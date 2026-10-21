@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Towns and Associations",
+  "label": "ch:la-towns-and-associations",
+  "canDo": "I can talk about a townsman and a town councillor, a colony, a comrade and an association.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "LA-R388-review-381-388",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can talk about a townsman and a town councillor, a colony, a comrade and an association.",
+    "assesses": [
+      "LA-LEX-C388-MUNICEPS-03",
+      "LA-LEX-C388-MUNICEPS-04",
+      "LA-LEX-C388-MUNICEPS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C440-kopfsteinpflaster",
+  "pathSegment": "GE-PATH-440-BRUNNEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-440-BRUNNEN",
+      "order": 3
+    }
+  ]
+}

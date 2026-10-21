@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C317-erzaehlung",
+    "language": "german",
+    "chapter": 317,
+    "sequence": 17310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b80ef384091ea447"
+  },
+  "findings": []
+}

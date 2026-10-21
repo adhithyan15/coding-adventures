@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C316-handlung",
+    "language": "german",
+    "chapter": 316,
+    "sequence": 17270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0da3d2557744ff4a"
+  },
+  "findings": []
+}

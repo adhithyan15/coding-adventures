@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C305-facinus",
+    "language": "latin",
+    "chapter": 305,
+    "sequence": 16520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e29970d5a7c8b769"
+  },
+  "findings": []
+}

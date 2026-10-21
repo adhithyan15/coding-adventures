@@ -1,0 +1,11 @@
+{
+  "id": "GE-C408-gegenverkehr",
+  "pathSegment": "GE-PATH-408-VORFAHRT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-408-VORFAHRT",
+      "order": 3
+    }
+  ]
+}

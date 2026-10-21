@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:f3ddb5aded951bf7",
+  "lessonIds": [
+    "GE-C342-wirkung",
+    "GE-C342-wirken",
+    "GE-C342-verursachen",
+    "GE-C342-ausloesen",
+    "GE-C342-ausloeser"
+  ],
+  "tex": "german/book/chapters/ch342-ursache-und-wirkung.tex"
+}

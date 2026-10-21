@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 509,
+  "title": "Courage and good sense",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7d7f4d00db6fb1d3",
+  "lessons": [
+    {
+      "id": "LA-C509-fortitudo",
+      "sequence": 27020,
+      "title": "fortitūdō, fortitūdinis — courage, bravery",
+      "headword": "fortitūdō, fortitūdinis",
+      "romanization": "fortitūdō, fortitūdinis",
+      "gloss": "courage, bravery",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b70637317fd9c24",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for vigorous, then the Latin for diligent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fortitūdō, fortitūdinis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fortitūdō, fortitūdinis — \"courage, bravery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mīlitēs magnā fortitūdine pugnant. The soldiers fight with great courage."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension, from fortis. One of the four great virtues of ancient ethics. English fortitude."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fortitūdō is built on fortis \"strong, brave\" with -tūdō (Lewis & Short; EtymDB). English fortitude comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fortitūdō, fortitūdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fortitūdō, fortitūdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fortitūdō, fortitūdinis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fortitūdō, fortitūdinis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fortitūdō, fortitūdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fortitūdō, fortitūdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for vigorous, then the Latin for diligent, then say fortitūdō, fortitūdinis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for vigorous, then the Latin for diligent, then say *fortitūdō, fortitūdinis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fortitūdō, fortitūdinis mean? (\"Courage, bravery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C509-audacia",
+      "sequence": 27030,
+      "title": "audācia, audāciae — boldness, daring",
+      "headword": "audācia, audāciae",
+      "romanization": "audācia, audāciae",
+      "gloss": "boldness, daring",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbd6083c4b3a02dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for diligent, then the Latin for courage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: audācia, audāciae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "audācia, audāciae — \"boldness, daring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Audācia nautae omnēs servat. The sailor's daring saves everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from audāx. Often in a bad sense: recklessness, impudence. English audacity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "audācia is built on audāx \"bold\", from audeō \"to dare\" (Lewis & Short; EtymDB). English audacity comes from the same adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "audācia, audāciae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *audācia, audāciae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "audācia, audāciae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *audācia, audāciae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with audācia, audāciae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *audācia, audāciae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for diligent, then the Latin for courage, then say audācia, audāciae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for diligent, then the Latin for courage, then say *audācia, audāciae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does audācia, audāciae mean? (\"Boldness, daring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C509-temerarius",
+      "sequence": 27040,
+      "title": "temerārius, temerāria, temerārium — rash, reckless",
+      "headword": "temerārius, temerāria, temerārium",
+      "romanization": "temerārius, temerāria, temerārium",
+      "gloss": "rash, reckless",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94cfdef1f8748d8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for courage, then the Latin for boldness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: temerārius, temerāria, temerārium",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "temerārius, temerāria, temerārium — \"rash, reckless\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Iuvenis temerārius in flūmen altum salit. The rash young man jumps into the deep river."
+            },
+            {
+              "kind": "speech",
+              "text": "From the adverb temere — blindly, by chance. English temerity comes from the related temeritās."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "temerārius is built on the adverb temere \"blindly, by chance\" (Lewis & Short; EtymDB). English temerity comes from the related temeritās."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temerārius, temerāria, temerārium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temerārius, temerāria, temerārium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temerārius, temerāria, temerārium, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *temerārius, temerāria, temerārium*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with temerārius, temerāria, temerārium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *temerārius, temerāria, temerārium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for courage, then the Latin for boldness, then say temerārius, temerāria, temerārium again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for courage, then the Latin for boldness, then say *temerārius, temerāria, temerārium* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does temerārius, temerāria, temerārium mean? (\"Rash, reckless\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C509-constans",
+      "sequence": 27050,
+      "title": "cōnstāns, cōnstantis — steadfast, consistent",
+      "headword": "cōnstāns, cōnstantis",
+      "romanization": "cōnstāns, cōnstantis",
+      "gloss": "steadfast, consistent",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbafea5f246a8dbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for boldness, then the Latin for rash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cōnstāns, cōnstantis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnstāns, cōnstantis — \"steadfast, consistent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Amīcus cōnstāns in perīculīs nōn fugit. A steadfast friend does not run away in danger."
+            },
+            {
+              "kind": "speech",
+              "text": "One ending. The present participle of cōnstō — to stand firm. English constant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cōnstāns is the present participle of cōnstō \"to stand firm\", built on con- and stō \"to stand\" (Lewis & Short; EtymDB). English constant comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnstāns, cōnstantis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnstāns, cōnstantis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cōnstāns, cōnstantis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cōnstāns, cōnstantis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cōnstāns, cōnstantis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cōnstāns, cōnstantis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for boldness, then the Latin for rash, then say cōnstāns, cōnstantis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for boldness, then the Latin for rash, then say *cōnstāns, cōnstantis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cōnstāns, cōnstantis mean? (\"Steadfast, consistent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C509-prudentia",
+      "sequence": 27060,
+      "title": "prūdentia, prūdentiae — good sense, prudence",
+      "headword": "prūdentia, prūdentiae",
+      "romanization": "prūdentia, prūdentiae",
+      "gloss": "good sense, prudence",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6151785491d5edb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for rash, then the Latin for steadfast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: prūdentia, prūdentiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prūdentia, prūdentiae — \"good sense, prudence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Prūdentiā patris familia servātur. The family is saved by the father's good sense."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from prūdēns, a short form of prōvidēns — foreseeing. English prudence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "prūdentia is built on prūdēns \"wise\", a shortened prōvidēns \"foreseeing\" (Lewis & Short; EtymDB links it with prōvidentia). English prudence comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prūdentia, prūdentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prūdentia, prūdentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prūdentia, prūdentiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prūdentia, prūdentiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with prūdentia, prūdentiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *prūdentia, prūdentiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for rash, then the Latin for steadfast, then say prūdentia, prūdentiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for rash, then the Latin for steadfast, then say *prūdentia, prūdentiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does prūdentia, prūdentiae mean? (\"Good sense, prudence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

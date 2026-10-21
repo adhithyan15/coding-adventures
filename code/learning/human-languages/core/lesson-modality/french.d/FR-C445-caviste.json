@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C445-caviste",
+    "language": "french",
+    "chapter": 445,
+    "sequence": 24640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff80a3a4c5b9383e"
+  },
+  "findings": []
+}

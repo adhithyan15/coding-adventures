@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Pedestrians and cyclists",
+  "label": "ch:ru-pedestrians-and-cyclists",
+  "canDo": "I can talk about sharing the road: pedestrians, cyclists, giving way, letting someone through and road markings.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C412-razmetka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about sharing the road: pedestrians, cyclists, giving way, letting someone through and road markings.",
+    "assesses": [
+      "RU-LEX-C412-PESHEKHOD-03",
+      "RU-LEX-C412-PESHEKHOD-04",
+      "RU-LEX-C412-PESHEKHOD-05"
+    ]
+  }
+}

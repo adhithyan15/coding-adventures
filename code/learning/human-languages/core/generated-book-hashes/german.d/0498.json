@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:a84da3463086b96e",
+  "lessonIds": [
+    "GE-C498-kennenlernen",
+    "GE-C498-befreundet",
+    "GE-C498-bekanntschaft",
+    "GE-C498-nachbarschaft",
+    "GE-C498-gastfreundschaft"
+  ],
+  "tex": "german/book/chapters/ch498-freunde-und-nachbarn.tex"
+}

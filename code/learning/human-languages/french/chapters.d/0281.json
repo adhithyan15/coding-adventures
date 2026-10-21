@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Le reportage",
+  "label": "ch:fr-le-reportage",
+  "canDo": "I can talk about reporting from the field: a report, a special correspondent, a correspondent, a wire story and a news agency.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C281-agence-de-presse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can talk about reporting from the field: a report, a special correspondent, a correspondent, a wire story and a news agency.",
+    "assesses": [
+      "FR-LEX-C281-REPORTAGE-03",
+      "FR-LEX-C281-REPORTAGE-04",
+      "FR-LEX-C281-REPORTAGE-05"
+    ]
+  }
+}

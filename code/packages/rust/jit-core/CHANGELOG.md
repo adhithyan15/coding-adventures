@@ -5,6 +5,73 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.8.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`GenericCirJit` bytecodes `ADD_OVF_I64` (0x18), `SUB_OVF_I64` (0x19),
+  `MUL_OVF_I64` (0x1A), `NEG_OVF_I64` (0x1B)** for the LANG83 PR4 ops
+  `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf`. They use Rust's
+  `checked_*`; `None` writes `trap: Trap.Overflow` to the error slot and stops
+  the function, and `JITCore` drains the slot into `VMError::Trap` (fail
+  closed). A truncated checked op in a hostile binary is a `malformed
+  bytecode` error, not a panic.
+- The compile arms match the full type-first names before any prefix arm, so
+  the wrapping `ADD_I64` family (and its narrow-width masking) can never claim
+  them. A test pins the opcode bytes.
+- **`CIRInstr::is_pure`** treats the four ops as impure: dead-code elimination
+  keeps an unused checked op, whose trap is its only observable effect.
+- `op_support`: all four `Lowered`, checked by compiling a one-op function per
+  registry entry.
+- New `tests/fail_closed.rs` case: each checked op, JIT-compiled in a callee
+  and overflowing, stops its interpreted caller before the next builtin runs,
+  and the error slot is drained.
+
+## [0.7.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`GenericCirJit` compiles the LANG83 PR1b ops** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
+  new bytecodes `DIV_FLOOR_I64` / `MOD_FLOOR_I64` (floor quotient / remainder;
+  zero divisor → `Trap.DivZero`, `MIN / -1` → `Trap.Overflow`, `MIN mod -1` → 0)
+  and `TRAP <kind id>` for `trap "<kind>"` (an unregistered kind refuses
+  compilation). A trap writes `trap: <kind>` (`generic_jit::trap_message`, the
+  same text `vm_core::VMError::Trap` displays) to the error slot and stops.
+- **`write_i64`** is `Lowered` on the same footing as `print_i64`/`putchar`:
+  `CALL_BUILTIN` to the embedder-registered handler.
+- **`CIRInstr::is_pure`** now treats `trap`, `i64_div_floor` and
+  `i64_mod_floor` as side-effecting, so `CIROptimizer`'s dead-code pass keeps a
+  floor divide whose quotient is unused (removing it would remove its trap).
+- `op_support`: the four PR1b ops flip to `Lowered`; the
+  `declared_support_matches_what_generic_jit_compiles` check registers
+  `write_i64` like the other output builtins.
+- **Fixed — JIT failures fail closed (security review, MEDIUM).** A trap,
+  floor-division edge or `div` by zero in compiled code used to write the
+  error slot and return `Value::Null`; the vm-core handler passed that `Null`
+  to the interpreted caller, which kept running, and `execute_with_jit`
+  returned `Ok` (the reviewer's repro: `Ok(Some(Int(0)))` with two `mark`s run
+  after the trap). Now: new `Backend::take_error() -> Option<VMError>`
+  (default `None`); `GenericCirJit` implements it by draining its slot through
+  `generic_jit::error_from_message` (`trap: <registered kind>` →
+  `VMError::Trap`, `DIV_BY_ZERO_MESSAGE` → `VMError::DivisionByZero`, anything
+  else → `VMError::Custom`); the handler `JITCore` registers and
+  `JITCore::execute` call it after every run and return `Err`. Draining also
+  stops a stale message from shadowing a later failure (`set_error` keeps only
+  the first). New `tests/fail_closed.rs` (reviewer's repro now
+  `Err(Trap.Overflow)` with 0 marks; trap through an interpreted call chain;
+  `div` by zero from an interpreted caller; direct `execute` + no stale slot)
+  and `take_error_maps_and_drains_the_slot`.
+
+## [0.6.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support.** New `op_support` module (`OP_SUPPORT`, `op_support`).
+  `Lowered` means `GenericCirJit` compiles the op to JIT bytecode — integer
+  `add sub mul div neg`, the `cmp_*` family, and `print_i64`/`putchar` via
+  `CALL_BUILTIN` to the embedder-registered handler. Ops that only run because
+  `JITCore` falls back to the vm-core interpreter (`mod`, strings, `f64` math,
+  conversions, `print_str`) are declared `Refused(INTERPRETER_TIER_ONLY)`, so
+  interpreter fallback cannot masquerade as JIT support ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). PR1b ops are
+  refused.
+- `declared_support_matches_what_generic_jit_compiles` builds a one-op function
+  per registry entry, specialises it and asks `GenericCirJit` to compile it, so
+  every row is checked against the real compiler rather than restated.
+
 ## [0.5.1] — 2026-08-02
 
 ### Fixed — compiled boolean procedures preserve their runtime type

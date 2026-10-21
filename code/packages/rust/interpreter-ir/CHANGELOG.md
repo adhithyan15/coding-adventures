@@ -1,5 +1,57 @@
 # Changelog — interpreter-ir
 
+## [0.13.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **Registry:** four new type-first Ops, `introduced_by: "LANG83 PR4"`
+  (`LANG83_PR4`, `OpSpec::is_pr4`): `i64_add_ovf`, `i64_sub_ovf`,
+  `i64_mul_ovf` (arity 2) and `i64_neg_ovf` (arity 1). Each yields the exact
+  result or traps `Trap.Overflow` when it does not fit in i64 (`may_trap:
+  [Trap.Overflow]`). Every backend lowers them in the same slice, so there is
+  no "not yet lowered" phase. The names avoid the `add_`/`sub_`/`mul_`/`neg_`
+  dispatch prefixes the native backends and the generic JIT match on.
+- **`opcodes::has_side_effects`** includes the four ops, so dead-code
+  elimination keeps an unused checked add (its trap is observable).
+  `is_known_op`, `is_value_producing` and `trap_kinds` pick them up from the
+  registry with no edit.
+- **New test `every_trapping_lang83_op_has_side_effects`**, derived from the
+  registry: a future LANG83 op that may trap cannot be registered without its
+  `has_side_effects` entry.
+- `exception_kind` docs: `Trap.Overflow` is now raised by the PR4 family.
+
+## [0.12.0] — 2026-10-19 (LANG83 PR1a — standard operation registry)
+
+Adds the contract half of [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md):
+one registry of the operations frontends may emit, which every backend must lower
+or refuse. Behaviour-preserving for every existing program; no backend lowers a new
+op in this release.
+
+- **New `op_registry` module.** `OpKind` (Op vs Builtin), `OpFamily`, `OpSupport`
+  (`Lowered` / `Refused(reason)`), `OpSpec` and `STANDARD_OPS`, registering the
+  operations existing frontends rely on across backends (`print_i64`, `putchar`,
+  `print_str`, the seven `str_*` ops, `add sub mul div mod neg`, the six `cmp_*`,
+  the eight `f64_*` math ops, `int_to_real`, `real_to_int_trunc/floor`) plus the four
+  PR1b ops (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`). Helpers:
+  `lookup`, `registry_entry`/`registry_name` (resolves Op mnemonics and
+  `call_builtin` names alike), `name_rule_violation`, `check_op_support_table`
+  (the per-backend declaration check) and `support_from_table`.
+- **Type-first naming rule** enforced by a unit test: no registry name may start
+  with a native/JIT dispatch prefix (`div_`, `add_`, …, `dyn_`), except the six
+  grandfathered `cmp_*` comparisons. A `div_floor` would otherwise be captured by
+  `x86_64-backend`'s `starts_with("div_")` arm and silently compiled as truncating
+  division.
+- **`opcodes`:** new `is_trap_op`, `is_terminator`, `trap_kinds`, `may_trap`.
+  `is_known_op` accepts every registry Op (so the long-emitted `f64_*` ops are now
+  "known"); `is_value_producing` includes every registry Op with a dest;
+  `has_side_effects` includes `trap`, `i64_div_floor`, `i64_mod_floor` so DCE
+  keeps them. Legacy `div`/`mod`/`array_get` keep their PR1a `has_side_effects`
+  answer (documented divergence).
+- **`exception_kind`:** `TRAP_OVERFLOW` (`Trap.Overflow`) and `TRAP_USER`
+  (`Trap.User`) join `ALL_TRAP_KINDS` (now six); `LANGUAGE_TRAP_KINDS` (empty, for
+  frontend kinds); `is_registered_trap_kind`; stable append-only ids via
+  `trap_kind_id`/`trap_kind_name` (built-ins 1–6, language kinds from 1000).
+- Crate root re-exports `OpKind`, `OpSpec`, `OpSupport`, `STANDARD_OPS`.
+- 15 new unit tests and 11 new doctests (119 unit + 52 doctests total).
+
 ## [0.11.0] — 2026-09-16 (AOT00 T2 slice 1 — exception IIR ops, inert)
 
 Adds the IIR-level taxonomy and validation for structured exceptions (AOT00 T2,

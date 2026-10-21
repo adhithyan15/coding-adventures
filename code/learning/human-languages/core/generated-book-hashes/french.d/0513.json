@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:c798578d6c9ac8e6",
+  "lessonIds": [
+    "FR-C513-orchestre",
+    "FR-C513-chef-d-orchestre",
+    "FR-C513-partition",
+    "FR-C513-repetition",
+    "FR-C513-improviser",
+    "FR-R513-revision-506-513"
+  ],
+  "tex": "french/book/chapters/ch513-l-orchestre.tex"
+}

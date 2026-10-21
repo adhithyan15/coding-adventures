@@ -1,5 +1,87 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR4 — overflow-checked arithmetic
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4),
+  on `long` operands only (an `int` operand is `UnsupportedType`). The
+  overflow condition is tested *before* the wrapping instruction, as PR1b's
+  floor division does, and a failing test runs the 17-byte flush-then-throw
+  trap with `Trap.Overflow`:
+  - add: `((a ^ (a+b)) & (b ^ (a+b))) < 0`; sub: `((a ^ b) & (a ^ (a-b))) < 0`
+    (`land; lconst_0; lcmp; ifge` over the trap);
+  - neg: `lcmp` against `MIN`, `ifne` over the trap;
+  - mul: `a == -1 && b == MIN`, then `a != 0 && (a*b)/a != b`.
+
+  `Math.addExact` & co. are deliberately not used: their
+  `ArithmeticException` has no LANG83 kind and skips the `System.out` flush,
+  and catching it would need an exception table this writer does not emit.
+  The mul check needs no JDK 9+ `Math.multiplyHigh`. The destination is
+  stored last, so a dest that aliases an operand is correct.
+- New helper `emit_skip_if(code, if_op, skip)` (`emit_skip_if_ne` now
+  delegates to it).
+- `op_support`: all four `Lowered`. `tests/lang83_pr1b.rs` pins each guard,
+  each trap and the tail; `lang-aot`'s `op_conformance` runs them on real
+  `java` with the verifier on.
+
+## 0.37.0 - 2026-10-19 - fail-closed real-to-integer narrowing
+
+Each `d2i`/`d2l` narrowing of `real_to_int_trunc` and `real_to_int_floor` is
+now preceded by a range check. The check throws `java.lang.ArithmeticException`
+for NaN, ±∞ and values outside the destination's integer range, where the JVM
+would otherwise saturate (NaN→0, +∞→MAX, −∞→MIN). This replaces the saturating
+lowering 0.18.0 documented as a divergence. The stack-depth analysis now
+models `dup2`, `new`, `invokespecial` and `athrow`.
+
+## Unreleased — LANG83 PR1b — floor division, `trap`, `write_i64`
+
+- **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)) →
+  `invokestatic java/lang/Math.floorDiv(JJ)J` / `floorMod(JJ)J`, preceded by
+  explicit `lcmp`/`ifne` checks: a zero divisor traps `Trap.DivZero` (instead
+  of `ArithmeticException`) and (div) `MIN / -1` traps `Trap.Overflow` (instead
+  of `floorDiv` silently returning `MIN`). `floorMod(MIN, -1)` is already 0.
+  Operands and dest must be `long`.
+- **`trap "<kind>"`** → a fixed 17-byte sequence: `System.out.flush()`, then
+  `throw new RuntimeException("<kind>")` (`ldc_w` so branch offsets over it are
+  constant). Uncaught, the JVM reports `java.lang.RuntimeException: <kind>` on
+  stderr and exits 1, after earlier output was flushed. Class files stay
+  version 49, so the type-inferring verifier accepts the dead code after
+  `athrow` without a `StackMapTable`.
+- **`write_i64`** → `System.out.print(J)V` inline (no host class), the same
+  `PrintStream` every other output path ends in.
+- `op_support`: the four PR1b ops are `Lowered`; `write_i64` joins
+  `CALL_BUILTIN_SUPPORTED_NAMES`.
+- Tests (`tests/lang83_pr1b.rs`): bytecode shape — both guards and their
+  `ifne` targets, the trap sequence resolved through the constant pool
+  (flush before `athrow`, kind string), `floorDiv`/`floorMod` refs, `write_i64`'s
+  `print(J)V`, unregistered kinds refused. Real-`java` execution is in
+  `lang-aot`'s `op_conformance` JVM column.
+
+## Unreleased — LANG83 PR1a — standard operation support
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Every existing registered op is `Lowered`. The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with `validate::CALL_BUILTIN_SUPPORTED_NAMES`.
+
+## 0.36.0 - 2026-10-19 - measured operand-stack depth
+
+Each method's `max_stack` is now measured by walking the emitted bytecode with
+a stack-depth dataflow, as the JVM verifier does. It replaces a fixed `8`
+(and `16` for `__callClosure`). The fixed value was too small for captured 3-D
+and 4-D `double[]` stores and failed verification with `VerifyError: Stack size
+too large`. An opcode the analysis does not model, an inconsistent depth where
+branches join, or a stack underflow is reported as the new
+`IIRJvmError::StackDepthAnalysis` instead of being emitted. `areturn` is now
+the named `ARETURN` constant instead of a raw `0xB0`, which the analysis found.
+
+Sizing `__callClosure` returns `StackDepthAnalysis` instead of panicking.
+Descriptor slot counts and invoke pop counts use checked `u16` arithmetic.
+
 ## 0.35.0 - 2026-10-05 - floating-point module globals
 
 Module globals carrying `f32` or `f64` values now use JVM fields with `F` or

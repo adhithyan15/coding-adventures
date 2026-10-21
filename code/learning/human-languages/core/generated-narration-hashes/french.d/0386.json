@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:124387fad0ccec05",
+  "lessonIds": [
+    "FR-C386-accuser",
+    "FR-C386-accusation",
+    "FR-C386-voleur",
+    "FR-C386-plainte",
+    "FR-C386-delit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch386.txt",
+  "json": "french/narration/ch386.json",
+  "textHash": "fnv1a64:84769c6e7d9295bd",
+  "jsonHash": "fnv1a64:1f0cefc7aef0ae03",
+  "findings": []
+}

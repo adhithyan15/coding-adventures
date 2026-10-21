@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 537,
+  "title": "Quarrels and making up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d19f2967339b2e8e",
+  "lessons": [
+    {
+      "id": "LA-C537-iurgium",
+      "sequence": 28460,
+      "title": "iūrgium, iūrgiī — a quarrel, dispute",
+      "headword": "iūrgium, iūrgiī",
+      "romanization": "iūrgium, iūrgiī",
+      "gloss": "a quarrel, dispute",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8afe522d80c3c07a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a darling, then the Latin for a gift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: iūrgium, iūrgiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iūrgium, iūrgiī — \"a quarrel, dispute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inter frātrēs saepe iūrgium est. There is often a quarrel between the brothers."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, second declension. A quarrel of words, at home or between neighbours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "iūrgium is built on iūrgō \"to quarrel\", which Lewis & Short takes from iūs \"right, law\" and agō \"to drive\"; EtymDB agrees on iūs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iūrgium, iūrgiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iūrgium, iūrgiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iūrgium, iūrgiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iūrgium, iūrgiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with iūrgium, iūrgiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *iūrgium, iūrgiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a darling, then the Latin for a gift, then say iūrgium, iūrgiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a darling, then the Latin for a gift, then say *iūrgium, iūrgiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does iūrgium, iūrgiī mean? (\"A quarrel, dispute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C537-reconcilio",
+      "sequence": 28470,
+      "title": "reconciliō, reconciliāre — to reconcile, bring together again",
+      "headword": "reconciliō, reconciliāre",
+      "romanization": "reconciliō, reconciliāre",
+      "gloss": "to reconcile, bring together again",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edcbde780fb3b020",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a gift, then the Latin for a quarrel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: reconciliō, reconciliāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reconciliō, reconciliāre — \"to reconcile, bring together again\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Māter frātrēs post iūrgium reconciliat. Mother reconciles the brothers after the quarrel."
+            },
+            {
+              "kind": "speech",
+              "text": "reconciliō, reconciliāre, reconciliāvī, reconciliātum: re- 'again' + conciliō 'to bring together'. English reconcile."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "reconciliō is built on re- \"again\" and conciliō \"to bring together\", from concilium \"a gathering\" (EtymDB; Lewis & Short). English reconcile comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reconciliō, reconciliāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reconciliō, reconciliāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reconciliō, reconciliāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *reconciliō, reconciliāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with reconciliō, reconciliāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *reconciliō, reconciliāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a gift, then the Latin for a quarrel, then say reconciliō, reconciliāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a gift, then the Latin for a quarrel, then say *reconciliō, reconciliāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does reconciliō, reconciliāre mean? (\"To reconcile, bring together again\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C537-dono",
+      "sequence": 28480,
+      "title": "dōnō, dōnāre — to give as a present",
+      "headword": "dōnō, dōnāre",
+      "romanization": "dōnō, dōnāre",
+      "gloss": "to give as a present",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76f83be000e90ba9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a quarrel, then the Latin for to reconcile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dōnō, dōnāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dōnō, dōnāre — \"to give as a present\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Avus nepōtī librum dōnat. Grandfather gives his grandson a book as a present."
+            },
+            {
+              "kind": "speech",
+              "text": "dōnō, dōnāre, dōnāvī, dōnātum: alicui aliquid dōnāre, or aliquem aliquā rē dōnāre. English donate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dōnō is built on dōnum \"a gift\" (EtymDB; Lewis & Short). English donate comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōnō, dōnāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōnō, dōnāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōnō, dōnāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōnō, dōnāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dōnō, dōnāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dōnō, dōnāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a quarrel, then the Latin for to reconcile, then say dōnō, dōnāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a quarrel, then the Latin for to reconcile, then say *dōnō, dōnāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dōnō, dōnāre mean? (\"To give as a present\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C537-infidus",
+      "sequence": 28490,
+      "title": "īnfīdus, īnfīda, īnfīdum — faithless, untrustworthy",
+      "headword": "īnfīdus, īnfīda, īnfīdum",
+      "romanization": "īnfīdus, īnfīda, īnfīdum",
+      "gloss": "faithless, untrustworthy",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08ba08cf6973fd14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to reconcile, then the Latin for to give as a present."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: īnfīdus, īnfīda, īnfīdum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnfīdus, īnfīda, īnfīdum — \"faithless, untrustworthy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Amīcus īnfīdus omnia, quae dīxī, aliīs nārrat. The faithless friend tells others everything I said."
+            },
+            {
+              "kind": "speech",
+              "text": "in- 'not' + fīdus 'faithful'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "īnfīdus is built on in- \"not\" and fīdus \"faithful\", from fīdō \"to trust\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnfīdus, īnfīda, īnfīdum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnfīdus, īnfīda, īnfīdum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īnfīdus, īnfīda, īnfīdum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īnfīdus, īnfīda, īnfīdum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with īnfīdus, īnfīda, īnfīdum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *īnfīdus, īnfīda, īnfīdum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to reconcile, then the Latin for to give as a present, then say īnfīdus, īnfīda, īnfīdum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to reconcile, then the Latin for to give as a present, then say *īnfīdus, īnfīda, īnfīdum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does īnfīdus, īnfīda, īnfīdum mean? (\"Faithless, untrustworthy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C537-desero",
+      "sequence": 28500,
+      "title": "dēserō, dēserere — to abandon, desert",
+      "headword": "dēserō, dēserere",
+      "romanization": "dēserō, dēserere",
+      "gloss": "to abandon, desert",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d12ad8ae635eed6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to give as a present, then the Latin for faithless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēserō, dēserere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēserō, dēserere — \"to abandon, desert\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Amīcus vērus amīcum in perīculō nōn dēserit. A true friend does not abandon his friend in danger."
+            },
+            {
+              "kind": "speech",
+              "text": "dēserō, dēserere, dēseruī, dēsertum: dē- 'away' + serō 'to join' — to break a tie. English desert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēserō is built on dē- \"away\" and serō \"to join, link\" (Lewis & Short): to break off a tie. English desert comes from its participle dēsertus."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēserō, dēserere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēserō, dēserere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēserō, dēserere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēserō, dēserere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēserō, dēserere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēserō, dēserere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to give as a present, then the Latin for faithless, then say dēserō, dēserere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to give as a present, then the Latin for faithless, then say *dēserō, dēserere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēserō, dēserere mean? (\"To abandon, desert\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

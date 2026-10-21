@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Gagner et perdre",
+  "label": "ch:fr-gagner-et-perdre",
+  "canDo": "I can talk about business money: profit, a loss, going bankrupt, paying back and a loan.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C394-emprunt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can talk about business money: profit, a loss, going bankrupt, paying back and a loan.",
+    "assesses": [
+      "FR-LEX-C394-FAILLITE-03",
+      "FR-LEX-C394-FAILLITE-04",
+      "FR-LEX-C394-FAILLITE-05"
+    ]
+  }
+}

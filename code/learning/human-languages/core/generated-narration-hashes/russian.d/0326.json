@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:563ecc1c91a2945d",
+  "lessonIds": [
+    "RU-C326-predok",
+    "RU-C326-potomok",
+    "RU-C326-letopis",
+    "RU-C326-knyaz",
+    "RU-C326-osnovyvat",
+    "RU-R326-review-319-326"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch326.txt",
+  "json": "russian/narration/ch326.json",
+  "textHash": "fnv1a64:02274e004d06be2f",
+  "jsonHash": "fnv1a64:0aad4dba096f4ac0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C461-degager",
+  "pathSegment": "FR-PATH-461-BRUINE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-461-BRUINE",
+      "order": 4
+    }
+  ]
+}

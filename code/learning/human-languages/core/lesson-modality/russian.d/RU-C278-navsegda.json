@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C278-navsegda",
+    "language": "russian",
+    "chapter": 278,
+    "sequence": 16760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae63034bc91ab035"
+  },
+  "findings": []
+}

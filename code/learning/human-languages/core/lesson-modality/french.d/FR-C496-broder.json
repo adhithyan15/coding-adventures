@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C496-broder",
+    "language": "french",
+    "chapter": 496,
+    "sequence": 27260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c1feb1ceb32b029"
+  },
+  "findings": []
+}

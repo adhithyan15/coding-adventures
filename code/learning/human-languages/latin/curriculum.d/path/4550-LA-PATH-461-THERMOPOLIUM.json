@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-461-THERMOPOLIUM",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-461-THERMOPOLIUM"
+  ],
+  "after": []
+}

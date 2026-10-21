@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:ab09bd219c8adeb8",
+  "lessonIds": [
+    "GE-C463-raureif",
+    "GE-C463-gefrieren",
+    "GE-C463-tauen",
+    "GE-C463-tauwetter",
+    "GE-C463-bibbern"
+  ],
+  "tex": "german/book/chapters/ch463-eisige-kalte.tex"
+}

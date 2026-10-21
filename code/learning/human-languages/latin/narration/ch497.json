@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 497,
+  "title": "Worry and distress",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:82e6eb436c3ca7b3",
+  "lessons": [
+    {
+      "id": "LA-C497-sollicitudo",
+      "sequence": 26410,
+      "title": "sollicitūdō, sollicitūdinis — anxiety, worry",
+      "headword": "sollicitūdō, sollicitūdinis",
+      "romanization": "sollicitūdō, sollicitūdinis",
+      "gloss": "anxiety, worry",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed1b8e139fd4dc0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for dreadful, then the Latin for frightful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sollicitūdō, sollicitūdinis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sollicitūdō, sollicitūdinis — \"anxiety, worry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Māter magnā sollicitūdine fīlium exspectat. The mother waits for her son with great anxiety."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension, from sollicitus — anxious. English solicitude."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sollicitūdō is built on sollicitus \"anxious, troubled\" with -tūdō (Lewis & Short; EtymDB). English solicitude comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sollicitūdō, sollicitūdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sollicitūdō, sollicitūdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sollicitūdō, sollicitūdinis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sollicitūdō, sollicitūdinis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sollicitūdō, sollicitūdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sollicitūdō, sollicitūdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for dreadful, then the Latin for frightful, then say sollicitūdō, sollicitūdinis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for dreadful, then the Latin for frightful, then say *sollicitūdō, sollicitūdinis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sollicitūdō, sollicitūdinis mean? (\"Anxiety, worry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C497-ango",
+      "sequence": 26420,
+      "title": "angō, angere — to distress, torment; to choke",
+      "headword": "angō, angere",
+      "romanization": "angō, angere",
+      "gloss": "to distress, torment; to choke",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afb3322b2a564ab8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for frightful, then the Latin for anxiety."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: angō, angere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "angō, angere — \"to distress, torment; to choke\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cūra dē fīliō patrem angit. Worry about his son torments the father."
+            },
+            {
+              "kind": "speech",
+              "text": "angō, angere, anxī. First to squeeze the throat, then to torment the mind. Anxius, already known, comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "angō is inherited from Proto-Italic angō, from a Proto-Indo-European root meaning \"narrow, tight\" (EtymDB). English anxious and anguish come from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "angō, angere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *angō, angere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "angō, angere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *angō, angere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with angō, angere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *angō, angere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for frightful, then the Latin for anxiety, then say angō, angere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for frightful, then the Latin for anxiety, then say *angō, angere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does angō, angere mean? (\"To distress, torment; to choke\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C497-aegritudo",
+      "sequence": 26430,
+      "title": "aegritūdō, aegritūdinis — distress of mind, grief; sickness",
+      "headword": "aegritūdō, aegritūdinis",
+      "romanization": "aegritūdō, aegritūdinis",
+      "gloss": "distress of mind, grief; sickness",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3d6ef69537dd568",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for anxiety, then the Latin for to distress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aegritūdō, aegritūdinis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aegritūdō, aegritūdinis — \"distress of mind, grief; sickness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post mortem amīcī aegritūdō eum diū tenet. After his friend's death, grief holds him for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, third declension, from aeger — sick. In philosophy it often means sorrow, a sickness of the mind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aegritūdō is built on aeger \"sick\" with -tūdō (Lewis & Short), and it names sickness of body or of mind."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aegritūdō, aegritūdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aegritūdō, aegritūdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aegritūdō, aegritūdinis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aegritūdō, aegritūdinis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aegritūdō, aegritūdinis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aegritūdō, aegritūdinis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for anxiety, then the Latin for to distress, then say aegritūdō, aegritūdinis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for anxiety, then the Latin for to distress, then say *aegritūdō, aegritūdinis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aegritūdō, aegritūdinis mean? (\"Distress of mind, grief; sickness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C497-molestia",
+      "sequence": 26440,
+      "title": "molestia, molestiae — annoyance, trouble",
+      "headword": "molestia, molestiae",
+      "romanization": "molestia, molestiae",
+      "gloss": "annoyance, trouble",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81e50a717c4157da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to distress, then the Latin for distress of mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: molestia, molestiae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "molestia, molestiae — \"annoyance, trouble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Muscae aegrō molestiam afferunt. The flies cause the sick man annoyance."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, first declension, from molestus — annoying. English molest comes from the related verb molestō."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "molestia is built on molestus \"troublesome\", which Lewis & Short connects with mōlēs \"a heavy mass\": a burden. English molest comes from the related verb molestō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "molestia, molestiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *molestia, molestiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "molestia, molestiae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *molestia, molestiae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with molestia, molestiae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *molestia, molestiae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to distress, then the Latin for distress of mind, then say molestia, molestiae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to distress, then the Latin for distress of mind, then say *molestia, molestiae* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does molestia, molestiae mean? (\"Annoyance, trouble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C497-crucio",
+      "sequence": 26450,
+      "title": "cruciō, cruciāre — to torment, torture",
+      "headword": "cruciō, cruciāre",
+      "romanization": "cruciō, cruciāre",
+      "gloss": "to torment, torture",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e2d6ab851dd7256",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for distress of mind, then the Latin for annoyance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cruciō, cruciāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cruciō, cruciāre — \"to torment, torture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dolor dentium senem cruciat. Toothache torments the old man."
+            },
+            {
+              "kind": "speech",
+              "text": "cruciō, cruciāre, cruciāvī, cruciātum, from crux — a cross. In comedy also of worry: mē cruciō — I fret. English excruciating."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cruciō is built on crux \"a cross\" (Lewis & Short; EtymDB): to torment as on a cross. English excruciating comes from the compound excruciō."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cruciō, cruciāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cruciō, cruciāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cruciō, cruciāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cruciō, cruciāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cruciō, cruciāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cruciō, cruciāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for distress of mind, then the Latin for annoyance, then say cruciō, cruciāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for distress of mind, then the Latin for annoyance, then say *cruciō, cruciāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cruciō, cruciāre mean? (\"To torment, torture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

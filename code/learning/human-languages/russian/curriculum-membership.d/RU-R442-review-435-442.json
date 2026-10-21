@@ -1,0 +1,11 @@
+{
+  "id": "RU-R442-review-435-442",
+  "pathSegment": "RU-PATH-442-EKSKURSIYA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-442-EKSKURSIYA",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 505,
+  "title": "Sur le terrain",
+  "label": "ch:fr-sur-le-terrain",
+  "canDo": "I can talk about what happens during a match.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-R505-revision-498-505",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 505: I can talk about what happens during a match.",
+    "assesses": [
+      "FR-LEX-C505-TERRAIN-03",
+      "FR-LEX-C505-TERRAIN-04",
+      "FR-LEX-C505-TERRAIN-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C340-pedes",
+  "pathSegment": "LA-PATH-340-ARMA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-340-ARMA",
+      "order": 2
+    }
+  ]
+}

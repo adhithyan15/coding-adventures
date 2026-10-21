@@ -490,6 +490,17 @@ multiple languages; close an enabler before the features that depend on it.
     JVM/aarch64). **RUN-verified end-to-end through real x86_64 codegen executed
     in the x86-simulator** (`floor(int_to_real(45)−2.7)`⇒42, `trunc(42.3)`⇒42).
     With this, E8's conversion ops are implemented on **all seven backends**.
+  - ✅ **E8 trap divergence closed** (x86_64-backend 0.41.0,
+    iir-to-jvm-class-file 0.37.0, aarch64-backend, lang-aot 0.582.0). The
+    saturating divergences documented in PR-4, PR-6a and PR-6b assumed `entier`
+    only ever sees finite, in-range values. ALGOL proofs later admitted runtime
+    `exp` chains, which broke that assumption: `entier(exp(exp(4)))` printed
+    `i64::MIN` on native x86-64 and `i64::MAX` on the JVM. The JVM now
+    range-checks before `d2i`/`d2l` and throws `ArithmeticException`. The two
+    native backends round-trip the converted integer and trap (`ud2` /
+    `udf #0xDEAD`) on mismatch or NaN. All seven backends now share the VM's
+    fail-closed contract, pinned by two matrix rows (finite ≈ 5.1e23, and +∞).
+    Details in `lang-full-e8-numeric-conversions.md` footnotes ² and ⁴.
   - ✅ **PR-7 — ALGOL `entier`** (algol-iir-compiler 0.10.0 + lang-aot matrix). The
     standard function `entier(E)` (§3.2.5) — the largest integer ≤ the *real* `E`,
     floor toward −∞ — lowers to a single E8 `real_to_int_floor` op (the floor + the
@@ -1462,6 +1473,14 @@ backend immediately) come before the enabler-dependent items.
   standard-function wrappers and applied independently to each runtime
   conditional path. Fractional, oversized and dynamic offsets remain
   conservative.
+  Exact whole-number multiplication may scale that sign-rooted integer
+  transform through magnitude `2^53`, including composition with exact
+  additive terms, when every intermediate result remains in the exact binary64
+  integer range. Fractional factors, denominator roots, repeated roots, and
+  oversized products remain conservative.
+  Static nonzero whole-number division may reduce that transform when a
+  conservative common-divisor proof shows that every possible path value is
+  exactly divisible; inexact and dynamic divisors remain conservative.
   Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Making a Promise",
+  "label": "ch:la-making-a-promise",
+  "canDo": "I can make a promise and say that I promised something, talk about trust and a formal pledge, and say that I am bound by a favour.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-R396-review-389-396",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can make a promise and say that I promised something, talk about trust and a formal pledge, and say that I am bound by a favour.",
+    "assesses": [
+      "LA-LEX-C396-POLLICEOR-03",
+      "LA-LEX-C396-POLLICEOR-04",
+      "LA-LEX-C396-POLLICEOR-05"
+    ]
+  }
+}

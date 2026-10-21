@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-301-ALERTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe raising the alarm: an alert, alerting people, a defibrillator, an emergency exit and clearing a building.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:b24c316eb2ad8884",
+  "lessonIds": [
+    "FR-C284-reveler",
+    "FR-C284-rapporter",
+    "FR-C284-dementir",
+    "FR-C284-relater",
+    "FR-C284-commenter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch284.txt",
+  "json": "french/narration/ch284.json",
+  "textHash": "fnv1a64:84c3f1bb022d361a",
+  "jsonHash": "fnv1a64:cf01f1cf8a115a3c",
+  "findings": []
+}

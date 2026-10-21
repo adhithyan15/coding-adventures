@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-269-QUAND",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can link two events in time: when, as soon as, at the moment when, at once and while.",
+  "prerequisites": []
+}

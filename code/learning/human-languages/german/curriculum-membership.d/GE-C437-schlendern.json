@@ -1,0 +1,11 @@
+{
+  "id": "GE-C437-schlendern",
+  "pathSegment": "GE-PATH-437-BUMMELN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-437-BUMMELN",
+      "order": 1
+    }
+  ]
+}

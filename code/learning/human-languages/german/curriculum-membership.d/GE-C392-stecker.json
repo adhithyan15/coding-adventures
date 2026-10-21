@@ -1,0 +1,11 @@
+{
+  "id": "GE-C392-stecker",
+  "pathSegment": "GE-PATH-392-GERAET",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-392-GERAET",
+      "order": 4
+    }
+  ]
+}

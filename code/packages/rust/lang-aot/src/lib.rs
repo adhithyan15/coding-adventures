@@ -16,7 +16,7 @@
 //!
 //! ## Supported languages today
 //!
-//! All ten variants below are wired through the shared IIR driver. Coverage is
+//! All twelve variants below are wired through the shared IIR driver. Coverage is
 //! feature-specific; see `code/specs/LANG-VM-FEATURE-COVERAGE.md` for executable
 //! proofs, backend exclusions and follow-up work.
 //!
@@ -33,6 +33,7 @@
 //! | FLOW-MATIC | `flow-matic-iir-compiler` |
 //! | COBOL-60 | `cobol-iir-compiler` |
 //! | Macsyma | `macsyma-iir-compiler` |
+//! | Perl | `perl-iir-compiler` (LANG84 phase 4a; default release) |
 //!
 //! ## How to add a language
 //!
@@ -60,6 +61,11 @@ use interpreter_ir::module::IIRModule;
 /// Lisp-family languages on the universal JIT backend.
 pub mod jit_lisp;
 pub use jit_lisp::{run_macsyma_on_jit, run_mccarthy_on_jit};
+
+/// LANG83: the nine backend columns and the compile-time standard-operation
+/// check every code-generation entry point runs first.
+pub mod op_check;
+pub use op_check::{check_module_for, Backend, OpRefusal, UnsupportedOps};
 
 /// Source language a `lang-aot` invocation is compiling.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -114,6 +120,11 @@ pub enum Language {
     /// descendant, but is wired here as a thin re-export of this same
     /// frontend rather than its own `Language` variant).
     Macsyma,
+    /// Perl — the bounded integer `print` subset (LANG81) via
+    /// `perl-iir-compiler`, compiled against its default release (LANG84
+    /// phase 4a). `print` lowers to the LANG83 `write_i64` builtin, so every
+    /// backend that lowers LANG83 runs it with no Perl-specific code.
+    Perl,
 }
 
 impl fmt::Display for Language {
@@ -130,6 +141,7 @@ impl fmt::Display for Language {
             Language::FlowMatic => write!(f, "flow-matic"),
             Language::Cobol60 => write!(f, "cobol60"),
             Language::Macsyma => write!(f, "macsyma"),
+            Language::Perl => write!(f, "perl"),
         }
     }
 }
@@ -152,12 +164,14 @@ impl Language {
             "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
             "cobol" | "cobol60" | "cobol-60" | "cob" => Ok(Self::Cobol60),
             "macsyma" | "mac" => Ok(Self::Macsyma),
+            "perl" | "pl" => Ok(Self::Perl),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, macrooct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
                  (or algol / algol-60 / a60), flow-matic (or fm / b0), \
-                 cobol60 (or cobol / cobol-60 / cob), macsyma (or mac)")),
+                 cobol60 (or cobol / cobol-60 / cob), macsyma (or mac), \
+                 perl (or pl)")),
         }
     }
 }
@@ -179,6 +193,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
         "cobol" | "cob" | "cbl" => Some(Language::Cobol60),
         "mac" => Some(Language::Macsyma),
+        "pl" => Some(Language::Perl),
         _ => None,
     }
 }
@@ -347,6 +362,10 @@ pub enum LangAotError {
     /// the 8080 (1974) is the 8008's direct successor and the CPU inside
     /// the Altair 8800.
     Intel8080BackendError(String),
+    /// The module uses LANG83 standard operations the target backend refuses
+    /// (`check_module_for`). Raised before any lowering pass runs, so a refused
+    /// op is never miscompiled.
+    UnsupportedOps(UnsupportedOps),
 }
 
 impl fmt::Display for LangAotError {
@@ -379,6 +398,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Intel8051BackendError(m) => write!(f, "intel8051: {m}"),
             LangAotError::Intel8086BackendError(m) => write!(f, "intel8086: {m}"),
             LangAotError::SparcV8BackendError(m) => write!(f, "sparc-v8: {m}"),
+            LangAotError::UnsupportedOps(e) => write!(f, "{e}"),
         }
     }
 }
@@ -391,6 +411,10 @@ impl From<twig_aot::AotError> for LangAotError {
 
 impl From<std::io::Error> for LangAotError {
     fn from(e: std::io::Error) -> Self { LangAotError::Io(e) }
+}
+
+impl From<UnsupportedOps> for LangAotError {
+    fn from(e: UnsupportedOps) -> Self { LangAotError::UnsupportedOps(e) }
 }
 
 /// Compile source text to an [`IIRModule`] using the matching frontend.
@@ -497,6 +521,23 @@ pub fn compile_source_to_iir(
                     message: format!("{e}"),
                 })
         }
+        // LANG84 phase 4a: the default release only. `compile_source_at` in
+        // the frontend already selects any checked inventory release; the
+        // lang-aot side of that (`compile_source_to_iir_at`, `--lang
+        // perl@<release>`) is phase 4b. The module uses only LANG83 registry
+        // ops — `print` is `write_i64` — so no backend needs a Perl case.
+        Language::Perl => {
+            perl_iir_compiler::compile_source_at(
+                source,
+                None,
+                module_name,
+                &perl_iir_compiler::FrontendBudgets::default(),
+            )
+            .map_err(|e| LangAotError::FrontendError {
+                language,
+                message: format!("{e}"),
+            })
+        }
     }
 }
 
@@ -522,6 +563,8 @@ pub fn compile_source_to_iir(
 /// * `FrontendError` — the language-specific frontend rejected the source.
 /// * `LlvmBackendError` — the IIR contained an op or type the LLVM backend
 ///   does not yet handle (the error message names the function and op).
+/// * `UnsupportedOps` — the module uses a LANG83 registry op the LLVM
+///   backend declares `Refused`.
 /// * `Io` — failed to read the input or write the output.
 pub fn compile_file_to_llvm_ir(
     src: &Path,
@@ -531,6 +574,11 @@ pub fn compile_file_to_llvm_ir(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
+    // LANG83: this textual-IR path lowers directly rather than through
+    // `compile_iir_to_llvm`, so it must run the registry check itself —
+    // every code-generation entry point refuses unsupported ops before
+    // any backend sees them.
+    check_module_for(Backend::Llvm, &module)?;
 
     // Use the stem as both the LLVM module-id and the default triple stays
     // at iir-to-llvm's deterministic `x86_64-unknown-linux-gnu` so test
@@ -663,7 +711,23 @@ pub fn compile_source_to_llvm_with_target(
     module_name: &str,
     target_triple: &str,
 ) -> Result<String, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, module_name)?;
+    let module = compile_source_to_iir(language, source, module_name)?;
+    compile_iir_to_llvm(module, module_name, target_triple)
+}
+
+/// The IIR-level LLVM entry point: an already-built [`IIRModule`] → textual
+/// LLVM IR for `target_triple`. [`compile_source_to_llvm_with_target`] is this
+/// plus the frontend; a test or tool that builds IIR directly (the LANG83
+/// conformance corpus) calls it without a source language.
+///
+/// Runs [`check_module_for`] first (LANG83), so a standard op LLVM refuses is a
+/// typed [`LangAotError::UnsupportedOps`] before any lowering pass runs.
+pub fn compile_iir_to_llvm(
+    mut module: IIRModule,
+    module_name: &str,
+    target_triple: &str,
+) -> Result<String, LangAotError> {
+    check_module_for(Backend::Llvm, &module)?;
     // E6d-8: lower dynamic `global_get`/`global_set` → `global_load`/`global_store`
     // before the value-model passes (as the native twig-aot path does).
     iir_builtin_lowering::lower_global_io(&mut module);
@@ -796,7 +860,13 @@ pub fn compile_source_to_wasm(
     source: &str,
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, module_name)?;
+    compile_iir_to_wasm(compile_source_to_iir(language, source, module_name)?)
+}
+
+/// The IIR-level WASM entry point: an already-built [`IIRModule`] → encoded
+/// wasm bytes. Runs [`check_module_for`] first (LANG83).
+pub fn compile_iir_to_wasm(mut module: IIRModule) -> Result<Vec<u8>, LangAotError> {
+    check_module_for(Backend::Wasm, &module)?;
     // E6d-8: lower `call_builtin "global_get"/"global_set"` (a forward-referenced
     // or closure-captured Twig `define`) to `global_load`/`global_store` — the
     // typed-global ops the code-gen backends accept. The native `twig-aot`
@@ -891,12 +961,28 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
     // `Int`, but `lstore` would tag it as `Long` in the verifier's type state →
     // `VerifyError: type mismatch` when the subsequent `iload` reads an `Int`
     // slot that the verifier sees as `Long`. (BA-JVM-INPUT)
-    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "input_i64", "input_more"];
+    //
+    // LANG83 PR1b: `write_i64` is a wide builtin like `print_i64`, and the
+    // `i64_div_floor` / `i64_mod_floor` ops are *defined* on i64 (their
+    // `MIN / -1` edge is an i64 fact) — narrowing a module that uses them to
+    // i32 would change their semantics, so they keep the module wide too.
+    //
+    // LANG83 PR4: the same holds for the overflow-checked `i64_*_ovf` ops,
+    // whose trap fires at the i64 bounds. Rather than extend a hand-kept list
+    // (which is how a new i64 op gets forgotten), the op side is *derived*:
+    // every registry Op with an `i64` operand type is wide-model evidence.
+    const WIDE_I64_BUILTINS: &[&str] = &["print_i64", "write_i64", "input_i64", "input_more"];
+    let is_wide_i64_op = |op: &str| {
+        interpreter_ir::op_registry::lookup(op).is_some_and(|spec| {
+            spec.kind == interpreter_ir::op_registry::OpKind::Op && spec.operand_types.contains(&"i64")
+        })
+    };
     let module_prints = module.functions.iter().any(|f| {
         f.instructions.iter().any(|i| {
-            i.op == "call_builtin"
-                && matches!(i.srcs.first(),
-                    Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str()))
+            is_wide_i64_op(&i.op)
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(),
+                        Some(interpreter_ir::Operand::Var(n)) if WIDE_I64_BUILTINS.contains(&n.as_str())))
         })
     });
     // Narrowing an explicit i64 constant that does not fit in i32 is a semantic
@@ -1058,7 +1144,16 @@ pub fn compile_source_to_jvm_class(
     source: &str,
     class_name: &str,
 ) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, class_name)?;
+    compile_iir_to_jvm_class(compile_source_to_iir(language, source, class_name)?, class_name)
+}
+
+/// The IIR-level JVM entry point: an already-built [`IIRModule`] → a
+/// [`iir_to_jvm_class_file::JvmClassFile`]. Runs [`check_module_for`] first (LANG83).
+pub fn compile_iir_to_jvm_class(
+    mut module: IIRModule,
+    class_name: &str,
+) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
+    check_module_for(Backend::Jvm, &module)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
     // Closures first: `lower_closures_to_heap` emits `cons`/`car`/`cdr`, which
@@ -1192,7 +1287,18 @@ pub fn compile_source_to_cil_artifact(
     source: &str,
     name: &str,
 ) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, name)?;
+    compile_iir_to_cil_artifact(compile_source_to_iir(language, source, name)?, name)
+}
+
+/// The IIR-level binary-CIL entry point (the in-repo `clr-simulator` path).
+/// Runs [`check_module_for`] first (LANG83). The CLR column's `op_support`
+/// describes the textual path; this narrower binary path still reports its own
+/// gaps through `ClrBackendError`.
+pub fn compile_iir_to_cil_artifact(
+    mut module: IIRModule,
+    name: &str,
+) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
+    check_module_for(Backend::Clr, &module)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
     // The managed value-model pipeline — the same backend-agnostic structural
@@ -1237,6 +1343,7 @@ pub fn compile_source_to_typed_cil_artifact(
     name: &str,
 ) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
     let module = compile_source_to_iir(language, source, name)?;
+    check_module_for(Backend::Clr, &module)?;
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
     iir_to_cil_bytecode::lower_typed_scalars_to_cil(&module, &config)
         .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
@@ -1255,7 +1362,13 @@ pub fn compile_source_to_cil_text(
     source: &str,
     name: &str,
 ) -> Result<String, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, name)?;
+    compile_iir_to_cil_text(compile_source_to_iir(language, source, name)?, name)
+}
+
+/// The IIR-level textual-CIL entry point (real `ilasm` + CoreCLR, the CLR
+/// column). Runs [`check_module_for`] first (LANG83).
+pub fn compile_iir_to_cil_text(mut module: IIRModule, name: &str) -> Result<String, LangAotError> {
+    check_module_for(Backend::Clr, &module)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
     // The same managed value-model pipeline the binary CIL path uses, so the
@@ -1345,7 +1458,13 @@ pub fn compile_source_to_beam(
     source: &str,
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
-    let mut module = compile_source_to_iir(language, source, module_name)?;
+    compile_iir_to_beam(compile_source_to_iir(language, source, module_name)?, module_name)
+}
+
+/// The IIR-level BEAM entry point: an already-built [`IIRModule`] → `.beam`
+/// bytes. Runs [`check_module_for`] first (LANG83).
+pub fn compile_iir_to_beam(mut module: IIRModule, module_name: &str) -> Result<Vec<u8>, LangAotError> {
+    check_module_for(Backend::Beam, &module)?;
     // E6d-8: dynamic global builtins → typed global_load/global_store.
     iir_builtin_lowering::lower_global_io(&mut module);
     // BEAM uses the NATIVE Erlang-terms value model, not the managed structural
@@ -2642,7 +2761,22 @@ pub fn compile_file_to_linux_executable(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
-    twig_aot::compile_module_to_linux_executable(&module, out)?;
+    compile_iir_to_host_executable(&module, out)
+}
+
+/// The IIR-level native entry point: an already-built [`IIRModule`] → a native
+/// executable for this host (x86-64 ELF on Linux, x86-64 PE on Windows, ARM64
+/// Mach-O on macOS — see [`Backend::native_host`]). Runs [`check_module_for`]
+/// first (LANG83).
+#[cfg(any(target_os = "linux", target_os = "windows", target_os = "macos"))]
+pub fn compile_iir_to_host_executable(module: &IIRModule, out: &Path) -> Result<(), LangAotError> {
+    check_module_for(Backend::native_host(), module)?;
+    #[cfg(target_os = "linux")]
+    twig_aot::compile_module_to_linux_executable(module, out)?;
+    #[cfg(target_os = "windows")]
+    twig_aot::compile_module_to_windows_executable(module, out)?;
+    #[cfg(target_os = "macos")]
+    twig_aot::compile_module_to_macos_executable(module, out)?;
     Ok(())
 }
 
@@ -2656,8 +2790,7 @@ pub fn compile_file_to_windows_executable(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
-    twig_aot::compile_module_to_windows_executable(&module, out)?;
-    Ok(())
+    compile_iir_to_host_executable(&module, out)
 }
 
 /// macOS ARM64: source → IIR → Mach-O → executable (Unix host only).
@@ -2670,6 +2803,9 @@ pub fn compile_file_to_macos_executable(
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_source_to_iir(language, &source, stem)?;
+    // Always the ARM64 Mach-O path (on any Unix host), so check the AArch64
+    // declaration explicitly rather than `Backend::native_host()`.
+    check_module_for(Backend::Aarch64, &module)?;
     twig_aot::compile_module_to_macos_executable(&module, out)?;
     Ok(())
 }
@@ -2965,6 +3101,42 @@ mod tests {
             instr.op == "mul" && instr.dest.as_deref() == Some("product")
         }).expect("the RNG multiplies its state before modulo");
         assert_eq!(product.type_hint, "i64", "small RNG operands can produce a wide product");
+    }
+
+    /// LANG83: every registry op defined on i64 (PR1b's floor ops, PR4's
+    /// `i64_*_ovf`) keeps a module on the JVM's wide model even with no
+    /// `print_i64` — the evidence is derived from the registry, so a module
+    /// whose only i64 fact is the op itself is not narrowed to `int`. A module
+    /// with only width-agnostic ops still narrows.
+    #[test]
+    fn jvm_concretization_keeps_modules_using_i64_registry_ops_wide() {
+        use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+        let module_with = |op: &str| {
+            let v = |n: &str| Operand::Var(n.into());
+            let mut m = IIRModule::new("m", "test");
+            m.add_or_replace(IIRFunction::new(
+                "main",
+                vec![],
+                "i64",
+                vec![
+                    IIRInstr::new("const", Some("a".into()), vec![Operand::Int(2_000_000_000)], "i64"),
+                    IIRInstr::new(op, Some("r".into()), vec![v("a"), v("a")], "i64"),
+                    IIRInstr::new("ret", None, vec![v("r")], "i64"),
+                ],
+            ));
+            m
+        };
+        for op in ["i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_div_floor", "i64_mod_floor"] {
+            let mut m = module_with(op);
+            concretize_scalar_any_for_jvm(&mut m);
+            let main = m.get_function("main").unwrap();
+            assert_eq!(main.return_type, "i64", "{op} keeps the module wide");
+            assert!(main.instructions.iter().all(|i| i.type_hint == "i64"), "{op}: {:?}", main.instructions);
+        }
+        // The legacy, width-agnostic `add` carries no such evidence.
+        let mut m = module_with("add");
+        concretize_scalar_any_for_jvm(&mut m);
+        assert_eq!(m.get_function("main").unwrap().return_type, "i32", "plain add still narrows");
     }
 
     #[test]

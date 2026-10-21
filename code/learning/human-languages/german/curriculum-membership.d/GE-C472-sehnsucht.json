@@ -1,0 +1,11 @@
+{
+  "id": "GE-C472-sehnsucht",
+  "pathSegment": "GE-PATH-472-SEHNSUCHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-472-SEHNSUCHT",
+      "order": 1
+    }
+  ]
+}

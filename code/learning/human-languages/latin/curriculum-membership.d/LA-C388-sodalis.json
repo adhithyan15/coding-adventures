@@ -1,0 +1,11 @@
+{
+  "id": "LA-C388-sodalis",
+  "pathSegment": "LA-PATH-388-MUNICEPS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-388-MUNICEPS",
+      "order": 3
+    }
+  ]
+}

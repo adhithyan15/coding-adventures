@@ -1,0 +1,11 @@
+{
+  "id": "LA-C550-perlego",
+  "pathSegment": "LA-PATH-550-LIBR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-550-LIBR",
+      "order": 3
+    }
+  ]
+}

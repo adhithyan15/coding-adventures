@@ -1,0 +1,11 @@
+{
+  "id": "LA-C447-scalpo",
+  "pathSegment": "LA-PATH-447-CIMEX",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-447-CIMEX",
+      "order": 2
+    }
+  ]
+}

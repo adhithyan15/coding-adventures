@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Es dauert lange",
+  "label": "ch:ge-es-dauert-lange",
+  "canDo": "I can say how long things went on: to last, to pass, to go on, to continue and to interrupt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C267-unterbrechen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can say how long things went on: to last, to pass, to go on, to continue and to interrupt.",
+    "assesses": [
+      "GE-LEX-C267-DAUERN-03",
+      "GE-LEX-C267-DAUERN-04",
+      "GE-LEX-C267-DAUERN-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-315-DEUIL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-315-DEUIL"
+  ],
+  "after": []
+}

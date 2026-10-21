@@ -1,0 +1,11 @@
+{
+  "id": "GE-C344-beeinflussen",
+  "pathSegment": "GE-PATH-344-EINFLUSS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-344-EINFLUSS",
+      "order": 0
+    }
+  ]
+}

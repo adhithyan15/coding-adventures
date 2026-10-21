@@ -1,0 +1,11 @@
+{
+  "id": "GE-C285-betrueger",
+  "pathSegment": "GE-PATH-285-BETRUG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-285-BETRUG",
+      "order": 2
+    }
+  ]
+}

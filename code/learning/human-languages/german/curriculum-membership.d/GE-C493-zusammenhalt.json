@@ -1,0 +1,11 @@
+{
+  "id": "GE-C493-zusammenhalt",
+  "pathSegment": "GE-PATH-493-ZUNEIGUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-493-ZUNEIGUNG",
+      "order": 4
+    }
+  ]
+}

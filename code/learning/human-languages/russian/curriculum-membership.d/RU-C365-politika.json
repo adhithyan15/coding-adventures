@@ -1,0 +1,11 @@
+{
+  "id": "RU-C365-politika",
+  "pathSegment": "RU-PATH-365-VLAST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-365-VLAST",
+      "order": 3
+    }
+  ]
+}

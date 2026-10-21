@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Roadbed, Flint, Kerb, Wheel rut, To pave",
+  "label": "ch:la-roadbed-flint-kerb-wheel-rut-to-pave",
+  "canDo": "I can describe how a Roman road is built: the raised roadbed, the flint paving, the raised kerb, the wheel ruts, and paving a road.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C425-sterno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can describe how a Roman road is built: the raised roadbed, the flint paving, the raised kerb, the wheel ruts, and paving a road.",
+    "assesses": [
+      "LA-LEX-C425-AGGER-03",
+      "LA-LEX-C425-AGGER-04",
+      "LA-LEX-C425-AGGER-05"
+    ]
+  }
+}

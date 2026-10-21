@@ -1,0 +1,11 @@
+{
+  "id": "FR-C399-bloquer",
+  "pathSegment": "FR-PATH-399-PANNE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-399-PANNE",
+      "order": 2
+    }
+  ]
+}

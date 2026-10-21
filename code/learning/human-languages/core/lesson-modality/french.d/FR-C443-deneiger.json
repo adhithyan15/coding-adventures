@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C443-deneiger",
+    "language": "french",
+    "chapter": 443,
+    "sequence": 24540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9505f5ab97a7fa0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:8acb8bc77227a1d2",
+  "lessonIds": [
+    "FR-C483-nausee",
+    "FR-C483-vomir",
+    "FR-C483-migraine",
+    "FR-C483-vertige",
+    "FR-C483-digerer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch483.txt",
+  "json": "french/narration/ch483.json",
+  "textHash": "fnv1a64:e9abe91070e8a44e",
+  "jsonHash": "fnv1a64:2fc80475df26e71d",
+  "findings": []
+}

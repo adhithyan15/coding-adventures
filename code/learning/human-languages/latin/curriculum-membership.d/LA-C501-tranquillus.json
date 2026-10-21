@@ -1,0 +1,11 @@
+{
+  "id": "LA-C501-tranquillus",
+  "pathSegment": "LA-PATH-501-AFFE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-501-AFFE",
+      "order": 3
+    }
+  ]
+}

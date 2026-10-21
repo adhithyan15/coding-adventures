@@ -1,0 +1,19 @@
+{
+  "chapter": 498,
+  "title": "Hope, despair and trust",
+  "label": "ch:la-hope-despair-and-trust",
+  "canDo": "I can talk about despair, trust and distrust.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C498-credulus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about despair, trust and distrust.",
+    "assesses": [
+      "LA-LEX-C498-SPES-03",
+      "LA-LEX-C498-SPES-04",
+      "LA-LEX-C498-SPES-05"
+    ]
+  }
+}

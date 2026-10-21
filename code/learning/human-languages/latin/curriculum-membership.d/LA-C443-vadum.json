@@ -1,0 +1,11 @@
+{
+  "id": "LA-C443-vadum",
+  "pathSegment": "LA-PATH-443-FLUCTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-443-FLUCTUS",
+      "order": 2
+    }
+  ]
+}

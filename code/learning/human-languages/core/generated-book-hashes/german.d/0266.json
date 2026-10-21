@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:9f7344c0d3f285d7",
+  "lessonIds": [
+    "GE-C266-ploetzlich",
+    "GE-C266-unerwartet",
+    "GE-C266-allmaehlich",
+    "GE-C266-rechtzeitig",
+    "GE-C266-zugleich"
+  ],
+  "tex": "german/book/chapters/ch266-auf-einmal.tex"
+}

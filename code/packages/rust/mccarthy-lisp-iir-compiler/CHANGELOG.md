@@ -1,5 +1,60 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## 0.9.0 - Unreleased - walk the parse tree, not the typed AST (LANG84)
+
+LANG84 decision 6: *the IIR compiler walks the parse tree*. No hand-written
+code may turn the CST into an owned typed AST before IIR compilation. This
+crate broke that rule. `compile_source` called `mccarthy_lisp_parser::parse`,
+which ran `parse_to_cst` and then `extract_program` to build a
+`Vec<LispExpr>`, and the compiler lowered those `LispExpr` values.
+
+* **Input is now the `GrammarASTNode` CST.** `compile_source` calls
+  `parse_to_cst` and hands the tree to the new public
+  `compile_ast(&GrammarASTNode, module_name)`, named like the other CST
+  compilers (`algol-iir-compiler`, `oct-iir-compiler`, …). The crate no longer
+  names `parse`, `extract_program` or `LispExpr`.
+* **Breaking:** `compile_forms(&[LispExpr], module_name)` is removed. It was
+  the typed-AST entry point, and no crate in the workspace called it. Use
+  `compile_ast`.
+* **Reading S-expressions off the tree.** `Sx` is a borrowed handle on a
+  `sexpr` node, or on the implicit `QUOTE` that a `'` stands for. `Shape`
+  classifies it as nil, symbol, integer or pair. A pair is a `Cell` cursor:
+  a child index inside a `list_body`, or one of the two cells of a `quoted`
+  node. `car` and `cdr` step through the CST on demand, and no tree is
+  built. So the compiler now handles a `quoted` node itself, as the pair
+  `QUOTE · (X · NIL)`. It reaches the same `QUOTE` arm as a spelled-out
+  `(QUOTE X)`. Dotted spellings such as `(CAR . ('(A B)))` read as the same
+  call as before. Free-variable capture analysis also runs over the CST
+  (LANG84 C1.7). The `QUOTE` subtree skip covers both spellings.
+* **Same errors.** A new validation pass, `check_cst`, rejects what
+  `extract_program` used to reject. That covers a non-`program` root,
+  malformed `sexpr`/`atom` nodes, an `INTEGER` outside `i64`, and nesting
+  past `MAX_AST_DEPTH`. The messages are the same `parse: parse error at
+  L:C: …` texts, and errors come in the same depth-first order, so an
+  overflowing literal is still reported before any lowering error.
+* **Symbols keep the lexer's alphabet.** `compile_ast` is public, so a
+  hand-built tree could put any text in a `SYMBOL` token, `*CLOSURE*`
+  included, and then `'(*CLOSURE* LAMBDA-0)` would forge a closure value.
+  `check_cst` now holds every `SYMBOL` to the lexer's `[A-Z][A-Z0-9-]*`,
+  so the closure tag stays un-forgeable for CST callers too. Source text
+  was never affected.
+* **Same IIR.** The old and new compilers were run over 4,286 inputs and their
+  `Debug` dumps diffed byte for byte, with no differences. The inputs were
+  every string literal in this crate's tests, the parser and VM crates, and
+  every `lang-aot` test file that mentions McCarthy, plus about 100
+  hand-written edge cases: nested quotes, dotted calls, `QUOTE`/`LAMBDA`/`COND`
+  used as parameter names, comments, `i64` bounds, and deep or flat nesting.
+  Of these, 302 compiled and the rest produced errors, which also matched.
+* **Tests.** The existing unit (42), `run_e2e` (52) and doc tests pass
+  unchanged. The new `tests/cst_walk.rs` (20 tests) adds a source check that
+  `src/lib.rs` never names `extract_program`/`LispExpr` and imports only
+  `parse_to_cst`/`ParseError`/`MAX_AST_DEPTH` from the parser crate. It also
+  covers `compile_ast` against `compile_source`, hand-built malformed and
+  over-deep trees, and end-to-end CST edge cases: nested quotes, the empty
+  list, dotted pairs, dotted call spellings, and comments.
+* New direct dependency: `parser`, for the `GrammarASTNode`/`ASTNodeOrToken`
+  types.
+
 ## 0.8.0 - 2026-08-13 - emit `ref<any>` for tagged values
 
 The frontend stamped bare `any` on every tagged `LispyValue` — parameters, lambda

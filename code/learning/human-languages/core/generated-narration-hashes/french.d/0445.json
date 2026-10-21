@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:61df235f0d7b7e01",
+  "lessonIds": [
+    "FR-C445-quincaillerie",
+    "FR-C445-droguerie",
+    "FR-C445-papeterie",
+    "FR-C445-mercerie",
+    "FR-C445-caviste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch445.txt",
+  "json": "french/narration/ch445.json",
+  "textHash": "fnv1a64:c80caaa48fc65531",
+  "jsonHash": "fnv1a64:8a3fa2c26b6a4d65",
+  "findings": []
+}

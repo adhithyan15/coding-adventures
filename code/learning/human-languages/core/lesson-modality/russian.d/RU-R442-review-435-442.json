@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R442-review-435-442",
+    "language": "russian",
+    "chapter": 442,
+    "sequence": 25240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e2a81b7c9d68c9d"
+  },
+  "findings": []
+}

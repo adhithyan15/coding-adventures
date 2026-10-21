@@ -1,0 +1,11 @@
+{
+  "id": "FR-C382-transgresser",
+  "pathSegment": "FR-PATH-382-INFRACTION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-382-INFRACTION",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-R455-revision-448-455",
+  "pathSegment": "FR-PATH-455-RANDONNEE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-455-RANDONNEE",
+      "order": 5
+    }
+  ]
+}

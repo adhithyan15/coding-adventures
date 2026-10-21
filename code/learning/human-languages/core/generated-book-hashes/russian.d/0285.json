@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:7a1ef1575bea0bbc",
+  "lessonIds": [
+    "RU-C285-sobytiye",
+    "RU-C285-proisshestviye",
+    "RU-C285-khronika",
+    "RU-C285-svodka",
+    "RU-C285-itog"
+  ],
+  "tex": "russian/book/chapters/ch285-events-and-incidents.tex"
+}

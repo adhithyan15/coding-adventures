@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 468,
+  "title": "To dye, Purple shellfish, Purple dye, Paint, Paintbrush",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3605d4e34869a4f1",
+  "lessons": [
+    {
+      "id": "LA-C468-tingo",
+      "sequence": 24900,
+      "title": "tingō, tingere — to dye, to colour; to wet, to dip",
+      "headword": "tingō, tingere",
+      "romanization": "tingō, tingere",
+      "gloss": "to dye, to colour; to wet, to dip",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa41535c1850b711",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a tanner, then the Latin for a furrier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tingō, tingere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tingō, tingere — \"to dye, to colour; to wet, to dip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Servus lānam in aquā calidā tingit. The slave dyes the wool in hot water."
+            },
+            {
+              "kind": "speech",
+              "text": "tingō, tingere, tīnxī, tīnctum, also spelled tinguō. English tinge, tint and tincture come from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tingō is inherited from PIE teng- 'to dip, to soak' (EtymDB), and Greek tengō 'to wet' is a cousin. English tinge, tint and tincture come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tingō, tingere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tingō, tingere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tingō, tingere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tingō, tingere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tingō, tingere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tingō, tingere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a tanner, then the Latin for a furrier, then say tingō, tingere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a tanner, then the Latin for a furrier, then say *tingō, tingere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tingō, tingere mean? (\"To dye, to colour; to wet, to dip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C468-murex",
+      "sequence": 24910,
+      "title": "mūrex, mūricis — the purple shellfish, murex; purple dye",
+      "headword": "mūrex, mūricis",
+      "romanization": "mūrex, mūricis",
+      "gloss": "the purple shellfish, murex; purple dye",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a7c9bf450f1070c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a furrier, then the Latin for to dye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mūrex, mūricis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mūrex, mūricis — \"the purple shellfish, murex; purple dye\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ex mūrice color purpureus fit. A purple colour is made from the murex shell."
+            },
+            {
+              "kind": "speech",
+              "text": "Third declension, masculine: mūrex, mūricis m. Thousands of these sea snails went into a little purple dye. English keeps murex."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mūrex is usually traced to Greek myax 'sea mussel' (EtymDB); Lewis & Short give the sense but no source, so the path is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūrex, mūricis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūrex, mūricis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūrex, mūricis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūrex, mūricis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mūrex, mūricis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mūrex, mūricis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a furrier, then the Latin for to dye, then say mūrex, mūricis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a furrier, then the Latin for to dye, then say *mūrex, mūricis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mūrex, mūricis mean? (\"The purple shellfish, murex; purple dye\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C468-ostrum",
+      "sequence": 24920,
+      "title": "ostrum, ostrī — purple dye; purple cloth",
+      "headword": "ostrum, ostrī",
+      "romanization": "ostrum, ostrī",
+      "gloss": "purple dye; purple cloth",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04297b185b432ac0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to dye, then the Latin for the purple shellfish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ostrum, ostrī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ostrum, ostrī — \"purple dye; purple cloth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dīves vestem ostrō tīnctam gerit. The rich man wears a garment dyed with purple."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: ostrum, ostrī n. A word of poetry for the dye and for cloth coloured with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ostrum was borrowed from Greek ostreon 'oyster, shellfish' (EtymDB; Lewis & Short), since the dye came from a shellfish."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ostrum, ostrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ostrum, ostrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ostrum, ostrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ostrum, ostrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ostrum, ostrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ostrum, ostrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to dye, then the Latin for the purple shellfish, then say ostrum, ostrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to dye, then the Latin for the purple shellfish, then say *ostrum, ostrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ostrum, ostrī mean? (\"Purple dye; purple cloth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C468-pigmentum",
+      "sequence": 24930,
+      "title": "pigmentum, pigmentī — a paint, a colour, a pigment",
+      "headword": "pigmentum, pigmentī",
+      "romanization": "pigmentum, pigmentī",
+      "gloss": "a paint, a colour, a pigment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ad2eecff1f3bae3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for the purple shellfish, then the Latin for purple dye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pigmentum, pigmentī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pigmentum, pigmentī — \"a paint, a colour, a pigment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pictor pigmenta in tabulā miscet. The painter mixes his paints on a board."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, neuter: pigmentum, pigmentī n., from pingō 'to paint'. English pigment comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pigmentum is built on pingō 'to paint' with the suffix -mentum (EtymDB; Lewis & Short). English pigment comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pigmentum, pigmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pigmentum, pigmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pigmentum, pigmentī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pigmentum, pigmentī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pigmentum, pigmentī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pigmentum, pigmentī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for the purple shellfish, then the Latin for purple dye, then say pigmentum, pigmentī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for the purple shellfish, then the Latin for purple dye, then say *pigmentum, pigmentī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pigmentum, pigmentī mean? (\"A paint, a colour, a pigment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C468-penicillus",
+      "sequence": 24940,
+      "title": "pēnicillus, pēnicillī — a paintbrush, a fine brush",
+      "headword": "pēnicillus, pēnicillī",
+      "romanization": "pēnicillus, pēnicillī",
+      "gloss": "a paintbrush, a fine brush",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:360f309240472c70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for purple dye, then the Latin for a paint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pēnicillus, pēnicillī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pēnicillus, pēnicillī — \"a paintbrush, a fine brush\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pictor pēnicillō tenuī flōrēs pingit. The painter paints flowers with a fine brush."
+            },
+            {
+              "kind": "speech",
+              "text": "Second declension, masculine: pēnicillus, pēnicillī m. (also pēnicillum n.). English pencil comes from it: the first pencils were fine brushes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pēnicillus is a diminutive of pēniculus 'brush' (Lewis & Short), which first meant 'a little tail', since brushes were made of ox-tails and horse-tails. English pencil comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēnicillus, pēnicillī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēnicillus, pēnicillī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēnicillus, pēnicillī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēnicillus, pēnicillī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pēnicillus, pēnicillī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pēnicillus, pēnicillī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for purple dye, then the Latin for a paint, then say pēnicillus, pēnicillī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for purple dye, then the Latin for a paint, then say *pēnicillus, pēnicillī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pēnicillus, pēnicillī mean? (\"A paintbrush, a fine brush\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

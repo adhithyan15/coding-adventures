@@ -1,0 +1,11 @@
+{
+  "id": "LA-C369-excusatio",
+  "pathSegment": "LA-PATH-369-HORTOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-369-HORTOR",
+      "order": 4
+    }
+  ]
+}

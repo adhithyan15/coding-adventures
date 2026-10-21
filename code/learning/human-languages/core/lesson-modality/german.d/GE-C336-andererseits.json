@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C336-andererseits",
+    "language": "german",
+    "chapter": 336,
+    "sequence": 18340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a18015fed2d3149"
+  },
+  "findings": []
+}

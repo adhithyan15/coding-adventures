@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:9447bdb9f88a315e",
+  "lessonIds": [
+    "GE-C483-gips",
+    "GE-C483-kruecke",
+    "GE-C483-humpeln",
+    "GE-C483-rollstuhl",
+    "GE-C483-heilen"
+  ],
+  "tex": "german/book/chapters/ch483-gips-und-krucken.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-254-MEINUNG",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-254-MEINUNG"
+  ],
+  "after": []
+}

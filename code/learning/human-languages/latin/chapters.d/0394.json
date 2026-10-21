@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Getting Ready",
+  "label": "ch:la-getting-ready",
+  "canDo": "I can say that I prepare, set out, put in order and set about a task, and that I foresee what will come.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "LA-C394-praevideo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can say that I prepare, set out, put in order and set about a task, and that I foresee what will come.",
+    "assesses": [
+      "LA-LEX-C394-APPARO-03",
+      "LA-LEX-C394-APPARO-04",
+      "LA-LEX-C394-APPARO-05"
+    ]
+  }
+}

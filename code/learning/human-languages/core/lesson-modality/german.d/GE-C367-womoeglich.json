@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C367-womoeglich",
+    "language": "german",
+    "chapter": 367,
+    "sequence": 19930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dbc75c4c44c559e"
+  },
+  "findings": []
+}

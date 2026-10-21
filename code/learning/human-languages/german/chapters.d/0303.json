@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Die Beerdigung",
+  "label": "ch:ge-die-beerdigung",
+  "canDo": "I can talk about a death: death, to bury, a funeral, a coffin and a cemetery.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C303-friedhof",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can talk about a death: death, to bury, a funeral, a coffin and a cemetery.",
+    "assesses": [
+      "GE-LEX-C303-BEERDIGUNG-03",
+      "GE-LEX-C303-BEERDIGUNG-04",
+      "GE-LEX-C303-BEERDIGUNG-05"
+    ]
+  }
+}

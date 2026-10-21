@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-411-ACCIDENT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a small road accident: hitting something, bumping into it, the pedestrian, the cyclist and writing up what happened.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C502-anbeissen",
+    "language": "german",
+    "chapter": 502,
+    "sequence": 26860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40adc54d2238f15e"
+  },
+  "findings": []
+}

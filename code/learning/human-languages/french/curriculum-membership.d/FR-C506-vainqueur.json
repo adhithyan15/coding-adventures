@@ -1,0 +1,11 @@
+{
+  "id": "FR-C506-vainqueur",
+  "pathSegment": "FR-PATH-506-RESULTATS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-506-RESULTATS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:5792351978cfab45",
+  "lessonIds": [
+    "GE-C500-sammlung",
+    "GE-C500-muenze",
+    "GE-C500-basteln",
+    "GE-C500-raetsel",
+    "GE-C500-kreuzwortraetsel"
+  ],
+  "tex": "german/book/chapters/ch500-sammeln-und-ratseln.tex"
+}

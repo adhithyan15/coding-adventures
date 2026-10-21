@@ -61,12 +61,14 @@ enum LispExpr {
 }
 ```
 
-Sugar expansions happen in the extractor: `'X` → `(QUOTE X)`, `(A B C)` → `(A . (B . (C . NIL)))`, and `(a . b)` → `Cons(a, b)`.  Public API: `parse(src) -> Result<Vec<LispExpr>, ParseError>`, plus `parse_to_cst` / `extract_program` for tooling.  DoS hardening: `MAX_PAREN_DEPTH = 64` (pre-parse) + `MAX_AST_DEPTH = 64` (extractor).
+Sugar expansions happen in the extractor: `'X` → `(QUOTE X)`, `(A B C)` → `(A . (B . (C . NIL)))`, and `(a . b)` → `Cons(a, b)`.  Public API: `parse(src) -> Result<Vec<LispExpr>, ParseError>`, plus `parse_to_cst` / `extract_program` for tooling.
+
+> **LANG84 update (mccarthy-lisp-iir-compiler 0.9.0).** The typed `LispExpr` AST is no longer on the IIR path.  LANG84 C2 forbids a hand-written CST → owned-AST lift before IIR compilation ("the IIR compiler walks the parse tree"), so the IIR compiler now calls `parse_to_cst` and walks the `GrammarASTNode` directly; it performs the two sugar readings (`'X` as `(QUOTE X)`, a `list_body` as a cons chain) itself, lazily, over borrowed CST positions.  `parse`, `extract_program` and `LispExpr` are unchanged and stay public for other consumers.  DoS hardening: `MAX_PAREN_DEPTH = 64` (pre-parse) + `MAX_AST_DEPTH = 64` (extractor).
 
 > **L1 divergence note.** #4967 first merged this frontend as a *hand-written* lexer (bespoke `Token`/`Loc`/`LexError` enums, a byte-at-a-time tokenizer) and a *hand-written* recursive-descent parser (with bespoke `ParseError` variants `StrayDot`, `MultipleDotsInList`, …).  That violated `feedback_no_handwritten_lexers_parsers`.  The follow-up rewrite (this spec revision) deleted both hand-written implementations in favour of the grammar-driven wrappers above and authored the two `code/grammars/mccarthy_lisp.*` files.  The `LispExpr` AST shape is unchanged, so L2 is unaffected.  `MAX_PAREN_DEPTH` dropped from 256 → 64 because the shared `GrammarParser` uses much more stack per paren than the old hand-written descent did.
 
 ### `mccarthy-lisp-iir-compiler`
-Source → `IIRModule`.  Lowering shape:
+Source → `IIRModule`.  **Input:** since v0.9.0 the compiler's only input is the `GrammarASTNode` CST from `mccarthy_lisp_parser::parse_to_cst` (public entry points `compile_source(src, name)` and `compile_ast(&GrammarASTNode, name)`; the former `compile_forms(&[LispExpr], name)` was removed).  A validation pass over the CST rejects what the old extractor rejected (`i64` overflow, `MAX_AST_DEPTH`, malformed trees) with the same `parse:` messages, and the emitted IIR is identical to the pre-0.9 typed-AST pipeline.  Lowering shape (original plan; the shipped lowering is documented in the crate README):
 
 | Lisp form | IIR ops |
 |-----------|---------|
@@ -165,9 +167,9 @@ This is the heart of the user-facing ask: *get Lisp all the way through AOT, VM,
 ```text
 McCarthy source
    │  mccarthy-lisp-lexer  (GrammarLexer)        ← L1 ✓ grammar-driven
-   ▼  mccarthy-lisp-parser (GrammarParser → LispExpr)
-LispExpr AST
-   │  mccarthy-lisp-iir-compiler                  ← L2
+   ▼  mccarthy-lisp-parser (GrammarParser, parse_to_cst)
+GrammarASTNode CST
+   │  mccarthy-lisp-iir-compiler                  ← L2 (walks the CST; LANG84)
    ▼
 IIRModule  ──────────────────────────────────────────────────┐
    │                                                          │

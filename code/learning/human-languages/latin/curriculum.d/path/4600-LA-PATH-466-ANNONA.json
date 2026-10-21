@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-466-ANNONA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-466-ANNONA"
+  ],
+  "after": []
+}

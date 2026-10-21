@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "Une agression",
+  "label": "ch:fr-une-agression",
+  "canDo": "I can report an attack: the assault, attacking, the attacker, threatening and a threat.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C289-menace",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can report an attack: the assault, attacking, the attacker, threatening and a threat.",
+    "assesses": [
+      "FR-LEX-C289-AGRESSION-03",
+      "FR-LEX-C289-AGRESSION-04",
+      "FR-LEX-C289-AGRESSION-05"
+    ]
+  }
+}

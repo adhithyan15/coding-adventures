@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 384,
+  "title": "Cramming and crib sheets",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ad1b5adbfa77eb32",
+  "lessons": [
+    {
+      "id": "RU-C384-zubrit",
+      "sequence": 22200,
+      "title": "зубрить (zubrít) — to cram, to learn by rote",
+      "headword": "зубрить",
+      "romanization": "zubrít",
+      "gloss": "to cram, to learn by rote",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40ef5c9465dc3c64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a faculty, then the Russian for a student grant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: зубрить",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "зубрить (zubrít) — \"to cram, to learn by rote\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Перед экзаменом он зубрил всю ночь. Péred ekzámenom on zubríl vsyu noch. Before the exam he crammed all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; present зубрю, зубришь; perfective вызубрить. Colloquial."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "зубрить (zubrít) is usually linked with зуб \"a tooth\", inherited from Proto-Slavic zǫbŭ: to gnaw away at a subject until it is learned."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zubrít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zubrít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zubrít, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zubrít*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zubrít",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zubrít*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a faculty, then the Russian for a student grant, then say zubrít again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a faculty, then the Russian for a student grant, then say *zubrít* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does зубрить (zubrít) mean? (\"To cram, to learn by rote\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C384-zauchivat",
+      "sequence": 22210,
+      "title": "заучивать (zaúchivat) — to memorise, to learn by heart",
+      "headword": "заучивать",
+      "romanization": "zaúchivat",
+      "gloss": "to memorise, to learn by heart",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d590978287d18b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a student grant, then the Russian for to cram."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: заучивать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "заучивать (zaúchivat) — \"to memorise, to learn by heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мы заучиваем стихи к уроку. My zaúchivayem stikhí k uróku. We learn poems by heart for the lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective заучить. Заучивать слова — to memorise words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "заучивать (zaúchivat) is built from за- and учить \"to teach, to learn\", inherited from Proto-Slavic učiti: to learn a thing until it sticks."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaúchivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaúchivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaúchivat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaúchivat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zaúchivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zaúchivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a student grant, then the Russian for to cram, then say zaúchivat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a student grant, then the Russian for to cram, then say *zaúchivat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does заучивать (zaúchivat) mean? (\"To memorise, to learn by heart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C384-progulivat",
+      "sequence": 22220,
+      "title": "прогуливать (progúlivat) — to skip (classes), to play truant",
+      "headword": "прогуливать",
+      "romanization": "progúlivat",
+      "gloss": "to skip (classes), to play truant",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b4091f25e59fb8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to cram, then the Russian for to memorise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: прогуливать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "прогуливать (progúlivat) — \"to skip (classes), to play truant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он часто прогуливает лекции. On chásto progúlivayet léktsii. He often skips lectures."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective прогулять. Прогул — a missed day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "прогуливать (progúlivat) is built from про- \"past, through\" and гулять \"to walk, to stroll\": to stroll past the lesson instead of going in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "progúlivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *progúlivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "progúlivat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *progúlivat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with progúlivat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *progúlivat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to cram, then the Russian for to memorise, then say progúlivat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to cram, then the Russian for to memorise, then say *progúlivat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does прогуливать (progúlivat) mean? (\"To skip (classes), to play truant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C384-shpargalka",
+      "sequence": 22230,
+      "title": "шпаргалка (shpargálka) — a crib sheet",
+      "headword": "шпаргалка",
+      "romanization": "shpargálka",
+      "gloss": "a crib sheet",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14fde41bcbf4f96f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to memorise, then the Russian for to skip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: шпаргалка",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "шпаргалка (shpargálka) — \"a crib sheet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "На экзамене у него нашли шпаргалку. Na ekzámene u negó nashlí shpargálku. They found a crib sheet on him during the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Colloquial; students often say шпора."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "шпаргалка (shpargálka) is usually traced to Polish szpargał \"an old scrap of paper\"; the further origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shpargálka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shpargálka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shpargálka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shpargálka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shpargálka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shpargálka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to memorise, then the Russian for to skip, then say shpargálka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to memorise, then the Russian for to skip, then say *shpargálka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does шпаргалка (shpargálka) mean? (\"A crib sheet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C384-otvlekatsya",
+      "sequence": 22240,
+      "title": "отвлекаться (otvlekátsya) — to get distracted",
+      "headword": "отвлекаться",
+      "romanization": "otvlekátsya",
+      "gloss": "to get distracted",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58647649c78105af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to skip, then the Russian for a crib sheet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: отвлекаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "отвлекаться (otvlekátsya) — \"to get distracted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Когда я работаю, я часто отвлекаюсь на телефон. Kogdá ya rabótayu, ya chásto otvlekáyus na telefón. When I work, I often get distracted by my phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective отвлечься. Отвлекаться на + accusative — to be distracted by."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "отвлекаться (otvlekátsya) is built from от- \"away\" and влечь \"to drag, to pull\", an inherited Slavic verb: to be pulled away from your work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otvlekátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otvlekátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otvlekátsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otvlekátsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with otvlekátsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *otvlekátsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to skip, then the Russian for a crib sheet, then say otvlekátsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to skip, then the Russian for a crib sheet, then say *otvlekátsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does отвлекаться (otvlekátsya) mean? (\"To get distracted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R384-review-377-384",
+      "sequence": 22250,
+      "title": "Words from chapters 377–384 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 377-384",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:128e8518bf314792",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for to postpone and to change one’s mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to postpone, to change one’s mind, to refuse, to set, to be going to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to postpone, to change one’s mind, to refuse, to set, to be going to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to arrange, an arrangement, an option, an alternative, final",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to arrange, an arrangement, an option, an alternative, final]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spare, in any case, to hesitate, to make up one’s mind, depending on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: spare, in any case, to hesitate, to make up one’s mind, depending on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to predict, to guess, a deadline, permanent, temporary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to predict, to guess, a deadline, permanent, temporary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an exam period, a pass-or-fail test, a seminar, lecture notes, a point",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an exam period, a pass-or-fail test, a seminar, lecture notes, a point]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fail, to retake, a resit, preparation, to prepare oneself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fail, to retake, a resit, preparation, to prepare oneself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "admission, a university applicant, entrance, a faculty, a student grant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: admission, a university applicant, entrance, a faculty, a student grant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cram, to memorise, to skip, a crib sheet, to get distracted",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cram, to memorise, to skip, a crib sheet, to get distracted]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To postpone? (переносить.) To change one’s mind? (передумывать.) To refuse? (отказываться.) To set? (назначать.) To be going to? (собираться.) To arrange? (договариваться.) An arrangement? (договорённость.) An option? (вариант.) An alternative? (альтернатива.) Final? (окончательный.) Spare? (запасной.) In any case? (в любом случае.) To hesitate? (колебаться.) To make up one’s mind? (решаться.) Depending on? (в зависимости от.) To predict? (предсказывать.) To guess? (угадывать.) A deadline? (дедлайн.) Permanent? (постоянный.) Temporary? (временный.) An exam period? (сессия.) A pass-or-fail test? (зачёт.) A seminar? (семинар.) Lecture notes? (конспект.) A point? (балл.) To fail? (провалить.) To retake? (пересдавать.) A resit? (пересдача.) Preparation? (подготовка.) To prepare oneself? (готовиться.) Admission? (поступление.) A university applicant? (абитуриент.) Entrance? (вступительный.) A faculty? (факультет.) A student grant? (стипендия.) To cram? (зубрить (zubrít).) To memorise? (заучивать (zaúchivat).) To skip? (прогуливать (progúlivat).) A crib sheet? (шпаргалка (shpargálka).) To get distracted? (отвлекаться (otvlekátsya).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:4525240bba921d60",
+  "lessonIds": [
+    "GE-C527-trockner",
+    "GE-C527-waescheleine",
+    "GE-C527-waescheklammer",
+    "GE-C527-buegeln",
+    "GE-C527-falten"
+  ],
+  "tex": "german/book/chapters/ch527-wasche-waschen.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C318-traditsiya",
+    "language": "russian",
+    "chapter": 318,
+    "sequence": 18800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b1b278e356b5c92"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Le diplôme",
+  "label": "ch:fr-le-diplome",
+  "canDo": "I can talk about qualifications: a diploma, an exam paper, a grade with honours, a doctorate and a grant.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-C379-bourse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can talk about qualifications: a diploma, an exam paper, a grade with honours, a doctorate and a grant.",
+    "assesses": [
+      "FR-LEX-C379-DIPLOME-03",
+      "FR-LEX-C379-DIPLOME-04",
+      "FR-LEX-C379-DIPLOME-05"
+    ]
+  }
+}

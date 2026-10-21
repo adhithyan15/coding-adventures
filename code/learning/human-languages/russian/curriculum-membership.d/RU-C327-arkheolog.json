@@ -1,0 +1,11 @@
+{
+  "id": "RU-C327-arkheolog",
+  "pathSegment": "RU-PATH-327-KLAD",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-327-KLAD",
+      "order": 0
+    }
+  ]
+}

@@ -44,7 +44,9 @@ writes to a temp file and hands to the system linker at compile time. It has
 two translation units:
 
 - `runtime/twig_runtime.c` — portable I/O + heap helpers (`__twig_print_i64`,
-  `__twig_print_string`, `__twig_putchar`, `__twig_alloc_bytes`, …).
+  `__twig_print_string`, `__twig_putchar`, `__twig_alloc_bytes`, …), plus the
+  LANG83 helpers `__twig_write_i64` (no newline) and `__twig_trap(kind_id)`,
+  which flushes stdout, prints `trap: <kind>` on stderr and aborts.
 - `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
   `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
   plus int box/unbox, implementing `dynval-runtime`'s 3-bit-tagged 64-bit

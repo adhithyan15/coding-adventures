@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Permis ou non",
+  "label": "ch:fr-permis-ou-non",
+  "canDo": "I can say what is authorised or tolerated, talk about permission and tolerance, and say what someone demands.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FR-R381-revision-374-381",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can say what is authorised or tolerated, talk about permission and tolerance, and say what someone demands.",
+    "assesses": [
+      "FR-LEX-C381-AUTORISER-03",
+      "FR-LEX-C381-AUTORISER-04",
+      "FR-LEX-C381-AUTORISER-05"
+    ]
+  }
+}

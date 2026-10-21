@@ -1,0 +1,11 @@
+{
+  "id": "RU-C362-specialist",
+  "pathSegment": "RU-PATH-362-POVYSHENIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-362-POVYSHENIYE",
+      "order": 3
+    }
+  ]
+}

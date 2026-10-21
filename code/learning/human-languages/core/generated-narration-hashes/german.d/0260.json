@@ -1,0 +1,18 @@
+{
+  "language": "german",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:b5e3f0c3038872d4",
+  "lessonIds": [
+    "GE-C260-wenn-falls",
+    "GE-C260-wenn-es-regnet",
+    "GE-C260-es-kommt-darauf-an",
+    "GE-C260-review"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "german/narration/ch260.txt",
+  "json": "german/narration/ch260.json",
+  "textHash": "fnv1a64:06a79619304c0c67",
+  "jsonHash": "fnv1a64:a4d715a589528eb5",
+  "findings": []
+}

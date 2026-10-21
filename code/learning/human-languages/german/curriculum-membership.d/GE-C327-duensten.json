@@ -1,0 +1,11 @@
+{
+  "id": "GE-C327-duensten",
+  "pathSegment": "GE-PATH-327-KOECHELN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-327-KOECHELN",
+      "order": 2
+    }
+  ]
+}

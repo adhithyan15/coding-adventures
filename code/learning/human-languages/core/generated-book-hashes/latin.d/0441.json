@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:6898d0d4b35c3e8c",
+  "lessonIds": [
+    "LA-C441-portus",
+    "LA-C441-navale",
+    "LA-C441-aestuarium",
+    "LA-C441-pharus",
+    "LA-C441-promunturium"
+  ],
+  "tex": "latin/book/chapters/ch441-harbour-dockyard-tidal-inlet-lighthouse-headland.tex"
+}

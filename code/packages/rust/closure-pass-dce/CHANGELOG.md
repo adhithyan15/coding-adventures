@@ -2,6 +2,68 @@
 
 ## [Unreleased]
 
+### Fixed - drop the dead tail after a top-level `throw` (CCR-086, #15923)
+
+`dce_program` now truncates a program's tail after a top-level terminator,
+as `dce_block_statement` does inside blocks, with the same hoisting guard. A
+tail holding any declaration or compound statement is kept whole. This
+matches upstream:
+
+- `throw 1;console.log(1);` → `throw 1;`
+- `throw 1;debugger;` → `throw 1;`, which closes the CCR-053 residual
+- `{throw 1;console.log(1);}` → `throw 1;`
+
+Upstream hoists a dead `var` (`throw 1;var z=1;` → `var z;throw 1;`); that gap
+is shared with CCR-082 and still open.
+
+Three new unit tests cover this.
+
+### Fixed - a nested `break` keeps its switch (#17842)
+
+The constant-discriminant switch collapse stripped only the case's *trailing*
+`break`. A `break` deeper in the case (`if (x) break;`) exited the switch,
+but after the collapse it exited the enclosing loop instead, or failed to
+parse outside one:
+
+```js
+while (c--) { switch (1) { case 1: if (x) break; b(); break; } d(); }
+// collapsed: for(;c--;){if(x)break;b();d()}  -> d() never ran
+```
+
+The collapse is now declined while `has_break_targeting_enclosing` finds
+another unlabelled `break` aimed at the switch. That check doesn't enter
+loops, nested switches or functions. Upstream rewrites the case instead
+(`x||b()`), which is a smaller output we don't produce yet.
+
+Three new unit tests cover this.
+
+### Fixed - drop the dead tail after `continue` and `break` (CCR-082, #15878)
+
+`is_terminator` now includes `ContinueStatement` and `BreakStatement`, labelled
+or not. Each one leaves its statement list unconditionally, so what follows in
+the same block never runs. At SIMPLE and ADVANCED:
+
+- `for(var c=0;c<1;c++){continue;g()}` now empties to `for(var c=0;c<1;c++);`,
+  as upstream does.
+- The CCR-053 residual `for(…){continue;debugger}` matches upstream again.
+
+A dead `var` or `function` still keeps its tail. Upstream instead hoists such
+a `var` into the `for` head; that remains open.
+
+`tail_is_safe_to_truncate` also changed, from the security review: a dead
+`let`/`const` now keeps its tail too. It previously counted as safe to drop,
+but a dead `let x` still binds `x` (in its TDZ) across the whole block. So
+`var x=5; for(;;){ try{log(x)}catch(e){log("TDZ")} break; let x; }` printed
+`TDZ` from source but `5` once compiled. `return` and `throw` tails already had
+this problem on main.
+
+Tests:
+
+- Five new unit tests: `continue`, labelled `continue`, statements before the
+  terminator, `break`, and the hoisting guard.
+- The upstream-ported `drops_code_after_break_in_loop_block` (gap-152) is no
+  longer ignored.
+
 ### Fixed - reject unrecordable deletion provenance (CV02)
 
 Use fallible tombstone recording and return a pass-specific error before accepting

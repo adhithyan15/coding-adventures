@@ -1,0 +1,11 @@
+{
+  "id": "GE-C363-recyceln",
+  "pathSegment": "GE-PATH-363-UMWELT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-363-UMWELT",
+      "order": 3
+    }
+  ]
+}

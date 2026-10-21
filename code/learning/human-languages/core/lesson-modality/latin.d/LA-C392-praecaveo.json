@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C392-praecaveo",
+    "language": "latin",
+    "chapter": 392,
+    "sequence": 21030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40c5534f8fd5d049"
+  },
+  "findings": []
+}

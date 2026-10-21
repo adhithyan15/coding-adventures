@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:fc0edf13676c30a1",
+  "lessonIds": [
+    "RU-C441-prokhozhiy",
+    "RU-C441-rassprashivat",
+    "RU-C441-podskazyvat",
+    "RU-C441-razyskivat",
+    "RU-C441-peresprashivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch441.txt",
+  "json": "russian/narration/ch441.json",
+  "textHash": "fnv1a64:7dab02b6598dad63",
+  "jsonHash": "fnv1a64:f5b5a81638553389",
+  "findings": []
+}

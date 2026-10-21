@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "Orchard, Olive tree, Press, To graft, Grape harvest",
+  "label": "ch:la-orchard-olive-tree-press-to-graft-grape-harvest",
+  "canDo": "I can talk about orchards and vineyards: an orchard, an olive tree, the press, grafting trees and the grape harvest.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C479-vindemia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can talk about orchards and vineyards: an orchard, an olive tree, the press, grafting trees and the grape harvest.",
+    "assesses": [
+      "LA-LEX-C479-POMARIUM-03",
+      "LA-LEX-C479-POMARIUM-04",
+      "LA-LEX-C479-POMARIUM-05"
+    ]
+  }
+}

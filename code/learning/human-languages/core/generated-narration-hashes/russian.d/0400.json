@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:8094100273e70de4",
+  "lessonIds": [
+    "RU-C400-parol",
+    "RU-C400-bezopasnost",
+    "RU-C400-khaker",
+    "RU-C400-vzlamyvat",
+    "RU-C400-virus",
+    "RU-R400-review-393-400"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch400.txt",
+  "json": "russian/narration/ch400.json",
+  "textHash": "fnv1a64:1057639ab01f0034",
+  "jsonHash": "fnv1a64:05d1124b9fc2a207",
+  "findings": []
+}

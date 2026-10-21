@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-281-EINBRUCH",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-281-EINBRUCH"
+  ],
+  "after": []
+}

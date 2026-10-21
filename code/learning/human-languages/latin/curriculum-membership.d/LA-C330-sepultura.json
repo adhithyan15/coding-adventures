@@ -1,0 +1,11 @@
+{
+  "id": "LA-C330-sepultura",
+  "pathSegment": "LA-PATH-330-FUNUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-330-FUNUS",
+      "order": 2
+    }
+  ]
+}

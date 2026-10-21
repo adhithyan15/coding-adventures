@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "Mit der Fähre",
+  "label": "ch:ge-mit-der-fahre",
+  "canDo": "I can take a ferry: the ferry, the crossing, the cabin, the life jacket and feeling seasick.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-R421-review-414-421",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can take a ferry: the ferry, the crossing, the cabin, the life jacket and feeling seasick.",
+    "assesses": [
+      "GE-LEX-C421-FAEHRE-03",
+      "GE-LEX-C421-FAEHRE-04",
+      "GE-LEX-C421-FAEHRE-05"
+    ]
+  }
+}

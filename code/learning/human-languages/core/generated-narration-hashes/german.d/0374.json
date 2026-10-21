@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:64a3f4146befc832",
+  "lessonIds": [
+    "GE-C374-entschliessen",
+    "GE-C374-entschluss",
+    "GE-C374-ausweg",
+    "GE-C374-flexibel",
+    "GE-C374-planung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch374.txt",
+  "json": "german/narration/ch374.json",
+  "textHash": "fnv1a64:d3047decc702a236",
+  "jsonHash": "fnv1a64:494e44c0bc9b0e06",
+  "findings": []
+}

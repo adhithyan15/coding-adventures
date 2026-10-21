@@ -1,0 +1,11 @@
+{
+  "id": "GE-C283-aussagen",
+  "pathSegment": "GE-PATH-283-ZEUGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-283-ZEUGE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-320-VOLSHEBNIK",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-320-VOLSHEBNIK"
+  ],
+  "after": []
+}

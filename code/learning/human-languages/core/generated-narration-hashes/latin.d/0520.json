@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:e38a00d9209e2f97",
+  "lessonIds": [
+    "LA-C520-spiritus",
+    "LA-C520-anhelo",
+    "LA-C520-singultus",
+    "LA-C520-oscito",
+    "LA-C520-sternuo",
+    "LA-R520-review-513-520"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch520.txt",
+  "json": "latin/narration/ch520.json",
+  "textHash": "fnv1a64:a64778c5d3da51a4",
+  "jsonHash": "fnv1a64:43d6de54c637cd53",
+  "findings": []
+}

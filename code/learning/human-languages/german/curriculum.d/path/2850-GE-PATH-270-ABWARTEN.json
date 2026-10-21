@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-270-ABWARTEN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-270-ABWARTEN"
+  ],
+  "after": []
+}

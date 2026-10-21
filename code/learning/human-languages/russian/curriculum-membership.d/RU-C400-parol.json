@@ -1,0 +1,11 @@
+{
+  "id": "RU-C400-parol",
+  "pathSegment": "RU-PATH-400-BEZOPASNOST",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-400-BEZOPASNOST",
+      "order": 0
+    }
+  ]
+}

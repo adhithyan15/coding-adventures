@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:9d3958c51a952141",
+  "lessonIds": [
+    "RU-C422-vylet",
+    "RU-C422-vyletat",
+    "RU-C422-prilyot",
+    "RU-C422-terminal",
+    "RU-C422-styuardessa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch422.txt",
+  "json": "russian/narration/ch422.json",
+  "textHash": "fnv1a64:bb902bb6f6eb0300",
+  "jsonHash": "fnv1a64:260fcd0f914db3cc",
+  "findings": []
+}

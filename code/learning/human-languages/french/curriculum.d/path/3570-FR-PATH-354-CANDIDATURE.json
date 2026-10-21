@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-354-CANDIDATURE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FR-EXT-354-CANDIDATURE"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C453-reperio",
+  "pathSegment": "LA-PATH-453-PERITUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-453-PERITUS",
+      "order": 3
+    }
+  ]
+}

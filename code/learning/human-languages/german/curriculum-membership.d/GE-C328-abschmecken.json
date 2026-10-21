@@ -1,0 +1,11 @@
+{
+  "id": "GE-C328-abschmecken",
+  "pathSegment": "GE-PATH-328-SIEB",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-328-SIEB",
+      "order": 3
+    }
+  ]
+}

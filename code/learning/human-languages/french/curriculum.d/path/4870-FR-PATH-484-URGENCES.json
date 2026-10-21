@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-484-URGENCES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-484-URGENCES"
+  ],
+  "after": []
+}

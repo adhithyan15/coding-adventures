@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C531-khlam",
+    "language": "russian",
+    "chapter": 531,
+    "sequence": 29780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:836575a94aa369a8"
+  },
+  "findings": []
+}

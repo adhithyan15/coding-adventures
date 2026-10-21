@@ -2,16 +2,13 @@ package irtojvmclassfile
 
 import (
 	"encoding/binary"
-	"errors"
 	"fmt"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 
 	ir "github.com/adhithyan15/coding-adventures/code/packages/go/compiler-ir"
 	jvmclassfile "github.com/adhithyan15/coding-adventures/code/packages/go/jvm-class-file"
-	"golang.org/x/sys/unix"
 )
 
 // The backend intentionally targets the same "boring" JVM subset as the
@@ -1274,8 +1271,51 @@ func (l *jvmClassLowerer) encodeMethod(method methodSpec, codeNameIndex uint16) 
 	return out
 }
 
+// ── Writing class files safely ─────────────────────────────────────────────
+//
+// WriteClassFile places `demo/Example.class` under a classpath root, creating
+// the package directories on the way.  The danger it guards against is a
+// symlink (or, on Windows, a junction) planted somewhere in that tree: write
+// through `out/demo -> /etc` and "demo/Example.class" lands outside the
+// classpath entirely.
+//
+// How the tree is walked depends on what the operating system offers, so the
+// walk itself lives in per-platform files:
+//
+//   file                   builds on      walk
+//   ─────────────────────  ─────────────  ───────────────────────────────────
+//   backend_unix.go        //go:build     descriptor-relative: openat(2) each
+//                          unix           component with O_NOFOLLOW.  Race-free.
+//   backend_windows.go     windows        path checks (backend_pathwalk.go):
+//                                         mkdir + Lstat each component, refuse
+//                                         reparse points, O_EXCL temp file +
+//                                         rename.  Not race-free (see there).
+//   backend_other.go       neither        refuses: no safe walk is known.
+//
+// The path-check walk is ordinary os/filepath code, so it compiles everywhere.
+// That is deliberate: the strategy seam below lets the POSIX test runs drive
+// the Windows walk too, instead of leaving it to whichever CI job happens to
+// run on Windows.
+
+// classFileWriteStrategy picks how writeClassFileWithStrategy walks from the
+// classpath root down to the class file.  It is an internal test seam; the
+// public API only ever uses writeStrategyAuto.
+type classFileWriteStrategy int
+
+const (
+	// writeStrategyAuto is the platform's best walk: descriptors on Unix,
+	// path checks on Windows.
+	writeStrategyAuto classFileWriteStrategy = iota
+	// writeStrategyPathChecks forces the path-check walk on every platform.
+	writeStrategyPathChecks
+)
+
 // WriteClassFile writes a generated class artifact into a classpath root.
 func WriteClassFile(artifact *JVMClassArtifact, outputDir string) (string, error) {
+	return writeClassFileWithStrategy(artifact, outputDir, writeStrategyAuto)
+}
+
+func writeClassFileWithStrategy(artifact *JVMClassArtifact, outputDir string, strategy classFileWriteStrategy) (string, error) {
 	if artifact == nil {
 		return "", backendError("artifact must not be nil")
 	}
@@ -1287,55 +1327,30 @@ func WriteClassFile(artifact *JVMClassArtifact, outputDir string) (string, error
 	if root == "" {
 		root = "."
 	}
-	rootFD, absoluteRoot, err := secureOpenRoot(root)
-	if err != nil {
-		return "", err
+	if strategy == writeStrategyPathChecks {
+		return writeClassFileViaPathChecks(artifact, root, relativePath)
 	}
-	openFDs := []int{rootFD}
-	defer func() {
-		for i := len(openFDs) - 1; i >= 0; i-- {
-			_ = unix.Close(openFDs[i])
-		}
-	}()
-
-	currentFD := rootFD
-	for _, component := range strings.Split(filepath.Dir(relativePath), string(filepath.Separator)) {
-		if component == "." || component == "" {
-			continue
-		}
-		if mkdirErr := unix.Mkdirat(currentFD, component, 0o755); mkdirErr != nil && !errors.Is(mkdirErr, unix.EEXIST) {
-			return "", backendError("failed to create output directory %q: %v", component, mkdirErr)
-		}
-		nextFD, openErr := openDirectoryNoFollowAt(currentFD, component)
-		if openErr != nil {
-			return "", backendError("class_filename contains a symlinked or invalid directory component: %s", component)
-		}
-		openFDs = append(openFDs, nextFD)
-		currentFD = nextFD
-	}
-
-	fileFD, openErr := unix.Openat(
-		currentFD,
-		filepath.Base(relativePath),
-		unix.O_WRONLY|unix.O_CREAT|unix.O_TRUNC|unix.O_NOFOLLOW|unix.O_CLOEXEC,
-		0o644,
-	)
-	if openErr != nil {
-		return "", backendError("class_filename points at a symlinked or invalid output file")
-	}
-	if err := writeAll(fileFD, artifact.ClassBytes); err != nil {
-		_ = unix.Close(fileFD)
-		return "", backendError("failed to write class file: %v", err)
-	}
-	if err := unix.Close(fileFD); err != nil {
-		return "", backendError("failed to close class file: %v", err)
-	}
-	target := filepath.Join(absoluteRoot, relativePath)
-	return target, nil
+	return writeClassFilePlatform(artifact, root, relativePath)
 }
 
+// validatedOutputRelativePath turns a class filename into a relative path that
+// cannot leave the classpath root.  Besides "." and "..", a component may not
+// contain a backslash, a colon or a NUL byte.  None of those can appear in a
+// Java binary name, but a hand-built artifact can carry any ClassName, and on
+// Windows each one is an escape hatch: `\` is a second separator, `C:x` is a
+// drive-relative path, and `name:stream` names an NTFS alternate data stream.
+//
+//	classFilename           result
+//	──────────────────────  ──────────────────────────────
+//	"demo/Example.class"    "demo/Example.class" (host separators)
+//	"../Example.class"      error
+//	"demo\\..\\x.class"     error
+//	"C:x.class"             error
 func validatedOutputRelativePath(classFilename string) (string, error) {
 	if classFilename == "" {
+		return "", backendError("class_filename escapes the requested output directory")
+	}
+	if strings.ContainsAny(classFilename, "\\:\x00") {
 		return "", backendError("class_filename escapes the requested output directory")
 	}
 	cleaned := filepath.Clean(classFilename)
@@ -1349,82 +1364,6 @@ func validatedOutputRelativePath(classFilename string) (string, error) {
 		}
 	}
 	return filepath.FromSlash(strings.Join(parts, "/")), nil
-}
-
-func rejectSymlink(path string) error {
-	info, err := os.Lstat(path)
-	if err != nil {
-		return err
-	}
-	if info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
-		return backendError("symlinked or invalid path component")
-	}
-	return nil
-}
-
-func secureOpenRoot(root string) (int, string, error) {
-	if info, err := os.Lstat(root); err == nil {
-		if info.Mode()&os.ModeSymlink != 0 || !info.IsDir() {
-			return -1, "", backendError("symlinked or invalid path component")
-		}
-		canonicalRoot, err := filepath.EvalSymlinks(root)
-		if err != nil {
-			return -1, "", backendError("failed to resolve output root: %v", err)
-		}
-		rootFD, err := unix.Open(canonicalRoot, unix.O_RDONLY|unix.O_DIRECTORY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
-		if err != nil {
-			return -1, "", backendError("failed to open output root: %v", err)
-		}
-		return rootFD, canonicalRoot, nil
-	} else if !os.IsNotExist(err) {
-		return -1, "", backendError("failed to inspect output root: %v", err)
-	}
-
-	absoluteRoot, err := filepath.Abs(root)
-	if err != nil {
-		return -1, "", backendError("failed to resolve output root: %v", err)
-	}
-	absoluteRoot = filepath.Clean(absoluteRoot)
-	currentFD, err := unix.Open(string(filepath.Separator), unix.O_RDONLY|unix.O_DIRECTORY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
-	if err != nil {
-		return -1, "", backendError("failed to open filesystem root: %v", err)
-	}
-	parts := strings.Split(strings.TrimPrefix(filepath.ToSlash(absoluteRoot), "/"), "/")
-	if len(parts) == 1 && parts[0] == "" {
-		return currentFD, absoluteRoot, nil
-	}
-	for _, component := range parts {
-		if component == "" {
-			continue
-		}
-		if mkdirErr := unix.Mkdirat(currentFD, component, 0o755); mkdirErr != nil && !errors.Is(mkdirErr, unix.EEXIST) {
-			_ = unix.Close(currentFD)
-			return -1, "", backendError("failed to create output root component %q: %v", component, mkdirErr)
-		}
-		nextFD, openErr := openDirectoryNoFollowAt(currentFD, component)
-		if openErr != nil {
-			_ = unix.Close(currentFD)
-			return -1, "", backendError("symlinked or invalid path component")
-		}
-		_ = unix.Close(currentFD)
-		currentFD = nextFD
-	}
-	return currentFD, absoluteRoot, nil
-}
-
-func openDirectoryNoFollowAt(parentFD int, component string) (int, error) {
-	return unix.Openat(parentFD, component, unix.O_RDONLY|unix.O_DIRECTORY|unix.O_NOFOLLOW|unix.O_CLOEXEC, 0)
-}
-
-func writeAll(fd int, data []byte) error {
-	for len(data) > 0 {
-		written, err := unix.Write(fd, data)
-		if err != nil {
-			return err
-		}
-		data = data[written:]
-	}
-	return nil
 }
 
 func asLabel(operands []ir.IrOperand, index int, context string) (ir.IrLabel, error) {

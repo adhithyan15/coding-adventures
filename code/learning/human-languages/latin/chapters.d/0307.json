@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "Venēnum",
+  "label": "ch:la-venenum",
+  "canDo": "I can talk about poison and plots: poison, a poisoner, an ambush, a conspiracy and a traitor.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C307-proditor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can talk about poison and plots: poison, a poisoner, an ambush, a conspiracy and a traitor.",
+    "assesses": [
+      "LA-LEX-C307-VENENUM-03",
+      "LA-LEX-C307-VENENUM-04",
+      "LA-LEX-C307-VENENUM-05"
+    ]
+  }
+}

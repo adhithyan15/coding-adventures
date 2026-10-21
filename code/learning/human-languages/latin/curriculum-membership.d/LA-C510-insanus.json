@@ -1,0 +1,11 @@
+{
+  "id": "LA-C510-insanus",
+  "pathSegment": "LA-PATH-510-INSA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-510-INSA",
+      "order": 1
+    }
+  ]
+}

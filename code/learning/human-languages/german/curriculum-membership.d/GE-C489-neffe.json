@@ -1,0 +1,11 @@
+{
+  "id": "GE-C489-neffe",
+  "pathSegment": "GE-PATH-489-VERWANDTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-489-VERWANDTE",
+      "order": 2
+    }
+  ]
+}

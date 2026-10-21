@@ -35,6 +35,12 @@ exactly once with a child certificate's issuer followed by a candidate issuer
 certificate's subject. It fixes the link direction without embedding or
 claiming a complete RFC 5280 name-normalization rule.
 
+Its self-issued classifier invokes the same kind of caller-owned comparator
+exactly once with one certificate's issuer followed by its subject. The
+non-copyable result retains a reference to that exact decoded certificate so a
+later path-policy layer does not need to accept an unrelated boolean. The
+classification does not imply that the certificate is self-signed or trusted.
+
 An intended issuing CA must carry critical `cA = TRUE` Basic Constraints and
 Key Usage with `keyCertSign`. An intended end entity may omit those extensions,
 but it must not assert either CA status or certificate-signing usage. Extended
@@ -86,6 +92,12 @@ evidence retains neither Name nor certificate bytes. It does not prove
 standards-complete name equality, CA role, signature, path, constraints,
 validity, purpose, identity, trust, or revocation.
 
+Passing the self-issued classifier proves only that the caller-owned comparator
+was applied in issuer-to-subject order for the exact retained certificate. The
+caller still owns complete Name normalization and equality semantics. The
+classification grants no role, signature, path, constraint, trust, revocation,
+TLS, HTTP, or network authority.
+
 ## Example
 
 ```rust,no_run
@@ -93,10 +105,10 @@ use der_asn1::Asn1Limits;
 use tls_server_identity::ReferenceIdentity;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
-    validate_certificate_algorithm_profile, validate_certificate_extended_key_purpose,
-    validate_certificate_issuer_link, validate_certificate_role_extensions,
-    validate_certificate_server_identity, validate_critical_extensions,
-    X509AlgorithmParametersPolicy,
+    classify_certificate_self_issued, validate_certificate_algorithm_profile,
+    validate_certificate_extended_key_purpose, validate_certificate_issuer_link,
+    validate_certificate_role_extensions, validate_certificate_server_identity,
+    validate_critical_extensions, X509AlgorithmParametersPolicy,
     X509CertificateAlgorithmProfile, X509CertificatePurposePolicy, X509CertificateRole,
 };
 
@@ -130,6 +142,10 @@ let _issuer_link = validate_certificate_issuer_link(
     &candidate_issuer,
     |issuer, subject| issuer.encoded() == subject.encoded(),
 )?;
+let self_issued = classify_certificate_self_issued(&certificate, |issuer, subject| {
+    issuer.encoded() == subject.encoded()
+});
+let _caller_classification = self_issued.is_self_issued();
 // These identifiers and encoded BIT STRING bounds are application policy data,
 // not an embedded registry, key-strength check, or permission to perform
 // cryptography.

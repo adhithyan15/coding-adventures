@@ -1,0 +1,11 @@
+{
+  "id": "RU-C391-yuridicheskiy",
+  "pathSegment": "RU-PATH-391-ZAKONODATELSTVO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-391-ZAKONODATELSTVO",
+      "order": 3
+    }
+  ]
+}

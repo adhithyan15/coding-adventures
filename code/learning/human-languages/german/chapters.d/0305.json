@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Die Feier",
+  "label": "ch:ge-die-feier",
+  "canDo": "I can talk about celebrations: a celebration, solemn, a public holiday, a ceremony and to open officially.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C305-einweihen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can talk about celebrations: a celebration, solemn, a public holiday, a ceremony and to open officially.",
+    "assesses": [
+      "GE-LEX-C305-FEIER-03",
+      "GE-LEX-C305-FEIER-04",
+      "GE-LEX-C305-FEIER-05"
+    ]
+  }
+}

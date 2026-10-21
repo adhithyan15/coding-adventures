@@ -1,0 +1,11 @@
+{
+  "id": "FR-C471-consoler",
+  "pathSegment": "FR-PATH-471-DECEPTION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-471-DECEPTION",
+      "order": 4
+    }
+  ]
+}

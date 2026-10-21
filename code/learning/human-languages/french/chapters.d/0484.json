@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Aux urgences",
+  "label": "ch:fr-aux-urgences",
+  "canDo": "I can talk about emergency care.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FR-C484-salle-d-attente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about emergency care.",
+    "assesses": [
+      "FR-LEX-C484-URGENCES-03",
+      "FR-LEX-C484-URGENCES-04",
+      "FR-LEX-C484-URGENCES-05"
+    ]
+  }
+}

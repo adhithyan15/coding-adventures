@@ -1,0 +1,11 @@
+{
+  "id": "RU-C513-ganteli",
+  "pathSegment": "RU-PATH-513-TRAINING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-513-TRAINING",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:346d923518a77529",
+  "lessonIds": [
+    "FR-C398-reseau",
+    "FR-C398-connexion",
+    "FR-C398-naviguer",
+    "FR-C398-lien",
+    "FR-C398-publier"
+  ],
+  "tex": "french/book/chapters/ch398-sur-internet.tex"
+}

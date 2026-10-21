@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-290-CRIME",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about serious crime: a crime, a criminal, a murder, a young offender and crime in general.",
+  "prerequisites": []
+}

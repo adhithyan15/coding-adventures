@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:92376f391662f192",
+  "lessonIds": [
+    "GE-C413-schlafwagen",
+    "GE-C413-speisewagen",
+    "GE-C413-endstation",
+    "GE-C413-reservieren",
+    "GE-C413-weiterfahren",
+    "GE-R413-review-406-413"
+  ],
+  "tex": "german/book/chapters/ch413-im-nachtzug.tex"
+}

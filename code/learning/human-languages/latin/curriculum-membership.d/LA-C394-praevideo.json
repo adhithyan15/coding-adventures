@@ -1,0 +1,11 @@
+{
+  "id": "LA-C394-praevideo",
+  "pathSegment": "LA-PATH-394-APPARO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-394-APPARO",
+      "order": 4
+    }
+  ]
+}

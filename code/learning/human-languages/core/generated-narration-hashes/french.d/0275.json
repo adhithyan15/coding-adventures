@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:944c4b9a9db166e4",
+  "lessonIds": [
+    "FR-C275-ecouler",
+    "FR-C275-ajourner",
+    "FR-C275-aboutir",
+    "FR-C275-contretemps",
+    "FR-C275-echeance",
+    "FR-R275-revision-268-275"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch275.txt",
+  "json": "french/narration/ch275.json",
+  "textHash": "fnv1a64:88ab1433ca80ca4d",
+  "jsonHash": "fnv1a64:cc471f1714b0d420",
+  "findings": []
+}

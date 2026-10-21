@@ -1,0 +1,11 @@
+{
+  "id": "LA-C361-argumentum",
+  "pathSegment": "LA-PATH-361-ARGUMENTUM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-361-ARGUMENTUM",
+      "order": 0
+    }
+  ]
+}

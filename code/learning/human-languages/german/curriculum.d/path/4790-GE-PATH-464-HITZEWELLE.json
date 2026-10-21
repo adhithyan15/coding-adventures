@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-464-HITZEWELLE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-464-HITZEWELLE"
+  ],
+  "after": []
+}

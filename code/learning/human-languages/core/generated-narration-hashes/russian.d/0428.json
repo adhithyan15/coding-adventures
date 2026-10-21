@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:5f5315f37c12cc20",
+  "lessonIds": [
+    "RU-C428-khostel",
+    "RU-C428-turbaza",
+    "RU-C428-nochleg",
+    "RU-C428-nochevat",
+    "RU-C428-bron"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch428.txt",
+  "json": "russian/narration/ch428.json",
+  "textHash": "fnv1a64:cf1fcdef853cdeb9",
+  "jsonHash": "fnv1a64:dd6083966e0dabd3",
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 417,
+  "title": "Property",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d3e380ff3ab366e9",
+  "lessons": [
+    {
+      "id": "LA-C417-possessio",
+      "sequence": 22270,
+      "title": "possessiō, possessiōnis — possession; (plural) estates",
+      "headword": "possessiō, possessiōnis",
+      "romanization": "possessiō, possessiōnis",
+      "gloss": "possession; (plural) estates",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e007512d08a073f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to restrain, then the Latin for to claim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: possessiō, possessiōnis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "possessiō, possessiōnis — \"possession; (plural) estates\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Possessiōnēs magnās in agrīs habēbat. He had large estates in the country."
+            },
+            {
+              "kind": "speech",
+              "text": "possessiō, possessiōnis f., the noun of possideō. In the plural, landed estates. English possession."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "possessiō is the noun built on possideō \"to possess\" (EtymDB; Lewis & Short). English possession comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "possessiō, possessiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *possessiō, possessiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "possessiō, possessiōnis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *possessiō, possessiōnis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with possessiō, possessiōnis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *possessiō, possessiōnis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to restrain, then the Latin for to claim, then say possessiō, possessiōnis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to restrain, then the Latin for to claim, then say *possessiō, possessiōnis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does possessiō, possessiōnis mean? (\"Possession; (plural) estates\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C417-proprius",
+      "sequence": 22280,
+      "title": "proprius, propria, proprium — one's own; peculiar (to)",
+      "headword": "proprius, propria, proprium",
+      "romanization": "proprius, propria, proprium",
+      "gloss": "one's own; peculiar (to)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35e5da6723488367",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to claim, then the Latin for possession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: proprius, propria, proprium",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "proprius, propria, proprium — \"one's own; peculiar (to)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Domum propriam nōn habet. He has no house of his own."
+            },
+            {
+              "kind": "speech",
+              "text": "proprius, propria, proprium + genitive or dative: belonging to one alone. English proper and property."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of proprius is not settled: EtymDB traces it to Proto-Italic prijos, but Lewis & Short call it doubtful and suggest, with a \"perhaps\", the root of prae \"before\". English proper and property come from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proprius, propria, proprium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *proprius, propria, proprium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proprius, propria, proprium, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *proprius, propria, proprium*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with proprius, propria, proprium",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *proprius, propria, proprium*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to claim, then the Latin for possession, then say proprius, propria, proprium again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to claim, then the Latin for possession, then say *proprius, propria, proprium* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does proprius, propria, proprium mean? (\"One's own; peculiar (to)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C417-alienus",
+      "sequence": 22290,
+      "title": "aliēnus, aliēna, aliēnum — belonging to another; foreign; unfavourable",
+      "headword": "aliēnus, aliēna, aliēnum",
+      "romanization": "aliēnus, aliēna, aliēnum",
+      "gloss": "belonging to another; foreign; unfavourable",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ef3205d76fed275",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for possession, then the Latin for one's own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aliēnus, aliēna, aliēnum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aliēnus, aliēna, aliēnum — \"belonging to another; foreign; unfavourable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Rem aliēnam cupere nōn dēbēmus. We should not desire what belongs to another."
+            },
+            {
+              "kind": "speech",
+              "text": "aliēnus, aliēna, aliēnum, built on alius, other. The opposite of suus and proprius. English alien."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aliēnus is built on alius \"other\" (EtymDB; Lewis & Short). English alien comes from it through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aliēnus, aliēna, aliēnum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aliēnus, aliēna, aliēnum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aliēnus, aliēna, aliēnum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aliēnus, aliēna, aliēnum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with aliēnus, aliēna, aliēnum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *aliēnus, aliēna, aliēnum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for possession, then the Latin for one's own, then say aliēnus, aliēna, aliēnum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for possession, then the Latin for one's own, then say *aliēnus, aliēna, aliēnum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does aliēnus, aliēna, aliēnum mean? (\"Belonging to another; foreign; unfavourable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C417-dominium",
+      "sequence": 22300,
+      "title": "dominium, dominiī — ownership",
+      "headword": "dominium, dominiī",
+      "romanization": "dominium, dominiī",
+      "gloss": "ownership",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:734d07e68ddf9758",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for one's own, then the Latin for belonging to another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dominium, dominiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dominium, dominiī — \"ownership\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Dominium agrī ad fīlium pervēnit. The ownership of the field passed to the son."
+            },
+            {
+              "kind": "speech",
+              "text": "dominium, dominiī n., built on dominus, master. In Roman law, full ownership. English dominion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dominium is built on dominus \"a master\" (EtymDB), which comes from domus \"a house\" (Lewis & Short): the right of the master of the house. English dominion is of the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dominium, dominiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dominium, dominiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dominium, dominiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dominium, dominiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dominium, dominiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dominium, dominiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for one's own, then the Latin for belonging to another, then say dominium, dominiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for one's own, then the Latin for belonging to another, then say *dominium, dominiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dominium, dominiī mean? (\"Ownership\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C417-mancipium",
+      "sequence": 22310,
+      "title": "mancipium, mancipiī — formal purchase; a slave",
+      "headword": "mancipium, mancipiī",
+      "romanization": "mancipium, mancipiī",
+      "gloss": "formal purchase; a slave",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90ad075c658723be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for belonging to another, then the Latin for ownership."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mancipium, mancipiī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mancipium, mancipiī — \"formal purchase; a slave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Servum mancipiō accēpit. He received the slave by formal purchase."
+            },
+            {
+              "kind": "speech",
+              "text": "mancipium, mancipiī n., manus + capiō: taking in the hand, the old ceremony of purchase with scales and bronze; then the thing bought, a slave. English emancipate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mancipium is built on manceps \"a purchaser\" (EtymDB; Lewis & Short), from manus \"hand\" and capiō \"to take\". English emancipate comes from its family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mancipium, mancipiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mancipium, mancipiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mancipium, mancipiī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mancipium, mancipiī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mancipium, mancipiī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mancipium, mancipiī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for belonging to another, then the Latin for ownership, then say mancipium, mancipiī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for belonging to another, then the Latin for ownership, then say *mancipium, mancipiī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mancipium, mancipiī mean? (\"Formal purchase; a slave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

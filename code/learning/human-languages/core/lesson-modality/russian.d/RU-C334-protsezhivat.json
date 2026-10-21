@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C334-protsezhivat",
+    "language": "russian",
+    "chapter": 334,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dbecab5c7c58af5"
+  },
+  "findings": []
+}

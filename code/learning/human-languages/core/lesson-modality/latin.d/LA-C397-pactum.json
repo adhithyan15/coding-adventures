@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C397-pactum",
+    "language": "latin",
+    "chapter": 397,
+    "sequence": 21280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80efd48820f032fb"
+  },
+  "findings": []
+}

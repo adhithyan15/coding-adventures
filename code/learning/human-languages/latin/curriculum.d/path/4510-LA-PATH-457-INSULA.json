@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-457-INSULA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "LA-EXT-457-INSULA"
+  ],
+  "after": []
+}

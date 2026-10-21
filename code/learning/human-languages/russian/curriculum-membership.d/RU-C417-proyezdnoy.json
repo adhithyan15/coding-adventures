@@ -1,0 +1,11 @@
+{
+  "id": "RU-C417-proyezdnoy",
+  "pathSegment": "RU-PATH-417-MARSHRUTKA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-417-MARSHRUTKA",
+      "order": 1
+    }
+  ]
+}

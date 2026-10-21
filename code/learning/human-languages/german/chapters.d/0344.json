@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Einfluss haben",
+  "label": "ch:ge-einfluss-haben",
+  "canDo": "I can say what influences something, what impact it has and whom it concerns.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C344-betreffen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say what influences something, what impact it has and whom it concerns.",
+    "assesses": [
+      "GE-LEX-C344-EINFLUSS-03",
+      "GE-LEX-C344-EINFLUSS-04",
+      "GE-LEX-C344-EINFLUSS-05"
+    ]
+  }
+}

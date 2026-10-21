@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C269-zavisit",
+    "language": "russian",
+    "chapter": 269,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0cf9299a754ce3a"
+  },
+  "findings": []
+}

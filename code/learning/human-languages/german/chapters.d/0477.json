@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Tapfer oder feige",
+  "label": "ch:ge-tapfer-oder-feige",
+  "canDo": "I can talk about courage and cowardice.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C477-trauen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can talk about courage and cowardice.",
+    "assesses": [
+      "GE-LEX-C477-MUT-03",
+      "GE-LEX-C477-MUT-04",
+      "GE-LEX-C477-MUT-05"
+    ]
+  }
+}

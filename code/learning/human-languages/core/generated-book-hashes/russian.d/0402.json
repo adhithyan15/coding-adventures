@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:a9b3af56576141e9",
+  "lessonIds": [
+    "RU-C402-podklyuchat",
+    "RU-C402-zaryazhat",
+    "RU-C402-perepisyvatsya",
+    "RU-C402-peresylat",
+    "RU-C402-ustroystvo",
+    "RU-R402-review-401-402",
+    "RU-R402-review-final-402"
+  ],
+  "tex": "russian/book/chapters/ch402-staying-connected.tex"
+}

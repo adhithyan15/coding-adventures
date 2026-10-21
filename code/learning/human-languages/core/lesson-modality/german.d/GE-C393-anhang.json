@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C393-anhang",
+    "language": "german",
+    "chapter": 393,
+    "sequence": 21250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fb8db32dfda3cf0"
+  },
+  "findings": []
+}

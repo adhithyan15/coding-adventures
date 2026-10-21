@@ -1,0 +1,11 @@
+{
+  "id": "LA-C415-proscribo",
+  "pathSegment": "LA-PATH-415-CASTIGO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-415-CASTIGO",
+      "order": 2
+    }
+  ]
+}

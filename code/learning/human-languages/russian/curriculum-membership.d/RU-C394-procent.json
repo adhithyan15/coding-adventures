@@ -1,0 +1,11 @@
+{
+  "id": "RU-C394-procent",
+  "pathSegment": "RU-PATH-394-DOLG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-394-DOLG",
+      "order": 4
+    }
+  ]
+}

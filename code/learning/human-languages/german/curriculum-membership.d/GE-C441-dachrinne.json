@@ -1,0 +1,11 @@
+{
+  "id": "GE-C441-dachrinne",
+  "pathSegment": "GE-PATH-441-FASSADE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-441-FASSADE",
+      "order": 2
+    }
+  ]
+}

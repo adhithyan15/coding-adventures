@@ -3,6 +3,13 @@
 **Status:** Draft, 2026-10-07. This is a separate syntax-coverage track from
 LANG81's executable Perl 5.38 arithmetic pilot.
 
+LANG84 (`LANG84-grammar-driven-versioned-frontends.md`) generalizes this
+spec's rules to every language. Those rules are a materialized pair per tagged
+release, no aliases, explicitly partial pairs, and source evidence per release.
+LANG84 also extends the `releases.csv` schema: this file's columns stay, and
+`perlhist_line` becomes a Perl-specific extra column. It adds release
+selection for the Perl IIR frontend and measured G/P/I/B status stages.
+
 ## Version range and evidence
 
 Cover every public, numbered Perl release from 1.000 (18 December 1987)
@@ -89,6 +96,14 @@ The existing unversioned `perl.tokens` and `perl.grammar` remain the bounded
 Perl 5.38 LANG81 execution grammar until a separately validated versioned
 pair replaces them. A version selector must never silently fall back to those
 files for a different release.
+
+Since LANG84 phase 4a the checked pairs are compiled into `perl-lexer` and
+`perl-parser` (deduplicated by content, release list read from
+`releases.csv`), and `perl_iir_compiler::compile_source_at` selects one by
+exact inventory ID. A pending or unknown ID is a typed error. Flipping a row
+from `pending` to `partial` therefore also means regenerating the tables with
+`grammar-tools generate-rust-compiled-grammars perl`; the two crates' tests
+fail until that is done.
 
 ## Delivery order and gates
 

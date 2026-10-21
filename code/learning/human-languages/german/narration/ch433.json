@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 433,
+  "title": "Wo ist Norden",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c673d9ce314e7fa5",
+  "lessons": [
+    {
+      "id": "GE-C433-orientieren",
+      "sequence": 23290,
+      "title": "orientieren — to get one's bearings (mostly reflexive: sich orientieren)",
+      "headword": "orientieren",
+      "romanization": "orientieren",
+      "gloss": "to get one's bearings (mostly reflexive: sich orientieren)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15dbfdc2be676b99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to compensate, then the German for the compensation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: orientieren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "orientieren — \"to get one's bearings (mostly reflexive: sich orientieren)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "In der fremden Stadt orientiert er sich am Fluss. In the unfamiliar city he gets his bearings from the river."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly reflexive: ich orientiere mich. Past participle without ge-: ich habe mich orientiert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "orientieren was borrowed from French orienter 'to set facing east', built on Latin oriēns 'rising (sun), the east', from orīrī 'to rise' (Lewis & Short). EtymDB does not list the German verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "orientieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *orientieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "orientieren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *orientieren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with orientieren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *orientieren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to compensate, then the German for the compensation, then say orientieren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to compensate, then the German for the compensation, then say *orientieren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does orientieren mean? (\"To get one's bearings (mostly reflexive: sich orientieren)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C433-kompass",
+      "sequence": 23300,
+      "title": "der Kompass — the compass",
+      "headword": "der Kompass",
+      "romanization": "der Kompass",
+      "gloss": "the compass",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9264e11c8b717ebf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the compensation, then the German for to get one's bearings."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Kompass",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Kompass — \"the compass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Im Wald hilft ihr der Kompass. In the forest the compass helps her."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Kompasse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kompass was borrowed from Italian compasso 'compass, pair of compasses', usually traced to a Vulgar Latin verb built on Latin passus 'step'. EtymDB lists the German word without a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Kompass",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Kompass*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Kompass, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Kompass*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with der Kompass",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *der Kompass*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the compensation, then the German for to get one's bearings, then say der Kompass again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the compensation, then the German for to get one's bearings, then say *der Kompass* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Kompass mean? (\"The compass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C433-himmelsrichtung",
+      "sequence": 23310,
+      "title": "die Himmelsrichtung — the point of the compass, the direction",
+      "headword": "die Himmelsrichtung",
+      "romanization": "die Himmelsrichtung",
+      "gloss": "the point of the compass, the direction",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:296e3dcabb174f6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for to get one's bearings, then the German for the compass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Himmelsrichtung",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Himmelsrichtung — \"the point of the compass, the direction\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Norden, Süden, Osten und Westen sind die vier Himmelsrichtungen. North, south, east and west are the four points of the compass."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: die Himmelsrichtungen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Himmelsrichtung is built from Himmel 'sky, heaven' and Richtung 'direction', from richten 'to direct'. Both are inherited, and Richtung shares its root with recht 'right', Proto-Germanic rehtaz."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Himmelsrichtung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Himmelsrichtung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Himmelsrichtung, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Himmelsrichtung*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with die Himmelsrichtung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *die Himmelsrichtung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for to get one's bearings, then the German for the compass, then say die Himmelsrichtung again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for to get one's bearings, then the German for the compass, then say *die Himmelsrichtung* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Himmelsrichtung mean? (\"The point of the compass, the direction\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C433-zurechtfinden",
+      "sequence": 23320,
+      "title": "zurechtfinden — to find one's way around (mostly reflexive: sich zurechtfinden)",
+      "headword": "zurechtfinden",
+      "romanization": "zurechtfinden",
+      "gloss": "to find one's way around (mostly reflexive: sich zurechtfinden)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9e43340bf7121ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the compass, then the German for the point of the compass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zurechtfinden",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zurechtfinden — \"to find one's way around (mostly reflexive: sich zurechtfinden)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nach einer Woche findet sie sich in der Stadt gut zurecht. After a week she finds her way around the town well."
+            },
+            {
+              "kind": "speech",
+              "text": "Reflexive and separable: ich finde mich zurecht, ich habe mich zurechtgefunden."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zurechtfinden is built from zurecht 'into the right place', from recht 'right' (Proto-Germanic rehtaz), and finden 'to find'; both are inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurechtfinden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurechtfinden*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zurechtfinden, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zurechtfinden*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zurechtfinden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zurechtfinden*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the compass, then the German for the point of the compass, then say zurechtfinden again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the compass, then the German for the point of the compass, then say *zurechtfinden* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zurechtfinden mean? (\"To find one's way around (mostly reflexive: sich zurechtfinden)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C433-verirren",
+      "sequence": 23330,
+      "title": "verirren — to get lost (mostly reflexive: sich verirren)",
+      "headword": "verirren",
+      "romanization": "verirren",
+      "gloss": "to get lost (mostly reflexive: sich verirren)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1377ac9962b9da99",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for the point of the compass, then the German for to find one's way around."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: verirren",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "verirren — \"to get lost (mostly reflexive: sich verirren)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Im Nebel haben sich die Wanderer verirrt. In the fog the hikers got lost."
+            },
+            {
+              "kind": "speech",
+              "text": "Reflexive: ich habe mich verirrt. On foot, people also say sich verlaufen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "verirren is built from ver- and irren 'to wander, to go astray', inherited from Old High German irren and Proto-Germanic irzijaną (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "verirren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *verirren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "verirren, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *verirren*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with verirren",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *verirren*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for the point of the compass, then the German for to find one's way around, then say verirren again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for the point of the compass, then the German for to find one's way around, then say *verirren* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does verirren mean? (\"To get lost (mostly reflexive: sich verirren)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

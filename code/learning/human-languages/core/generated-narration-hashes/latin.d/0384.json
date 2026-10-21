@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:90453b0746a619e4",
+  "lessonIds": [
+    "LA-C384-suffragium",
+    "LA-C384-comitia",
+    "LA-C384-candidatus",
+    "LA-C384-ambitio",
+    "LA-C384-eligo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch384.txt",
+  "json": "latin/narration/ch384.json",
+  "textHash": "fnv1a64:c5c663e805e3c7b6",
+  "jsonHash": "fnv1a64:f34241f26fafe51d",
+  "findings": []
+}

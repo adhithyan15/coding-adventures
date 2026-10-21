@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-499-JEUX",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-499-JEUX"
+  ],
+  "after": []
+}

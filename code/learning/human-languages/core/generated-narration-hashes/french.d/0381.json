@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:b9375e29cd92edb8",
+  "lessonIds": [
+    "FR-C381-autoriser",
+    "FR-C381-autorisation",
+    "FR-C381-tolerer",
+    "FR-C381-tolerance",
+    "FR-C381-exiger",
+    "FR-R381-revision-374-381"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch381.txt",
+  "json": "french/narration/ch381.json",
+  "textHash": "fnv1a64:9c47333d58f6c4a1",
+  "jsonHash": "fnv1a64:21782012b80aad6a",
+  "findings": []
+}

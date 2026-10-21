@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:b2d87e9904f9a1a8",
+  "lessonIds": [
+    "RU-C460-ruchey",
+    "RU-C460-boloto",
+    "RU-C460-rodnik",
+    "RU-C460-prud",
+    "RU-C460-zhurchat"
+  ],
+  "tex": "russian/book/chapters/ch460-streams-and-ponds.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C442-maritimus",
+  "pathSegment": "LA-PATH-442-SALUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-442-SALUM",
+      "order": 4
+    }
+  ]
+}

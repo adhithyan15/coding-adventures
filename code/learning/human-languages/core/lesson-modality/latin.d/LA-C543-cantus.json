@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C543-cantus",
+    "language": "latin",
+    "chapter": 543,
+    "sequence": 28760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4765332180af1f44"
+  },
+  "findings": []
+}

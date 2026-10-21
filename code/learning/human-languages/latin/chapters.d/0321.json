@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Minae et tumultus",
+  "label": "ch:la-minae-et-tumultus",
+  "canDo": "I can tell of threats and uproar: threats, to threaten, to frighten, an uproar and shouting.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "LA-C321-clamor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can tell of threats and uproar: threats, to threaten, to frighten, an uproar and shouting.",
+    "assesses": [
+      "LA-LEX-C321-MINAE-03",
+      "LA-LEX-C321-MINAE-04",
+      "LA-LEX-C321-MINAE-05"
+    ]
+  }
+}

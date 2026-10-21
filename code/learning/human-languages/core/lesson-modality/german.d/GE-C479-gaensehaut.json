@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C479-gaensehaut",
+    "language": "german",
+    "chapter": 479,
+    "sequence": 25700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5a8b49769a19ccd"
+  },
+  "findings": []
+}

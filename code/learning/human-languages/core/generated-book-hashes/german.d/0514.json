@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:99167616db240d40",
+  "lessonIds": [
+    "GE-C514-melodie",
+    "GE-C514-rhythmus",
+    "GE-C514-takt",
+    "GE-C514-strophe",
+    "GE-C514-summen"
+  ],
+  "tex": "german/book/chapters/ch514-melodie-und-rhythmus.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C332-assaisonner",
+    "language": "french",
+    "chapter": 332,
+    "sequence": 18810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:605718a6961cb8f6"
+  },
+  "findings": []
+}

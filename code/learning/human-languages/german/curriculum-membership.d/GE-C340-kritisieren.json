@@ -1,0 +1,11 @@
+{
+  "id": "GE-C340-kritisieren",
+  "pathSegment": "GE-PATH-340-KRITIK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-340-KRITIK",
+      "order": 3
+    }
+  ]
+}

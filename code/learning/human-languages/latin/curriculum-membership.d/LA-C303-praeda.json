@@ -1,0 +1,11 @@
+{
+  "id": "LA-C303-praeda",
+  "pathSegment": "LA-PATH-303-FURTUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-303-FURTUM",
+      "order": 4
+    }
+  ]
+}

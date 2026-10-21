@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Shop signs and windows",
+  "label": "ch:ru-shop-signs-and-windows",
+  "canDo": "I can describe shopfronts and small spaces: a little public garden, a shop sign, a shop window, a drainpipe and a stall.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C446-laryok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can describe shopfronts and small spaces: a little public garden, a shop sign, a shop window, a drainpipe and a stall.",
+    "assesses": [
+      "RU-LEX-C446-VITRINA-03",
+      "RU-LEX-C446-VITRINA-04",
+      "RU-LEX-C446-VITRINA-05"
+    ]
+  }
+}

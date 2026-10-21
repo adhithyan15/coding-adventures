@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:7f6269d1aba4da9f",
+  "lessonIds": [
+    "GE-C434-wegweiser",
+    "GE-C434-schild",
+    "GE-C434-pfeil",
+    "GE-C434-abzweigung",
+    "GE-C434-abzweigen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch434.txt",
+  "json": "german/narration/ch434.json",
+  "textHash": "fnv1a64:0cf2c221b8c9c73e",
+  "jsonHash": "fnv1a64:f6f0373fa22dfeb3",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C381-cliens",
+    "language": "latin",
+    "chapter": 381,
+    "sequence": 20440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:092c12d487fde955"
+  },
+  "findings": []
+}

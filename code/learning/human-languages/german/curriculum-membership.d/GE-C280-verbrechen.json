@@ -1,0 +1,11 @@
+{
+  "id": "GE-C280-verbrechen",
+  "pathSegment": "GE-PATH-280-VERBRECHEN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-280-VERBRECHEN",
+      "order": 0
+    }
+  ]
+}

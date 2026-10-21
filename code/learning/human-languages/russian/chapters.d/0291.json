@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "The investigation",
+  "label": "ch:ru-the-investigation",
+  "canDo": "I can talk about an investigator, an investigation, investigating, a suspect and suspecting someone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C291-podozrevat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can talk about an investigator, an investigation, investigating, a suspect and suspecting someone.",
+    "assesses": [
+      "RU-LEX-C291-SLEDOVATEL-03",
+      "RU-LEX-C291-SLEDOVATEL-04",
+      "RU-LEX-C291-SLEDOVATEL-05"
+    ]
+  }
+}

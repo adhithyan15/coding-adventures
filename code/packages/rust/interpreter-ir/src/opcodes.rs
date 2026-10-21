@@ -401,6 +401,101 @@ pub fn is_exception_op(op: &str) -> bool {
     matches!(op, "throw" | "catch" | "landingpad")
 }
 
+// ---------------------------------------------------------------------------
+// Trap and terminator predicates (LANG83)
+// ---------------------------------------------------------------------------
+//
+// LANG83 adds `trap kind` — terminate the program with a kind from the closed
+// table in `exception_kind`, after flushing all output written so far. It is the
+// first registry operation (`op_registry::STANDARD_OPS`) that analyses must
+// treat specially, so the predicates live here beside `is_exception_op`:
+//
+// | Predicate        | Question it answers                                   |
+// |------------------|-------------------------------------------------------|
+// | `is_trap_op`     | is this the LANG83 `trap` terminator?                 |
+// | `is_terminator`  | does control never fall through this op?             |
+// | `may_trap`       | could executing this op end the program with a trap? |
+// | `trap_kinds`     | which kinds could it raise (from the registry)?      |
+//
+// Truth table for a few representative ops:
+//
+// | op              | is_terminator | may_trap | has_side_effects |
+// |-----------------|---------------|----------|------------------|
+// | `add`           | no            | no       | no               |
+// | `div`           | no            | yes      | no  (legacy; see below) |
+// | `i64_div_floor` | no            | yes      | yes              |
+// | `i64_add_ovf`   | no            | yes      | yes              |
+// | `array_get`     | no            | yes      | no  (legacy; see below) |
+// | `jmp`           | yes           | no       | yes              |
+// | `ret`           | yes           | no       | yes              |
+// | `trap`          | yes           | yes      | yes              |
+//
+// "Legacy": the pre-LANG83 trapping ops keep their old `has_side_effects`
+// answer in PR1a, because existing optimisers treat them as pure and their
+// trap behaviour is backend-dependent anyway (LANG83 "Legacy edge behaviour").
+// The LANG83 ops are side-effecting from day one, so dead-code elimination can
+// never delete a divide whose only observable effect is its trap.
+
+/// Return `true` if `op` is the LANG83 `trap` terminator.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_trap_op;
+/// assert!(is_trap_op("trap"));
+/// assert!(!is_trap_op("throw"));
+/// ```
+pub fn is_trap_op(op: &str) -> bool {
+    op == "trap"
+}
+
+/// Return `true` if control never falls through `op` to the next instruction:
+/// unconditional jumps, returns, `throw` and `trap`.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_terminator;
+/// assert!(is_terminator("trap"));
+/// assert!(is_terminator("ret_void"));
+/// assert!(!is_terminator("jmp_if_true")); // falls through when not taken
+/// assert!(!is_terminator("label"));
+/// ```
+pub fn is_terminator(op: &str) -> bool {
+    matches!(op, "jmp" | "ret" | "ret_void" | "throw") || is_trap_op(op)
+}
+
+/// The trap kinds `op` may raise, from the LANG83 registry, plus the
+/// pre-registry trap sites the T2 spec lists (`array_get`/`array_set` →
+/// `Trap.Bounds`, `unbox` → `Trap.Null`). Empty for an op that never traps.
+///
+/// ```
+/// use interpreter_ir::opcodes::trap_kinds;
+/// assert_eq!(trap_kinds("i64_div_floor"), &["Trap.DivZero", "Trap.Overflow"]);
+/// assert_eq!(trap_kinds("array_get"), &["Trap.Bounds"]);
+/// assert!(trap_kinds("add").is_empty());
+/// ```
+pub fn trap_kinds(op: &str) -> &'static [&'static str] {
+    use crate::exception_kind::{TRAP_BOUNDS, TRAP_NULL};
+    match op {
+        "array_get" | "array_set" => &[TRAP_BOUNDS],
+        "unbox" => &[TRAP_NULL],
+        _ => crate::op_registry::lookup(op)
+            .filter(|s| s.kind == crate::op_registry::OpKind::Op)
+            .map(|s| s.may_trap)
+            .unwrap_or(&[]),
+    }
+}
+
+/// Return `true` if executing `op` could end the program with a trap.
+///
+/// ```
+/// use interpreter_ir::opcodes::may_trap;
+/// assert!(may_trap("trap"));
+/// assert!(may_trap("i64_mod_floor"));
+/// assert!(may_trap("real_to_int_floor"));
+/// assert!(!may_trap("cmp_lt"));
+/// ```
+pub fn may_trap(op: &str) -> bool {
+    !trap_kinds(op).is_empty()
+}
+
 /// Numeric conversions between `integer` and `real` (LANG-FULL E8).
 ///
 /// Unlike the width-masking `cast` (`is_coercion`), these change the numeric
@@ -526,6 +621,10 @@ pub fn is_value_producing(op: &str) -> bool {
                 | "select_wait"
                 | "select_default"
         )
+        // LANG83: every registry Op that writes a dest (`i64_div_floor`,
+        // `i64_mod_floor`, and the `f64_*` math ops the registry made official).
+        || crate::op_registry::lookup(op)
+            .is_some_and(|s| s.kind == crate::op_registry::OpKind::Op && s.dest)
 }
 
 /// Return `true` if `op` has side effects beyond producing a value.
@@ -579,6 +678,17 @@ pub fn has_side_effects(op: &str) -> bool {
                 | "group_close"
                 | "chan_send"
                 | "chan_close"
+                // LANG83: `trap` ends the program; the floor ops may trap, so
+                // an unused result must still not be eliminated.
+                | "trap"
+                | "i64_div_floor"
+                | "i64_mod_floor"
+                // LANG83 PR4: the overflow-checked ops trap `Trap.Overflow`;
+                // deleting an unused `i64_add_ovf` would delete its trap.
+                | "i64_add_ovf"
+                | "i64_sub_ovf"
+                | "i64_mul_ovf"
+                | "i64_neg_ovf"
         )
 }
 
@@ -974,6 +1084,9 @@ pub fn is_known_op(op: &str) -> bool {
         || is_closure_op(op)
         || is_concurrency(op)
         || is_exception_op(op)
+        // LANG83: every registry entry of kind Op (this includes `trap`, the
+        // PR1b arithmetic ops and the long-emitted `f64_*` math ops).
+        || crate::op_registry::is_standard_op_mnemonic(op)
 }
 
 /// Return `true` if `type_hint` is a concrete (non-dynamic) type.
@@ -1346,6 +1459,59 @@ mod tests {
         assert!(!is_concurrency_type("ref<u8>"));
         assert!(!is_concurrency_type("any"));
         assert!(!is_concurrency_type("bool"));
+    }
+
+    #[test]
+    fn lang83_ops_are_known_value_producing_and_effectful() {
+        for op in ["trap", "i64_div_floor", "i64_mod_floor", "f64_sin", "f64_pow"] {
+            assert!(is_known_op(op), "{op}");
+        }
+        // Builtins are call_builtin names, never mnemonics.
+        assert!(!is_known_op("print_i64"));
+        assert!(!is_known_op("write_i64"));
+        assert!(is_value_producing("i64_div_floor"));
+        assert!(is_value_producing("i64_mod_floor"));
+        assert!(is_value_producing("f64_sqrt"));
+        assert!(!is_value_producing("trap"));
+        assert!(!is_value_producing("print_str"));
+        for op in ["trap", "i64_div_floor", "i64_mod_floor",
+                   "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf"] {
+            assert!(has_side_effects(op), "{op} must survive DCE");
+        }
+        // PR4: the overflow family is known and value-producing through the
+        // registry, with no hand-kept list.
+        for op in ["i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf"] {
+            assert!(is_known_op(op), "{op}");
+            assert!(is_value_producing(op), "{op}");
+            assert_eq!(trap_kinds(op), &["Trap.Overflow"], "{op}");
+        }
+        // Legacy trapping ops keep their PR1a answer (documented divergence).
+        assert!(!has_side_effects("div"));
+    }
+
+    #[test]
+    fn terminators_and_trap_predicates() {
+        for op in ["jmp", "ret", "ret_void", "throw", "trap"] {
+            assert!(is_terminator(op), "{op}");
+        }
+        for op in ["jmp_if_true", "jmp_if_false", "label", "call", "add", "catch"] {
+            assert!(!is_terminator(op), "{op}");
+        }
+        assert!(is_trap_op("trap"));
+        assert!(!is_trap_op("throw"));
+        assert_eq!(trap_kinds("trap"), &["*"]);
+        assert_eq!(trap_kinds("unbox"), &["Trap.Null"]);
+        assert_eq!(trap_kinds("array_set"), &["Trap.Bounds"]);
+        assert_eq!(trap_kinds("str_slice"), &["Trap.Bounds"]);
+        assert_eq!(trap_kinds("div"), &["Trap.DivZero"]);
+        // A Builtin name is not a trapping mnemonic.
+        assert!(trap_kinds("print_i64").is_empty());
+        for op in ["add", "cmp_eq", "str_len", "jmp", "print_str", "f64_sin"] {
+            assert!(!may_trap(op), "{op}");
+        }
+        for op in ["trap", "div", "mod", "i64_div_floor", "real_to_int_trunc", "str_index"] {
+            assert!(may_trap(op), "{op}");
+        }
     }
 
     #[test]

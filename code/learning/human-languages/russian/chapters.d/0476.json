@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Fright and Courage",
+  "label": "ch:ru-fright-and-courage",
+  "canDo": "I can talk about getting a fright and being brave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R476-review-469-476",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about getting a fright and being brave.",
+    "assesses": [
+      "RU-LEX-C476-FRIGHT-03",
+      "RU-LEX-C476-FRIGHT-04",
+      "RU-LEX-C476-FRIGHT-05"
+    ]
+  }
+}

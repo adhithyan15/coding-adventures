@@ -1,0 +1,19 @@
+{
+  "chapter": 491,
+  "title": "In-laws",
+  "label": "ch:ru-in-laws",
+  "canDo": "I can talk about my in-laws.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C491-zyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about my in-laws.",
+    "assesses": [
+      "RU-LEX-C491-INLAWS-03",
+      "RU-LEX-C491-INLAWS-04",
+      "RU-LEX-C491-INLAWS-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-297-ROUTE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a road accident: a pile-up, a reckless driver, speeding, the accident report and a skid.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Spans of time",
+  "label": "ch:ru-spans-of-time",
+  "canDo": "I can talk about spans of time: a decade, a period, a stage, an interval and a deadline.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C276-srok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can talk about spans of time: a decade, a period, a stage, an interval and a deadline.",
+    "assesses": [
+      "RU-LEX-C276-DESYATILETIYE-03",
+      "RU-LEX-C276-DESYATILETIYE-04",
+      "RU-LEX-C276-DESYATILETIYE-05"
+    ]
+  }
+}

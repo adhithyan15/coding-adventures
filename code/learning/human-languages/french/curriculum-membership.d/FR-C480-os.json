@@ -1,0 +1,11 @@
+{
+  "id": "FR-C480-os",
+  "pathSegment": "FR-PATH-480-PLATRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-480-PLATRE",
+      "order": 4
+    }
+  ]
+}

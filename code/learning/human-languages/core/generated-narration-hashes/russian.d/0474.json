@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:bf2a21bcb5c9b519",
+  "lessonIds": [
+    "RU-C474-nervnichat",
+    "RU-C474-trevozhnyy",
+    "RU-C474-bespokoitsya",
+    "RU-C474-bespokoystvo",
+    "RU-C474-uspokaivatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch474.txt",
+  "json": "russian/narration/ch474.json",
+  "textHash": "fnv1a64:aaf5ac35871329d3",
+  "jsonHash": "fnv1a64:02c9561b97c034fe",
+  "findings": []
+}

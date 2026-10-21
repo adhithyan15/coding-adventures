@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C313-maerchen",
+    "language": "german",
+    "chapter": 313,
+    "sequence": 17110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a43349928a82476"
+  },
+  "findings": []
+}

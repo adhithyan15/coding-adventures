@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C354-candidature",
+    "language": "french",
+    "chapter": 354,
+    "sequence": 19940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03982fbb58e95f27"
+  },
+  "findings": []
+}

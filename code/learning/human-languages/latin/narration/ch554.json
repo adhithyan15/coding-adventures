@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 554,
+  "title": "Household chores",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:dc23c7b5be2be150",
+  "lessons": [
+    {
+      "id": "LA-C554-subsellium",
+      "sequence": 29330,
+      "title": "subsellium, subselliī — a bench, low seat",
+      "headword": "subsellium, subselliī",
+      "romanization": "subsellium, subselliī",
+      "gloss": "a bench, low seat",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0a2d7999554a835",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a hinge, then the Latin for provisions."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: subsellium, subselliī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "subsellium, subselliī — \"a bench, low seat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Discipulī in subselliīs sedent. The pupils sit on benches."
+            },
+            {
+              "kind": "speech",
+              "text": "Neuter, second declension: sub + sella — lower than a chair. Also the benches of a law court."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "subsellium is built on sub \"below\" and sella \"seat, chair\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subsellium, subselliī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subsellium, subselliī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "subsellium, subselliī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *subsellium, subselliī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with subsellium, subselliī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *subsellium, subselliī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a hinge, then the Latin for provisions, then say subsellium, subselliī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a hinge, then the Latin for provisions, then say *subsellium, subselliī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does subsellium, subselliī mean? (\"A bench, low seat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C554-urceus",
+      "sequence": 29340,
+      "title": "urceus, urceī — a jug, pitcher",
+      "headword": "urceus, urceī",
+      "romanization": "urceus, urceī",
+      "gloss": "a jug, pitcher",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4b82f7df4b5f353",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for provisions, then the Latin for a bench."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: urceus, urceī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "urceus, urceī — \"a jug, pitcher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ancilla aquam urceō portat. The maid carries water in a jug."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine, second declension."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "urceus is a word of uncertain origin; Lewis & Short compares Greek hurche \"a jar\", and EtymDB links it with orca \"a cask\", but nothing is settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urceus, urceī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urceus, urceī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urceus, urceī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urceus, urceī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with urceus, urceī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *urceus, urceī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for provisions, then the Latin for a bench, then say urceus, urceī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for provisions, then the Latin for a bench, then say *urceus, urceī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does urceus, urceī mean? (\"A jug, pitcher\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C554-repono",
+      "sequence": 29350,
+      "title": "repōnō, repōnere — to put back; to store away",
+      "headword": "repōnō, repōnere",
+      "romanization": "repōnō, repōnere",
+      "gloss": "to put back; to store away",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0da2a46af8fddabc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a bench, then the Latin for a jug."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: repōnō, repōnere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "repōnō, repōnere — \"to put back; to store away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Post cēnam ancilla vāsa in armāriō repōnit. After dinner the maid puts the dishes back in the cupboard."
+            },
+            {
+              "kind": "speech",
+              "text": "repōnō, repōnere, reposuī, repositum. English repository."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "repōnō is built on re- \"back\" and pōnō \"to put\" (EtymDB; Lewis & Short). English repository comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "repōnō, repōnere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *repōnō, repōnere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "repōnō, repōnere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *repōnō, repōnere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with repōnō, repōnere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *repōnō, repōnere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a bench, then the Latin for a jug, then say repōnō, repōnere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a bench, then the Latin for a jug, then say *repōnō, repōnere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does repōnō, repōnere mean? (\"To put back; to store away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C554-sarcio",
+      "sequence": 29360,
+      "title": "sarciō, sarcīre — to mend, patch",
+      "headword": "sarciō, sarcīre",
+      "romanization": "sarciō, sarcīre",
+      "gloss": "to mend, patch",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b6f5fffc84c1703",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a jug, then the Latin for to put back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sarciō, sarcīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sarciō, sarcīre — \"to mend, patch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Avia tunicam nepōtis sarcit. Grandmother mends her grandson's tunic."
+            },
+            {
+              "kind": "speech",
+              "text": "sarciō, sarcīre, sarsī, sartum. Of clothes, roofs and friendships."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sarciō is inherited from a Proto-Indo-European root meaning \"to mend, make whole\" (EtymDB), though Lewis & Short calls it doubtful."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarciō, sarcīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarciō, sarcīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarciō, sarcīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarciō, sarcīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sarciō, sarcīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sarciō, sarcīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a jug, then the Latin for to put back, then say sarciō, sarcīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a jug, then the Latin for to put back, then say *sarciō, sarcīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sarciō, sarcīre mean? (\"To mend, patch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C554-pecto",
+      "sequence": 29370,
+      "title": "pectō, pectere — to comb",
+      "headword": "pectō, pectere",
+      "romanization": "pectō, pectere",
+      "gloss": "to comb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3319b9db78b280d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to put back, then the Latin for to mend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pectō, pectere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pectō, pectere — \"to comb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Ancilla crīnēs dominae pectit. The maid combs her mistress's hair."
+            },
+            {
+              "kind": "speech",
+              "text": "pectō, pectere, pexī, pexum. Pecten, already known, is the comb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pectō is inherited from a Proto-Indo-European root meaning \"to comb, shear\", and Greek peko is a cousin (EtymDB; Lewis & Short). pecten \"comb\" is built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pectō, pectere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pectō, pectere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pectō, pectere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pectō, pectere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pectō, pectere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pectō, pectere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to put back, then the Latin for to mend, then say pectō, pectere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to put back, then the Latin for to mend, then say *pectō, pectere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pectō, pectere mean? (\"To comb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R554-review-553-554",
+      "sequence": 29380,
+      "title": "Home, books and the arts",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "a review of chapters 553-554",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c56b971797fab79d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for a forecourt and a door bolt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a forecourt, a door bolt, a threshold, a hinge, provisions",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a forecourt, a door bolt, a threshold, a hinge, provisions]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bench, a jug, to put back, to mend, to comb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bench, a jug, to put back, to mend, to comb]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A forecourt? (vestibulum, vestibulī.) A door bolt? (pessulus, pessulī.) A threshold? (līmen, līminis.) A hinge? (cardō, cardinis.) Provisions? (penus, penūs.) A bench? (subsellium, subselliī.) A jug? (urceus, urceī.) To put back? (repōnō, repōnere.) To mend? (sarciō, sarcīre.) To comb? (pectō, pectere.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R554-review-final-554",
+      "sequence": 29390,
+      "title": "Household chores — once more",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "one more pass over chapter 554",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3809e371209b7e96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Latin for a bench and a jug."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bench, a jug, to put back, to mend, to comb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bench, a jug, to put back, to mend, to comb]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bench? (subsellium, subselliī.) A jug? (urceus, urceī.) To put back? (repōnō, repōnere.) To mend? (sarciō, sarcīre.) To comb? (pectō, pectere.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

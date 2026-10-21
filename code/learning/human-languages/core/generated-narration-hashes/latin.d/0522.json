@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:efdf67a8335f7ee1",
+  "lessonIds": [
+    "LA-C522-palleo",
+    "LA-C522-pallidus",
+    "LA-C522-rubeo",
+    "LA-C522-macer",
+    "LA-C522-macies"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch522.txt",
+  "json": "latin/narration/ch522.json",
+  "textHash": "fnv1a64:4f6a0c262cf44886",
+  "jsonHash": "fnv1a64:8e39be3dfc68fdb8",
+  "findings": []
+}

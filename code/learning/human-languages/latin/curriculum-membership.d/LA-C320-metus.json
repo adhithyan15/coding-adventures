@@ -1,0 +1,11 @@
+{
+  "id": "LA-C320-metus",
+  "pathSegment": "LA-PATH-320-PAVOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-320-PAVOR",
+      "order": 1
+    }
+  ]
+}

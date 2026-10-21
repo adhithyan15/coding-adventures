@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:eed63b2bf57c9aa8",
+  "lessonIds": [
+    "RU-C452-bulochnaya",
+    "RU-C452-gastronom",
+    "RU-C452-prilavok",
+    "RU-C452-prodavshchitsa",
+    "RU-C452-vzveshivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch452.txt",
+  "json": "russian/narration/ch452.json",
+  "textHash": "fnv1a64:2476447d5e003618",
+  "jsonHash": "fnv1a64:d26979206cefc98f",
+  "findings": []
+}

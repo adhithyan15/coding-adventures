@@ -1,5 +1,5 @@
 layout Surface {
   Column [ surface-root ] {
-    slot: children
+    slot: items
   }
 }

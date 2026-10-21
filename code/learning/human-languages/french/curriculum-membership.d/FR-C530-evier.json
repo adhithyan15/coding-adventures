@@ -1,0 +1,11 @@
+{
+  "id": "FR-C530-evier",
+  "pathSegment": "FR-PATH-530-VAISSELLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-530-VAISSELLE",
+      "order": 1
+    }
+  ]
+}

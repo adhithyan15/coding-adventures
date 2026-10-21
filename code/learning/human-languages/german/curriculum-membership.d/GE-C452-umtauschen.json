@@ -1,0 +1,11 @@
+{
+  "id": "GE-C452-umtauschen",
+  "pathSegment": "GE-PATH-452-LIEFERUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-452-LIEFERUNG",
+      "order": 4
+    }
+  ]
+}

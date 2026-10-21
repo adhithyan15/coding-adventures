@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C357-rukovoditel",
+    "language": "russian",
+    "chapter": 357,
+    "sequence": 20830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b072a429b86ae04b"
+  },
+  "findings": []
+}

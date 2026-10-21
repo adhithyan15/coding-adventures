@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:711dfd75019092b5",
+  "lessonIds": [
+    "LA-C501-commoveo",
+    "LA-C501-afficio",
+    "LA-C501-affectus",
+    "LA-C501-tranquillus",
+    "LA-C501-securus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch501.txt",
+  "json": "latin/narration/ch501.json",
+  "textHash": "fnv1a64:088a2af61a6a157b",
+  "jsonHash": "fnv1a64:7d847d1766b73f89",
+  "findings": []
+}

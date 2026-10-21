@@ -1,0 +1,11 @@
+{
+  "id": "GE-C305-feiertag",
+  "pathSegment": "GE-PATH-305-FEIER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-305-FEIER",
+      "order": 2
+    }
+  ]
+}

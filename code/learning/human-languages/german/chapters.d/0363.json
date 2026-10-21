@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Die Umwelt schützen",
+  "label": "ch:ge-die-umwelt-schutzen",
+  "canDo": "I can talk about protecting the environment, climate change, sustainability, recycling and consumption.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C363-verbrauchen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can talk about protecting the environment, climate change, sustainability, recycling and consumption.",
+    "assesses": [
+      "GE-LEX-C363-UMWELT-03",
+      "GE-LEX-C363-UMWELT-04",
+      "GE-LEX-C363-UMWELT-05"
+    ]
+  }
+}

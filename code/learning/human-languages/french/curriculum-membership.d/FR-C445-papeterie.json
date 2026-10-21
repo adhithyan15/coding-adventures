@@ -1,0 +1,11 @@
+{
+  "id": "FR-C445-papeterie",
+  "pathSegment": "FR-PATH-445-BOUTIQUES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-445-BOUTIQUES",
+      "order": 2
+    }
+  ]
+}

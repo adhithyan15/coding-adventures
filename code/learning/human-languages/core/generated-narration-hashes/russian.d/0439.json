@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:b2a495f141499743",
+  "lessonIds": [
+    "RU-C439-povorot",
+    "RU-C439-razvilka",
+    "RU-C439-tupik",
+    "RU-C439-srezat",
+    "RU-C439-ogibat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch439.txt",
+  "json": "russian/narration/ch439.json",
+  "textHash": "fnv1a64:f534a27d8da2f666",
+  "jsonHash": "fnv1a64:ac6f1f72b75fba87",
+  "findings": []
+}

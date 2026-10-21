@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Depends on `mosaic-pkg-grid` 0.3.0 (Cell's `row-height`, Column's `column-key`/`column-width`), whose Cell and Column load on Qt again.
+
 All notable changes to `mosaic-pkg-sheet` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.

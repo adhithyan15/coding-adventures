@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-512-CHANT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-512-CHANT"
+  ],
+  "after": []
+}

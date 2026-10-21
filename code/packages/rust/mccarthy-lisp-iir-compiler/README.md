@@ -1,6 +1,6 @@
 # mccarthy-lisp-iir-compiler
 
-Lowers a **McCarthy 1960 Lisp** (Lisp 1.0) AST into an **IIRModule** —
+Lowers a **McCarthy 1960 Lisp** (Lisp 1.0) **parse tree** into an **IIRModule** —
 the architecture-independent IR consumed by every applicable LANG backend:
 the dedicated McCarthy VM, native AOT, JIT, WASM, JVM, CLR, BEAM, and LLVM.
 
@@ -9,6 +9,35 @@ is complete through **W16**. See the implementation history in
 [`MCCARTHY-LISP-PLAN.md`](../../../specs/MCCARTHY-LISP-PLAN.md) and the
 authoritative completed backend matrix in
 [`MCCARTHY-LISP-PLATFORM-MATRIX.md`](../../../specs/MCCARTHY-LISP-PLATFORM-MATRIX.md).
+
+## Pipeline: the compiler walks the parse tree
+
+```text
+source ──mccarthy-lisp-lexer──▶ tokens ──mccarthy-lisp-parser::parse_to_cst──▶ GrammarASTNode (CST)
+                                                                                     │
+                                                         mccarthy-lisp-iir-compiler  │  compile_ast
+                                                                                     ▼
+                                                                                IIRModule
+```
+
+Per LANG84 ("the IIR compiler walks the parse tree"), the compiler's only
+input is the generic `GrammarASTNode` that the shared grammar-driven
+parser builds from `code/grammars/mccarthy_lisp/mccarthy_lisp.grammar`.
+It does **not** go through the parser crate's typed `LispExpr` AST
+(`parse` / `extract_program`), which remains available for other tools.
+
+The two pieces of McCarthy sugar are read straight off the tree, lazily,
+through borrowed cursors — nothing is copied into a second tree:
+
+- `'X` (a `quoted` node: `'` token + `sexpr`) is read as the list `(QUOTE X)`;
+- `(A B . C)` (a `list` node whose `list_body` holds `sexpr` nodes, an
+  optional `DOT` token and a tail `sexpr`) is read as the cons chain
+  `(A . (B . C))`, so `(CAR . ('(A B)))` is the same call as `(CAR '(A B))`.
+
+A validation pass over the CST rejects what the typed-AST extractor used to
+reject — an integer literal that does not fit in `i64`, nesting past
+`MAX_AST_DEPTH`, a malformed tree — with the same `parse: …` messages. The
+emitted IIR is identical to the pre-0.9 typed-AST pipeline.
 
 ## What it does
 
@@ -128,4 +157,5 @@ McCarthy core/backend item; the completed worklist and proof live in
 ## API
 
 - `compile_source(src, module_name) -> Result<IIRModule, CompileError>`
-- `compile_forms(&[LispExpr], module_name) -> Result<IIRModule, CompileError>`
+- `compile_ast(&GrammarASTNode, module_name) -> Result<IIRModule, CompileError>` —
+  for a tree you already hold from `mccarthy_lisp_parser::parse_to_cst`

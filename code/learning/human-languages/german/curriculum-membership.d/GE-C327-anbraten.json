@@ -1,0 +1,11 @@
+{
+  "id": "GE-C327-anbraten",
+  "pathSegment": "GE-PATH-327-KOECHELN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-327-KOECHELN",
+      "order": 3
+    }
+  ]
+}

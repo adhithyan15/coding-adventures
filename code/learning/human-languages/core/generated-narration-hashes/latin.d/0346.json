@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:8b4ca74b58a48744",
+  "lessonIds": [
+    "LA-C346-deus",
+    "LA-C346-divus",
+    "LA-C346-numen",
+    "LA-C346-mortalis",
+    "LA-C346-immortalis",
+    "LA-R346-review-339-346"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch346.txt",
+  "json": "latin/narration/ch346.json",
+  "textHash": "fnv1a64:d6c469074766e0be",
+  "jsonHash": "fnv1a64:58edcaca665ee515",
+  "findings": []
+}

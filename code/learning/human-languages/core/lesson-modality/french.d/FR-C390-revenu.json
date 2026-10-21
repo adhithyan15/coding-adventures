@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C390-revenu",
+    "language": "french",
+    "chapter": 390,
+    "sequence": 21780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c5f926b1d6a6bbd"
+  },
+  "findings": []
+}

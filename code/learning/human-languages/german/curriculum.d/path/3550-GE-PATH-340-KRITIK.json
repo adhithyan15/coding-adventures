@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-340-KRITIK",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-340-KRITIK"
+  ],
+  "after": []
+}

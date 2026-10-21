@@ -1,0 +1,11 @@
+{
+  "id": "GE-C407-blitzer",
+  "pathSegment": "GE-PATH-407-BLITZER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-407-BLITZER",
+      "order": 1
+    }
+  ]
+}

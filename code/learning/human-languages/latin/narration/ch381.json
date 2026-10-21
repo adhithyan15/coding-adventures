@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 381,
+  "title": "Pleaders, Clients and Clerks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4bea79c58639c861",
+  "lessons": [
+    {
+      "id": "LA-C381-causidicus",
+      "sequence": 20430,
+      "title": "causidicus, causidicī — an advocate, a pleader for hire",
+      "headword": "causidicus, causidicī",
+      "romanization": "causidicus, causidicī",
+      "gloss": "an advocate, a pleader for hire",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c801435e7f626da9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to do with energy, then the Latin for to tire out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: causidicus, causidicī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "causidicus, causidicī — \"an advocate, a pleader for hire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Causidicus prō reō dīxit. The advocate spoke for the accused."
+            },
+            {
+              "kind": "speech",
+              "text": "causidicus, causidicī m., from causa, a case, and dīcō: a case-speaker, often said with a little scorn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "causidicus is built from causa \"a case at law\" and dīcō \"to say\" (Lewis & Short): one who speaks cases."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "causidicus, causidicī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *causidicus, causidicī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "causidicus, causidicī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *causidicus, causidicī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with causidicus, causidicī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *causidicus, causidicī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to do with energy, then the Latin for to tire out, then say causidicus, causidicī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to do with energy, then the Latin for to tire out, then say *causidicus, causidicī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does causidicus, causidicī mean? (\"An advocate, a pleader for hire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C381-cliens",
+      "sequence": 20440,
+      "title": "cliēns, clientis — a client, a dependant",
+      "headword": "cliēns, clientis",
+      "romanization": "cliēns, clientis",
+      "gloss": "a client, a dependant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:092c12d487fde955",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to tire out, then the Latin for an advocate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cliēns, clientis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cliēns, clientis — \"a client, a dependant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Clientēs māne ad domum patrōnī veniunt. The clients come to their patron's house in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "cliēns, clientis m. A client owed his patron greeting and support; the patron owed him protection and help at law. English client."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cliēns is usually traced to an old verb clueō \"to hear, to be called\" (Lewis & Short): one who listens to his patron. English client comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cliēns, clientis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cliēns, clientis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cliēns, clientis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cliēns, clientis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cliēns, clientis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cliēns, clientis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to tire out, then the Latin for an advocate, then say cliēns, clientis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to tire out, then the Latin for an advocate, then say *cliēns, clientis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cliēns, clientis mean? (\"A client, a dependant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C381-navicularius",
+      "sequence": 20450,
+      "title": "nāviculārius, nāviculāriī — a shipowner, a shipper",
+      "headword": "nāviculārius, nāviculāriī",
+      "romanization": "nāviculārius, nāviculāriī",
+      "gloss": "a shipowner, a shipper",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51612e2f1f7a49ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for an advocate, then the Latin for a client."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nāviculārius, nāviculāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nāviculārius, nāviculāriī — \"a shipowner, a shipper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Nāviculārius frūmentum trāns mare vehit. The shipowner carries grain across the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "nāviculārius, nāviculāriī m., built on a little word for a ship, from nāvis. The great grain ships of Rome were run by nāviculāriī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nāviculārius is built on nāvicula \"a little ship\" (Lewis & Short), a small form of nāvis \"a ship\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāviculārius, nāviculāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāviculārius, nāviculāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāviculārius, nāviculāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāviculārius, nāviculāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nāviculārius, nāviculāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nāviculārius, nāviculāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for an advocate, then the Latin for a client, then say nāviculārius, nāviculāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for an advocate, then the Latin for a client, then say *nāviculārius, nāviculāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nāviculārius, nāviculāriī mean? (\"A shipowner, a shipper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C381-librarius",
+      "sequence": 20460,
+      "title": "librārius, librāriī — a copyist, a scribe; a bookseller",
+      "headword": "librārius, librāriī",
+      "romanization": "librārius, librāriī",
+      "gloss": "a copyist, a scribe; a bookseller",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e1c242aa71a9b4c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a client, then the Latin for a shipowner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: librārius, librāriī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "librārius, librāriī — \"a copyist, a scribe; a bookseller\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Librārius librōs dīligenter scrībit. The copyist writes out books carefully."
+            },
+            {
+              "kind": "speech",
+              "text": "librārius, librāriī m., built on liber, a book, with a short i. Copyists were often slaves trained to write a fast clear hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "librārius is built on liber, librī \"a book\" (Lewis & Short), with the ending -ārius of a man busy with something. English library comes from the same word through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "librārius, librāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *librārius, librāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "librārius, librāriī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *librārius, librāriī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with librārius, librāriī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *librārius, librāriī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a client, then the Latin for a shipowner, then say librārius, librāriī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a client, then the Latin for a shipowner, then say *librārius, librāriī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does librārius, librāriī mean? (\"A copyist, a scribe; a bookseller\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C381-agrimensor",
+      "sequence": 20470,
+      "title": "agrīmēnsor, agrīmēnsōris — a land surveyor",
+      "headword": "agrīmēnsor, agrīmēnsōris",
+      "romanization": "agrīmēnsor, agrīmēnsōris",
+      "gloss": "a land surveyor",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee3965d4a69c3b5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a shipowner, then the Latin for a copyist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: agrīmēnsor, agrīmēnsōris",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "agrīmēnsor, agrīmēnsōris — \"a land surveyor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Agrīmēnsor fīnēs agrī mētītur. The surveyor measures the boundaries of the field."
+            },
+            {
+              "kind": "speech",
+              "text": "agrīmēnsor, agrīmēnsōris m., from agrī, of a field, and mētior, to measure (participle mēnsus). A late word, in Ammianus and Cassiodorus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "agrīmēnsor is built from agrī, the genitive of ager \"a field\" and mēnsor \"a measurer\" (Lewis & Short), the agent noun of mētior \"to measure\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agrīmēnsor, agrīmēnsōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agrīmēnsor, agrīmēnsōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agrīmēnsor, agrīmēnsōris, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agrīmēnsor, agrīmēnsōris*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with agrīmēnsor, agrīmēnsōris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *agrīmēnsor, agrīmēnsōris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a shipowner, then the Latin for a copyist, then say agrīmēnsor, agrīmēnsōris again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a shipowner, then the Latin for a copyist, then say *agrīmēnsor, agrīmēnsōris* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does agrīmēnsor, agrīmēnsōris mean? (\"A land surveyor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

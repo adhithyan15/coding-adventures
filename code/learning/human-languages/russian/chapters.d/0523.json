@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Plot and Characters",
+  "label": "ch:ru-plot-and-characters",
+  "canDo": "I can talk about the story of a book or a film.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C523-zachityvatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about the story of a book or a film.",
+    "assesses": [
+      "RU-LEX-C523-PLOT-03",
+      "RU-LEX-C523-PLOT-04",
+      "RU-LEX-C523-PLOT-05"
+    ]
+  }
+}

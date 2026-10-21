@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:7b8937c8c820afcf",
+  "lessonIds": [
+    "GE-C408-vorfahrt",
+    "GE-C408-ueberholen",
+    "GE-C408-draengeln",
+    "GE-C408-gegenverkehr",
+    "GE-C408-ausweichen"
+  ],
+  "tex": "german/book/chapters/ch408-wer-fahrt-zuerst.tex"
+}

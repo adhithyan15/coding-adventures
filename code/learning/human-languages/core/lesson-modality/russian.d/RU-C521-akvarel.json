@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C521-akvarel",
+    "language": "russian",
+    "chapter": 521,
+    "sequence": 29280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b97434e77f3a81c"
+  },
+  "findings": []
+}

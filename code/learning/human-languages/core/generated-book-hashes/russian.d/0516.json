@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:2cdd8d75d711beb0",
+  "lessonIds": [
+    "RU-C516-melodiya",
+    "RU-C516-ritm",
+    "RU-C516-pripev",
+    "RU-C516-napevat",
+    "RU-C516-falshivit",
+    "RU-R516-review-509-516"
+  ],
+  "tex": "russian/book/chapters/ch516-tune-and-rhythm.tex"
+}

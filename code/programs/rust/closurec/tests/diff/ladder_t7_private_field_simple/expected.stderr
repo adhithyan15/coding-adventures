@@ -1,0 +1,9 @@
+tests/diff/ladder_t7_private_field_simple/input/a.js:1:10: ERROR - [JSC_UNSUPPORTED_LANGUAGE_FEATURE] This language feature is not currently supported by the compiler: Private elements.
+  1| class A { #x = 1; get(){ return this.#x; } }
+               ^
+
+tests/diff/ladder_t7_private_field_simple/input/a.js:1:37: ERROR - [JSC_UNSUPPORTED_LANGUAGE_FEATURE] This language feature is not currently supported by the compiler: Private elements.
+  1| class A { #x = 1; get(){ return this.#x; } }
+                                          ^
+
+2 error(s), 0 warning(s)

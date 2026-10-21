@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:53e555b1ba5d269f",
+  "lessonIds": [
+    "FR-C524-version-originale",
+    "FR-C524-projeter",
+    "FR-C524-doublage",
+    "FR-C524-realisateur",
+    "FR-C524-tournage"
+  ],
+  "tex": "french/book/chapters/ch524-en-version-originale.tex"
+}

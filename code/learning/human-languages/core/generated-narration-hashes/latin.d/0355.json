@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:33f3403e3213d2d5",
+  "lessonIds": [
+    "LA-C355-condio",
+    "LA-C355-condimentum",
+    "LA-C355-aspergo",
+    "LA-C355-infundo",
+    "LA-C355-colo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch355.txt",
+  "json": "latin/narration/ch355.json",
+  "textHash": "fnv1a64:8500810088bda716",
+  "jsonHash": "fnv1a64:cfdbcd044fd970f9",
+  "findings": []
+}

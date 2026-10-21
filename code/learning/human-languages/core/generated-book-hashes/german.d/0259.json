@@ -1,0 +1,11 @@
+{
+  "language": "german",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:f44ec5c81b3f21d9",
+  "lessonIds": [
+    "GE-C259-aelter-als",
+    "GE-C259-seit",
+    "GE-C259-review"
+  ],
+  "tex": "german/book/chapters/ch259-older-than-since-when.tex"
+}

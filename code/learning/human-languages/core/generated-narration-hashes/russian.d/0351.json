@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:8b593eccdc4adc61",
+  "lessonIds": [
+    "RU-C351-poskolku",
+    "RU-C351-ved",
+    "RU-C351-blagodarya",
+    "RU-C351-vsledstvie",
+    "RU-C351-sledovatelno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch351.txt",
+  "json": "russian/narration/ch351.json",
+  "textHash": "fnv1a64:9549e23d8dee3e8f",
+  "jsonHash": "fnv1a64:f09bf213b830cfbf",
+  "findings": []
+}

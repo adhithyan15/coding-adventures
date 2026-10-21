@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:65618fee80f0fa19",
+  "lessonIds": [
+    "GE-C368-stattdessen",
+    "GE-C368-anstatt",
+    "GE-C368-ohne-dass",
+    "GE-C368-verzichten",
+    "GE-C368-ersetzen"
+  ],
+  "tex": "german/book/chapters/ch368-stattdessen.tex"
+}

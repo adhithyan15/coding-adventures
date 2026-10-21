@@ -1,0 +1,11 @@
+{
+  "id": "FR-C300-secourir",
+  "pathSegment": "FR-PATH-300-SECOURS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-300-SECOURS",
+      "order": 1
+    }
+  ]
+}

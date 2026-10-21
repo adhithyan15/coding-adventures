@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:b42aa24ef0f48b00",
+  "lessonIds": [
+    "RU-C431-konditsioner",
+    "RU-C431-obogrevatel",
+    "RU-C431-skvoznyak",
+    "RU-C431-provetrivat",
+    "RU-C431-sushit"
+  ],
+  "tex": "russian/book/chapters/ch431-too-hot-too-cold.tex"
+}

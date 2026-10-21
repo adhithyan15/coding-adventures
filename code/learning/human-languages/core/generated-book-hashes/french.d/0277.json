@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:990102c947481530",
+  "lessonIds": [
+    "FR-C277-etape",
+    "FR-C277-phase",
+    "FR-C277-chronologie",
+    "FR-C277-instant",
+    "FR-C277-a-l-issue-de"
+  ],
+  "tex": "french/book/chapters/ch277-etape-par-etape.tex"
+}

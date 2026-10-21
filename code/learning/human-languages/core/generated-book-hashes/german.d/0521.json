@@ -1,0 +1,14 @@
+{
+  "language": "german",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:a508aee6eaf382da",
+  "lessonIds": [
+    "GE-C521-gedicht",
+    "GE-C521-dichter",
+    "GE-C521-reim",
+    "GE-C521-reimen",
+    "GE-C521-schriftsteller",
+    "GE-R521-review-514-521"
+  ],
+  "tex": "german/book/chapters/ch521-gedichte-und-reime.tex"
+}

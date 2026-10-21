@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-328-SIEB",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "GE-EXT-328-SIEB"
+  ],
+  "after": []
+}

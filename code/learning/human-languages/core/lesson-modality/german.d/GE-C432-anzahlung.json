@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C432-anzahlung",
+    "language": "german",
+    "chapter": 432,
+    "sequence": 23260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d5c40c8fe99abf1"
+  },
+  "findings": []
+}

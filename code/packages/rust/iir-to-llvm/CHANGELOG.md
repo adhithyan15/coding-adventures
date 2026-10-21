@@ -1,4 +1,57 @@
 # Changelog — iir-to-llvm
+## [0.61.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4):
+  `call { i64, i1 } @llvm.sadd/ssub/smul.with.overflow.i64`, `extractvalue`
+  the overflow bit, `br` to a block that calls the module-local
+  `@__iir_trap` with `Trap.Overflow` (flush, report, abort), and define the
+  destination from the value half on the other edge only. `i64_neg_ovf a` is
+  `ssub.with.overflow(0, a)`. Each intrinsic used is declared once.
+- `op_support` and `SUPPORTED_OPS`: all four.
+- Tests: the textual shape per op, and real-`clang` runs at the range edges
+  (`MAX - 1 + 1`, `MIN + MAX`, `MIN + 1 - 1`, `-1 - MAX`, `-2^32 * 2^31`,
+  `3_037_000_499²`, `-MAX`) plus print-then-trap for each op (stdout is a
+  pipe, so the earlier output survives only because the trap flushes).
+
+## [0.60.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **Self-contained LANG83 runtime in the emitted module.** A module that uses
+  `write_i64` gets `define linkonce_odr void @__iir_write_i64(i64)`
+  (`printf("%lld")`); one that can trap gets
+  `define linkonce_odr void @__iir_trap(ptr, i64) noreturn`, which calls
+  `fflush(NULL)` **first** (libc stdout is buffered on a pipe and `abort` does
+  not flush it), then `write(2, "trap: <kind>\n")`, then `abort()`, plus one
+  `@__iir_trap_msg.<id>` constant per kind used. Nothing beyond libc is linked,
+  so no harness C runtime is involved ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)).
+- **`i64_div_floor` / `i64_mod_floor`**: `icmp`+`br` to a trap block for a zero
+  divisor and (div) `MIN / -1`; mod divides by 1 instead of -1. `sdiv`/`srem`
+  are only reached with a safe divisor (never LLVM UB), then a `select`-based
+  floor fix-up.
+- **`trap "<kind>"`**: `call @__iir_trap(msg); unreachable`, then a fresh
+  (unreachable) block for any IIR that follows. When `trap` is the function's
+  last instruction that fresh block is closed with `unreachable` too (security
+  review note: an empty block with no terminator is invalid IR clang rejects;
+  tests `trailing_trap_closes_its_after_block` and the real-clang
+  `trailing_trap_compiles_and_traps_on_real_clang`). The validator rejects a
+  `trap` whose operand is not a registered kind literal.
+- `op_support`: the four PR1b ops are `Lowered`.
+- Tests: IR shape (edges before `sdiv`, flush → write → abort order, message
+  bytes, fresh block after `trap`, validator), and three real-`clang` runs:
+  the floor sign table and `MIN / 1`, `MIN mod -1 = 0`, and print-then-trap
+  proving buffered stdout survives a `Trap.Overflow` / `Trap.DivZero`.
+
+## [0.59.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Every existing registered op is `Lowered`. The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with `SUPPORTED_BUILTINS`.
+
 ## 0.58.0 - 2026-10-05 - valid floating module-global initializers
 
 Typed `double` and `float` module globals now use LLVM floating-point zero

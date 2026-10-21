@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C432-gerant",
+    "language": "french",
+    "chapter": 432,
+    "sequence": 23940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a9b8383d465bfc8"
+  },
+  "findings": []
+}

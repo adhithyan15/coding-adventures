@@ -1,0 +1,11 @@
+{
+  "id": "LA-C337-praemium",
+  "pathSegment": "LA-PATH-337-PALMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-337-PALMA",
+      "order": 1
+    }
+  ]
+}

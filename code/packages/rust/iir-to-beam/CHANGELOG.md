@@ -1,5 +1,76 @@
 # Changelog — iir-to-beam
 
+## [0.22.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4).
+  BEAM integers never overflow, they become bignums, so the lowering computes
+  the *exact* result with one `gc_bif2` (`erlang:'+'`, `'-'`, `'*'`; negation
+  is `0 - a`) into the destination register, then range-checks it:
+  `is_lt {f,LO_OK} rd MIN` and `is_lt {f,DONE} MAX rd`, each followed by
+  `erlang:error('Trap.Overflow')`. An out-of-range bignum reaches only the
+  raise. The destination is a variable register below `live`, so the bignum
+  survives a GC.
+- `op_support`: all four `Lowered`.
+- `tests/lang83_pr1b.rs`'s opcode model gains `erlang:*/2` (in `i128`, exact
+  like a bignum) and runs the sequences: exact results at the range edges,
+  `Trap.Overflow` for 11 overflowing inputs (including `MIN * MIN`), the
+  instruction shape, and a destination that aliases an operand.
+
+## [0.21.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): Erlang's
+  `div`/`rem` truncate, raise a kind-less `badarith` for a zero divisor and
+  never overflow (`MIN div -1` is the bignum 2^63), so both edges are tested
+  with `is_eq_exact` first (`Trap.DivZero`; div `Trap.Overflow`; mod returns 0
+  for any `b == -1`), then the floor fix-up is done with `is_eq_exact`/`is_lt`
+  branches. The truncating remainder lives in a dedicated **anonymous**
+  register (`FnMeta::floor_tmp`) allocated **below** `next_reg`, so it is a GC
+  root at every `gc_bif` (a bignum `div`/`rem` can collect) and is
+  nil-initialised by the prologue. A dest that aliases an operand stays
+  correct. (Security review, LOW: the register was first keyed by the name
+  `__lang83_floor_tmp` in `reg_map` and reused a user variable of that name,
+  which the expansion then clobbered; it is no longer reachable from any IIR
+  name — test `user_variable_named_like_the_floor_temp_is_not_clobbered`.)
+- **`trap "<kind>"`** → `move {atom,'<kind>'} x0; call_ext erlang:error/1`.
+  The error reason is the kind atom itself (LANG83 updated: no
+  `{iir_trap, Kind}` tuple — this backend has no tuple-construction opcodes,
+  and a registered kind atom is already unambiguous).
+- **`write_i64`** → `io:format("~w", [X])`, the `print_i64` sequence without
+  `~n`, through the same `io` server; listed with the other `call_ext`
+  builtins in the live-across analysis.
+- `op_support`: the four PR1b ops are `Lowered`; `write_i64` joins
+  `CALL_BUILTIN_SUPPORTED_NAMES`.
+- Tests (`tests/lang83_pr1b.rs`): with no local `erl`, the emitted instruction
+  stream is **executed on a model** of the opcodes it uses (i128 arithmetic,
+  Erlang truncating `div`/`rem`): full sign tables, `MIN / 1`, `MIN mod -1`,
+  both traps, aliasing dest, and the GC-root property of the temp; plus
+  `trap`'s kind atom and `write_i64`'s `"~w"` format. CI's BEAM column runs
+  the real emulator.
+
+## [0.20.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and
+  `op_support(name) -> OpSupport`: this backend's declaration for every entry of
+  `interpreter_ir::op_registry::STANDARD_OPS` ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)). Every existing registered op is `Lowered`. The four PR1b ops
+  (`write_i64`, `i64_div_floor`, `i64_mod_floor`, `trap`) are
+  `Refused("not yet lowered; LANG83 PR1b")`. `lang-aot`'s `check_module_for`
+  uses the table to refuse an unsupported op at compile time.
+- Tests: every registry entry is declared exactly once; the PR1b ops are
+  refused; the Builtin rows agree with the new `validate::CALL_BUILTIN_SUPPORTED_NAMES`.
+- **`print_i64` now writes through the `io` server** (`io:format("~w~n", [X])`)
+  instead of `erlang:display/1`. The bytes are identical for integers (`42\n`),
+  but `erlang:display` writes straight from the emulator and bypasses the `io`
+  server `putchar`/`print_str` use, so mixed output could be reordered (LANG83
+  "ordered output stream"). The new sequence is a real `call_ext`, so
+  `print_i64` joins the call-emitting builtins in the live-across analysis (live
+  values are saved to Y slots); a new test pins the sequence, the `io:format/2`
+  import and GC-root validity, and runs it on real `erl` when present.
+  `io_out` still uses `erlang:display/1`.
+- The validator's inline builtin list is hoisted into
+  `validate::CALL_BUILTIN_SUPPORTED_NAMES` (the predicates folded in; behaviour
+  unchanged) so the validator and `OP_SUPPORT` share one list.
+
 ## Unreleased - reserve heap for string literals
 
 `str_const` now emits `test_heap` for two words per byte before the

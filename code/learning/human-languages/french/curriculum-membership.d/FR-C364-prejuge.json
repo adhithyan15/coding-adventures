@@ -1,0 +1,11 @@
+{
+  "id": "FR-C364-prejuge",
+  "pathSegment": "FR-PATH-364-JUSTICE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-364-JUSTICE",
+      "order": 3
+    }
+  ]
+}

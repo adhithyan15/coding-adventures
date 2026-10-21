@@ -1,0 +1,11 @@
+{
+  "id": "GE-C391-versichern",
+  "pathSegment": "GE-PATH-391-STEUER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-391-STEUER",
+      "order": 4
+    }
+  ]
+}

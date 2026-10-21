@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-531-KUECHE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-531-KUECHE"
+  ],
+  "after": []
+}

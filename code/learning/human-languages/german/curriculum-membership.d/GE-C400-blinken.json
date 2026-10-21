@@ -1,0 +1,11 @@
+{
+  "id": "GE-C400-blinken",
+  "pathSegment": "GE-PATH-400-SICHT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-400-SICHT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:6c86ffc3b6446e94",
+  "lessonIds": [
+    "GE-C358-gesellschaft",
+    "GE-C358-demokratie",
+    "GE-C358-abstimmen",
+    "GE-C358-abstimmung",
+    "GE-C358-beitragen"
+  ],
+  "tex": "german/book/chapters/ch358-die-gesellschaft.tex"
+}

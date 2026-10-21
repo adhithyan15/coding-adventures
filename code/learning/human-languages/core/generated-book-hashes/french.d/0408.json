@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:40e9c71e6d885d6a",
+  "lessonIds": [
+    "FR-C408-contravention",
+    "FR-C408-radar",
+    "FR-C408-flasher",
+    "FR-C408-verbaliser",
+    "FR-C408-controler"
+  ],
+  "tex": "french/book/chapters/ch408-controles-sur-la-route.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C429-carpentum",
+  "pathSegment": "LA-PATH-429-CARRUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-429-CARRUS",
+      "order": 3
+    }
+  ]
+}

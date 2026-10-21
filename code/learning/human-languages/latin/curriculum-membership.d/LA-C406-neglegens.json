@@ -1,0 +1,11 @@
+{
+  "id": "LA-C406-neglegens",
+  "pathSegment": "LA-PATH-406-SEDULUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-406-SEDULUS",
+      "order": 4
+    }
+  ]
+}

@@ -26,3 +26,7 @@ tempfile = "3"
 [[test]]
 name = "package_compiles"
 path = "tests/package_compiles.rs"
+
+[[test]]
+name = "host_theme_tokens"
+path = "tests/host_theme_tokens.rs"

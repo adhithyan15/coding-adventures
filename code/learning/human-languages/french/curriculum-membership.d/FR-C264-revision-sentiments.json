@@ -1,0 +1,11 @@
+{
+  "id": "FR-C264-revision-sentiments",
+  "pathSegment": "FR-PATH-264-SENTIMENTS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-264-SENTIMENTS",
+      "order": 2
+    }
+  ]
+}

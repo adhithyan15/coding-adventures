@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C411-poputka",
+    "language": "russian",
+    "chapter": 411,
+    "sequence": 23620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b69710bb82223466"
+  },
+  "findings": []
+}

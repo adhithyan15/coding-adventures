@@ -1542,6 +1542,40 @@ const FOCUS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicFocusState: View
 }
 "#;
 
+/// UI25 §4 — a text area's commit chord: Cmd+Return (macOS, iPadOS with a
+/// hardware keyboard), and Ctrl+Return, which every other backend accepts
+/// too. Return alone is the `TextEditor`'s line break and returns
+/// `.ignored`, so it still reaches the text; a chord returns `.handled`,
+/// so it inserts nothing. `"\u{3}"` is the keypad Enter.
+///
+/// `onKeyPress` sees the key while the editor it modifies has focus, so two
+/// text areas on one screen each commit only themselves. A hidden
+/// `.keyboardShortcut` button would be window-wide instead, and in practice
+/// did not fire while a `TextEditor` was first responder.
+///
+/// `onKeyPress` is macOS 14 / iOS 17, newer than the generated package's
+/// floor (macOS 13 / iOS 16), so the check lives here. On the older systems
+/// the editor still edits; it has no commit chord.
+const COMMIT_CHORD_HELPER_SWIFT: &str = r#"private struct _MosaicCommitChord: ViewModifier {
+    let commit: () -> Void
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(macOS 14.0, iOS 17.0, *) {
+            content.onKeyPress(keys: [.return, KeyEquivalent("\u{3}")], phases: .down) { press in
+                guard press.modifiers.contains(.command) || press.modifiers.contains(.control) else {
+                    return .ignored
+                }
+                commit()
+                return .handled
+            }
+        } else {
+            content
+        }
+    }
+}
+"#;
+
 const PRESS_STATE_HELPER_SWIFT: &str = r#"private struct _MosaicPressState: View {
     @GestureState private var isPressed = false
     private let content: (Bool) -> AnyView
@@ -3630,6 +3664,10 @@ fn emit_component(
         out.push_str(SLIDER_HELPER_SWIFT);
         writeln!(out).unwrap();
     }
+    if layout_has_multiline_commit(&layout.root) {
+        out.push_str(COMMIT_CHORD_HELPER_SWIFT);
+        writeln!(out).unwrap();
+    }
     if layout_contains_native_table(&layout.root) {
         out.push_str(TABLE_ROW_HELPER_SWIFT);
         writeln!(out).unwrap();
@@ -4637,7 +4675,7 @@ fn emit_view_tree(
         // `TextField`. HostInput used to go straight to the `TextField`
         // path, so every multiline HostInput was drawn as one line here.
         "Input" | "HostInput" if find_keyword_prop(node, "multiline") == Some("true") => {
-            emit_text_editor(node, indent)?
+            emit_text_editor(node, indent, emits)?
         }
         "Input" | "HostInput" => emit_host_input(node, indent, emits)?,
         "HostButton" => emit_host_button(node, indent, emits, for_payload)?,
@@ -5821,6 +5859,111 @@ fn text_field_disabled_modifier(node: &LayoutNode) -> Result<Option<String>, Pip
     Ok(None)
 }
 
+/// The event case a text field's `onCommit` dispatches, shared by the
+/// single-line `.onSubmit` and the multi-line commit chord so both carry the
+/// same payload: a void emit dispatches its bare case, and the canonical
+/// one-text-parameter commit carries the field's bound value under the
+/// authored label.
+fn text_commit_case_call(
+    emits: &[EmitDecl],
+    emit_name: &str,
+    value_expr: &str,
+) -> Result<String, PipelineEmitError> {
+    let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+    validate_emit_name(&case_name)?;
+    Ok(emits
+        .iter()
+        .find(|emit| emit.name == emit_name)
+        .and_then(|emit| match emit.params.as_slice() {
+            [] => Some(format!(".{case_name}")),
+            [param] if param.r#type == EmitPayloadType::Text => {
+                let label = to_camel_case_first_lower(&param.name);
+                Some(format!(".{case_name}({label}: {value_expr})"))
+            }
+            _ => None,
+        })
+        .unwrap_or_else(|| format!(".{case_name}")))
+}
+
+/// Does any text area commit (UI25 §4)? Gates [`COMMIT_CHORD_HELPER_SWIFT`].
+fn layout_has_multiline_commit(node: &LayoutNode) -> bool {
+    (matches!(node.tag.as_str(), "HostInput" | "Input")
+        && find_keyword_prop(node, "multiline") == Some("true")
+        && find_emit_ref_prop(node, "onCommit").is_some())
+        || node.children.iter().any(layout_has_multiline_commit)
+}
+
+/// A text field's `placeholder`, as it reaches SwiftUI.
+///
+/// | authored form          | `TextField` title / `TextEditor` overlay                  |
+/// |------------------------|-----------------------------------------------------------|
+/// | `placeholder : "Text"` | `"Text"` / `Text("Text")` (a `LocalizedStringKey`, as before) |
+/// | `placeholder : 3`      | `"3"` / `Text("3")`                                       |
+/// | `placeholder : slot: s`| `String(describing: s)` / `Text(verbatim: …)`             |
+/// | `placeholder : item`   | `String(describing: item)` (a `For` binding)              |
+/// | `placeholder : ( e )`  | `String(describing: ( e ))`                               |
+///
+/// `String(describing:)` makes the bound forms a `String` whatever the slot
+/// or binding's Swift type is, which is what `TextField`'s
+/// `StringProtocol` title and `Text(verbatim:)` take. This read string
+/// literals only, so every bound placeholder was dropped without a report.
+enum SwiftPlaceholder {
+    /// A Swift string literal, quotes included.
+    Literal(String),
+    /// A Swift expression of type `String`.
+    Bound(String),
+}
+
+impl SwiftPlaceholder {
+    /// The first argument of `TextField(_:text:)`.
+    fn title(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => literal.clone(),
+            SwiftPlaceholder::Bound(expr) => expr.clone(),
+        }
+    }
+
+    /// The `Text` view a `TextEditor` overlays while its value is empty.
+    fn text(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => format!("Text({literal})"),
+            SwiftPlaceholder::Bound(expr) => format!("Text(verbatim: {expr})"),
+        }
+    }
+
+    /// The argument of `.accessibilityLabel(...)` when the placeholder
+    /// names an otherwise unlabelled `TextEditor`.
+    fn accessibility_label(&self) -> String {
+        match self {
+            SwiftPlaceholder::Literal(literal) => literal.clone(),
+            SwiftPlaceholder::Bound(_) => self.text(),
+        }
+    }
+}
+
+/// Read a text field's `placeholder` (see [`SwiftPlaceholder`]). An empty
+/// literal is no placeholder; a slot or binding name that is not a Swift
+/// identifier is an `UnsafeSlotName` error, never spliced into the source.
+fn swift_placeholder(node: &LayoutNode) -> Result<Option<SwiftPlaceholder>, PipelineEmitError> {
+    Ok(match find_prop_value(node, "placeholder") {
+        Some(LayoutPropValue::String(text)) if !text.is_empty() => Some(
+            SwiftPlaceholder::Literal(format!("\"{}\"", escape_swift_string(text))),
+        ),
+        Some(LayoutPropValue::Number(number)) => {
+            Some(SwiftPlaceholder::Literal(format!("\"{number}\"")))
+        }
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            Some(SwiftPlaceholder::Bound(format!("String(describing: {camel})")))
+        }
+        Some(LayoutPropValue::Expr(expr)) if !expr.trim().is_empty() => Some(
+            SwiftPlaceholder::Bound(format!("String(describing: {})", expr.trim())),
+        ),
+        _ => None,
+    })
+}
+
 /// Lower a multiline text field — `HostInput` or the legacy `Input` with
 /// `multiline: true` — to a SwiftUI `TextEditor`.
 ///
@@ -5828,15 +5971,24 @@ fn text_field_disabled_modifier(node: &LayoutNode) -> Result<Option<String>, Pip
 /// |-----------------------|--------------------------------------------------------|
 /// | `value` + `onChange`  | `TextEditor(text: Binding(get:set:))`, as `TextField`   |
 /// | `placeholder: "..."`  | a `Text` overlay shown while the value is empty         |
+/// | `placeholder: slot: x`| the same overlay, `Text(verbatim: String(describing: x))` |
 /// | `a11y-label`          | `.accessibilityLabel(...)` (placeholder as a fallback)  |
 /// | `disabled`/`read-only`| `.disabled(...)`, shared with `TextField`               |
-/// | `onCommit`            | none: Return inserts a newline in a `TextEditor`        |
+/// | `onCommit`            | `.modifier(_MosaicCommitChord { ... })`: Cmd/Ctrl+Return |
 /// | `onCancel`            | `.onExitCommand` on macOS, as `TextField`               |
-fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+///
+/// Return inserts a newline in a `TextEditor`, so `.onSubmit` never fires
+/// there. UI25 §4's multi-line commit key is Cmd+Return on macOS and iPadOS
+/// (Ctrl+Return is accepted too, as every other backend accepts both); see
+/// [`COMMIT_CHORD_HELPER_SWIFT`].
+fn emit_text_editor(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let child_pad = " ".repeat(indent + 4);
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+    let placeholder = swift_placeholder(node)?;
 
     let value_expr = match node.props.iter().find(|p| p.name == "value") {
         Some(p) => match &p.value {
@@ -5876,9 +6028,10 @@ fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     };
 
     let mut output = format!("{pad}ZStack(alignment: .topLeading) {{\n");
-    if !placeholder.is_empty() {
+    if let Some(placeholder) = &placeholder {
+        let overlay = placeholder.text();
         output.push_str(&format!(
-            "{child_pad}if {value_expr}.isEmpty {{\n{child_pad}    Text({placeholder_lit})\n{child_pad}        .foregroundColor(.secondary)\n{child_pad}        .padding(.horizontal, 5)\n{child_pad}        .padding(.vertical, 8)\n{child_pad}        .allowsHitTesting(false)\n{child_pad}        .accessibilityHidden(true)\n{child_pad}}}\n"
+            "{child_pad}if {value_expr}.isEmpty {{\n{child_pad}    {overlay}\n{child_pad}        .foregroundColor(.secondary)\n{child_pad}        .padding(.horizontal, 5)\n{child_pad}        .padding(.vertical, 8)\n{child_pad}        .allowsHitTesting(false)\n{child_pad}        .accessibilityHidden(true)\n{child_pad}}}\n"
         ));
     }
     output.push_str(&format!("{child_pad}TextEditor(text: {text_binding})"));
@@ -5887,8 +6040,8 @@ fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     // placeholder unconditionally and drop the authored name (J3b-pre).
     if let Some(label) = swift_accessibility_label(node) {
         output.push_str(&format!(".accessibilityLabel({label})"));
-    } else if !placeholder.is_empty() {
-        output.push_str(&format!(".accessibilityLabel({placeholder_lit})"));
+    } else if let Some(placeholder) = &placeholder {
+        output.push_str(&format!(".accessibilityLabel({})", placeholder.accessibility_label()));
     }
     if let Some(part_name) = &node.part_name {
         output.push_str(&format!(
@@ -5901,9 +6054,16 @@ fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
     if let Some(modifier) = text_field_disabled_modifier(node)? {
         output.push_str(&modifier);
     }
+    // Return is a line break in a `TextEditor` (#15930), so `onCommit` rides
+    // the Cmd/Ctrl+Return chord instead, with the single-line payload rule.
+    if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
+        let case_call = text_commit_case_call(emits, emit_name, &value_expr)?;
+        output.push_str(&format!(
+            ".modifier(_MosaicCommitChord {{ dispatch({case_call}) }})"
+        ));
+    }
     // Escape cancels, as on the single-line `TextField`; macOS-only, so it is
-    // guarded exactly as there. There is no `onCommit` counterpart: Return
-    // is a line break in a `TextEditor` (#15930).
+    // guarded exactly as there.
     if let Some(emit_name) = find_emit_ref_prop(node, "onCancel") {
         let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         validate_emit_name(&case_name)?;
@@ -5922,6 +6082,7 @@ fn emit_text_editor(node: &LayoutNode, indent: usize) -> Result<String, Pipeline
 /// | Moslayout prop                | SwiftUI surface                                 |
 /// |-------------------------------|-------------------------------------------------|
 /// | `placeholder: "..."`          | First arg of `TextField("placeholder", ...)`    |
+/// | `placeholder: slot: x`        | `TextField(String(describing: x), ...)`         |
 /// | `value: slot: x`              | `text: .constant(x)` (see binding nuance below) |
 /// | `read-only: slot: x`          | `.disabled(x)` modifier                         |
 /// | `read-only: true` / `false`   | `.disabled(true)` / `.disabled(false)` modifier |
@@ -5960,10 +6121,11 @@ fn emit_host_input(
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // First arg: the placeholder string literal. We escape `\` and `"`
-    // per Swift string-literal rules; everything else passes through.
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let placeholder_lit = format!("\"{}\"", escape_swift_string(placeholder));
+    // First arg: the title — the placeholder, literal or bound (see
+    // `swift_placeholder`), or `""` when there is none.
+    let placeholder_arg = swift_placeholder(node)?
+        .map(|placeholder| placeholder.title())
+        .unwrap_or_else(|| "\"\"".to_string());
 
     // `value: slot: x` -> `text: .constant(x)`. If `value` is an Expr
     // (e.g. `value: ( v )` where `v` is a For-loop binding from the
@@ -6011,7 +6173,7 @@ fn emit_host_input(
     };
 
     // The opening `TextField` expression.
-    let mut line = format!("{pad}TextField({placeholder_lit}, text: {text_binding})");
+    let mut line = format!("{pad}TextField({placeholder_arg}, text: {text_binding})");
 
     // Keep the author-owned MLL part identity on the native control. This is
     // the stable cross-platform handle for accessibility and interaction
@@ -6050,20 +6212,7 @@ fn emit_host_input(
     // while the canonical one-text-field commit event carries the input's
     // current bound value under the authored parameter label.
     if let Some(emit_name) = find_emit_ref_prop(node, "onCommit") {
-        let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-        validate_emit_name(&case_name)?;
-        let case_call = emits
-            .iter()
-            .find(|emit| emit.name == *emit_name)
-            .and_then(|emit| match emit.params.as_slice() {
-                [] => Some(format!(".{case_name}")),
-                [param] if param.r#type == EmitPayloadType::Text => {
-                    let label = to_camel_case_first_lower(&param.name);
-                    Some(format!(".{case_name}({label}: {value_expr})"))
-                }
-                _ => None,
-            })
-            .unwrap_or_else(|| format!(".{case_name}"));
+        let case_call = text_commit_case_call(emits, emit_name, &value_expr)?;
         line.push_str(&format!(".onSubmit {{ dispatch({case_call}) }}"));
     }
 
@@ -7368,6 +7517,9 @@ fn emit_host_tooltip(
 ///     .disabled(disabled)
 /// ```
 ///
+/// A bound placeholder (`placeholder : slot: p`) is the title as
+/// `String(describing: p)`, the same lowering `HostInput` uses.
+///
 /// `.constant(value)` is used when there is no `onChange` handler.
 /// When `value` and `onChange` are both present, the field uses a
 /// writable `Binding(get:set:)` whose setter dispatches the new
@@ -7376,8 +7528,11 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
     let pad = " ".repeat(indent);
     let mod_pad = " ".repeat(indent + 4);
 
-    let placeholder = find_string_prop(node, "placeholder").unwrap_or("");
-    let escaped_placeholder = escape_swift_string(placeholder);
+    // The title is the placeholder, literal or bound (see
+    // `swift_placeholder`; EM-14: this read literals only), or `""`.
+    let title = swift_placeholder(node)?
+        .map(|placeholder| placeholder.title())
+        .unwrap_or_else(|| "\"\"".to_string());
 
     let value_prop = find_prop_value(node, "value");
     let value_expr: String = match value_prop {
@@ -7410,7 +7565,7 @@ fn emit_host_number_input(node: &LayoutNode, indent: usize) -> Result<String, Pi
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}TextField(\"{escaped_placeholder}\", value: {value_binding}, format: .number)"
+        "{pad}TextField({title}, value: {value_binding}, format: .number)"
     )
     .unwrap();
 
@@ -8964,6 +9119,24 @@ mod tests {
     use mosmodel_compiler::EmitParam;
     use mosstyle_compiler::{PartStyle, StateStyle, StyleDef, StyleProp, StyleTransition};
 
+    /// A scratch-name nonce that is unique for every call in this process.
+    ///
+    /// The clock alone is not: macOS reports `SystemTime` in whole microseconds,
+    /// so two tests running in parallel threads could read the same "nanos" and
+    /// be handed the same directory, each seeing the other's files (this made
+    /// `compose_fixtures` fail about one run in five). The counter makes every
+    /// call distinct; the clock keeps names from a previous run apart.
+    #[cfg(target_os = "macos")] // its only caller type-checks with the macOS SDK
+    fn unique_nonce() -> String {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let nanos = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock after epoch")
+            .as_nanos();
+        format!("{nanos}-{n}")
+    }
+
     // --- Story fixtures (#14459) ---------------------------------------
 
     /// A fixture value is written as a Swift literal of the slot's declared
@@ -9066,7 +9239,7 @@ mod tests {
     #[test]
     fn generated_typography_typechecks_with_swiftui() {
         let directory = std::env::temp_dir().join(format!("mosaic-swift-font-{}-{}", std::process::id(),
-            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
+            unique_nonce()));
         std::fs::create_dir(&directory).unwrap();
         let mut paths = Vec::new();
         for name in ["ScaledFirst", "ScaledSecond"] {
@@ -10170,8 +10343,19 @@ mod tests {
             out.contains(".accessibilityIdentifier(\"front-template-input\")"),
             "got:\n{out}"
         );
-        // Return is a line break in a TextEditor, so nothing commits on it.
+        // Return is a line break in a TextEditor, so nothing commits on it;
+        // Ctrl/Cmd+Return does instead (UI25 §4), through the generated
+        // `_MosaicCommitChord` modifier.
         assert!(!out.contains(".onSubmit"), "got:\n{out}");
+        assert!(
+            out.contains(".modifier(_MosaicCommitChord { dispatch(.save) })"),
+            "got:\n{out}"
+        );
+        assert_eq!(
+            out.matches("private struct _MosaicCommitChord: ViewModifier {").count(),
+            1,
+            "got:\n{out}"
+        );
         // Escape still cancels, guarded to macOS as on TextField.
         assert!(
             out.contains("#if os(macOS)\n") && out.contains(".onExitCommand { dispatch(.discard) }"),
@@ -10179,6 +10363,205 @@ mod tests {
         );
         // `auto-focus` is keyed on the HostInput tag, not on TextField.
         assert!(out.contains(".focused($isFocused)"), "got:\n{out}");
+    }
+
+    /// UI25 §4 — the multi-line commit chord carries the same payload as
+    /// the single-line `.onSubmit`: a text-payload `onCommit` gets the bound
+    /// value. `onKeyPress` is macOS 14 / iOS 17, newer than the generated
+    /// package's floor, so the helper checks availability itself and lets
+    /// the chord through as `.ignored` unless Command or Control is held.
+    #[test]
+    fn a_multiline_field_commits_on_cmd_or_ctrl_return() {
+        for tag in ["HostInput", "Input"] {
+            let input = LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: vec![
+                    prop_slot_ref("value", "body"),
+                    prop_keyword("multiline", "true"),
+                    prop_emit_ref("onChange", "onBodyChange"),
+                    prop_emit_ref("onCommit", "onSave"),
+                ],
+                children: vec![],
+            };
+            let out = from_pipeline(
+                &component(
+                    "Draft",
+                    vec![slot("body", SlotType::Text, true)],
+                    vec![
+                        emit("onBodyChange", vec![param("value", EmitPayloadType::Text)]),
+                        emit("onSave", vec![param("text", EmitPayloadType::Text)]),
+                    ],
+                ),
+                &layout_with("Draft", container_node("Box", vec![input])),
+                &empty_style("Draft"),
+            )
+            .unwrap()
+            .output;
+            assert!(
+                out.contains(".modifier(_MosaicCommitChord { dispatch(.save(text: body)) })"),
+                "{tag}: {out}"
+            );
+            for helper_line in [
+                "if #available(macOS 14.0, iOS 17.0, *) {",
+                "content.onKeyPress(keys: [.return, KeyEquivalent(\"\\u{3}\")], phases: .down) { press in",
+                "guard press.modifiers.contains(.command) || press.modifiers.contains(.control) else {",
+                "return .ignored",
+                "return .handled",
+            ] {
+                assert!(out.contains(helper_line), "{tag}: `{helper_line}` in {out}");
+            }
+        }
+    }
+
+    /// The helper is emitted only when a text area commits.
+    #[test]
+    fn a_single_line_commit_emits_no_commit_chord_helper() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: vec![
+                prop_slot_ref("value", "body"),
+                prop_emit_ref("onCommit", "onSave"),
+            ],
+            children: vec![],
+        };
+        let out = from_pipeline(
+            &component(
+                "Draft",
+                vec![slot("body", SlotType::Text, true)],
+                vec![emit("onSave", vec![])],
+            ),
+            &layout_with("Draft", container_node("Box", vec![input])),
+            &empty_style("Draft"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains(".onSubmit { dispatch(.save) }"), "got:\n{out}");
+        assert!(!out.contains("_MosaicCommitChord"), "got:\n{out}");
+}
+
+    /// Lower one text field with a slot-bound placeholder and return the
+    /// generated Swift.
+    fn text_field_with_placeholder(tag: &str, multiline: bool, placeholder: LayoutProp) -> String {
+        let mut props = vec![prop_slot_ref("value", "front-template"), placeholder];
+        if multiline {
+            props.push(prop_keyword("multiline", "true"));
+        }
+        let input = LayoutNode {
+            tag: tag.to_string(),
+            part_name: Some("front-template-input".to_string()),
+            props,
+            children: vec![],
+        };
+        from_pipeline(
+            &component(
+                "Editor",
+                vec![
+                    slot("front-template", SlotType::Text, true),
+                    slot("front-template-placeholder", SlotType::Text, true),
+                ],
+                vec![],
+            ),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap()
+        .output
+    }
+
+    /// A slot-bound placeholder is the `TextField` title. `TextField` takes
+    /// any `StringProtocol` title, and `String(describing:)` makes that hold
+    /// for whatever type the slot or binding has. This path read string
+    /// literals only, so `placeholder : slot: x` (every toolkit `Input`)
+    /// produced `TextField("", …)`, silently.
+    #[test]
+    fn a_slot_bound_placeholder_is_the_text_field_title() {
+        for tag in ["HostInput", "Input"] {
+            let out = text_field_with_placeholder(
+                tag,
+                false,
+                prop_slot_ref("placeholder", "front-template-placeholder"),
+            );
+            assert!(
+                out.contains(
+                    "TextField(String(describing: frontTemplatePlaceholder), text: .constant(frontTemplate))"
+                ),
+                "{tag}:\n{out}"
+            );
+        }
+    }
+
+    /// The multiline (`TextEditor`) shape has no title, so the placeholder
+    /// is an overlay shown while the value is empty, and the fallback
+    /// accessible name. Both now come from the bound value; before, a
+    /// slot-bound placeholder left the editor with neither
+    /// (mosaic-pkg-note-type-editor's card templates).
+    #[test]
+    fn a_slot_bound_placeholder_is_the_text_editor_overlay_and_fallback_name() {
+        for tag in ["HostInput", "Input"] {
+            let out = text_field_with_placeholder(
+                tag,
+                true,
+                prop_slot_ref("placeholder", "front-template-placeholder"),
+            );
+            assert!(
+                out.contains("if frontTemplate.isEmpty {"),
+                "{tag} overlay condition:\n{out}"
+            );
+            assert!(
+                out.contains("Text(verbatim: String(describing: frontTemplatePlaceholder))\n"),
+                "{tag} overlay text:\n{out}"
+            );
+            assert!(
+                out.contains(
+                    ".accessibilityLabel(Text(verbatim: String(describing: frontTemplatePlaceholder)))"
+                ),
+                "{tag} fallback name:\n{out}"
+            );
+        }
+    }
+
+    /// A `For` binding and a parenthesised expression reach the title the
+    /// same way: `String(describing:)` around the authored expression.
+    #[test]
+    fn a_binding_or_expression_placeholder_is_the_text_field_title() {
+        let out = text_field_with_placeholder("HostInput", false, prop_keyword("placeholder", "hint"));
+        assert!(
+            out.contains("TextField(String(describing: hint), text:"),
+            "{out}"
+        );
+        let out = text_field_with_placeholder(
+            "HostInput",
+            false,
+            prop_expr("placeholder", "( hints[0] )"),
+        );
+        assert!(
+            out.contains("TextField(String(describing: ( hints[0] )), text:"),
+            "{out}"
+        );
+    }
+
+    /// A slot name that is not a Swift identifier is refused loudly, never
+    /// spliced into the generated expression.
+    #[test]
+    fn an_unsafe_placeholder_slot_name_is_rejected() {
+        let input = LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: vec![prop_slot_ref("placeholder", "x), text: y); evil(")],
+            children: vec![],
+        };
+        let err = from_pipeline(
+            &component("Editor", vec![], vec![]),
+            &layout_with("Editor", container_node("Box", vec![input])),
+            &empty_style("Editor"),
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "got {err:?}"
+        );
     }
 
     #[test]
@@ -13333,6 +13716,67 @@ mod tests {
             r.contains("TextField(\"Enter a number\", value: .constant(count), format: .number)"),
             "expected TextField with .number format, got:\n{r}"
         );
+    }
+
+    /// EM-14 — a bound `placeholder` is the `TextField` title, as a
+    /// `String` (`String(describing:)`), so `init(_:value:format:)` takes
+    /// it through its `StringProtocol` overload. This read string literals
+    /// only, so mosaic-pkg-toolkit's `NumberInput` (`placeholder : slot:
+    /// placeholder`) emitted `TextField("", …)` with nothing reported.
+    #[test]
+    fn host_number_input_bound_placeholder_is_the_textfield_title() {
+        let m = component(
+            "X",
+            vec![
+                slot("count", SlotType::Number, true),
+                slot("amount-hint", SlotType::Text, false),
+            ],
+            vec![],
+        );
+        for (placeholder, title) in [
+            (
+                prop_slot_ref("placeholder", "amount-hint"),
+                "String(describing: amountHint)",
+            ),
+            (prop_keyword("placeholder", "hint"), "String(describing: hint)"),
+            (
+                prop_expr("placeholder", "( hints[0] )"),
+                "String(describing: ( hints[0] ))",
+            ),
+        ] {
+            let l = layout_with(
+                "X",
+                container_node(
+                    "Box",
+                    vec![leaf(
+                        "HostNumberInput",
+                        vec![placeholder, prop_slot_ref("value", "count")],
+                    )],
+                ),
+            );
+            let r = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+            let expected = format!("TextField({title}, value: .constant(count), format: .number)");
+            assert!(r.contains(&expected), "expected `{expected}`, got:\n{r}");
+        }
+    }
+
+    /// EM-14 — a slot name that is not a Swift identifier is refused
+    /// instead of being spliced into the title expression.
+    #[test]
+    fn host_number_input_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        let l = layout_with(
+            "X",
+            container_node(
+                "Box",
+                vec![leaf(
+                    "HostNumberInput",
+                    vec![prop_slot_ref("placeholder", "x) + evil(")],
+                )],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("X")).unwrap_err();
+        assert!(matches!(err, PipelineEmitError::UnsafeSlotName(_)), "got {err:?}");
     }
 
     /// UI29-4 SwiftUI test 5 — `onChange: emit: onSet` makes the

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C296-schwangerschaft",
+    "language": "german",
+    "chapter": 296,
+    "sequence": 16260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a283b251dd18a32"
+  },
+  "findings": []
+}

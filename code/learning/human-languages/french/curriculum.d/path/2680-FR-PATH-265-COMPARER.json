@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-265-COMPARER",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-265-COMPARER"
+  ],
+  "after": []
+}

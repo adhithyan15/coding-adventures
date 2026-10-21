@@ -3430,3 +3430,254 @@ fn runtime_string_index_calls_checked_helper() {
     assert!(ll.contains("declare i64 @__twig_str_index(i64, i64)"));
     assert!(ll.contains("call i64 @__twig_str_index(i64 %source, i64 %index)"));
 }
+
+// ===========================================================================
+// LANG83 PR1b — floor division, `trap`, `write_i64`
+// ===========================================================================
+
+fn v(name: &str) -> Operand {
+    Operand::Var(name.into())
+}
+
+/// `floor(a, b) -> i64 { return <op>(a, b) }` plus a `main` that prints
+/// `<op>(x, y)` with `write_i64` for each pair, separated by spaces, then
+/// returns 0. The operands arrive as parameters, so nothing is constant-folded.
+fn floor_program(op: &str, pairs: &[(i64, i64)]) -> IIRModule {
+    let floor = IIRFunction::new(
+        "floor",
+        vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new(op, Some("q".into()), vec![v("a"), v("b")], "i64"),
+            IIRInstr::new("ret", None, vec![v("q")], "i64"),
+        ],
+    );
+    let mut body = vec![IIRInstr::new("const", Some("sp".into()), vec![Operand::Int(32)], "i64")];
+    for (i, (a, b)) in pairs.iter().enumerate() {
+        let (x, y, r) = (format!("x{i}"), format!("y{i}"), format!("r{i}"));
+        body.push(IIRInstr::new("const", Some(x.clone()), vec![Operand::Int(*a)], "i64"));
+        body.push(IIRInstr::new("const", Some(y.clone()), vec![Operand::Int(*b)], "i64"));
+        body.push(IIRInstr::new("call", Some(r.clone()), vec![v("floor"), v(&x), v(&y)], "i64"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("write_i64"), v(&r)], "void"));
+        body.push(IIRInstr::new("call_builtin", None, vec![v("putchar"), v("sp")], "void"));
+    }
+    body.push(IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![v("z")], "i64"));
+    let main = IIRFunction::new("main", vec![], "i64", body);
+    IIRModule {
+        name: "floor".into(),
+        functions: vec![floor, main],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+        exports: vec![],
+        imports: vec![],
+    }
+}
+
+#[test]
+fn i64_div_floor_checks_both_edges_before_sdiv() {
+    let ll = lower(&floor_program("i64_div_floor", &[(7, 2)]));
+    let zero = ll.find("icmp eq i64 %b, 0").expect("zero check");
+    let min = ll.find("icmp eq i64 %a, -9223372036854775808").expect("MIN check");
+    let sdiv = ll.find("= sdiv i64 %a, %b").expect("sdiv");
+    assert!(zero < min && min < sdiv, "both edges are tested before the divide:\n{ll}");
+    assert!(ll.contains("call void @__iir_trap(ptr @__iir_trap_msg.3, i64 19)"), "{ll}");
+    assert!(ll.contains("call void @__iir_trap(ptr @__iir_trap_msg.5, i64 20)"), "{ll}");
+    assert!(ll.contains("= srem i64 %a, %b"));
+    assert!(ll.contains("%q = select i1 "), "floor fix-up selects the quotient:\n{ll}");
+}
+
+#[test]
+fn i64_mod_floor_divides_by_one_instead_of_minus_one() {
+    let ll = lower(&floor_program("i64_mod_floor", &[(7, 2)]));
+    assert!(ll.contains("select i1 %__fm1"), "b == -1 → divisor 1:\n{ll}");
+    assert!(!ll.contains("@__iir_trap_msg.5"), "MIN mod -1 is 0, never Trap.Overflow:\n{ll}");
+    assert!(ll.contains("@__iir_trap_msg.3"));
+}
+
+#[test]
+fn lang83_runtime_is_self_contained_and_flushes_before_abort() {
+    let ll = lower(&floor_program("i64_div_floor", &[(7, 2)]));
+    assert!(ll.contains("define linkonce_odr void @__iir_write_i64(i64 %x)"), "{ll}");
+    assert!(ll.contains("define linkonce_odr void @__iir_trap(ptr %msg, i64 %len) noreturn"), "{ll}");
+    let flush = ll.find("call i32 @fflush(ptr null)").expect("fflush(NULL)");
+    let write = ll.find("call i64 @write(i32 2,").expect("stderr write");
+    let abort = ll.find("call void @abort()").expect("abort");
+    assert!(flush < write && write < abort, "flush, then report, then abort");
+    let msg: String = b"trap: Trap.DivZero\n".iter().map(|b| format!("\\{b:02X}")).collect();
+    assert!(ll.contains(&format!("@__iir_trap_msg.3 = linkonce_odr unnamed_addr constant [19 x i8] c\"{msg}\"")), "{ll}");
+    assert!(!ll.contains("@__print_i64"), "write_i64 needs no harness runtime");
+}
+
+#[test]
+fn trap_terminates_its_block_and_validates_its_kind() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("trap", None, vec![Operand::Str("Trap.User".into())], "void"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![v("z")], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    let call = ll.find("call void @__iir_trap(ptr @__iir_trap_msg.6, i64 16)").expect("trap call");
+    let after = ll[call..].find("unreachable\n__after_trap").expect("unreachable, then a fresh block");
+    assert!(ll[call + after..].contains("ret i64 0"));
+    let bad = module_with(IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![IIRInstr::new("trap", None, vec![Operand::Str("Nope".into())], "void")],
+    ));
+    assert!(validate_for_llvm(&bad).iter().any(|e| e.contains("trap requires")), "{:?}", validate_for_llvm(&bad));
+}
+
+/// A `trap` that is the function's last instruction leaves no code after it,
+/// so the fresh `__after_trapN:` block must be closed with `unreachable` —
+/// an empty block with no terminator is invalid IR (security-review note on
+/// LANG83 PR1b). Checked textually here and, when clang is present, by real
+/// compilation in `trailing_trap_compiles_and_traps_on_real_clang`.
+#[test]
+fn trailing_trap_closes_its_after_block() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![IIRInstr::new("trap", None, vec![Operand::Str("Trap.User".into())], "void")],
+    );
+    let ll = lower(&module_with(f));
+    let body = &ll[ll.find("define void @main").or_else(|| ll.find("@main(")).expect("main defined")..];
+    let after = body.find("__after_trap").expect("after-trap block");
+    let tail = &body[after..body.find("\n}\n").expect("function end")];
+    assert!(tail.trim_end().ends_with("unreachable"), "after-trap block must be terminated:\n{tail}");
+}
+
+#[test]
+fn trailing_trap_compiles_and_traps_on_real_clang() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![IIRInstr::new("trap", None, vec![Operand::Str("Trap.User".into())], "void")],
+    );
+    let Some(out) = run_on_clang(&module_with(f), "trailing_trap") else { return };
+    assert!(!out.status.success(), "a trap exits non-zero");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("trap: Trap.User"));
+}
+
+/// Compile with real `clang` and run; `None` when clang is absent.
+fn run_on_clang(module: &IIRModule, tag: &str) -> Option<std::process::Output> {
+    use std::process::Command;
+    if Command::new("clang").arg("--version").output().map(|o| !o.status.success()).unwrap_or(true) {
+        eprintln!("clang not available — skipping {tag}");
+        return None;
+    }
+    let ll = lower_iir_to_llvm(module, &IIRLlvmConfig::default()).expect("lower");
+    let dir = std::env::temp_dir().join(format!("lang83_llvm_{tag}_{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("mkdir");
+    let ll_path = dir.join("prog.ll");
+    let exe = dir.join("prog");
+    std::fs::write(&ll_path, &ll).expect("write .ll");
+    let built = Command::new("clang").arg("-x").arg("ir").arg(&ll_path).arg("-o").arg(&exe).output().expect("clang");
+    assert!(built.status.success(), "clang failed:\n{}\n--- .ll ---\n{ll}", String::from_utf8_lossy(&built.stderr));
+    let out = Command::new(&exe).output().expect("run exe");
+    let _ = std::fs::remove_dir_all(&dir);
+    Some(out)
+}
+
+#[test]
+fn floor_ops_and_write_i64_run_on_real_clang() {
+    let pairs = [(7, 2), (-7, 2), (7, -2), (-7, -2), (i64::MIN, 1)];
+    let Some(out) = run_on_clang(&floor_program("i64_div_floor", &pairs), "div") else { return };
+    assert!(out.status.success());
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "3 -4 -4 3 -9223372036854775808 ");
+    let mod_pairs = [(7, 2), (-7, 2), (7, -2), (-7, -2), (i64::MIN, -1)];
+    let out = run_on_clang(&floor_program("i64_mod_floor", &mod_pairs), "mod").expect("clang present");
+    assert!(out.status.success());
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "1 1 -1 -1 0 ");
+}
+
+/// The flush-before-trap proof: the first quotients are written (buffered —
+/// stdout is a pipe here), then `MIN // -1` traps. The bytes must survive.
+#[test]
+fn trap_on_real_clang_flushes_stdout_then_names_its_kind() {
+    let Some(out) = run_on_clang(&floor_program("i64_div_floor", &[(-7, 2), (i64::MIN, -1)]), "ovf") else { return };
+    assert!(!out.status.success(), "a trap exits non-zero");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "-4 ", "output before the trap is flushed");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("trap: Trap.Overflow"));
+    let out = run_on_clang(&floor_program("i64_mod_floor", &[(5, 3), (1, 0)]), "zero").expect("clang present");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "2 ");
+    assert!(String::from_utf8_lossy(&out.stderr).contains("trap: Trap.DivZero"));
+}
+
+// ===========================================================================
+// LANG83 PR4 — overflow-checked arithmetic
+// ===========================================================================
+
+/// `floor_program`, but for a checked op; `i64_neg_ovf` ignores `b`. The name
+/// of the helper function stays `floor` (it is only a callee name).
+fn checked_program(op: &str, pairs: &[(i64, i64)]) -> IIRModule {
+    let mut module = floor_program("i64_div_floor", pairs);
+    let srcs = if op == "i64_neg_ovf" { vec![v("a")] } else { vec![v("a"), v("b")] };
+    module.functions[0].instructions[0] = IIRInstr::new(op, Some("q".into()), srcs, "i64");
+    module
+}
+
+#[test]
+fn checked_ops_call_the_overflow_intrinsic_and_branch_to_the_trap() {
+    for (op, call) in [
+        ("i64_add_ovf", "call { i64, i1 } @llvm.sadd.with.overflow.i64(i64 %a, i64 %b)"),
+        ("i64_sub_ovf", "call { i64, i1 } @llvm.ssub.with.overflow.i64(i64 %a, i64 %b)"),
+        ("i64_mul_ovf", "call { i64, i1 } @llvm.smul.with.overflow.i64(i64 %a, i64 %b)"),
+        ("i64_neg_ovf", "call { i64, i1 } @llvm.ssub.with.overflow.i64(i64 0, i64 %a)"),
+    ] {
+        let ll = lower(&checked_program(op, &[(1, 2)]));
+        let at = ll.find(call).unwrap_or_else(|| panic!("{op}: {call}\n{ll}"));
+        let flag = ll[at..].find("extractvalue { i64, i1 }").expect("flag extracted");
+        let trap = ll[at..].find("call void @__iir_trap(ptr @__iir_trap_msg.5, i64 20)").expect("Trap.Overflow");
+        let value = ll[at..].find("%q = extractvalue { i64, i1 }").expect("dest is the value half");
+        assert!(flag < trap && trap < value, "{op}: the value is defined only after the trap branch:\n{ll}");
+        let name = call.split('@').nth(1).unwrap().split('(').next().unwrap();
+        assert_eq!(ll.matches(&format!("declare {{ i64, i1 }} @{name}(i64, i64)")).count(), 1, "{op}: declared once");
+        // Only Trap.Overflow is possible.
+        assert!(!ll.contains("@__iir_trap_msg.3"), "{op} never divides by zero");
+    }
+    assert!(validate_for_llvm(&checked_program("i64_mul_ovf", &[(1, 2)])).is_empty());
+}
+
+#[test]
+fn checked_ops_run_on_real_clang_at_the_range_edges() {
+    const MAX: i64 = i64::MAX;
+    const MIN: i64 = i64::MIN;
+    let Some(out) = run_on_clang(&checked_program("i64_add_ovf", &[(MAX - 1, 1), (MIN, MAX), (-5, 3)]), "add") else {
+        return;
+    };
+    assert!(out.status.success());
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "9223372036854775807 -1 -2 ");
+    let out = run_on_clang(&checked_program("i64_sub_ovf", &[(MIN + 1, 1), (-1, MAX)]), "sub").expect("clang");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "-9223372036854775808 -9223372036854775808 ");
+    let out = run_on_clang(&checked_program("i64_mul_ovf", &[(-(1 << 32), 1 << 31), (3_037_000_499, 3_037_000_499)]), "mul")
+        .expect("clang");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "-9223372036854775808 9223372030926249001 ");
+    let out = run_on_clang(&checked_program("i64_neg_ovf", &[(MAX, 0), (0, 0)]), "neg").expect("clang");
+    assert_eq!(String::from_utf8_lossy(&out.stdout), "-9223372036854775807 0 ");
+}
+
+/// Print-then-trap for every checked op: the earlier result is flushed, the
+/// overflowing call traps `Trap.Overflow`, and nothing after it prints.
+#[test]
+fn checked_ops_on_real_clang_flush_then_trap_overflow() {
+    for (op, ok, bad, printed) in [
+        ("i64_add_ovf", (2, 3), (i64::MAX, 1), "5 "),
+        ("i64_sub_ovf", (2, 3), (i64::MIN, 1), "-1 "),
+        ("i64_mul_ovf", (2, 3), (i64::MIN, -1), "6 "),
+        ("i64_neg_ovf", (2, 0), (i64::MIN, 0), "-2 "),
+    ] {
+        let Some(out) = run_on_clang(&checked_program(op, &[ok, bad, ok]), op) else { return };
+        assert!(!out.status.success(), "{op}: a trap exits non-zero");
+        assert_eq!(String::from_utf8_lossy(&out.stdout), printed, "{op}: output before the trap is flushed");
+        assert!(String::from_utf8_lossy(&out.stderr).contains("trap: Trap.Overflow"), "{op}");
+    }
+}

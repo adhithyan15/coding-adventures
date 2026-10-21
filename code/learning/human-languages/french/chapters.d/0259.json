@@ -1,0 +1,21 @@
+{
+  "chapter": 259,
+  "title": "D'abord, Ensuite, Enfin — A Story Told in Order",
+  "label": "ch:fr-a-story-told-in-order",
+  "canDo": "I can tell a short connected story in order with d'abord, ensuite and enfin, and read one of about a hundred words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C259-revision-histoire",
+    "kind": "production",
+    "summary": "Complete FR-C259-revision-histoire: retell the reading's journey aloud, choosing scene or event for every verb.",
+    "assesses": [
+      "FR-LEX-DABORD-01",
+      "FR-LEX-RACONTER-01",
+      "FR-GRAM-RECIT-ORDRE-02",
+      "FR-GRAM-RECIT-SQUELETTE-02",
+      "FR-SKILL-READ-NARRATIVE-01"
+    ]
+  }
+}

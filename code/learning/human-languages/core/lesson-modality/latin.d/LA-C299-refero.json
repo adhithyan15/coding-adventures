@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C299-refero",
+    "language": "latin",
+    "chapter": 299,
+    "sequence": 16240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81c404ac14adb0b7"
+  },
+  "findings": []
+}

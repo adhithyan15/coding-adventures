@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:734a2eac78144bbc",
+  "lessonIds": [
+    "FR-C489-fiancailles",
+    "FR-C489-alliance",
+    "FR-C489-noces",
+    "FR-C489-lune-de-miel",
+    "FR-C489-ceremonie",
+    "FR-R489-revision-482-489"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch489.txt",
+  "json": "french/narration/ch489.json",
+  "textHash": "fnv1a64:4d0cdb86573ef193",
+  "jsonHash": "fnv1a64:8d2f749eb42536fb",
+  "findings": []
+}

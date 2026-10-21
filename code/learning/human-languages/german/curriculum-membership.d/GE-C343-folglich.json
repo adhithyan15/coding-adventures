@@ -1,0 +1,11 @@
+{
+  "id": "GE-C343-folglich",
+  "pathSegment": "GE-PATH-343-KONSEQUENZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-343-KONSEQUENZ",
+      "order": 2
+    }
+  ]
+}

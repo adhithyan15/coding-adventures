@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C363-denego",
+    "language": "latin",
+    "chapter": 363,
+    "sequence": 19510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:effa58f7e0135be4"
+  },
+  "findings": []
+}

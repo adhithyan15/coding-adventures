@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R529-review-522-529",
+    "language": "german",
+    "chapter": 529,
+    "sequence": 28270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1ce09ba644f1519"
+  },
+  "findings": []
+}

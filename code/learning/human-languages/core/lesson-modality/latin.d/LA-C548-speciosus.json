@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C548-speciosus",
+    "language": "latin",
+    "chapter": 548,
+    "sequence": 29030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:303ecffc9a609374"
+  },
+  "findings": []
+}

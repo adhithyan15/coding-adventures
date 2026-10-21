@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C476-gereizt",
+    "language": "german",
+    "chapter": 476,
+    "sequence": 25540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6284e4ae980502e"
+  },
+  "findings": []
+}

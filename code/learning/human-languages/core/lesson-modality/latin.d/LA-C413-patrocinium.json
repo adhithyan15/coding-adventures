@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C413-patrocinium",
+    "language": "latin",
+    "chapter": 413,
+    "sequence": 22110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c277a7c2a185d26"
+  },
+  "findings": []
+}

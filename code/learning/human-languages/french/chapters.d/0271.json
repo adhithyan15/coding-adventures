@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Peu à peu",
+  "label": "ch:fr-peu-a-peu",
+  "canDo": "I can say that something changed little by little, gradually, as things went along, in the long run, or sooner or later.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C271-tot-ou-tard",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can say that something changed little by little, gradually, as things went along, in the long run, or sooner or later.",
+    "assesses": [
+      "FR-LEX-C271-PEU-03",
+      "FR-LEX-C271-PEU-04",
+      "FR-LEX-C271-PEU-05"
+    ]
+  }
+}

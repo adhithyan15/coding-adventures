@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:90b438560aaeb8d6",
+  "lessonIds": [
+    "FR-C340-fiable",
+    "FR-C340-credible",
+    "FR-C340-douteux",
+    "FR-C340-vraisemblable",
+    "FR-C340-invraisemblable"
+  ],
+  "tex": "french/book/chapters/ch340-croire-ou-pas.tex"
+}

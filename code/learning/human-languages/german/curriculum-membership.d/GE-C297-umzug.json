@@ -1,0 +1,11 @@
+{
+  "id": "GE-C297-umzug",
+  "pathSegment": "GE-PATH-297-AUFWACHSEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-297-AUFWACHSEN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-303-SEISME",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about natural disasters: an earthquake, an avalanche, a rockfall, things caving in and the rubble.",
+  "prerequisites": []
+}

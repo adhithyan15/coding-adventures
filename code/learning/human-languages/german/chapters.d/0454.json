@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Eine Wanderung",
+  "label": "ch:ge-eine-wanderung",
+  "canDo": "I can talk about a hike: the hike, the trail, climbing up, climbing down and stopping for a rest.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C454-rasten",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can talk about a hike: the hike, the trail, climbing up, climbing down and stopping for a rest.",
+    "assesses": [
+      "GE-LEX-C454-WANDERUNG-03",
+      "GE-LEX-C454-WANDERUNG-04",
+      "GE-LEX-C454-WANDERUNG-05"
+    ]
+  }
+}

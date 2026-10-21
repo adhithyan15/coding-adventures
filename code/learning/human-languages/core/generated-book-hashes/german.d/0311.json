@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:2318290a2323d847",
+  "lessonIds": [
+    "GE-C311-weihnachtsmarkt",
+    "GE-C311-weihnachtsbaum",
+    "GE-C311-adventskranz",
+    "GE-C311-bescherung",
+    "GE-C311-lebkuchen"
+  ],
+  "tex": "german/book/chapters/ch311-im-advent.tex"
+}

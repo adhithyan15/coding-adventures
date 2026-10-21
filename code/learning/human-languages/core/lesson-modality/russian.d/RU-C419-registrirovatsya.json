@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C419-registrirovatsya",
+    "language": "russian",
+    "chapter": 419,
+    "sequence": 24030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:368a348378970146"
+  },
+  "findings": []
+}

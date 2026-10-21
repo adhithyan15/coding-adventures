@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Im Advent",
+  "label": "ch:ge-im-advent",
+  "canDo": "I can talk about Christmas customs: a Christmas market, a Christmas tree, an Advent wreath, the giving of presents and gingerbread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C311-lebkuchen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can talk about Christmas customs: a Christmas market, a Christmas tree, an Advent wreath, the giving of presents and gingerbread.",
+    "assesses": [
+      "GE-LEX-C311-ADVENT-03",
+      "GE-LEX-C311-ADVENT-04",
+      "GE-LEX-C311-ADVENT-05"
+    ]
+  }
+}

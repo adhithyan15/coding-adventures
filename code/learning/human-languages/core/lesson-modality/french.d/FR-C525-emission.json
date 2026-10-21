@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C525-emission",
+    "language": "french",
+    "chapter": 525,
+    "sequence": 28740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b33248a4d7c5fe2"
+  },
+  "findings": []
+}

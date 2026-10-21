@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:e0026420af60680c",
+  "lessonIds": [
+    "GE-C404-reifen",
+    "GE-C404-platten",
+    "GE-C404-aufpumpen",
+    "GE-C404-wagenheber",
+    "GE-C404-warndreieck"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch404.txt",
+  "json": "german/narration/ch404.json",
+  "textHash": "fnv1a64:37f5d0f0237c7852",
+  "jsonHash": "fnv1a64:20d2c1f2a3a2c062",
+  "findings": []
+}

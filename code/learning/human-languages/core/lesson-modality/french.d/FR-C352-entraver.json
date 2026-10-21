@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C352-entraver",
+    "language": "french",
+    "chapter": 352,
+    "sequence": 19830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a7fc0b8fc0279ef"
+  },
+  "findings": []
+}

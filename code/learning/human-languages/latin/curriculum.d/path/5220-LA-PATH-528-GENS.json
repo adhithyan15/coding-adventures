@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-528-GENS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "LA-EXT-528-GENS"
+  ],
+  "after": []
+}

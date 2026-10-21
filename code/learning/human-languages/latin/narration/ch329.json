@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 329,
+  "title": "Mors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6a49eb4957774170",
+  "lessons": [
+    {
+      "id": "LA-C329-mors",
+      "sequence": 17740,
+      "title": "mors, mortis — death",
+      "headword": "mors, mortis",
+      "romanization": "mors, mortis",
+      "gloss": "death",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cdb01192ece9b770",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a married woman, then the Latin for a divorce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mors, mortis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mors, mortis — \"death\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Mors avī tōtam familiam trīstem fēcit. Grandfather's death made the whole family sad."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine, 3rd declension, from the root of morior (taught). English mortal comes from its family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mors is inherited from Proto-Indo-European mértis, \"death\" (EtymDB). English mortal comes from its family, as does mortgage, a dead pledge, through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mors, mortis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mors, mortis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mors, mortis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mors, mortis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mors, mortis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mors, mortis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a married woman, then the Latin for a divorce, then say mors, mortis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a married woman, then the Latin for a divorce, then say *mors, mortis* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mors, mortis mean? (\"Death\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C329-mortuus",
+      "sequence": 17750,
+      "title": "mortuus, mortua, mortuum — dead",
+      "headword": "mortuus, mortua, mortuum",
+      "romanization": "mortuus, mortua, mortuum",
+      "gloss": "dead",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa5998425a9e5fbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a divorce, then the Latin for death."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mortuus, mortua, mortuum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mortuus, mortua, mortuum — \"dead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Canis senex in angulō mortuus iacēbat. The old dog lay dead in the corner."
+            },
+            {
+              "kind": "speech",
+              "text": "The past participle of morior: mortuus est, he died. As a noun, mortuus is a dead man."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mortuus is the participle of morior, \"to die\" (EtymDB), and goes back to Proto-Italic mortwos, \"dead\"; Greek brotos, \"mortal\", is a cousin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mortuus, mortua, mortuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mortuus, mortua, mortuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mortuus, mortua, mortuum, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mortuus, mortua, mortuum*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mortuus, mortua, mortuum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mortuus, mortua, mortuum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a divorce, then the Latin for death, then say mortuus, mortua, mortuum again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a divorce, then the Latin for death, then say *mortuus, mortua, mortuum* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mortuus, mortua, mortuum mean? (\"Dead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C329-exspiro",
+      "sequence": 17760,
+      "title": "exspīrō, exspīrāre — to breathe one's last",
+      "headword": "exspīrō, exspīrāre",
+      "romanization": "exspīrō, exspīrāre",
+      "gloss": "to breathe one's last",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d71ff77f018e7cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for death, then the Latin for dead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: exspīrō, exspīrāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exspīrō, exspīrāre — \"to breathe one's last\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Senex in lectō exspīrāvit. The old man breathed his last in bed."
+            },
+            {
+              "kind": "speech",
+              "text": "exspīrō, exspīrāre, exspīrāvī, exspīrātum: ex + spīrō (taught), to breathe out. English expire."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "exspīrō is built on spīrō, \"to breathe\", with ex-, \"out\" (EtymDB): to breathe out the last breath. English expire comes from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exspīrō, exspīrāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exspīrō, exspīrāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exspīrō, exspīrāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *exspīrō, exspīrāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with exspīrō, exspīrāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *exspīrō, exspīrāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for death, then the Latin for dead, then say exspīrō, exspīrāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for death, then the Latin for dead, then say *exspīrō, exspīrāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does exspīrō, exspīrāre mean? (\"To breathe one's last\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C329-obeo",
+      "sequence": 17770,
+      "title": "obeō, obīre — to die; to go to meet",
+      "headword": "obeō, obīre",
+      "romanization": "obeō, obīre",
+      "gloss": "to die; to go to meet",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a612cf14df985f01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for dead, then the Latin for to breathe one's last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: obeō, obīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obeō, obīre — \"to die; to go to meet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Avia mea placidē in somnō obiit. My grandmother died peacefully in her sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "obeō, obīre, obiī, obitum, like eō. Mortem obīre: to meet death; alone, obiit means 'he died'. English obituary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "obeō is built on eō, \"to go\", with ob, \"towards\" (EtymDB): to go to meet, and so to meet one's end. English obituary comes from its noun obitus, \"death\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obeō, obīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obeō, obīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obeō, obīre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obeō, obīre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with obeō, obīre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *obeō, obīre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for dead, then the Latin for to breathe one's last, then say obeō, obīre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for dead, then the Latin for to breathe one's last, then say *obeō, obīre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does obeō, obīre mean? (\"To die; to go to meet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C329-decedo",
+      "sequence": 17780,
+      "title": "dēcēdō, dēcēdere — to depart; to die",
+      "headword": "dēcēdō, dēcēdere",
+      "romanization": "dēcēdō, dēcēdere",
+      "gloss": "to depart; to die",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb72b1a8c63a3547",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to breathe one's last, then the Latin for to die."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēcēdō, dēcēdere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēcēdō, dēcēdere — \"to depart; to die\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Pater meus herī dēcessit. My father passed away yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "dēcēdō, dēcēdere, dēcessī, dēcessum: to go away, from a province or from life. English decease."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēcēdō is built on cēdō, \"to go, to withdraw\", with dē, \"away\" (Lewis & Short). English decease comes from its noun through French."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēcēdō, dēcēdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēcēdō, dēcēdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēcēdō, dēcēdere, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēcēdō, dēcēdere*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dēcēdō, dēcēdere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dēcēdō, dēcēdere*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to breathe one's last, then the Latin for to die, then say dēcēdō, dēcēdere again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to breathe one's last, then the Latin for to die, then say *dēcēdō, dēcēdere* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēcēdō, dēcēdere mean? (\"To depart; to die\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

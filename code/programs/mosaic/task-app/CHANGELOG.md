@@ -7,6 +7,20 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.8` accumulate here until the next version is
 cut.
 
+- The Web Component acceptance test types into the task name with an `input`
+  event. A Web Component text field now dispatches `onChange` per keystroke, as
+  on every other backend, and keeps focus across the re-render that follows.
+
+### Changed — web host theme colours are generated from the stylesheets
+
+The new `tests/host_theme_tokens.rs` reads `TaskApp.{light,dark}.msl` with
+mosstyle and writes `host/web/src/theme-tokens.generated.ts`. That module is
+the eight `part.property` values the web host has to paint before or around
+the emitted component. The test fails when the committed module is stale, and
+it names any part or property the host reads that the stylesheet no longer has.
+This replaces hand-kept copies in `host/web/src/theme.ts`. See
+`host/web/CHANGELOG.md`.
+
 ## [0.5.8] - 2026-10-16
 
 ### Fixed — Qt milestone diamonds retain their authored rotation (#17675)

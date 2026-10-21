@@ -1,0 +1,11 @@
+{
+  "id": "FR-C343-avantage",
+  "pathSegment": "FR-PATH-343-AVANTAGE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-343-AVANTAGE",
+      "order": 0
+    }
+  ]
+}

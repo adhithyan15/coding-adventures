@@ -1,0 +1,11 @@
+{
+  "id": "LA-C360-absurdus",
+  "pathSegment": "LA-PATH-360-MANIFESTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-360-MANIFESTUS",
+      "order": 2
+    }
+  ]
+}

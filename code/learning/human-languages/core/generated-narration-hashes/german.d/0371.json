@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:24f2851bb157c984",
+  "lessonIds": [
+    "GE-C371-zusagen",
+    "GE-C371-zusage",
+    "GE-C371-absagen",
+    "GE-C371-absage",
+    "GE-C371-bestaetigung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch371.txt",
+  "json": "german/narration/ch371.json",
+  "textHash": "fnv1a64:cf2f02ea556da08b",
+  "jsonHash": "fnv1a64:4fd8a184f019c284",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-353-BETRIEB",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a firm: the company, its departments, my superior and who runs what.",
+  "prerequisites": []
+}

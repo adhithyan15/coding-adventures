@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:ac18e480b8c3bbc1",
+  "lessonIds": [
+    "GE-C418-flugbegleiter",
+    "GE-C418-fensterplatz",
+    "GE-C418-gangplatz",
+    "GE-C418-abfliegen",
+    "GE-C418-landung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch418.txt",
+  "json": "german/narration/ch418.json",
+  "textHash": "fnv1a64:054588c982351c66",
+  "jsonHash": "fnv1a64:47380cec951afcbb",
+  "findings": []
+}

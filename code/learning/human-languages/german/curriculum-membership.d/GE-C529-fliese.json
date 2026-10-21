@@ -1,0 +1,11 @@
+{
+  "id": "GE-C529-fliese",
+  "pathSegment": "GE-PATH-529-RENOVIEREN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-529-RENOVIEREN",
+      "order": 3
+    }
+  ]
+}

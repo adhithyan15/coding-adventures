@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:8e02299fa5d8b038",
+  "lessonIds": [
+    "LA-C542-strigilis",
+    "LA-C542-unguo",
+    "LA-C542-ambulatio",
+    "LA-C542-rusticor",
+    "LA-C542-amoenus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch542.txt",
+  "json": "latin/narration/ch542.json",
+  "textHash": "fnv1a64:cc0b270b175b2b60",
+  "jsonHash": "fnv1a64:59b4f83f905e7a38",
+  "findings": []
+}

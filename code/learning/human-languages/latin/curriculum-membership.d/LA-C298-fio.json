@@ -1,0 +1,11 @@
+{
+  "id": "LA-C298-fio",
+  "pathSegment": "LA-PATH-298-EVENIO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-298-EVENIO",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-427-KLIMA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with the temperature in a room: the air conditioning, the heating, the radiator, turning something up and turning it off.",
+  "prerequisites": []
+}

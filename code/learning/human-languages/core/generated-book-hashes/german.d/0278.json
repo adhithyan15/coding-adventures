@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:ab3f48847da6f985",
+  "lessonIds": [
+    "GE-C278-verhandeln",
+    "GE-C278-verhandlung",
+    "GE-C278-vertrag",
+    "GE-C278-unterzeichnen",
+    "GE-C278-konferenz"
+  ],
+  "tex": "german/book/chapters/ch278-verhandlungen.tex"
+}

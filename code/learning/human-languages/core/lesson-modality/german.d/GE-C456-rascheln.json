@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C456-rascheln",
+    "language": "german",
+    "chapter": 456,
+    "sequence": 24510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71cb267936f3e979"
+  },
+  "findings": []
+}

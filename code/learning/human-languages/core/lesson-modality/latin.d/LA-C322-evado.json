@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C322-evado",
+    "language": "latin",
+    "chapter": 322,
+    "sequence": 17400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb763919a4a8b10f"
+  },
+  "findings": []
+}

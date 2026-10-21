@@ -1,0 +1,11 @@
+{
+  "id": "GE-C458-zwitschern",
+  "pathSegment": "GE-PATH-458-WILDTIERE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-458-WILDTIERE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C435-chayevyye",
+  "pathSegment": "RU-PATH-435-OBSLUZHIVANIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-435-OBSLUZHIVANIYE",
+      "order": 3
+    }
+  ]
+}

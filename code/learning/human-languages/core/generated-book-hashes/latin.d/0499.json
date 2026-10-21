@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:f85e58e5ac2ef19e",
+  "lessonIds": [
+    "LA-C499-delecto",
+    "LA-C499-delectatio",
+    "LA-C499-voluptas",
+    "LA-C499-oblecto",
+    "LA-C499-placeo"
+  ],
+  "tex": "latin/book/chapters/ch499-pleasure-and-delight.tex"
+}

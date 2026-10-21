@@ -1,0 +1,11 @@
+{
+  "id": "GE-C285-erpressen",
+  "pathSegment": "GE-PATH-285-BETRUG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-285-BETRUG",
+      "order": 4
+    }
+  ]
+}

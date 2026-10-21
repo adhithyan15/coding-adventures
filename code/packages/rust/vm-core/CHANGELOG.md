@@ -1,5 +1,70 @@
 # Changelog — vm-core
 
+## [0.29.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf` handlers**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4):
+  Rust's `checked_add` / `checked_sub` / `checked_mul` / `checked_neg`; a
+  `None` (the exact result does not fit in i64) returns
+  `VMError::Trap { kind: "Trap.Overflow" }`. Defined on i64 only, so no
+  narrow-width masking.
+- `op_support` is derived from the dispatch table, so all four flip to
+  `Lowered` with no edit there.
+- Tests pin the exact results at the range edges (`MAX + 0`, `MIN - 0`,
+  `-2^32 * 2^31 = MIN`, `3_037_000_499²`, `-MAX`) and the trap one step past
+  them (`MAX + 1`, `MIN - 1`, `0 - MIN`, `MIN * -1`, `-1 * MIN`, `2^32 * 2^31`,
+  `3_037_000_500²`, `-MIN`).
+
+## [0.28.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`i64_div_floor` / `i64_mod_floor` handlers** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):
+  floor quotient / remainder (Python `//` `%`, Ruby `/` `%`) with defined
+  edges — a zero divisor raises `Trap.DivZero`, `i64::MIN / -1` raises
+  `Trap.Overflow`, `i64::MIN mod -1` is `0`.
+- **`trap` handler.** `trap "<kind>"` returns the new `VMError::Trap { kind }`
+  for a kind in the closed `exception_kind` table; any other kind is malformed
+  IR (`VMError::Custom`). Every output builtin flushes as it writes, so output
+  before a trap is never lost.
+- **Default `write_i64` builtin** — decimal, no newline, same stdout handle as
+  `print_i64`/`putchar`/`print_str` (one ordered stream).
+- **Fixed: legacy `div`/`mod` no longer panic on `i64::MIN / -1`.** Rust's `/`
+  and `%` panic on that overflow in every build profile, aborting the host. The
+  legacy ops now use `wrapping_div`/`wrapping_rem` (`MIN`, `0`) — the JVM /
+  generic-JIT answer; their edges stay backend-dependent by design (LANG83
+  "Legacy edge behaviour"), so this picks a defined value instead of a crash.
+- `op_support` flips all four PR1b ops to `Lowered` with no edit to the
+  module itself — the answer is derived from the dispatch table and default
+  builtins.
+- Tests: sign table, both trap kinds, MIN/1, legacy MIN/−1, `trap` kind
+  validation, `VMError::Trap` display, `write_i64` registration.
+- **Breaking — JIT handlers are fallible (security review, fail closed).**
+  `register_jit_handler` now takes `Fn(&[Value]) -> Result<Value, VMError>`
+  (new `dispatch::JitHandler` alias; `JitHandlerMap` maps to it), and `call`
+  propagates a handler's `Err` with `?`. Before, a handler returned a bare
+  `Value`, so a JIT-compiled function that trapped handed its interpreted
+  caller `Value::Null` and the caller kept running — `execute` even returned
+  `Ok`. Now the error stops the program at the `call`: the destination is
+  never assigned and no later instruction runs. Callers update their closures
+  to return `Ok(value)`. New test
+  `failing_jit_handler_stops_interpreted_caller`.
+
+## [0.27.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
+
+- **LANG83 op support, derived.** New `op_support` module: `op_support(name)` and
+  `op_support_table()` answer [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)'s per-backend question for every
+  `STANDARD_OPS` entry by asking the VM itself — an Op is `Lowered` iff the
+  standard dispatch table has a handler, a Builtin iff the default
+  `BuiltinRegistry` registers it. No hand-maintained list; PR1b ops are refused
+  with the shared PR1b reason until handlers exist.
+- **Default `print_i64` and `putchar` builtins.** `BuiltinRegistry::new()` now
+  registers the two LANG83 standard output builtins (decimal + `\n`; low byte),
+  writing through the same `std::io::stdout()` handle as `print_str`, so mixed
+  output is one ordered stream and a bare `VMCore` runs BASIC/Oct/ALGOL output
+  without the embedder registering them. Non-integer arguments are
+  `VMError::TypeError`. Embedders that capture output still override them.
+- Tests: declaration completeness, every existing op executed / PR1b refused,
+  default output builtins (4 new unit tests, 1 doctest).
+
 ## [0.26.0] — 2026-08-27 (lisp `equal?` dynamic builtin)
 
 The default builtin registry now exposes `equal?` as the lisp-family spelling

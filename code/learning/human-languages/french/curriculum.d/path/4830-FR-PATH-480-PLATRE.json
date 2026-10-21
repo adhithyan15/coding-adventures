@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-480-PLATRE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-480-PLATRE"
+  ],
+  "after": []
+}

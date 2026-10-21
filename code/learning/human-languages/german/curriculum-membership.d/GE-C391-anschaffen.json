@@ -1,0 +1,11 @@
+{
+  "id": "GE-C391-anschaffen",
+  "pathSegment": "GE-PATH-391-STEUER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-391-STEUER",
+      "order": 3
+    }
+  ]
+}

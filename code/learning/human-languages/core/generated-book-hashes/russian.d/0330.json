@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:c79d1e87216f466f",
+  "lessonIds": [
+    "RU-C330-smeshivat",
+    "RU-C330-vzbivat",
+    "RU-C330-venchik",
+    "RU-C330-pomeshivat",
+    "RU-C330-polovnik"
+  ],
+  "tex": "russian/book/chapters/ch330-mixing-and-stirring.tex"
+}

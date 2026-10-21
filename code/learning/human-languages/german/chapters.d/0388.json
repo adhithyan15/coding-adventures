@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "Geld leihen",
+  "label": "ch:ge-geld-leihen",
+  "canDo": "I can talk about loans and debts, paying money back, and borrowing from friends.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "GE-C388-borgen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can talk about loans and debts, paying money back, and borrowing from friends.",
+    "assesses": [
+      "GE-LEX-C388-KREDIT-03",
+      "GE-LEX-C388-KREDIT-04",
+      "GE-LEX-C388-KREDIT-05"
+    ]
+  }
+}

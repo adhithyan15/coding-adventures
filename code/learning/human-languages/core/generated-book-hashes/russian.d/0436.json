@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:ddfb5b8d3a7f176f",
+  "lessonIds": [
+    "RU-C436-vozvrat",
+    "RU-C436-trebovat",
+    "RU-C436-vozmushchatsya",
+    "RU-C436-ustranyat",
+    "RU-C436-kvitantsiya"
+  ],
+  "tex": "russian/book/chapters/ch436-getting-a-refund.tex"
+}

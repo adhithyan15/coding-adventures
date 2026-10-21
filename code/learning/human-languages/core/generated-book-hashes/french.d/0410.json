@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:700246e76f28c597",
+  "lessonIds": [
+    "FR-C410-bouchon",
+    "FR-C410-embouteillage",
+    "FR-C410-deviation",
+    "FR-C410-aire",
+    "FR-C410-doubler"
+  ],
+  "tex": "french/book/chapters/ch410-bouchons-sur-l-autoroute.tex"
+}

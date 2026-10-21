@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:3b2b546f176e66fe",
+  "lessonIds": [
+    "LA-C387-discordia",
+    "LA-C387-seditio",
+    "LA-C387-seditiosus",
+    "LA-C387-turbulentus",
+    "LA-C387-concito"
+  ],
+  "tex": "latin/book/chapters/ch387-unrest.tex"
+}

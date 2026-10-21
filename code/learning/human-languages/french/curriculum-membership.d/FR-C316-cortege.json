@@ -1,0 +1,11 @@
+{
+  "id": "FR-C316-cortege",
+  "pathSegment": "FR-PATH-316-CELEBRER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-316-CELEBRER",
+      "order": 2
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/forme-pipeline-config",
   "version": "1.0.0",
-  "description": "Forme orchestrator: PipelineConfig types, validator (now with JSON Schema validation of stage configs), and TS-form config loader (FM03 §2).",
+  "description": "Forme orchestrator: PipelineConfig types, validator, TS loader, and bounded declarative TOML lowering (FM03 §2).",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -15,7 +15,9 @@
     "@coding-adventures/forme-types": "file:../forme-types",
     "@coding-adventures/forme-stage": "file:../forme-stage",
     "@coding-adventures/forme-capability": "file:../forme-capability",
-    "@coding-adventures/forme-errors": "file:../forme-errors"
+    "@coding-adventures/forme-errors": "file:../forme-errors",
+    "@coding-adventures/toml-lexer": "file:../toml-lexer",
+    "@coding-adventures/toml-parser": "file:../toml-parser"
   },
   "devDependencies": {
     "typescript": "^5.0.0",

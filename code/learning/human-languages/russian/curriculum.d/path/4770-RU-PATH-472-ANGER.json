@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-472-ANGER",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-472-ANGER"
+  ],
+  "after": []
+}

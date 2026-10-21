@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C290-criminel",
+    "language": "french",
+    "chapter": 290,
+    "sequence": 16630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e395cc7a980d9dd7"
+  },
+  "findings": []
+}

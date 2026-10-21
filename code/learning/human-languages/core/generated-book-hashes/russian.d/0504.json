@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:821183f20abf042c",
+  "lessonIds": [
+    "RU-C504-shashki",
+    "RU-C504-peshka",
+    "RU-C504-kubik",
+    "RU-C504-koloda",
+    "RU-C504-zhulnichat"
+  ],
+  "tex": "russian/book/chapters/ch504-draughts-dice-and-cards.tex"
+}

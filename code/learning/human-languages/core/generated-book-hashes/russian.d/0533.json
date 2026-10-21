@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:ed8cdef851eae306",
+  "lessonIds": [
+    "RU-C533-shurup",
+    "RU-C533-ploskogubtsy",
+    "RU-C533-otkruchivat",
+    "RU-C533-peregorat",
+    "RU-C533-izolenta"
+  ],
+  "tex": "russian/book/chapters/ch533-small-repairs.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C403-starthilfe",
+  "pathSegment": "GE-PATH-403-STARTHILFE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-403-STARTHILFE",
+      "order": 2
+    }
+  ]
+}

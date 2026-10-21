@@ -1,0 +1,11 @@
+{
+  "id": "LA-C384-comitia",
+  "pathSegment": "LA-PATH-384-SUFFRAGIUM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-384-SUFFRAGIUM",
+      "order": 1
+    }
+  ]
+}

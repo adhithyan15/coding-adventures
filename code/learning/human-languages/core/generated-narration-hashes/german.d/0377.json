@@ -1,0 +1,20 @@
+{
+  "language": "german",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:4ddd057c9683953b",
+  "lessonIds": [
+    "GE-C377-hochschule",
+    "GE-C377-vorlesung",
+    "GE-C377-dozent",
+    "GE-C377-studiengang",
+    "GE-C377-praktikum",
+    "GE-R377-review-370-377"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "german/narration/ch377.txt",
+  "json": "german/narration/ch377.json",
+  "textHash": "fnv1a64:995ec7885be4b3d0",
+  "jsonHash": "fnv1a64:9ff953b98e9bbebc",
+  "findings": []
+}

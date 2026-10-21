@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C522-lesezeichen",
+    "language": "german",
+    "chapter": 522,
+    "sequence": 27890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2174b99743822850"
+  },
+  "findings": []
+}

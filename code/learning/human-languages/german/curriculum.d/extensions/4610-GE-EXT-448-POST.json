@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-448-POST",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can send things by post: putting a stamp on, sending, posting a letter, the small parcel and registered post.",
+  "prerequisites": []
+}

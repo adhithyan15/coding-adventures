@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:cfdfe3957314b8ab",
+  "lessonIds": [
+    "GE-C456-lichtung",
+    "GE-C456-gebuesch",
+    "GE-C456-farn",
+    "GE-C456-moos",
+    "GE-C456-rascheln"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch456.txt",
+  "json": "german/narration/ch456.json",
+  "textHash": "fnv1a64:7ea67b5039fb8b7b",
+  "jsonHash": "fnv1a64:0d605e6c3dab5937",
+  "findings": []
+}

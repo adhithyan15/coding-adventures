@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "LA-W290-epistula",
+    "language": "latin",
+    "chapter": 290,
+    "sequence": 15770,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9399b8fc208632d9",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ]
+  },
+  "findings": []
+}

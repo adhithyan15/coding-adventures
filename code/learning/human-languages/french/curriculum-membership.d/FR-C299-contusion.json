@@ -1,0 +1,11 @@
+{
+  "id": "FR-C299-contusion",
+  "pathSegment": "FR-PATH-299-CHUTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-299-CHUTE",
+      "order": 2
+    }
+  ]
+}

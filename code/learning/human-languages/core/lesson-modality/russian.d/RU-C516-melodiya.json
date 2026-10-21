@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C516-melodiya",
+    "language": "russian",
+    "chapter": 516,
+    "sequence": 29000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f105b4e3391f5dfe"
+  },
+  "findings": []
+}

@@ -84,6 +84,21 @@
       "expected": { "min": 0.499, "max": 0.501 }
     },
     {
+      "id": "diode-global-temperature-op",
+      "kind": "temp",
+      "analysis": "op",
+      "sample": "temperature-op-node",
+      "deck": "* Berkeley SPICE v1 core corpus: diode-global-temperature-op\n.model Dfast D(IS=2e-14)\nVbias vin 0 0.8\nRlimit vin out 1k\nD1 out 0 Dfast\n.temp 27 75\n.op\n.save V(out)\n.end\n",
+      "probe": "out",
+      "expected": {
+        "temperaturesKelvin": [300.15, 348.15],
+        "windows": [
+          { "min": 0.59, "max": 0.60 },
+          { "min": 0.50, "max": 0.52 }
+        ]
+      }
+    },
+    {
       "id": "diode-capacitance-ac",
       "kind": "D",
       "analysis": "ac",

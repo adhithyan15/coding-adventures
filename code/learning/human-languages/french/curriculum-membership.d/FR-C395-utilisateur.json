@@ -1,0 +1,11 @@
+{
+  "id": "FR-C395-utilisateur",
+  "pathSegment": "FR-PATH-395-COMPTE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-395-COMPTE",
+      "order": 0
+    }
+  ]
+}

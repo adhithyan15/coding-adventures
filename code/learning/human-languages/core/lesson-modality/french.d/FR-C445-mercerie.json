@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C445-mercerie",
+    "language": "french",
+    "chapter": 445,
+    "sequence": 24630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb788b5b214f0101"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:e12251e44ab120a0",
+  "lessonIds": [
+    "GE-C533-kamin",
+    "GE-C533-kommode",
+    "GE-C533-schublade",
+    "GE-C533-bettdecke",
+    "GE-C533-gemuetlichkeit",
+    "GE-R533-review-530-533",
+    "GE-R533-review-final-533"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch533.txt",
+  "json": "german/narration/ch533.json",
+  "textHash": "fnv1a64:b4b9e761f3c9b662",
+  "jsonHash": "fnv1a64:a6ebed951b29181d",
+  "findings": []
+}

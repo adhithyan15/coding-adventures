@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:e2b24554ce33121d",
+  "lessonIds": [
+    "LA-C454-dextrorsum",
+    "LA-C454-sinistrorsum",
+    "LA-C454-obliquus",
+    "LA-C454-circumeo",
+    "LA-C454-circuitus",
+    "LA-R454-review-447-454"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch454.txt",
+  "json": "latin/narration/ch454.json",
+  "textHash": "fnv1a64:494f4acea1bfbd9e",
+  "jsonHash": "fnv1a64:4e53ee56d02485c2",
+  "findings": []
+}

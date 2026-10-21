@@ -9,7 +9,8 @@
 //!   ├── FrameOverflow            — call stack depth exceeded
 //!   ├── UndefinedVariable(String) — variable not in scope
 //!   ├── TypeError { expected, actual, context } — type mismatch
-//!   ├── DivisionByZero           — integer division by zero
+//!   ├── DivisionByZero           — integer division by zero (legacy `div`/`mod`)
+//!   ├── Trap { kind }            — a LANG83 trap (`trap`, `i64_div_floor`, …)
 //!   └── Custom(String)           — for type_assert and other domain errors
 //! ```
 
@@ -35,6 +36,15 @@ pub enum VMError {
     },
     /// Integer division by zero.
     DivisionByZero,
+    /// A LANG83 trap: the program executed `trap kind`, or a trapping standard
+    /// operation hit its defined trap (`i64_div_floor` by zero → `Trap.DivZero`,
+    /// `i64::MIN / -1` → `Trap.Overflow`). `kind` is a name from the closed table
+    /// in `interpreter_ir::exception_kind`. Output written before the trap has
+    /// already been flushed (every VM output builtin flushes as it writes).
+    Trap {
+        /// The trap kind, e.g. `"Trap.DivZero"`.
+        kind: String,
+    },
     /// Named label referenced by a branch does not exist in the function.
     UndefinedLabel { label: String, function: String },
     /// A custom error raised by language-specific opcode handlers.
@@ -63,6 +73,7 @@ impl fmt::Display for VMError {
                 )
             }
             VMError::DivisionByZero => write!(f, "division by zero"),
+            VMError::Trap { kind } => write!(f, "trap: {kind}"),
             VMError::UndefinedLabel { label, function } => {
                 write!(f, "undefined label {label:?} in function {function:?}")
             }
@@ -88,6 +99,12 @@ mod tests {
         let e = VMError::FrameOverflow { depth: 512, callee: "foo".into() };
         assert!(e.to_string().contains("512"));
         assert!(e.to_string().contains("foo"));
+    }
+
+    #[test]
+    fn display_trap_names_its_kind() {
+        let e = VMError::Trap { kind: "Trap.DivZero".into() };
+        assert_eq!(e.to_string(), "trap: Trap.DivZero");
     }
 
     #[test]

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:362342f2d4ebeb2f",
+  "lessonIds": [
+    "GE-C484-stirn",
+    "GE-C484-wange",
+    "GE-C484-kinn",
+    "GE-C484-augenbraue",
+    "GE-C484-wimper"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch484.txt",
+  "json": "german/narration/ch484.json",
+  "textHash": "fnv1a64:284207afb2d3a21a",
+  "jsonHash": "fnv1a64:1fbc977d1c81a061",
+  "findings": []
+}

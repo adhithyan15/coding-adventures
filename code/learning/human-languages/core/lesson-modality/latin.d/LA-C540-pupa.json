@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C540-pupa",
+    "language": "latin",
+    "chapter": 540,
+    "sequence": 28610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27b4c776b3d2f1e8"
+  },
+  "findings": []
+}

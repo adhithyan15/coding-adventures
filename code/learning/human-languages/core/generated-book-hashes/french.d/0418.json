@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:8dfa8697ed1caf20",
+  "lessonIds": [
+    "FR-C418-embarquer",
+    "FR-C418-hotesse",
+    "FR-C418-steward",
+    "FR-C418-hublot",
+    "FR-C418-allee"
+  ],
+  "tex": "french/book/chapters/ch418-a-bord.tex"
+}

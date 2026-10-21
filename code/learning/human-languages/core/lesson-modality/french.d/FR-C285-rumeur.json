@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C285-rumeur",
+    "language": "french",
+    "chapter": 285,
+    "sequence": 16370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d337bc987b883d30"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:2a8e2154692530c8",
+  "lessonIds": [
+    "GE-C281-einbrechen",
+    "GE-C281-einbruch",
+    "GE-C281-einbrecher",
+    "GE-C281-klauen",
+    "GE-C281-beute"
+  ],
+  "tex": "german/book/chapters/ch281-der-einbruch.tex"
+}

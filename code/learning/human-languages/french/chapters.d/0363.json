@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Dans la rue",
+  "label": "ch:fr-dans-la-rue",
+  "canDo": "I can describe a protest: a demonstration, demonstrators, a banner, and people who demonstrate and protest.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C363-protester",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can describe a protest: a demonstration, demonstrators, a banner, and people who demonstrate and protest.",
+    "assesses": [
+      "FR-LEX-C363-MANIFESTATION-03",
+      "FR-LEX-C363-MANIFESTATION-04",
+      "FR-LEX-C363-MANIFESTATION-05"
+    ]
+  }
+}

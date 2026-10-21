@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Gratitude and praise",
+  "label": "ch:la-gratitude-and-praise",
+  "canDo": "I can talk about thanks, praise and blame.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R512-review-505-512",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about thanks, praise and blame.",
+    "assesses": [
+      "LA-LEX-C512-GRAT-03",
+      "LA-LEX-C512-GRAT-04",
+      "LA-LEX-C512-GRAT-05"
+    ]
+  }
+}

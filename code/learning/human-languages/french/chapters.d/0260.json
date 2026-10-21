@@ -1,0 +1,20 @@
+{
+  "chapter": 260,
+  "title": "What I Think, and So — je pense que, donc",
+  "label": "ch:fr-what-i-think",
+  "canDo": "I can give an opinion with je pense que and à mon avis, and point a reason forward with donc or alors.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C260-revision-opinion",
+    "kind": "production",
+    "summary": "Complete FR-C260-revision-opinion: an opinion with its reason, said both ways round, with parce que and with donc.",
+    "assesses": [
+      "FR-GRAM-JE-PENSE-QUE-01",
+      "FR-GRAM-A-MON-AVIS-02",
+      "FR-GRAM-DEUX-FLECHES-01",
+      "FR-GRAM-ALORS-DONC-02"
+    ]
+  }
+}

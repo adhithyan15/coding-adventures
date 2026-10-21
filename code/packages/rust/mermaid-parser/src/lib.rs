@@ -3288,16 +3288,16 @@ fn parse_mindmap_markdown_spans(markdown: &str) -> (String, Vec<DiagramTextSpan>
     };
 
     while !rest.is_empty() {
-        if rest.starts_with("***") {
+        if rest.starts_with("***") || rest.starts_with("___") {
             flush(&mut current, &mut spans, bold, italic);
             bold = !bold;
             italic = !italic;
             rest = &rest[3..];
-        } else if rest.starts_with("**") {
+        } else if rest.starts_with("**") || rest.starts_with("__") {
             flush(&mut current, &mut spans, bold, italic);
             bold = !bold;
             rest = &rest[2..];
-        } else if rest.starts_with('*') {
+        } else if rest.starts_with('*') || rest.starts_with('_') {
             flush(&mut current, &mut spans, bold, italic);
             italic = !italic;
             rest = &rest[1..];
@@ -6986,7 +6986,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     let optimize_ranks_by_crossings = parse_swimlane_optimize_ranks_by_crossings(source)?;
     let flowchart_config = parse_swimlane_flowchart_config(source)?;
     let theme = parse_swimlane_theme(source);
-    let prepared = prepare_line_grammar_source(source)?;
+    let prepared = collapse_swimlane_markdown_lines(&prepare_line_grammar_source(source)?)?;
     let tokens = try_tokenize_mermaid_swimlane(&prepared).map_err(|message| ParseError {
         message,
         line: 1,
@@ -7044,15 +7044,15 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("title ") {
-            diagram.title = Some(normalize_swimlane_label(value));
+            diagram.title = Some(normalize_swimlane_text(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("accTitle:") {
-            diagram.accessibility_title = Some(normalize_swimlane_label(value));
+            diagram.accessibility_title = Some(normalize_swimlane_text(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("accDescr:") {
-            diagram.accessibility_description = Some(normalize_swimlane_label(value));
+            diagram.accessibility_description = Some(normalize_swimlane_text(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("subgraph ") {
@@ -7576,7 +7576,7 @@ fn take_swimlane_quoted_value<'a>(value: &'a str, line: usize, kind: &str) -> Re
     for (index, character) in value[1..].char_indices() {
         if character == '"' && !escaped {
             let close = index + 1;
-            return Ok((normalize_swimlane_label(&value[..=close]), &value[close + 1..]));
+            return Ok((normalize_swimlane_text(&value[..=close]), &value[close + 1..]));
         }
         escaped = character == '\\' && !escaped;
         if character != '\\' {
@@ -7799,7 +7799,7 @@ fn parse_swimlane_lane(
     value: &str,
     index: usize,
     line: usize,
-) -> Result<(String, String, Vec<String>), ParseError> {
+) -> Result<(String, DiagramLabel, Vec<String>), ParseError> {
     let (value, classes) = split_swimlane_class_decorators(value.trim());
     if let Some(open) = value.find('[') {
         let Some(label) = value[open + 1..].strip_suffix(']') else {
@@ -8331,7 +8331,37 @@ fn split_swimlane_class_decorators(value: &str) -> (&str, Vec<String>) {
     (source.trim_end(), classes)
 }
 
-fn normalize_swimlane_label(value: &str) -> String {
+fn collapse_swimlane_markdown_lines(source: &str) -> Result<String, ParseError> {
+    let mut output = Vec::new();
+    let mut pending: Option<String> = None;
+    let mut start_line = 0;
+
+    for (index, line) in source.lines().enumerate() {
+        if let Some(current) = &mut pending {
+            current.push_str("\\n");
+            current.push_str(line.trim());
+            if line.contains("`\"") {
+                output.push(pending.take().expect("pending Markdown line exists"));
+            }
+        } else if line.contains("\"`") && !line.contains("`\"") {
+            pending = Some(line.to_string());
+            start_line = index + 1;
+        } else {
+            output.push(line.to_string());
+        }
+    }
+
+    if pending.is_some() {
+        return Err(ParseError {
+            message: "unterminated Swimlane Markdown string".into(),
+            line: start_line,
+            col: 1,
+        });
+    }
+    Ok(output.join("\n"))
+}
+
+fn normalize_swimlane_text(value: &str) -> String {
     let value = value.trim();
     let normalized = if value.len() >= 2 && value.starts_with('"') && value.ends_with('"') {
         value[1..value.len() - 1]
@@ -8343,6 +8373,18 @@ fn normalize_swimlane_label(value: &str) -> String {
     commonmark_parser::entities::decode_entities(&normalized)
 }
 
+fn normalize_swimlane_label(value: &str) -> DiagramLabel {
+    let mut label = parse_mermaid_label(value);
+    label.text = commonmark_parser::entities::decode_entities(&label.text);
+    if let Some(markdown) = &mut label.markdown {
+        *markdown = commonmark_parser::entities::decode_entities(markdown);
+    }
+    for span in &mut label.spans {
+        span.text = commonmark_parser::entities::decode_entities(&span.text);
+    }
+    label
+}
+
 fn upsert_swimlane_node(
     diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>, group: Option<usize>,
 ) {
@@ -8351,7 +8393,7 @@ fn upsert_swimlane_node(
         .iter_mut()
         .find(|existing| existing.id == node.id)
     {
-        if existing.label == existing.id && node.label != node.id {
+        if existing.label.text == existing.id && node.label.text != node.id {
             existing.label = node.label;
             existing.shape = node.shape;
         }
@@ -8392,7 +8434,7 @@ fn assign_swimlane_default_lane(diagram: &mut SwimlaneDiagram) {
         .unwrap_or_else(|| {
             diagram.lanes.push(SwimlaneLane {
                 id: DEFAULT_LANE_ID.into(),
-                label: String::new(),
+                label: DiagramLabel::new(""),
                 node_ids: Vec::new(),
                 classes: Vec::new(),
                 style: DiagramStyle::default(),

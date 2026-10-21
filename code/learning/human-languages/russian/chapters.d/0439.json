@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Turns and dead ends",
+  "label": "ch:ru-turns-and-dead-ends",
+  "canDo": "I can follow a route: a turn, a fork in the road, a dead end, taking a short cut and going round something.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C439-ogibat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can follow a route: a turn, a fork in the road, a dead end, taking a short cut and going round something.",
+    "assesses": [
+      "RU-LEX-C439-RAZVILKA-03",
+      "RU-LEX-C439-RAZVILKA-04",
+      "RU-LEX-C439-RAZVILKA-05"
+    ]
+  }
+}

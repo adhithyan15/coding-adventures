@@ -1,0 +1,11 @@
+{
+  "id": "GE-C448-frankieren",
+  "pathSegment": "GE-PATH-448-POST",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-448-POST",
+      "order": 0
+    }
+  ]
+}

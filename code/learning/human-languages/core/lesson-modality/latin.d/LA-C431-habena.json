@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C431-habena",
+    "language": "latin",
+    "chapter": 431,
+    "sequence": 23010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4e97e3860c75df3"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R497-review-490-497",
+    "language": "german",
+    "chapter": 497,
+    "sequence": 26630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1374268a9183bf77"
+  },
+  "findings": []
+}

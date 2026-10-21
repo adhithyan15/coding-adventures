@@ -1,0 +1,11 @@
+{
+  "id": "FR-C515-interpreter",
+  "pathSegment": "FR-PATH-515-SCENE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-515-SCENE",
+      "order": 2
+    }
+  ]
+}

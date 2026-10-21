@@ -1,0 +1,11 @@
+{
+  "id": "GE-C332-erlaeutern",
+  "pathSegment": "GE-PATH-332-BEGRUENDEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-332-BEGRUENDEN",
+      "order": 4
+    }
+  ]
+}

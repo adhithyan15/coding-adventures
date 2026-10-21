@@ -1,0 +1,11 @@
+{
+  "id": "LA-C428-progredior",
+  "pathSegment": "LA-PATH-428-PROFECTIO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-428-PROFECTIO",
+      "order": 4
+    }
+  ]
+}

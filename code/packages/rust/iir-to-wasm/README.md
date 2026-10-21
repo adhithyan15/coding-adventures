@@ -260,3 +260,18 @@ FLOW-MATIC WASM EOF (VM-039b): modules using `input_more` import
 at EOF without consuming the next field. The peek and `env.__input_i64`
 reader must share the same input stream; repeated peeks must be stable.
 The matrix exercises the four native/LLVM input programs on WASM as well.
+
+## LANG83 operation support
+
+`iir_to_wasm::op_support::op_support(name)` (and `OP_SUPPORT`) is this backend's answer,
+`Lowered` or `Refused(reason)`, for every operation in the
+[LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means `lower_iir_to_wasm` emits WebAssembly for the op. `lang-aot` refuses a
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64` (`env.__write_i64`),
+`i64_div_floor`/`i64_mod_floor` (explicit zero / `MIN / -1` checks, then a
+floor fix-up) and `trap` (`env.__trap(kind_id)` then `unreachable`). LANG83 PR4 adds
+`i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`. WASM has no overflow flag
+and no wide multiply, so overflow is computed from the operands: a sign test for
+add/sub, `a == MIN` for negation, and for multiply a `-1 × MIN` guard followed by
+`a != 0 && (a * b) / a != b`. Each failing test calls `env.__trap(5)`
+(`Trap.Overflow`) then `unreachable`.

@@ -65,6 +65,11 @@ use x86_64_encoder::{
 
 pub use x86_64_encoder::ExternalReloc as Reloc;
 
+/// LANG83: this backend's declaration for every standard operation (see the
+/// module docs and `code/specs/LANG83-iir-standard-operation-registry.md`).
+pub mod op_support;
+pub use op_support::{op_support, OP_SUPPORT};
+
 // ===========================================================================
 // GC precise-roots: reference-typed slots (AOT00-T1)
 // ===========================================================================
@@ -117,6 +122,12 @@ pub enum X86_64Abi {
     MsX64,
 }
 
+/// Most arguments a call may pass on the stack, and most stack-passed
+/// parameters a function may declare. 255 matches the JVM's parameter-slot
+/// limit and keeps the per-call outgoing area (≤ 2 KiB plus shadow space)
+/// below one guard page, so no stack probing is needed when it is reserved.
+const MAX_STACK_ARGS: usize = 255;
+
 impl X86_64Abi {
     /// Integer argument registers in order.
     fn arg_regs(self) -> &'static [Reg] {
@@ -128,6 +139,43 @@ impl X86_64Abi {
 
     /// Maximum number of GPR-passed args supported by this ABI.
     fn max_args(self) -> usize { self.arg_regs().len() }
+
+    /// Byte offset, relative to the **caller's** `rsp` at the `call`
+    /// instruction, of stack-passed argument `k` (the `k`-th argument after
+    /// the register arguments).
+    ///
+    /// Both ABIs place overflow arguments in ascending 8-byte slots right
+    /// above anything the callee may already own at `[rsp]`:
+    ///
+    /// ```text
+    ///             SysV                         Microsoft x64
+    ///   [rsp + 0]   arg 7 (k = 0)     [rsp + 0..32]  shadow space
+    ///   [rsp + 8]   arg 8 (k = 1)     [rsp + 32]     arg 5 (k = 0)
+    ///   ...                           [rsp + 40]     arg 6 (k = 1)
+    /// ```
+    fn outgoing_stack_arg_offset(self, k: usize) -> i32 {
+        // `k < MAX_STACK_ARGS` at every caller, so this is at most a few KiB.
+        i32::try_from(self.shadow_space() as usize + 8 * k)
+            .expect("stack-argument offsets are bounded by MAX_STACK_ARGS")
+    }
+
+    /// `rbp`-relative offset where the **callee** finds stack-passed
+    /// argument `k` after `push rbp; mov rbp, rsp`: the return address sits
+    /// at `[rbp + 8]`, so the caller's `[rsp + off]` is `[rbp + 16 + off]`.
+    fn incoming_stack_arg_offset(self, k: usize) -> i32 {
+        16 + self.outgoing_stack_arg_offset(k)
+    }
+
+    /// Bytes a call site must reserve below its frame to hold `n_stack`
+    /// overflow arguments (plus the Microsoft x64 shadow space that has to
+    /// sit beneath them), rounded up so `rsp` stays 16-byte aligned at the
+    /// `call` instruction.
+    fn outgoing_stack_area(self, n_stack: usize) -> i32 {
+        if n_stack == 0 {
+            return 0;
+        }
+        (self.outgoing_stack_arg_offset(n_stack) + 15) & !15
+    }
 
     /// 32-byte shadow space the caller must reserve.  Microsoft x64
     /// only.  V1 reserves it unconditionally in every non-trivial
@@ -319,6 +367,7 @@ impl RegAlloc {
 // | Mnemonic       | C signature                                   | Returns |
 // |---------------|-----------------------------------------------|---------|
 // | `print_i64`   | `void __twig_print_i64(int64_t)`              | no      |
+// | `write_i64`   | `void __twig_write_i64(int64_t)` (no newline) | no      |
 // | `putchar`     | `void __twig_putchar(int32_t c)`              | no      |
 // | `getchar`     | `int32_t __twig_getchar(void)`                | yes     |
 // | `print_string`| `void __twig_print_string(const char*, int64_t)` | no      |
@@ -346,6 +395,8 @@ struct BuiltinSig {
 /// faster than a `HashMap` at this scale.
 const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "print_i64",    n_args: 1, returns: false },
+    // LANG83 PR1b — decimal, no newline (`__twig_write_i64`, same stdout FILE*).
+    BuiltinSig { name: "write_i64",    n_args: 1, returns: false },
     BuiltinSig { name: "putchar",      n_args: 1, returns: false },
     BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
@@ -472,14 +523,13 @@ fn compile_inner(
     abi: X86_64Abi,
     global_slots: &HashMap<String, usize>,
 ) -> Result<(Vec<u8>, Vec<ExternalReloc>, Vec<StackMapRecord>), BackendError> {
-    if ctx.params.len() > abi.max_args() {
+    if ctx.params.len().saturating_sub(abi.max_args()) > MAX_STACK_ARGS {
         return Err(BackendError::TooManyParams {
             abi: match abi { X86_64Abi::SysV => "SysV", X86_64Abi::MsX64 => "MsX64" },
             got: ctx.params.len(),
-            max: abi.max_args(),
+            max: abi.max_args() + MAX_STACK_ARGS,
         });
     }
-
     // ---- Pre-pass: assign slots --------------------------------------------
     //
     // Params first, in arg-register order, so the prologue's stores
@@ -554,12 +604,19 @@ fn compile_inner(
         asm.sub_imm32(Reg::Rsp, frame as i32);
     }
 
-    // Spill incoming arg registers to their slots.
+    // Spill incoming arguments to their slots: register arguments first,
+    // then any overflow arguments the caller left above our return address
+    // (copied through RAX, which holds nothing live yet).
     for (i, (name, _ty)) in ctx.params.iter().enumerate() {
         let slot = alloc.slot_of(name);
         let off = RegAlloc::rbp_offset(slot);
-        let arg_reg = abi.arg_regs()[i];
-        asm.mov_mem_r64(Reg::Rbp, off, arg_reg);
+        if let Some(&arg_reg) = abi.arg_regs().get(i) {
+            asm.mov_mem_r64(Reg::Rbp, off, arg_reg);
+        } else {
+            let k = i - abi.max_args();
+            asm.mov_r64_mem(Reg::Rax, Reg::Rbp, abi.incoming_stack_arg_offset(k));
+            asm.mov_mem_r64(Reg::Rbp, off, Reg::Rax);
+        }
     }
 
     // ---- Body --------------------------------------------------------------
@@ -788,13 +845,22 @@ fn emit_instr(
     // selects the register file, exactly as the f64 arithmetic path relies on.
     //
     //   int_to_real        mov rax,[src]; cvtsi2sd xmm0,rax;       movsd [dest],xmm0
-    //   real_to_int_trunc  movsd xmm0,[src]; cvttsd2si rax,xmm0;   mov [dest],rax
-    //   real_to_int_floor  movsd xmm0,[src]; roundsd xmm0,xmm0,1; cvttsd2si rax,xmm0; mov [dest],rax
+    //   real_to_int_*      movsd xmm0,[src]
+    //                      roundsd xmm0,xmm0,<1 floor | 3 trunc>
+    //                      cvttsd2si rax,xmm0
+    //                      cvtsi2sd xmm1,rax ; ucomisd xmm0,xmm1   ; round-trip check
+    //                      jp trap ; je ok
+    //               trap:  ud2
+    //                 ok:  mov [dest],rax
     //
-    // `cvttsd2si` truncates toward zero and yields the integer-indefinite
-    // `0x8000…0` on NaN/±∞/out-of-range (no trap) — a documented divergence from
-    // the VM trap, shared with the JVM/aarch64 backends; every finite, in-range
-    // value converts identically. `roundsd … ,1` rounds toward −∞ (floor).
+    // `cvttsd2si` does not trap: on NaN/±∞/out-of-range it yields the
+    // integer-indefinite `0x8000…0` (i64::MIN), which would hand the program
+    // a sign-flipped wrong answer. The VM contract is a fail-closed trap, so
+    // the converted integer is turned back into a double and compared with the
+    // already-rounded input. An in-range integral value survives the round
+    // trip exactly. i64::MIN comes back as -2^63, which only matches a genuine
+    // -2^63 input. NaN compares unordered and sets PF. xmm1 (`Reg::Rcx`) is
+    // free scratch here.
     if op == "int_to_real" {
         let dest = require_dest(instr)?;
         let src = instr.srcs.first()
@@ -810,10 +876,20 @@ fn emit_instr(
         let src = instr.srcs.first()
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_fp_operand(asm, alloc, Reg::Rax, src)?;   // f64 → xmm0
-        if op == "real_to_int_floor" {
-            asm.roundsd(Reg::Rax, Reg::Rax, 1);        // xmm0 = floor(xmm0)  (mode 1 = −∞)
-        }
-        asm.cvttsd2si(Reg::Rax, Reg::Rax);             // rax = (i64) xmm0  (trunc toward zero)
+        // Round in place so the round-trip check compares integral values:
+        // mode 1 = toward −∞ (floor), mode 3 = toward zero (truncate).
+        let mode = if op == "real_to_int_floor" { 1 } else { 3 };
+        asm.roundsd(Reg::Rax, Reg::Rax, mode);
+        asm.cvttsd2si(Reg::Rax, Reg::Rax);             // rax = (i64) xmm0
+        asm.cvtsi2sd(Reg::Rcx, Reg::Rax);              // xmm1 = (double) rax
+        asm.ucomisd(Reg::Rax, Reg::Rcx);               // xmm0 vs xmm1
+        let trap = asm.create_label();
+        let ok = asm.create_label();
+        asm.jcc(Cond::P, trap);                        // unordered: NaN input
+        asm.jcc(Cond::E, ok);                          // exact round trip: in range
+        asm.bind(trap).map_err(BackendError::from)?;
+        asm.ud2();
+        asm.bind(ok).map_err(BackendError::from)?;
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax); // store rax
         return Ok(());
@@ -909,20 +985,34 @@ fn emit_instr(
             )),
         };
         let arg_srcs = &instr.srcs[1..];
-        if arg_srcs.len() > abi.max_args() {
+
+        // Arguments beyond the ABI's registers go in an outgoing area carved
+        // below the frame for just this call. Every source lives in an
+        // `rbp`-relative slot, so moving `rsp` does not disturb the loads.
+        // RAX is the copy scratch; it is not an argument register in either
+        // ABI, and the register arguments are loaded afterwards.
+        let n_stack = arg_srcs.len().saturating_sub(abi.max_args());
+        if n_stack > MAX_STACK_ARGS {
             return Err(BackendError::UnsupportedOp(format!(
-                "call: too many arguments ({}) for {:?} ABI — max {}",
-                arg_srcs.len(), abi, abi.max_args()
+                "call: {} arguments exceed the {:?} limit of {}",
+                arg_srcs.len(), abi, abi.max_args() + MAX_STACK_ARGS
             )));
         }
+        let stack_area = abi.outgoing_stack_area(n_stack);
+        if stack_area != 0 {
+            asm.sub_imm32(Reg::Rsp, stack_area);
+            for (k, src) in arg_srcs[abi.max_args()..].iter().enumerate() {
+                load_operand(asm, alloc, Reg::Rax, src);
+                asm.mov_mem_r64(Reg::Rsp, abi.outgoing_stack_arg_offset(k), Reg::Rax);
+            }
+        }
 
-        // Load each argument from its stack slot into the ABI's arg register.
-        // With stack-spill allocation, all values are already on the stack,
-        // so loading left-to-right is correct — no aliasing between an arg's
-        // source slot and another arg's destination register.
-        let arg_regs = abi.arg_regs();
-        for (i, src) in arg_srcs.iter().enumerate() {
-            load_operand(asm, alloc, arg_regs[i], src);
+        // Load each register argument from its stack slot into the ABI's arg
+        // register. With stack-spill allocation, all values are already on
+        // the stack, so loading left-to-right is correct — no aliasing
+        // between an arg's source slot and another arg's destination register.
+        for (src, &reg) in arg_srcs.iter().zip(abi.arg_regs()) {
+            load_operand(asm, alloc, reg, src);
         }
 
         // Emit the call itself.
@@ -940,6 +1030,9 @@ fn emit_instr(
             recursive_safepoints.push(asm.len() as u32);
         } else {
             asm.call_rel32(callee_name, ExternalRelocKind::PltRel32);
+        }
+        if stack_area != 0 {
+            asm.add_imm32(Reg::Rsp, stack_area);
         }
 
         // Save the return value from RAX into the destination slot.
@@ -1430,6 +1523,32 @@ fn emit_instr(
         return Ok(());
     }
 
+    // --- LANG83 PR1b: floor division and `trap` ---
+    //
+    // Type-first names (never `div_floor`) so the `div_` prefix arm below can
+    // never claim them as a truncating hardware divide.
+    if op == "i64_div_floor" || op == "i64_mod_floor" {
+        return emit_floor_divmod(asm, alloc, instr, abi, op == "i64_mod_floor");
+    }
+    // --- LANG83 PR4: overflow-checked arithmetic ---
+    //
+    // Matched by full name before the `add_`/`sub_`/`mul_`/`neg_` prefix arms
+    // (which wrap); the type-first names keep those arms from ever seeing them.
+    if matches!(op, "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf") {
+        return emit_checked_arith(asm, alloc, instr, abi);
+    }
+    if op == "trap" {
+        // IIR `trap "<kind>"` arrives as `trap Var("<kind>")` (the specialiser
+        // lifts `Operand::Str` to a CIR `Var`). Only a kind from the closed
+        // table has a stable id; anything else is malformed IR.
+        let kind = instr.srcs.first().and_then(CIROperand::as_var)
+            .ok_or_else(|| BackendError::MalformedInstr("trap needs srcs[0]=kind".into()))?;
+        let id = interpreter_ir::exception_kind::trap_kind_id(kind)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("trap: unregistered kind {kind:?}")))?;
+        emit_trap_call(asm, abi, id);
+        return Ok(());
+    }
+
     // --- LANG38-parity additions ---
 
     // div_<ty> / mod_<ty> — signed types use IDIV, unsigned use DIV.
@@ -1536,6 +1655,182 @@ fn emit_divmod(
     mask_narrow(asm, result_reg, ty);
     let slot = alloc.slot_of(dest);
     asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), result_reg);
+    Ok(())
+}
+
+// ===========================================================================
+// LANG83 PR1b — floor division and traps
+// ===========================================================================
+
+/// `mov <arg0>, kind_id; call __twig_trap; ud2` — the native trap sequence.
+///
+/// `__twig_trap(int32_t)` (`twig-aot/runtime/twig_runtime.c`) flushes stdout,
+/// writes `trap: <kind>` to stderr and aborts; it never returns. The trailing
+/// `ud2` makes that explicit to anything disassembling the function and
+/// guarantees a fault, not a fall-through, if the runtime were ever wrong.
+/// The id is the stable `exception_kind::trap_kind_id`.
+fn emit_trap_call(asm: &mut Assembler, abi: X86_64Abi, kind_id: u32) {
+    asm.mov_r64_imm32(abi.arg_regs()[0], kind_id as i32);
+    asm.call_rel32("__twig_trap", ExternalRelocKind::PltRel32);
+    asm.ud2();
+}
+
+/// `i64_div_floor` / `i64_mod_floor` (LANG83): floor quotient / remainder with
+/// *defined* edges. The hardware `idiv` is never reached with either edge —
+/// on x86-64 both a zero divisor and `MIN / -1` raise `#DE` (SIGFPE), which
+/// is not a LANG83 trap and would lose buffered output.
+///
+/// ```text
+///         mov  rax, [a]
+///         mov  rcx, [b]
+///         test rcx, rcx            ; b == 0 ?
+///         jne  nonzero
+///         mov  edi, 3              ; Trap.DivZero
+///         call __twig_trap
+///         ud2
+/// nonzero:
+///         cmp  rcx, -1             ; b == -1 ?
+///         jne  divide
+///   div:  mov  rdx, MIN ; cmp rax, rdx ; jne divide
+///         mov  edi, 5 ; call __twig_trap ; ud2      ; Trap.Overflow
+///   mod:  mov  ecx, 1              ; a mod -1 == a mod 1 == 0, no overflow
+/// divide:
+///         cqo
+///         idiv rcx                 ; rax = q (trunc), rdx = r
+///         test rdx, rdx            ; r == 0 → already floor
+///         je   done
+///         mov  r8, rdx
+///         xor  r8, rcx             ; sign(r) != sign(b) ?
+///         jns  done
+///   div:  sub  rax, 1              ; q -= 1
+///   mod:  add  rdx, rcx            ; r += b
+/// done:
+///         mov  [dest], rax | rdx
+/// ```
+///
+/// R8 is a scratch register: volatile in both SysV and MS x64, and never
+/// live across an instruction under the stack-spill allocator.
+fn emit_floor_divmod(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    abi: X86_64Abi,
+    want_mod: bool,
+) -> Result<(), BackendError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_DIV_ZERO, TRAP_OVERFLOW};
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr(format!("{} needs srcs[0]", instr.op)))?;
+    let rhs = instr.srcs.get(1)
+        .ok_or_else(|| BackendError::MalformedInstr(format!("{} needs srcs[1]", instr.op)))?;
+    let div_zero = trap_kind_id(TRAP_DIV_ZERO).expect("Trap.DivZero is a built-in kind");
+    let overflow = trap_kind_id(TRAP_OVERFLOW).expect("Trap.Overflow is a built-in kind");
+
+    let nonzero = asm.create_label();
+    let divide = asm.create_label();
+    let done = asm.create_label();
+
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    load_operand(asm, alloc, Reg::Rcx, rhs);
+    asm.test_(Reg::Rcx, Reg::Rcx);
+    asm.jcc(Cond::Ne, nonzero);
+    // The trap call clobbers RDI/RCX, but it never returns.
+    emit_trap_call(asm, abi, div_zero);
+    asm.bind(nonzero).map_err(BackendError::from)?;
+    asm.cmp_imm32(Reg::Rcx, -1);
+    asm.jcc(Cond::Ne, divide);
+    if want_mod {
+        asm.mov_r64_imm32(Reg::Rcx, 1);
+    } else {
+        asm.mov_r64_imm64(Reg::Rdx, i64::MIN as u64);
+        asm.cmp(Reg::Rax, Reg::Rdx);
+        asm.jcc(Cond::Ne, divide);
+        emit_trap_call(asm, abi, overflow);
+    }
+    asm.bind(divide).map_err(BackendError::from)?;
+    asm.cqo();
+    asm.idiv(Reg::Rcx);
+    asm.test_(Reg::Rdx, Reg::Rdx);
+    asm.jcc(Cond::E, done);
+    asm.mov_r64_r64(Reg::R8, Reg::Rdx);
+    asm.xor_(Reg::R8, Reg::Rcx);
+    asm.jcc(Cond::Ns, done);
+    if want_mod {
+        asm.add(Reg::Rdx, Reg::Rcx);
+    } else {
+        asm.sub_imm32(Reg::Rax, 1);
+    }
+    asm.bind(done).map_err(BackendError::from)?;
+    let result_reg = if want_mod { Reg::Rdx } else { Reg::Rax };
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), result_reg);
+    Ok(())
+}
+
+// ===========================================================================
+// LANG83 PR4 — overflow-checked arithmetic
+// ===========================================================================
+
+/// `i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf` (LANG83 PR4):
+/// the exact result, or `Trap.Overflow`.
+///
+/// x86-64 computes the overflow condition for free. The **OF** (overflow) flag
+/// is set by each of these instructions exactly when the signed result does
+/// not fit in 64 bits:
+///
+/// | instruction      | OF = 1 when                                         |
+/// |------------------|-----------------------------------------------------|
+/// | `add rax, rcx`   | the exact sum is outside `[MIN, MAX]`               |
+/// | `sub rax, rcx`   | the exact difference is outside the range           |
+/// | `imul rax, rcx`  | the full 128-bit signed product does not fit in RAX |
+/// | `neg rax`        | `rax == MIN` (the only value whose negation overflows) |
+///
+/// So the whole lowering is "do it, then `jno` over the trap":
+///
+/// ```text
+///         mov  rax, [a]
+///         mov  rcx, [b]              ; binary ops only
+///         add  rax, rcx              ; | sub rax, rcx | imul rax, rcx | neg rax
+///         jno  ok
+///         mov  edi, 5                ; Trap.Overflow (rcx on Microsoft x64)
+///         call __twig_trap           ; flush stdout, report, abort
+///         ud2
+/// ok:
+///         mov  [dest], rax
+/// ```
+///
+/// The destination is written only after the check, so a wrapped value never
+/// escapes, and a dest that aliases an operand is still correct (both operands
+/// are already in registers).
+fn emit_checked_arith(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+    abi: X86_64Abi,
+) -> Result<(), BackendError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_OVERFLOW};
+    let dest = require_dest(instr)?;
+    let lhs = instr.srcs.first()
+        .ok_or_else(|| BackendError::MalformedInstr(format!("{} needs srcs[0]", instr.op)))?;
+    load_operand(asm, alloc, Reg::Rax, lhs);
+    if instr.op == "i64_neg_ovf" {
+        asm.neg_(Reg::Rax);
+    } else {
+        let rhs = instr.srcs.get(1)
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{} needs srcs[1]", instr.op)))?;
+        load_operand(asm, alloc, Reg::Rcx, rhs);
+        match instr.op.as_str() {
+            "i64_add_ovf" => asm.add(Reg::Rax, Reg::Rcx),
+            "i64_sub_ovf" => asm.sub(Reg::Rax, Reg::Rcx),
+            _ => asm.imul(Reg::Rax, Reg::Rcx),
+        }
+    }
+    let ok = asm.create_label();
+    asm.jcc(Cond::No, ok);
+    emit_trap_call(asm, abi, trap_kind_id(TRAP_OVERFLOW).expect("Trap.Overflow is a built-in kind"));
+    asm.bind(ok).map_err(BackendError::from)?;
+    let slot = alloc.slot_of(dest);
+    asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
     Ok(())
 }
 
@@ -2859,6 +3154,143 @@ mod tests {
         assert!(has_jne,  "expected jne in {bytes:02X?}");
     }
 
+    // ---- LANG83 PR1b: floor division, trap, write_i64 ----
+
+    fn floor_fn(op: &str) -> (Vec<u8>, Vec<Reloc>) {
+        let params = vec![("a".to_string(), "i64".to_string()), ("b".to_string(), "i64".to_string())];
+        let ctx = fn_ctx("f", &params, "i64");
+        let ir = vec![
+            instr(op, Some("q"), vec![Op::Var("a".into()), Op::Var("b".into())]),
+            instr("ret_i64", None, vec![Op::Var("q".into())]),
+        ];
+        compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).expect("floor op lowers")
+    }
+
+    fn position(bytes: &[u8], needle: &[u8]) -> usize {
+        bytes.windows(needle.len()).position(|w| w == needle)
+            .unwrap_or_else(|| panic!("{needle:02X?} not found in {bytes:02X?}"))
+    }
+
+    fn trap_calls(relocs: &[Reloc]) -> usize {
+        relocs.iter().filter(|r| r.symbol == "__twig_trap" && r.kind == ExternalRelocKind::PltRel32).count()
+    }
+
+    #[test]
+    fn i64_div_floor_checks_both_edges_before_idiv_then_fixes_up() {
+        let (bytes, relocs) = floor_fn("i64_div_floor");
+        let zero_check = position(&bytes, &[0x48, 0x85, 0xC9]);        // test rcx, rcx
+        let minus_one = position(&bytes, &[0x48, 0x81, 0xF9, 0xFF, 0xFF, 0xFF, 0xFF]); // cmp rcx, -1
+        let min_imm = position(&bytes, &[0x48, 0xBA, 0, 0, 0, 0, 0, 0, 0, 0x80]); // mov rdx, i64::MIN
+        let idiv = position(&bytes, &[0x48, 0x99, 0x48, 0xF7, 0xF9]);  // cqo; idiv rcx
+        assert!(zero_check < minus_one && minus_one < min_imm && min_imm < idiv,
+            "both edges are tested before the hardware divide");
+        // DivZero (id 3) and Overflow (id 5): mov edi, id; call __twig_trap; ud2.
+        assert!(body_contains(&bytes, &[0x48, 0xC7, 0xC7, 3, 0, 0, 0, 0xE8]));
+        assert!(body_contains(&bytes, &[0x48, 0xC7, 0xC7, 5, 0, 0, 0, 0xE8]));
+        assert_eq!(trap_calls(&relocs), 2);
+        // Floor fix-up after the divide: mov r8, rdx; xor r8, rcx; jns; sub rax, 1.
+        let fixup = position(&bytes, &[0x49, 0x89, 0xD0, 0x49, 0x31, 0xC8]);
+        assert!(idiv < fixup);
+        assert!(fixup < position(&bytes, &[0x48, 0x81, 0xE8, 1, 0, 0, 0]), "sub rax, 1 after the sign test");
+    }
+
+    #[test]
+    fn i64_mod_floor_has_no_overflow_trap_and_adds_the_divisor() {
+        let (bytes, relocs) = floor_fn("i64_mod_floor");
+        assert_eq!(trap_calls(&relocs), 1, "only Trap.DivZero: MIN mod -1 is 0");
+        assert!(!body_contains(&bytes, &[0x48, 0xC7, 0xC7, 5, 0, 0, 0]), "no Trap.Overflow");
+        // b == -1 → divide by 1 instead (mov rcx, 1), then add rdx, rcx in the fix-up.
+        assert!(body_contains(&bytes, &[0x48, 0xC7, 0xC1, 1, 0, 0, 0]));
+        assert!(body_contains(&bytes, &[0x48, 0x01, 0xCA]), "add rdx, rcx in {bytes:02X?}");
+        // The remainder (RDX) is what reaches the dest slot.
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x95]), "mov [rbp+disp32], rdx in {bytes:02X?}");
+    }
+
+    // ---- LANG83 PR4: overflow-checked arithmetic ----
+
+    fn checked_fn(op: &str, abi: X86_64Abi) -> (Vec<u8>, Vec<Reloc>) {
+        let params = vec![("a".to_string(), "i64".to_string()), ("b".to_string(), "i64".to_string())];
+        let ctx = fn_ctx("f", &params, "i64");
+        let srcs = if op == "i64_neg_ovf" {
+            vec![Op::Var("a".into())]
+        } else {
+            vec![Op::Var("a".into()), Op::Var("b".into())]
+        };
+        let ir = vec![instr(op, Some("r"), srcs), instr("ret_i64", None, vec![Op::Var("r".into())])];
+        compile_function_with_relocs(&ctx, &ir, abi).expect("checked op lowers")
+    }
+
+    /// Each checked op is the one flag-setting instruction, then `jno` over
+    /// exactly the 14-byte trap sequence (`mov edi, 5; call __twig_trap;
+    /// ud2`), then the store — never the wrapping arm the `add_`/`mul_`
+    /// prefixes would have chosen without a following overflow check.
+    #[test]
+    fn checked_ops_test_the_overflow_flag_then_trap_overflow() {
+        for (op, arith) in [
+            ("i64_add_ovf", &[0x48, 0x01, 0xC8][..]),       // add rax, rcx
+            ("i64_sub_ovf", &[0x48, 0x29, 0xC8][..]),       // sub rax, rcx
+            ("i64_mul_ovf", &[0x48, 0x0F, 0xAF, 0xC1][..]), // imul rax, rcx
+            ("i64_neg_ovf", &[0x48, 0xF7, 0xD8][..]),       // neg rax
+        ] {
+            let (bytes, relocs) = checked_fn(op, X86_64Abi::SysV);
+            let at = position(&bytes, arith);
+            let jno = at + arith.len();
+            assert_eq!(&bytes[jno..jno + 6], &[0x0F, 0x81, 14, 0, 0, 0], "{op}: jno over the trap");
+            assert_eq!(&bytes[jno + 6..jno + 13], &[0x48, 0xC7, 0xC7, 5, 0, 0, 0], "{op}: mov rdi, Trap.Overflow");
+            assert_eq!(bytes[jno + 13], 0xE8, "{op}: call __twig_trap");
+            assert_eq!(&bytes[jno + 18..jno + 20], &[0x0F, 0x0B], "{op}: ud2");
+            // The result (RAX) is stored only after the check.
+            assert_eq!(&bytes[jno + 20..jno + 23], &[0x48, 0x89, 0x85], "{op}: mov [rbp+disp32], rax");
+            assert_eq!(trap_calls(&relocs), 1, "{op}");
+        }
+        // Microsoft x64 passes the kind id in RCX.
+        let (bytes, _) = checked_fn("i64_add_ovf", X86_64Abi::MsX64);
+        assert!(body_contains(&bytes, &[0x0F, 0x81, 14, 0, 0, 0, 0x48, 0xC7, 0xC1, 5, 0, 0, 0, 0xE8]));
+    }
+
+    #[test]
+    fn checked_ops_need_their_operands() {
+        let ctx = fn_ctx("f", &[], "i64");
+        let bad = vec![instr("i64_add_ovf", Some("r"), vec![Op::Var("a".into())])];
+        assert!(compile_function(&ctx, &bad, X86_64Abi::SysV).is_err(), "binary op with one source");
+        let no_dest = vec![instr("i64_neg_ovf", None, vec![Op::Var("a".into())])];
+        assert!(compile_function(&ctx, &no_dest, X86_64Abi::SysV).is_err(), "no dest");
+    }
+
+    #[test]
+    fn trap_passes_the_stable_kind_id_in_the_first_argument_register() {
+        let ctx = fn_ctx("t", &[], "void");
+        let ir = vec![
+            instr("trap", None, vec![Op::Var("Trap.User".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        for (abi, mov) in [
+            (X86_64Abi::SysV, [0x48, 0xC7, 0xC7, 6, 0, 0, 0]),  // mov rdi, 6
+            (X86_64Abi::MsX64, [0x48, 0xC7, 0xC1, 6, 0, 0, 0]), // mov rcx, 6
+        ] {
+            let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, abi).unwrap();
+            let at = position(&bytes, &mov);
+            assert_eq!(bytes[at + 7], 0xE8, "call rel32 follows");
+            assert_eq!(&bytes[at + 12..at + 14], &[0x0F, 0x0B], "ud2 after the noreturn call");
+            assert_eq!(trap_calls(&relocs), 1);
+        }
+        // A kind outside the closed table is malformed IR, not a trap.
+        let bad = vec![instr("trap", None, vec![Op::Var("Not.A.Kind".into())])];
+        assert!(compile_function(&ctx, &bad, X86_64Abi::SysV).is_err());
+    }
+
+    #[test]
+    fn write_i64_calls_the_runtime_helper() {
+        let ctx = fn_ctx("w", &[], "void");
+        let ir = vec![
+            instr("const_i64", Some("n"), vec![Op::Int(-5)]),
+            instr("call_builtin", None, vec![Op::Var("write_i64".into()), Op::Var("n".into())]),
+            instr("ret_void", None, vec![]),
+        ];
+        let (_bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(relocs.iter().any(|r| r.symbol == "__twig_write_i64"));
+    }
+
     // ---- Type assert ----
 
     #[test]
@@ -2876,25 +3308,27 @@ mod tests {
     // ---- Errors ----
 
     #[test]
-    fn too_many_args_sysv() {
-        // 7 args > 6 GPR slots → BackendRefused.
+    fn overflow_params_sysv_compile() {
+        // 7 params > 6 GPR slots: the overflow parameter is read from
+        // the caller's stack instead of being refused.
         let params: Vec<_> = (0..7)
             .map(|i| (format!("p{i}"), "u64".to_string()))
             .collect();
-        let ctx = fn_ctx("toomany", &params, "void");
+        let ctx = fn_ctx("overflow", &params, "void");
         let result = compile_function(&ctx, &[], X86_64Abi::SysV);
-        assert!(result.is_err());
+        assert!(result.is_ok(), "{result:?}");
     }
 
     #[test]
-    fn too_many_args_msx64() {
-        // 5 args > 4 GPR slots → BackendRefused on Windows.
+    fn overflow_params_msx64_compile() {
+        // 5 params > 4 GPR slots: the overflow parameter is read from
+        // the caller's stack instead of being refused.
         let params: Vec<_> = (0..5)
             .map(|i| (format!("p{i}"), "u64".to_string()))
             .collect();
-        let ctx = fn_ctx("toomany", &params, "void");
+        let ctx = fn_ctx("overflow", &params, "void");
         let result = compile_function(&ctx, &[], X86_64Abi::MsX64);
-        assert!(result.is_err());
+        assert!(result.is_ok(), "{result:?}");
     }
 
     // ---- Backend trait ----
@@ -3121,8 +3555,10 @@ mod tests {
     }
 
     #[test]
-    fn fn_call_too_many_args_msx64() {
-        // 5 args > 4 GPR slots on MS x64.
+    fn fn_call_overflow_args_msx64_go_above_shadow_space() {
+        // 5 args > 4 GPR slots on MS x64: the fifth travels on the stack at
+        // [rsp + 32], just above the callee's 32-byte shadow space, inside a
+        // 48-byte (16-aligned) outgoing area that is released after the call.
         let ctx = fn_ctx("caller", &[], "u64");
         let mut srcs = vec![Op::Var("external".into())];
         for i in 0..5 { srcs.push(Op::Int(i)); }
@@ -3130,8 +3566,69 @@ mod tests {
             instr("call", Some("r"), srcs),
             instr("ret_u64", None, vec![Op::Var("r".into())]),
         ];
-        let result = compile_function(&ctx, &ir, X86_64Abi::MsX64);
-        assert!(result.is_err(), "expected `too many args` error");
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        // mov [rsp + 32], rax  =  48 89 84 24 20 00 00 00
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x84, 0x24, 0x20, 0, 0, 0]),
+                "expected the fifth argument stored at [rsp + 32]");
+        // sub rsp, 48 / add rsp, 48  =  48 81 EC 30 00 00 00 / 48 81 C4 30 00 00 00
+        assert!(body_contains(&bytes, &[0x48, 0x81, 0xEC, 0x30, 0, 0, 0]),
+                "expected a 48-byte outgoing area");
+        assert!(body_contains(&bytes, &[0x48, 0x81, 0xC4, 0x30, 0, 0, 0]),
+                "expected the outgoing area to be released after the call");
+    }
+
+    #[test]
+    fn fn_call_overflow_args_sysv_go_at_rsp() {
+        // 8 args > 6 GPR slots on SysV: args 7 and 8 sit at [rsp] and
+        // [rsp + 8] at the call, in a 16-byte outgoing area.
+        let ctx = fn_ctx("caller", &[], "u64");
+        let mut srcs = vec![Op::Var("external".into())];
+        for i in 0..8 { srcs.push(Op::Int(i)); }
+        let ir = vec![
+            instr("call", Some("r"), srcs),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x84, 0x24, 0x00, 0, 0, 0]),
+                "expected the seventh argument stored at [rsp]");
+        assert!(body_contains(&bytes, &[0x48, 0x89, 0x84, 0x24, 0x08, 0, 0, 0]),
+                "expected the eighth argument stored at [rsp + 8]");
+        assert!(body_contains(&bytes, &[0x48, 0x81, 0xEC, 0x10, 0, 0, 0]),
+                "expected a 16-byte outgoing area");
+        assert!(body_contains(&bytes, &[0x48, 0x81, 0xC4, 0x10, 0, 0, 0]),
+                "expected the outgoing area to be released after the call");
+    }
+
+    #[test]
+    fn stack_argument_count_is_capped() {
+        // 6 register + 256 stack-passed parameters exceeds MAX_STACK_ARGS.
+        let params: Vec<(String, String)> =
+            (0..262).map(|i| (format!("p{i}"), "u64".to_string())).collect();
+        let ctx = fn_ctx("huge", &params, "void");
+        assert!(compile_function(&ctx, &[], X86_64Abi::SysV).is_err());
+        let ctx = fn_ctx("caller", &[], "u64");
+        let mut srcs = vec![Op::Var("external".into())];
+        for i in 0..262 { srcs.push(Op::Int(i)); }
+        let ir = vec![instr("call", Some("r"), srcs), instr("ret_u64", None, vec![Op::Var("r".into())])];
+        assert!(compile_function(&ctx, &ir, X86_64Abi::SysV).is_err());
+    }
+
+    #[test]
+    fn fn_overflow_params_load_from_above_return_address() {
+        // A callee with 8 params reads its SysV overflow arguments from
+        // [rbp + 16] and [rbp + 24]; on MS x64 the fifth parameter is at
+        // [rbp + 48] (return address + saved rbp + 32-byte shadow space).
+        let params: Vec<(String, String)> =
+            (0..8).map(|i| (format!("p{i}"), "u64".to_string())).collect();
+        let ctx = fn_ctx("callee", &params, "u64");
+        let ir = vec![instr("ret_u64", None, vec![Op::Var("p7".into())])];
+        let sysv = compile_function(&ctx, &ir, X86_64Abi::SysV).unwrap();
+        // mov rax, [rbp + 16] / [rbp + 24]  =  48 8B 85 10/18 00 00 00
+        assert!(body_contains(&sysv, &[0x48, 0x8B, 0x85, 0x10, 0, 0, 0]));
+        assert!(body_contains(&sysv, &[0x48, 0x8B, 0x85, 0x18, 0, 0, 0]));
+        let ms = compile_function(&ctx, &ir, X86_64Abi::MsX64).unwrap();
+        assert!(body_contains(&ms, &[0x48, 0x8B, 0x85, 0x30, 0, 0, 0]),
+                "expected the fifth MS x64 parameter read from [rbp + 48]");
     }
 
     // ---- Globals + io_out (phase 6) ----

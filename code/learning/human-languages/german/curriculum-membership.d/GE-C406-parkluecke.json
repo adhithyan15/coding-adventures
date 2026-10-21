@@ -1,0 +1,11 @@
+{
+  "id": "GE-C406-parkluecke",
+  "pathSegment": "GE-PATH-406-PARKEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-406-PARKEN",
+      "order": 2
+    }
+  ]
+}

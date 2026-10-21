@@ -1,0 +1,11 @@
+{
+  "id": "FR-C441-reverbere",
+  "pathSegment": "FR-PATH-441-MOBILIER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-441-MOBILIER",
+      "order": 2
+    }
+  ]
+}

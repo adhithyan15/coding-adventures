@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "To thresh, To winnow, Chaff, Stalk, Granary",
+  "label": "ch:la-to-thresh-to-winnow-chaff-stalk-granary",
+  "canDo": "I can talk about what happens after the harvest: threshing, winnowing, the chaff, the stalks and storing grain in the granary.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "LA-C476-horreum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can talk about what happens after the harvest: threshing, winnowing, the chaff, the stalks and storing grain in the granary.",
+    "assesses": [
+      "LA-LEX-C476-TRITURO-03",
+      "LA-LEX-C476-TRITURO-04",
+      "LA-LEX-C476-TRITURO-05"
+    ]
+  }
+}

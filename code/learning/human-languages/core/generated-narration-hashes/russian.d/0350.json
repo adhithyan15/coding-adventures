@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:051a617942babf2b",
+  "lessonIds": [
+    "RU-C350-posledstvie",
+    "RU-C350-sledstvie",
+    "RU-C350-otrazhatsya",
+    "RU-C350-effekt",
+    "RU-C350-v-rezultate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch350.txt",
+  "json": "russian/narration/ch350.json",
+  "textHash": "fnv1a64:43f9db03c05e807f",
+  "jsonHash": "fnv1a64:8909aa68789a294f",
+  "findings": []
+}

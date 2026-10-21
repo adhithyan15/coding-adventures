@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C377-perenosit",
+    "language": "russian",
+    "chapter": 377,
+    "sequence": 21850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74d0b6e5dffe5073"
+  },
+  "findings": []
+}

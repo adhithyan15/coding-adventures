@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C346-divus",
+    "language": "latin",
+    "chapter": 346,
+    "sequence": 18620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:096d4340d4eab6c7"
+  },
+  "findings": []
+}

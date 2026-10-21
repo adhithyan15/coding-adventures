@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:2acfb4cccbefbae7",
+  "lessonIds": [
+    "FR-C370-imprevu",
+    "FR-C370-previsible",
+    "FR-C370-imprevisible",
+    "FR-C370-adapter",
+    "FR-C370-souple"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch370.txt",
+  "json": "french/narration/ch370.json",
+  "textHash": "fnv1a64:9cb1b9f600fbde14",
+  "jsonHash": "fnv1a64:9b147b5e6dfa3076",
+  "findings": []
+}

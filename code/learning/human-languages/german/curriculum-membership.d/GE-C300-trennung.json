@@ -1,0 +1,11 @@
+{
+  "id": "GE-C300-trennung",
+  "pathSegment": "GE-PATH-300-SCHEIDUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-300-SCHEIDUNG",
+      "order": 2
+    }
+  ]
+}

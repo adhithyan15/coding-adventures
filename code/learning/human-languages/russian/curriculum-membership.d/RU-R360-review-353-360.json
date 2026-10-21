@@ -1,0 +1,11 @@
+{
+  "id": "RU-R360-review-353-360",
+  "pathSegment": "RU-PATH-360-SOVESHCHANIYE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-360-SOVESHCHANIYE",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:b9bc4fbaeab299c9",
+  "lessonIds": [
+    "RU-C274-postepenno",
+    "RU-C274-odnovremenno",
+    "RU-C274-ponachalu",
+    "RU-C274-vposledstvii",
+    "RU-C274-naposledok"
+  ],
+  "tex": "russian/book/chapters/ch274-little-by-little.tex"
+}

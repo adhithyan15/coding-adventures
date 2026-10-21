@@ -1,0 +1,11 @@
+{
+  "id": "RU-C284-redaktor",
+  "pathSegment": "RU-PATH-284-INTERVYU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-284-INTERVYU",
+      "order": 2
+    }
+  ]
+}

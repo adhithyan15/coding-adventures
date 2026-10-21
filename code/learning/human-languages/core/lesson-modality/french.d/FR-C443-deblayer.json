@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C443-deblayer",
+    "language": "french",
+    "chapter": 443,
+    "sequence": 24520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ce8b4f4ade0e600"
+  },
+  "findings": []
+}

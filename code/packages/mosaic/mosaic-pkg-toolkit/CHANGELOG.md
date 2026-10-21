@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Fixed — the README describes every export, and a test keeps it that way
+
+The README said "11 of 13 Tier-1 components shipped" while the manifest
+exported 26. Five of them had no entry: `Breadcrumb`, `ButtonGroup`, `Nav`,
+`NumberInput` and `Tooltip`. All five are now described, from their
+interfaces. The new `readme_describes_every_export` test fails if the
+README's export list and `[components].exports` disagree.
+
+The smoke test's own `COMPONENTS` list is gone, so a new component no
+longer has to be added in two places. The compile loop reads the manifest,
+and the manifest must export exactly the `src/*.mil` interfaces on disk.
+
 ### Added — `RecordList`: multi-field, groupable rows (v0.16.0, J3a of #14416)
 
 `ListGroup` holds one string per row. Journal's timeline and search

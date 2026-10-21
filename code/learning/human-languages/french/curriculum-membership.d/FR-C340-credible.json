@@ -1,0 +1,11 @@
+{
+  "id": "FR-C340-credible",
+  "pathSegment": "FR-PATH-340-FIABLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-340-FIABLE",
+      "order": 1
+    }
+  ]
+}

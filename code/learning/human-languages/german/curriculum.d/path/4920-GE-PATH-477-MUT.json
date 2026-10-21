@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-477-MUT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "GE-EXT-477-MUT"
+  ],
+  "after": []
+}

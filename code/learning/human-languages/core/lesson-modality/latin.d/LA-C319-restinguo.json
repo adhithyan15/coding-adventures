@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C319-restinguo",
+    "language": "latin",
+    "chapter": 319,
+    "sequence": 17250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d41ed5620885672e"
+  },
+  "findings": []
+}

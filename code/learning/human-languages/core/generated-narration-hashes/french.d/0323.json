@@ -1,0 +1,20 @@
+{
+  "language": "french",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:5f8e5a95f98d4995",
+  "lessonIds": [
+    "FR-C323-regner",
+    "FR-C323-regne",
+    "FR-C323-trone",
+    "FR-C323-couronne",
+    "FR-C323-couronner",
+    "FR-R323-revision-316-323"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch323.txt",
+  "json": "french/narration/ch323.json",
+  "textHash": "fnv1a64:50e449f59f074a80",
+  "jsonHash": "fnv1a64:794d93198fdd4329",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C390-zahlung",
+  "pathSegment": "GE-PATH-390-VERSCHWENDUNG",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-390-VERSCHWENDUNG",
+      "order": 4
+    }
+  ]
+}

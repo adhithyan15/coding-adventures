@@ -1,0 +1,462 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 263,
+  "title": "What I Think, and So",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:7ebe2e4f373beeca",
+  "lessons": [
+    {
+      "id": "RU-C263-po-moemu",
+      "sequence": 16080,
+      "title": "по-моему and мне кажется — an opinion, three ways",
+      "headword": "я думаю, что …; по-моему, …; мне кажется, что …",
+      "romanization": "ya dúmayu, shto …; po-móyemu, …; mne kázhetsya, shto …",
+      "gloss": "three ways to own an opinion — я думаю, что for the plain claim, по-моему for 'in my view', мне кажется, что for a softer 'it seems to me'",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1df2cb4f4e852e3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think that you understand\". (Ya dúmayu, shto ty ponimáyesh.) Then the word for \"an opinion\". (Mnéniye.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A story told with рассказать says what happened. Giving reasons starts one step earlier, with what you think of it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three frames",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Я думаю, что … is the plain frame, here with что and its comma."
+            },
+            {
+              "kind": "speech",
+              "text": "По-моему, … — po-móyemu — \"in my view\". It takes no что; a comma follows it, and then the opinion:"
+            },
+            {
+              "kind": "speech",
+              "text": "По-моему, это хороший фильм. — po-móyemu, éto khoróshiy film — In my view, it's a good film."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: мне кажется, что …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Мне кажется, что … — mne kázhetsya, shto — \"it seems to me that\". It is softer than я думаю: less sure, and politer when you disagree."
+            },
+            {
+              "kind": "speech",
+              "text": "Мне кажется, что фильм скучный. — mne kázhetsya, shto film skúchnyy — It seems to me the film is boring."
+            },
+            {
+              "kind": "speech",
+              "text": "Мне is \"to me\", a form of я. The person something seems to is not the subject here: the opinion is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— По-моему, это хороший фильм. А ты как думаешь? — Я тоже так думаю."
+            },
+            {
+              "kind": "speech",
+              "text": "A ty kak dúmayesh? — \"And what do you think?\" Ya tózhe tak dúmayu — \"I think so too.\" To disagree gently, the second voice says instead: А мне кажется, что он скучный. Он, \"he\", stands for фильм, a masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "по-моему is по, \"by, after\", with моему, a form of мой, \"my\", which EtymDB 2.1 traces to Proto-Slavic mojĭ: \"after my fashion\". кажется is казаться, \"to show oneself, to seem\", the -ся form of an older казать, \"to show\". So мне кажется says \"it shows itself to me\"."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Po-móyemu, éto khoróshiy film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Po-móyemu, éto khoróshiy film.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mne kázhetsya, shto film skúchnyy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mne kázhetsya, shto film skúchnyy.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one opinion of yours three ways: ya dúmayu, shto; po-móyemu; mne kázhetsya, shto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one opinion of yours three ways: *ya dúmayu, shto*; *po-móyemu*; *mne kázhetsya, shto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "A ty kak dúmayesh?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *A ty kak dúmayesh?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"In my view\": which frame needs no что? (По-моему.) The softer one, for \"it seems to me\"? (Мне кажется, что …) \"I think so too\"? (Я тоже так думаю.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C263-tak-chto",
+      "sequence": 16090,
+      "title": "поэтому and так что — the reason, turned round",
+      "headword": "поэтому, так что",
+      "romanization": "poétomu, tak shto",
+      "gloss": "so, and so then — потому что points back to the cause, поэтому and так что point forward to the result",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6187c1a480479bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"because\" and \"since\". (Potomú shto. Tak kak.) Then an opinion with po-móyemu. An opinion needs a reason, and a reason has a direction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: back to the cause, forward to the result",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One rainy day, said two ways:"
+            },
+            {
+              "kind": "speech",
+              "text": "Мы не гуляли, потому что шёл дождь. — my ne gulyáli, potomú shto shol dozhd — We didn't go for a walk, because it was raining. Шёл дождь, поэтому мы не гуляли. — shol dozhd, poétomu my ne gulyáli — It was raining, so we didn't go for a walk."
+            },
+            {
+              "kind": "speech",
+              "text": "Потому что stands in front of the cause. Поэтому stands in front of the result. The facts are the same; the order flips, and the comma moves with the seam. Поэтому can also open a new sentence: Шёл дождь. Поэтому мы не гуляли."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: так что",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "так что — tak shto — \"so, so then\". It also points to the result, and it sounds more like talk:"
+            },
+            {
+              "kind": "speech",
+              "text": "Шёл дождь, так что мы сидели в кафе. — shol dozhd, tak shto my sidéli v kafé — It was raining, so we sat in a café."
+            },
+            {
+              "kind": "speech",
+              "text": "It usually sits inside one sentence, after a comma."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "так, \"in that way, so\", goes back to Old East Slavic tako (EtymDB 2.1), on the pointing stem to- that also gives тот, \"that\". So так что is \"that way, so that\". Поэтому is по, \"by\", with этому, a form of этот: \"for this\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My ne gulyáli, potomú shto shol dozhd.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *My ne gulyáli, potomú shto shol dozhd.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "turned round: Shol dozhd, poétomu my ne gulyáli.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: turned round: *Shol dozhd, poétomu my ne gulyáli.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Shol dozhd, tak shto my sidéli v kafé.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Shol dozhd, tak shto my sidéli v kafé.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reason of your own, first with potomú shto, then turned round with poétomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reason of your own, first with *potomú shto*, then turned round with *poétomu*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word stands in front of the cause? (Потому что.) And in front of the result? (Поэтому, or так что.) Which of the two opens a new sentence more easily? (Поэтому.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C263-review",
+      "sequence": 16100,
+      "title": "Review — what I think, and so",
+      "headword": "(review)",
+      "romanization": "(review)",
+      "gloss": "an opinion and its reason — по-моему and мне кажется, then the same reason pointed back with потому что and forward with поэтому",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3460b8c9e5844f82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"in my view, it's a good film\". (Po-móyemu, éto khoróshiy film.) Then softer: \"it seems to me the film is boring\". (Mne kázhetsya, shto film skúchnyy.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and an opinion now comes with its reason. Three frames: я думаю, что, по-моему, мне кажется, что. And two directions: потому что before the cause, поэтому or так что before the result."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All of it in two sentences:"
+            },
+            {
+              "kind": "speech",
+              "text": "По-моему, музей интересный, потому что он старый. — po-móyemu, muzéy interésnyy, potomú shto on stáryy — In my view the museum is interesting, because it's old. Музей старый, поэтому, мне кажется, он интересный. — the same reason, pointed forward, and said more softly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Po-móyemu, muzéy interésnyy, potomú shto on stáryy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Po-móyemu, muzéy interésnyy, potomú shto on stáryy.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Shol dozhd, tak shto my sidéli v kafé.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Shol dozhd, tak shto my sidéli v kafé.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "A ty kak dúmayesh? about a film you know, with mne kázhetsya, shto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *A ty kak dúmayesh?* about a film you know, with *mne kázhetsya, shto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a short Saturday story: a scene, then snachála, zatém, and a result with poétomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a short Saturday story: a scene, then *snachála*, *zatém*, and a result with *poétomu*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"So\", in front of a result, two ways? (Поэтому, так что.) \"In my view\", with no что? (По-моему.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

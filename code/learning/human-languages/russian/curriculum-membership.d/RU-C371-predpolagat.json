@@ -1,0 +1,11 @@
+{
+  "id": "RU-C371-predpolagat",
+  "pathSegment": "RU-PATH-371-GIPOTEZA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-371-GIPOTEZA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-R529-review-522-529",
+  "pathSegment": "GE-PATH-529-RENOVIEREN",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-529-RENOVIEREN",
+      "order": 5
+    }
+  ]
+}

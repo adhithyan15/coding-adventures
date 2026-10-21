@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:b17d3f88822760d6",
+  "lessonIds": [
+    "GE-C464-hitzewelle",
+    "GE-C464-duerre",
+    "GE-C464-luftfeuchtigkeit",
+    "GE-C464-schwuel",
+    "GE-C464-austrocknen"
+  ],
+  "tex": "german/book/chapters/ch464-die-hitzewelle.tex"
+}

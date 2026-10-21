@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-401-PRILOZHENIYA",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-401-PRILOZHENIYA"
+  ],
+  "after": []
+}

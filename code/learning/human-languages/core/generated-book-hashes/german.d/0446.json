@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:a7b189644455d18e",
+  "lessonIds": [
+    "GE-C446-reinigung",
+    "GE-C446-waschsalon",
+    "GE-C446-entfernen",
+    "GE-C446-flicken",
+    "GE-C446-trocknen"
+  ],
+  "tex": "german/book/chapters/ch446-in-der-reinigung.tex"
+}

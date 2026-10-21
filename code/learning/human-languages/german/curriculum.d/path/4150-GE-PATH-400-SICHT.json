@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-400-SICHT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "GE-EXT-400-SICHT"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Kaiser und Könige",
+  "label": "ch:ge-kaiser-und-konige",
+  "canDo": "I can tell who ruled and how: an emperor, to rule, to govern, to conquer and a victory.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C319-sieg",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can tell who ruled and how: an emperor, to rule, to govern, to conquer and a victory.",
+    "assesses": [
+      "GE-LEX-C319-KAISER-03",
+      "GE-LEX-C319-KAISER-04",
+      "GE-LEX-C319-KAISER-05"
+    ]
+  }
+}

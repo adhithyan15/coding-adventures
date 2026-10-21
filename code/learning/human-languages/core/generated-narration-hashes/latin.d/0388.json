@@ -1,0 +1,20 @@
+{
+  "language": "latin",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:e1597b99f7fd2829",
+  "lessonIds": [
+    "LA-C388-municeps",
+    "LA-C388-decurio",
+    "LA-C388-colonia",
+    "LA-C388-sodalis",
+    "LA-C388-collegium",
+    "LA-R388-review-381-388"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "latin/narration/ch388.txt",
+  "json": "latin/narration/ch388.json",
+  "textHash": "fnv1a64:22ab914030cd29c0",
+  "jsonHash": "fnv1a64:e5efdca3450f5fef",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C450-auszahlen",
+  "pathSegment": "GE-PATH-450-GELDAUTOMAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-450-GELDAUTOMAT",
+      "order": 4
+    }
+  ]
+}

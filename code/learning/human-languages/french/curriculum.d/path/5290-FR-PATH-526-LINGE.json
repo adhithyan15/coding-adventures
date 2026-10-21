@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-526-LINGE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FR-EXT-526-LINGE"
+  ],
+  "after": []
+}

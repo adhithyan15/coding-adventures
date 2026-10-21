@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Close friends",
+  "label": "ch:la-close-friends",
+  "canDo": "I can talk about close friends and the ties between people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-C533-amabilis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about close friends and the ties between people.",
+    "assesses": [
+      "LA-LEX-C533-FAMI-03",
+      "LA-LEX-C533-FAMI-04",
+      "LA-LEX-C533-FAMI-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C455-tuempel",
+  "pathSegment": "GE-PATH-455-WASSERFALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-455-WASSERFALL",
+      "order": 2
+    }
+  ]
+}

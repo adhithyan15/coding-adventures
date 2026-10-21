@@ -1,0 +1,19 @@
+{
+  "chapter": 419,
+  "title": "Décollage et atterrissage",
+  "label": "ch:fr-decollage-et-atterrissage",
+  "canDo": "I can talk about take-off and landing, and flying over places.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C419-survoler",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 419: I can talk about take-off and landing, and flying over places.",
+    "assesses": [
+      "FR-LEX-C419-DECOLLAGE-03",
+      "FR-LEX-C419-DECOLLAGE-04",
+      "FR-LEX-C419-DECOLLAGE-05"
+    ]
+  }
+}

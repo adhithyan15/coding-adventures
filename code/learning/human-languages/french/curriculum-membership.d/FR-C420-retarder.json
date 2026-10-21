@@ -1,0 +1,11 @@
+{
+  "id": "FR-C420-retarder",
+  "pathSegment": "FR-PATH-420-ESCALE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-420-ESCALE",
+      "order": 4
+    }
+  ]
+}

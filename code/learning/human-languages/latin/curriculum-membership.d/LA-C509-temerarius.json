@@ -1,0 +1,11 @@
+{
+  "id": "LA-C509-temerarius",
+  "pathSegment": "LA-PATH-509-FORT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-509-FORT",
+      "order": 2
+    }
+  ]
+}

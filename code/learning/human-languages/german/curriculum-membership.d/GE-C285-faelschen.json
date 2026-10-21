@@ -1,0 +1,11 @@
+{
+  "id": "GE-C285-faelschen",
+  "pathSegment": "GE-PATH-285-BETRUG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-285-BETRUG",
+      "order": 3
+    }
+  ]
+}

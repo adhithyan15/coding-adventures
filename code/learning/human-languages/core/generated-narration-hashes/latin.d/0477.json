@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:6297faaf38cae1bc",
+  "lessonIds": [
+    "LA-C477-pecus",
+    "LA-C477-grex",
+    "LA-C477-armentum",
+    "LA-C477-pasco",
+    "LA-C477-pascuum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch477.txt",
+  "json": "latin/narration/ch477.json",
+  "textHash": "fnv1a64:2181589710cdf451",
+  "jsonHash": "fnv1a64:46b07c8f1e720640",
+  "findings": []
+}

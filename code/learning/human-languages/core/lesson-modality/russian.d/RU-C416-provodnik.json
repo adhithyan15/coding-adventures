@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C416-provodnik",
+    "language": "russian",
+    "chapter": 416,
+    "sequence": 23860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24b40b629edc36ac"
+  },
+  "findings": []
+}

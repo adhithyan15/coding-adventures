@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C320-toast",
+    "language": "french",
+    "chapter": 320,
+    "sequence": 18170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3535239433a206d"
+  },
+  "findings": []
+}

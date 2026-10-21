@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Die Hitzewelle",
+  "label": "ch:ge-die-hitzewelle",
+  "canDo": "I can talk about hot, dry weather: the heatwave, the drought, the humidity, muggy air and drying out.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C464-austrocknen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can talk about hot, dry weather: the heatwave, the drought, the humidity, muggy air and drying out.",
+    "assesses": [
+      "GE-LEX-C464-HITZEWELLE-03",
+      "GE-LEX-C464-HITZEWELLE-04",
+      "GE-LEX-C464-HITZEWELLE-05"
+    ]
+  }
+}

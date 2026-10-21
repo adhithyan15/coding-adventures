@@ -107,6 +107,29 @@ ret                               ret
 Since `push rbp` shifts the inherited 8-mod-16 alignment to 0-mod-16,
 `<frame> ≡ 0 (mod 16)`.
 
+### Arguments beyond the registers
+
+Calls and functions may take more arguments than the ABI's integer
+registers (six for SysV, four for Microsoft x64). The overflow arguments
+travel on the stack in the standard layout:
+
+```
+; caller, for a call with n_stack overflow arguments
+sub  rsp, align16(shadow + 8 * n_stack)
+mov  rax, <arg k>  ;  mov [rsp + shadow + 8*k], rax     ; for each k
+<load register arguments>
+call callee
+add  rsp, align16(shadow + 8 * n_stack)
+
+; callee prologue, after the register spills
+mov  rax, [rbp + 16 + shadow + 8*k]  ;  mov [rbp - slot], rax
+```
+
+`shadow` is 0 on SysV and 32 on Microsoft x64. RAX is the copy scratch
+because it is never an argument register. Every source lives in an
+`rbp`-relative slot, so moving `rsp` for the outgoing area does not
+disturb them.
+
 For Microsoft x64, V1 unconditionally reserves the 32-byte shadow
 space in the prologue (treating every function as potentially
 non-leaf).  Costs at most 32 bytes of unused stack per leaf function;
@@ -122,3 +145,17 @@ removes the need to reserve-per-call.
 FLOW-MATIC EOF support (VM-039a): `input_more()` uses a non-consuming stdio
 peek alongside `input_i64`. The native/LLVM input stream proof includes empty
 input and repeated EOF reads; this does not change existing integer parsing.
+
+## LANG83 operation support
+
+`x86_64_backend::op_support::op_support(name)` (and `OP_SUPPORT`) is this backend's answer,
+`Lowered` or `Refused(reason)`, for every operation in the
+[LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) standard registry
+(`interpreter_ir::op_registry::STANDARD_OPS`). "Lowered" means the native AOT pipeline that ends in this backend (twig-aot's IIR rewriting, then `jit_core::specialise`, then this crate) compiles the op. This crate dispatches CIR ops by name prefix (`div_`, `add_`, …), which is why LANG83 requires new op names to be type-first. `lang-aot` refuses a
+module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b the native pipeline also lowers `write_i64`
+(`__twig_write_i64`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
+`MIN / -1` checks before `idiv`, then a floor fix-up) and `trap`
+(`call __twig_trap` with the stable kind id, then `ud2`). LANG83 PR4 adds the
+overflow-checked `i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`: one
+flag-setting `add`/`sub`/`imul`/`neg`, then `jno` over a `Trap.Overflow` trap
+call, then the store (a wrapped value never reaches the destination).

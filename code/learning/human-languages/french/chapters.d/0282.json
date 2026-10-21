@@ -1,0 +1,19 @@
+{
+  "chapter": 282,
+  "title": "Les gros titres",
+  "label": "ch:fr-les-gros-titres",
+  "canDo": "I can talk about the front page: headlines, banner headlines, sections, editorials and short news items.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C282-faits-divers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 282: I can talk about the front page: headlines, banner headlines, sections, editorials and short news items.",
+    "assesses": [
+      "FR-LEX-C282-TITRES-03",
+      "FR-LEX-C282-TITRES-04",
+      "FR-LEX-C282-TITRES-05"
+    ]
+  }
+}

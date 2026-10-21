@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:041cd5aa27dbc22a",
+  "lessonIds": [
+    "GE-C471-traene",
+    "GE-C471-schluchzen",
+    "GE-C471-trost",
+    "GE-C471-troesten",
+    "GE-C471-mitleid"
+  ],
+  "tex": "german/book/chapters/ch471-tranen-und-trost.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "french",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:eb361e860ef8f9bb",
+  "lessonIds": [
+    "FR-C323-regner",
+    "FR-C323-regne",
+    "FR-C323-trone",
+    "FR-C323-couronne",
+    "FR-C323-couronner",
+    "FR-R323-revision-316-323"
+  ],
+  "tex": "french/book/chapters/ch323-le-regne.tex"
+}

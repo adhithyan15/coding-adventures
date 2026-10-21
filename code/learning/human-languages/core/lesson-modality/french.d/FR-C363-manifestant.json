@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C363-manifestant",
+    "language": "french",
+    "chapter": 363,
+    "sequence": 20400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e504187d21ed4a2c"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:c48f1582e215241c",
+  "lessonIds": [
+    "LA-C334-sacerdos",
+    "LA-C334-victima",
+    "LA-C334-immolo",
+    "LA-C334-voveo",
+    "LA-C334-votum"
+  ],
+  "tex": "latin/book/chapters/ch334-sacrificium.tex"
+}

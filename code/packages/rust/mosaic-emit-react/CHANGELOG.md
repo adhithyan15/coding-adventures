@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-19 (slot-bound number placeholder)
+
+- **`HostNumberInput ( placeholder : slot: x )` reaches the field (EM-14).** The number field read `placeholder` with a string-literal-only lookup, so `mosaic-pkg-toolkit`'s `NumberInput` emitted no placeholder at all, and the degradation report said nothing. It now uses `push_text_field_placeholder`, as `HostInput` does: a literal is `placeholder="..."`, a slot is `placeholder={x}`, and a `For` binding or expression passes through. A name that is not a JavaScript identifier is an `UnsafeSlotName` error.
+
+## 2026-10-19 (Text-area commit on Ctrl/Cmd+Enter)
+
+- **A `<textarea>` commits on Ctrl+Enter or Cmd+Enter (UI25 §4).** `HostInput` and the legacy `Input` share `commit_key_branch`: a multiline field's `onKeyDown` checks `e.key === "Enter" && (e.ctrlKey || e.metaKey)` and calls `preventDefault()`; a single-line field keeps bare Enter. A text-payload commit carries `e.currentTarget.value`, as the single-line one does.
+- **Fixed: the legacy multiline `Input` committed on every line break.** It kept its bare-Enter branch on a `<textarea>`, so each Enter both inserted a newline and dispatched `onCommit`.
+
+## 2026-10-19 (slot-bound placeholder)
+
+- **`placeholder : slot: x` reaches the field.** `HostInput` and the legacy `Input` read `placeholder` with a string-literal-only lookup, so a bound placeholder (every toolkit `Input`, the note-type editor's fields, the SPICE netlist editor) emitted no attribute at all, and the degradation report said nothing. Both paths, on `<input>` and `<textarea>`, now share `push_text_field_placeholder`: a literal is `placeholder="..."` (expression form when it needs escaping), a slot is `placeholder={x}`, and a `For` binding or expression passes through as `a11y-label` does. A slot or binding name that is not a JavaScript identifier is an `UnsafeSlotName` error.
+  - `push_text_field_aria_label` and the new helper are both `push_text_field_text_attr`, so a text-valued attribute has one lowering.
+
 ## 2026-10-19 (HostInput multiline)
 
 - **`HostInput ( multiline : true )` is a `<textarea>` (#15930).** React always drew a one-line `<input type="text">` for `HostInput` and ignored the keyword, on the theory that a userland `MultilineInput` would own text areas. None could: a text area cannot be composed from single-line fields. UI29-3 had already counted on HostInput's `multiline`, and XAML, Compose and Flutter honoured it, so the note-type editor's card templates were one line here and a text area there.

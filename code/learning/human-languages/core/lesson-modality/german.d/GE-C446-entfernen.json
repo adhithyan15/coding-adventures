@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C446-entfernen",
+    "language": "german",
+    "chapter": 446,
+    "sequence": 23980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33d18a2d491fd4af"
+  },
+  "findings": []
+}

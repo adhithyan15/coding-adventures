@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:059d9ea93efece06",
+  "lessonIds": [
+    "RU-C276-desyatiletiye",
+    "RU-C276-period",
+    "RU-C276-etap",
+    "RU-C276-promezhutok",
+    "RU-C276-srok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch276.txt",
+  "json": "russian/narration/ch276.json",
+  "textHash": "fnv1a64:8893323b80820695",
+  "jsonHash": "fnv1a64:ff5b4dea9816824e",
+  "findings": []
+}

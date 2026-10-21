@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.62.0] - 2026-10-20
+
+### Fixed — a `do…while` body slot is braced; `else{` without a space (CCR-083, #15918)
+
+Upstream's AST always holds a BLOCK in the body of `if`/`else`, `while`,
+`for`, `for-in`, `for-of`, `with` and `do`. Its printer
+(`addNonEmptyStatement`) unwraps a one-statement block, except when that
+statement is a `do…while` (`isBlockDeclOrDo`, "a IE6/7 browser bug that needs
+a block around DOs"). The new `emit_body` does the same, so
+`if(c)do a();while(d)` now emits `if(c){do a();while(d)}` instead of a bare
+`do`. Labels stay bare, because upstream lets a label take any child.
+
+`else` and `do` now write a space before their body only when the body doesn't
+open with `{`. A block `else` therefore emits `else{…}`, where it used to
+emit `else {…}`.
+
+Six new tests cover every body slot, the `do` body, labels and statement
+position, and the `else` spacing.
+
+## [0.61.0] - 2026-10-20
+
+### Fixed — a block-final `throw` keeps its `;` (CCR-084, #15919)
+
+Upstream's `CodeGenerator` always ends a `throw` with a forced semicolon:
+`endStatement(/* needSemiColon= */ true, …)`, because "otherwise safari can't
+parse this". A `}` that follows does not absorb it, as it does for `return`
+and other terminators.
+
+The gap-030 compact-tail rule was popping that `;`. It did so in blocks,
+function bodies and the last `switch` case, even when the source had written
+the `;`. So `function f(){throw 1}` emitted `function f(){throw 1}` instead of
+upstream's `function f(){throw 1;}`.
+
+`ThrowStatement` is now excluded from `last_stmt_uses_terminator_semi`.
+Block-final `return`, `break`, `continue`, expression statements and `var`
+are unchanged.
+
+Three new tests cover blocks, the last statement of a `switch`, and the
+contrast rows.
+
 ## [0.60.0] - 2026-09-25
 
 ### Fixed — a number used as an access base needs parentheses the source never had

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C407-horodateur",
+  "pathSegment": "FR-PATH-407-STATIONNEMENT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-407-STATIONNEMENT",
+      "order": 2
+    }
+  ]
+}

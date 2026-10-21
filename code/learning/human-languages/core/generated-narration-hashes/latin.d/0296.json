@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:1901bf87081ed648",
+  "lessonIds": [
+    "LA-C296-initium",
+    "LA-C296-principium",
+    "LA-C296-exitus",
+    "LA-C296-intervallum",
+    "LA-C296-momentum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch296.txt",
+  "json": "latin/narration/ch296.json",
+  "textHash": "fnv1a64:63d67d34939eaee3",
+  "jsonHash": "fnv1a64:0f301158049951cb",
+  "findings": []
+}

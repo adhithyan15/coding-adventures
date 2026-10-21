@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C493-accoucher",
+    "language": "french",
+    "chapter": 493,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71e8b3eda4fb24d2"
+  },
+  "findings": []
+}

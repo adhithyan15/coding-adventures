@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-288-ARNAQUE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FR-EXT-288-ARNAQUE"
+  ],
+  "after": []
+}

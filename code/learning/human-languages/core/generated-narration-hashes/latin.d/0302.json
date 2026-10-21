@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:4a3fdfbfbc5c0a5c",
+  "lessonIds": [
+    "LA-C302-speculator",
+    "LA-C302-explorator",
+    "LA-C302-exploro",
+    "LA-C302-prodo",
+    "LA-C302-patefacio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch302.txt",
+  "json": "latin/narration/ch302.json",
+  "textHash": "fnv1a64:9abe820bb9289df8",
+  "jsonHash": "fnv1a64:1120e89ee8076a9f",
+  "findings": []
+}

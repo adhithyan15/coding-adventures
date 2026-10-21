@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:79a2d61223fcaccc",
+  "lessonIds": [
+    "RU-C453-primerochnaya",
+    "RU-C453-primeryat",
+    "RU-C453-razmer",
+    "RU-C453-zhat",
+    "RU-C453-obmenivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch453.txt",
+  "json": "russian/narration/ch453.json",
+  "textHash": "fnv1a64:0bb7711400cd9bcb",
+  "jsonHash": "fnv1a64:14644c8e6e4b1f02",
+  "findings": []
+}

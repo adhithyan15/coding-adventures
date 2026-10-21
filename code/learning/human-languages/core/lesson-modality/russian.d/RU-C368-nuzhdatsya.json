@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C368-nuzhdatsya",
+    "language": "russian",
+    "chapter": 368,
+    "sequence": 21420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f65bec98b53f5f0"
+  },
+  "findings": []
+}

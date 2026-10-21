@@ -847,6 +847,9 @@ function safeHref(value) {
 
 "##,
     );
+    if layout_has_focusable(&layout.root) {
+        out.push_str(FOCUS_KEEPER_JS);
+    }
 
     // 3. Class opener.
     writeln!(out, "class {class_name} extends HTMLElement {{").unwrap();
@@ -1053,6 +1056,12 @@ fn emit_render(
     // The HTML tree is one flat string for now (no per-line indentation
     // inside the template literal — keeps the output compact and avoids
     // surprising whitespace inside `<span>` and `<div>` text content).
+    // `_render` replaces the whole shadow tree, destroying whichever control
+    // had focus; see `FOCUS_KEEPER_JS`.
+    let keeps_focus = layout_has_focusable(layout_root);
+    if keeps_focus {
+        writeln!(out, "    const mosaicFocus = mosaicCaptureFocus(this.shadowRoot);").unwrap();
+    }
     writeln!(out, "    this.shadowRoot.innerHTML = `{html}`;").unwrap();
     if has_font_size_tree(layout_root) {
         out.push_str(r#"    for (const element of this.shadowRoot.querySelectorAll('[data-mosaic-font-size-slot]')) {
@@ -1067,9 +1076,99 @@ fn emit_render(
     for line in ctx.post_script_lines {
         writeln!(out, "    {line}").unwrap();
     }
+    if keeps_focus {
+        writeln!(out, "    mosaicRestoreFocus(this.shadowRoot, mosaicFocus);").unwrap();
+    }
     writeln!(out, "  }}").unwrap();
     Ok(out)
 }
+
+/// Does the tree hold a control that can have focus? Gates the
+/// `FOCUS_KEEPER_JS` helpers so a static component's output is unchanged.
+fn layout_has_focusable(node: &LayoutNode) -> bool {
+    matches!(
+        node.tag.as_str(),
+        "HostInput"
+            | "Input"
+            | "HostNumberInput"
+            | "HostButton"
+            | "HostCheckbox"
+            | "HostRadio"
+            | "HostSlider"
+            | "HostLink"
+            | "HostSelect"
+    ) || node.children.iter().any(layout_has_focusable)
+}
+
+/// `_render` rebuilds `shadowRoot.innerHTML` on every attribute change, which
+/// destroys the focused control. A controlled field whose host echoes each
+/// keystroke back as an attribute therefore lost focus after one character,
+/// and a keyboard user who pressed a button that changed a slot was sent
+/// back to the top of the page. These helpers find the same control again
+/// by what it is (tag, accessible name, inline event handlers) and which of
+/// the matching controls it was, then restore focus, caret and scroll. A
+/// child-index path would land on a different control once an `If` or
+/// `For` changed the tree above it.
+///
+/// Focus is restored only when the number of matching controls is
+/// unchanged: after a row is added or removed, "the third Delete button"
+/// may belong to another record, and no focus is safer than the wrong one.
+/// Rows reordered without a change in number still restore by position; a
+/// per-row accessible name (part of the signature) tells such rows apart, so
+/// only identically labelled controls in a re-sorted list remain, until `For`
+/// rows carry a stable key.
+/// Lookup is by tag name rather than a selector (the HTML parser accepts
+/// tag names that are not valid selectors), and both helpers swallow their
+/// own errors, so they can skip a restore but never stop a render.
+const FOCUS_KEEPER_JS: &str = r##"const MOSAIC_FOCUS_SIGNATURE = ["aria-label", "name", "placeholder", "oninput", "onchange", "onkeydown", "onclick"];
+
+function mosaicFocusSignature(element) {
+  return [element.tagName, ...MOSAIC_FOCUS_SIGNATURE.map(name => element.getAttribute(name) ?? "")].join("\u0000");
+}
+
+function mosaicFocusTwins(root, name, signature) {
+  return [...root.querySelectorAll("*")].filter(element => element.localName === name && mosaicFocusSignature(element) === signature);
+}
+
+function mosaicCaptureFocus(root) {
+  try {
+    const active = root.activeElement;
+    if (!active) return null;
+    const signature = mosaicFocusSignature(active);
+    const twins = mosaicFocusTwins(root, active.localName, signature);
+    const state = { signature, name: active.localName, occurrence: twins.indexOf(active), count: twins.length, scrollTop: active.scrollTop };
+    if (typeof active.selectionStart === "number") {
+      state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+    }
+    return state;
+  } catch {
+    return null;
+  }
+}
+
+function mosaicRestoreFocus(root, state) {
+  if (state === null || state.occurrence < 0) return;
+  try {
+    const twins = mosaicFocusTwins(root, state.name, state.signature);
+    if (twins.length !== state.count) return;
+    const element = twins[state.occurrence];
+    if (element === undefined) return;
+    element.focus({ preventScroll: true });
+    if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
+      const length = String(element.value ?? "").length;
+      try {
+        element.setSelectionRange(Math.min(state.selection[0], length), Math.min(state.selection[1], length), state.selection[2]);
+      } catch {
+        // Some input types (number, email) refuse a selection; focus is enough.
+      }
+    }
+    element.scrollTop = state.scrollTop;
+  } catch {
+    // Restoring focus is a courtesy; it must never break a render.
+  }
+}
+
+"##;
 
 /// Emit one signal-like instance method for an emit declaration.
 ///
@@ -1180,7 +1279,7 @@ fn emit_html_tree(
     // -----------------------------------------------------------------
     match node.tag.as_str() {
         "HostSurface" => return Ok(emit_host_surface(node, part_styles)),
-        "HostInput" | "Input" => return Ok(emit_host_input(node, part_styles)),
+        "HostInput" | "Input" => return emit_host_input(node, part_styles, ctx),
         "HostButton" => return emit_host_button(node, ctx, part_styles),
         "HostDialog" => return emit_host_dialog(node, ctx, part_styles),
 
@@ -1702,15 +1801,22 @@ fn layout_value_to_js_expr(v: &LayoutPropValue) -> String {
 ///
 /// - `value: slot: x`     → `value="${x}"`
 /// - `placeholder: "..."` → `placeholder="..."`
+/// - `placeholder: slot: x` → `placeholder="${escapeHtmlAttribute(x)}"`
 /// - `read-only: slot: x` → `${x ? 'readonly' : ''}` (template-literal attr presence)
 /// - `read-only: true`    → `readonly`
-/// - `onChange: emit: onX` → `onchange="this.getRootNode().host.dispatch({type:'x', value:event.target.value})"`
+/// - `onChange: emit: onX` → `oninput="if(!event.isComposing)…dispatch({type:'x', value:event.target.value})"`
+///   plus `oncompositionend` (per keystroke; the payload is the emit's declared field)
 /// - `onCommit: emit: onX` + `onCancel: emit: onY` → merged `onkeydown` handler
+///   (Enter commits a single-line field, Ctrl/Cmd+Enter a `<textarea>`)
 ///
 /// All inline handlers reach the host via `this.getRootNode().host`
 /// because in the shadow DOM `this` inside an inline handler is the
 /// element where the handler is declared, not the Custom Element.
-fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
+fn emit_host_input(
+    node: &LayoutNode,
+    part_styles: &HtmlStyles,
+    ctx: &RenderCtx<'_>,
+) -> Result<String, PipelineEmitError> {
     // `multiline: true` is a `<textarea>` on both primitives, the legacy
     // `Input` and the kernel `HostInput` (UI29 §2.1). Reading it only on the
     // legacy tag turned every multiline `HostInput` into a one-line
@@ -1744,10 +1850,10 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
         }
     }
 
-    // placeholder="text"
-    if let Some(s) = find_string(node, "placeholder") {
-        attrs.push_str(&format!(r#" placeholder="{}""#, escape_html_attribute(s)));
-    }
+    // placeholder — a literal, escaped now, or a bound value escaped at
+    // render time. This read string literals only, so a slot-bound
+    // placeholder (every toolkit `Input`) rendered none, silently.
+    attrs.push_str(&text_attr(node, "placeholder", "placeholder")?);
 
     // readonly attribute — three cases. The kebab-name `read-only` is
     // the moslayout-compiler-emitted form (the React backend uses the
@@ -1788,28 +1894,50 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
         }
     }
 
-    // onchange — wraps `event.target.value` into the dispatch payload.
+    // oninput — wraps `event.target.value` into the dispatch payload.
     if let Some(emit_name) = find_emit_ref(node, "onChange") {
         let type_field = to_camel_case_first_lower(&strip_on_prefix(emit_name));
         if is_safe_identifier(&type_field) {
+            // Every keystroke, as UI25 specifies (`_render` keeps focus, so a
+            // host that echoes the value back no longer steals it), carrying
+            // the payload the emit declares. An IME composition is sent once,
+            // when it ends: a re-render mid-word would cancel it.
+            let payload = text_field_payload(ctx, emit_name, ",value:event.target.value");
+            let dispatch =
+                format!("this.getRootNode().host.dispatch({{type:'{type_field}'{payload}}})");
             attrs.push_str(&format!(
-                r#" onchange="this.getRootNode().host.dispatch({{type:'{type_field}',value:event.target.value}})""#
+                r#" oninput="if(!event.isComposing){dispatch}" oncompositionend="{dispatch}""#
             ));
         }
     }
 
-    // onkeydown — merges onCommit (Enter) and onCancel (Escape). In a text
-    // area Enter is a line break, so a multiline field has no commit key.
-    let commit = find_emit_ref(node, "onCommit").filter(|_| !multiline);
+    // onkeydown — merges onCommit and onCancel (Escape). A single-line field
+    // commits on Enter. In a text area Enter is a line break, so the commit
+    // key is UI25 §4's Ctrl+Enter (Windows, Linux) or Cmd+Enter (macOS):
+    // `ctrlKey||metaKey` covers both without sniffing the platform, and
+    // `preventDefault()` keeps the chord from ever reaching the text.
+    //
+    //   field       | handler branch
+    //   ------------+---------------------------------------------------------
+    //   single-line | if(event.key==='Enter')<dispatch>;
+    //   multiline   | if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){
+    //               |   event.preventDefault();<dispatch>;}
+    let commit = find_emit_ref(node, "onCommit");
     let cancel = find_emit_ref(node, "onCancel");
     if commit.is_some() || cancel.is_some() {
         let mut body = String::new();
         if let Some(e) = commit {
             let t = to_camel_case_first_lower(&strip_on_prefix(e));
             if is_safe_identifier(&t) {
-                body.push_str(&format!(
-                    "if(event.key==='Enter')this.getRootNode().host.dispatch({{type:'{t}'}});"
-                ));
+                let payload = text_field_payload(ctx, e, "");
+                let dispatch = format!("this.getRootNode().host.dispatch({{type:'{t}'{payload}}});");
+                if multiline {
+                    body.push_str(&format!(
+                        "if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){{event.preventDefault();{dispatch}}}"
+                    ));
+                } else {
+                    body.push_str(&format!("if(event.key==='Enter'){dispatch}"));
+                }
             }
         }
         if let Some(e) = cancel {
@@ -1830,7 +1958,47 @@ fn emit_host_input(node: &LayoutNode, part_styles: &HtmlStyles) -> String {
     } else {
         attrs.push_str(" />");
     }
-    attrs
+    Ok(attrs)
+}
+
+/// The payload fields a text field's inline dispatch carries for `emit_name`
+/// (`onChange` or `onCommit`), as a `,field:expr` suffix for the dispatched
+/// object literal.
+///
+/// The field is the declared parameter's camel-cased name — the same key the
+/// element's own `onX(param)` method dispatches — and the value is the
+/// field's current text, read as the parameter's type:
+///
+/// | declared parameter      | suffix                                          |
+/// |-------------------------|-------------------------------------------------|
+/// | none                    | (empty)                                         |
+/// | `( v : text )`          | `,v:event.target.value`                         |
+/// | `( n : number )`        | `,n:(Number(event.target.value)\|\|0)` — 0 when unreadable |
+/// | `( b : bool )`          | `,b:event.target.value.toLowerCase()==='true'`  |
+///
+/// An undeclared emit (a direct emitter caller with no interface) or one
+/// with several parameters keeps `fallback`, the shape each event had
+/// before payloads followed the declaration.
+fn text_field_payload(ctx: &RenderCtx<'_>, emit_name: &str, fallback: &str) -> String {
+    let Some(emit) = ctx.emits.iter().find(|emit| emit.name == emit_name) else {
+        return fallback.to_string();
+    };
+    match emit.params.as_slice() {
+        [] => String::new(),
+        [param] => {
+            let field = to_camel_case_first_lower(&param.name);
+            if !is_safe_identifier(&field) {
+                return String::new();
+            }
+            let value = match param.r#type {
+                EmitPayloadType::Number => "(Number(event.target.value)||0)",
+                EmitPayloadType::Bool => "event.target.value.toLowerCase()==='true'",
+                _ => "event.target.value",
+            };
+            format!(",{field}:{value}")
+        }
+        _ => fallback.to_string(),
+    }
 }
 
 /// Lower a `HostButton` node to a `<button>` block inside the shadow
@@ -1948,21 +2116,43 @@ fn host_button_pressed_attr(node: &LayoutNode) -> Result<String, PipelineEmitErr
 /// An empty runtime value yields `aria-label=""`, which the accessible-name
 /// computation treats as absent, so the button's text still names it.
 fn accessible_name_attr(node: &LayoutNode) -> String {
-    let Some(prop) = node.props.iter().find(|prop| prop.name == "a11y-label") else {
-        return String::new();
+    text_attr(node, "a11y-label", "aria-label").unwrap_or_default()
+}
+
+/// Lower one text-valued layout prop to an HTML attribute fragment inside
+/// the `innerHTML` template, or to nothing when the node has no such prop.
+///
+/// | authored form     | emitted                                   |
+/// |-------------------|-------------------------------------------|
+/// | `prop : "Text"`   | ` attr="Text"` (escaped at emit time)     |
+/// | `prop : slot: s`  | ` attr="${escapeHtmlAttribute(s)}"`       |
+/// | `prop : item`     | ` attr="${escapeHtmlAttribute(item)}"`    |
+/// | `prop : ( e )`    | ` attr="${escapeHtmlAttribute(e)}"`       |
+///
+/// Every dynamic value is escaped at render time, because an unescaped `"`
+/// in a host-supplied value would end the attribute and start markup. A
+/// slot or binding name that is not a safe JS identifier is an
+/// `UnsafeSlotName` error; `accessible_name_attr` keeps its older rule of
+/// dropping such a name.
+fn text_attr(
+    node: &LayoutNode,
+    prop_name: &str,
+    html_attr: &str,
+) -> Result<String, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|prop| prop.name == prop_name) else {
+        return Ok(String::new());
     };
-    let dynamic = |js: &str| format!(r#" aria-label="${{escapeHtmlAttribute({js})}}""#);
-    match &prop.value {
-        LayoutPropValue::String(label) => {
-            format!(r#" aria-label="{}""#, escape_html_attribute(label))
+    let dynamic = |js: &str| format!(r#" {html_attr}="${{escapeHtmlAttribute({js})}}""#);
+    Ok(match &prop.value {
+        LayoutPropValue::String(text) => {
+            format!(r#" {html_attr}="{}""#, escape_html_attribute(text))
         }
         LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
             let camel = to_camel_case_first_lower(name);
-            if is_safe_identifier(&camel) {
-                dynamic(&camel)
-            } else {
-                String::new()
+            if !is_safe_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
             }
+            dynamic(&camel)
         }
         LayoutPropValue::Expr(expr) => {
             let trimmed = strip_outer_parens(expr.trim());
@@ -1973,7 +2163,7 @@ fn accessible_name_attr(node: &LayoutNode) -> String {
             }
         }
         _ => String::new(),
-    }
+    })
 }
 
 fn host_button_dispatch_bits(emit_name: &str, ctx: &RenderCtx<'_>) -> Option<(String, String)> {
@@ -5098,7 +5288,16 @@ mod tests {
         let m = component(
             "Edit",
             vec![slot("value", SlotType::Text, true)],
-            vec![emit_decl("onChange", vec![]), emit_decl("onCommit", vec![])],
+            vec![
+                emit_decl(
+                    "onChange",
+                    vec![EmitParam {
+                        name: "value".to_string(),
+                        r#type: EmitPayloadType::Text,
+                    }],
+                ),
+                emit_decl("onCommit", vec![]),
+            ],
         );
         let l = root_layout(
             "Edit",
@@ -5141,13 +5340,18 @@ mod tests {
             "missing placeholder attribute, got:\n{}",
             r.output
         );
+        // onChange fires per keystroke (UI25), and an IME composition once,
+        // when it ends.
         assert!(
             r.output.contains(
-                r#"onchange="this.getRootNode().host.dispatch({type:'change',value:event.target.value})""#
+                r#"oninput="if(!event.isComposing)this.getRootNode().host.dispatch({type:'change',value:event.target.value})""#
+            ) && r.output.contains(
+                r#"oncompositionend="this.getRootNode().host.dispatch({type:'change',value:event.target.value})""#
             ),
-            "missing or wrong onchange wiring, got:\n{}",
+            "missing or wrong oninput wiring, got:\n{}",
             r.output
         );
+        assert!(!r.output.contains(" onchange="), "onChange is not blur-time: {}", r.output);
         assert!(
             r.output.contains("event.key==='Enter'"),
             "missing Enter-key check for onCommit, got:\n{}",
@@ -5191,6 +5395,82 @@ mod tests {
             let out = from_pipeline(&m, &l, &empty_style("Edit")).unwrap().output;
             assert!(out.contains(expected), "expected {expected} in:\n{out}");
         }
+    }
+
+    /// A bound `placeholder` is interpolated into the template and escaped at
+    /// render time, on the `<input>` and on the `<textarea>`, for both
+    /// `HostInput` and the legacy `Input`. This path read string literals
+    /// only, so `placeholder : slot: front-template-placeholder`
+    /// (mosaic-pkg-note-type-editor) and every toolkit `Input` rendered no
+    /// placeholder, and the degradation report said nothing.
+    #[test]
+    fn text_field_placeholder_lowers_every_bound_form() {
+        let m = component(
+            "Edit",
+            vec![slot("front-template-placeholder", SlotType::Text, true)],
+            vec![],
+        );
+        for tag in ["HostInput", "Input"] {
+            for multiline in [false, true] {
+                for (value, expected) in [
+                    (
+                        LayoutPropValue::String("Say \"hi\" <b>".into()),
+                        r#" placeholder="Say &quot;hi&quot; &lt;b&gt;""#,
+                    ),
+                    (
+                        LayoutPropValue::SlotRef("front-template-placeholder".into()),
+                        r#" placeholder="${escapeHtmlAttribute(frontTemplatePlaceholder)}""#,
+                    ),
+                    (
+                        LayoutPropValue::Keyword("hint".into()),
+                        r#" placeholder="${escapeHtmlAttribute(hint)}""#,
+                    ),
+                    (
+                        LayoutPropValue::Expr("( hints [ 0 ] )".into()),
+                        r#" placeholder="${escapeHtmlAttribute(hints [ 0 ])}""#,
+                    ),
+                ] {
+                    let mut props = vec![LayoutProp {
+                        name: "placeholder".into(),
+                        value,
+                    }];
+                    if multiline {
+                        props.push(LayoutProp {
+                            name: "multiline".into(),
+                            value: LayoutPropValue::Keyword("true".into()),
+                        });
+                    }
+                    let l = root_layout("Edit", leaf_with_props(tag, props));
+                    let out = from_pipeline(&m, &l, &empty_style("Edit")).unwrap().output;
+                    assert!(
+                        out.contains(expected),
+                        "{tag} multiline={multiline}: expected {expected} in:\n{out}"
+                    );
+                }
+            }
+        }
+    }
+
+    /// A slot name that is not a JavaScript identifier is refused loudly
+    /// rather than spliced into the `${…}` interpolation, or dropped.
+    #[test]
+    fn text_field_placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("Edit", vec![], vec![]);
+        let l = root_layout(
+            "Edit",
+            leaf_with_props(
+                "HostInput",
+                vec![LayoutProp {
+                    name: "placeholder".into(),
+                    value: LayoutPropValue::SlotRef("x)}${alert(1)".into()),
+                }],
+            ),
+        );
+        let err = from_pipeline(&m, &l, &empty_style("Edit")).unwrap_err();
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+            "got {err:?}"
+        );
     }
 
     /// #15426: HostButton's portable name was never read on this backend.
@@ -5329,8 +5609,31 @@ mod tests {
             ),
         );
         let out = from_pipeline(&m, &l, &empty_style("Btn")).unwrap().output;
-        assert!(!out.contains("aria-label"), "unexpected aria-label in:\n{out}");
+        // The focus-keeper helper names `aria-label` in its own code, so look
+        // only at the rendered button.
+        let button = &out[out.find("<button").expect("a button")..];
+        let button = &button[..button.find('>').unwrap()];
+        assert!(!button.contains("aria-label"), "unexpected aria-label in:\n{button}");
         assert!(!out.contains("alert(1)"), "unsafe name reached output:\n{out}");
+    }
+
+    /// `_render` replaces the shadow tree, so a component with a focusable
+    /// control captures focus before and restores it after; a static one
+    /// carries no helper at all.
+    #[test]
+    fn render_keeps_focus_only_where_a_control_can_hold_it() {
+        let m = component("X", vec![], vec![]);
+        let interactive = root_layout("X", leaf("HostInput"));
+        let out = from_pipeline(&m, &interactive, &empty_style("X")).unwrap().output;
+        let capture = out.find("const mosaicFocus = mosaicCaptureFocus(this.shadowRoot);").expect("capture");
+        let assign = out.find("this.shadowRoot.innerHTML = `").expect("assign");
+        let restore = out.find("mosaicRestoreFocus(this.shadowRoot, mosaicFocus);").expect("restore");
+        assert!(capture < assign && assign < restore, "{out}");
+        assert_eq!(out.matches("function mosaicRestoreFocus(root, state)").count(), 1, "{out}");
+
+        let text_only = root_layout("X", leaf("Text"));
+        let out = from_pipeline(&m, &text_only, &empty_style("X")).unwrap().output;
+        assert!(!out.contains("mosaicFocus"), "{out}");
     }
 
     // -------- K4: HostButton with literal label + onTap → onclick --------
@@ -8232,7 +8535,13 @@ mod tests {
                 slot("body", SlotType::Text, true),
                 slot("body-label", SlotType::Text, true),
             ],
-            vec![emit_decl("onBodyChange", vec![])],
+            vec![emit_decl(
+                "onBodyChange",
+                vec![EmitParam {
+                    name: "value".to_string(),
+                    r#type: EmitPayloadType::Text,
+                }],
+            )],
         );
         let l = multiline_field(
             "HostInput",
@@ -8254,10 +8563,11 @@ mod tests {
         );
     }
 
-    /// #15930 — Enter is a line break in a text area, so neither primitive
-    /// wires it to `onCommit` when multiline. Escape still cancels.
+    /// UI25 §4 — Enter is a line break in a text area, so a multiline field
+    /// commits on Ctrl+Enter (Windows/Linux) or Cmd+Enter (macOS) instead,
+    /// on both primitives. Escape still cancels.
     #[test]
-    fn a_multiline_field_does_not_commit_on_enter() {
+    fn a_multiline_field_commits_on_ctrl_or_cmd_enter() {
         for tag in ["HostInput", "Input"] {
             let m = component(
                 "X",
@@ -8272,12 +8582,116 @@ mod tests {
                 ],
             );
             let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
-            assert!(!out.contains("'Enter'"), "{tag}:\n{out}");
+            assert!(
+                out.contains(
+                    "if(event.key==='Enter'&&(event.ctrlKey||event.metaKey)){event.preventDefault();this.getRootNode().host.dispatch({type:'save'});}"
+                ),
+                "{tag}:\n{out}"
+            );
+            assert!(!out.contains("if(event.key==='Enter')"), "{tag}:\n{out}");
             assert!(
                 out.contains("if(event.key==='Escape')this.getRootNode().host.dispatch({type:'discard'});"),
                 "{tag}:\n{out}"
             );
         }
+    }
+
+    /// A text field's dispatch carries the payload its emit declares, under
+    /// the declared parameter's name, exactly as the element's own
+    /// `onX(param)` method does. `onCommit` used to dispatch `{type}` alone,
+    /// so a `( value : text )` commit reached listeners with no text, and
+    /// `onChange` always wrote `value`, whatever the parameter was called.
+    #[test]
+    fn text_field_dispatches_carry_the_declared_payload() {
+        let text = |name: &str| EmitParam {
+            name: name.to_string(),
+            r#type: EmitPayloadType::Text,
+        };
+        let m = component(
+            "X",
+            vec![],
+            vec![
+                emit_decl("onEdit", vec![text("draft-text")]),
+                emit_decl("onSave", vec![text("value")]),
+                emit_decl(
+                    "onPick",
+                    vec![EmitParam {
+                        name: "amount".to_string(),
+                        r#type: EmitPayloadType::Number,
+                    }],
+                ),
+                emit_decl("onPing", vec![]),
+            ],
+        );
+        let field = |multiline: bool, change: &str, commit: &str| {
+            let mut root = leaf("HostInput");
+            if multiline {
+                root.props.push(LayoutProp {
+                    name: "multiline".to_string(),
+                    value: LayoutPropValue::Keyword("true".to_string()),
+                });
+            }
+            root.props.push(LayoutProp {
+                name: "onChange".to_string(),
+                value: LayoutPropValue::EmitRef(change.to_string()),
+            });
+            root.props.push(LayoutProp {
+                name: "onCommit".to_string(),
+                value: LayoutPropValue::EmitRef(commit.to_string()),
+            });
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root,
+            };
+            from_pipeline(&m, &l, &empty_style("X")).unwrap().output
+        };
+
+        let single = field(false, "onEdit", "onSave");
+        assert!(
+            single.contains("oninput=\"if(!event.isComposing)this.getRootNode().host.dispatch({type:'edit',draftText:event.target.value})\" oncompositionend=\"this.getRootNode().host.dispatch({type:'edit',draftText:event.target.value})\""),
+            "onChange uses the declared field name:\n{single}"
+        );
+        assert!(
+            single.contains("if(event.key==='Enter')this.getRootNode().host.dispatch({type:'save',value:event.target.value});"),
+            "a single-line text commit carries the text:\n{single}"
+        );
+
+        let multi = field(true, "onPing", "onSave");
+        assert!(
+            multi.contains("oninput=\"if(!event.isComposing)this.getRootNode().host.dispatch({type:'ping'})\" oncompositionend=\"this.getRootNode().host.dispatch({type:'ping'})\""),
+            "a void onChange carries nothing:\n{multi}"
+        );
+        assert!(
+            multi.contains("{event.preventDefault();this.getRootNode().host.dispatch({type:'save',value:event.target.value});}"),
+            "the text-area chord carries the text too:\n{multi}"
+        );
+
+        let number = field(false, "onPing", "onPick");
+        assert!(
+            number.contains("dispatch({type:'pick',amount:(Number(event.target.value)||0)})"),
+            "a number payload is parsed, 0 when unreadable:\n{number}"
+        );
+    }
+
+    /// A single-line field keeps bare Enter as its commit key.
+    #[test]
+    fn a_single_line_field_still_commits_on_bare_enter() {
+        let m = component("X", vec![], vec![emit_decl("onSave", vec![])]);
+        let mut root = leaf("HostInput");
+        root.props.push(LayoutProp {
+            name: "onCommit".to_string(),
+            value: LayoutPropValue::EmitRef("onSave".to_string()),
+        });
+        let l = LayoutDef {
+            component_name: "X".to_string(),
+            root,
+        };
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(
+            out.contains("if(event.key==='Enter')this.getRootNode().host.dispatch({type:'save'});"),
+            "got:\n{out}"
+        );
+        assert!(!out.contains("ctrlKey"), "got:\n{out}");
     }
 
 }

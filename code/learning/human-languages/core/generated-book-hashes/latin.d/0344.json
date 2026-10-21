@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:1d917eca58fb62a7",
+  "lessonIds": [
+    "LA-C344-maiores",
+    "LA-C344-annales",
+    "LA-C344-conditor",
+    "LA-C344-origo",
+    "LA-C344-vetustas"
+  ],
+  "tex": "latin/book/chapters/ch344-maiores-nostri.tex"
+}

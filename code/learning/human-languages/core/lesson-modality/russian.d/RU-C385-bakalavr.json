@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C385-bakalavr",
+    "language": "russian",
+    "chapter": 385,
+    "sequence": 22290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bf70f05a25ab936"
+  },
+  "findings": []
+}

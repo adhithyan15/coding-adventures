@@ -1,0 +1,11 @@
+{
+  "id": "LA-R283-what-i-think",
+  "pathSegment": "LA-PATH-283-SENTENTIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-283-SENTENTIA",
+      "order": 3
+    }
+  ]
+}

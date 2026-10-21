@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:8ba718f15d30bf9c",
+  "lessonIds": [
+    "GE-C457-duene",
+    "GE-C457-ebbe",
+    "GE-C457-flut",
+    "GE-C457-bucht",
+    "GE-C457-muschel"
+  ],
+  "tex": "german/book/chapters/ch457-an-der-kuste.tex"
+}

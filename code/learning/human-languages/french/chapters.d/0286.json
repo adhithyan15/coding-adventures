@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Les chiffres",
+  "label": "ch:fr-les-chiffres",
+  "canDo": "I can report figures: a poll, a final count, a rise, a fall and a statistic.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FR-C286-statistique",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can report figures: a poll, a final count, a rise, a fall and a statistic.",
+    "assesses": [
+      "FR-LEX-C286-CHIFFRES-03",
+      "FR-LEX-C286-CHIFFRES-04",
+      "FR-LEX-C286-CHIFFRES-05"
+    ]
+  }
+}

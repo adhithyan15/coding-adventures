@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:2bcc4d61b1bc37d2",
+  "lessonIds": [
+    "GE-C449-kassierer",
+    "GE-C449-kassieren",
+    "GE-C449-bargeld",
+    "GE-C449-kartenlesegeraet",
+    "GE-C449-wechselgeld"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch449.txt",
+  "json": "german/narration/ch449.json",
+  "textHash": "fnv1a64:09ccd75f8b96d3fe",
+  "jsonHash": "fnv1a64:7f471ad9240155e4",
+  "findings": []
+}

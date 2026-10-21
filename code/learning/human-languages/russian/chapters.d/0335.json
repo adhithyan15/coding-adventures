@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Cooling and thawing",
+  "label": "ch:ru-cooling-and-thawing",
+  "canDo": "I can describe food cooling, defrosting, chilling and melting, and turning it over.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C335-perevorachivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can describe food cooling, defrosting, chilling and melting, and turning it over.",
+    "assesses": [
+      "RU-LEX-C335-OSTYVAT-03",
+      "RU-LEX-C335-OSTYVAT-04",
+      "RU-LEX-C335-OSTYVAT-05"
+    ]
+  }
+}

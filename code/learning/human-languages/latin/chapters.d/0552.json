@@ -1,0 +1,19 @@
+{
+  "chapter": 552,
+  "title": "Rooms and furniture",
+  "label": "ch:la-rooms-and-furniture",
+  "canDo": "I can talk about rooms, furniture and sweeping.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "LA-R552-review-545-552",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can talk about rooms, furniture and sweeping.",
+    "assesses": [
+      "LA-LEX-C552-DOMI-03",
+      "LA-LEX-C552-DOMI-04",
+      "LA-LEX-C552-DOMI-05"
+    ]
+  }
+}

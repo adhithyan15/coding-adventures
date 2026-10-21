@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:a92f0872fa042bdb",
+  "lessonIds": [
+    "RU-C407-obgonyat",
+    "RU-C407-perestraivatsya",
+    "RU-C407-svorachivat",
+    "RU-C407-razvorachivatsya",
+    "RU-C407-obochina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch407.txt",
+  "json": "russian/narration/ch407.json",
+  "textHash": "fnv1a64:b57ebbb324506288",
+  "jsonHash": "fnv1a64:7c1425489a6d2744",
+  "findings": []
+}

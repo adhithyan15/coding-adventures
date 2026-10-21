@@ -1,0 +1,11 @@
+{
+  "id": "GE-C272-presse",
+  "pathSegment": "GE-PATH-272-SENDUNG",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-272-SENDUNG",
+      "order": 2
+    }
+  ]
+}

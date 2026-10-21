@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C536-deliciae",
+    "language": "latin",
+    "chapter": 536,
+    "sequence": 28430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b757f06365b51b6"
+  },
+  "findings": []
+}

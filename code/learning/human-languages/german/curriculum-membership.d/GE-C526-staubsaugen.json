@@ -1,0 +1,11 @@
+{
+  "id": "GE-C526-staubsaugen",
+  "pathSegment": "GE-PATH-526-PUTZEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-526-PUTZEN",
+      "order": 3
+    }
+  ]
+}

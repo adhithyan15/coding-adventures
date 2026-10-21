@@ -1,0 +1,11 @@
+{
+  "id": "LA-C431-lorum",
+  "pathSegment": "LA-PATH-431-HABENA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-431-HABENA",
+      "order": 1
+    }
+  ]
+}

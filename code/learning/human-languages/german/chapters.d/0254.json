@@ -1,0 +1,22 @@
+{
+  "chapter": 254,
+  "title": "What I Think — ich finde, dass; darum",
+  "label": "ch:ge-what-i-think",
+  "canDo": "I can give an opinion with ich finde, dass or meiner Meinung nach, and draw a consequence with darum.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "GE-C254-review",
+    "kind": "production",
+    "summary": "Complete GE-C254-review: an opinion with dass and the verb at the end, a reason with weil, and a consequence with darum.",
+    "assesses": [
+      "GE-GRAMMAR-DASS-VERB-ENDE-01",
+      "GE-LEX-MEINEN-02",
+      "GE-LEX-MEINER-MEINUNG-NACH-01",
+      "GE-GRAMMAR-MEINUNG-ERSTE-STELLE-02",
+      "GE-LEX-DARUM-01",
+      "GE-GRAMMAR-WEIL-DARUM-02"
+    ]
+  }
+}

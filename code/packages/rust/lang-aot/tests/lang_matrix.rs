@@ -3247,6 +3247,27 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Trap,
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — `entier` of a runtime real that no integer can hold fails
+    // closed on all seven standard backends. Without a range check, native
+    // x86-64 `cvttsd2si` returned i64::MIN (a sign-flipped answer), JVM `d2l`
+    // saturated to i64::MAX, and aarch64 `fcvtzs` saturated too. The first
+    // row is finite (exp(exp(4)) ≈ 5.1e23 > 2^63); the second overflows to +∞.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 4.0; integer result; \
+                  result := entier(exp(exp(pick()))); output(result) end",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 2.0; integer result; \
+                  result := entier(exp(exp(exp(pick())))); output(result) end",
+        expect: Expect::Trap,
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a two-dimensional array formal infers its rank from `a[i,j]`
     // in `fill2`. The call ABI carries the shared handle plus both lower bounds
     // and the outer row-major stride: `array<i64>, i64, i64, i64`. `invoke`
@@ -5319,6 +5340,24 @@ fn main() { out(1, VALUE); }\n",
         ext: "alg",
         src: "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then (entier(sign(left)) - 9007199254740991) else ((entier(sign(right)) + 4503599627370496) + 4503599627370495))); output(result) end",
         expect: Expect::Stdout("-9.0072E+15"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - exact integer scaling and addition are tracked together on
+    // each runtime-selected path; the false branch computes 2*sign(3.5)+5.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then ((entier(sign(left)) * 4) + 3) else ((2 * entier(sign(right))) + 5))); output(result) end",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 - a common-divisor proof permits static whole-number division
+    // after runtime path selection; the false branch computes (9*1+6)/3.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((sign(left) * 6) + 6) else ((sign(right) * 9) + 6)) / 3); output(result) end",
+        expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
     // ALGOL 60 — a variable-free false body condition makes its dependency
@@ -9151,6 +9190,41 @@ fn main() { out(1, VALUE); }\n",
     backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
+    // Perl — LANG84 phase 4a, the bounded LANG81 integer `print` subset on its
+    // default release (the unversioned LANG81 pair). Perl's `print` writes the
+    // decimal text with NO newline, which is LANG83's `write_i64`; the frontend emits
+    // `call_builtin write_i64` and nothing Perl-specific, so every column runs these
+    // rows through the same lowering the op-conformance suite already proved.
+    //
+    // Every expected string below was produced by the host `perl` oracle
+    // (`perl_rows_agree_with_the_host_perl_oracle` re-checks each one whenever a
+    // `perl` is on PATH); the compiled programs never run on it.
+    //
+    // The rows print, rather than exit with, their value on purpose: an exit code is
+    // `& 0xFF`, so it could not tell `2147483647` from `255`. Several rows print more
+    // than once, which proves statement order and the absence of a newline.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(1 + 2);", expect: Expect::Stdout("3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `*` binds tighter than `-`: 7 - (2 * 3).
+    Prog { lang: Language::Perl, ext: "pl", src: "print(7 - 2 * 3);", expect: Expect::Stdout("1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Two prints, no separator: `-4` then `2` is `-42`, not `-4\n2`.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(-4); print(2);", expect: Expect::Stdout("-42"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: "print((1 + 2) * 3);", expect: Expect::Stdout("9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Left associativity: (10 - 3) - 2, not 10 - (3 - 2).
+    Prog { lang: Language::Perl, ext: "pl", src: "print(10 - 3 - 2);", expect: Expect::Stdout("5"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A spaced `- -` is binary minus then unary minus (adjacent `--` is decrement
+    // and is refused); `- -5` nests two unary minuses.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(1- -2); print(- -5);", expect: Expect::Stdout("35"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: "print(2 * -3 * 4);", expect: Expect::Stdout("-24"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Both ends of the signed 32-bit range the subset admits, printed at full width.
+    // The minimum is spelled `-2147483647 - 1` because the literal 2147483648 is
+    // itself out of range and refused.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(2147483647); print(-2147483647 - 1);", expect: Expect::Stdout("2147483647-2147483648"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // The largest square in range; `46341 * 46341` would be refused at compile time.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(46340 * 46340);", expect: Expect::Stdout("2147395600"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Integer `-0` prints `0`; a negated parenthesised difference.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(0); print(-0); print(-(3 - 10));", expect: Expect::Stdout("007"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Newlines and tabs between statements are whitespace, not output.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(1);\nprint(2);\n\tprint(3);\n", expect: Expect::Stdout("123"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -9566,12 +9640,22 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
 /// `BasicRuntime.println(J)V`, and the CLR's `Console.WriteLine(int64)`. It is *not*
 /// language-specific: any IIR that prints an integer routes through this import.
 ///
-/// `PrintFunc` is the host implementation of that import. Each call appends its single
-/// `i64` argument to a shared capture buffer (`Arc<Mutex<Vec<i64>>>`) so the test can
-/// read back exactly what the program printed. The function does no work proportional
-/// to untrusted input — it pushes one integer and returns — so there is no DoS vector.
+/// `PrintFunc` is the host implementation of that import. Each call appends the decimal
+/// text of its single `i64` argument **plus `\n`** (the `print_i64` contract) to the
+/// program's ONE shared output byte buffer — the same buffer `putchar` and `__print_str`
+/// append to — so the captured stdout is in program order (LANG83 "ordered output
+/// stream"). Before LANG83 this pushed into a separate integer list that the runner
+/// dropped whenever any byte output existed, so a program mixing `print_i64` with
+/// `putchar`/`print_str` silently lost every integer on this column. One integer's text
+/// per call (≤ 21 bytes) — no DoS vector.
+///
+/// The same struct serves LANG83's `write_i64` (`env.__write_i64`, Perl's `print`):
+/// the identical decimal text with `newline: false`. Two imports, one sink, so a
+/// program mixing them still produces one ordered stream.
 struct PrintFunc {
-    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+    /// `true` for `__print_i64` (value + `\n`), `false` for `__write_i64` (value only).
+    newline: bool,
 }
 
 impl wasm_execution::HostFunction for PrintFunc {
@@ -9596,10 +9680,11 @@ impl wasm_execution::HostFunction for PrintFunc {
             .ok_or_else(|| wasm_execution::TrapError::new("__print_i64: missing argument"))?
             .as_i64()
             .map_err(|e| wasm_execution::TrapError::new(e.message))?;
-        self.captured
+        let text = if self.newline { format!("{value}\n") } else { value.to_string() };
+        self.bytes
             .lock()
-            .expect("lang-matrix print buffer poisoned")
-            .push(value);
+            .expect("lang-matrix output buffer poisoned")
+            .extend_from_slice(text.as_bytes());
         Ok(vec![])
     }
 }
@@ -10036,14 +10121,14 @@ impl wasm_execution::HostFunction for TanFunc {
 }
 
 /// The host interface the matrix runs wasm under: it resolves the generic
-/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC),
+/// `env.__print_i64` import to a `PrintFunc` (decimal text + newline),
 /// `env.__print_str` to a memory-reading byte capture, and the Brainfuck I/O
 /// imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture) /
 /// `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
 /// import no host functions, so the host is never consulted for them and behaviour is
 /// identical to `WasmRuntime::new`).
 struct PrintHost {
-    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+    /// The program's single ordered output stream: every output import appends here.
     bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
     input: std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
 }
@@ -10056,7 +10141,13 @@ impl wasm_execution::HostInterface for PrintHost {
     ) -> Option<Box<dyn wasm_execution::HostFunction>> {
         match (module_name, name) {
             ("env", "__print_i64") => Some(Box::new(PrintFunc {
-                captured: std::sync::Arc::clone(&self.captured),
+                bytes: std::sync::Arc::clone(&self.bytes),
+                newline: true,
+            })),
+            // LANG83 PR1b `write_i64` (Perl `print`): decimal, no newline, same sink.
+            ("env", "__write_i64") => Some(Box::new(PrintFunc {
+                bytes: std::sync::Arc::clone(&self.bytes),
+                newline: false,
             })),
             ("env", "__print_str") => Some(Box::new(PrintStrFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),
@@ -10132,14 +10223,12 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
         Ok(w) => w,
         Err(e) => cell_failed("Wasm", p, "source → wasm bytes", format!("{e:?}")),
     };
-    let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     // The program's stdin, drained by `env.getchar` (Brainfuck `,`); empty otherwise.
     let input = std::sync::Arc::new(std::sync::Mutex::new(
         program_stdin(p).iter().copied().collect::<std::collections::VecDeque<u8>>(),
     ));
     let host = PrintHost {
-        captured: std::sync::Arc::clone(&captured),
         bytes: std::sync::Arc::clone(&byte_buf),
         input: std::sync::Arc::clone(&input),
     };
@@ -10152,28 +10241,15 @@ fn run_wasm(p: &Prog) -> Option<RunResult> {
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
     // convention the native/LLVM columns use for the same programs).
     let code = result.first().copied().map(|v| (v as i32) & 0xFF);
-    // stdout has two shapes: Brainfuck writes raw bytes via `env.putchar` (so `.` of 65
-    // is the byte `A`); BASIC writes integers via `env.__print_i64` (one per call, joined
-    // by newlines). A program uses one or the other, so prefer the byte stream when the
-    // program wrote any. Expression languages print nothing → empty stdout.
-    let printed_bytes = byte_buf.lock().expect("lang-matrix putchar buffer poisoned");
-    let stdout = if printed_bytes.is_empty() {
-        captured
-            .lock()
-            .expect("lang-matrix print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the six sibling `run_*` functions (native/LLVM/CLR/
-        // JVM/VM/JIT all trim): BASIC's BA2 `PRINT` ends each line with a
-        // `putchar('\n')`, so the raw byte stream for `PRINT 42` is `"42\n"`.
-        // Without trimming, the Wasm column alone disagreed with the others on
-        // every BASIC `Stdout` cell (a latent inconsistency the putchar print
-        // model surfaced). Inner newlines (multi-line output) are preserved.
-        String::from_utf8_lossy(&printed_bytes).trim().to_string()
-    };
+    // stdout is the ONE ordered byte stream every output import appended to (LANG83):
+    // Brainfuck's `env.putchar` bytes, `__print_str` text and `__print_i64`'s
+    // "<value>\n" interleave in program order. Expression languages print nothing.
+    //
+    // `.trim()` to match the sibling `run_*` functions (native/LLVM/CLR/JVM/VM/JIT
+    // all trim): `print_i64` and BASIC's BA2 `PRINT` both end a line with `\n`, so
+    // the raw stream for `PRINT 42` is `"42\n"`. Inner newlines are preserved.
+    let printed_bytes = byte_buf.lock().expect("lang-matrix output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&printed_bytes).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -10908,17 +10984,32 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
 
     let mut vm = VMCore::new();
 
-    // Capture buffer for the I/O languages. `print_i64` (BASIC) appends one integer per
-    // call, joined by newlines; `putchar` (Brainfuck) appends one byte. A program uses at
-    // most one, so a single buffer + a byte buffer suffice; expression languages print
-    // nothing. The closures push a bounded amount per call — no DoS vector.
-    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    // The program's ONE ordered output stream (LANG83): `print_i64` appends its decimal
+    // text + "\n", `putchar` one byte, `print_str` the string's bytes — all into the same
+    // buffer, in call order. (Before LANG83 integers went to a separate list that was
+    // dropped whenever any byte output existed.) Expression languages print nothing.
+    // The closures push a bounded amount per call — no DoS vector.
     let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
 
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix VM print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix VM output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
+        Ok(Value::Null)
+    });
+    // LANG83 PR1b `write_i64` (Perl `print`): the same decimal text without the
+    // newline, into the same ordered buffer. vm-core's default would write to the
+    // process stdout, where the harness cannot see it.
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("write_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        bytes
+            .lock()
+            .expect("lang-matrix VM output buffer poisoned")
+            .extend_from_slice(n.to_string().as_bytes());
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -10983,22 +11074,10 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
 
     // The exit code: an expression language's `main` returns an `Int`.
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
-    // stdout: prefer the byte stream (Brainfuck `putchar`) when present, else the integer
-    // stream (BASIC `print_i64`) joined by newlines; empty for the expression languages.
-    let byte_buf = printed_bytes.lock().expect("lang-matrix VM putchar buffer poisoned");
-    let stdout = if byte_buf.is_empty() {
-        printed_ints
-            .lock()
-            .expect("lang-matrix VM print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the subprocess columns: BA2 BASIC `PRINT` ends
-        // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
-        String::from_utf8_lossy(&byte_buf).trim().to_string()
-    };
+    // stdout: the one ordered stream, `.trim()`med to match the subprocess columns
+    // (`print_i64` and BA2 BASIC `PRINT` both end a line with `\n`).
+    let byte_buf = printed_bytes.lock().expect("lang-matrix VM output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&byte_buf).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -11033,15 +11112,29 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     lower_dynamic_for_generic_engine(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
 
-    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    // ONE ordered output stream shared by both tiers (LANG83): whichever tier a
+    // function lands on, its `print_i64`/`putchar`/`print_str` append to this buffer
+    // in call order.
     let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
 
     // --- interpreter-fallback path: builtins on the VM (closures return Result) ---
     let mut vm = VMCore::new();
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix JIT print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("write_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(n.to_string().as_bytes());
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -11094,10 +11187,22 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
 
     // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
     let backend = GenericCirJit::new();
-    let ints = Arc::clone(&printed_ints);
+    let bytes = Arc::clone(&printed_bytes);
     backend.register_builtin("print_i64", move |args: &[Value]| {
         let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-        ints.lock().expect("lang-matrix JIT print buffer poisoned").push(n);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(format!("{n}\n").as_bytes());
+        Value::Null
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    backend.register_builtin("write_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(n.to_string().as_bytes());
         Value::Null
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -11153,20 +11258,8 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     // Exit code / stdout extraction is identical to `run_vm` — the JIT is observably
     // equivalent to the interpreter, which is the whole point of a JIT.
     let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
-    let byte_buf = printed_bytes.lock().expect("lang-matrix JIT putchar buffer poisoned");
-    let stdout = if byte_buf.is_empty() {
-        printed_ints
-            .lock()
-            .expect("lang-matrix JIT print buffer poisoned")
-            .iter()
-            .map(|v| v.to_string())
-            .collect::<Vec<_>>()
-            .join("\n")
-    } else {
-        // `.trim()` to match the subprocess columns: BA2 BASIC `PRINT` ends
-        // each line with `putchar('\n')`, so the byte stream is e.g. `"42\n"`.
-        String::from_utf8_lossy(&byte_buf).trim().to_string()
-    };
+    let byte_buf = printed_bytes.lock().expect("lang-matrix JIT output buffer poisoned");
+    let stdout = String::from_utf8_lossy(&byte_buf).trim().to_string();
     Some(RunResult::Completed { code, stdout })
 }
 
@@ -11913,6 +12006,8 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::MacroOct, 15, 120),
         (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 59, 472),
+        // Perl: LANG84 phase 4a's eleven integer-`print` rows, all eight columns.
+        (Language::Perl, 11, 88),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -12192,6 +12287,50 @@ fn algol_integer_output_runs_on_every_available_standard_backend() {
         };
         assert_cell(backend, program, result);
     }
+}
+
+/// LANG83 "ordered output stream": a program's `print_i64` and `print_str` output
+/// is ONE byte stream in program order, on every column.
+///
+/// ALGOL is the existing frontend that emits both in one program — integer
+/// `output(…)` lowers to `call_builtin "print_i64"` (value + newline) and a string
+/// `print(…)` to `print_str` (no newline). (No current frontend emits both
+/// `print_i64` and `putchar`; that pairing is proven at the IIR level by
+/// `op_conformance.rs::print_i64_and_putchar_share_one_ordered_stream`.)
+///
+/// Before LANG83 this program printed `ABC` on the WASM, VM and JIT columns: their
+/// harnesses kept integers in a separate list and dropped it whenever any byte
+/// output existed. It is a standalone row (not in `PROGRAMS`) so the pinned
+/// corpus counts in LANG-VM-FEATURE-COVERAGE.md are unchanged.
+const ORDERED_OUTPUT_PROGRAM: Prog = Prog {
+    lang: Language::Algol60,
+    ext: "alg",
+    // `n` is a variable on purpose: ALGOL folds `output(<integer literal>)` into a
+    // string literal (no newline), which would not exercise `print_i64` at all.
+    src: "begin integer n; n := 1; print('A'); output(n); print('B'); output(n - 3); \
+          print('C') end",
+    expect: Expect::Stdout("A1\nB-2\nC"),
+    backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+};
+
+#[test]
+fn mixed_print_i64_and_print_str_output_is_one_ordered_stream_on_every_available_backend() {
+    let program = &ORDERED_OUTPUT_PROGRAM;
+    let mut ran = Vec::new();
+    for &backend in program.backends {
+        let available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(!available, "{backend:?} toolchain is present but the ordered-output row did not run");
+            continue;
+        };
+        assert_cell(backend, program, result);
+        ran.push(backend);
+    }
+    // The in-process columns have no toolchain to be absent: they never skip.
+    for backend in [Wasm, Vm, Jit] {
+        assert!(ran.contains(&backend), "{backend:?} must run the ordered-output row");
+    }
+    eprintln!("LANG83 ordered output proven on {ran:?}");
 }
 
 #[test]
@@ -16778,6 +16917,34 @@ fn algol_multidimensional_cross_coordinate_oob_traps_on_every_available_standard
             continue;
         };
         assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_out_of_range_entier_traps_on_every_available_standard_backend() {
+    let programs: Vec<_> = PROGRAMS
+        .iter()
+        .filter(|program| {
+            program.lang == Language::Algol60
+                && matches!(program.expect, Expect::Trap)
+                && (program.src.contains("result := entier(exp(exp(pick())))")
+                    || program.src.contains("result := entier(exp(exp(exp(pick()))))"))
+        })
+        .collect();
+    assert_eq!(programs.len(), 2, "both out-of-range entier trap programs must remain in the matrix");
+
+    for program in programs {
+        for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+            let toolchain_available = toolchain_available(backend);
+            let Some(result) = run(backend, program) else {
+                assert!(
+                    !toolchain_available,
+                    "{backend:?} toolchain is present but out-of-range entier execution did not complete"
+                );
+                continue;
+            };
+            assert_cell(backend, program, result);
+        }
     }
 }
 
@@ -23161,6 +23328,58 @@ fn algol_pathwise_maximum_exact_offset_bounded_local_name_actual_runtime_real_ou
 }
 
 #[test]
+fn algol_pathwise_exact_scaled_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "relay(entier(if choose() then ((entier(sign(left)) * 4) + 3) else ((2 * entier(sign(right))) + 5)))",
+                )
+        })
+        .expect("the pathwise exact-scaled ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise exact-scaled local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_pathwise_exact_divided_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier((if choose() then ((sign(left) * 6) + 6) else ((sign(right) * 9) + 6)) / 3)",
+                )
+        })
+        .expect("the pathwise exactly-divided ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise exactly-divided local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_conditional_while_effect_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -25147,6 +25366,115 @@ fn portable_text_stdout_cobol_region_intersection() {
                 eprintln!("VM058 region intersection executed {backend:?}");
             }
             None => eprintln!("SKIP VM058 region intersection: {backend:?} runtime unavailable"),
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 4a — Perl on every backend
+// ---------------------------------------------------------------------------
+
+fn perl_rows() -> Vec<&'static Prog> {
+    let rows: Vec<_> = PROGRAMS.iter().filter(|p| p.lang == Language::Perl).collect();
+    assert!(!rows.is_empty(), "PROGRAMS has no Perl rows");
+    rows
+}
+
+/// Every Perl row on every backend it declares, as one named test so a Perl
+/// regression is reported as one. A runner that returns `None` while its
+/// toolchain is present fails rather than skips, exactly as the non-ALGOL
+/// aggregate does.
+#[test]
+fn perl_rows_run_on_every_available_backend() {
+    let (mut ran, mut skipped) = (0usize, 0usize);
+    for program in perl_rows() {
+        assert_eq!(
+            program.backends,
+            &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+            "every Perl row declares all eight columns: {:?}",
+            program.src
+        );
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(!available, "Perl {backend:?} silently skipped: {:?}", program.src);
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(ran > 0);
+    eprintln!("Perl matrix: {ran} cells executed, {skipped} skipped (toolchain absent)");
+}
+
+/// The oracle: a host `perl` must print exactly what each row expects. The
+/// compiled programs never run on it — it only checks that the expectations
+/// written into `PROGRAMS` are Perl's answers and not this compiler's. Skips
+/// (loudly) on a host with no `perl`; every CI Linux and macOS image has one.
+#[test]
+fn perl_rows_agree_with_the_host_perl_oracle() {
+    let version = match Command::new("perl").args(["-e", "print $^V"]).output() {
+        Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).into_owned(),
+        _ => {
+            eprintln!("SKIP Perl oracle: no `perl` on PATH");
+            return;
+        }
+    };
+    for program in perl_rows() {
+        let Expect::Stdout(expected) = program.expect else {
+            panic!("a Perl row is checked by its stdout: {:?}", program.src);
+        };
+        // `-e` with the source as its own argument: no shell, no temp file.
+        let out = Command::new("perl")
+            .args(["-e", program.src])
+            .output()
+            .expect("perl ran once already");
+        assert!(out.status.success(), "perl {version} rejected {:?}", program.src);
+        assert_eq!(
+            String::from_utf8_lossy(&out.stdout),
+            expected,
+            "perl {version} disagrees with the row's expectation for {:?}",
+            program.src
+        );
+    }
+    eprintln!("Perl oracle: {} rows agree with perl {version}", perl_rows().len());
+}
+
+/// LANG84 C7.3: the frontend's corpus passes `check_module_for` on all nine
+/// LANG83 backends — including CLR and BEAM, whose runtimes this host may lack —
+/// and `print` really is the registry's `write_i64` in every module (a frontend
+/// that constant-folded a print into some other shape would not be testing the op
+/// these rows are here to prove).
+#[test]
+fn perl_rows_pass_the_lang83_check_on_all_nine_backends() {
+    for program in perl_rows() {
+        let module = lang_aot::compile_source_to_iir(Language::Perl, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: {e}", program.src));
+        let builtins: Vec<_> = module
+            .functions
+            .iter()
+            .flat_map(|f| &f.instructions)
+            .filter(|i| i.op == "call_builtin")
+            .map(|i| interpreter_ir::op_registry::registry_name(i))
+            .collect();
+        assert!(!builtins.is_empty(), "{:?}: no print was lowered", program.src);
+        assert!(
+            builtins.iter().all(|name| *name == Some("write_i64")),
+            "{:?}: every Perl print must be write_i64, got {builtins:?}",
+            program.src
+        );
+        for backend in lang_aot::op_check::Backend::ALL {
+            lang_aot::op_check::check_module_for(backend, &module).unwrap_or_else(|e| {
+                panic!("{:?} refused on {}: {e}", program.src, backend.name())
+            });
         }
     }
 }

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C368-sinon",
+  "pathSegment": "FR-PATH-368-CONDITION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-368-CONDITION",
+      "order": 4
+    }
+  ]
+}

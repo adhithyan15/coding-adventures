@@ -1,0 +1,11 @@
+{
+  "id": "GE-C444-kleben",
+  "pathSegment": "GE-PATH-444-BAUMARKT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-444-BAUMARKT",
+      "order": 4
+    }
+  ]
+}

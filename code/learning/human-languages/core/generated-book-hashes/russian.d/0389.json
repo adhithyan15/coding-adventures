@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:387861629ea72eae",
+  "lessonIds": [
+    "RU-C389-zapreshchat",
+    "RU-C389-zapret",
+    "RU-C389-razreshat",
+    "RU-C389-razreshenie",
+    "RU-C389-pozvolyat"
+  ],
+  "tex": "russian/book/chapters/ch389-allowed-and-forbidden.tex"
+}

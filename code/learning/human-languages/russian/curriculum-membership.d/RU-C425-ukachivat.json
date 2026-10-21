@@ -1,0 +1,11 @@
+{
+  "id": "RU-C425-ukachivat",
+  "pathSegment": "RU-PATH-425-KACHKA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-425-KACHKA",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C275-ajourner",
+  "pathSegment": "FR-PATH-275-DELAI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-275-DELAI",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C518-ispolnyat",
+    "language": "russian",
+    "chapter": 518,
+    "sequence": 29110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd2f2c7b236d3853"
+  },
+  "findings": []
+}

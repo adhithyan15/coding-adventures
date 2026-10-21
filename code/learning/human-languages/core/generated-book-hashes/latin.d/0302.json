@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:f7cb819ae88cd69b",
+  "lessonIds": [
+    "LA-C302-speculator",
+    "LA-C302-explorator",
+    "LA-C302-exploro",
+    "LA-C302-prodo",
+    "LA-C302-patefacio"
+  ],
+  "tex": "latin/book/chapters/ch302-speculatores.tex"
+}

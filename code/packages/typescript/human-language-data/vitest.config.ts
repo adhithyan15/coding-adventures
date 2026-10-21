@@ -32,6 +32,24 @@ export default defineConfig({
     // now skips the build products the plan never reads (about 43% of the files)
     // and states its own hook budget. The copy still grows with every lesson.
     hookTimeout: 30_000,
+    // The budgets above are not what keeps the suite inside them; doing less
+    // work is. About 200 test files read the real corpus, and each one used to
+    // parse all ~38,000 lessons from scratch in its own worker — measured at
+    // 123 full-corpus parses and ~1,250 s of CPU per run, half of everything
+    // the suite did. `src/lesson-cache.ts` stores each track's parsed lessons
+    // under a hash of the lesson files' bytes and the parser's own source, so
+    // a lesson edit can never be answered from a stale entry.
+    //
+    // `globalSetup` parses the real corpus once, in the main process, before
+    // any worker starts. `setupFiles` runs inside every worker and turns the
+    // cache on for that test file's module graph. CLI processes never run
+    // either, so `generate:*` and `check:*` keep parsing from disk. (A CLI's
+    // `run…()` function called INSIDE a test does read through the cache —
+    // that is how the in-process `--check` cases got faster — and what it reads
+    // is byte-for-byte what a fresh parse returns, which
+    // `tests/lesson-cache.test.ts` checks for every real track.)
+    globalSetup: ["./tests/setup/warm-lesson-cache.ts"],
+    setupFiles: ["./tests/setup/lesson-cache.ts"],
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],

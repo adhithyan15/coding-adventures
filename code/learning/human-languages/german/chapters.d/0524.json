@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Komödie und Tragödie",
+  "label": "ch:ge-komodie-und-tragodie",
+  "canDo": "I can talk about kinds of films.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "GE-C524-synchronisieren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about kinds of films.",
+    "assesses": [
+      "GE-LEX-C524-FILM-03",
+      "GE-LEX-C524-FILM-04",
+      "GE-LEX-C524-FILM-05"
+    ]
+  }
+}

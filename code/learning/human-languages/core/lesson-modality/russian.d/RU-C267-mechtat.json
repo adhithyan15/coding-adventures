@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C267-mechtat",
+    "language": "russian",
+    "chapter": 267,
+    "sequence": 16210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc4ed5701e376927"
+  },
+  "findings": []
+}

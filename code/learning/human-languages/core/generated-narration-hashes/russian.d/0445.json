@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:15a5b8f5859eb139",
+  "lessonIds": [
+    "RU-C445-fonar",
+    "RU-C445-skameyka",
+    "RU-C445-urna",
+    "RU-C445-kiosk",
+    "RU-C445-klumba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch445.txt",
+  "json": "russian/narration/ch445.json",
+  "textHash": "fnv1a64:485cff38e0f9369a",
+  "jsonHash": "fnv1a64:23be55e691c030e3",
+  "findings": []
+}

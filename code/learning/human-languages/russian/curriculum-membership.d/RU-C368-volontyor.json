@@ -1,0 +1,11 @@
+{
+  "id": "RU-C368-volontyor",
+  "pathSegment": "RU-PATH-368-POMOSHCH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-368-POMOSHCH",
+      "order": 1
+    }
+  ]
+}

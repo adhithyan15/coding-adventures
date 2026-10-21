@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Kleine Läden",
+  "label": "ch:ge-kleine-laden",
+  "canDo": "I can find small food and health shops: the delicatessen, the cake shop, the greengrocer, the chemist and the health food shop.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "GE-C443-reformhaus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can find small food and health shops: the delicatessen, the cake shop, the greengrocer, the chemist and the health food shop.",
+    "assesses": [
+      "GE-LEX-C443-FEINKOST-03",
+      "GE-LEX-C443-FEINKOST-04",
+      "GE-LEX-C443-FEINKOST-05"
+    ]
+  }
+}

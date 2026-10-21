@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:40fbe26ffe3805fe",
+  "lessonIds": [
+    "RU-C288-krazha",
+    "RU-C288-vor",
+    "RU-C288-krast",
+    "RU-C288-karmannik",
+    "RU-C288-vzlom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch288.txt",
+  "json": "russian/narration/ch288.json",
+  "textHash": "fnv1a64:29162b60f038d404",
+  "jsonHash": "fnv1a64:d136e81bbf4eaf78",
+  "findings": []
+}

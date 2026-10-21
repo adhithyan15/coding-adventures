@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Raccourcis et détours",
+  "label": "ch:fr-raccourcis-et-detours",
+  "canDo": "I can talk about routes: the shortcut, the detour, the route plan, going round something and turning back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FR-C436-rebrousser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about routes: the shortcut, the detour, the route plan, going round something and turning back.",
+    "assesses": [
+      "FR-LEX-C436-RACCOURCI-03",
+      "FR-LEX-C436-RACCOURCI-04",
+      "FR-LEX-C436-RACCOURCI-05"
+    ]
+  }
+}

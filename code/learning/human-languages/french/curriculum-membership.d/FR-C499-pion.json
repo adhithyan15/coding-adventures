@@ -1,0 +1,11 @@
+{
+  "id": "FR-C499-pion",
+  "pathSegment": "FR-PATH-499-JEUX",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-499-JEUX",
+      "order": 2
+    }
+  ]
+}

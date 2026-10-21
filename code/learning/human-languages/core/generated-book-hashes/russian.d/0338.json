@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:b950abd9a08544f1",
+  "lessonIds": [
+    "RU-C338-argument",
+    "RU-C338-dovod",
+    "RU-C338-dokazyvat",
+    "RU-C338-dokazatelstvo",
+    "RU-C338-ubeditelnyy"
+  ],
+  "tex": "russian/book/chapters/ch338-arguments-and-evidence.tex"
+}

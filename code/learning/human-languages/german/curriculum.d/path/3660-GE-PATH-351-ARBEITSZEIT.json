@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-351-ARBEITSZEIT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-351-ARBEITSZEIT"
+  ],
+  "after": []
+}

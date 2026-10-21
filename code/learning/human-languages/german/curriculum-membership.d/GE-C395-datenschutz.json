@@ -1,0 +1,11 @@
+{
+  "id": "GE-C395-datenschutz",
+  "pathSegment": "GE-PATH-395-PASSWORT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-395-PASSWORT",
+      "order": 3
+    }
+  ]
+}

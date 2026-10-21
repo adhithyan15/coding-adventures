@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-413-PROYEZD",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can buy a train ticket: the fare, an open sleeping car, a compartment, the rate and a concession.",
+  "prerequisites": []
+}

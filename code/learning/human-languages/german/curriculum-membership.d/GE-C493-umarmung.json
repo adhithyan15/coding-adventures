@@ -1,0 +1,11 @@
+{
+  "id": "GE-C493-umarmung",
+  "pathSegment": "GE-PATH-493-ZUNEIGUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-493-ZUNEIGUNG",
+      "order": 1
+    }
+  ]
+}

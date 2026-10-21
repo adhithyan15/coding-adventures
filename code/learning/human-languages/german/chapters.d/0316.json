@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "Wer erzählt?",
+  "label": "ch:ge-wer-erzahlt",
+  "canDo": "I can talk about how a story is built: a narrator, the plot, a character, a chapter and a sequel.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "GE-C316-fortsetzung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can talk about how a story is built: a narrator, the plot, a character, a chapter and a sequel.",
+    "assesses": [
+      "GE-LEX-C316-ERZAEHLER-03",
+      "GE-LEX-C316-ERZAEHLER-04",
+      "GE-LEX-C316-ERZAEHLER-05"
+    ]
+  }
+}

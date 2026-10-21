@@ -1,0 +1,11 @@
+{
+  "id": "LA-C536-deliciae",
+  "pathSegment": "LA-PATH-536-BLAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-536-BLAN",
+      "order": 3
+    }
+  ]
+}

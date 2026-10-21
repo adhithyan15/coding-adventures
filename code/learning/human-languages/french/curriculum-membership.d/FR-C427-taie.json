@@ -1,0 +1,11 @@
+{
+  "id": "FR-C427-taie",
+  "pathSegment": "FR-PATH-427-CHAMBRE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-427-CHAMBRE",
+      "order": 3
+    }
+  ]
+}

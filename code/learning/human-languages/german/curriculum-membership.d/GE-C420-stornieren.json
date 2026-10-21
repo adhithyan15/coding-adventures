@@ -1,0 +1,11 @@
+{
+  "id": "GE-C420-stornieren",
+  "pathSegment": "GE-PATH-420-STORNO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-420-STORNO",
+      "order": 0
+    }
+  ]
+}
