@@ -136,6 +136,26 @@ history owners.
 
 All forty-seven later lessons remain below five effective minutes.
 
+- **Chapters 339–348 — the B1 core** ([`lessons/`](./lessons/), `ML-C339-*` to
+  `ML-R348-*`): ten chapters, two for each of the five B1 spine nodes. Narrating:
+  **ആയിരുന്നു** "was", the past progressive **വായിക്കുകയായിരുന്നു** as the scene a
+  story stands in, **-ഉമായിരുന്നു** "used to", **എന്നിട്ട്**, **അതിനുശേഷം** and
+  **-അപ്പോൾ**, and a hundred-word reading told in all three pasts. Reasons:
+  **… എന്ന് ഞാൻ വിചാരിക്കുന്നു / കരുതുന്നു**, **അതുകൊണ്ട്**, the obligative
+  **-അണം** (the **വേണം** the learner knows, worn onto the verb), **-ഏണ്ടതാണ്** and
+  **-അതുകൊണ്ട്**. Travel: asking the way, a ticket, and a missed bus or a lost
+  bag. Experience: feelings in the dative with **തോന്നുക**, **-ആൻ ആഗ്രഹമുണ്ട്**,
+  **-ക്കാൾ** and **ഏറ്റവും**, and **മൂന്ന് വർഷമായി**. Conditions: **-ആൽ** and
+  **-എങ്കിൽ** on a full verb, **ഇല്ലെങ്കിൽ**, **ആശ്രയിച്ചിരിക്കുന്നു**, and the
+  unreal **-ഇരുന്നെങ്കിൽ … -ഉമായിരുന്നു**, closed by six connected lines of
+  writing. Eight letters arrive here, each written straight after a word that
+  holds it: **ഈ** (ഈയിടെ), **ഐ** (ഐക്യം), **ഔ** (ഔദ്യോഗികമായ), **ഡ** (റോഡ്),
+  **ൗ** (സൗകര്യം), **ഃ** (ദുഃഖം), **ഋ** (ഋതു) and **ഘ** (ആഘോഷം). The four vowels
+  and two signs cite Jayasree's recorded strokes in
+  [`data/scripts/malayalam.json`](../data/scripts/malayalam.json); none has
+  filmstrip geometry yet, so their lessons describe the order in words and print
+  no strip.
+
 ## Book / fonts
 
 ---

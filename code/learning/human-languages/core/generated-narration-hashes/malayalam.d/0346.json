@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:5ae4aafadc0e8b8c",
+  "lessonIds": [
+    "ML-C346-atinekkal",
+    "ML-C346-rtu",
+    "ML-W346-vocalic-r",
+    "ML-C346-varsamayi",
+    "ML-R346-comparing-and-time"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch346.txt",
+  "json": "malayalam/narration/ch346.json",
+  "textHash": "fnv1a64:c427b6e1ffcec385",
+  "jsonHash": "fnv1a64:c890e6a27e8de306",
+  "findings": []
+}

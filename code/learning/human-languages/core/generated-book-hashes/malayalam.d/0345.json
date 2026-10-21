@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:a5c91db70dbd819f",
+  "lessonIds": [
+    "ML-C345-duhkham",
+    "ML-W345-visarga",
+    "ML-C345-santosham-tonni",
+    "ML-C345-kanan-agrahamundu",
+    "ML-R345-feelings-and-hopes"
+  ],
+  "tex": "malayalam/book/chapters/ch345-feelings-and-hopes.tex"
+}

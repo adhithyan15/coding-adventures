@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R339-the-past-three-ways",
+    "language": "malayalam",
+    "chapter": 339,
+    "sequence": 16130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:529c527557ac16f9"
+  },
+  "findings": []
+}

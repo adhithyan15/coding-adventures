@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:90e80b6223cca339",
+  "lessonIds": [
+    "ML-C342-pokanam",
+    "ML-C342-audyogikamaya",
+    "ML-W342-au",
+    "ML-C342-vannatukondu",
+    "ML-R342-advice-and-reasons"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch342.txt",
+  "json": "malayalam/narration/ch342.json",
+  "textHash": "fnv1a64:7fba1148cca9014b",
+  "jsonHash": "fnv1a64:15f83119fc807346",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "language": "malayalam",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:c2309cc671a243b3",
+  "lessonIds": [
+    "ML-C347-varunnundenkil",
+    "ML-C347-maza-peytal",
+    "ML-R347-if-and-otherwise"
+  ],
+  "tex": "malayalam/book/chapters/ch347-if-it-rains.tex"
+}

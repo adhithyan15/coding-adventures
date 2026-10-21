@@ -1,0 +1,77 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ML-W342-au
+spine_node: SPINE-GIVE-REASONS
+sequence: 16280
+delivery: script
+chapter: 342
+type: writing
+headword: "ഔ"
+gloss: "au — the letter that opens ഔദ്യോഗികമായ"
+romanization: "au"
+prerequisites: [ML-S126-letter-oo, ML-S125-letter-uu, ML-C342-audyogikamaya]
+sounds: []
+roots: []
+duration:
+  max_seconds: 220
+requires:
+  knowledge: [ML-SCRIPT-RECOG-126, ML-SCRIPT-RECOG-125, ML-LEX-C342-AUDYOGIKAMAYA-01]
+introduces:
+  knowledge: [ML-SCRIPT-C342-AU-01]
+practises:
+  knowledge: [ML-SCRIPT-C342-AU-01, ML-SCRIPT-RECOG-126, ML-SCRIPT-RECOG-125, ML-LEX-C342-AUDYOGIKAMAYA-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C342-audyogikamaya]
+---
+
+# ഔ (au) — the letter that opens ഔദ്യോഗികമായ
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-126, ML-SCRIPT-RECOG-125] -->
+
+[PAUSE 2s] Before the new one: write **ഓ** and **ഊ** once each, and name them.
+
+[PAUSE 2s] Now say **ഔദ്യോഗികമായ** (*audyōgikamāya*), "official". This lesson takes its first
+letter out and puts it in your hand.
+
+## Script you'll notice: ഔ
+<!-- hl-knowledge: introduces=[ML-SCRIPT-C342-AU-01]; assesses=[ML-LEX-C342-AUDYOGIKAMAYA-01] -->
+
+**ഔ** — *au*, at the start of a word. It is rare: a handful of learned words begin with it.
+
+Its body is the shape of **ഒ**, which you write inside **ഓ**: an inner loop, a broad arch, a
+rounded lobe. On its right it carries the tail you have written on **ഊ**: a small lobe, a notch,
+and a broader lobe that sweeps back along its foot. Chapter 344 gives that tail a lesson of its own.
+
+## Writing: ഔ
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C342-AU-01] -->
+
+One recorded hand writes **ഔ** in two strokes. First the body: from the inner tip, round the small
+loop, out over the broad arch, and down round the lower lobe to its foot. Then, after one lift,
+the tail: over the small lobe, into the notch, over the broader lobe and back along its foot.
+
+Write **ഔ** yourself, slowly, and larger than it is printed. Copy the printed shape and keep the
+order above.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-126, ML-SCRIPT-RECOG-125, ML-LEX-C342-AUDYOGIKAMAYA-01, ML-SCRIPT-C342-AU-01] -->
+
+[PAUSE 1s]
+- [YOU FIND: ഔ at the start of **ഔദ്യോഗികമായ**]
+- [YOU TRACE: ഔ three times, saying *au* as you finish each one]
+- [YOU WRITE: ഊ, then ഔ, from memory, and compare their tails]
+- [YOU WRITE: **ഔദ്യോഗികമായ**]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-125, ML-LEX-C342-AUDYOGIKAMAYA-01, ML-SCRIPT-C342-AU-01] -->
+
+[PAUSE 3s] Which letter is this — ഔ? (**au**, at the start of a word.) Which word did it come
+from? (**ഔദ്യോഗികമായ**, *audyōgikamāya*, "official".) Which other letter carries the same tail?
+(**ഊ**.)

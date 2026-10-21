@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C343-evideyanu",
+    "language": "malayalam",
+    "chapter": 343,
+    "sequence": 16330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a60866a3fd3bcf99"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C339-ayirunnu",
+    "language": "malayalam",
+    "chapter": 339,
+    "sequence": 16100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:889df0e46b39c095"
+  },
+  "findings": []
+}

@@ -1,0 +1,908 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 348,
+  "title": "It Depends, and What Would Have Been",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:8290ee6cd1c29268",
+  "lessons": [
+    {
+      "id": "ML-C348-asrayiccirikkunnu",
+      "sequence": 16530,
+      "title": "അത് കാലാവസ്ഥയെ ആശ്രയിച്ചിരിക്കുന്നു (atŭ kālāvasthaye āśrayiccirikkunnu) — it depends on the weather",
+      "headword": "അത് കാലാവസ്ഥയെ ആശ്രയിച്ചിരിക്കുന്നു",
+      "romanization": "atŭ kālāvasthaye āśrayiccirikkunnu",
+      "gloss": "it depends on the weather — and both outcomes, with -eṅkil and illeṅkil",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c02b2921fb4b7e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"the weather\" and \"according to\". (kālāvastha, anusariccŭ.) Then \"if it rains, I will not come\". (maḻa peytāl ñān varilla.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ആശ്രയിച്ചിരിക്കുന്നു",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What something depends on takes the object ending -എ, as in അവനെ, and the verb is ആശ്രയിച്ചിരിക്കുന്നു: \"rests on, depends on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "നിങ്ങൾ നാളെ വരുമോ? — അത് കാലാവസ്ഥയെ ആശ്രയിച്ചിരിക്കുന്നു. niṅṅaḷ nāḷe varumō? — atŭ kālāvasthaye āśrayiccirikkunnu. — \"Will you come tomorrow? — It depends on the weather.\""
+            },
+            {
+              "kind": "speech",
+              "text": "സമയം gives സമയത്തെ, and പണം gives പണത്തെ: \"it depends on time\", \"on money\". The verb is ആശ്രയിക്കുക, \"to rely on\", built on Sanskrit āśraya, \"that on which anything rests\" (Monier-Williams), and its form here is the past with ഇരിക്കുന്നു after it: it stays in a state of resting on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: then both outcomes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "After \"it depends\", give both sides:"
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ പെയ്തില്ലെങ്കിൽ ഞാൻ വരും. മഴ പെയ്താൽ വരില്ല. maḻa peytilleṅkil ñān varuṁ. maḻa peytāl varilla. — \"If it does not rain, I will come. If it rains, I will not.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Everyday speech often reaches for the അനുസരിച്ച് you know: സമയം അനുസരിച്ച്, \"depending on the time\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on the weather.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on the weather.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on time\", then \"on money\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on time\", then \"on money\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both outcomes: if it does not rain, if it rains",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both outcomes: if it does not rain, if it rains]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"depending on the time\" — samayaṁ anusariccŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"depending on the time\" — *samayaṁ anusariccŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (atŭ kālāvasthaye āśrayiccirikkunnu.) Which ending does the thing it depends on take? (-എ: samayatte, paṇatte.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C348-aghosham",
+      "sequence": 16540,
+      "title": "ആഘോഷം (āghōṣaṁ) — a celebration",
+      "headword": "ആഘോഷം",
+      "romanization": "āghōṣaṁ",
+      "gloss": "a celebration, festivities",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:094ae4e78ac3c608",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"Onam\", \"a festival\", and \"a wedding\". (ōṇaṁ, utsavaṁ, kalyāṇaṁ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആഘോഷം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആഘോഷം — āghōṣaṁ — \"a celebration, festivities\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓണം കേരളത്തിലെ ഏറ്റവും വലിയ ആഘോഷമാണ്. ōṇaṁ kēraḷattile ēṟṟavuṁ valiya āghōṣamāṇŭ. — \"Onam is the biggest celebration in Kerala.\""
+            },
+            {
+              "kind": "speech",
+              "text": "കല്യാണത്തിന് വലിയ ആഘോഷം ഉണ്ടായിരുന്നു. kalyāṇattinŭ valiya āghōṣaṁ uṇṭāyirunnu. — \"There was a big celebration at the wedding.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ഉത്സവം is the festival itself, often at a temple; ആഘോഷം (āghōṣaṁ) is the celebrating, at a festival, a wedding or a birthday. The verb is ആഘോഷിക്കുക, \"to celebrate\": ഞങ്ങൾ ഓണം ആഘോഷിച്ചു."
+            },
+            {
+              "kind": "speech",
+              "text": "Its second consonant is new. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആഘോഷം (āghōṣaṁ) is a Sanskrit word, āghoṣa, which Monier-Williams glosses as \"a calling out, a proclaiming\". In Malayalam it has come to mean the noise and gathering of a celebration; how the sense moved is not recorded there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āghōṣaṁ, with a breath after the g",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āghōṣaṁ*, with a breath after the *g*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Onam is the biggest celebration in Kerala.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Onam is the biggest celebration in Kerala.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There was a big celebration at the wedding.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There was a big celebration at the wedding.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We celebrated Onam.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We celebrated Onam.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Will you come to the celebration? — It depends on the time.\" — āghōṣattinŭ varumō? — atŭ samayatte āśrayiccirikkunnu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Will you come to the celebration? — It depends on the time.\" — *āghōṣattinŭ varumō? — atŭ samayatte āśrayiccirikkunnu.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആഘോഷം (āghōṣaṁ) mean? (a celebration.) How is it different from ഉത്സവം? (ഉത്സവം is the festival; ആഘോഷം (āghōṣaṁ) is the celebrating.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W348-gha",
+      "sequence": 16550,
+      "title": "ഘ (gha) — the letter inside ആഘോഷം (āghōṣaṁ)",
+      "headword": "ഘ",
+      "romanization": "gha",
+      "gloss": "gha — the letter inside ആഘോഷം",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:dbb9c81d74629a9a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ഘ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ഘ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ഗ and ഖ once each, and name them. (ga, voiced; kha, with a puff of breath.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ആഘോഷം (āghōṣaṁ), \"a celebration\". This lesson takes its second consonant out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഘ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഘ — gha: a g with a puff of breath after it. It is to ഗ what ഖ is to ക."
+            },
+            {
+              "kind": "speech",
+              "text": "In ആഘോഷം (āghōṣaṁ) it wears the ō sign, ഘോ. Most words with ഘ (gha) come from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഘ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഘ (gha) and follow its line. Copy the shape you can see, slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ഘ (gha) inside ആഘോഷം (āghōṣaṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ഘ inside **ആഘോഷം**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഘ (gha) three times, saying gh as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഘ three times, saying *gh* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ഗ, then ഘ (gha), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ഗ, then ഘ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ആഘോഷം (āghōṣaṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ആഘോഷം**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ഘ? (gha, g with breath.) Which word did it come from? (ആഘോഷം, āghōṣaṁ, \"a celebration\".) Which letter is it the breathy partner of? (ഗ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C348-undayirunnenkil",
+      "sequence": 16560,
+      "title": "ഉണ്ടായിരുന്നെങ്കിൽ (uṇṭāyirunneṅkil) — if there had been: the unreal condition",
+      "headword": "പണം ഉണ്ടായിരുന്നെങ്കിൽ ഞാൻ പോകുമായിരുന്നു",
+      "romanization": "paṇaṁ uṇṭāyirunneṅkil ñān pōkumāyirunnu",
+      "gloss": "if I had money, I would go — the unreal condition, and would have",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9272b803b890e632",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I used to go\". (ñān pōkumāyirunnu.) Then \"there was\". (uṇṭāyirunnu.) Then \"if there is\". (uṇṭeṅkil.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -ഇരുന്നെങ്കിൽ, if only it had been so",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "For something that is not so, or was not, put ഇരുന്നെങ്കിൽ after the past form: വന്നു becomes വന്നിരുന്നെങ്കിൽ, \"if (he) had come\"; അറിഞ്ഞു becomes അറിഞ്ഞിരുന്നെങ്കിൽ, \"if (I) had known\"; ഉണ്ടായി becomes ഉണ്ടായിരുന്നെങ്കിൽ, \"if there had been\", \"if (I) had\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -ഉമായിരുന്നു, would",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The other half is the -ഉമായിരുന്നു of chapter 339, now with its second job: \"would\", \"would have\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പണം ഉണ്ടായിരുന്നെങ്കിൽ ഞാൻ പോകുമായിരുന്നു. paṇaṁ uṇṭāyirunneṅkil ñān pōkumāyirunnu. — \"If I had money, I would go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The same sentence also says \"if I had had money, I would have gone\"; the context decides which."
+            },
+            {
+              "kind": "speech",
+              "text": "നീ നേരത്തെ വന്നിരുന്നെങ്കിൽ നമുക്ക് ബസ് കിട്ടുമായിരുന്നു. nī nēratte vannirunneṅkil namukkŭ basŭ kiṭṭumāyirunnu. — \"If you had come earlier, we would have caught the bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "അറിഞ്ഞിരുന്നെങ്കിൽ ഞാൻ വിളിക്കുമായിരുന്നു. aṟiññirunneṅkil ñān viḷikkumāyirunnu. — \"If I had known, I would have called.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With -അണം it is regret: ഞാൻ പോകണമായിരുന്നു (ñān pōkaṇamāyirunnu), \"I should have gone\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had money, I would go.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had money, I would go.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you had come earlier, we would have caught the bus.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you had come earlier, we would have caught the bus.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had known, I would have called.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had known, I would have called.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I should have gone.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I should have gone.\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If he had come\"? (vannirunneṅkil.) \"Would have called\"? (viḷikkumāyirunnu.) How does pōkumāyirunnu tell \"used to go\" from \"would have gone\"? (By the context: an if-clause in front makes it \"would\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W348-six-lines",
+      "sequence": 16570,
+      "title": "Six lines about a trip",
+      "headword": "(six lines)",
+      "romanization": "",
+      "gloss": "six connected lines about a trip in the past, with a feeling, a reason and an if",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:d8ea353cc9f84704",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter 338 asked for a connected message about a familiar day. This one asks for six lines, and they tell a story."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one reader: a friend, by name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A told story is not a list of events. It has a scene, in ആയിരുന്നു and the -ഉകയായിരുന്നു past. It has events in the plain past, kept in order with ആദ്യം, എന്നിട്ട്, -അപ്പോൾ, അതിനുശേഷം and ഒടുവിൽ. It has at least one reason, with -അതുകൊണ്ട് or കാരണം, and a feeling, with എനിക്ക് … തോന്നി."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A good one ends by looking at what might have been: … -ഇരുന്നെങ്കിൽ … -ഉമായിരുന്നു."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, write six lines to your reader about a trip, real or invented, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene: when it was, with ഈയിടെ or കഴിഞ്ഞ, and what it was like, with ആയിരുന്നു;"
+            },
+            {
+              "kind": "speech",
+              "text": "where you went and what you were doing on the way, in the -ഉകയായിരുന്നു past;"
+            },
+            {
+              "kind": "speech",
+              "text": "the first thing that happened, with ആദ്യം;"
+            },
+            {
+              "kind": "speech",
+              "text": "what happened next, with എന്നിട്ട് or -അപ്പോൾ, and one thing that went wrong;"
+            },
+            {
+              "kind": "speech",
+              "text": "how it ended and how you felt, with ഒടുവിൽ and എനിക്ക് … തോന്നി, and a reason;"
+            },
+            {
+              "kind": "speech",
+              "text": "one line about what might have been, with -ഇരുന്നെങ്കിൽ … -ഉമായിരുന്നു."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "There is no model on this page. Use only words you already write. The whole exercise is choosing the right past for each line, and joining them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read your lines as you read the village story in chapter 340. Mark every verb s for scene or e for event. Line two should be mostly s; lines three and four mostly e."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then three spelling checks. A word that starts with long ī starts with ഈ, not ഇ. The au of സൗകര്യം is the tail ൗ after its consonant. ദുഃഖം keeps its two rings, ഃ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, read line six alone. Does the if-clause end in -ഇരുന്നെങ്കിൽ, and the main verb in -ഉമായിരുന്നു?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R348-depends-and-would",
+      "sequence": 16580,
+      "title": "Review — it depends, and what would have been",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "it depends, what would have been, a celebration, and the letter ഘ",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:7f9909bd94df5cae",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a celebration\". (āghōṣaṁ.) Write ഘ (gha) once from memory, then ആഘോഷം."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Will you come tomorrow? — It depends on the weather.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Will you come tomorrow? — It depends on the weather.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it does not rain, I will come. If it rains, I will not.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it does not rain, I will come. If it rains, I will not.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Onam is the biggest celebration in Kerala.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Onam is the biggest celebration in Kerala.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had money, I would go.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had money, I would go.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you had come earlier, we would have caught the bus.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you had come earlier, we would have caught the bus.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had known, I would have called. I should have gone.\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had known, I would have called. I should have gone.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ആഘോഷം (āghōṣaṁ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ആഘോഷം**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on …\"? (… -എ ആശ്രയിച്ചിരിക്കുന്നു.) \"If I had known\"? (അറിഞ്ഞിരുന്നെങ്കിൽ.) \"Would have called\"? (വിളിക്കുമായിരുന്നു.) \"A celebration\"? (ആഘോഷം (āghōṣaṁ), with ഘ (gha).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

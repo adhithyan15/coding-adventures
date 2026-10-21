@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C341-aikyam",
+    "language": "malayalam",
+    "chapter": 341,
+    "sequence": 16220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48ecfe7f0958ff12"
+  },
+  "findings": []
+}

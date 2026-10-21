@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C345-kanan-agrahamundu",
+    "language": "malayalam",
+    "chapter": 345,
+    "sequence": 16430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed5e27002fe510ef"
+  },
+  "findings": []
+}

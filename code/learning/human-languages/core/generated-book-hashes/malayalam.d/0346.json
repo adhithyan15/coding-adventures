@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:37f225e5151fa655",
+  "lessonIds": [
+    "ML-C346-atinekkal",
+    "ML-C346-rtu",
+    "ML-W346-vocalic-r",
+    "ML-C346-varsamayi",
+    "ML-R346-comparing-and-time"
+  ],
+  "tex": "malayalam/book/chapters/ch346-bigger-best-and-how-long.tex"
+}

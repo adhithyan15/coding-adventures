@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "ML-W344-au-sign",
+    "language": "malayalam",
+    "chapter": 344,
+    "sequence": 16370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b2412067447a98c7",
+    "detachableSegments": [
+      "Script you'll notice: ൗ",
+      "Writing: ൗ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

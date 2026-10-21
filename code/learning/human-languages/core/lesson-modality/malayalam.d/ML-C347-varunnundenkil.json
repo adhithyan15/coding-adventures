@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C347-varunnundenkil",
+    "language": "malayalam",
+    "chapter": 347,
+    "sequence": 16500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:348c72c88f43240f"
+  },
+  "findings": []
+}

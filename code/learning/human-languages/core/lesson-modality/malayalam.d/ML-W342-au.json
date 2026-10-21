@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "ML-W342-au",
+    "language": "malayalam",
+    "chapter": 342,
+    "sequence": 16280,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:84dea9f4c70c3a8d",
+    "detachableSegments": [
+      "Script you'll notice: ഔ",
+      "Writing: ഔ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

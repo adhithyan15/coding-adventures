@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:5ade2b3944629ad2",
+  "lessonIds": [
+    "ML-C342-pokanam",
+    "ML-C342-audyogikamaya",
+    "ML-W342-au",
+    "ML-C342-vannatukondu",
+    "ML-R342-advice-and-reasons"
+  ],
+  "tex": "malayalam/book/chapters/ch342-must-ought-to-and-because.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:8290ee6cd1c29268",
+  "lessonIds": [
+    "ML-C348-asrayiccirikkunnu",
+    "ML-C348-aghosham",
+    "ML-W348-gha",
+    "ML-C348-undayirunnenkil",
+    "ML-W348-six-lines",
+    "ML-R348-depends-and-would"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "malayalam/narration/ch348.txt",
+  "json": "malayalam/narration/ch348.json",
+  "textHash": "fnv1a64:0b68644dc4994527",
+  "jsonHash": "fnv1a64:53dcdd3e3c76185d",
+  "findings": []
+}

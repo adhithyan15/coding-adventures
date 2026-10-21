@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:91ee5597b55f1339",
+  "lessonIds": [
+    "ML-C340-iyite",
+    "ML-W340-ii",
+    "ML-C340-ennittu",
+    "ML-C340-atinusesham",
+    "ML-C340-gramathil",
+    "ML-R340-a-story-in-order"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch340.txt",
+  "json": "malayalam/narration/ch340.json",
+  "textHash": "fnv1a64:98dfafa374d467a1",
+  "jsonHash": "fnv1a64:f9734836b0b0baca",
+  "findings": []
+}

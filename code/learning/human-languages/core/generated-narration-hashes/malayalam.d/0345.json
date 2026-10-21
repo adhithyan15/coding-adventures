@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:bdb73dafe480a276",
+  "lessonIds": [
+    "ML-C345-duhkham",
+    "ML-W345-visarga",
+    "ML-C345-santosham-tonni",
+    "ML-C345-kanan-agrahamundu",
+    "ML-R345-feelings-and-hopes"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "malayalam/narration/ch345.txt",
+  "json": "malayalam/narration/ch345.json",
+  "textHash": "fnv1a64:58dcdf38066c130a",
+  "jsonHash": "fnv1a64:c0fc9d61add8c5d4",
+  "findings": []
+}
