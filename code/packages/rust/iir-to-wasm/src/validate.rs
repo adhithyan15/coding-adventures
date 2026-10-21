@@ -166,7 +166,9 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // the lisp `not` to `i32.eqz` (boolean negation), and `equal?` (McCarthy
     // `EQ` on atoms) to unbox-both-and-`i32.eq`. `ATOM x` = `not(pair? x)`.
     // `write_i64` (LANG83 PR1b) lowers to `env.__write_i64(i64)`: decimal, no newline.
-    &["putchar", "getchar", "print_i64", "write_i64", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
+    // `write_f64_py` / `write_f64_js` (LANG83 PR6a) call the in-module
+    // `$__iir_write_f64`, which prints through `env.putchar`.
+    &["putchar", "getchar", "print_i64", "write_i64", "write_f64_py", "write_f64_js", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
 
 // ---------------------------------------------------------------------------
 // validate_for_wasm
