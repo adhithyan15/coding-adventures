@@ -63,6 +63,7 @@
     "invisible-layout-link",
     "open-styled-links",
     "styled-endpoint-markers",
+    "long-endpoint-markers",
     "minimum-link-lengths",
     "styled-inline-link-labels",
     "labeled-bidirectional-links",

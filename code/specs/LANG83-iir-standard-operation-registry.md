@@ -579,6 +579,25 @@ locally (IL text, BEAM instruction streams, and AArch64 words compared against
 `aarch64-encoder`'s own encodings, which gains `adds`, `subs`, `negs`, `smulh`
 and `cmp … asr #imm` for this PR), and execute in CI.
 
+## PR4's first frontend: Python (LANG84 phase 7a)
+
+`python-iir-compiler`'s release path is the first frontend to emit the PR4
+ops. Python `+ - *` and unary `-` on `i64` are `i64_add_ovf`, `i64_sub_ovf`,
+`i64_mul_ovf` and `i64_neg_ovf`. Where CPython would produce an `int`
+outside `i64`, the program prints its output so far and stops with
+`Trap.Overflow`. That is the frontend's stated divergence until traps are
+catchable and it can promote to a bignum. `//` and `%` are the PR1b floor
+ops. A divisor known to be `-1` is folded (`a // -1` is `i64_neg_ovf a`,
+`a % -1` is `0`), so `MIN // -1` and `MIN % -1` never reach a backend's
+divide.
+
+`lang_matrix` carries the trap data through the same `StdoutThenTrap` port
+as PR2 (Ruby). Five Python rows are the first matrix rows whose kind is
+`Trap.Overflow`: `MAX + 1`, `MIN - 1`, `3037000500²`, `-MIN` and `MIN // -1`.
+Each one checks the stdout before the trap and the kind on every column.
+Locally, native, LLVM, WASM, JVM, VM and JIT reported the right kind for
+all of them. CLR and BEAM run in CI.
+
 ## PR6a — shortest round-trip float output
 
 Python's `print(x)` and JavaScript's `console.log(x)` for a float both print
