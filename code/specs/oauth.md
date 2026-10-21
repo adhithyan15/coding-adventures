@@ -794,6 +794,16 @@ the hard-coded RSA SHA-256 verifier, and its encoded public-key length is not an
 RSA modulus-strength check. This composition still adds no general algorithm
 routing, complete path construction or validation, trust, time, identity,
 constraints, revocation, TLS, HTTP, OAuth transport, or network authority.
+A bounded reviewed-anchor binding follow-up now consumes that strongest RSA
+SHA-256 issuer-link evidence together with reviewed-root selection evidence.
+It fails closed unless both non-copyable inputs retain the same exact issuer
+certificate, then retains both proofs in one distinct non-copyable result. This
+proves only that one authenticated child-to-issuer link terminates at a
+certificate identity occurring exactly once in the reviewed Mozilla snapshot.
+It does not apply the selected anchor's name constraints, validate the target's
+role, purpose, validity, or identity, construct a multi-hop path, apply path
+length or other constraints, check revocation, or provide TLS, HTTP, OAuth
+transport, or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
