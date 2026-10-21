@@ -35,8 +35,12 @@ stay conservative. A non-unit static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
 whole-number factors may precede the sign-rooted numerator, including exact
 divisions among those factors, when multiplication connects the resulting
-prefix to that root; division by the root stays conservative. Unary
-signs, arithmetic composition with finite static operands, and real-valued
+prefix to that root; division by the root stays conservative. Positive
+variable-free whole-number powers may raise the exact sign-rooted integer
+transform within the existing exponent-unroll cap while checked exponentiation
+remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
+stay conservative. Unary signs, arithmetic composition with finite static
+operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
 results may also widen through a real name formal. Other real name-actual
