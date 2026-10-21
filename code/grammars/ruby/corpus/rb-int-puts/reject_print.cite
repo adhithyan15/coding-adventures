@@ -1,0 +1,4 @@
+oracle: host ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+command: ruby reject_print.rb
+ruby: exit 0, stdout '1' (Ruby accepts it)
+rb-int-puts: rejected with Unsupported: only `puts` is in rb-int-puts

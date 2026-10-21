@@ -26,6 +26,22 @@ An empty body (`l:{}`) still keeps its braces, although upstream prints
 checks with `node` that those shapes, and 32 shapes deliberately left
 braced, parse, and it times the nested case. Six unit tests cover the rule.
 
+### Fixed - templates, comments and regexes end where JavaScript ends them (#17886, #17888, #17887)
+
+`` var x = `$` // `; console.log('PWN') `` compiled at SIMPLE to
+`console.log("PWN");`. The template token didn't end at `` `$` ``, so it ran
+on to the backtick inside the comment, and the comment text became code.
+Three more token patterns had the same flaw:
+
+- `/***/` and `/* a **/` weren't comments;
+- `// c\r` swallowed the code after the `\r`;
+- a regex could hold a `\r`.
+
+The fix is in the ECMAScript `.tokens` files and javascript-lexer.
+`tests/regression_token_patterns.rs` compiles the repros at SIMPLE and
+ADVANCED and, when `node` is installed, checks that each prints what the
+source prints.
+
 ### Fixed - switch cases keep shared `var`/`function`/`class` declarations (#17879)
 
 `closure-pass-dce` truncated a case's dead tail, and collapsed a constant

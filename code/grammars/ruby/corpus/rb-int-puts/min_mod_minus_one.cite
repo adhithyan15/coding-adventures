@@ -1,0 +1,5 @@
+oracle: host ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+command: ruby min_mod_minus_one.rb
+result: exit 0; stdout is exactly <name>.expect
+releases: 3.3.6 directly; 3.3.5 and 3.3.7 through IIR identity (same token, grammar and profile class)
+why: security review (LANG84 5a) — i64::MIN % -1 is the one modulus a machine rem faults on; the compiler folds it to 0 (Ruby's answer) and still lowers the neighbouring moduli

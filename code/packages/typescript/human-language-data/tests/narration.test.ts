@@ -11,6 +11,7 @@
 
 import { describe, expect, it } from "vitest";
 import { loadEverything } from "../src/loader.js";
+import { corpusNarration } from "../src/narration-cli.js";
 import { deriveLessonModality } from "../src/modality.js";
 import {
   narrateChapter,
@@ -935,7 +936,15 @@ describe("the whole corpus", () => {
   // as long as the load itself, so the first test to run paid a whole narration
   // inside its 30-second budget and timed out on a slower runner as the corpus
   // grew. One pass, read four ways, asserts exactly what four passes did.
-  const corpusChapters = narrationChapters(lessons, { maxLinearisableTableColumns: 3 });
+  //
+  // And it is the EXPORT's pass: `corpusNarration()` narrates with the policy's
+  // width (3, as this literal used to say) and the authored chapter titles,
+  // exactly as `narrationOutputs` does — so these assertions now cover the very
+  // chapters `check:narration` gates, titles included, instead of a near-copy
+  // narrated a second time. Being the same computation is also what lets the
+  // narration cache (`src/narration-cache.ts`, warmed once by the suite's global
+  // setup) answer both this file and `narration-cli.test.ts` from one narration.
+  const corpusChapters = corpusNarration();
 
   it("narrates every lesson in the corpus", () => {
     const chapters = corpusChapters;

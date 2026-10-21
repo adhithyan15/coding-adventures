@@ -397,6 +397,12 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "print_i64",    n_args: 1, returns: false },
     // LANG83 PR1b — decimal, no newline (`__twig_write_i64`, same stdout FILE*).
     BuiltinSig { name: "write_i64",    n_args: 1, returns: false },
+    // LANG83 PR6a — a double as Python `repr` / JS `Number#toString`, no
+    // newline (`__twig_write_f64_py` / `__twig_write_f64_js`). The f64 slot's
+    // raw 8 bytes travel in the integer argument register, so the generic
+    // marshalling is unchanged; the runtime reinterprets them.
+    BuiltinSig { name: "write_f64_py", n_args: 1, returns: false },
+    BuiltinSig { name: "write_f64_js", n_args: 1, returns: false },
     BuiltinSig { name: "putchar",      n_args: 1, returns: false },
     BuiltinSig { name: "getchar",      n_args: 0, returns: true  },
     BuiltinSig { name: "print_string", n_args: 2, returns: false },
@@ -3289,6 +3295,36 @@ mod tests {
         ];
         let (_bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
         assert!(relocs.iter().any(|r| r.symbol == "__twig_write_i64"));
+    }
+
+    /// LANG83 PR6a: a float writer is a plain V1 builtin call; the f64
+    /// slot's raw 8 bytes are loaded into `rdi` (an integer `mov`), which is
+    /// what the runtime's `int64_t bits` parameter expects.
+    #[test]
+    fn float_writers_pass_the_raw_bits_in_rdi() {
+        for name in ["write_f64_py", "write_f64_js"] {
+            let ctx = fn_ctx("f", &[], "void");
+            let ir = vec![
+                instr("const_f64", Some("x"), vec![Op::Float(1.5)]),
+                instr("call_builtin", None, vec![Op::Var(name.into()), Op::Var("x".into())]),
+                instr("ret_void", None, vec![]),
+            ];
+            let (bytes, relocs) = compile_function_with_relocs(&ctx, &ir, X86_64Abi::SysV).unwrap();
+            assert!(relocs.iter().any(|r| r.symbol == format!("__twig_{name}")), "{name}");
+            // 1.5 = 0x3FF8_0000_0000_0000 appears as a 64-bit immediate (movabs).
+            assert!(bytes.windows(8).any(|w| w == 0x3FF8_0000_0000_0000u64.to_le_bytes()), "{name}");
+            // The call is `E8 rel32` at the reloc, and the argument reaches it
+            // through an integer `mov rdi, r/m64` (REX.W 8B, ModRM.reg = 7) —
+            // no SSE instruction (0x66/0xF2 0x0F) anywhere in the function.
+            let reloc = relocs.iter().find(|r| r.symbol == format!("__twig_{name}")).unwrap();
+            let call = reloc.patch_offset - 1;
+            assert_eq!(bytes[call], 0xE8, "{name}");
+            assert!(
+                bytes[..call].windows(3).any(|w| w[0] == 0x48 && w[1] == 0x8B && (w[2] >> 3) & 7 == 7),
+                "{name}: mov rdi, [slot]"
+            );
+            assert!(!bytes[..call].windows(2).any(|w| (w[0] == 0xF2 || w[0] == 0x66) && w[1] == 0x0F), "{name}");
+        }
     }
 
     // ---- Type assert ----

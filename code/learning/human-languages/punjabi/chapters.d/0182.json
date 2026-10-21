@@ -1,0 +1,25 @@
+{
+  "chapter": 182,
+  "title": "A Week on the Noticeboard",
+  "label": "ch:pa-a2-weekday-schedule",
+  "canDo": "I can recognise the seven weekdays and understand one simple opening-days notice.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C182-payoff",
+    "kind": "production",
+    "summary": "Retrieve the full week and a two-line opening-days notice through listening, speaking, reading, and bounded Gurmukhi writing after an atom-free review.",
+    "assesses": [
+      "PA-WEEKDAY-SOMVAR-01",
+      "PA-WEEKDAY-MANGALVAR-01",
+      "PA-WEEKDAY-BUDHVAR-01",
+      "PA-WEEKDAY-VEERVAR-01",
+      "PA-WEEKDAY-SHUKKARVAR-01",
+      "PA-WEEKDAY-SHANIVAR-01",
+      "PA-WEEKDAY-AITVAR-01",
+      "PA-SCRIPT-RECOG-AI-01"
+    ],
+    "note": "This fifth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}
