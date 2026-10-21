@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:e5c97ce0b5b6eb38",
+  "lessonIds": [
+    "FA-C535-shumine",
+    "FA-C535-rakhtekhab",
+    "FA-C535-denj",
+    "FA-C535-khanedar",
+    "FA-C535-kadbanu",
+    "FA-R535-review-528-535"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch535.txt",
+  "json": "persian/narration/ch535.json",
+  "textHash": "fnv1a64:e7fc50e57026a426",
+  "jsonHash": "fnv1a64:3f41ddbc6631e137",
+  "findings": []
+}

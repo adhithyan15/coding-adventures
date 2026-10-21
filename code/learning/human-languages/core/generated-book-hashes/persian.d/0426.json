@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:c08c0fd1f570f425",
+  "lessonIds": [
+    "FA-C426-rahbandan",
+    "FA-C426-park-kardan",
+    "FA-C426-dor-zadan",
+    "FA-C426-yektarafe",
+    "FA-C426-govahiname"
+  ],
+  "tex": "persian/book/chapters/ch426-traffic-jams-and-parking.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Brain, Nerves and Eyes",
+  "label": "ch:fa-brain-nerves-and-eyes",
+  "canDo": "I can talk about the brain, nerves and eyes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C496-lase",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about the brain, nerves and eyes.",
+    "assesses": [
+      "FA-LEX-C496-NERVES-03",
+      "FA-LEX-C496-NERVES-04",
+      "FA-LEX-C496-NERVES-05"
+    ]
+  }
+}

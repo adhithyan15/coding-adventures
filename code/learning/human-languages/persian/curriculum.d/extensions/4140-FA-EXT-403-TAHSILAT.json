@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-403-TAHSILAT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about my education, say that someone graduated, presented a paper and holds a degree.",
+  "prerequisites": []
+}

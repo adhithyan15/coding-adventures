@@ -1,0 +1,11 @@
+{
+  "id": "FA-C358-kafgir",
+  "pathSegment": "FA-PATH-358-QABLAME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-358-QABLAME",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C451-saken",
+  "pathSegment": "FA-PATH-451-SHOLUGHI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-451-SHOLUGHI",
+      "order": 2
+    }
+  ]
+}

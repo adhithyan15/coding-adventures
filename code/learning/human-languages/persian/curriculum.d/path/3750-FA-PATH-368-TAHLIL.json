@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-368-TAHLIL",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-368-TAHLIL"
+  ],
+  "after": []
+}

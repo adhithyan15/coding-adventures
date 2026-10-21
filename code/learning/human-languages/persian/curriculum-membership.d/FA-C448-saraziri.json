@@ -1,0 +1,11 @@
+{
+  "id": "FA-C448-saraziri",
+  "pathSegment": "FA-PATH-448-MIYANBOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-448-MIYANBOR",
+      "order": 2
+    }
+  ]
+}

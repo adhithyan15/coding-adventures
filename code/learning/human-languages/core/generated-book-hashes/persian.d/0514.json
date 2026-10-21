@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:58efdbfde5d5d316",
+  "lessonIds": [
+    "FA-C514-valibal",
+    "FA-C514-basketbal",
+    "FA-C514-tenis",
+    "FA-C514-raket",
+    "FA-C514-darvazeban"
+  ],
+  "tex": "persian/book/chapters/ch514-ball-games.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C503-lus",
+  "pathSegment": "FA-PATH-503-PLAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-503-PLAY",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C375-arzesh-dashtan",
+    "language": "persian",
+    "chapter": 375,
+    "sequence": 19190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2359192ca22a6b87"
+  },
+  "findings": []
+}

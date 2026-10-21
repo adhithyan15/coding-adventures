@@ -138,6 +138,14 @@ from `pending` to `partial` therefore also means regenerating the tables with
 `grammar-tools generate-rust-compiled-grammars perl`; the two crates' tests
 fail until that is done.
 
+Since LANG84 phase 4a the checked pairs are compiled into `perl-lexer` and
+`perl-parser` (deduplicated by content, release list read from
+`releases.csv`), and `perl_iir_compiler::compile_source_at` selects one by
+exact inventory ID. A pending or unknown ID is a typed error. Flipping a row
+from `pending` to `partial` therefore also means regenerating the tables with
+`grammar-tools generate-rust-compiled-grammars perl`; the two crates' tests
+fail until that is done.
+
 ## Delivery order and gates
 
 1. Inventory numbered releases and their primary sources. Start with 1.000,

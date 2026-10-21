@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 26,
-  "sourceHash": "fnv1a64:a573fef9310f1308",
+  "sourceHash": "fnv1a64:9ae7bc4511703730",
   "lessonIds": [
     "MR-C22-dene",
     "MR-C22-pine",
@@ -14,6 +14,6 @@
   "text": "marathi/narration/ch26.txt",
   "json": "marathi/narration/ch26.json",
   "textHash": "fnv1a64:761cad69eba61a44",
-  "jsonHash": "fnv1a64:a94f45a204fc0410",
+  "jsonHash": "fnv1a64:f24fe96869df56c0",
   "findings": []
 }

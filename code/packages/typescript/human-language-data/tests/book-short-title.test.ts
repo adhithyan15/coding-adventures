@@ -18,14 +18,14 @@ import { describe, expect, it } from "vitest";
 import { renderBookChapter } from "../src/book.js";
 import { parseLesson } from "../src/parse.js";
 
-function source(headword: string, romanization = ""): string {
+function source(headword: string, romanization = "", type = "word"): string {
   return `---
 schema_version: 2
 id: T1
 spine_node: HELLO
 sequence: 10
 chapter: 1
-type: word
+type: ${type}
 headword: ${headword}
 ${romanization === "" ? "" : `romanization: ${romanization}\n`}gloss: a test
 concept_tag: GREETING-HELLO
@@ -38,7 +38,7 @@ introduces:
   knowledge: []
 practises:
   knowledge: []
-skills: [reading]
+skills: [${type === "listening-speaking" ? "listening, speaking" : "reading"}]
 modes: [interpretive]
 strands: [meaning-input]
 register: neutral
@@ -62,9 +62,17 @@ const target = {
 };
 
 /** The `[...]` of the generated `\section[...]{...}`. */
-function shortTitle(headword: string, romanization = "", scripted = false): string {
+function shortTitle(
+  headword: string,
+  romanization = "",
+  scripted = false,
+  type = "word",
+): string {
   const chapterTarget = scripted ? { ...target, unicodeScript: "Tamil", scriptCommand: "ta" } : target;
-  const tex = renderBookChapter(chapterTarget, [parseLesson(source(headword, romanization), "test")]).tex;
+  const tex = renderBookChapter(
+    chapterTarget,
+    [parseLesson(source(headword, romanization, type), "test")],
+  ).tex;
   const match = /\\section\[(.*?)\]\{/.exec(tex);
   if (match === null) throw new Error("no \\section[...] in the generated chapter");
   return match[1]!;
@@ -149,6 +157,10 @@ describe("section short titles", () => {
 
     it("shows one form when the romanization repeats the headword", () => {
       expect(shortTitle("kaṇ", "kaṇ", true)).toBe("kaṇ");
+    });
+
+    it("keeps an oral-only lesson's spelling out of the contents", () => {
+      expect(shortTitle("கண்", "kaṇ", true, "listening-speaking")).toBe("kaṇ");
     });
 
     it("shows the headword alone for a bracketed placeholder", () => {

@@ -1,0 +1,17 @@
+{
+  "glyph": "ژ",
+  "sound": "zh",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ژ",
+    "initial": "ژ",
+    "medial": "ـژ",
+    "final": "ـژ"
+  },
+  "components": [
+    "short descending curve",
+    "three dots above"
+  ],
+  "strokeOrder": [],
+  "notes": "One of the four letters Persian added to the Arabic alphabet; the sound of s in English measure. Does not join to the following letter. Its stroke order is deliberately left empty: no Persian-scoped source for it has been verified yet."
+}

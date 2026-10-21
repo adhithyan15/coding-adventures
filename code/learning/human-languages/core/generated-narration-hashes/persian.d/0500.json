@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:090eb022c46c5f3f",
+  "lessonIds": [
+    "FA-C500-amu",
+    "FA-C500-amme",
+    "FA-C500-pesaramu",
+    "FA-C500-dokhtarkhale",
+    "FA-C500-khaharzade"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch500.txt",
+  "json": "persian/narration/ch500.json",
+  "textHash": "fnv1a64:2e17a8991e672736",
+  "jsonHash": "fnv1a64:17c32ef60b111863",
+  "findings": []
+}

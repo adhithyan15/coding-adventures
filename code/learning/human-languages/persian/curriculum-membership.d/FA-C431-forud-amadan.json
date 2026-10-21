@@ -1,0 +1,11 @@
+{
+  "id": "FA-C431-forud-amadan",
+  "pathSegment": "FA-PATH-431-PARVAZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-431-PARVAZ",
+      "order": 2
+    }
+  ]
+}

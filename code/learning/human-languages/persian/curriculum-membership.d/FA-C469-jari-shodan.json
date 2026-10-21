@@ -1,0 +1,11 @@
+{
+  "id": "FA-C469-jari-shodan",
+  "pathSegment": "FA-PATH-469-TALAB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-469-TALAB",
+      "order": 4
+    }
+  ]
+}

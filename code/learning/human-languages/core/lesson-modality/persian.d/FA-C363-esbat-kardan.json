@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C363-esbat-kardan",
+    "language": "persian",
+    "chapter": 363,
+    "sequence": 18570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2874edbd6f682e9"
+  },
+  "findings": []
+}

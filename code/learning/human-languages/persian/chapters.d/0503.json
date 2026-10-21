@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Children at Play",
+  "label": "ch:fa-children-at-play",
+  "canDo": "I can talk about toys and children's games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R503-review-496-503",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about toys and children's games.",
+    "assesses": [
+      "FA-LEX-C503-PLAY-03",
+      "FA-LEX-C503-PLAY-04",
+      "FA-LEX-C503-PLAY-05"
+    ]
+  }
+}

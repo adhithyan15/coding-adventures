@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-397-EHTIYAT",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-397-EHTIYAT"
+  ],
+  "after": []
+}

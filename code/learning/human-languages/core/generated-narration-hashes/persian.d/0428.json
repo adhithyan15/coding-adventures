@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:204d903af0172756",
+  "lessonIds": [
+    "FA-C428-aber-e-piyade",
+    "FA-C428-motorsiklet",
+    "FA-C428-kamiyun",
+    "FA-C428-vanet",
+    "FA-C428-zir-gereftan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch428.txt",
+  "json": "persian/narration/ch428.json",
+  "textHash": "fnv1a64:9a6d10a9a827f7bd",
+  "jsonHash": "fnv1a64:8a898946add3f2aa",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-496-NERVES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-496-NERVES"
+  ],
+  "after": []
+}

@@ -1063,6 +1063,13 @@ fn emit_instr(
     if op == "i64_div_floor" || op == "i64_mod_floor" {
         return emit_floor_divmod(asm, alloc, instr, op == "i64_mod_floor");
     }
+    // ── LANG83 PR4: overflow-checked arithmetic ─────────────────────────────
+    //
+    // Matched by full name before the `add_`/`sub_`/`mul_`/`neg_` prefix arms
+    // (which wrap); the type-first names keep those arms from claiming them.
+    if matches!(op, "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf") {
+        return emit_checked_arith(asm, alloc, instr);
+    }
     if op == "trap" {
         // IIR `trap "<kind>"` arrives as `trap Var("<kind>")`; only a kind in
         // the closed table has a stable id.
@@ -2116,6 +2123,86 @@ fn emit_floor_divmod(
     let result = if want_mod { Reg::X10 } else { Reg::X2 };
     let slot = alloc.slot_of(dest);
     asm.str_(result, Reg::Sp, slot)?;
+    Ok(())
+}
+
+// ===========================================================================
+// LANG83 PR4 — overflow-checked arithmetic
+// ===========================================================================
+
+/// `i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf` (LANG83 PR4):
+/// the exact result, or `Trap.Overflow`.
+///
+/// Add, subtract and negate use the flag-setting forms, whose **V** flag is
+/// set exactly when the signed result overflows; `b.vc` ("V clear") skips the
+/// trap:
+///
+/// ```text
+///         ldr  x0, [a]
+///         ldr  x1, [b]               ; binary ops only
+///         adds x2, x0, x1            ; | subs x2, x0, x1 | negs x2, x0
+///         b.vc ok
+///         movz w0, #5 ; bl __twig_trap ; udf     ; Trap.Overflow
+/// ok:     str  x2, [dest]
+/// ```
+///
+/// A multiply sets no flags, so the check compares the two halves of the full
+/// 128-bit product: it fits in 64 bits exactly when the high half (`smulh`) is
+/// the sign-extension of the low half (`low ASR #63` — all zeros for a
+/// non-negative low half, all ones for a negative one):
+///
+/// ```text
+///         mul   x2, x0, x1           ; low 64 bits
+///         smulh x9, x0, x1           ; high 64 bits
+///         cmp   x9, x2, asr #63
+///         b.eq  ok
+///         movz w0, #5 ; bl __twig_trap ; udf
+/// ok:     str   x2, [dest]
+/// ```
+///
+/// The result register is stored only after the check, so a wrapped value
+/// never escapes. X9 is an AAPCS64 temporary that is never live across an
+/// instruction under the stack-spill allocator.
+fn emit_checked_arith(
+    asm: &mut Assembler,
+    alloc: &mut RegAlloc,
+    instr: &CIRInstr,
+) -> Result<(), BackendError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_OVERFLOW};
+    let dest = require_dest(instr)?;
+    let unary = instr.op == "i64_neg_ovf";
+    let need = if unary { 1 } else { 2 };
+    if instr.srcs.len() < need {
+        return Err(BackendError::MalformedInstr(format!("{} needs {need} srcs", instr.op)));
+    }
+    let ok = asm.create_label();
+    load_operand(asm, alloc, Reg::X0, &instr.srcs[0])?;
+    if unary {
+        asm.negs(Reg::X2, Reg::X0);
+        asm.b_cond(Cond::Vc, ok);
+    } else {
+        load_operand(asm, alloc, Reg::X1, &instr.srcs[1])?;
+        match instr.op.as_str() {
+            "i64_add_ovf" => {
+                asm.adds(Reg::X2, Reg::X0, Reg::X1);
+                asm.b_cond(Cond::Vc, ok);
+            }
+            "i64_sub_ovf" => {
+                asm.subs(Reg::X2, Reg::X0, Reg::X1);
+                asm.b_cond(Cond::Vc, ok);
+            }
+            _ => {
+                asm.mul(Reg::X2, Reg::X0, Reg::X1);
+                asm.smulh(Reg::X9, Reg::X0, Reg::X1);
+                asm.cmp_asr(Reg::X9, Reg::X2, 63)?;
+                asm.b_cond(Cond::Eq, ok);
+            }
+        }
+    }
+    emit_trap_call(asm, trap_kind_id(TRAP_OVERFLOW).expect("Trap.Overflow is a built-in kind"))?;
+    asm.bind(ok).map_err(BackendError::from)?;
+    let slot = alloc.slot_of(dest);
+    asm.str_(Reg::X2, Reg::Sp, slot)?;
     Ok(())
 }
 
@@ -3384,6 +3471,75 @@ mod tests {
         let sdiv = pos(&ws, word_of(|a| a.sdiv(Reg::X2, Reg::X0, Reg::X1)));
         let add = pos(&ws, word_of(|a| a.add(Reg::X10, Reg::X10, Reg::X1)));
         assert!(one < sdiv && sdiv < add);
+    }
+
+    // ---- LANG83 PR4: overflow-checked arithmetic (structural) ----
+
+    fn checked_fn(op: &str) -> (Vec<u32>, Vec<ExternalReloc>) {
+        let params = vec![("a".into(), "i64".into()), ("b".into(), "i64".into())];
+        let srcs = if op == "i64_neg_ovf" {
+            vec![CIROperand::Var("a".into())]
+        } else {
+            vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())]
+        };
+        let cir = vec![
+            CIRInstr { op: op.into(), dest: Some("r".into()), srcs, ty: "i64".into(), deopt_to: None },
+            CIRInstr { op: "ret_i64".into(), dest: None, srcs: vec![CIROperand::Var("r".into())],
+                       ty: "i64".into(), deopt_to: None },
+        ];
+        let (bytes, relocs) = compile_with_relocs(&ctx("f", &params, "i64"), &cir)
+            .unwrap_or_else(|e| panic!("{op}: {e}"));
+        (words(&bytes), relocs)
+    }
+
+    /// `b.cond` forward by `n` words: `0x54000000 | imm19 << 5 | cond`.
+    fn b_cond_word(cond: Cond, n: u32) -> u32 {
+        0x5400_0000 | (n << 5) | cond as u32
+    }
+
+    /// add/sub/neg: the flag-setting instruction, then `b.vc` over exactly the
+    /// three-word trap (`movz w0, #5; bl __twig_trap; udf`), then the store.
+    #[test]
+    fn checked_add_sub_neg_branch_on_v_clear_over_the_overflow_trap() {
+        for (op, arith) in [
+            ("i64_add_ovf", word_of(|a| a.adds(Reg::X2, Reg::X0, Reg::X1))),
+            ("i64_sub_ovf", word_of(|a| a.subs(Reg::X2, Reg::X0, Reg::X1))),
+            ("i64_neg_ovf", word_of(|a| a.negs(Reg::X2, Reg::X0))),
+        ] {
+            let (ws, relocs) = checked_fn(op);
+            let at = pos(&ws, arith);
+            assert_eq!(ws[at + 1], b_cond_word(Cond::Vc, 4), "{op}: b.vc over the trap");
+            assert_eq!(ws[at + 2], word_of(|a| a.movz(Reg::X0, 5, 0)), "{op}: Trap.Overflow id");
+            assert_eq!(ws[at + 3] & 0xFC00_0000, 0x9400_0000, "{op}: bl");
+            assert_eq!(ws[at + 4], u32::from(TRAP_UDF_IMM), "{op}: udf after the noreturn call");
+            assert_eq!(relocs.len(), 1, "{op}");
+            assert_eq!((relocs[0].symbol.as_str(), relocs[0].word_idx), ("__twig_trap", at + 3), "{op}");
+            // The result is stored after the check (str x2, [sp, #slot]).
+            assert_eq!(ws[at + 5] & 0xFFC0_001F, 0xF900_0002, "{op}: str x2 after the trap");
+        }
+    }
+
+    #[test]
+    fn checked_mul_compares_smulh_with_the_low_half_sign() {
+        let (ws, relocs) = checked_fn("i64_mul_ovf");
+        let mul = pos(&ws, word_of(|a| a.mul(Reg::X2, Reg::X0, Reg::X1)));
+        assert_eq!(ws[mul + 1], word_of(|a| a.smulh(Reg::X9, Reg::X0, Reg::X1)));
+        assert_eq!(ws[mul + 2], word_of(|a| a.cmp_asr(Reg::X9, Reg::X2, 63).unwrap()));
+        assert_eq!(ws[mul + 3], b_cond_word(Cond::Eq, 4), "b.eq over the trap");
+        assert_eq!(ws[mul + 4], word_of(|a| a.movz(Reg::X0, 5, 0)));
+        assert_eq!(ws[mul + 6], u32::from(TRAP_UDF_IMM));
+        assert_eq!(relocs.iter().filter(|r| r.symbol == "__twig_trap").count(), 1);
+    }
+
+    #[test]
+    fn checked_ops_need_their_operands() {
+        let params: [(String, String); 0] = [];
+        let one_src = vec![CIRInstr { op: "i64_mul_ovf".into(), dest: Some("r".into()),
+                                      srcs: vec![CIROperand::Var("a".into())], ty: "i64".into(), deopt_to: None }];
+        assert!(compile(&ctx("f", &params, "i64"), &one_src).is_err());
+        let no_dest = vec![CIRInstr { op: "i64_neg_ovf".into(), dest: None,
+                                      srcs: vec![CIROperand::Var("a".into())], ty: "i64".into(), deopt_to: None }];
+        assert!(compile(&ctx("f", &params, "i64"), &no_dest).is_err());
     }
 
     #[test]

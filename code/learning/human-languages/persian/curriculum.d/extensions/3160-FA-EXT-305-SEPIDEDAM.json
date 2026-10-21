@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-305-SEPIDEDAM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say at what time of day something happened, what happened the day after, and for how long.",
+  "prerequisites": []
+}

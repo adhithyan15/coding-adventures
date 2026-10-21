@@ -4974,6 +4974,133 @@ fn lower_function(
                 emit_lstore(&mut code, dest_slot);
             }
 
+            // ── LANG83 PR4: overflow-checked arithmetic ─────────────────────
+            //
+            // `Math.addExact` & co. would detect the overflow, but they throw
+            // `ArithmeticException` — no LANG83 kind, and no `System.out`
+            // flush — and catching it needs an exception-table entry this
+            // class writer never emits. So, like PR1b's floor division, the
+            // condition is tested *before* the plain wrapping instruction and
+            // a failing test runs the 17-byte trap sequence
+            // (`Trap.Overflow`):
+            //
+            //   add: ((a ^ (a+b)) & (b ^ (a+b))) < 0  → trap
+            //   sub: ((a ^ b) & (a ^ (a-b))) < 0      → trap
+            //   neg: a == MIN                          → trap
+            //   mul: a == -1 && b == MIN               → trap
+            //        a != 0 && (a*b) / a != b          → trap
+            //   lload a; [lload b]; ladd|lsub|lmul|lneg; lstore dest
+            //
+            // The mul guard is exact (a wrapped product differs from a*b by a
+            // non-zero multiple of 2^64, which is larger than |a|), and needs
+            // no JDK 9+ `Math.multiplyHigh`. The destination is stored last,
+            // so a dest that aliases an operand is still correct.
+            "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => {
+                use interpreter_ir::exception_kind::TRAP_OVERFLOW;
+                let unary = instr.op == "i64_neg_ovf";
+                let (a, b) = if unary {
+                    let a = one_src(func, instr, &slots)?;
+                    (a, a)
+                } else {
+                    two_srcs(func, instr, &slots)?
+                };
+                let dest = instr.dest.as_ref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let (dest_slot, dest_type) = lookup_var(dest)?;
+                if a.1 != JvmType::Long || b.1 != JvmType::Long || dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let trap = lang83_trap_bytes(cp, TRAP_OVERFLOW);
+                let (a, b) = (a.0, b.0);
+                match instr.op.as_str() {
+                    "i64_add_ovf" | "i64_sub_ovf" => {
+                        let arith = if instr.op == "i64_add_ovf" { LADD } else { LSUB };
+                        if arith == LADD {
+                            // (a ^ r) & (b ^ r)
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LADD);
+                            code.push(LXOR);
+                            emit_lload(&mut code, b);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LADD);
+                            code.push(LXOR);
+                        } else {
+                            // (a ^ b) & (a ^ r)
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LXOR);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LSUB);
+                            code.push(LXOR);
+                        }
+                        code.push(LAND);
+                        code.push(LCONST_0);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFGE, trap.len());
+                        code.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        emit_lload(&mut code, b);
+                        code.push(arith);
+                    }
+                    "i64_neg_ovf" => {
+                        emit_lload(&mut code, a);
+                        code.push(LDC2_W);
+                        code.extend_from_slice(&cp.add_long(i64::MIN).to_be_bytes());
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFNE, trap.len());
+                        code.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(LNEG);
+                    }
+                    _ => {
+                        // Guard 1: a == -1 && b == MIN.
+                        let mut b_is_min: Vec<u8> = Vec::new();
+                        emit_lload(&mut b_is_min, b);
+                        b_is_min.push(LDC2_W);
+                        b_is_min.extend_from_slice(&cp.add_long(i64::MIN).to_be_bytes());
+                        b_is_min.push(LCMP);
+                        emit_skip_if(&mut b_is_min, IFNE, trap.len());
+                        b_is_min.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(ICONST_M1);
+                        code.push(I2L);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFNE, b_is_min.len());
+                        code.extend_from_slice(&b_is_min);
+                        // Guard 2: a != 0 && (a * b) / a != b.
+                        let mut quotient: Vec<u8> = Vec::new();
+                        emit_lload(&mut quotient, a);
+                        emit_lload(&mut quotient, b);
+                        quotient.push(LMUL);
+                        emit_lload(&mut quotient, a);
+                        quotient.push(LDIV);
+                        emit_lload(&mut quotient, b);
+                        quotient.push(LCMP);
+                        emit_skip_if(&mut quotient, IFEQ, trap.len());
+                        quotient.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(LCONST_0);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFEQ, quotient.len());
+                        code.extend_from_slice(&quotient);
+                        emit_lload(&mut code, a);
+                        emit_lload(&mut code, b);
+                        code.push(LMUL);
+                    }
+                }
+                emit_lstore(&mut code, dest_slot);
+            }
+
             // ── LANG83 PR1b: `trap "<kind>"` ─────────────────────────────────
             //
             //   getstatic System.out; invokevirtual PrintStream.flush()V
@@ -5150,8 +5277,14 @@ fn lang83_trap_bytes(cp: &mut ConstantPoolBuilder, kind: &str) -> Vec<u8> {
 
 /// `ifne +(3 + skip)` — jump over the next `skip` bytes when TOS int != 0.
 fn emit_skip_if_ne(code: &mut Vec<u8>, skip: usize) {
+    emit_skip_if(code, IFNE, skip);
+}
+
+/// `<if_op> +(3 + skip)` — a one-operand `if<cond>` (`ifeq`, `ifne`, `ifge`, …)
+/// that jumps over the next `skip` bytes when its condition holds.
+fn emit_skip_if(code: &mut Vec<u8>, if_op: u8, skip: usize) {
     let offset = i16::try_from(3 + skip).expect("LANG83 trap sequences are short");
-    code.push(IFNE);
+    code.push(if_op);
     code.extend_from_slice(&offset.to_be_bytes());
 }
 

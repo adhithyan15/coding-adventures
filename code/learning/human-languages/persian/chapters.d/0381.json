@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Roles at work",
+  "label": "ch:fa-roles-at-work",
+  "canDo": "I can name roles at work, such as a supervisor, a deputy, an expert and a specialist, and talk about my duties.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C381-vazife",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can name roles at work, such as a supervisor, a deputy, an expert and a specialist, and talk about my duties.",
+    "assesses": [
+      "FA-LEX-C381-SARPARAST-03",
+      "FA-LEX-C381-SARPARAST-04",
+      "FA-LEX-C381-SARPARAST-05"
+    ]
+  }
+}

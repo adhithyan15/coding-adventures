@@ -433,6 +433,70 @@ fn handle_trap(_ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>
     }
 }
 
+// LANG83 PR4 — overflow-checked arithmetic ----------------------------------
+//
+// `i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf` produce the
+// *exact* result, or trap `Trap.Overflow` when it does not fit in an i64.
+// Rust's `checked_*` family answers exactly that question — `None` means the
+// mathematically exact result is outside `[i64::MIN, i64::MAX]`:
+//
+// | expression                | checked result | VM outcome            |
+// |---------------------------|----------------|-----------------------|
+// | `MAX + 0`, `MIN + MAX`    | `Some(..)`     | the value             |
+// | `MAX + 1`, `MIN + -1`     | `None`         | trap `Trap.Overflow`  |
+// | `MIN - 1`, `MAX - -1`     | `None`         | trap `Trap.Overflow`  |
+// | `MIN * -1`, `2^32 * 2^31` | `None`         | trap `Trap.Overflow`  |
+// | `-2^32 * 2^31` (= MIN)    | `Some(MIN)`    | `MIN`                 |
+// | `-MIN`                    | `None`         | trap `Trap.Overflow`  |
+//
+// Unlike the legacy `add`/`sub`/`mul`/`neg`, these never consult the type hint
+// for narrow-width masking: they are defined on i64 and nothing else.
+
+/// Shared body of the four checked ops: compute with `f`, trap on `None`.
+fn checked_i64_op(
+    ctx: &mut DispatchCtx,
+    instr: &IIRInstr,
+    unary: bool,
+    f: fn(i64, i64) -> Option<i64>,
+) -> Result<Option<Value>, VMError> {
+    let (a, b) = {
+        let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
+        if unary {
+            let a = resolve_src(frame, &instr.srcs, 0)?
+                .as_i64()
+                .ok_or_else(|| VMError::Custom("arithmetic on non-integer".into()))?;
+            (a, 0)
+        } else {
+            int_srcs(frame, &instr.srcs)?
+        }
+    };
+    let result = Value::Int(f(a, b).ok_or_else(|| trap(interpreter_ir::exception_kind::TRAP_OVERFLOW))?);
+    if let Some(dest) = &instr.dest {
+        ctx.frames.last_mut().unwrap().assign(dest, result.clone());
+    }
+    Ok(Some(result))
+}
+
+/// `i64_add_ovf dest <- a, b` (LANG83 PR4).
+fn handle_i64_add_ovf(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    checked_i64_op(ctx, instr, false, i64::checked_add)
+}
+
+/// `i64_sub_ovf dest <- a, b` (LANG83 PR4).
+fn handle_i64_sub_ovf(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    checked_i64_op(ctx, instr, false, i64::checked_sub)
+}
+
+/// `i64_mul_ovf dest <- a, b` (LANG83 PR4).
+fn handle_i64_mul_ovf(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    checked_i64_op(ctx, instr, false, i64::checked_mul)
+}
+
+/// `i64_neg_ovf dest <- a` (LANG83 PR4): only `-MIN` overflows.
+fn handle_i64_neg_ovf(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
+    checked_i64_op(ctx, instr, true, |a, _| a.checked_neg())
+}
+
 fn handle_neg(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let result = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
@@ -2098,6 +2162,10 @@ pub(crate) fn lookup_standard(op: &str) -> Option<StdHandlerFn> {
         "neg"          => Some(handle_neg),
         "i64_div_floor" => Some(handle_i64_div_floor),
         "i64_mod_floor" => Some(handle_i64_mod_floor),
+        "i64_add_ovf"  => Some(handle_i64_add_ovf),
+        "i64_sub_ovf"  => Some(handle_i64_sub_ovf),
+        "i64_mul_ovf"  => Some(handle_i64_mul_ovf),
+        "i64_neg_ovf"  => Some(handle_i64_neg_ovf),
         "trap"         => Some(handle_trap),
         "and"          => Some(handle_and),
         "or"           => Some(handle_or),

@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Ancient times",
+  "label": "ch:fa-ancient-times",
+  "canDo": "I can talk about antiquity, ancient things, a civilisation, an empire and a dynasty.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C352-selsele",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can talk about antiquity, ancient things, a civilisation, an empire and a dynasty.",
+    "assesses": [
+      "FA-LEX-C352-BASTAN-03",
+      "FA-LEX-C352-BASTAN-04",
+      "FA-LEX-C352-BASTAN-05"
+    ]
+  }
+}

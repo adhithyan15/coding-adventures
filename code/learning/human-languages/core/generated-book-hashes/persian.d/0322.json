@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:efb3b5997c85b909",
+  "lessonIds": [
+    "FA-C322-mahkum-shodan",
+    "FA-C322-tabrae-shodan",
+    "FA-C322-zendani",
+    "FA-C322-vasiqe",
+    "FA-C322-azad-shodan"
+  ],
+  "tex": "persian/book/chapters/ch322-verdict-and-release.tex"
+}

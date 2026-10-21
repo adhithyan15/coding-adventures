@@ -1,0 +1,11 @@
+{
+  "id": "FA-C311-khabargozari",
+  "pathSegment": "FA-PATH-311-MANBA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-311-MANBA",
+      "order": 4
+    }
+  ]
+}

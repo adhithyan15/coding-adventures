@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Earning a living",
+  "label": "ch:fa-earning-a-living",
+  "canDo": "I can talk about wages and income, overtime, bonuses and the benefits of a job.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C378-mazaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about wages and income, overtime, bonuses and the benefits of a job.",
+    "assesses": [
+      "FA-LEX-C378-DASTMOZD-03",
+      "FA-LEX-C378-DASTMOZD-04",
+      "FA-LEX-C378-DASTMOZD-05"
+    ]
+  }
+}

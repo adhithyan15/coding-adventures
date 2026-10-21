@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:00aa9c8eae4ad213",
+  "lessonIds": [
+    "FA-C389-davtalab",
+    "FA-C389-kheyriyye",
+    "FA-C389-solh",
+    "FA-C389-khoshunat",
+    "FA-C389-etiyad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch389.txt",
+  "json": "persian/narration/ch389.json",
+  "textHash": "fnv1a64:f3c7cd7c59e9b200",
+  "jsonHash": "fnv1a64:6822ad246a2be86c",
+  "findings": []
+}

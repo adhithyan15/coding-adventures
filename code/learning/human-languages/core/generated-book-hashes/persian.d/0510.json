@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:796f0d7c4c87d618",
+  "lessonIds": [
+    "FA-C510-tafrih",
+    "FA-C510-vaqt-gozarandan",
+    "FA-C510-sargarm-shodan",
+    "FA-C510-khosh-gozashtan",
+    "FA-C510-ozv-shodan"
+  ],
+  "tex": "persian/book/chapters/ch510-free-time.tex"
+}

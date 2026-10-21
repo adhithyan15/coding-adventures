@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:669a748e469c0099",
+  "lessonIds": [
+    "FA-C335-arusi",
+    "FA-C335-arus",
+    "FA-C335-hanabandan",
+    "FA-C335-mehriye",
+    "FA-C335-jahiziye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch335.txt",
+  "json": "persian/narration/ch335.json",
+  "textHash": "fnv1a64:a8ee61f6f025f00c",
+  "jsonHash": "fnv1a64:7341dd856aa2c9b2",
+  "findings": []
+}

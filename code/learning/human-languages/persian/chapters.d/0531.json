@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "On Screen",
+  "label": "ch:fa-on-screen",
+  "canDo": "I can talk about what I watch on screen.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C531-kanal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can talk about what I watch on screen.",
+    "assesses": [
+      "FA-LEX-C531-SCREEN-03",
+      "FA-LEX-C531-SCREEN-04",
+      "FA-LEX-C531-SCREEN-05"
+    ]
+  }
+}

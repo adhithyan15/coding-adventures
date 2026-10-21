@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:6a1628d70759b6b4",
+  "lessonIds": [
+    "FA-C344-nazr",
+    "FA-C344-nazri",
+    "FA-C344-halva",
+    "FA-C344-shole-zard",
+    "FA-C344-golab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch344.txt",
+  "json": "persian/narration/ch344.json",
+  "textHash": "fnv1a64:3d8f718a122dced8",
+  "jsonHash": "fnv1a64:fe65351c1a643955",
+  "findings": []
+}

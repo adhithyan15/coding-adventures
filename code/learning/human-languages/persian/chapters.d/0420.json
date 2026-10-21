@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Behind the wheel",
+  "label": "ch:fa-behind-the-wheel",
+  "canDo": "I can talk about driving: the steering wheel, driving, the gears, changing gear and the clutch.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C420-kelach",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about driving: the steering wheel, driving, the gears, changing gear and the clutch.",
+    "assesses": [
+      "FA-LEX-C420-FARMAN-03",
+      "FA-LEX-C420-FARMAN-04",
+      "FA-LEX-C420-FARMAN-05"
+    ]
+  }
+}

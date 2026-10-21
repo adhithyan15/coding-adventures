@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 399,
+  "title": "Entrance exams",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fe380201a5c35ea4",
+  "lessons": [
+    {
+      "id": "FA-C399-konkur",
+      "sequence": 20390,
+      "title": "کنکور (konkur) — the university entrance exam",
+      "headword": "کنکور",
+      "romanization": "konkur",
+      "gloss": "the university entrance exam",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdbba53e574fbd8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a priority, then the Persian for to weigh up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کنکور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کنکور (konkur) — \"the university entrance exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "برادرم برای کنکور درس میخواند. barâdaram barâye konkur dars mikhânad. My brother is studying for the entrance exam."
+            },
+            {
+              "kind": "speech",
+              "text": "The national exam for university places in Iran."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کنکور (konkur) was borrowed from French concours \"competition\" (EtymDB), from Latin concursus \"a running together\", built on currere \"to run\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konkur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konkur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "konkur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *konkur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with konkur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *konkur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a priority, then the Persian for to weigh up, then say konkur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a priority, then the Persian for to weigh up, then say *konkur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کنکور (konkur) mean? (\"The university entrance exam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C399-azmun",
+      "sequence": 20400,
+      "title": "آزمون (âzmun) — a test, an examination",
+      "headword": "آزمون",
+      "romanization": "âzmun",
+      "gloss": "a test, an examination",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d65292fcf84c1480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to weigh up, then the Persian for the university entrance exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آزمون",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آزمون (âzmun) — \"a test, an examination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آزمون زبان را دیروز دادم. âzmun-e zabân râ diruz dâdam. I took the language test yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech emtehân. Âzmun dâdan — to sit a test."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آزمون (âzmun) is native Persian, built on âzmudan \"to test, to try\": a test is a trying."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âzmun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âzmun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âzmun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âzmun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with âzmun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *âzmun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to weigh up, then the Persian for the university entrance exam, then say âzmun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to weigh up, then the Persian for the university entrance exam, then say *âzmun* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آزمون (âzmun) mean? (\"A test, an examination\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C399-qabuli",
+      "sequence": 20410,
+      "title": "قبولی (qabuli) — a pass (in an exam)",
+      "headword": "قبولی",
+      "romanization": "qabuli",
+      "gloss": "a pass (in an exam)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f60e27e38bde5d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for the university entrance exam, then the Persian for a test."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قبولی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قبولی (qabuli) — \"a pass (in an exam)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "همه برای قبولی او خوشحال شدند. hame barâye qabuli-ye u khoshhâl shodand. Everyone was happy that she passed."
+            },
+            {
+              "kind": "speech",
+              "text": "From qabul \"accepted\" + -i. Qabul shodan — to pass."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قبولی (qabuli) is built on qabul \"accepted\", usually traced to Arabic qabūl \"acceptance\", with the Persian noun suffix -i."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabuli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabuli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabuli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabuli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with qabuli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *qabuli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for the university entrance exam, then the Persian for a test, then say qabuli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for the university entrance exam, then the Persian for a test, then say *qabuli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قبولی (qabuli) mean? (\"A pass (in an exam)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C399-mardud-shodan",
+      "sequence": 20420,
+      "title": "مردود شدن (mardud shodan) — to fail (an exam)",
+      "headword": "مردود شدن",
+      "romanization": "mardud shodan",
+      "gloss": "to fail (an exam)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93d4c8f7b1cf2648",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a test, then the Persian for a pass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مردود شدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مردود شدن (mardud shodan) — \"to fail (an exam)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او در امتحان ریاضی مردود شد. u dar emtehân-e riyâzi mardud shod. He failed the maths exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech rad shodan or oftâdan. Stem shav-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مردود is usually traced to Arabic mardūd \"rejected, sent back\", from the same Arabic family as radd, the source of Persian rad; shodan \"to become\" is inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mardud shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mardud shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mardud shodan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mardud shodan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mardud shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mardud shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a test, then the Persian for a pass, then say mardud shodan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a test, then the Persian for a pass, then say *mardud shodan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مردود شدن (mardud shodan) mean? (\"To fail (an exam)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C399-moaddel",
+      "sequence": 20430,
+      "title": "معدل (mo'addel) — a grade average",
+      "headword": "معدل",
+      "romanization": "mo'addel",
+      "gloss": "a grade average",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f2fc3f5821d082d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a pass, then the Persian for to fail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: معدل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معدل (mo'addel) — \"a grade average\"."
+            },
+            {
+              "kind": "speech",
+              "text": "معدل او امسال بیست بود. mo'addel-e u emsâl bist bud. Her grade average this year was twenty."
+            },
+            {
+              "kind": "speech",
+              "text": "Iranian marks go up to twenty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معدل (mo'addel) is usually traced to Arabic mu'addal \"evened out, balanced\", from the same Arabic family as 'adl \"justice\": an average evens out the marks."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mo'addel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mo'addel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mo'addel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mo'addel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mo'addel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mo'addel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a pass, then the Persian for to fail, then say mo'addel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a pass, then the Persian for to fail, then say *mo'addel* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does معدل (mo'addel) mean? (\"A grade average\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R399-review-392-399",
+      "sequence": 20440,
+      "title": "Words from chapters 392–399 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 392-399",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54815a58e0624cd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a probability and to think likely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a probability, to think likely, a possibility, unlikely, definite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a probability, to think likely, a possibility, unlikely, definite]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "definitely, doubt, certainty, to make sure, apparently",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: definitely, doubt, certainty, to make sure, apparently]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "if only, to assess, to guarantee, a risk, to take a risk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: if only, to assess, to guarantee, a risk, to take a risk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "depending on, dependent, conditions, as soon as, as long as",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: depending on, dependent, conditions, as soon as, as long as]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to change one's mind, to put off, to postpone, to coordinate, to carry out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to change one's mind, to put off, to postpone, to coordinate, to carry out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caution, as a precaution, readiness, to come up, an option",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: caution, as a precaution, readiness, to come up, an option]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "possible, practical, a budget, a priority, to weigh up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: possible, practical, a budget, a priority, to weigh up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the university entrance exam, a test, a pass, to fail, a grade average",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the university entrance exam, a test, a pass, to fail, a grade average]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A probability? (احتمال.) To think likely? (احتمال دادن.) A possibility? (امکان.) Unlikely? (بعید.) Definite? (قطعی.) Definitely? (قطعا.) Doubt? (تردید.) Certainty? (اطمینان.) To make sure? (مطمئن شدن.) Apparently? (ظاهرا.) If only? (ای کاش.) To assess? (ارزیابی کردن.) To guarantee? (تضمین کردن.) A risk? (ریسک.) To take a risk? (خطر کردن.) Depending on? (بسته به.) Dependent? (وابسته.) Conditions? (شرایط.) As soon as? (به محض اینکه.) As long as? (تا زمانی که.) To change one's mind? (منصرف شدن.) To put off? (عقب انداختن.) To postpone? (به تعویق انداختن.) To coordinate? (هماهنگ کردن.) To carry out? (اجرا کردن.) Caution? (احتیاط.) As a precaution? (محض احتیاط.) Readiness? (آمادگی.) To come up? (پیش آمدن.) An option? (گزینه.) Possible? (امکان پذیر.) Practical? (عملی.) A budget? (بودجه.) A priority? (اولویت.) To weigh up? (سنجیدن.) The university entrance exam? (کنکور (konkur).) A test? (آزمون (âzmun).) A pass? (قبولی (qabuli).) To fail? (مردود شدن (mardud shodan).) A grade average? (معدل (mo'addel).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

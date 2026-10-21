@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:0185bb2c7b710dab",
+  "lessonIds": [
+    "FA-C449-masiryab",
+    "FA-C449-donbal-kardan",
+    "FA-C449-nazdik-shodan",
+    "FA-C449-gozashtan",
+    "FA-C449-kuche-pas-kuche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch449.txt",
+  "json": "persian/narration/ch449.json",
+  "textHash": "fnv1a64:eda3dde2eb8a6db9",
+  "jsonHash": "fnv1a64:9fd7fd8d14d87083",
+  "findings": []
+}

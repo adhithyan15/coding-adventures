@@ -1,0 +1,11 @@
+{
+  "id": "FA-C343-tashviq-kardan",
+  "pathSegment": "FA-PATH-343-BARANDE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-343-BARANDE",
+      "order": 3
+    }
+  ]
+}

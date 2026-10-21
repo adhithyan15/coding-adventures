@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:277aedd28bd06160",
+  "lessonIds": [
+    "FA-C430-maqsad",
+    "FA-C430-takhir",
+    "FA-C430-laghv-shodan",
+    "FA-C430-dir-kardan",
+    "FA-C430-bolandgu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch430.txt",
+  "json": "persian/narration/ch430.json",
+  "textHash": "fnv1a64:cecd664fa454d356",
+  "jsonHash": "fnv1a64:89338ba69e9db557",
+  "findings": []
+}

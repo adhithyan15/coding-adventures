@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:6e381134cb60d7c3",
+  "lessonIds": [
+    "FA-C426-rahbandan",
+    "FA-C426-park-kardan",
+    "FA-C426-dor-zadan",
+    "FA-C426-yektarafe",
+    "FA-C426-govahiname"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch426.txt",
+  "json": "persian/narration/ch426.json",
+  "textHash": "fnv1a64:a09d0f7a3d3c6a9c",
+  "jsonHash": "fnv1a64:2b31dcce1a8badae",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C367-ba-in-vojud",
+  "pathSegment": "FA-PATH-367-AMMA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-367-AMMA",
+      "order": 3
+    }
+  ]
+}

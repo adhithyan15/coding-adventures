@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 340,
+  "title": "Nowruz visits",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d4b26a79bf35e646",
+  "lessons": [
+    {
+      "id": "FA-C340-eydi",
+      "sequence": 17350,
+      "title": "عیدی ('eydi) — New Year money, a holiday gift",
+      "headword": "عیدی",
+      "romanization": "'eydi",
+      "gloss": "New Year money, a holiday gift",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb6307a1d36553d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for oleaster, then the Persian for a goldfish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عیدی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عیدی ('eydi) — \"New Year money, a holiday gift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پدربزرگ به همه بچه ها عیدی داد. Pedarbozorg be hame-ye bachche-hâ 'eydi dâd. Grandfather gave all the children their New Year money."
+            },
+            {
+              "kind": "speech",
+              "text": "Usually crisp new banknotes, given by the elders. 'Eydi gereftan \"to get one's New Year gift\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "'eydi adds the Persian suffix -i to 'eyd \"festival\", which is borrowed from Arabic 'īd (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'eydi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'eydi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'eydi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'eydi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'eydi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'eydi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for oleaster, then the Persian for a goldfish, then say 'eydi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for oleaster, then the Persian for a goldfish, then say *'eydi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عیدی ('eydi) mean? (\"New Year money, a holiday gift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C340-did-o-bazdid",
+      "sequence": 17360,
+      "title": "دید و بازدید (did o bâzdid) — a round of visits (at the New Year)",
+      "headword": "دید و بازدید",
+      "romanization": "did o bâzdid",
+      "gloss": "a round of visits (at the New Year)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:809a07a63e168649",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a goldfish, then the Persian for New Year money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دید و بازدید",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دید و بازدید (did o bâzdid) — \"a round of visits (at the New Year)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در روزهای عید دید و بازدید داریم. Dar ruz-hâ-ye 'eyd did o bâzdid dârim. During the New Year holidays we go round visiting family."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally \"seeing and seeing back\": you visit, then they return the visit. The elders are visited first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "did \"a seeing\" and bâzdid \"a return visit\" (bâz \"back\" + did) are both built on the past stem of the native verb didan \"to see\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "did o bâzdid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *did o bâzdid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "did o bâzdid, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *did o bâzdid*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with did o bâzdid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *did o bâzdid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a goldfish, then the Persian for New Year money, then say did o bâzdid again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a goldfish, then the Persian for New Year money, then say *did o bâzdid* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دید و بازدید (did o bâzdid) mean? (\"A round of visits (at the New Year)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C340-ayin",
+      "sequence": 17370,
+      "title": "آیین (âyin) — a rite, a ritual",
+      "headword": "آیین",
+      "romanization": "âyin",
+      "gloss": "a rite, a ritual",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ebc4b67776db1e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for New Year money, then the Persian for a round of visits."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آیین",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آیین (âyin) — \"a rite, a ritual\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پریدن از روی آتش یک آیین قدیمی است. Paridan az ru-ye âtash yek âyin-e qadimi ast. Jumping over a fire is an old ritual."
+            },
+            {
+              "kind": "speech",
+              "text": "It also means \"a religion, a creed\". Âyin-e Nowruz \"the Nowruz rites\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "âyin is a native Persian word that EtymDB glosses \"custom\" with no parent; it is usually traced to Middle Persian ēwēn, \"manner, custom\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âyin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âyin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âyin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âyin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with âyin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *âyin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for New Year money, then the Persian for a round of visits, then say âyin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for New Year money, then the Persian for a round of visits, then say *âyin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آیین (âyin) mean? (\"A rite, a ritual\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C340-rasm",
+      "sequence": 17380,
+      "title": "رسم (rasm) — a custom, a tradition",
+      "headword": "رسم",
+      "romanization": "rasm",
+      "gloss": "a custom, a tradition",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:637b11bc6aa4ccc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a round of visits, then the Persian for a rite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رسم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رسم (rasm) — \"a custom, a tradition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در خانواده ما رسم است که شب عید همه دور هم جمع شوند. Dar khânevâde-ye mâ rasm ast ke shab-e 'eyd hame dor-e ham jam' shavand. In our family it is the custom for everyone to get together on New Year's Eve."
+            },
+            {
+              "kind": "speech",
+              "text": "Broken plural rosum: rasm-o rosum \"customs and traditions\". In Arabic the word means \"a drawing\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rasm is borrowed from Arabic rasm, \"a drawing, a picture\" (EtymDB); in Persian it came to mean a custom, a traced-out way of doing things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rasm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rasm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a round of visits, then the Persian for a rite, then say rasm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a round of visits, then the Persian for a rite, then say *rasm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رسم (rasm) mean? (\"A custom, a tradition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C340-espand",
+      "sequence": 17390,
+      "title": "اسپند (espand) — wild rue (seeds burned for luck)",
+      "headword": "اسپند",
+      "romanization": "espand",
+      "gloss": "wild rue (seeds burned for luck)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:993c3301bd1f0d21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a rite, then the Persian for a custom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اسپند",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسپند (espand) — \"wild rue (seeds burned for luck)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مادربزرگم برای ما اسپند دود کرد. Mâdarbozorgam barâ-ye mâ espand dud kard. My grandmother burned wild rue for us."
+            },
+            {
+              "kind": "speech",
+              "text": "The seeds are burned on hot coals against the evil eye, at weddings and at the New Year."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "espand \"wild rue\" is a native Persian word, usually traced to Middle Persian spand; EtymDB lists no entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "espand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *espand*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "espand, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *espand*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with espand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *espand*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a rite, then the Persian for a custom, then say espand again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a rite, then the Persian for a custom, then say *espand* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اسپند (espand) mean? (\"Wild rue (seeds burned for luck)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

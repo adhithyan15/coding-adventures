@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-480-PRIDE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-480-PRIDE"
+  ],
+  "after": []
+}

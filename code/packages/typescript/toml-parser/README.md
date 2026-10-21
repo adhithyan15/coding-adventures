@@ -41,6 +41,9 @@ enabled = true
 `);
 
 console.log(ast.ruleName); // "document"
+
+// Bound lexer output before parsing untrusted input.
+const boundedAst = parseTOML(untrustedSource, 50_000);
 ```
 
 ## Grammar Rules

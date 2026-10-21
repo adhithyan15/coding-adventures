@@ -1,7 +1,7 @@
 import { expect } from "vitest";
 import type { GlyphEvidence } from "./types";
 
-// Gurmukhi reaches the app as a script tab of its own: the Punjabi track's 33
+// Gurmukhi reaches the app as a script tab of its own: the Punjabi track's 34
 // letters, recognition-only except where GNPS's Gurmukhi Sikho tracing lesson
 // cites an order.
 export default [
@@ -14,7 +14,7 @@ export default [
       // Gurmukhi was the last tab until Latin joined after it.
       expect(SCRIPTS.at(-2)!.script).toBe("gurmukhi");
       const gurmukhi = SCRIPTS.find((script) => script.script === "gurmukhi")!;
-      expect(gurmukhi.letters).toHaveLength(33);
+      expect(gurmukhi.letters).toHaveLength(34);
       expect(gurmukhi.letters.slice(0, 5).map((letter) => letter.glyph)).toEqual(["ਅ", "ਆ", "ਇ", "ਈ", "ਉ"]);
       const cited = gurmukhi.letters.filter((letter) => letter.strokeOrderSource !== undefined);
       expect(cited).toHaveLength(27);

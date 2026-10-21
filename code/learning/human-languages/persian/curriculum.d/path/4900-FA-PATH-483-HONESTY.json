@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-483-HONESTY",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-483-HONESTY"
+  ],
+  "after": []
+}

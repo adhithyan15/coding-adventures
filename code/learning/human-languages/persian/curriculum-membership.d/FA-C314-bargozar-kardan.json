@@ -1,0 +1,11 @@
+{
+  "id": "FA-C314-bargozar-kardan",
+  "pathSegment": "FA-PATH-314-RUYDAD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-314-RUYDAD",
+      "order": 3
+    }
+  ]
+}

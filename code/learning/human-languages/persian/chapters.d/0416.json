@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Accounts and passwords",
+  "label": "ch:fa-accounts-and-passwords",
+  "canDo": "I can talk about users and passwords, saving and deleting things, and updates.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C416-be-ruz-resani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can talk about users and passwords, saving and deleting things, and updates.",
+    "assesses": [
+      "FA-LEX-C416-KARBAR-03",
+      "FA-LEX-C416-KARBAR-04",
+      "FA-LEX-C416-KARBAR-05"
+    ]
+  }
+}

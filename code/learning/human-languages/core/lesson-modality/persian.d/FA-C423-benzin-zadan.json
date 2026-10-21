@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C423-benzin-zadan",
+    "language": "persian",
+    "chapter": 423,
+    "sequence": 21660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c1c6ccb30d26aa6"
+  },
+  "findings": []
+}

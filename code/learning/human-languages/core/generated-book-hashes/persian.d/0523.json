@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:17d63ca6d240bd1b",
+  "lessonIds": [
+    "FA-C523-teatr",
+    "FA-C523-sahne",
+    "FA-C523-namayeshname",
+    "FA-C523-tamashachi",
+    "FA-C523-naqsh"
+  ],
+  "tex": "persian/book/chapters/ch523-at-the-theatre.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C371-be-hamin-dalil",
+  "pathSegment": "FA-PATH-371-DALIL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-371-DALIL",
+      "order": 1
+    }
+  ]
+}

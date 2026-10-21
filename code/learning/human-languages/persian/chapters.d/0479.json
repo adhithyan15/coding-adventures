@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "After the rain",
+  "label": "ch:fa-after-the-rain",
+  "canDo": "I can describe the sky after rain: a rainbow, a breeze, the sun shining, sunset and sunrise.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R479-review-final-479",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can describe the sky after rain: a rainbow, a breeze, the sun shining, sunset and sunrise.",
+    "assesses": [
+      "FA-LEX-C479-RANGINKAMAN-03",
+      "FA-LEX-C479-RANGINKAMAN-04",
+      "FA-LEX-C479-RANGINKAMAN-05"
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 # Changelog — interpreter-ir
 
-## [0.13.0] — Unreleased (LANG84 phase 4b — module release provenance)
+## Unreleased (LANG84 phase 4b — module release provenance)
 
 - **`IIRModule::release: Option<String>`** (LANG84 C4.1): the exact
   `releases.csv` ID a release-versioned frontend compiled against, such as
@@ -11,6 +11,24 @@
   language's default release.
 - Breaking for struct literals: every `IIRModule { .. }` literal in the
   repository (161 of them, across 14 crates) now names `release: None`.
+
+## [0.13.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **Registry:** four new type-first Ops, `introduced_by: "LANG83 PR4"`
+  (`LANG83_PR4`, `OpSpec::is_pr4`): `i64_add_ovf`, `i64_sub_ovf`,
+  `i64_mul_ovf` (arity 2) and `i64_neg_ovf` (arity 1). Each yields the exact
+  result or traps `Trap.Overflow` when it does not fit in i64 (`may_trap:
+  [Trap.Overflow]`). Every backend lowers them in the same slice, so there is
+  no "not yet lowered" phase. The names avoid the `add_`/`sub_`/`mul_`/`neg_`
+  dispatch prefixes the native backends and the generic JIT match on.
+- **`opcodes::has_side_effects`** includes the four ops, so dead-code
+  elimination keeps an unused checked add (its trap is observable).
+  `is_known_op`, `is_value_producing` and `trap_kinds` pick them up from the
+  registry with no edit.
+- **New test `every_trapping_lang83_op_has_side_effects`**, derived from the
+  registry: a future LANG83 op that may trap cannot be registered without its
+  `has_side_effects` entry.
+- `exception_kind` docs: `Trap.Overflow` is now raised by the PR4 family.
 
 ## [0.12.0] — 2026-10-19 (LANG83 PR1a — standard operation registry)
 

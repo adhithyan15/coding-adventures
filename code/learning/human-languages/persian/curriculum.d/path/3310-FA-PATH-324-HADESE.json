@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-324-HADESE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-324-HADESE"
+  ],
+  "after": []
+}

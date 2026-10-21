@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C371-leza",
+    "language": "persian",
+    "chapter": 371,
+    "sequence": 18990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c7e906e6a86e658"
+  },
+  "findings": []
+}

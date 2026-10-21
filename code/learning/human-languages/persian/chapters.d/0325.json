@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Falls and injuries",
+  "label": "ch:fa-falls-and-injuries",
+  "canDo": "I can say that someone fell over, twisted an ankle, got hurt or harmed, or broke a bone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C325-shekastegi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can say that someone fell over, twisted an ankle, got hurt or harmed, or broke a bone.",
+    "assesses": [
+      "FA-LEX-C325-ZAMINKHORDAN-03",
+      "FA-LEX-C325-ZAMINKHORDAN-04",
+      "FA-LEX-C325-ZAMINKHORDAN-05"
+    ]
+  }
+}

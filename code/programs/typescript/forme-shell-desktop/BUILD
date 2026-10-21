@@ -1,5 +1,11 @@
 set -e
 
+(cd ../../../packages/typescript/cli-builder && npm ci --quiet)
+(cd ../../../packages/typescript/grammar-tools && npm ci --quiet)
+(cd ../../../packages/typescript/lexer && npm ci --quiet)
+(cd ../../../packages/typescript/parser && npm ci --quiet)
+(cd ../../../packages/typescript/toml-lexer && npm ci --quiet)
+(cd ../../../packages/typescript/toml-parser && npm ci --quiet)
 (cd ../../../packages/typescript/document-ast && npm ci --quiet)
 (cd ../../../packages/typescript/forme-types && npm ci --quiet)
 (cd ../../../packages/typescript/forme-interactivity-ir && npm ci --quiet)

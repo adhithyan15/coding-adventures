@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:c1ec549742d6155a",
+  "lessonIds": [
+    "FA-C412-sarmaye",
+    "FA-C412-sarmaye-gozari-kardan",
+    "FA-C412-saham",
+    "FA-C412-burs",
+    "FA-C412-varshekaste"
+  ],
+  "tex": "persian/book/chapters/ch412-investing.tex"
+}

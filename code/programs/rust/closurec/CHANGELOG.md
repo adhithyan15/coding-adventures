@@ -4,6 +4,41 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - switch cases keep shared `var`/`function`/`class` declarations (#17879)
+
+`closure-pass-dce` truncated a case's dead tail, and collapsed a constant
+switch to its matched case, without regard for the declarations the whole
+switch body shares. A dropped `var x` left `x` reading the global (`"string"`
+where the source prints `"undefined"`), and a dropped `function g` became a
+`ReferenceError`. `tests/regression_switch_declarations.rs` compiles five
+shapes at SIMPLE and ADVANCED and, when `node` is installed, checks that each
+output prints what the source prints.
+
+### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
+
+`console.log(x + x + … + x)` with about 1,000 or more terms used to overflow
+the stack in a debug build, and 10,000 or more in release. The process died
+with SIGABRT (exit 134) and gave no diagnostic. Two changes fix this:
+
+- **Chain bound.** closurec now measures chain depth with
+  `javascript_parser::check_chain_spine` before building the typed AST. Past
+  `MAX_CHAIN_SPINE` (16,384 units, about 8,000 `+` operands or 16,000 calls),
+  SIMPLE and ADVANCED fail at the parse stage. They print a located
+  diagnostic, exit 1 and write no output. Externs files past the bound are
+  treated like externs files that fail to parse.
+- **Compiler thread.** `run_compiler` runs the compile on a worker thread with
+  a 1 GiB stack reservation. Every chain within the bound therefore compiles
+  on every platform, including Windows, where the main thread only has 1 MiB.
+  If that thread can't be started, the compile fails closed with exit 2
+  (`could not start the compiler thread …`) instead of running on a smaller
+  stack.
+
+`tests/regression_chain_depth.rs` checks both changes in a debug build:
+
+- The issue's 10,000-term reproduction fails cleanly.
+- For six chain shapes, the deepest chain the bound admits compiles at SIMPLE
+  and ADVANCED, and one link deeper fails cleanly.
+
 ### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
 
 `var x = 1; for (let x of [7]) console.log(x); console.log(x);` compiled at
@@ -13,7 +48,6 @@ loop scope. `tests/regression_for_head_shadow.rs` compiles the issue's matrix at
 SIMPLE and ADVANCED, checks that the outer declaration survives and pins the
 output bytes, and, when `node` is installed, checks that the output prints
 what the source prints.
-
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph
@@ -47,6 +81,25 @@ strict ACL setup. Optional diagnostic failure cannot hide an ACL setup error.
 A child-PATH shadow regression verifies the native utility and intended denial;
 a missing setup path remains fatal. No production publication checks change.
 Fresh complete validation, exact-head review and three-platform CI are required.
+
+### Added - ladder rung for an array spread before an index read (#15942)
+
+`ladder_t6_array_spread_index_{ws,simple,advanced}` compiles
+`var a = [..."xy", 5]; console.log(a[1]);`. Its `expected.stdout` was captured
+from the pinned `v20260915` jar, verified by sha256 and byte length, using the
+manifest's `closure-flags-file-v1` argv under Java 21.0.10. This is the shape
+behind the CLOC28 miscompile, where folding past the spread printed `5`
+instead of `y`. Until now no rung covered it.
+
+- WHITESPACE_ONLY and SIMPLE match upstream byte for byte.
+- ADVANCED is a known divergence: closurec doesn't inline the single-use
+  array (CCR-068), but its output is still correct.
+
+The other changes that go with the new rung:
+
+- The ledger gains one entry; its count pin moves from 59 to 60.
+- The fixture tripwire moves from 797 to 800.
+- The parity figures are now 55/58, 36/58 and 24/58.
 
 ### Fixed - token-independent OWNER RIGHTS admission (CV02)
 
@@ -126,6 +179,24 @@ ACL rejection. Strict all-target Linux/macOS cross-checks pass; native Unix runt
 and final complete security review remain pending. All 20 Windows publication
 units and four artifact process tests pass after integration. #16905 remains draft.
 
+### Fixed - WHITESPACE_ONLY keeps newline statement boundaries (#17840, CCR-080 #15867)
+
+WHITESPACE_ONLY dropped every newline without restoring the statement
+boundary it supplied. `a()⏎b()` compiled to the SyntaxError `a()b()`, and so
+did any semicolon-light program.
+
+The token path now splices a `;` wherever ECMAScript ASI inserts one. The
+positions come from `javascript_parser::asi::asi_insertion_points`. The
+end-of-input point is also CCR-080's missing program-final `;` after a
+`do…while`. Two follow-on fixes keep the output byte-identical to upstream:
+
+- An ASI `;` that lands directly in a class body is dropped.
+- The gap-074/076/079 body flatten also takes a single statement that ends
+  in its own `;` (`with(o){a();}` → `with(o)a();`).
+
+`tests/regression_ws_newline_asi.rs` checks 23 shapes against bytes captured
+from the `v20260915` jar, and confirms each output parses under node.
+
 ### Fixed locally - fresh verification opens during policy preflight (CV02)
 
 Independent review found that retained probe handles continued to permit policy
@@ -137,6 +208,43 @@ while the separate empty probe has its intended policy, reopen its active path
 with production verification access and verify identity, zero length and policy.
 Unsupported verification policies now reject before original mutation.
 
+### Changed - refuse private class elements, as upstream does (CCR-075 slice 1, #15860, CLOC44)
+
+Upstream `v20260915` rejects every private element with
+`JSC_UNSUPPORTED_LANGUAGE_FEATURE` ("Private elements."). The owner decided
+that closurec refuses what Closure refuses, so closurec now rejects them too.
+Every input is scanned before compilation, and a refused program produces:
+
+- stderr byte-identical to upstream's: one located error with an excerpt and
+  caret per occurrence, plus the extra error a `static` field gets, then
+  `N error(s), 0 warning(s)`;
+- exit status `min(N, 127)`;
+- no stdout, no output file and no sidecar.
+
+The ladder gains a third verdict, `DeclinedIdentically`. A rung upstream
+refuses records `expected.exit` and `expected.stderr` from the jar, and
+counts as agreement when closurec declines identically. The three
+`private_field` rungs moved there: the ledger drops from 59 to 56, and parity
+is now 56/58, 37/58 and 25/58. The four CCR-081 `simple-private-*` fixtures
+now assert the identical refusal. They had pinned closurec's old output.
+
+Diagnostics stay byte-identical up to 16 MiB. Past that, closurec stops
+printing error blocks but keeps the true count and exit status, because
+upstream's output grows with errors × line length on a hostile line. Memory
+stays proportional to the input. See CLOC44 for both.
+
+### Fixed - a constant `switch` no longer loses a nested `break` (#17842)
+
+`while(c--){switch(1){case 1:if(x)break;b();break}d()}` collapsed the switch,
+so its inner `break` exited the loop and `d()` never ran. The fix is in
+`closure-pass-dce`. `tests/regression_switch_collapse_break.rs` runs both
+shapes under node at SIMPLE and ADVANCED.
+
+### Fixed - dead code after a top-level `throw` is dropped (CCR-086, #15923)
+
+`throw 1;console.log(1);` now compiles to `throw 1;` at SIMPLE and ADVANCED,
+as upstream does. The fix is in `closure-pass-dce`.
+`tests/regression_toplevel_throw.rs` pins five rows captured from the jar.
 ### Fixed locally - verified Windows publication policies (CV02)
 
 Create prepared directories and files with atomically protected current-user
@@ -975,6 +1083,15 @@ conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
 `rename-globals`, `rename-properties`) appear in the trace exactly when they
 were registered, that every reported name is a known pass, and pinning the
 scheduler's real order so a future fix to #15829 must consciously update it.
+
+### Fixed - outer binding shadowed in a `switch` case survives (#17836)
+
+`var x = 1; switch (1) { case 1: let x = 2; } console.log(x);` compiled at
+SIMPLE and ADVANCED without `var x = 1;` and threw `ReferenceError`. The fix
+is in `closure-scope-analyzer` 0.22.0, which gives the case block its own
+scope. `tests/regression_switch_case_shadow.rs` pins four shapes at both
+levels and, when `node` is present, checks that the output prints what the
+source prints.
 
 ### Fixed - strict clippy passes on closurec (#15939)
 

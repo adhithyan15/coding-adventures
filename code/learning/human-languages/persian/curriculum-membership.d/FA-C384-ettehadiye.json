@@ -1,0 +1,11 @@
+{
+  "id": "FA-C384-ettehadiye",
+  "pathSegment": "FA-PATH-384-ETESAB",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-384-ETESAB",
+      "order": 1
+    }
+  ]
+}

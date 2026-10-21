@@ -1,0 +1,11 @@
+{
+  "id": "FA-C536-ashghal",
+  "pathSegment": "FA-PATH-536-CHORES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-536-CHORES",
+      "order": 4
+    }
+  ]
+}

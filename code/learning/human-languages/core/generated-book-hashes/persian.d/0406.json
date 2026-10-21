@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:4f35d847a45b9fa8",
+  "lessonIds": [
+    "FA-C406-qazi",
+    "FA-C406-mottaham",
+    "FA-C406-shahed",
+    "FA-C406-hokm",
+    "FA-C406-mohakeme"
+  ],
+  "tex": "persian/book/chapters/ch406-in-court.tex"
+}

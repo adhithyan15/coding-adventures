@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:4b3fd0ef46d06a03",
+  "lessonIds": [
+    "FA-C318-jenayat",
+    "FA-C318-qatl",
+    "FA-C318-qatel",
+    "FA-C318-hamle-kardan",
+    "FA-C318-aslahe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch318.txt",
+  "json": "persian/narration/ch318.json",
+  "textHash": "fnv1a64:8c4b89451d9baf37",
+  "jsonHash": "fnv1a64:9d79c959cbee0c7f",
+  "findings": []
+}

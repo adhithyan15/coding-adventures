@@ -253,6 +253,19 @@ historical context with status `RESOLVED` and a link to the fix PR.
   gets none. Upstream WHITESPACE_ONLY bytes are in #15919, probed under Java
   21.0.10.
 
+### CCR-083 (#15918) — a `do…while` in a body slot is braced
+
+- **Upstream rule.** At `10ca677a`, `CodeGenerator.addNonEmptyStatement`
+  unwraps a one-statement BLOCK body unless `isBlockDeclOrDo` is true. That
+  holds for `LET`, `CONST`, `FUNCTION`, `CLASS` and `DO`. Closure's AST always
+  gives `IF`, `WHILE`, `FOR`, `FOR_IN`, `FOR_OF`, `WITH` and `DO` a BLOCK
+  body. `LABEL` passes `allowNonBlockChild=true`, so it keeps a bare child.
+- **AST emitter (SIMPLE/ADVANCED): resolved.** `emit_body` braces a bare
+  `do…while` in every one of those slots. `else`/`do` drop the separating
+  space before a `{`-led body.
+- **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
+  ASI), since both rewrite the same statement boundaries.
+
 ### gap-031 — empty `{}` body collapses to `;`
 
 - **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.
@@ -1414,6 +1427,15 @@ after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
 inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
 survives. Placeholder: `drops_code_after_break_in_loop_block`.
 
+### #17842 — the switch collapse retargeted a nested `break`
+
+**Resolved (soundness).** The gap-014 constant-switch collapse now declines
+when the matched case still holds a non-trailing unlabelled `break` aimed at
+the switch. Without the switch, that `break` would hit the enclosing loop.
+
+**Still open (size):** upstream instead rewrites the case: `if(x)break;g()`
+becomes `x||g()`.
+
 ### #17841 — fold-control-flow's dead-after-`return` drop ignored hoisting
 
 **Resolved.** `closure-pass-fold-control-flow` truncated a block after
@@ -1427,6 +1449,19 @@ deleted:
 `is_droppable_dead_statement` now applies, per statement, the same whitelist as DCE's
 `tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
 such tails, which is the CCR-082 review fix.
+
+### #17879 — DCE dropped declarations a switch body shares
+
+**Resolved (soundness).** A switch body is one scope: a `var` in any case is
+hoisted to the function, and a `function`/`class` in any case is visible to
+every case. DCE's per-case dead-tail truncation now applies
+`tail_is_safe_to_truncate`. The constant-discriminant collapse, and the
+no-match collapse to `;`, decline unless every discarded case is safe to
+drop.
+
+**Still open (size):** upstream folds these further. For example,
+`switch(2){case 1: var x=1; break; case 2: return typeof x}` becomes
+`return"undefined"`. closurec keeps the switch.
 
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 

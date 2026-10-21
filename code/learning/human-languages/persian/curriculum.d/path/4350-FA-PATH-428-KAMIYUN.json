@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-428-KAMIYUN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-428-KAMIYUN"
+  ],
+  "after": []
+}

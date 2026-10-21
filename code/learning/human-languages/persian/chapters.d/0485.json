@@ -1,0 +1,19 @@
+{
+  "chapter": 485,
+  "title": "Worry and Stress",
+  "label": "ch:fa-worry-and-stress",
+  "canDo": "I can talk about worry and stress.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C485-ah-keshidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can talk about worry and stress.",
+    "assesses": [
+      "FA-LEX-C485-WORRY-03",
+      "FA-LEX-C485-WORRY-04",
+      "FA-LEX-C485-WORRY-05"
+    ]
+  }
+}

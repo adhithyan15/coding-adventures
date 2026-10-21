@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Degrees and graduation",
+  "label": "ch:fa-degrees-and-graduation",
+  "canDo": "I can talk about my education, say that someone graduated, presented a paper and holds a degree.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C403-doktora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about my education, say that someone graduated, presented a paper and holds a degree.",
+    "assesses": [
+      "FA-LEX-C403-TAHSILAT-03",
+      "FA-LEX-C403-TAHSILAT-04",
+      "FA-LEX-C403-TAHSILAT-05"
+    ]
+  }
+}

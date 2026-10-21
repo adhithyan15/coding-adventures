@@ -1,0 +1,11 @@
+{
+  "id": "FA-C474-seylab",
+  "pathSegment": "FA-PATH-474-RAGBAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-474-RAGBAR",
+      "order": 4
+    }
+  ]
+}

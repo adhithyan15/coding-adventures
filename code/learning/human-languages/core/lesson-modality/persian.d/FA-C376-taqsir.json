@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C376-taqsir",
+    "language": "persian",
+    "chapter": 376,
+    "sequence": 19220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e821c22d66a18ff"
+  },
+  "findings": []
+}

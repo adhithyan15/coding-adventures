@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-448-MIYANBOR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-448-MIYANBOR"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:68abb322c5de0b9d",
+  "lessonIds": [
+    "FA-C440-sar-o-seda",
+    "FA-C440-kasif",
+    "FA-C440-seda-dadan",
+    "FA-C440-badbu",
+    "FA-C440-abgarmkon"
+  ],
+  "tex": "persian/book/chapters/ch440-when-things-go-wrong.tex"
+}

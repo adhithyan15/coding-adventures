@@ -1,0 +1,11 @@
+{
+  "id": "FA-C357-tanur",
+  "pathSegment": "FA-PATH-357-KHAMIR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-357-KHAMIR",
+      "order": 4
+    }
+  ]
+}

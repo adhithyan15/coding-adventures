@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:ee8a37b03427f283",
+  "lessonIds": [
+    "FA-C420-farman",
+    "FA-C420-ranandegi-kardan",
+    "FA-C420-dande",
+    "FA-C420-dande-avaz-kardan",
+    "FA-C420-kelach"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch420.txt",
+  "json": "persian/narration/ch420.json",
+  "textHash": "fnv1a64:2bcf66b9aab76b0f",
+  "jsonHash": "fnv1a64:46b87ffe1fe29676",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:2d9937b5a1d34685",
+  "lessonIds": [
+    "FA-C291-tarif-kardan",
+    "FA-W291-eyn",
+    "FA-C291-avval-bad",
+    "FA-C291-vaqti",
+    "FA-C291-khandani",
+    "FA-R291-a-story-in-order"
+  ],
+  "tex": "persian/book/chapters/ch291-then-and-in-the-end-a-story-in-order.tex"
+}

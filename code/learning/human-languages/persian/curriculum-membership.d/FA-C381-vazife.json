@@ -1,0 +1,11 @@
+{
+  "id": "FA-C381-vazife",
+  "pathSegment": "FA-PATH-381-SARPARAST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-381-SARPARAST",
+      "order": 4
+    }
+  ]
+}

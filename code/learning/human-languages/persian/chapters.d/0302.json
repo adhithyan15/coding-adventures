@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "Beginnings and endings",
+  "label": "ch:fa-beginnings-and-endings",
+  "canDo": "I can say when something began and when it came to an end.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C302-saranjam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can say when something began and when it came to an end.",
+    "assesses": [
+      "FA-LEX-C302-AGHAZ-03",
+      "FA-LEX-C302-AGHAZ-04",
+      "FA-LEX-C302-AGHAZ-05"
+    ]
+  }
+}

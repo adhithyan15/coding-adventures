@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Poetry",
+  "label": "ch:fa-poetry",
+  "canDo": "I can talk about poems and poets.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C521-beyt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can talk about poems and poets.",
+    "assesses": [
+      "FA-LEX-C521-POETRY-03",
+      "FA-LEX-C521-POETRY-04",
+      "FA-LEX-C521-POETRY-05"
+    ]
+  }
+}

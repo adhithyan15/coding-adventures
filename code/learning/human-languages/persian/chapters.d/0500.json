@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Uncles, Aunts and Cousins",
+  "label": "ch:fa-uncles-aunts-and-cousins",
+  "canDo": "I can name uncles, aunts and cousins.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C500-khaharzade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can name uncles, aunts and cousins.",
+    "assesses": [
+      "FA-LEX-C500-UNCLES-03",
+      "FA-LEX-C500-UNCLES-04",
+      "FA-LEX-C500-UNCLES-05"
+    ]
+  }
+}

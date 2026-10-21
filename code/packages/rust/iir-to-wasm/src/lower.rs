@@ -3477,6 +3477,128 @@ fn emit_instr(
             code.extend(encode_local_set(rd));
         }
 
+        // ── LANG83 PR4: overflow-checked arithmetic ──────────────────────────
+        //
+        // WASM has no overflow flag and no wide multiply, so overflow is
+        // computed from the operands. No scratch locals: a value needed twice
+        // is recomputed (cheaper than widening the locals section, and the
+        // operands are plain `local.get`s).
+        //
+        //   add:  r = a + b overflows  ⇔  ((a ^ r) & (b ^ r)) < 0
+        //         (both operands have the same sign and r's sign differs)
+        //   sub:  r = a - b overflows  ⇔  ((a ^ b) & (a ^ r)) < 0
+        //         (the operands' signs differ and r's sign differs from a's)
+        //   neg:  overflows  ⇔  a == MIN
+        //   mul:  a == -1 && b == MIN  → overflow (and the check below would
+        //         itself compute MIN / -1, which WASM traps on);
+        //         otherwise, for a != 0, overflow  ⇔  (a * b) / a != b
+        //         (a wrapped product differs from a*b by a non-zero multiple
+        //         of 2^64 > |a|, so it can never divide back to b).
+        //
+        // Each test is `if ; <trap Trap.Overflow> ; end`, and the destination
+        // is written only after every test passed.
+        "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => {
+            use interpreter_ir::exception_kind::{trap_kind_id, TRAP_OVERFLOW};
+            let overflow = trap_kind_id(TRAP_OVERFLOW).expect("built-in kind");
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            let unary = instr.op == "i64_neg_ovf";
+            let ra = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            let rb = if unary { ra } else { get_src_reg(&instr.srcs, 1, reg_map, fn_name)? };
+            if !(slot_is_i64(ra) && slot_is_i64(rb) && slot_is_i64(rd)) {
+                return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: format!("{} operates on i64 operands and an i64 dest", instr.op),
+                });
+            }
+            let get = |code: &mut Vec<u8>, r: u32| code.extend(encode_local_get(r));
+            match instr.op.as_str() {
+                "i64_add_ovf" | "i64_sub_ovf" => {
+                    let arith = if instr.op == "i64_add_ovf" { I64_ADD } else { I64_SUB };
+                    // r = a op b, pushed fresh each time it is needed.
+                    let push_r = |code: &mut Vec<u8>| {
+                        code.extend(encode_local_get(ra));
+                        code.extend(encode_local_get(rb));
+                        code.push(arith);
+                    };
+                    if arith == I64_ADD {
+                        get(code, ra);
+                        push_r(code);
+                        code.push(I64_XOR); // a ^ r
+                        get(code, rb);
+                        push_r(code);
+                        code.push(I64_XOR); // b ^ r
+                    } else {
+                        get(code, ra);
+                        get(code, rb);
+                        code.push(I64_XOR); // a ^ b
+                        get(code, ra);
+                        push_r(code);
+                        code.push(I64_XOR); // a ^ r
+                    }
+                    code.push(I64_AND);
+                    code.extend(encode_i64_const(0));
+                    code.push(I64_LT_S);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    emit_lang83_trap(code, lang83, overflow, fn_name)?;
+                    code.push(END);
+                    push_r(code);
+                }
+                "i64_neg_ovf" => {
+                    get(code, ra);
+                    code.extend(encode_i64_const(i64::MIN));
+                    code.push(I64_EQ);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    emit_lang83_trap(code, lang83, overflow, fn_name)?;
+                    code.push(END);
+                    code.extend(encode_i64_const(0));
+                    get(code, ra);
+                    code.push(I64_SUB);
+                }
+                _ => {
+                    // a == -1 && b == MIN
+                    get(code, ra);
+                    code.extend(encode_i64_const(-1));
+                    code.push(I64_EQ);
+                    get(code, rb);
+                    code.extend(encode_i64_const(i64::MIN));
+                    code.push(I64_EQ);
+                    code.push(I32_AND);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    emit_lang83_trap(code, lang83, overflow, fn_name)?;
+                    code.push(END);
+                    // a != 0 && (a * b) / a != b
+                    get(code, ra);
+                    code.push(I64_EQZ);
+                    code.push(I32_EQZ);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    get(code, ra);
+                    get(code, rb);
+                    code.push(I64_MUL);
+                    get(code, ra);
+                    code.push(I64_DIV_S);
+                    get(code, rb);
+                    code.push(I64_NE);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    emit_lang83_trap(code, lang83, overflow, fn_name)?;
+                    code.push(END);
+                    code.push(END);
+                    get(code, ra);
+                    get(code, rb);
+                    code.push(I64_MUL);
+                }
+            }
+            code.extend(encode_local_set(rd));
+        }
+
         // ── io_out → call $__print_i64 ────────────────────────────────────────
         //
         // `io_out Var("%val")`
@@ -5741,7 +5863,14 @@ pub fn lower_iir_to_wasm(
         .functions
         .iter()
         .flat_map(|f| &f.instructions)
-        .any(|i| matches!(i.op.as_str(), "trap" | "i64_div_floor" | "i64_mod_floor"));
+        .any(|i| {
+            matches!(
+                i.op.as_str(),
+                "trap" | "i64_div_floor" | "i64_mod_floor"
+                    // LANG83 PR4: the overflow-checked ops trap Trap.Overflow.
+                    | "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf"
+            )
+        });
     let mut lang83 = Lang83Imports::default();
     if lang83_uses_write_i64 {
         lang83.write_i64 = Some(next_import_idx);

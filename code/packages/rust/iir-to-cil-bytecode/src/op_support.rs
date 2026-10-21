@@ -51,6 +51,11 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("neg", Lowered),
     ("i64_div_floor", Lowered),
     ("i64_mod_floor", Lowered),
+    // LANG83 PR4 — overflow-checked arithmetic (`Trap.Overflow`).
+    ("i64_add_ovf", Lowered),
+    ("i64_sub_ovf", Lowered),
+    ("i64_mul_ovf", Lowered),
+    ("i64_neg_ovf", Lowered),
     // ── Comparison ──────────────────────────────────────────────────────────
     ("cmp_eq", Lowered),
     ("cmp_ne", Lowered),

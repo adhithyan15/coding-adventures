@@ -1,0 +1,11 @@
+{
+  "id": "FA-C291-avval-bad",
+  "pathSegment": "FA-PATH-291-STORY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-291-STORY",
+      "order": 2
+    }
+  ]
+}

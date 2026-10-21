@@ -1,0 +1,11 @@
+{
+  "id": "FA-C509-pazel",
+  "pathSegment": "FA-PATH-509-GAMES",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-509-GAMES",
+      "order": 0
+    }
+  ]
+}

@@ -7,7 +7,7 @@
   "signature": "A headline runs along the top of most letters, as in Devanagari, but the letters are rounder and simpler, with no conjunct stacks; three vowel bearers (ੳ ਅ ੲ) carry the independent vowels.",
   "complete": false,
   "combination": "A consonant carries an inherent vowel a (ਕ = ka). A vowel sign replaces it (ਨ + ਾ → ਨਾ = nā); ਿ is written in front of the consonant it follows in speech. Vowels with no consonant ride on a bearer (ਅ + ਾ → ਆ ā). Bindi and tippi nasalize a vowel, addak doubles the next consonant, and the dot below (਼) marks borrowed sounds (ਸ਼ sha). A headline runs along the top of a word, joining its letters.",
-  "notes": "The Punjabi track's own inventory: exactly the letters, signs and digits its lessons read (33 letters, 14 signs, 4 digits), each `sound` taken from that letter's own lesson romanization. It is not the whole alphabet (ੳ ੲ ਙ ਞ ਢ ਯ, the other six digits and the other nukta letters are not yet read), so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from the Apache-2.0 tracing lesson of GNPS's Gurmukhi Sikho app (order, start, direction and lifts only; no checkpoint is copied), with Omniglot copyists' counts and shares as corroboration. Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. The vowel signs, bindi, tippi, addak, halant and the dot below have no stroke-order source yet, so they stay undrawn; ਝ and ਧ, which the source covers, are left for a later batch because no lesson would print them yet.",
+  "notes": "The Punjabi track's own inventory: exactly the letters, signs and digits its lessons read (34 letters, 14 signs, 4 digits), each `sound` taken from that letter's own lesson romanization. It is not the whole alphabet (ੳ ੲ ਙ ਞ ਢ, the other six digits and the other nukta letters are not yet read), so `complete` is false. Stroke order is source-gated: only rows with `penLifts` and `strokeOrderSource` carry a cited order, from the Apache-2.0 tracing lesson of GNPS's Gurmukhi Sikho app (order, start, direction and lifts only; no checkpoint is copied), with Omniglot copyists' counts and shares as corroboration. Rows without them are recognition-only: `strokeOrder: []` means NOT VERIFIED, never none. The vowel signs, bindi, tippi, addak, halant and the dot below have no stroke-order source yet, so they stay undrawn; ਝ and ਧ, which the source covers, are left for a later batch because no lesson would print them yet.",
   "letters": [
     {
       "glyph": "ਅ",
@@ -669,6 +669,17 @@
         "url": "https://github.com/codemanxdev/gnps_learning_hub/blob/de1e56014cb0caf7e56de2320681781cae6a7e41/lib/data/lessons/lesson_tracing.dart#L952",
         "variation": "GNPS's children's Punjabi app (Apache-2.0; developer CodeManX) has a tracing lesson whose checkpoints the developer entered over the Noto Sans Gurmukhi letter, one list per pen-down stroke, and whose trace widget makes the child reach them in order. It writes ਮ in two pen-down strokes: from the top left along the bar's left part, down the left side, clockwise round the loop and right along the bar to the stem; then from the top right, left along the bar's right part and down the stem. In the bundled Noto Sans Gurmukhi outline this letter's top bar is split, with a gap above the body, and the source draws no separate headline: the first stroke opens along the bar's left part and the last stroke opens by running right to left along its right part before turning down the stem. The outline and the source agree, so there is no headline stroke to place first or last. The outline prints the loop as a solid tail, so the path loops clockwise inside it. Omniglot (Lake, Salakhutdinov & Tenenbaum, Science 350:1332, 2015; https://github.com/brendenlake/omniglot, MIT licence) holds 20 drawings of ਮ, each by a different non-native copyist; only counts and shares are cited. 40% (8 of 20) draw it in two strokes, the source's count and their most common one. For the first stroke of the body, 85% (17 of 20) start in the same part of the letter as the source and 85% (17 of 20) set off in the same direction, within 45 degrees. Only the order, the start, the direction and the lifts are taken from the source; no checkpoint coordinate is copied, and the path is fitted to the bundled Noto Sans Gurmukhi outline. Handwriting varies by writer."
       }
+    },
+    {
+      "glyph": "ਯ",
+      "sound": "ya",
+      "role": "consonant",
+      "inherentVowel": "a",
+      "components": [
+        "ਯ  ya — consonant (inherent “a”)"
+      ],
+      "strokeOrder": [],
+      "strokeOrderNote": ""
     },
     {
       "glyph": "ਰ",

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C470-otraq-kardan",
+  "pathSegment": "FA-PATH-470-CHADOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-470-CHADOR",
+      "order": 4
+    }
+  ]
+}

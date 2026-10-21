@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:2b1c277795bc53f8",
+  "lessonIds": [
+    "FA-C450-markaz",
+    "FA-C450-hume",
+    "FA-C450-borj",
+    "FA-C450-mojassame",
+    "FA-C450-favvare"
+  ],
+  "tex": "persian/book/chapters/ch450-the-town-centre.tex"
+}

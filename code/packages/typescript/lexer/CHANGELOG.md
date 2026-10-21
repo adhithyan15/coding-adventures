@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Fixed
 
+- Match grammar regular expressions against the original source with sticky
+  offsets instead of allocating the unread suffix for every token. Add an
+  optional `maxTokens` emission bound for untrusted inputs.
 - Removed the tokenizer's dead local `peek` helper so strict downstream
   TypeScript builds do not fail on an unused declaration.
 

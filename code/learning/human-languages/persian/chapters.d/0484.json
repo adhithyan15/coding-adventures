@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Sadness and Regret",
+  "label": "ch:fa-sadness-and-regret",
+  "canDo": "I can talk about sadness and regret.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C484-pashiman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about sadness and regret.",
+    "assesses": [
+      "FA-LEX-C484-SADNESS-03",
+      "FA-LEX-C484-SADNESS-04",
+      "FA-LEX-C484-SADNESS-05"
+    ]
+  }
+}

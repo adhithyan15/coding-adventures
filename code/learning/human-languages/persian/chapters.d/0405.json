@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Legal or not",
+  "label": "ch:fa-legal-or-not",
+  "canDo": "I can say whether something is legal or illegal, talk about offences and punishments, and say that I need a permit.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C405-mojavvez",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can say whether something is legal or illegal, talk about offences and punishments, and say that I need a permit.",
+    "assesses": [
+      "FA-LEX-C405-QANUNI-03",
+      "FA-LEX-C405-QANUNI-04",
+      "FA-LEX-C405-QANUNI-05"
+    ]
+  }
+}

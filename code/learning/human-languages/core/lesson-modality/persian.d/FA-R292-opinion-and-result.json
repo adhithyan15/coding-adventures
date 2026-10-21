@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R292-opinion-and-result",
+    "language": "persian",
+    "chapter": 292,
+    "sequence": 15012,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c0b4f8ef4958021"
+  },
+  "findings": []
+}

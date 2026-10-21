@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:071c341f408b68f3",
+  "lessonIds": [
+    "FA-C390-be-shart-e-inke",
+    "FA-C390-dar-surati-ke",
+    "FA-C390-dar-surat-e",
+    "FA-C390-magar-inke",
+    "FA-C390-dar-gheyr-e-in-surat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch390.txt",
+  "json": "persian/narration/ch390.json",
+  "textHash": "fnv1a64:224e1a58f6edbad5",
+  "jsonHash": "fnv1a64:381bbd4b3765a6b6",
+  "findings": []
+}

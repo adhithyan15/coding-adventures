@@ -198,18 +198,21 @@ impl Pass for ConstantFoldPass {
 
 /// Stack size for the constant-fold worker thread (see [`ConstantFoldPass::run`]).
 ///
-/// 128 MiB comfortably absorbs the ~20 000-deep adversarial chains that
-/// motivated this worker, with a healthy margin above them. The margin
-/// matters: `fold_expression` is a wide `match` whose per-frame footprint
-/// grows as new `Expression` variants are handled (e.g. the CLOC12.151
-/// `ArrowFunctionExpression` arm), and per-frame cost also differs by target
-/// — aarch64 (Apple-silicon CI) lays out larger frames than x86-64, so a
-/// stack that merely *just* held 20 000 levels on one target overflowed on
-/// another. Sizing to 128 MiB keeps a 2× cushion so a modest future frame
-/// increase can't re-break the deep-chain DoS regression test. Costs nothing
-/// for real code — pages fault in lazily. Matches the spirit of the emitter's
+/// 1 GiB, raised from 128 MiB by CLOC42 (#16009). closurec admits chains up to
+/// its `MAX_CHAIN_SPINE` bound, and every admitted chain must fold. The most
+/// expensive shape per level is a call chain (`f()()()…`): `fold_call` keeps
+/// a large frame, about 31 KiB per level in a debug build on aarch64. At
+/// 128 MiB the worker overflowed near 4,150 calls. At 1 GiB, call chains fold
+/// to about 33,000 levels, twice closurec's bound, and operator and member
+/// chains pass 90,000.
+///
+/// The margin matters: `fold_expression` is a wide `match` whose per-frame
+/// footprint grows as new `Expression` variants are handled, and per-frame
+/// cost also differs by target (aarch64 lays out larger frames than x86-64).
+/// The size is a reservation, not an allocation: pages fault in lazily, so it
+/// costs nothing for real code. It matches the spirit of the emitter's
 /// `EMIT_STACK_SIZE`.
-const FOLD_STACK_SIZE: usize = 128 * 1024 * 1024;
+const FOLD_STACK_SIZE: usize = 1024 * 1024 * 1024;
 
 // =====================================================================
 // FoldState — mutable bookkeeping threaded through the recursive walk
@@ -7133,7 +7136,7 @@ mod tests {
     /// overflowing the native stack. The bottom-up `fold_binary` walk recurses
     /// once per operator; on the caller's ordinary ~2 MiB stack this used to
     /// overflow (an uncatchable abort). The large-stack worker
-    /// (`FOLD_STACK_SIZE`, 128 MiB) absorbs the recursion and still folds the
+    /// (`FOLD_STACK_SIZE`, 1 GiB since CLOC42) absorbs the recursion and still folds the
     /// whole chain to a single number.
     ///
     /// ## Why `N = 6_000` and not more
@@ -7143,8 +7146,8 @@ mod tests {
     /// that folding on the caller's ~2 MiB stack WOULD overflow (each
     /// `fold_binary` frame is several KiB, so a few thousand levels already blow
     /// past 2 MiB by an order of magnitude), while sitting comfortably inside
-    /// the 128 MiB worker with room to spare. An earlier `N = 20_000` sat right
-    /// at the worker's edge (~6-7 KiB/frame × 20 000 ≈ the full 128 MiB), so on
+    /// the worker with room to spare. When the worker had 128 MiB, an earlier
+    /// `N = 20_000` sat right at its edge (~6-7 KiB/frame × 20 000 ≈ the full 128 MiB), so on
     /// CI runners — fatter debug frames, higher memory pressure under parallel
     /// tests — it aborted nondeterministically (~2/3 of runs) even though it
     /// passed locally. `6_000` keeps ~4× headroom under the worker while still
@@ -7165,7 +7168,7 @@ mod tests {
             });
         }
         let prog = program_with_expr(expr, false);
-        // `fold_program` runs its recursion on the 128 MiB `FOLD_STACK_SIZE`
+        // `fold_program` runs its recursion on the 1 GiB `FOLD_STACK_SIZE`
         // worker, so this depth folds fine even though the test runs on cargo's
         // ~2 MiB thread. Without the worker, `fold_binary`'s per-operator
         // recursion overflows here — so a regression re-breaks this test. The

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C495-kabed",
+  "pathSegment": "FA-PATH-495-ORGANS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-495-ORGANS",
+      "order": 2
+    }
+  ]
+}

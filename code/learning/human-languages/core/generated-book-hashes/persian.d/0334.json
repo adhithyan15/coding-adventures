@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:4892d80513bdc4d7",
+  "lessonIds": [
+    "FA-C334-asheq-shodan",
+    "FA-C334-khastegari",
+    "FA-C334-khastegari-kardan",
+    "FA-C334-namzadi",
+    "FA-C334-aqd"
+  ],
+  "tex": "persian/book/chapters/ch334-love-and-engagement.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Sure and unsure",
+  "label": "ch:fa-sure-and-unsure",
+  "canDo": "I can say that I am certain or in doubt, that I made sure of something and how things seem.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C393-zaheran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can say that I am certain or in doubt, that I made sure of something and how things seem.",
+    "assesses": [
+      "FA-LEX-C393-ETMINAN-03",
+      "FA-LEX-C393-ETMINAN-04",
+      "FA-LEX-C393-ETMINAN-05"
+    ]
+  }
+}
