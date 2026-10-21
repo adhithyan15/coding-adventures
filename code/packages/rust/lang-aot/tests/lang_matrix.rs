@@ -5395,6 +5395,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("7"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - a common-divisor proof permits static whole-number division
+    // after runtime path selection; the false branch computes (9*1+6)/3.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((sign(left) * 6) + 6) else ((sign(right) * 9) + 6)) / 3); output(result) end",
+        expect: Expect::Stdout("5"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -9264,6 +9273,41 @@ fn main() { out(1, VALUE); }\n",
     backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
 
+    // Perl — LANG84 phase 4a, the bounded LANG81 integer `print` subset on its
+    // default release (the unversioned LANG81 pair). Perl's `print` writes the
+    // decimal text with NO newline, which is LANG83's `write_i64`; the frontend emits
+    // `call_builtin write_i64` and nothing Perl-specific, so every column runs these
+    // rows through the same lowering the op-conformance suite already proved.
+    //
+    // Every expected string below was produced by the host `perl` oracle
+    // (`perl_rows_agree_with_the_host_perl_oracle` re-checks each one whenever a
+    // `perl` is on PATH); the compiled programs never run on it.
+    //
+    // The rows print, rather than exit with, their value on purpose: an exit code is
+    // `& 0xFF`, so it could not tell `2147483647` from `255`. Several rows print more
+    // than once, which proves statement order and the absence of a newline.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(1 + 2);", expect: Expect::Stdout("3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `*` binds tighter than `-`: 7 - (2 * 3).
+    Prog { lang: Language::Perl, ext: "pl", src: "print(7 - 2 * 3);", expect: Expect::Stdout("1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Two prints, no separator: `-4` then `2` is `-42`, not `-4\n2`.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(-4); print(2);", expect: Expect::Stdout("-42"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: "print((1 + 2) * 3);", expect: Expect::Stdout("9"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Left associativity: (10 - 3) - 2, not 10 - (3 - 2).
+    Prog { lang: Language::Perl, ext: "pl", src: "print(10 - 3 - 2);", expect: Expect::Stdout("5"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A spaced `- -` is binary minus then unary minus (adjacent `--` is decrement
+    // and is refused); `- -5` nests two unary minuses.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(1- -2); print(- -5);", expect: Expect::Stdout("35"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    Prog { lang: Language::Perl, ext: "pl", src: "print(2 * -3 * 4);", expect: Expect::Stdout("-24"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Both ends of the signed 32-bit range the subset admits, printed at full width.
+    // The minimum is spelled `-2147483647 - 1` because the literal 2147483648 is
+    // itself out of range and refused.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(2147483647); print(-2147483647 - 1);", expect: Expect::Stdout("2147483647-2147483648"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // The largest square in range; `46341 * 46341` would be refused at compile time.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(46340 * 46340);", expect: Expect::Stdout("2147395600"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Integer `-0` prints `0`; a negated parenthesised difference.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(0); print(-0); print(-(3 - 10));", expect: Expect::Stdout("007"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Newlines and tabs between statements are whitespace, not output.
+    Prog { lang: Language::Perl, ext: "pl", src: "print(1);\nprint(2);\n\tprint(3);\n", expect: Expect::Stdout("123"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -9695,8 +9739,14 @@ fn run_llvm(p: &Prog) -> Option<RunResult> {
 /// dropped whenever any byte output existed, so a program mixing `print_i64` with
 /// `putchar`/`print_str` silently lost every integer on this column. One integer's text
 /// per call (≤ 21 bytes) — no DoS vector.
+///
+/// The same struct serves LANG83's `write_i64` (`env.__write_i64`, Perl's `print`):
+/// the identical decimal text with `newline: false`. Two imports, one sink, so a
+/// program mixing them still produces one ordered stream.
 struct PrintFunc {
     bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+    /// `true` for `__print_i64` (value + `\n`), `false` for `__write_i64` (value only).
+    newline: bool,
 }
 
 impl wasm_execution::HostFunction for PrintFunc {
@@ -9721,10 +9771,11 @@ impl wasm_execution::HostFunction for PrintFunc {
             .ok_or_else(|| wasm_execution::TrapError::new("__print_i64: missing argument"))?
             .as_i64()
             .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        let text = if self.newline { format!("{value}\n") } else { value.to_string() };
         self.bytes
             .lock()
             .expect("lang-matrix output buffer poisoned")
-            .extend_from_slice(format!("{value}\n").as_bytes());
+            .extend_from_slice(text.as_bytes());
         Ok(vec![])
     }
 }
@@ -10217,6 +10268,12 @@ impl wasm_execution::HostInterface for PrintHost {
         match (module_name, name) {
             ("env", "__print_i64") => Some(Box::new(PrintFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),
+                newline: true,
+            })),
+            // LANG83 PR1b `write_i64` (Perl `print`): decimal, no newline, same sink.
+            ("env", "__write_i64") => Some(Box::new(PrintFunc {
+                bytes: std::sync::Arc::clone(&self.bytes),
+                newline: false,
             })),
             ("env", "__print_str") => Some(Box::new(PrintStrFunc {
                 bytes: std::sync::Arc::clone(&self.bytes),
@@ -11121,6 +11178,18 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
             .extend_from_slice(format!("{n}\n").as_bytes());
         Ok(Value::Null)
     });
+    // LANG83 PR1b `write_i64` (Perl `print`): the same decimal text without the
+    // newline, into the same ordered buffer. vm-core's default would write to the
+    // process stdout, where the harness cannot see it.
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("write_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        bytes
+            .lock()
+            .expect("lang-matrix VM output buffer poisoned")
+            .extend_from_slice(n.to_string().as_bytes());
+        Ok(Value::Null)
+    });
     let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("putchar", move |args: &[Value]| {
         let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
@@ -11246,6 +11315,15 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
         Ok(Value::Null)
     });
     let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("write_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(n.to_string().as_bytes());
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("putchar", move |args: &[Value]| {
         let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
         bytes.lock().expect("lang-matrix JIT putchar buffer poisoned").push(b);
@@ -11302,6 +11380,15 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
             .lock()
             .expect("lang-matrix JIT output buffer poisoned")
             .extend_from_slice(format!("{n}\n").as_bytes());
+        Value::Null
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    backend.register_builtin("write_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        bytes
+            .lock()
+            .expect("lang-matrix JIT output buffer poisoned")
+            .extend_from_slice(n.to_string().as_bytes());
         Value::Null
     });
     let bytes = Arc::clone(&printed_bytes);
@@ -12299,6 +12386,8 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // StdoutThenTrap), all eight columns.
         (Language::Ruby, 13, 104),
         (Language::Cobol60, 59, 472),
+        // Perl: LANG84 phase 4a's eleven integer-`print` rows, all eight columns.
+        (Language::Perl, 11, 88),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -23645,6 +23734,32 @@ fn algol_pathwise_exact_scaled_local_name_actual_runtime_real_output_runs_on_eve
 }
 
 #[test]
+fn algol_pathwise_exact_divided_local_name_actual_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier((if choose() then ((sign(left) * 6) + 6) else ((sign(right) * 9) + 6)) / 3)",
+                )
+        })
+        .expect("the pathwise exactly-divided ALGOL local name-actual program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the pathwise exactly-divided local name actual did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_conditional_while_effect_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -25631,6 +25746,115 @@ fn portable_text_stdout_cobol_region_intersection() {
                 eprintln!("VM058 region intersection executed {backend:?}");
             }
             None => eprintln!("SKIP VM058 region intersection: {backend:?} runtime unavailable"),
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 4a — Perl on every backend
+// ---------------------------------------------------------------------------
+
+fn perl_rows() -> Vec<&'static Prog> {
+    let rows: Vec<_> = PROGRAMS.iter().filter(|p| p.lang == Language::Perl).collect();
+    assert!(!rows.is_empty(), "PROGRAMS has no Perl rows");
+    rows
+}
+
+/// Every Perl row on every backend it declares, as one named test so a Perl
+/// regression is reported as one. A runner that returns `None` while its
+/// toolchain is present fails rather than skips, exactly as the non-ALGOL
+/// aggregate does.
+#[test]
+fn perl_rows_run_on_every_available_backend() {
+    let (mut ran, mut skipped) = (0usize, 0usize);
+    for program in perl_rows() {
+        assert_eq!(
+            program.backends,
+            &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+            "every Perl row declares all eight columns: {:?}",
+            program.src
+        );
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(!available, "Perl {backend:?} silently skipped: {:?}", program.src);
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(ran > 0);
+    eprintln!("Perl matrix: {ran} cells executed, {skipped} skipped (toolchain absent)");
+}
+
+/// The oracle: a host `perl` must print exactly what each row expects. The
+/// compiled programs never run on it — it only checks that the expectations
+/// written into `PROGRAMS` are Perl's answers and not this compiler's. Skips
+/// (loudly) on a host with no `perl`; every CI Linux and macOS image has one.
+#[test]
+fn perl_rows_agree_with_the_host_perl_oracle() {
+    let version = match Command::new("perl").args(["-e", "print $^V"]).output() {
+        Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).into_owned(),
+        _ => {
+            eprintln!("SKIP Perl oracle: no `perl` on PATH");
+            return;
+        }
+    };
+    for program in perl_rows() {
+        let Expect::Stdout(expected) = program.expect else {
+            panic!("a Perl row is checked by its stdout: {:?}", program.src);
+        };
+        // `-e` with the source as its own argument: no shell, no temp file.
+        let out = Command::new("perl")
+            .args(["-e", program.src])
+            .output()
+            .expect("perl ran once already");
+        assert!(out.status.success(), "perl {version} rejected {:?}", program.src);
+        assert_eq!(
+            String::from_utf8_lossy(&out.stdout),
+            expected,
+            "perl {version} disagrees with the row's expectation for {:?}",
+            program.src
+        );
+    }
+    eprintln!("Perl oracle: {} rows agree with perl {version}", perl_rows().len());
+}
+
+/// LANG84 C7.3: the frontend's corpus passes `check_module_for` on all nine
+/// LANG83 backends — including CLR and BEAM, whose runtimes this host may lack —
+/// and `print` really is the registry's `write_i64` in every module (a frontend
+/// that constant-folded a print into some other shape would not be testing the op
+/// these rows are here to prove).
+#[test]
+fn perl_rows_pass_the_lang83_check_on_all_nine_backends() {
+    for program in perl_rows() {
+        let module = lang_aot::compile_source_to_iir(Language::Perl, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: {e}", program.src));
+        let builtins: Vec<_> = module
+            .functions
+            .iter()
+            .flat_map(|f| &f.instructions)
+            .filter(|i| i.op == "call_builtin")
+            .map(|i| interpreter_ir::op_registry::registry_name(i))
+            .collect();
+        assert!(!builtins.is_empty(), "{:?}: no print was lowered", program.src);
+        assert!(
+            builtins.iter().all(|name| *name == Some("write_i64")),
+            "{:?}: every Perl print must be write_i64, got {builtins:?}",
+            program.src
+        );
+        for backend in lang_aot::op_check::Backend::ALL {
+            lang_aot::op_check::check_module_for(backend, &module).unwrap_or_else(|e| {
+                panic!("{:?} refused on {}: {e}", program.src, backend.name())
+            });
         }
     }
 }

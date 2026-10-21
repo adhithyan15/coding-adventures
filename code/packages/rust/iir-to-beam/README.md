@@ -453,4 +453,7 @@ in `code/specs/BEAM-normal-x-prefix-gc-safety.md`.
 module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64`
 (`io:format("~w", [X])`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
 `MIN / -1` tests, then a branchy floor fix-up over truncating `div`/`rem`) and
-`trap` (`erlang:error('<kind>')`).
+`trap` (`erlang:error('<kind>')`). LANG83 PR4 adds `i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/
+`i64_neg_ovf`: Erlang integers are bignums, so the exact result is computed with one
+`gc_bif2` (`+`, `-`, `*`, or `0 - a`) and then checked with two `is_lt` tests
+against `MIN` and `MAX`; out of range raises `erlang:error('Trap.Overflow')`.

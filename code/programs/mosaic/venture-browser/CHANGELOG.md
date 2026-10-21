@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- The web interaction test types with `input` events on both web backends. The
+  Web Component's text fields used to dispatch `onChange` on `change` (blur);
+  they now dispatch per keystroke, as HTML's always did, and keep focus.
 - The Flutter live test runs in a 1024x700 window. It had been enlarged to
   1800x2400 to get past overflowing rows: the toolbar overflowed by 173 px at
   1400 wide, and at 1024 the page-actions row by 159 px and library-actions by

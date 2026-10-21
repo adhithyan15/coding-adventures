@@ -424,6 +424,7 @@ pub fn is_exception_op(op: &str) -> bool {
 // | `add`           | no            | no       | no               |
 // | `div`           | no            | yes      | no  (legacy; see below) |
 // | `i64_div_floor` | no            | yes      | yes              |
+// | `i64_add_ovf`   | no            | yes      | yes              |
 // | `array_get`     | no            | yes      | no  (legacy; see below) |
 // | `jmp`           | yes           | no       | yes              |
 // | `ret`           | yes           | no       | yes              |
@@ -682,6 +683,12 @@ pub fn has_side_effects(op: &str) -> bool {
                 | "trap"
                 | "i64_div_floor"
                 | "i64_mod_floor"
+                // LANG83 PR4: the overflow-checked ops trap `Trap.Overflow`;
+                // deleting an unused `i64_add_ovf` would delete its trap.
+                | "i64_add_ovf"
+                | "i64_sub_ovf"
+                | "i64_mul_ovf"
+                | "i64_neg_ovf"
         )
 }
 
@@ -1467,8 +1474,16 @@ mod tests {
         assert!(is_value_producing("f64_sqrt"));
         assert!(!is_value_producing("trap"));
         assert!(!is_value_producing("print_str"));
-        for op in ["trap", "i64_div_floor", "i64_mod_floor"] {
+        for op in ["trap", "i64_div_floor", "i64_mod_floor",
+                   "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf"] {
             assert!(has_side_effects(op), "{op} must survive DCE");
+        }
+        // PR4: the overflow family is known and value-producing through the
+        // registry, with no hand-kept list.
+        for op in ["i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf"] {
+            assert!(is_known_op(op), "{op}");
+            assert!(is_value_producing(op), "{op}");
+            assert_eq!(trap_kinds(op), &["Trap.Overflow"], "{op}");
         }
         // Legacy trapping ops keep their PR1a answer (documented divergence).
         assert!(!has_side_effects("div"));

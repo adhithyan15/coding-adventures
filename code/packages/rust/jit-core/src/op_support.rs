@@ -24,6 +24,7 @@
 //! | `print_i64`, `putchar`, `write_i64` | `CALL_BUILTIN` to the embedder-registered handler | Lowered |
 //! | `i64_div_floor`, `i64_mod_floor` | `DIV_FLOOR_I64`, `MOD_FLOOR_I64` (defined traps) | Lowered |
 //! | `trap` | `TRAP <kind id>` (error slot `trap: <kind>`) | Lowered |
+//! | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` | `ADD_OVF_I64` … `NEG_OVF_I64` (`checked_*`; `Trap.Overflow`) | Lowered |
 //! | `mod`, strings, `f64` math, conversions, `print_str` | — | Refused (interpreter tier only) |
 //!
 //! Like every backend's table, this one is name-granular: `add` is `Lowered`
@@ -63,6 +64,10 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("neg", Lowered),
     ("i64_div_floor", Lowered),
     ("i64_mod_floor", Lowered),
+    ("i64_add_ovf", Lowered),
+    ("i64_sub_ovf", Lowered),
+    ("i64_mul_ovf", Lowered),
+    ("i64_neg_ovf", Lowered),
     // ── Comparison ──────────────────────────────────────────────────────────
     ("cmp_eq", Lowered),
     ("cmp_ne", Lowered),

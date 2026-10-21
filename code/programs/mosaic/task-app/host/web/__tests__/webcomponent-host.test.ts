@@ -109,7 +109,9 @@ describe("TaskApp Web Components parity host", () => {
     );
     expect(name).toBeTruthy();
     name!.value = "Ship the Web Component gate";
-    name!.dispatchEvent(new Event("change", { bubbles: true }));
+    // onChange is per keystroke on every web backend (UI25), so typing is an
+    // `input` event; the field keeps focus across the re-render it causes.
+    name!.dispatchEvent(new Event("input", { bubbles: true }));
     buttonByText(root.shadowRoot, "Add task").click();
     await settle();
 

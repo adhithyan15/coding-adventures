@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-closure-scope-analyzer` crate will be documented in this file.
 
+## [0.22.0] - 2026-10-20
+
+### Fixed — a `switch` case block gets its own scope — #17836
+
+A `switch` used to walk its cases in the enclosing scope. A case's `let x`
+was therefore registered beside an outer `var x`. The read after the
+`switch` resolved to the case binding, remove-unused-vars deleted the outer
+`var`, and ADVANCED output threw `ReferenceError`.
+
+The discriminant still walks in the enclosing scope. Every case test and
+consequent now walks in one new `ScopeKind::Block` scope shared by all cases
+(ECMAScript §14.12.4). `var` inside a case still hoists. Three new unit tests
+cover this.
+
 ## [0.21.0] - 2026-10-19
 
 ### Fixed — lexical `for` heads get their own loop scope — #16008
