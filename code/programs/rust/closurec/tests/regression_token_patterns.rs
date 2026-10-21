@@ -87,16 +87,23 @@ fn run_node(program: &str) -> Option<(bool, String, String)> {
 
 #[test]
 fn token_boundaries_match_javascript() {
+    // Every case compiles at both levels, with or without node; only the
+    // runtime comparison needs node (security review: an early `return`
+    // used to skip compiling the remaining cases).
+    let have_node = run_node("0").is_some();
+    if !have_node {
+        eprintln!("node not on PATH; compiling only, no runtime check");
+    }
     for source in CASES {
         let outputs: Vec<(&str, String)> =
             ["SIMPLE", "ADVANCED"].iter().map(|l| (*l, compile(source, l))).collect();
-        let Some((ok, expected, err)) = run_node(source) else {
-            eprintln!("node not on PATH; skipping the runtime check");
-            return;
-        };
+        if !have_node {
+            continue;
+        }
+        let (ok, expected, err) = run_node(source).expect("node is on PATH");
         assert!(ok, "source {source:?} must run: {err}");
         for (level, out) in outputs {
-            let (ok, got, err) = run_node(&out).expect("node ran once already");
+            let (ok, got, err) = run_node(&out).expect("node is on PATH");
             assert!(ok, "{level} {source:?} -> {out:?} throws: {err}");
             assert_eq!(got, expected, "{level} {source:?} -> {out:?}");
         }

@@ -1485,8 +1485,19 @@ code. At SIMPLE, `` var x = `$` // `; f() `` ran `f()`.
   handled by the javascript-lexer refusal check (#17875 follow-up).
 - A regex vs. division after `}` (#17886 review) is a lexer-mode problem,
   not a pattern problem.
-- The TypeScript and Go compiled JavaScript grammars aren't checked for
-  drift by CI, so they keep the old patterns until regenerated.
+- **Copies still on the old patterns.** CI doesn't check these for drift, so
+  they keep the old exploitable patterns until regenerated:
+  - the TypeScript and Go compiled JavaScript grammars;
+  - the Perl JavaScript lexer's `_Grammar_es20*.pm`;
+  - every TypeScript lexer: `code/grammars/typescript/ts*.tokens` and their
+    Rust, Perl, TypeScript and Go compiled copies.
+
+  closurec uses only the Rust javascript-lexer.
+- **Line continuation.** A `$` directly before a template line continuation
+  (`` `$\⏎` ``) no longer lexes. The new `$` alternative uses `\\.`, and `.`
+  doesn't match a newline. This fails closed, as `` `a\⏎` `` already did.
+  The fix is `\\[\s\S]` in the template bodies, once the Lua pattern
+  converter is confirmed to accept it.
 
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 
