@@ -55,9 +55,11 @@ pub fn tokenize_javascript(source: &str, version: &str) -> Result<Vec<Token>, St
     let grammar = _grammar::token_grammar(version)
         .expect("compiled JavaScript token grammar missing supported version");
     let mut lexer = GrammarLexer::new(source, &grammar);
-    lexer
+    let tokens = lexer
         .tokenize()
-        .map_err(|e| format!("JavaScript tokenization failed: {e}"))
+        .map_err(|e| format!("JavaScript tokenization failed: {e}"))?;
+    refuse_html_like_comments(source, &tokens)?;
+    Ok(tokens)
 }
 
 /// Typed version of [`create_javascript_lexer`]. Takes an [`EsVersion`]
@@ -81,9 +83,11 @@ pub fn tokenize_javascript_typed(
     let grammar = _grammar::token_grammar(version.as_str())
         .expect("compiled JavaScript token grammar missing supported version");
     let mut lexer = GrammarLexer::new(source, &grammar);
-    lexer
+    let tokens = lexer
         .tokenize()
-        .map_err(|e| format!("JavaScript tokenization failed: {e}"))
+        .map_err(|e| format!("JavaScript tokenization failed: {e}"))?;
+    refuse_html_like_comments(source, &tokens)?;
+    Ok(tokens)
 }
 
 /// Tokenize a JavaScript subset that does not admit regex literals.
@@ -106,9 +110,169 @@ pub fn tokenize_javascript_division_only(
         .error_definitions
         .retain(|rule| rule.name != "BAD_REGEX");
     let mut lexer = GrammarLexer::new(source, &grammar);
-    lexer
+    let tokens = lexer
         .tokenize()
-        .map_err(|e| format!("JavaScript tokenization failed: {e}"))
+        .map_err(|e| format!("JavaScript tokenization failed: {e}"))?;
+    refuse_html_like_comments(source, &tokens)?;
+    Ok(tokens)
+}
+
+// ---------------------------------------------------------------------------
+// Annex B HTML-like comments: refused, never misread
+// ---------------------------------------------------------------------------
+//
+// In a script, ECMA-262 Annex B (B.1.1) has two comment forms this token
+// grammar can't express, because they depend on "start of a line" or on
+// three tokens together:
+//
+//   SingleLineHTMLOpenComment   `<!--` …to end of line
+//   SingleLineHTMLCloseComment  a line terminator, then optional whitespace
+//                               and comments, then `-->` …to end of line
+//
+// Lexed as ordinary tokens they become CODE: `a = b⏎-->f()` reads as
+// `b-- > f()`, and `x = 1 <!--y` as `1 < !--y`. Either way, comment text
+// would run (#17840 review). Modelling them correctly takes context the
+// token grammar lacks: two attempts were defeated by regex, template and
+// `\r` corner cases. So both forms are REFUSED with a clear error.
+//
+// A line-leading `--` is judged twice. Either the lexer's line count rose
+// since the previous token (it counts `\n`), or the source between the two
+// tokens holds another line terminator (`\r`, U+2028, U+2029) the line
+// count misses. The span starts at the previous token, so a multi-line
+// template right before `--` is also refused; `--` after a template is an
+// early error anyway.
+
+/// Error if `tokens` contain an Annex B HTML-like comment.
+fn refuse_html_like_comments(source: &str, tokens: &[Token]) -> Result<(), String> {
+    let adjacent = |a: &Token, b: &Token, width: usize| {
+        b.line == a.line && b.column == a.column + width
+    };
+    // Source offsets of tokens, found by a cursor that only moves forward:
+    // tokens come in source order, so mapping every one costs O(source)
+    // in total, however long a line is.
+    let mut cursor = SourceCursor::new(source);
+    let has_hidden_breaks = source.contains(['\r', '\u{2028}', '\u{2029}']);
+    for i in 0..tokens.len() {
+        let t = &tokens[i];
+        // After a `}` the token grammar always expects a regex, but when that
+        // `}` closes an object, function or class expression a `/` there is
+        // DIVISION: `x = {}⏎/ 2 <!--/; f()` is `x = {} / 2` plus a comment.
+        // The lexer then hides the `<!--` inside one REGEX token and the rest
+        // of the comment runs (#17840 review). A regex right after `}` that
+        // holds `<!--` is refused; elsewhere `/<!--/` stays an ordinary regex.
+        if t.type_name.as_deref() == Some("REGEX")
+            && t.value.contains("<!--")
+            && i.checked_sub(1).is_some_and(|p| tokens[p].value == "}")
+        {
+            return Err(html_comment_error("<!--", t));
+        }
+        // A regex literal may never hold a line terminator, escaped or not
+        // (ECMA-262 RegularExpressionChar). The REGEX token pattern only
+        // excludes `\n`, so `\r`, U+2028 or U+2029 inside one means the lexer
+        // misread division (after `}`) and swallowed a line break, with a
+        // line-leading `-->` behind it (#17840 review round 3). No valid
+        // program is refused.
+        if t.type_name.as_deref() == Some("REGEX")
+            && t.value.contains(['\r', '\u{2028}', '\u{2029}'])
+        {
+            return Err(format!(
+                "JavaScript tokenization failed: line terminator inside a regular expression \
+                 literal at {}:{}",
+                t.line, t.column
+            ));
+        }
+        // A `--` here is one `--` token (ES grammars) or two touching `-`
+        // tokens (the generic subset grammar has no `--`); `next` is the
+        // index of the token after it.
+        let next = if t.value == "--" && t.type_name.as_deref() == Some("MINUS_MINUS") {
+            i + 1
+        } else if t.value == "-"
+            && tokens.get(i + 1).is_some_and(|m| m.value == "-" && adjacent(t, m, 1))
+        {
+            i + 2
+        } else {
+            continue;
+        };
+        // `<!--`: `<` `!` `--`, touching.
+        if i >= 2
+            && tokens[i - 2].value == "<"
+            && tokens[i - 1].value == "!"
+            && adjacent(&tokens[i - 2], &tokens[i - 1], 1)
+            && adjacent(&tokens[i - 1], t, 1)
+        {
+            return Err(html_comment_error("<!--", &tokens[i - 2]));
+        }
+        // `-->` at the start of a line (or of the source). Maximal munch may
+        // fuse the `>` with what follows (`-->>x` is `--` `>>`, `-->=x` is
+        // `--` `>=`), so only the token's FIRST character must be `>`.
+        let Some(gt) = tokens.get(next) else { continue };
+        if !gt.value.starts_with('>') || !adjacent(t, gt, 2) {
+            continue;
+        }
+        let line_leading = match i.checked_sub(1).map(|p| &tokens[p]) {
+            None => true,
+            Some(prev) => {
+                prev.line < t.line
+                    // Only `\r`, U+2028 and U+2029 can hide a line break from
+                    // the line count; without them, skip the offset walk.
+                    || (has_hidden_breaks
+                        && match (cursor.offset(prev), cursor.offset(t)) {
+                            (Some(a), Some(b)) if a <= b => source[a..b]
+                                .contains(['\r', '\u{2028}', '\u{2029}']),
+                            // Positions that don't map back: refuse.
+                            _ => true,
+                        })
+            }
+        };
+        if line_leading {
+            return Err(html_comment_error("-->", t));
+        }
+    }
+    Ok(())
+}
+
+/// Maps a token's 1-based (line, column), with lines counted by `\n` and
+/// columns by `char`, to its byte offset. Queries must not go backwards, by
+/// more than the one token the caller re-asks for, so the walk is linear.
+struct SourceCursor<'s> {
+    source: &'s str,
+    byte: usize,
+    line: usize,
+    column: usize,
+}
+
+impl<'s> SourceCursor<'s> {
+    fn new(source: &'s str) -> Self {
+        SourceCursor { source, byte: 0, line: 1, column: 1 }
+    }
+
+    fn offset(&mut self, t: &Token) -> Option<usize> {
+        let target = (t.line, t.column);
+        if target < (self.line, self.column) {
+            // Re-asked for an earlier token: restart (rare, and bounded by
+            // the one-token look-back of the caller).
+            *self = SourceCursor::new(self.source);
+        }
+        while (self.line, self.column) < target {
+            let ch = self.source[self.byte..].chars().next()?;
+            self.byte += ch.len_utf8();
+            if ch == '\n' {
+                self.line += 1;
+                self.column = 1;
+            } else {
+                self.column += 1;
+            }
+        }
+        ((self.line, self.column) == target).then_some(self.byte)
+    }
+}
+
+fn html_comment_error(form: &str, at: &Token) -> String {
+    format!(
+        "JavaScript tokenization failed: unsupported Annex B HTML-like comment `{form}` \
+         at {}:{} (not modelled; refused so its text can't run as code)",
+        at.line, at.column
+    )
 }
 
 /// A token paired with the correlation-vector ID assigned to it by
@@ -170,6 +334,75 @@ pub fn tokenize_javascript_with_cv(
 mod tests {
     use super::*;
     use lexer::token::{TokenType, TOKEN_PRECEDED_BY_NEWLINE};
+
+    fn lex(src: &str) -> Result<Vec<Token>, String> {
+        tokenize_javascript_typed(src, EsVersion::Es2025)
+    }
+
+    #[test]
+    fn a_line_leading_html_close_comment_is_refused() {
+        // test262 annexB/language/comments/single-line-html-close-asi.js
+        assert!(lex("var foo = [23]\n-->[0];").is_err());
+        // Its text would otherwise run as code (#17840 review).
+        assert!(lex("a = b\n-->console.log(1)").is_err());
+        assert!(lex("a\n  /* x */ -->y").is_err());
+        assert!(lex("a\n/*\n*/-->b()").is_err());
+        assert!(lex("-->x").is_err());
+        // Maximal munch fuses the `>` with the comment text (#17840 review).
+        assert!(lex("a\n-->>b").is_err());
+        assert!(lex("a\n-->=b").is_err());
+        assert!(lex("a\r-->>>=b").is_err());
+        assert!(lex("-->>x").is_err());
+    }
+
+    #[test]
+    fn a_line_break_the_line_count_misses_still_counts() {
+        // `\r`, U+2028 and U+2029 end a line too; the lexer counts only `\n`.
+        assert!(lex("var a=1;a/*\r*/-->console.log(1)").is_err());
+        assert!(lex("a\r-->b").is_err());
+    }
+
+    #[test]
+    fn the_check_is_linear_on_one_long_line() {
+        // Many same-line `a-->b` pairs, plus a `\r` so the offset walk runs:
+        // offsets come from a forward-only cursor, not a per-token rescan.
+        let src = format!("x\r;{}", "a-->b;".repeat(50_000));
+        let start = std::time::Instant::now();
+        assert!(lex(&src).is_ok());
+        assert!(start.elapsed() < std::time::Duration::from_secs(30), "{:?}", start.elapsed());
+    }
+
+    #[test]
+    fn an_html_open_comment_is_refused() {
+        assert!(lex("var r = 1 <!--y").is_err());
+        assert!(lex("<!-- x").is_err());
+        // The generic subset grammar lexes `--` as two `-` tokens.
+        assert!(tokenize_javascript("var r = 1 <!--y", "").is_err());
+        assert!(tokenize_javascript("a\n-->b", "").is_err());
+        assert!(tokenize_javascript("a - -b", "").is_ok());
+        // Hidden in what the lexer takes for a regex after `}` (#17840 review).
+        assert!(lex("var x = {}\n/ 2 <!--/; console.log(1)").is_err());
+        assert!(lex("var x = function(){}\n/ 2 <!--/; f()").is_err());
+        // A line break the REGEX pattern lets through hides a `-->` (round 3).
+        assert!(lex("var x = {}\n/ 2\u{2028}-->/; console.log(1)").is_err());
+        assert!(lex("var x = {}\n/ 2\u{2029}-->/; console.log(1)").is_err());
+        assert!(lex("var x = {}\n/ 2\r-->/; f()").is_err());
+        assert!(lex("var r = /a\u{2028}-->/; f()").is_err());
+        // A regex that matches HTML comments is fine elsewhere.
+        assert!(lex("var re = /<!--.*-->/;").is_ok());
+    }
+
+    #[test]
+    fn ordinary_decrements_and_comparisons_are_untouched() {
+        // Same line: `a-->b` is `a-- > b`.
+        assert!(lex("a-->b").is_ok());
+        assert!(lex("a\n-- >b").is_ok());
+        assert!(lex("a < !--b").is_ok());
+        assert!(lex("a<! --b").is_ok());
+        // Inside strings, templates, regexes and comments, nothing is a token.
+        assert!(lex("x = '-->'; y = `\n-->`; z = /-->/; /* \n--> */ // -->").is_ok());
+        assert!(lex("s = '<!--'").is_ok());
+    }
 
     #[test]
     fn division_only_goal_keeps_slashes_separate_in_every_version() {

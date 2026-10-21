@@ -2,6 +2,15 @@
 
 ## 0.1.0 — unreleased
 
+- **38 more tests parse after javascript-parser's ASI work (#17840), and
+  two leave the list.** The insertion-point and postfix `++`/`--` changes
+  let 38 more programs parse, so `--update` added them.
+  `annexB/language/comments/single-line-html-close-asi.js` (sloppy and
+  strict) was removed by hand, the only removal this grow-only list has had.
+  It had "passed" only because `[23]⏎-->[0]` lexed as `[23]-- > [0]`,
+  reading a comment as code. javascript-lexer now refuses Annex B HTML-like
+  comments rather than run their text, and proper support is #17884. The owner approved the removal.
+
 - **The budget rises to 4 MiB.** `parser` now shares memoised subtrees, so
   `string-upper-lower-mapping.js` parses in about 3 GB and five seconds and is
   judged again (it is on the pass list in both modes). `PARSE_BUDGET_BYTES`

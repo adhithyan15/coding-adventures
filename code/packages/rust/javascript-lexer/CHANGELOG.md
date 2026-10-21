@@ -6,6 +6,22 @@ All notable changes to the `coding-adventures-javascript-lexer` crate will be do
 
 ### Fixed
 
+- **Annex B HTML-like comments are refused, not misread (#17840).** In a
+  script, a line-leading `-->` and an `<!--` start comments. The token
+  grammar can't express either, so they lexed as code: `a = b⏎-->f()` as
+  `b-- > f()`, and `1 <!--y` as `1 < !--y`, running the comment text. Every
+  `tokenize_*` entry point now fails with a clear error on both forms. A
+  line counts as starting with `-->` when the line count rose since the
+  previous token, or when the source between them holds `\r`, U+2028 or
+  U+2029, which the line count misses. `-->>x` and `-->=x` lex as `--`
+  then `>>`/`>=`, so any token starting with `>` counts. A regex right after
+  `}` that contains `<!--` is refused too: there the lexer can take a
+  division for a regex and hide the comment inside it. A regex token holding
+  `\r`, U+2028 or U+2029 is refused as well: a regex literal can never
+  contain a line terminator, and one there means a line break, and a `-->`
+  after it, were swallowed. Proper support is
+  #17884. Seven unit tests cover this. Related bugs that were already on main
+  are #17886 and #17887.
 - Add explicit `tokenize_javascript_division_only` for subsets excluding regex
   literals, preserving comments, strings, token locations and version rules.
   Existing regex-capable entry points retain their behavior.
