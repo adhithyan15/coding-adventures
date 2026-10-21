@@ -18,9 +18,9 @@
   },
   "active_pr": 17905,
   "last_ci_action": {
-    "observed_at": "2026-10-21T06:22:16.040789+00:00",
+    "observed_at": "2026-10-21T07:31:05.934362+00:00",
     "pr_number": 17905,
-    "action": "Ready PR opened after final package/race/vet/build/fuzz/security/61package unforced execution validation; awaiting live final-head checks. No auto-merge while pending."
+    "action": "Fixing three actual CodeQL fixture-reader narrowing annotations in same PR after checked-boundary/race/vet/build/coverage/security validation; awaiting pushed-head hosted recheck. No auto-merge while failing/pending. No item status transition."
   },
   "last_inventory": {
     "revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
@@ -22735,7 +22735,25 @@
         "receipt": "bf03-go-local-validation-receipt.json"
       },
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17905",
-      "ready_for_review_at": "2026-10-21T06:22:16.040789+00:00"
+      "ready_for_review_at": "2026-10-21T06:22:16.040789+00:00",
+      "ci_recovery": {
+        "observed_at": "2026-10-21T07:31:05.934362+00:00",
+        "failed_head": "d4d437c380934d5b2e3efded262cd696f6af4977",
+        "check_run": 119096369448,
+        "findings": "Three CodeQL go/incorrect-integer-conversion annotations in test fixture reader; workflow itself succeeded.",
+        "fix": "Wide native-int bounds before conversion; checked sequence count; native endpoints/types/32-bit admission tests. Production source unchanged.",
+        "validation": {
+          "amd64_package_coverage": "PASS280/281productionstatements99.644%",
+          "race": "PASS",
+          "vet": "PASS",
+          "build": "PASS",
+          "386_focused_integer_admission": "PASS actual Windows386execution",
+          "386_full_corpus": "NOT QUALIFIED: semantic-negative fixture values exceed legacy32bitnativeint; transport rejection not production credit",
+          "security": "PASS bf03-go-codeql-fix-security-review.md",
+          "codeql": "Await new-head hosted recheck; old failure remains until rescanned"
+        },
+        "test_sha256": "85f5f685445a9bd82ceeb36ebf3768b519baa3dc3864223855e08e401ee3a68f"
+      }
     },
     {
       "id": "compiler-ir-bf03-haskell-core-profile-adoption",

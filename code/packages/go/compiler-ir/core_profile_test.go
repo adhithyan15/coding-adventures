@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"reflect"
 	"strconv"
@@ -158,7 +159,9 @@ func coreObject(v any, keys string) (map[string]any, error) {
 }
 func coreInt(v any) (int, error) {
 	n, ok := v.(int64)
-	if !ok || int64(int(n)) != n {
+	// Check in the wide domain before narrowing. A cast-and-roundtrip guard
+	// performs the lossy conversion before establishing the native bound.
+	if !ok || n < math.MinInt || n > math.MaxInt {
 		return 0, fmt.Errorf("native integer")
 	}
 	return int(n), nil
@@ -454,7 +457,11 @@ func TestCoreFrozenCorpus(t *testing.T) {
 	}
 	for _, v := range m["id_sequences"].([]any) {
 		r := v.(map[string]any)
-		values, next, e := CoreIDSequence(r["start"].(int64), int(r["count"].(int64)))
+		count, e := coreInt(r["count"])
+		if e != nil {
+			t.Fatal("sequence count", e)
+		}
+		values, next, e := CoreIDSequence(r["start"].(int64), count)
 		want := []int64{}
 		for _, v := range r["values"].([]any) {
 			want = append(want, v.(int64))
@@ -521,6 +528,27 @@ func TestCoreFrozenCorpus(t *testing.T) {
 			}
 		} else if err != nil || text == row["text"] {
 			t.Fatal("lost data/ID/order/golden witness", mutation, err)
+		}
+	}
+}
+
+func TestCoreReaderNativeInteger(t *testing.T) {
+	for _, n := range []int64{0, -1, math.MinInt, math.MaxInt} {
+		got, err := coreInt(n)
+		if err != nil || int64(got) != n {
+			t.Fatalf("native boundary %d: %d %v", n, got, err)
+		}
+	}
+	for _, v := range []any{nil, true, "1", float64(1), json.Number("1")} {
+		if _, err := coreInt(v); err == nil {
+			t.Fatalf("accepted non-int64 %T", v)
+		}
+	}
+	if strconv.IntSize == 32 {
+		for _, n := range []int64{math.MinInt32 - 1, math.MaxInt32 + 1, math.MinInt64, math.MaxInt64} {
+			if _, err := coreInt(n); err == nil {
+				t.Fatalf("accepted outside native bounds: %d", n)
+			}
 		}
 	}
 }

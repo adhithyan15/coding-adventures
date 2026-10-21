@@ -22,6 +22,12 @@ this file.
   IDGenerator behavior. Strict rejection does not normalize legacy debug data.
 - No source-map, optimizer, backend/runtime or whole-language qualification.
 
+### Fixed
+
+- Check fixture integers against native bounds before narrowing, and route
+  sequence counts through the same checked conversion. Exercise both native
+  boundaries and rejection of values outside a 32-bit integer domain.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

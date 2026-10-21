@@ -43,6 +43,9 @@ with independent rosters, a digest and literal sparse-ID golden. Run the real
 `BUILD` (`go test ./... -v -cover`), `go vet ./...` and `go build ./...`.
 Coverage includes all shipped production files, including generated outcome
 helpers; fixture-reader statements are test-only and earn no production credit.
+Full corpus execution is validated on a 64-bit host. Checked integer admission
+also passes focused 32-bit tests; the full corpus is not qualified on 32-bit
+hosts because some semantic-negative values exceed the legacy native `int`.
 
 ## Design Philosophy
 
