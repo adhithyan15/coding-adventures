@@ -1,0 +1,11 @@
+{
+  "id": "RU-C287-ulika",
+  "pathSegment": "RU-PATH-287-PRESTUPLENIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-287-PRESTUPLENIYE",
+      "order": 3
+    }
+  ]
+}

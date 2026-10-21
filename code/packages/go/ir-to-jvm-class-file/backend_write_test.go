@@ -65,18 +65,19 @@ func makeDirectoryLink(t *testing.T, target string, link string) {
 	}
 }
 
-// canonical resolves path to an absolute, link-free form.
-func canonical(t *testing.T, path string) string {
+// tempDir is t.TempDir() in canonical form.  Both walks report the path they
+// wrote with every link above the output root resolved, so on macOS — where
+// t.TempDir() lives under /var -> /private/var — the expected path has to be
+// resolved too.  The *input* to every write is still the raw t.TempDir() path,
+// links and all: that is the case the walks must accept.
+func tempDir(t *testing.T) (raw string, resolved string) {
 	t.Helper()
-	absolute, err := filepath.Abs(path)
-	if err != nil {
-		t.Fatalf("absolutize failed: %v", err)
-	}
-	resolved, err := filepath.EvalSymlinks(absolute)
+	raw = t.TempDir()
+	resolved, err := filepath.EvalSymlinks(raw)
 	if err != nil {
 		t.Fatalf("canonicalize failed: %v", err)
 	}
-	return resolved
+	return raw, resolved
 }
 
 func requireErrorContaining(t *testing.T, err error, fragment string) {
@@ -102,12 +103,12 @@ func requireNoTempFiles(t *testing.T, dir string) {
 func TestWriteClassFileUsesClasspathLayout(t *testing.T) {
 	forEachWriteStrategy(t, func(t *testing.T, write func(*JVMClassArtifact, string) (string, error)) {
 		artifact := demoArtifact(t)
-		outputDir := t.TempDir()
+		outputDir, resolved := tempDir(t)
 		target, err := write(artifact, outputDir)
 		if err != nil {
 			t.Fatalf("write failed: %v", err)
 		}
-		expected := filepath.Join(canonical(t, outputDir), "demo", "Example.class")
+		expected := filepath.Join(resolved, "demo", "Example.class")
 		if target != expected {
 			t.Fatalf("expected %q, got %q", expected, target)
 		}
@@ -125,15 +126,16 @@ func TestWriteClassFileUsesClasspathLayout(t *testing.T) {
 func TestWriteClassFileCreatesMissingRootDirectories(t *testing.T) {
 	forEachWriteStrategy(t, func(t *testing.T, write func(*JVMClassArtifact, string) (string, error)) {
 		artifact := demoArtifact(t)
-		// Canonical base: the Unix descriptor walk creates a missing root by
-		// walking down from "/" with O_NOFOLLOW, so it refuses ordinary
-		// system links above the root (macOS's /var -> /private/var).
-		base := canonical(t, t.TempDir())
+		// On macOS base sits under /var -> /private/var.  The descriptor walk
+		// used to create a missing root by walking down from "/" with
+		// O_NOFOLLOW and so refused that system link; both walks now start
+		// from the deepest existing ancestor instead.
+		base, resolved := tempDir(t)
 		target, err := write(artifact, filepath.Join(base, "new", "deeper"))
 		if err != nil {
 			t.Fatalf("write failed: %v", err)
 		}
-		expected := filepath.Join(base, "new", "deeper", "demo", "Example.class")
+		expected := filepath.Join(resolved, "new", "deeper", "demo", "Example.class")
 		if target != expected {
 			t.Fatalf("expected %q, got %q", expected, target)
 		}
@@ -146,13 +148,13 @@ func TestWriteClassFileCreatesMissingRootDirectories(t *testing.T) {
 func TestWriteClassFileAcceptsRelativeOutputRoot(t *testing.T) {
 	forEachWriteStrategy(t, func(t *testing.T, write func(*JVMClassArtifact, string) (string, error)) {
 		artifact := demoArtifact(t)
-		base := canonical(t, t.TempDir()) // see CreatesMissingRootDirectories
+		base, resolved := tempDir(t)
 		t.Chdir(base)
 		target, err := write(artifact, filepath.Join("out", "nested"))
 		if err != nil {
 			t.Fatalf("write failed: %v", err)
 		}
-		expected := filepath.Join(base, "out", "nested", "demo", "Example.class")
+		expected := filepath.Join(resolved, "out", "nested", "demo", "Example.class")
 		if target != expected {
 			t.Fatalf("expected %q, got %q", expected, target)
 		}
@@ -162,17 +164,16 @@ func TestWriteClassFileAcceptsRelativeOutputRoot(t *testing.T) {
 func TestWriteClassFileDefaultsToCurrentDirectory(t *testing.T) {
 	forEachWriteStrategy(t, func(t *testing.T, write func(*JVMClassArtifact, string) (string, error)) {
 		artifact := demoArtifact(t)
-		base := t.TempDir()
+		base, resolved := tempDir(t)
 		t.Chdir(base)
 		target, err := write(artifact, "")
 		if err != nil {
 			t.Fatalf("write failed: %v", err)
 		}
-		// The descriptor walk reports "demo/Example.class" relative to the
-		// working directory; the path-check walk reports it absolute.  Both
-		// name the same file.
-		expected := filepath.Join(canonical(t, base), "demo", "Example.class")
-		if canonical(t, target) != expected {
+		// Both walks report an absolute path, never "demo/Example.class"
+		// relative to whatever the working directory happens to be.
+		expected := filepath.Join(resolved, "demo", "Example.class")
+		if target != expected {
 			t.Fatalf("expected %q, got %q", expected, target)
 		}
 	})
@@ -358,6 +359,44 @@ func TestWriteClassFileRejectsSymlinkedOutputFile(t *testing.T) {
 	})
 }
 
+// A hard link is not a symlink: O_NOFOLLOW does not see it, and opening the
+// target name with O_TRUNC would truncate the file it shares an inode with.
+// Both walks must replace the directory entry instead, leaving the other name
+// (the sentinel) exactly as it was.
+func TestWriteClassFileDoesNotWriteThroughHardLink(t *testing.T) {
+	forEachWriteStrategy(t, func(t *testing.T, write func(*JVMClassArtifact, string) (string, error)) {
+		artifact := demoArtifact(t)
+		root := t.TempDir()
+		// Same directory tree as root, so the link stays on one filesystem.
+		sentinel := filepath.Join(root, "sentinel.txt")
+		if err := os.WriteFile(sentinel, []byte("keep me"), 0o644); err != nil {
+			t.Fatalf("seed failed: %v", err)
+		}
+		if err := os.Mkdir(filepath.Join(root, "demo"), 0o755); err != nil {
+			t.Fatalf("mkdir failed: %v", err)
+		}
+		classPath := filepath.Join(root, "demo", "Example.class")
+		if err := os.Link(sentinel, classPath); err != nil {
+			t.Skipf("hard links unsupported here: %v", err)
+		}
+		if _, err := write(artifact, root); err != nil {
+			t.Fatalf("write failed: %v", err)
+		}
+		data, err := os.ReadFile(sentinel)
+		if err != nil || string(data) != "keep me" {
+			t.Fatalf("hard-link target was modified: %q (%v)", data, err)
+		}
+		written, err := os.ReadFile(classPath)
+		if err != nil {
+			t.Fatalf("read failed: %v", err)
+		}
+		if string(written) != string(artifact.ClassBytes) {
+			t.Fatal("class file was not written")
+		}
+		requireNoTempFiles(t, filepath.Dir(classPath))
+	})
+}
+
 func TestWriteClassFileReportsUncreatablePackageDirectory(t *testing.T) {
 	if runtime.GOOS == "windows" || os.Geteuid() == 0 {
 		t.Skip("needs POSIX permission bits enforced against a non-root user")
@@ -415,7 +454,7 @@ func TestWriteClassFileReportsUncreatableRootComponent(t *testing.T) {
 	}
 	forEachWriteStrategy(t, func(t *testing.T, write func(*JVMClassArtifact, string) (string, error)) {
 		artifact := demoArtifact(t)
-		base := canonical(t, t.TempDir())
+		base := t.TempDir()
 		if err := os.Chmod(base, 0o555); err != nil {
 			t.Fatalf("chmod failed: %v", err)
 		}
@@ -428,12 +467,12 @@ func TestWriteClassFileReportsUncreatableRootComponent(t *testing.T) {
 // The public entry point is the auto strategy; check it is wired up.
 func TestWriteClassFileUsesPlatformWalk(t *testing.T) {
 	artifact := demoArtifact(t)
-	outputDir := t.TempDir()
+	outputDir, resolved := tempDir(t)
 	target, err := WriteClassFile(artifact, outputDir)
 	if err != nil {
 		t.Fatalf("write failed: %v", err)
 	}
-	if target != filepath.Join(canonical(t, outputDir), "demo", "Example.class") {
+	if target != filepath.Join(resolved, "demo", "Example.class") {
 		t.Fatalf("unexpected target %q", target)
 	}
 }

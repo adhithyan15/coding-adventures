@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C356-nesmotrya-na",
+    "language": "russian",
+    "chapter": 356,
+    "sequence": 20770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6ec0f857de4f92c"
+  },
+  "findings": []
+}

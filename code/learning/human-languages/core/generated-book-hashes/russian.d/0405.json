@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:f1511cc487de9c92",
+  "lessonIds": [
+    "RU-C405-shina",
+    "RU-C405-prokol",
+    "RU-C405-nasos",
+    "RU-C405-nakachivat",
+    "RU-C405-buksovat"
+  ],
+  "tex": "russian/book/chapters/ch405-a-flat-tyre.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C471-obidchivyy",
+  "pathSegment": "RU-PATH-471-HURT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-471-HURT",
+      "order": 3
+    }
+  ]
+}

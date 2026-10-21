@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C439-ogibat",
+    "language": "russian",
+    "chapter": 439,
+    "sequence": 25080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1ffb7f54db986e9"
+  },
+  "findings": []
+}

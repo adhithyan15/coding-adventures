@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C410-sbivat",
+    "language": "russian",
+    "chapter": 410,
+    "sequence": 23580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2dd9284d830a0f3"
+  },
+  "findings": []
+}

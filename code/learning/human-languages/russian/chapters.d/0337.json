@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "My point of view",
+  "label": "ch:ru-my-point-of-view",
+  "canDo": "I can give my point of view and my position, say how I see things, state something publicly and say what is considered true.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C337-schitatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can give my point of view and my position, say how I see things, state something publicly and say what is considered true.",
+    "assesses": [
+      "RU-LEX-C337-TOCHKAZRENIYA-03",
+      "RU-LEX-C337-TOCHKAZRENIYA-04",
+      "RU-LEX-C337-TOCHKAZRENIYA-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Heat",
+  "label": "ch:ru-heat",
+  "canDo": "I can talk about the heat: hot weather, stuffy air, a close room, sweating and melting.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-R468-review-final-468",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can talk about the heat: hot weather, stuffy air, a close room, sweating and melting.",
+    "assesses": [
+      "RU-LEX-C468-ZHARA-03",
+      "RU-LEX-C468-ZHARA-04",
+      "RU-LEX-C468-ZHARA-05"
+    ]
+  }
+}

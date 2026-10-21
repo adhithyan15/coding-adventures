@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:230cd7d9124e44da",
+  "lessonIds": [
+    "RU-C470-styd",
+    "RU-C470-styditsya",
+    "RU-C470-smushchatsya",
+    "RU-C470-krasnet",
+    "RU-C470-zastenchivyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch470.txt",
+  "json": "russian/narration/ch470.json",
+  "textHash": "fnv1a64:5dcd422c991fb6cf",
+  "jsonHash": "fnv1a64:d3d771cb42178169",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C519-premyera",
+  "pathSegment": "RU-PATH-519-CURTAIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-519-CURTAIN",
+      "order": 3
+    }
+  ]
+}

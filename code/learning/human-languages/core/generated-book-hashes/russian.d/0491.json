@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:bbd8a7fea8e281e3",
+  "lessonIds": [
+    "RU-C491-svekrov",
+    "RU-C491-tyoshcha",
+    "RU-C491-svyokor",
+    "RU-C491-test",
+    "RU-C491-zyat"
+  ],
+  "tex": "russian/book/chapters/ch491-in-laws.tex"
+}

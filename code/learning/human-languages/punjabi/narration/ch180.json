@@ -4,7 +4,7 @@
   "chapter": 180,
   "title": "People in the Big Room",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2f5a9607c0ddb4a9",
+  "sourceHash": "fnv1a64:2abe7afd1cc429cb",
   "lessons": [
     {
       "id": "PA-C180-lok",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c53e892c3243300",
+      "sourceHash": "fnv1a64:933258b6916edba2",
       "notice": null,
       "blocks": [
         {
@@ -59,6 +59,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੋਕ (lok) is Sanskrit loka, \"world, people\", taken over as a learned loan. Mahan Kosh identifies the Sanskrit word; CDIAL 11119 gives the same meanings."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -83,7 +94,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -99,7 +110,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Punjabi University, RCPLT dictionary, lists ਲੋਕ (lok) as people or public."
+              "text": "Sources: Punjabi University, RCPLT dictionary, lists ਲੋਕ (lok) as people or public. Mahan Kosh identifies Sanskrit loka; Turner gives its senses in CDIAL 11119."
             }
           ]
         }
@@ -214,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4526dae5bd0c7c0",
+      "sourceHash": "fnv1a64:05cfd26546aca7d8",
       "notice": null,
       "blocks": [
         {
@@ -255,6 +266,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥਾਂ (thaan) (thā̃) is a tadbhava, inherited and reshaped by sound change. It comes through Prakrit thāma from Sanskrit sthāman, \"station, place\" (CDIAL 13760)."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -288,7 +310,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -304,7 +326,7 @@
             },
             {
               "kind": "speech",
-              "text": "Source: Punjabi University, RCPLT dictionary, gives ਥਾਂ (thaan) as place or location."
+              "text": "Sources: Punjabi University, RCPLT dictionary, gives ਥਾਂ (thaan) as place or location. Turner derives it through Prakrit thāma from Sanskrit sthāman in CDIAL 13760."
             }
           ]
         }

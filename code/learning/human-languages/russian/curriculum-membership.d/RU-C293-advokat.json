@@ -1,0 +1,11 @@
+{
+  "id": "RU-C293-advokat",
+  "pathSegment": "RU-PATH-293-SUD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-293-SUD",
+      "order": 1
+    }
+  ]
+}

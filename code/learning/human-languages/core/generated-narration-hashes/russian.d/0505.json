@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:1f78200553e98243",
+  "lessonIds": [
+    "RU-C505-rybalka",
+    "RU-C505-udochka",
+    "RU-C505-kryuchok",
+    "RU-C505-klevat",
+    "RU-C505-ulov"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch505.txt",
+  "json": "russian/narration/ch505.json",
+  "textHash": "fnv1a64:ffcaaa938fc37b33",
+  "jsonHash": "fnv1a64:b7f490f0cc8148c5",
+  "findings": []
+}

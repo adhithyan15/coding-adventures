@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-447-MASTERSKAYA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find repair shops: a workshop, a shoemaker, a watchmaker, a locksmith and repairs.",
+  "prerequisites": []
+}

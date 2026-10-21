@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:b300480b44087325",
+  "lessonIds": [
+    "RU-C366-vybory",
+    "RU-C366-golosovat",
+    "RU-C366-partiya",
+    "RU-C366-protest",
+    "RU-C366-protestovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch366.txt",
+  "json": "russian/narration/ch366.json",
+  "textHash": "fnv1a64:51a20c35fe039a57",
+  "jsonHash": "fnv1a64:b9424dfbba19981d",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:816c53d00c39f1fb",
+  "lessonIds": [
+    "RU-C507-rassada",
+    "RU-C507-tsvesti",
+    "RU-C507-vyanut",
+    "RU-C507-teplitsa",
+    "RU-C507-podrezat"
+  ],
+  "tex": "russian/book/chapters/ch507-seedlings-and-blossom.tex"
+}

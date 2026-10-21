@@ -1,0 +1,11 @@
+{
+  "id": "RU-C275-sovpadat",
+  "pathSegment": "RU-PATH-275-ZATYAGIVATSYA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-275-ZATYAGIVATSYA",
+      "order": 4
+    }
+  ]
+}

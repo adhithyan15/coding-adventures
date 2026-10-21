@@ -1048,6 +1048,114 @@ fn emit_method(
                 store_var_from(il, &regs, dest, "int64")?;
                 let _ = writeln!(il, "  {done}:");
             }
+            // ── LANG83 PR4: overflow-checked arithmetic ──────────────────────
+            //
+            // CIL's `add.ovf`/`sub.ovf`/`mul.ovf` throw `OverflowException`,
+            // which is not a LANG83 trap (no kind, no `Console.Out` flush);
+            // turning it into one needs a `.try`/`catch` region, which this
+            // path has never emitted and CoreCLR checks more strictly than
+            // `ilasm`. So, like the floor ops above, the overflow condition is
+            // branched around first, with the evaluation stack empty at every
+            // branch and label, and the plain wrapping instruction runs last:
+            //
+            //   add:  ((a ^ (a+b)) & (b ^ (a+b))) >= 0 → OK    else trap
+            //   sub:  ((a ^ b) & (a ^ (a-b))) >= 0     → OK    else trap
+            //   neg:  a != MIN                          → OK    else trap
+            //   mul:  a != -1 || b != MIN               → CHK   else trap
+            //   CHK:  a == 0 || (a*b) / a == b           → OK    else trap
+            //   OK:   ld a; [ld b]; add|sub|mul|neg; st dest
+            //
+            // The `-1 × MIN` guard also keeps the check's own `div` from ever
+            // seeing `MIN / -1`, which would throw.
+            "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => {
+                use interpreter_ir::exception_kind::TRAP_OVERFLOW;
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let unary = instr.op == "i64_neg_ovf";
+                let a = var_src(f, instr, 0, instr.op.as_str())?;
+                let b = if unary { a } else { var_src(f, instr, 1, instr.op.as_str())? };
+                if regs.home(dest)?.ty != "int64" {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: format!("{} needs an int64 dest (it is defined on i64)", instr.op),
+                    });
+                }
+                let ok = lang83_label();
+                match instr.op.as_str() {
+                    "i64_add_ovf" | "i64_sub_ovf" => {
+                        let arith = if instr.op == "i64_add_ovf" { "add" } else { "sub" };
+                        if arith == "add" {
+                            // (a ^ r) & (b ^ r)
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, b, "int64")?;
+                            let _ = writeln!(il, "    add");
+                            let _ = writeln!(il, "    xor");
+                            load_var_as(il, &regs, b, "int64")?;
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, b, "int64")?;
+                            let _ = writeln!(il, "    add");
+                            let _ = writeln!(il, "    xor");
+                        } else {
+                            // (a ^ b) & (a ^ r)
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, b, "int64")?;
+                            let _ = writeln!(il, "    xor");
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, b, "int64")?;
+                            let _ = writeln!(il, "    sub");
+                            let _ = writeln!(il, "    xor");
+                        }
+                        let _ = writeln!(il, "    and");
+                        let _ = writeln!(il, "    ldc.i8 0");
+                        let _ = writeln!(il, "    bge {ok}");
+                        emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                        let _ = writeln!(il, "  {ok}:");
+                        load_var_as(il, &regs, a, "int64")?;
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    {arith}");
+                    }
+                    "i64_neg_ovf" => {
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    ldc.i8 {}", i64::MIN);
+                        let _ = writeln!(il, "    bne.un {ok}");
+                        emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                        let _ = writeln!(il, "  {ok}:");
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    neg");
+                    }
+                    _ => {
+                        let chk = lang83_label();
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    ldc.i8 -1");
+                        let _ = writeln!(il, "    bne.un {chk}");
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    ldc.i8 {}", i64::MIN);
+                        let _ = writeln!(il, "    bne.un {chk}");
+                        emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                        let _ = writeln!(il, "  {chk}:");
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    ldc.i8 0");
+                        let _ = writeln!(il, "    beq {ok}");
+                        load_var_as(il, &regs, a, "int64")?;
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    mul");
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    div");
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    beq {ok}");
+                        emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                        let _ = writeln!(il, "  {ok}:");
+                        load_var_as(il, &regs, a, "int64")?;
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    mul");
+                    }
+                }
+                store_var_from(il, &regs, dest, "int64")?;
+            }
             // str_const <dest> = Str(s)  ->  ldstr "..."; st<dest>
             //
             // LANG-FULL E4 first managed foothold: Dartmouth BASIC string

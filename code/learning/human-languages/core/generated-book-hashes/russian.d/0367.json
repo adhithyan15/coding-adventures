@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:177f71a1f8ad0205",
+  "lessonIds": [
+    "RU-C367-svoboda",
+    "RU-C367-ravenstvo",
+    "RU-C367-bednost",
+    "RU-C367-bogatstvo",
+    "RU-C367-bezrabotica"
+  ],
+  "tex": "russian/book/chapters/ch367-freedom-and-equality.tex"
+}

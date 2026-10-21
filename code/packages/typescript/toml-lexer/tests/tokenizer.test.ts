@@ -125,6 +125,11 @@ describe("literal strings (single-quoted)", () => {
 });
 
 describe("multi-line basic strings (triple double-quoted)", () => {
+  it("rejects long unterminated newline-only strings without catastrophic backtracking", () => {
+    const source = `\"\"\"${"\n".repeat(256)}`;
+    expect(() => tokenizeTOML(source)).toThrow();
+  });
+
   it("tokenizes a multi-line basic string", () => {
     /**
      * Multi-line basic strings use triple double quotes: """..."""
@@ -146,6 +151,17 @@ describe("multi-line basic strings (triple double-quoted)", () => {
     expect(tokens[0].type).toBe("ML_BASIC_STRING");
     expect(tokens[0].value).toBe("hello");
   });
+
+  it.each([
+    ['"""x""""', 'x"'],
+    ['"""x"""""', 'x""'],
+  ])("retains delimiter-adjacent quotes in %s", (source, expected) => {
+    expect(tokenizeTOML(source)[0].value).toBe(expected);
+  });
+
+  it("rejects a lone carriage return in a multi-line basic string", () => {
+    expect(() => tokenizeTOML('"""x\ry"""')).toThrow();
+  });
 });
 
 describe("multi-line literal strings (triple single-quoted)", () => {
@@ -157,6 +173,17 @@ describe("multi-line literal strings (triple single-quoted)", () => {
     const tokens = tokenizeTOML("'''hello\nworld'''");
     expect(tokens[0].type).toBe("ML_LITERAL_STRING");
     expect(tokens[0].value).toBe("hello\nworld");
+  });
+
+  it.each([
+    ["'''x''''", "x'"],
+    ["'''x'''''", "x''"],
+  ])("retains delimiter-adjacent quotes in %s", (source, expected) => {
+    expect(tokenizeTOML(source)[0].value).toBe(expected);
+  });
+
+  it("rejects a lone carriage return in a multi-line literal string", () => {
+    expect(() => tokenizeTOML("'''x\ry'''")).toThrow();
   });
 });
 

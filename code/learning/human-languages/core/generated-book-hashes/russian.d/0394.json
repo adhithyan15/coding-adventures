@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:60947ede14d9b387",
+  "lessonIds": [
+    "RU-C394-dolg",
+    "RU-C394-kredit",
+    "RU-C394-odalzhivat",
+    "RU-C394-vozvrashchat",
+    "RU-C394-procent"
+  ],
+  "tex": "russian/book/chapters/ch394-debts-and-loans.tex"
+}

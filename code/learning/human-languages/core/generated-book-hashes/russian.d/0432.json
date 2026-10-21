@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:d795a1435760ef98",
+  "lessonIds": [
+    "RU-C432-protekat",
+    "RU-C432-kapat",
+    "RU-C432-zasoryatsya",
+    "RU-C432-tech",
+    "RU-C432-potop"
+  ],
+  "tex": "russian/book/chapters/ch432-a-leaking-tap.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R468-review-467-468",
+    "language": "russian",
+    "chapter": 468,
+    "sequence": 26580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab4fb555015f83c7"
+  },
+  "findings": []
+}

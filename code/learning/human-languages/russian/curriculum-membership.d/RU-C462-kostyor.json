@@ -1,0 +1,11 @@
+{
+  "id": "RU-C462-kostyor",
+  "pathSegment": "RU-PATH-462-KOSTYOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-462-KOSTYOR",
+      "order": 2
+    }
+  ]
+}

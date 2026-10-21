@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:f781ab7475228ecd",
+  "lessonIds": [
+    "RU-C449-parikmakherskaya",
+    "RU-C449-strizhka",
+    "RU-C449-strich",
+    "RU-C449-britsya",
+    "RU-C449-chyolka"
+  ],
+  "tex": "russian/book/chapters/ch449-a-haircut.tex"
+}

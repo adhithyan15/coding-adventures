@@ -612,6 +612,46 @@ impl<'a> Emitter<'a> {
         }
     }
 
+    /// Emit the body slot of an `if`/`else`, `while`, `for`, `for-in`,
+    /// `for-of`, `with` or `do` (CCR-083, #15918).
+    ///
+    /// Upstream's AST always holds a BLOCK there, and its printer
+    /// (`addNonEmptyStatement`) unwraps a one-statement block except when the
+    /// statement is a `do…while` (`isBlockDeclOrDo`, "a IE6/7 browser bug that
+    /// needs a block around DOs"). So a bare `do…while` body prints braced:
+    /// `if(c)do a();while(d)` → `if(c){do a();while(d)}`. The `do…while`'s own
+    /// `;` sits before the `}` and is dropped, as at the end of any block.
+    /// Labels are not body slots here, since upstream lets them take any child.
+    fn emit_body(&mut self, body: &Statement) {
+        if !matches!(body, Statement::Tagged(TaggedStatement::DoWhileStatement(_))) {
+            self.emit_statement(body);
+            return;
+        }
+        if self.opts.pretty {
+            // Pretty mode lays the braces out like any other block.
+            self.emit_block_statement(&BlockStatement {
+                cv: None,
+                body: vec![body.clone()],
+            });
+            return;
+        }
+        self.write_str("{");
+        self.emit_statement(body);
+        self.pop_trailing_semi_if_compact();
+        self.write_str("}");
+    }
+
+    /// Does [`Self::emit_body`] start this body with `{`? A keyword before it
+    /// (`else`, `do`) then needs no separating space: `else{`, `do{`.
+    fn body_opens_with_brace(body: &Statement) -> bool {
+        matches!(
+            body,
+            Statement::Tagged(
+                TaggedStatement::BlockStatement(_) | TaggedStatement::DoWhileStatement(_)
+            )
+        )
+    }
+
     fn emit_if(&mut self, i: &IfStatement) {
         self.maybe_map(&i.cv);
         self.write_str("if");
@@ -620,12 +660,17 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&i.test);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_statement(&i.consequent);
+        self.emit_body(&i.consequent);
         if let Some(alt) = &i.alternate {
             self.pretty_ws();
             self.write_str("else");
-            self.required_ws();
-            self.emit_statement(alt);
+            // `else{` lexes cleanly; only a word-led body needs the space.
+            if Self::body_opens_with_brace(alt) {
+                self.pretty_ws();
+            } else {
+                self.required_ws();
+            }
+            self.emit_body(alt);
         }
     }
 
@@ -637,7 +682,7 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&w.test);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_statement(&w.body);
+        self.emit_body(&w.body);
     }
 
     /// `with (object) body` (CLOC12.187). Byte-identical in shape to a `while`
@@ -651,7 +696,7 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&w.object);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_statement(&w.body);
+        self.emit_body(&w.body);
     }
 
     fn emit_do_while(&mut self, d: &DoWhileStatement) {
@@ -667,15 +712,12 @@ impl<'a> Emitter<'a> {
         // before a closing `}` via `last_stmt_uses_terminator_semi`).
         self.maybe_map(&d.cv);
         self.write_str("do");
-        if matches!(
-            d.body.as_ref(),
-            Statement::Tagged(TaggedStatement::BlockStatement(_))
-        ) {
+        if Self::body_opens_with_brace(&d.body) {
             self.pretty_ws();
         } else {
             self.required_ws();
         }
-        self.emit_statement(&d.body);
+        self.emit_body(&d.body);
         self.pretty_ws();
         self.write_str("while");
         self.pretty_ws();
@@ -710,7 +752,7 @@ impl<'a> Emitter<'a> {
         }
         self.write_str(")");
         self.pretty_ws();
-        self.emit_statement(&f.body);
+        self.emit_body(&f.body);
     }
 
     fn emit_for_in(&mut self, f: &ForInStatement) {
@@ -738,7 +780,7 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&f.right);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_statement(&f.body);
+        self.emit_body(&f.body);
     }
 
     fn emit_for_of(&mut self, f: &ForOfStatement) {
@@ -761,7 +803,7 @@ impl<'a> Emitter<'a> {
         self.emit_expression(&f.right);
         self.write_str(")");
         self.pretty_ws();
-        self.emit_statement(&f.body);
+        self.emit_body(&f.body);
     }
 
     fn emit_return(&mut self, r: &ReturnStatement) {
@@ -8591,5 +8633,108 @@ mod tests {
         });
         assert_eq!(emit_stmt(block_of(vec![ret])), "{return};");
         assert_eq!(emit_stmt(block_of(vec![call_a()])), "{a()};");
+    }
+
+    // ---- CCR-083 (#15918): a `do…while` body slot is braced -------------
+    //
+    // Upstream's AST always has a BLOCK in the body slot of `if`/`else`,
+    // `while`, `for`, `for-in`, `for-of`, `with` and `do`. Its printer
+    // (`addNonEmptyStatement`) unwraps a one-statement block EXCEPT when that
+    // statement is a `do…while` (`isBlockDeclOrDo`; the source comments "hack
+    // around a IE6/7 browser bug that needs a block around DOs"). So a bare
+    // `do…while` in a body slot prints braced, at every level. Labels take any
+    // child and stay bare.
+    //
+    // | input                       | upstream                     |
+    // |-----------------------------|------------------------------|
+    // | `if(c)do a();while(0)`      | `if(c){do a();while(0)};`    |
+    // | `if(c)a();else do b();while(0)` | `if(c)a();else{do b();while(0)};` |
+    // | `l:do a();while(0)`         | `l:do a();while(0);`         |
+
+    fn do_a_while(test: &str) -> Statement {
+        Statement::do_while_statement(DoWhileStatement {
+            cv: None,
+            body: Box::new(expr_stmt(Expression::CallExpression(CallExpression {
+                cv: None,
+                callee: Box::new(ident("a")),
+                arguments: vec![],
+            }))),
+            test: ident(test),
+        })
+    }
+
+    #[test]
+    fn ccr083_if_consequent_do_while_is_braced() {
+        let s = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(do_a_while("d")),
+            alternate: None,
+        });
+        assert_eq!(emit_stmt(s), "if(c){do a();while(d)};");
+    }
+
+    #[test]
+    fn ccr083_else_do_while_is_braced_without_a_space() {
+        let s = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(expr_stmt(ident("b"))),
+            alternate: Some(Box::new(do_a_while("d"))),
+        });
+        assert_eq!(emit_stmt(s), "if(c)b;else{do a();while(d)};");
+    }
+
+    #[test]
+    fn ccr083_loop_and_with_bodies_are_braced() {
+        let w = Statement::while_statement(WhileStatement {
+            cv: None,
+            test: ident("c"),
+            body: Box::new(do_a_while("d")),
+        });
+        assert_eq!(emit_stmt(w), "while(c){do a();while(d)};");
+        let with = Statement::with_statement(WithStatement {
+            cv: None,
+            object: ident("o"),
+            body: Box::new(do_a_while("d")),
+        });
+        assert_eq!(emit_stmt(with), "with(o){do a();while(d)};");
+    }
+
+    #[test]
+    fn ccr083_do_body_do_while_is_braced() {
+        // do do a();while(d);while(e) → do{do a();while(d)}while(e);
+        let s = Statement::do_while_statement(DoWhileStatement {
+            cv: None,
+            body: Box::new(do_a_while("d")),
+            test: ident("e"),
+        });
+        assert_eq!(emit_stmt(s), "do{do a();while(d)}while(e);");
+    }
+
+    #[test]
+    fn ccr083_label_and_statement_position_stay_bare() {
+        assert_eq!(emit_stmt(do_a_while("d")), "do a();while(d);");
+        let l = Statement::labeled_statement(LabeledStatement {
+            cv: None,
+            label: Identifier {
+                cv: None,
+                name: "l".to_string(),
+            },
+            body: Box::new(do_a_while("d")),
+        });
+        assert_eq!(emit_stmt(l), "l:do a();while(d);");
+    }
+
+    #[test]
+    fn ccr083_else_block_has_no_space() {
+        // `else` needs a space only before a word; `{` lexes cleanly.
+        let s = Statement::if_statement(IfStatement {
+            cv: None,
+            test: ident("c"),
+            consequent: Box::new(expr_stmt(ident("a"))),
+            alternate: Some(Box::new(block_of(vec![expr_stmt(ident("b")), expr_stmt(ident("e"))]))),
+        });
+        assert_eq!(emit_stmt(s), "if(c)a;else{b;e};");
     }
 }

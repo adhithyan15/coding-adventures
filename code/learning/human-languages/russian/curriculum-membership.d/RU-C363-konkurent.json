@@ -1,0 +1,11 @@
+{
+  "id": "RU-C363-konkurent",
+  "pathSegment": "RU-PATH-363-PEREGOVORY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-363-PEREGOVORY",
+      "order": 3
+    }
+  ]
+}

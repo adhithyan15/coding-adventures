@@ -157,7 +157,7 @@ pub fn compile_typed_source(source: &str) -> Result<IIRModule, TwigCompileError>
 3. Compiles to IIR using `annotated_node.iir_hint()` for `type_hint` on each instruction
 4. Sets `FunctionTypeStatus` from instruction type coverage
 
-Existing `compile_source` / `compile_program` unchanged.
+Existing `compile_source` unchanged. (`compile_program` was later replaced by the CST entry point `compile_ast` in twig-ir-compiler 0.46, per LANG84 decision 6.)
 
 ---
 

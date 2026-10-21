@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-425-KACHKA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-425-KACHKA"
+  ],
+  "after": []
+}

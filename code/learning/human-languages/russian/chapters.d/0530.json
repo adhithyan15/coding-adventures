@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Washing Day",
+  "label": "ch:ru-washing-day",
+  "canDo": "I can talk about doing the laundry and getting stains out.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C530-otstiryvat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can talk about doing the laundry and getting stains out.",
+    "assesses": [
+      "RU-LEX-C530-LAUNDRY-03",
+      "RU-LEX-C530-LAUNDRY-04",
+      "RU-LEX-C530-LAUNDRY-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-321-KOROL",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-321-KOROL"
+  ],
+  "after": []
+}

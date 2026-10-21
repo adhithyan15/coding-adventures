@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-391-ZAKONODATELSTVO",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-391-ZAKONODATELSTVO"
+  ],
+  "after": []
+}

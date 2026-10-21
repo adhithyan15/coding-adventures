@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:90af29fd7f22a740",
+  "lessonIds": [
+    "RU-C488-bessonnitsa",
+    "RU-C488-khrapet",
+    "RU-C488-zevat",
+    "RU-C488-koshmar",
+    "RU-C488-dremat"
+  ],
+  "tex": "russian/book/chapters/ch488-a-sleepless-night.tex"
+}

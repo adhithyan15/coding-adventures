@@ -340,11 +340,11 @@ class FormeSpecMapTests(unittest.TestCase):
         )
         self.assertIn("Authoring v1 is complete.", roadmap)
         self.assertIn(
-            "| 72 | FM-B073 | active | Implement the declarative TOML pipeline form |",
+            "| 72 | FM-B073 | done | Implement the declarative TOML pipeline form |",
             roadmap,
         )
         self.assertIn(
-            "| 73 | FM-B074 | ready | Enforce plugin extension-kind subtype compatibility |",
+            "| 73 | FM-B074 | active | Enforce plugin extension-kind subtype compatibility |",
             roadmap,
         )
 

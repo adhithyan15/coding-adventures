@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:86cc879048c25d3c",
+  "lessonIds": [
+    "RU-C513-razminka",
+    "RU-C513-otzhimatsya",
+    "RU-C513-prisedat",
+    "RU-C513-ganteli",
+    "RU-C513-vynoslivost"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch513.txt",
+  "json": "russian/narration/ch513.json",
+  "textHash": "fnv1a64:cea825fbc204ab63",
+  "jsonHash": "fnv1a64:f5925867f2eeb439",
+  "findings": []
+}

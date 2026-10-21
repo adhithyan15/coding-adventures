@@ -1,0 +1,11 @@
+{
+  "id": "RU-C282-slukh",
+  "pathSegment": "RU-PATH-282-ISTOCHNIK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-282-ISTOCHNIK",
+      "order": 2
+    }
+  ]
+}

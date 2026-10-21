@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:2582934f2fb5f965",
+  "lessonIds": [
+    "RU-C281-korrespondent",
+    "RU-C281-reportazh",
+    "RU-C281-vedushchiy",
+    "RU-C281-efir",
+    "RU-C281-telekanal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch281.txt",
+  "json": "russian/narration/ch281.json",
+  "textHash": "fnv1a64:0337ed373d6d30af",
+  "jsonHash": "fnv1a64:0787e86f6f7e579f",
+  "findings": []
+}

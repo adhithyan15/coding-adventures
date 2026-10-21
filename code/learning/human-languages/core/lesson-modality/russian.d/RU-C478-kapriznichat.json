@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C478-kapriznichat",
+    "language": "russian",
+    "chapter": 478,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6b464102740c0a8"
+  },
+  "findings": []
+}

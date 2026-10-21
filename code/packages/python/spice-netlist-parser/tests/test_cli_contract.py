@@ -56,6 +56,8 @@ def test_run_netlist_json_expands_global_temperature_cards() -> None:
     assert [len(analysis["records"]) for analysis in payload["analyses"]] == case["expected"]["recordCounts"]
     assert [output["temperatureKelvin"] for output in payload["outputs"]] == case["expected"]["outputTemperaturesKelvin"]
     assert [measure["temperatureKelvin"] for measure in payload["measures"]] == case["expected"]["measureTemperaturesKelvin"]
+    assert [measure["analysis"] for measure in payload["measures"]] == case["expected"]["measureAnalyses"]
+    assert [measure["name"] for measure in payload["measures"]] == case["expected"]["measureNames"]
 
 
 def test_run_netlist_json_exposes_deck_output_artifacts() -> None:
@@ -68,9 +70,19 @@ def test_run_netlist_json_exposes_deck_output_artifacts() -> None:
     assert payload["measures"] == case["expected"]["measures"]
 
 
+def test_run_netlist_json_exposes_raw_output_artifacts() -> None:
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "raw-output-artifacts")
+    payload = json.loads(run_netlist_json(case["deck"]))
+
+    assert payload["rawfiles"] == case["expected"]["rawfiles"]
+    assert payload["wrdata"] == case["expected"]["wrdata"]
+
+
 def test_module_cli_runs_a_deck_file_as_json(tmp_path: Path) -> None:
-    case = _cli_case()
-    deck_path = tmp_path / "core.cir"
+    corpus = json.loads(_grammar_path("berkeley-v1-cli-corpus.json").read_text(encoding="utf-8"))
+    case = next(case for case in corpus["cases"] if case["id"] == "raw-output-artifacts")
+    deck_path = tmp_path / "raw-output.cir"
     deck_path.write_text(case["deck"], encoding="utf-8")
 
     completed = subprocess.run(
@@ -81,7 +93,10 @@ def test_module_cli_runs_a_deck_file_as_json(tmp_path: Path) -> None:
     )
 
     assert completed.returncode == 0, completed.stderr
-    assert json.loads(completed.stdout)["title"] == case["expected"]["title"]
+    payload = json.loads(completed.stdout)
+    assert payload["title"] == case["expected"]["title"]
+    assert payload["rawfiles"] == case["expected"]["rawfiles"]
+    assert payload["wrdata"] == case["expected"]["wrdata"]
 
 
 def test_inspection_api_and_cli_expose_the_complete_runnable_plan() -> None:

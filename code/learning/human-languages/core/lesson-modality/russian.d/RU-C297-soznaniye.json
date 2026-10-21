@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C297-soznaniye",
+    "language": "russian",
+    "chapter": 297,
+    "sequence": 17750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41566c1de3d98fac"
+  },
+  "findings": []
+}

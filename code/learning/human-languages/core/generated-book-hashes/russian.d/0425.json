@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:cb9a1d3b3b6f3f65",
+  "lessonIds": [
+    "RU-C425-otplyvat",
+    "RU-C425-prichalivat",
+    "RU-C425-kachka",
+    "RU-C425-ukachivat",
+    "RU-C425-yakor"
+  ],
+  "tex": "russian/book/chapters/ch425-seasickness.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C346-nedostatok",
+  "pathSegment": "RU-PATH-346-PLYUSY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-346-PLYUSY",
+      "order": 1
+    }
+  ]
+}

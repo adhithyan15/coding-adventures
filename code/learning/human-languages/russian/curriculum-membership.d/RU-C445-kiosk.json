@@ -1,0 +1,11 @@
+{
+  "id": "RU-C445-kiosk",
+  "pathSegment": "RU-PATH-445-FONAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-445-FONAR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:7de5440c28b2d8d5",
+  "lessonIds": [
+    "RU-C313-yolka",
+    "RU-C313-girlyanda",
+    "RU-C313-ukrashat",
+    "RU-C313-ukrasheniye",
+    "RU-C313-naryazhat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch313.txt",
+  "json": "russian/narration/ch313.json",
+  "textHash": "fnv1a64:8b70264a1905d83d",
+  "jsonHash": "fnv1a64:9df97067634ff8bd",
+  "findings": []
+}

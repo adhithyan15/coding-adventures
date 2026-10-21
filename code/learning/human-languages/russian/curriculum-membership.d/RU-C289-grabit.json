@@ -1,0 +1,11 @@
+{
+  "id": "RU-C289-grabit",
+  "pathSegment": "RU-PATH-289-OGRABLENIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-289-OGRABLENIYE",
+      "order": 2
+    }
+  ]
+}

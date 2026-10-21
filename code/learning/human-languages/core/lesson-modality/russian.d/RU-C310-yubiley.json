@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C310-yubiley",
+    "language": "russian",
+    "chapter": 310,
+    "sequence": 18390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:092c9e01de7a06e5"
+  },
+  "findings": []
+}

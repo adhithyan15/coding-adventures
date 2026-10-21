@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:4a7308622da4446e",
+  "lessonIds": [
+    "RU-C455-rasplachivatsya",
+    "RU-C455-oplata",
+    "RU-C455-kartochka",
+    "RU-C455-razmenivat",
+    "RU-C455-obschityvat"
+  ],
+  "tex": "russian/book/chapters/ch455-paying-at-the-till.tex"
+}

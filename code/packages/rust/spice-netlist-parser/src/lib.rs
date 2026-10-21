@@ -8,10 +8,10 @@ use spice_engine::{
     format_deck_table_json, mosfet_from_model_card, noise_ac, normalize_model_card, run_deck,
     sens_dc, tf, transient_with_method, AcPoint, AdaptiveTransientOptions, Bjt, BjtPolarity,
     Capacitor, Cccs, Ccvs, Circuit, Complex, CurrentSource, DcOpOptions, DcResult, DcSweepPoint,
-    Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params,
-    MosfetType, MutualInductor, NoiseResult, PulseWaveform, PwlWaveform, Resistor, SensResult,
-    SinWaveform, SpiceError, TfResult, TransientMethod, TransientPoint, TransmissionLine, Vccs,
-    Vcvs, VoltageSource, Waveform,
+    DeckAnalysisExecution, Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet,
+    MosfetLevel1Params, MosfetType, MutualInductor, NoiseResult, PulseWaveform, PwlWaveform,
+    Resistor, SensResult, SinWaveform, SpiceError, TfResult, TransientMethod, TransientPoint,
+    TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 const OXIDE_PERMITTIVITY: f64 = 3.453_133e-11;
@@ -898,7 +898,7 @@ struct SubcktDefinition {
 }
 
 pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
-    let syntax = syntax::parse_berkeley_syntax(text);
+    let syntax = syntax::parse_berkeley_syntax(&without_control_blocks(text));
     if let Some(diagnostic) = syntax
         .diagnostics
         .iter()
@@ -1023,6 +1023,27 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
     })
 }
 
+fn without_control_blocks(text: &str) -> String {
+    let mut in_control = false;
+    text.split('\n')
+        .map(|line| {
+            let head = line.trim().to_ascii_lowercase();
+            if in_control {
+                if head == ".endc" {
+                    in_control = false;
+                }
+                String::new()
+            } else if head == ".control" {
+                in_control = true;
+                String::new()
+            } else {
+                line.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
 fn syntax_diagnostic_error(diagnostic: &BerkeleySyntaxDiagnostic) -> NetlistParseError {
     let message = format!("{}: {}", diagnostic.code, diagnostic.message);
     if let Some(span) = diagnostic.span {
@@ -1071,7 +1092,7 @@ pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisE
     run_analysis_plan(&parsed)
 }
 
-pub const CLI_RESULT_SCHEMA_VERSION: u32 = 2;
+pub const CLI_RESULT_SCHEMA_VERSION: u32 = 3;
 pub const CLI_INSPECTION_SCHEMA_VERSION: u32 = 1;
 pub const CLI_ERROR_CODE: &str = "SPICE_CLI_ERROR";
 
@@ -1082,6 +1103,8 @@ pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
     let measures = measure_results(&parsed, &parser_results)?;
     let plan = build_analysis_plan(&parsed);
     let mut analyses = Vec::new();
+    let mut rawfiles = Vec::new();
+    let mut wrdata = Vec::new();
     for temperature_kelvin in parsed.analysis_temperatures_kelvin()? {
         let circuit = match temperature_kelvin {
             Some(temperature) => {
@@ -1102,6 +1125,8 @@ pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
                 "temperatureKelvin": temperature_kelvin,
                 "records": cli_table_records(&item.plan.analysis, &item.table),
             }));
+            rawfiles.extend(cli_rawfile_artifacts(step, item, temperature_kelvin));
+            wrdata.extend(cli_wrdata_artifacts(step, item, temperature_kelvin));
         }
     }
     Ok(format!(
@@ -1112,6 +1137,8 @@ pub fn run_netlist_json(text: &str) -> Result<String, AnalysisExecutionError> {
             "analyses": analyses,
             "outputs": cli_output_artifacts(&outputs),
             "measures": cli_measure_artifacts(&measures),
+            "rawfiles": rawfiles,
+            "wrdata": wrdata,
         }))
         .expect("CLI result envelope must serialize")
     ))
@@ -1205,6 +1232,56 @@ fn cli_measure_artifacts(measures: &[MeasureResult]) -> Vec<serde_json::Value> {
                 "probe": cli_probe_text(&measure.probe),
                 "value": measure.value,
                 "temperatureKelvin": measure.temperature_kelvin,
+            })
+        })
+        .collect()
+}
+
+fn cli_rawfile_artifacts(
+    step: &AnalysisPlanStep,
+    execution: &DeckAnalysisExecution,
+    temperature_kelvin: Option<f64>,
+) -> Vec<serde_json::Value> {
+    execution
+        .rawfile_artifacts
+        .iter()
+        .map(|artifact| {
+            serde_json::json!({
+                "analysisIndex": step.index,
+                "analysis": format!("{:?}", step.kind).to_ascii_lowercase(),
+                "temperatureKelvin": temperature_kelvin,
+                "target": artifact.target,
+                "marker": artifact.marker,
+                "probes": artifact.probes,
+                "matchedProbes": artifact.matched_probes,
+                "unmatchedProbes": artifact.unmatched_probes,
+                "options": artifact.options,
+                "content": artifact.rawfile,
+            })
+        })
+        .collect()
+}
+
+fn cli_wrdata_artifacts(
+    step: &AnalysisPlanStep,
+    execution: &DeckAnalysisExecution,
+    temperature_kelvin: Option<f64>,
+) -> Vec<serde_json::Value> {
+    execution
+        .wrdata_artifacts
+        .iter()
+        .map(|artifact| {
+            serde_json::json!({
+                "analysisIndex": step.index,
+                "analysis": format!("{:?}", step.kind).to_ascii_lowercase(),
+                "temperatureKelvin": temperature_kelvin,
+                "target": artifact.target,
+                "marker": artifact.marker,
+                "probes": artifact.probes,
+                "matchedProbes": artifact.matched_probes,
+                "unmatchedProbes": artifact.unmatched_probes,
+                "options": artifact.options,
+                "content": artifact.datafile,
             })
         })
         .collect()
@@ -1586,10 +1663,16 @@ fn evaluate_measure(
             card.name
         )));
     }
-    if card.operation == MeasureOperation::Find {
-        if execution.kind == AnalysisKind::Op && card.at.is_none() {
-            return Ok(measure_numeric_value(samples[0].value));
+    if execution.kind == AnalysisKind::Op && card.operation == MeasureOperation::Find {
+        if card.at.is_some() && card.at != Some(0.0) {
+            return Err(NetlistParseError::new(format!(
+                ".measure {:?} operating-point FIND AT must be 0",
+                card.name
+            )));
         }
+        return Ok(measure_numeric_value(samples[0].value));
+    }
+    if card.operation == MeasureOperation::Find {
         let Some(at) = card.at else {
             return Err(NetlistParseError::new(format!(
                 ".measure {:?} FIND requires AT=<value>",

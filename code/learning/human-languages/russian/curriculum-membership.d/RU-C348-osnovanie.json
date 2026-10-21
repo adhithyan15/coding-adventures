@@ -1,0 +1,11 @@
+{
+  "id": "RU-C348-osnovanie",
+  "pathSegment": "RU-PATH-348-POVOD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-348-POVOD",
+      "order": 1
+    }
+  ]
+}

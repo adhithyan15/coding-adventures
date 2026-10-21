@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-348-POVOD",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-348-POVOD"
+  ],
+  "after": []
+}

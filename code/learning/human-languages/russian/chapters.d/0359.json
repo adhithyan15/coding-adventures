@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Duties at work",
+  "label": "ch:ru-duties-at-work",
+  "canDo": "I can talk about my duties at work: what I am given to do, what I carry out and whether I can cope.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C359-spravlyatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about my duties at work: what I am given to do, what I carry out and whether I can cope.",
+    "assesses": [
+      "RU-LEX-C359-OBYAZANNOSTI-03",
+      "RU-LEX-C359-OBYAZANNOSTI-04",
+      "RU-LEX-C359-OBYAZANNOSTI-05"
+    ]
+  }
+}

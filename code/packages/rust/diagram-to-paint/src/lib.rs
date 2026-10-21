@@ -838,6 +838,7 @@ where
 {
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
+    let mut rich_text_instructions = Vec::new();
     for (index, lane) in diagram.lanes.iter().enumerate() {
         let fallback_fill = if index % 2 == 0 { "#f8fafc" } else { "#eef6f8" };
         let fill = lane.style.fill.as_deref()
@@ -864,21 +865,24 @@ where
         if let Some(weight) = lane.style.font_weight { title_font.weight = weight; }
         if let Some(italic) = lane.style.font_italic { title_font.italic = italic; }
         if let Some(family) = &lane.style.font_family { title_font.family.clone_from(family); }
-        text_children.push(text_node(
-            &lane.label,
-            lane.x + 8.0,
-            lane.y + 7.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
-            lane.width - 16.0,
-            26.0,
-            title_font,
-            lane.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
-                .and_then(parse_css_color).unwrap_or(Color {
-                r: 38,
-                g: 50,
-                b: 56,
-                a: 255,
-            }),
-        ));
+        let label_x = lane.x + 8.0;
+        let label_y = lane.y + 7.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0);
+        let label_color = lane.style.text_color.as_deref()
+            .or(diagram.theme.title_color.as_deref()).unwrap_or("#263238");
+        if lane.label.markdown.is_some() {
+            rich_text_instructions.extend(markdown_label_instructions(
+                &lane.label,
+                MarkdownLabelBox { x: label_x, y: label_y, width: lane.width - 16.0, height: 26.0 },
+                &title_font,
+                label_color,
+                options,
+            ));
+        } else {
+            text_children.push(text_node(
+                &lane.label.text, label_x, label_y, lane.width - 16.0, 26.0, title_font,
+                parse_css_color(label_color).unwrap_or(Color { r: 38, g: 50, b: 56, a: 255 }),
+            ));
+        }
     }
     for group in &diagram.groups {
         let stroke = group.style.stroke.as_deref()
@@ -897,16 +901,24 @@ where
         if let Some(weight) = group.style.font_weight { label_font.weight = weight; }
         if let Some(italic) = group.style.font_italic { label_font.italic = italic; }
         if let Some(family) = &group.style.font_family { label_font.family.clone_from(family); }
-        text_children.push(text_node(
-            &group.label,
-            group.x + 8.0,
-            group.y + 4.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
-            group.width - 16.0,
-            22.0,
-            label_font, group.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
-                .and_then(parse_css_color)
-                .unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
-        ));
+        let label_x = group.x + 8.0;
+        let label_y = group.y + 4.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0);
+        let label_color = group.style.text_color.as_deref()
+            .or(diagram.theme.title_color.as_deref()).unwrap_or("#455a64");
+        if group.label.markdown.is_some() {
+            rich_text_instructions.extend(markdown_label_instructions(
+                &group.label,
+                MarkdownLabelBox { x: label_x, y: label_y, width: group.width - 16.0, height: 22.0 },
+                &label_font,
+                label_color,
+                options,
+            ));
+        } else {
+            text_children.push(text_node(
+                &group.label.text, label_x, label_y, group.width - 16.0, 22.0, label_font,
+                parse_css_color(label_color).unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
+            ));
+        }
     }
     for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
@@ -1083,15 +1095,21 @@ where
             if let Some(family) = &edge.style.font_family {
                 label_font.family.clone_from(family);
             }
-            text_children.push(text_node(
-                label,
-                label_x,
-                label_y,
-                104.0,
-                22.0,
-                label_font,
-                css_to_color(edge.style.text_color.as_deref().unwrap_or(&diagram.theme.text_color)),
-            ));
+            let label_color = edge.style.text_color.as_deref().unwrap_or(&diagram.theme.text_color);
+            if label.markdown.is_some() {
+                rich_text_instructions.extend(markdown_label_instructions(
+                    label,
+                    MarkdownLabelBox { x: label_x, y: label_y, width: 104.0, height: 22.0 },
+                    &label_font,
+                    label_color,
+                    options,
+                ));
+            } else {
+                text_children.push(text_node(
+                    &label.text, label_x, label_y, 104.0, 22.0, label_font,
+                    css_to_color(label_color),
+                ));
+            }
         }
     }
     for node in &diagram.nodes {
@@ -1565,15 +1583,22 @@ where
                     ),
                 ),
             };
-            text_children.push(text_node(
-                &node.label,
-                label_x,
-                label_y,
-                label_width,
-                label_height,
-                label_font,
-                text_color,
-            ));
+            if node.label.markdown.is_some() {
+                let label_color = node.style.text_color.as_deref()
+                    .or(diagram.theme.node_text_color.as_deref())
+                    .unwrap_or(&diagram.theme.primary_text_color);
+                rich_text_instructions.extend(markdown_label_instructions(
+                    &node.label,
+                    MarkdownLabelBox { x: label_x, y: label_y, width: label_width, height: label_height },
+                    &label_font,
+                    label_color,
+                    options,
+                ));
+            } else {
+                text_children.push(text_node(
+                    &node.label.text, label_x, label_y, label_width, label_height, label_font, text_color,
+                ));
+            }
         }
     }
     if let Some(title) = &diagram.title {
@@ -1622,6 +1647,7 @@ where
         },
     );
     instructions.extend(text_scene.instructions);
+    instructions.extend(rich_text_instructions);
     let mut metadata = HashMap::new();
     if let Some(title) = &diagram.accessibility_title {
         metadata.insert("accessibility.title".into(), title.clone());

@@ -58,15 +58,17 @@
     },
     {
       "id": "global-temperature-op",
-      "deck": "* Berkeley SPICE global temperature CLI corpus\n.model Dfast D(IS=2e-14)\nVbias vin 0 0.8\nRlimit vin out 1k\nD1 out 0 Dfast\n.temp 27 75\n.dc Vbias 0.8 0.8 0.1\n.save V(out)\n.measure dc temperature_output FIND V(out) AT=0.8\n.end\n",
+      "deck": "* Berkeley SPICE global temperature CLI corpus\n.model Dfast D(IS=2e-14)\nVbias vin 0 0.8\nRlimit vin out 1k\nD1 out 0 Dfast\n.temp 27 75\n.op\n.save V(out)\n.measure op temperature_output FIND V(out) AT=0\n.end\n",
       "expected": {
         "title": "Berkeley SPICE global temperature CLI corpus",
-        "analysisKinds": ["dc", "dc"],
+        "analysisKinds": ["op", "op"],
         "analysisIndexes": [1, 1],
         "temperatureKelvin": [300.15, 348.15],
         "recordCounts": [1, 1],
         "outputTemperaturesKelvin": [300.15, 348.15],
-        "measureTemperaturesKelvin": [300.15, 348.15]
+        "measureTemperaturesKelvin": [300.15, 348.15],
+        "measureAnalyses": ["op", "op"],
+        "measureNames": ["temperature_output", "temperature_output"]
       }
     },
     {
@@ -109,6 +111,41 @@
             "operation": "find",
             "probe": "V(out)",
             "value": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "id": "raw-output-artifacts",
+      "deck": "* Berkeley SPICE raw output CLI corpus\nV1 in 0 1\nR1 in out 1k\nR2 out 0 1k\n.op\n.control\nset filetype=ascii\nset wr_vecnames\nwrite result.raw V(out) V(missing)\nwrdata result.dat V(out) V(missing)\n.endc\n.end\n",
+      "expected": {
+        "title": "Berkeley SPICE raw output CLI corpus",
+        "rawfiles": [
+          {
+            "analysisIndex": 0,
+            "analysis": "op",
+            "temperatureKelvin": null,
+            "target": "result.raw",
+            "marker": "write result.raw V(out) V(missing)",
+            "probes": ["V(out)", "V(missing)"],
+            "matchedProbes": ["V(out)"],
+            "unmatchedProbes": ["V(missing)"],
+            "options": ["set filetype=ascii", "set wr_vecnames"],
+            "content": "Title: SPICE deck op result\nDate: deterministic\nPlotname: op\nFlags: real\nNo. Variables: 2\nNo. Points: 1\nOptions: set filetype=ascii;set wr_vecnames\nVariables:\n\t0\tIndex\treal\n\t1\tV(out)\treal\nValues:\n0\t0\t5.000000e-01\n"
+          }
+        ],
+        "wrdata": [
+          {
+            "analysisIndex": 0,
+            "analysis": "op",
+            "temperatureKelvin": null,
+            "target": "result.dat",
+            "marker": "wrdata result.dat V(out) V(missing)",
+            "probes": ["V(out)", "V(missing)"],
+            "matchedProbes": ["V(out)"],
+            "unmatchedProbes": ["V(missing)"],
+            "options": ["set filetype=ascii", "set wr_vecnames"],
+            "content": "# SPICE deck wrdata artifact\nProbes: V(out);V(missing)\nOptions: set filetype=ascii;set wr_vecnames\nVectorNames: Index;V(out)\nIndex\tV(out)\n0\t5.000000e-01\n"
           }
         ]
       }

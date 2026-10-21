@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:a9412d60deae8852",
+  "lessonIds": [
+    "RU-C324-pobeda",
+    "RU-C324-pobezhdat",
+    "RU-C324-voyevat",
+    "RU-C324-pogibat",
+    "RU-C324-osvobozhdat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch324.txt",
+  "json": "russian/narration/ch324.json",
+  "textHash": "fnv1a64:c8378839793f3c6c",
+  "jsonHash": "fnv1a64:8f94047a40dce279",
+  "findings": []
+}

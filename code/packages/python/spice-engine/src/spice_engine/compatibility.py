@@ -2770,13 +2770,16 @@ def _resolve_measurement_line(
         return
 
     analysis = tokens[1].strip().lower()
-    if analysis not in {"tran", "transient", "dc", "ac"}:
+    if analysis not in {"op", "tran", "transient", "dc", "ac"}:
         _add_measurement_diagnostic(
             state,
             code="SPICE_DECK_MEASURE_ANALYSIS",
             directive=directive,
             line_number=line_number,
-            message=f"only transient, dc, and ac .measure cards are supported, got {tokens[1]!r}",
+            message=(
+                "only operating-point, transient, dc, and ac .measure cards are supported, "
+                f"got {tokens[1]!r}"
+            ),
             token=tokens[1],
         )
         return
@@ -2949,13 +2952,21 @@ def _resolve_measurement_line(
         else:
             at_value = value
 
-    if mode == "find" and at_value is None:
+    if mode == "find" and at_value is None and analysis != "op":
         _add_measurement_diagnostic(
             state,
             code="SPICE_DECK_MEASURE_ARGUMENT",
             directive=directive,
             line_number=line_number,
             message="FIND measurements require an AT value",
+        )
+    if analysis == "op" and (mode != "find" or (at_value is not None and at_value != 0.0)):
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message="operating-point .measure cards require FIND probe with optional AT=0",
         )
     if mode == "when" and target_value is None:
         _add_measurement_diagnostic(

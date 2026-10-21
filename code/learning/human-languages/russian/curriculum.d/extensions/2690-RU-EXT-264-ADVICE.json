@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-264-ADVICE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can give advice with тебе стоит, ты должен and лучше, and explain why with причина в том, что and поэтому.",
+  "prerequisites": []
+}

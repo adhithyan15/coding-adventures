@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Delight and Pride",
+  "label": "ch:ru-delight-and-pride",
+  "canDo": "I can talk about delight, admiration and pride.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C475-khvastatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about delight, admiration and pride.",
+    "assesses": [
+      "RU-LEX-C475-PRIDE-03",
+      "RU-LEX-C475-PRIDE-04",
+      "RU-LEX-C475-PRIDE-05"
+    ]
+  }
+}

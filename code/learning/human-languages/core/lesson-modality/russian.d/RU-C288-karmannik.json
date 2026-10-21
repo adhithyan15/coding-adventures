@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C288-karmannik",
+    "language": "russian",
+    "chapter": 288,
+    "sequence": 17300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68f21cee8d947c87"
+  },
+  "findings": []
+}

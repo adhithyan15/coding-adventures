@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "The weather forecast",
+  "label": "ch:ru-the-weather-forecast",
+  "canDo": "I can follow a weather forecast: the forecast, the forecaster, rain and snow, an overcast sky and clearing up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C464-proyasnyatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can follow a weather forecast: the forecast, the forecaster, rain and snow, an overcast sky and clearing up.",
+    "assesses": [
+      "RU-LEX-C464-PROGNOZ-03",
+      "RU-LEX-C464-PROGNOZ-04",
+      "RU-LEX-C464-PROGNOZ-05"
+    ]
+  }
+}

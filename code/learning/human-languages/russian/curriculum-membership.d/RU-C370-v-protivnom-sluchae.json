@@ -1,0 +1,11 @@
+{
+  "id": "RU-C370-v-protivnom-sluchae",
+  "pathSegment": "RU-PATH-370-USLOVIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-370-USLOVIYE",
+      "order": 3
+    }
+  ]
+}

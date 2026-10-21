@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Disaster",
+  "label": "ch:ru-disaster",
+  "canDo": "I can talk about a disaster, an explosion, something blowing up, a building collapsing and panic.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C301-panika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can talk about a disaster, an explosion, something blowing up, a building collapsing and panic.",
+    "assesses": [
+      "RU-LEX-C301-KATASTROFA-03",
+      "RU-LEX-C301-KATASTROFA-04",
+      "RU-LEX-C301-KATASTROFA-05"
+    ]
+  }
+}

@@ -73,6 +73,10 @@
 //!   error slot (see [`trap_message`]) and stops the function; `JITCore`
 //!   drains the slot after the run and raises `VMError::Trap { kind }`, which
 //!   stops every caller too (see [`Backend::take_error`]).
+//! - **LANG83 PR4**: `i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` /
+//!   `i64_neg_ovf` → `ADD_OVF_I64` / `SUB_OVF_I64` / `MUL_OVF_I64` /
+//!   `NEG_OVF_I64` (Rust `checked_*`); an out-of-range result is the trap
+//!   `trap: Trap.Overflow`, drained by `JITCore` exactly like the floor ops.
 //! - **Optional linear memory**: `load_mem`, `store_mem` (when the
 //!   GenericCirJit was constructed with a non-zero tape size).
 //!
@@ -133,6 +137,15 @@ pub(crate) mod opcode {
     /// `MOD_FLOOR_I64 <dst> <a> <b>` — LANG83 `i64_mod_floor`: floor remainder
     /// (divisor's sign); `b == 0` traps `Trap.DivZero`, `MIN mod -1` is 0.
     pub const MOD_FLOOR_I64: u8 = 0x17;
+    /// `ADD_OVF_I64 <dst> <a> <b>` — LANG83 PR4 `i64_add_ovf`: the exact sum,
+    /// or trap `Trap.Overflow` when it does not fit in i64.
+    pub const ADD_OVF_I64: u8 = 0x18;
+    /// `SUB_OVF_I64 <dst> <a> <b>` — LANG83 PR4 `i64_sub_ovf`.
+    pub const SUB_OVF_I64: u8 = 0x19;
+    /// `MUL_OVF_I64 <dst> <a> <b>` — LANG83 PR4 `i64_mul_ovf`.
+    pub const MUL_OVF_I64: u8 = 0x1A;
+    /// `NEG_OVF_I64 <dst> <a>` — LANG83 PR4 `i64_neg_ovf`: only `-MIN` traps.
+    pub const NEG_OVF_I64: u8 = 0x1B;
     /// `TRAP <kind_id:u32 le>` — LANG83 `trap`: record `trap: <kind>` in the
     /// error slot and stop. `kind_id` is `exception_kind::trap_kind_id`.
     pub const TRAP:         u8 = 0x70;
@@ -542,6 +555,49 @@ impl Backend for GenericCirJit {
                     }
                     return Value::Null;
                 }
+                // LANG83 PR4: overflow-checked arithmetic. `checked_*` is
+                // `None` exactly when the mathematically exact result is
+                // outside the i64 range; that becomes `trap: Trap.Overflow`
+                // in the error slot, which `JITCore` drains into
+                // `VMError::Trap` (fail closed, like the floor ops).
+                opcode::ADD_OVF_I64 | opcode::SUB_OVF_I64 | opcode::MUL_OVF_I64 => {
+                    if pc + 3 > code.len() {
+                        self.set_error("malformed bytecode: truncated checked arithmetic");
+                        return Value::Null;
+                    }
+                    let dst = code[pc] as usize;
+                    let a = regs[code[pc + 1] as usize];
+                    let b = regs[code[pc + 2] as usize];
+                    pc += 3;
+                    let r = match op {
+                        opcode::ADD_OVF_I64 => a.checked_add(b),
+                        opcode::SUB_OVF_I64 => a.checked_sub(b),
+                        _ => a.checked_mul(b),
+                    };
+                    match r {
+                        Some(v) => regs[dst] = v,
+                        None => {
+                            self.set_error(trap_message(interpreter_ir::exception_kind::TRAP_OVERFLOW));
+                            return Value::Null;
+                        }
+                    }
+                }
+                opcode::NEG_OVF_I64 => {
+                    if pc + 2 > code.len() {
+                        self.set_error("malformed bytecode: truncated NEG_OVF_I64");
+                        return Value::Null;
+                    }
+                    let dst = code[pc] as usize;
+                    let a = regs[code[pc + 1] as usize];
+                    pc += 2;
+                    match a.checked_neg() {
+                        Some(v) => regs[dst] = v,
+                        None => {
+                            self.set_error(trap_message(interpreter_ir::exception_kind::TRAP_OVERFLOW));
+                            return Value::Null;
+                        }
+                    }
+                }
                 opcode::NEG_I64 => {
                     if pc + 2 > code.len() {
                         self.set_error("malformed bytecode: truncated NEG_I64");
@@ -929,6 +985,31 @@ fn compile_to_bytecode(
             continue;
         }
 
+        // LANG83 PR4 overflow-checked arithmetic. Like the floor ops, these
+        // names reach CIR unchanged and are type-first, so the `add_`/`sub_`/
+        // `mul_`/`neg_` arms (which wrap, and mask narrow widths) can never
+        // claim them.
+        if let Some(opc) = match op {
+            "i64_add_ovf" => Some(opcode::ADD_OVF_I64),
+            "i64_sub_ovf" => Some(opcode::SUB_OVF_I64),
+            "i64_mul_ovf" => Some(opcode::MUL_OVF_I64),
+            _ => None,
+        } {
+            let dest = instr.dest.as_deref()?;
+            let didx = lookup_or_alloc_var(dest, &mut reg_map, &mut next_reg)?;
+            let a = resolve_operand(instr.srcs.first()?, &mut reg_map, &mut next_reg, &mut code)?;
+            let b = resolve_operand(instr.srcs.get(1)?, &mut reg_map, &mut next_reg, &mut code)?;
+            code.extend_from_slice(&[opc, didx, a, b]);
+            continue;
+        }
+        if op == "i64_neg_ovf" {
+            let dest = instr.dest.as_deref()?;
+            let didx = lookup_or_alloc_var(dest, &mut reg_map, &mut next_reg)?;
+            let a = resolve_operand(instr.srcs.first()?, &mut reg_map, &mut next_reg, &mut code)?;
+            code.extend_from_slice(&[opcode::NEG_OVF_I64, didx, a]);
+            continue;
+        }
+
         // LANG83 PR1b `trap "<kind>"`: the kind (an IIR `Operand::Str`, lifted
         // to a CIR `Var`) must be in the closed table; anything else is
         // malformed IR and refuses compilation.
@@ -1237,6 +1318,69 @@ mod tests {
         assert_eq!(run_trapping_binop("i64_div_floor", 1, 0), Err("trap: Trap.DivZero".into()));
         assert_eq!(run_trapping_binop("i64_mod_floor", 1, 0), Err("trap: Trap.DivZero".into()));
         assert_eq!(run_trapping_binop("i64_div_floor", i64::MIN, -1), Err("trap: Trap.Overflow".into()));
+    }
+
+    #[test]
+    fn checked_ops_compute_exactly_or_trap_overflow_in_compiled_jit() {
+        const MAX: i64 = i64::MAX;
+        const MIN: i64 = i64::MIN;
+        let overflow = Err("trap: Trap.Overflow".to_string());
+        assert_eq!(run_trapping_binop("i64_add_ovf", MAX - 1, 1), Ok(MAX));
+        assert_eq!(run_trapping_binop("i64_add_ovf", MAX, 1), overflow);
+        assert_eq!(run_trapping_binop("i64_add_ovf", MIN, -1), overflow);
+        assert_eq!(run_trapping_binop("i64_sub_ovf", MIN + 1, 1), Ok(MIN));
+        assert_eq!(run_trapping_binop("i64_sub_ovf", MIN, 1), overflow);
+        assert_eq!(run_trapping_binop("i64_sub_ovf", MAX, -1), overflow);
+        assert_eq!(run_trapping_binop("i64_mul_ovf", -(1 << 32), 1 << 31), Ok(MIN));
+        assert_eq!(run_trapping_binop("i64_mul_ovf", 1 << 32, 1 << 31), overflow);
+        assert_eq!(run_trapping_binop("i64_mul_ovf", MIN, -1), overflow);
+        assert_eq!(run_trapping_binop("i64_mul_ovf", -1, MIN), overflow);
+    }
+
+    #[test]
+    fn neg_ovf_traps_only_for_min_in_compiled_jit() {
+        let run = |a: i64| {
+            let cir = vec![
+                CIRInstr::new("const_i64", Some("a"), vec![CIROperand::Int(a)], "i64"),
+                CIRInstr::new("i64_neg_ovf", Some("c"), vec![CIROperand::Var("a".into())], "i64"),
+                CIRInstr::new("ret_i64", None::<&str>, vec![CIROperand::Var("c".into())], "i64"),
+            ];
+            let j = jit_no_builtins();
+            let bin = j.compile(&cir).expect("i64_neg_ovf compiles to JIT bytecode");
+            let v = j.run(&bin, &[]);
+            let err = j.error.lock().unwrap().take();
+            match err {
+                Some(e) => Err(e),
+                None => Ok(v.as_i64().expect("i64 result")),
+            }
+        };
+        assert_eq!(run(i64::MAX), Ok(-i64::MAX));
+        assert_eq!(run(0), Ok(0));
+        assert_eq!(run(i64::MIN), Err("trap: Trap.Overflow".into()));
+    }
+
+    /// The checked ops get their own opcodes — never the wrapping `ADD_I64`
+    /// family a `add_` prefix match would have produced.
+    #[test]
+    fn checked_ops_compile_to_their_own_opcodes() {
+        for (op, opc) in [
+            ("i64_add_ovf", opcode::ADD_OVF_I64),
+            ("i64_sub_ovf", opcode::SUB_OVF_I64),
+            ("i64_mul_ovf", opcode::MUL_OVF_I64),
+        ] {
+            let cir = vec![
+                CIRInstr::new(op, Some("c"), vec![CIROperand::Var("a".into()), CIROperand::Var("b".into())], "i64"),
+                CIRInstr::new("ret_i64", None::<&str>, vec![CIROperand::Var("c".into())], "i64"),
+            ];
+            let bin = jit_no_builtins().compile(&cir).expect("compiles");
+            // [u16 n_builtins = 0] then the op: dst c=r0, a=r1, b=r2.
+            assert_eq!(&bin[2..6], &[opc, 0, 1, 2], "{op}");
+        }
+        // A truncated checked op in a hostile binary fails closed, not panics.
+        let j = jit_no_builtins();
+        j.run(&[0, 0, opcode::MUL_OVF_I64, 0], &[]);
+        let err = j.error.lock().unwrap().take();
+        assert!(err.is_some_and(|e| e.contains("truncated")), "truncated op must fail closed");
     }
 
     #[test]

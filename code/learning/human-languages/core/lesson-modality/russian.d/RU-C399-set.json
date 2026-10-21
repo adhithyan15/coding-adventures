@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C399-set",
+    "language": "russian",
+    "chapter": 399,
+    "sequence": 22970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15ef99bba7a9e5e9"
+  },
+  "findings": []
+}

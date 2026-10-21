@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:4fda4addea59f88e",
+  "lessonIds": [
+    "RU-C427-gavan",
+    "RU-C427-mayak",
+    "RU-C427-matros",
+    "RU-C427-kapitan",
+    "RU-C427-tonut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch427.txt",
+  "json": "russian/narration/ch427.json",
+  "textHash": "fnv1a64:a7c02026d1d71603",
+  "jsonHash": "fnv1a64:4c2641910ea900c1",
+  "findings": []
+}

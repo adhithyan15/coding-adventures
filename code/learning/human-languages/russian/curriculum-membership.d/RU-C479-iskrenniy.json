@@ -1,0 +1,11 @@
+{
+  "id": "RU-C479-iskrenniy",
+  "pathSegment": "RU-PATH-479-TRUST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-479-TRUST",
+      "order": 4
+    }
+  ]
+}

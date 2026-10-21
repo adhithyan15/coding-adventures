@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:05fa81a2204a8d4b",
+  "lessonIds": [
+    "RU-C408-skorost",
+    "RU-C408-prevyshat",
+    "RU-C408-inspektor",
+    "RU-C408-prava",
+    "RU-C408-shtrafovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch408.txt",
+  "json": "russian/narration/ch408.json",
+  "textHash": "fnv1a64:dfbc8bb508c832c5",
+  "jsonHash": "fnv1a64:ca19e40d1961b216",
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 279,
+  "title": "News and headlines",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2b4ce7485119d4e0",
+  "lessons": [
+    {
+      "id": "RU-C279-izvestiye",
+      "sequence": 16810,
+      "title": "известие (izvéstiye) — a piece of news, a report",
+      "headword": "известие",
+      "romanization": "izvéstiye",
+      "gloss": "a piece of news, a report",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3acfde0e28d46f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to recall, then the Russian for to memorize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: известие",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "известие (izvéstiye) — \"a piece of news, a report\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мы получили известие о его приезде. My poluchíli izvéstiye o yevó priyézde. We received news of his arrival."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than новость. Neuter; plural известия."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "известие (izvéstiye) is built on весть \"news, tidings\", from the old Slavic root of ведать \"to know\", which goes back to PIE weyd- \"to see, to know\" (EtymDB lists известие (izvéstiye) \"news\" with no parent)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izvéstiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izvéstiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izvéstiye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izvéstiye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with izvéstiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *izvéstiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to recall, then the Russian for to memorize, then say izvéstiye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to recall, then the Russian for to memorize, then say *izvéstiye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does известие (izvéstiye) mean? (\"A piece of news, a report\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C279-vypusk",
+      "sequence": 16820,
+      "title": "выпуск (výpusk) — a bulletin, an issue, an edition",
+      "headword": "выпуск",
+      "romanization": "výpusk",
+      "gloss": "a bulletin, an issue, an edition",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59cd14dbecd18838",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to memorize, then the Russian for a piece of news."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: выпуск",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "выпуск (výpusk) — \"a bulletin, an issue, an edition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В вечернем выпуске новостей говорили о погоде. V vechérnem výpuske novostéy govoríli o pogóde. In the evening news bulletin they talked about the weather."
+            },
+            {
+              "kind": "speech",
+              "text": "Выпуск новостей — a news bulletin; also an issue of a magazine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "выпуск (výpusk) is built on выпускать \"to let out, to issue\", from пускать \"to let go\", inherited from Proto-Slavic pustiti (EtymDB): what is let out to the public."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "výpusk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *výpusk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "výpusk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *výpusk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with výpusk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *výpusk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to memorize, then the Russian for a piece of news, then say výpusk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to memorize, then the Russian for a piece of news, then say *výpusk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does выпуск (výpusk) mean? (\"A bulletin, an issue, an edition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C279-zagolovok",
+      "sequence": 16830,
+      "title": "заголовок (zagolóvok) — a headline, a title",
+      "headword": "заголовок",
+      "romanization": "zagolóvok",
+      "gloss": "a headline, a title",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e5e6b53cbf29cd7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a piece of news, then the Russian for a bulletin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: заголовок",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "заголовок (zagolóvok) — \"a headline, a title\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Заголовок в газете был очень большой. Zagolóvok v gazéte byl óchen bolshóy. The headline in the newspaper was very big."
+            },
+            {
+              "kind": "speech",
+              "text": "Genitive заголовка."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "заголовок (zagolóvok) is built on за- and голова \"head\", which is inherited from Proto-Slavic golva (EtymDB): what stands at the head."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zagolóvok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zagolóvok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zagolóvok, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zagolóvok*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zagolóvok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zagolóvok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a piece of news, then the Russian for a bulletin, then say zagolóvok again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a piece of news, then the Russian for a bulletin, then say *zagolóvok* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does заголовок (zagolóvok) mean? (\"A headline, a title\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C279-statya",
+      "sequence": 16840,
+      "title": "статья (statyá) — an article",
+      "headword": "статья",
+      "romanization": "statyá",
+      "gloss": "an article",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38dc3bab3118c810",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a bulletin, then the Russian for a headline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: статья",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "статья (statyá) — \"an article\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Он написал статью о нашей школе. On napisál statyú o náshey shkóle. He wrote an article about our school."
+            },
+            {
+              "kind": "speech",
+              "text": "Genitive статьи. Also an article of a law: статья (statyá) закона."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "статья (statyá) is usually traced to the root of стать \"to stand, to become\", inherited from Proto-Slavic stati (EtymDB), with an old sense \"a part in its place\"; EtymDB lists no parent for статья (statyá) itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "statyá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *statyá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "statyá, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *statyá*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with statyá",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *statyá*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a bulletin, then the Russian for a headline, then say statyá again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a bulletin, then the Russian for a headline, then say *statyá* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does статья (statyá) mean? (\"An article\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C279-sensatsiya",
+      "sequence": 16850,
+      "title": "сенсация (sensátsiya) — a sensation",
+      "headword": "сенсация",
+      "romanization": "sensátsiya",
+      "gloss": "a sensation",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d73b7bf589b22cbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a headline, then the Russian for an article."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: сенсация",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сенсация (sensátsiya) — \"a sensation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Эта новость стала настоящей сенсацией. Éta nóvost stála nastoyáshchey sensátsiyey. This news became a real sensation."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. The adjective is сенсационный."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "сенсация (sensátsiya) was borrowed from French sensation, built on Latin sensus \"feeling\", from sentīre \"to feel\" (Lewis & Short); EtymDB lists the Russian word with no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensátsiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensátsiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensátsiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensátsiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sensátsiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sensátsiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a headline, then the Russian for an article, then say sensátsiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a headline, then the Russian for an article, then say *sensátsiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does сенсация (sensátsiya) mean? (\"A sensation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

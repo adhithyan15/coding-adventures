@@ -1,0 +1,11 @@
+{
+  "id": "RU-C358-sobesedovanie",
+  "pathSegment": "RU-PATH-358-VAKANSIYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-358-VAKANSIYA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Noisy neighbours",
+  "label": "ch:ru-noisy-neighbours",
+  "canDo": "I can complain about a room: noise, being disturbed, cockroaches, the safe and a fault.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C433-nepoladka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can complain about a room: noise, being disturbed, cockroaches, the safe and a fault.",
+    "assesses": [
+      "RU-LEX-C433-SHUM-03",
+      "RU-LEX-C433-SHUM-04",
+      "RU-LEX-C433-SHUM-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-494-MARRIAGE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-494-MARRIAGE"
+  ],
+  "after": []
+}

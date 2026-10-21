@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:bd2f6b8e3da7522b",
+  "lessonIds": [
+    "RU-C508-bolelshchik",
+    "RU-C508-tribuna",
+    "RU-C508-svistok",
+    "RU-C508-podbadrivat",
+    "RU-C508-likovat",
+    "RU-R508-review-501-508"
+  ],
+  "tex": "russian/book/chapters/ch508-in-the-stands.tex"
+}

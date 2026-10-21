@@ -1,0 +1,11 @@
+{
+  "id": "RU-C473-otchayaniye",
+  "pathSegment": "RU-PATH-473-LETDOWN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-473-LETDOWN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C443-prigorod",
+  "pathSegment": "RU-PATH-443-BRODIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-443-BRODIT",
+      "order": 3
+    }
+  ]
+}

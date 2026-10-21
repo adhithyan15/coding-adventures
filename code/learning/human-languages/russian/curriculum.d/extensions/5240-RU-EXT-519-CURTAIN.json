@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-519-CURTAIN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about an evening at the theatre.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C455-kartochka",
+  "pathSegment": "RU-PATH-455-OPLATA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-455-OPLATA",
+      "order": 2
+    }
+  ]
+}

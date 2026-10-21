@@ -1,0 +1,11 @@
+{
+  "id": "RU-C468-dukhota",
+  "pathSegment": "RU-PATH-468-ZHARA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-468-ZHARA",
+      "order": 2
+    }
+  ]
+}

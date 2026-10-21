@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C404-akkumulyator",
+    "language": "russian",
+    "chapter": 404,
+    "sequence": 23270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eab20e61c4d89186"
+  },
+  "findings": []
+}

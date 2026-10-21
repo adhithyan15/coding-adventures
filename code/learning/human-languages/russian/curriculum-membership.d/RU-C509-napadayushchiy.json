@@ -1,0 +1,11 @@
+{
+  "id": "RU-C509-napadayushchiy",
+  "pathSegment": "RU-PATH-509-FOOTBALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-509-FOOTBALL",
+      "order": 2
+    }
+  ]
+}

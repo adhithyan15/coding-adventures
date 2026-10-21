@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:71ac37ee171320ab",
+  "lessonIds": [
+    "RU-C427-gavan",
+    "RU-C427-mayak",
+    "RU-C427-matros",
+    "RU-C427-kapitan",
+    "RU-C427-tonut"
+  ],
+  "tex": "russian/book/chapters/ch427-in-the-harbour.tex"
+}

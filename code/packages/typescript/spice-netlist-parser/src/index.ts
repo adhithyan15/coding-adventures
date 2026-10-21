@@ -571,7 +571,7 @@ export function parseNetlist(text: string): ParsedNetlist {
   const statements: Statement[] = [];
   const subckts = new Map<string, SubcktDefinition>();
   let currentSubckt: SubcktDefinition | undefined;
-  const { title, cards } = berkeleyLogicalCards(text);
+  const { title, cards } = berkeleyLogicalCards(withoutControlBlocks(text));
 
   let fields: string[];
   for (const card of cards) {
@@ -662,6 +662,24 @@ export function parseNetlist(text: string): ParsedNetlist {
   return new ParsedNetlist(circuit, analyses, models, title);
 }
 
+function withoutControlBlocks(text: string): string {
+  let inControl = false;
+  return text.split("\n").map((line) => {
+    const head = line.trim().toLowerCase();
+    if (inControl) {
+      if (head === ".endc") {
+        inControl = false;
+      }
+      return "";
+    }
+    if (head === ".control") {
+      inControl = true;
+      return "";
+    }
+    return line;
+  }).join("\n");
+}
+
 export const parse = parseNetlist;
 
 export function buildAnalysisPlan(parsed: ParsedNetlist): AnalysisPlanStep[] {
@@ -693,7 +711,7 @@ export function runNetlist(text: string): AnalysisExecutionResult[] {
   return runAnalysisPlan(parseNetlist(text));
 }
 
-export const CLI_RESULT_SCHEMA_VERSION = 2;
+export const CLI_RESULT_SCHEMA_VERSION = 3;
 export const CLI_INSPECTION_SCHEMA_VERSION = 1;
 export const CLI_ERROR_CODE = "SPICE_CLI_ERROR";
 
@@ -701,6 +719,8 @@ export function runNetlistJson(text: string): string {
   const parsed = parseNetlist(text);
   const parserResults = runAnalysisPlan(parsed);
   const plan = buildAnalysisPlan(parsed);
+  const rawfiles: Record<string, unknown>[] = [];
+  const wrdata: Record<string, unknown>[] = [];
   const analyses = parsed.analysisTemperaturesKelvin().flatMap((temperatureKelvin) => {
     const circuit = temperatureKelvin === undefined
       ? parsed.circuit
@@ -709,12 +729,17 @@ export function runNetlistJson(text: string): string {
     if (execution.executions.length !== plan.length) {
       throw new NetlistParseError("deck execution plan did not match the parser analysis plan");
     }
-    return execution.executions.map((item, index) => ({
-      index: plan[index]!.index,
-      kind: plan[index]!.kind,
+    return execution.executions.map((item, index) => {
+      const step = plan[index]!;
+      rawfiles.push(...cliRawfileArtifacts(step, item, temperatureKelvin));
+      wrdata.push(...cliWrdataArtifacts(step, item, temperatureKelvin));
+      return {
+      index: step.index,
+      kind: step.kind,
       temperatureKelvin: temperatureKelvin ?? null,
       records: cliTableRecords(item.plan.analysis, item.table),
-    }));
+      };
+    });
   });
   return `${JSON.stringify(canonicalJson({
     schemaVersion: CLI_RESULT_SCHEMA_VERSION,
@@ -722,6 +747,8 @@ export function runNetlistJson(text: string): string {
     analyses,
     outputs: cliOutputArtifacts(selectOutputs(parsed, parserResults)),
     measures: cliMeasureArtifacts(measureResults(parsed, parserResults)),
+    rawfiles,
+    wrdata,
   }))}\n`;
 }
 
@@ -771,6 +798,44 @@ function cliMeasureArtifacts(measures: readonly MeasureResult[]): readonly Recor
     probe: cliProbeText(measure.probe),
     value: measure.value,
     temperatureKelvin: measure.temperatureKelvin ?? null,
+  }));
+}
+
+function cliRawfileArtifacts(
+  step: AnalysisPlanStep,
+  execution: ReturnType<typeof runDeck>["executions"][number],
+  temperatureKelvin: number | undefined,
+): Record<string, unknown>[] {
+  return execution.rawfileArtifacts.map((artifact) => ({
+    analysisIndex: step.index,
+    analysis: step.kind,
+    temperatureKelvin: temperatureKelvin ?? null,
+    target: artifact.target,
+    marker: artifact.marker,
+    probes: artifact.probes,
+    matchedProbes: artifact.matchedProbes,
+    unmatchedProbes: artifact.unmatchedProbes,
+    options: artifact.options,
+    content: artifact.rawfile,
+  }));
+}
+
+function cliWrdataArtifacts(
+  step: AnalysisPlanStep,
+  execution: ReturnType<typeof runDeck>["executions"][number],
+  temperatureKelvin: number | undefined,
+): Record<string, unknown>[] {
+  return execution.wrdataArtifacts.map((artifact) => ({
+    analysisIndex: step.index,
+    analysis: step.kind,
+    temperatureKelvin: temperatureKelvin ?? null,
+    target: artifact.target,
+    marker: artifact.marker,
+    probes: artifact.probes,
+    matchedProbes: artifact.matchedProbes,
+    unmatchedProbes: artifact.unmatchedProbes,
+    options: artifact.options,
+    content: artifact.datafile,
   }));
 }
 
@@ -1099,10 +1164,15 @@ function evaluateMeasure(card: MeasureAnalysis, execution: AnalysisExecutionResu
   if (samples.length === 0) {
     throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} has no samples`);
   }
-  if (card.operation === "find") {
-    if (execution.kind === "op" && card.at === undefined) {
-      return measureNumericValue(samples[0][1]);
+  if (execution.kind === "op" && card.operation === "find") {
+    if (card.at !== undefined && card.at !== 0) {
+      throw new NetlistParseError(
+        `.measure ${JSON.stringify(card.name)} operating-point FIND AT must be 0`,
+      );
     }
+    return measureNumericValue(samples[0][1]);
+  }
+  if (card.operation === "find") {
     if (card.at === undefined) {
       throw new NetlistParseError(`.measure ${JSON.stringify(card.name)} FIND requires AT=<value>`);
     }

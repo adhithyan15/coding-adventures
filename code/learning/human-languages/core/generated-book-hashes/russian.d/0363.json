@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:3cc4780203bc8645",
+  "lessonIds": [
+    "RU-C363-peregovory",
+    "RU-C363-kontrakt",
+    "RU-C363-zakazchik",
+    "RU-C363-konkurent",
+    "RU-C363-sotrudnichat"
+  ],
+  "tex": "russian/book/chapters/ch363-negotiations-and-contracts.tex"
+}

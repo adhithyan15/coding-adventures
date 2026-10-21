@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:0a26350bbd94059a",
+  "lessonIds": [
+    "RU-C435-obsluzhivaniye",
+    "RU-C435-obsluzhivat",
+    "RU-C435-personal",
+    "RU-C435-chayevyye",
+    "RU-C435-khamit"
+  ],
+  "tex": "russian/book/chapters/ch435-service-and-tips.tex"
+}

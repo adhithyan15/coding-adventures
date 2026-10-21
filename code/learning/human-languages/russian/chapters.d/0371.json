@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Let us suppose",
+  "label": "ch:ru-let-us-suppose",
+  "canDo": "I can put forward a hypothesis, suppose something, say let us say, and make a guess.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C371-predpolozhenie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can put forward a hypothesis, suppose something, say let us say, and make a guess.",
+    "assesses": [
+      "RU-LEX-C371-GIPOTEZA-03",
+      "RU-LEX-C371-GIPOTEZA-04",
+      "RU-LEX-C371-GIPOTEZA-05"
+    ]
+  }
+}
