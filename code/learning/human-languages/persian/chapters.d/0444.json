@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Asking the way",
+  "label": "ch:fa-asking-the-way",
+  "canDo": "I can ask the way: an address, asking around, knowing the way, getting lost and a landmark.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C444-neshane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can ask the way: an address, asking around, knowing the way, getting lost and a landmark.",
+    "assesses": [
+      "FA-LEX-C444-NESHANI-03",
+      "FA-LEX-C444-NESHANI-04",
+      "FA-LEX-C444-NESHANI-05"
+    ]
+  }
+}

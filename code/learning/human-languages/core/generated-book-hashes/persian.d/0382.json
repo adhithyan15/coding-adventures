@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:6f9e16a4521f6126",
+  "lessonIds": [
+    "FA-C382-prozhe",
+    "FA-C382-modiriyyat-kardan",
+    "FA-C382-barname-rizi-kardan",
+    "FA-C382-sazman",
+    "FA-C382-herfei"
+  ],
+  "tex": "persian/book/chapters/ch382-projects-and-planning.tex"
+}

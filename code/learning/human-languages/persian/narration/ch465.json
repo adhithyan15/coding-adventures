@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 465,
+  "title": "On the farm",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0aa0943540d53ff3",
+  "lessons": [
+    {
+      "id": "FA-C465-mazrae",
+      "sequence": 23800,
+      "title": "مزرعه (mazra'e) — a farm; a field (of crops)",
+      "headword": "مزرعه",
+      "romanization": "mazra'e",
+      "gloss": "a farm; a field (of crops)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af1a2bdd46772ce8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a down payment, then the Persian for to overcharge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مزرعه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مزرعه (mazra'e) — \"a farm; a field (of crops)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پدربزرگم یک مزرعه کوچک در روستا دارد. Pedarbozorgam yek mazra'e-ye kuchek dar rustâ dârad. My grandfather has a small farm in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic plural mazâre'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mazra'e was borrowed from Arabic mazraʿa (EtymDB), a place where seed is sown."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazra'e",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazra'e*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazra'e, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazra'e*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mazra'e",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mazra'e*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a down payment, then the Persian for to overcharge, then say mazra'e again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a down payment, then the Persian for to overcharge, then say *mazra'e* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مزرعه (mazra'e) mean? (\"A farm; a field (of crops)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C465-gandom",
+      "sequence": 23810,
+      "title": "گندم (gandom) — wheat",
+      "headword": "گندم",
+      "romanization": "gandom",
+      "gloss": "wheat",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73d0481ad5a53e95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to overcharge, then the Persian for a farm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گندم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گندم (gandom) — \"wheat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در این دشت گندم میکارند. Dar in dasht gandom mikârand. They grow wheat on this plain."
+            },
+            {
+              "kind": "speech",
+              "text": "Ârd-e gandom — wheat flour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gandom is inherited: EtymDB traces it to a Middle Persian word for wheat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gandom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gandom*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gandom, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gandom*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gandom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gandom*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to overcharge, then the Persian for a farm, then say gandom again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to overcharge, then the Persian for a farm, then say *gandom* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گندم (gandom) mean? (\"Wheat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C465-shalizar",
+      "sequence": 23820,
+      "title": "شالیزار (shâlizâr) — a rice paddy, a paddy field",
+      "headword": "شالیزار",
+      "romanization": "shâlizâr",
+      "gloss": "a rice paddy, a paddy field",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56201e59c313a2f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a farm, then the Persian for wheat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شالیزار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شالیزار (shâlizâr) — \"a rice paddy, a paddy field\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در شمال شالیزارهای سبز زیادی هست. Dar shomâl shâlizâr-hâ-ye sabz-e ziyâdi hast. In the north there are many green rice paddies."
+            },
+            {
+              "kind": "speech",
+              "text": "shâli 'rice in the husk' + -zâr 'a place full of'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shâlizâr is built from shâli 'rice in the husk' and the native ending -zâr 'a place full of', as in golzâr 'a rose garden'. The origin of shâli is not settled, and EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shâlizâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shâlizâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shâlizâr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shâlizâr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shâlizâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shâlizâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a farm, then the Persian for wheat, then say shâlizâr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a farm, then the Persian for wheat, then say *shâlizâr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شالیزار (shâlizâr) mean? (\"A rice paddy, a paddy field\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C465-takestan",
+      "sequence": 23830,
+      "title": "تاکستان (tâkestân) — a vineyard",
+      "headword": "تاکستان",
+      "romanization": "tâkestân",
+      "gloss": "a vineyard",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f108a15ff5c0d56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for wheat, then the Persian for a rice paddy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تاکستان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تاکستان (tâkestân) — \"a vineyard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در پاییز در تاکستان انگور میچینند. Dar pâyiz dar tâkestân angur michinand. In autumn they pick grapes in the vineyard."
+            },
+            {
+              "kind": "speech",
+              "text": "tâk 'vine' + -estân 'place of'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tâkestân is a native compound of tâk 'vine' and the ending -estân 'place of', as in bimârestân 'hospital'. EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tâkestân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tâkestân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tâkestân, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tâkestân*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tâkestân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tâkestân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for wheat, then the Persian for a rice paddy, then say tâkestân again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for wheat, then the Persian for a rice paddy, then say *tâkestân* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تاکستان (tâkestân) mean? (\"A vineyard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C465-shokhm-zadan",
+      "sequence": 23840,
+      "title": "شخم زدن (shokhm zadan) — to plough (US: to plow)",
+      "headword": "شخم زدن",
+      "romanization": "shokhm zadan",
+      "gloss": "to plough (US: to plow)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:070489e57af4b71e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a rice paddy, then the Persian for a vineyard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شخم زدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شخم زدن (shokhm zadan) — \"to plough (US: to plow)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کشاورز زمین را با تراکتور شخم زد. Keshâvarz zamin râ bâ terâktor shokhm zad. The farmer ploughed the land with a tractor."
+            },
+            {
+              "kind": "speech",
+              "text": "shokhm 'ploughing' + zadan. Present stem zan-: shokhm mizanad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shokhm zadan is built from shokhm 'ploughing', whose origin is not settled, and the native verb zadan 'to strike'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokhm zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokhm zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokhm zadan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokhm zadan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shokhm zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shokhm zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a rice paddy, then the Persian for a vineyard, then say shokhm zadan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a rice paddy, then the Persian for a vineyard, then say *shokhm zadan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شخم زدن (shokhm zadan) mean? (\"To plough (US: to plow)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

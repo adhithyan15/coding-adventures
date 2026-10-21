@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-539-GARDEN",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-539-GARDEN"
+  ],
+  "after": []
+}

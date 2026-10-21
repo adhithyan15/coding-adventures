@@ -1,0 +1,11 @@
+{
+  "id": "FA-C393-etminan",
+  "pathSegment": "FA-PATH-393-ETMINAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-393-ETMINAN",
+      "order": 2
+    }
+  ]
+}

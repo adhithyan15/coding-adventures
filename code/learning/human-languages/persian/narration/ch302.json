@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 302,
+  "title": "Beginnings and endings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:60ce926800a0f63e",
+  "lessons": [
+    {
+      "id": "FA-C302-aghaz",
+      "sequence": 15400,
+      "title": "آغاز (âghâz) — a beginning, a start",
+      "headword": "آغاز",
+      "romanization": "âghâz",
+      "gloss": "a beginning, a start",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:28d7e5951e12e0fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to take place, then the Persian for to last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آغاز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آغاز (âghâz) — \"a beginning, a start\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آغاز (âghâz) کلاس ساعت هشت است. Âghâz-e kelâs sâ'at-e hasht ast. The start of the class is at eight o'clock."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than shoru'. Dar âghâz \"at the beginning\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "âghâz is a native Persian word. EtymDB lists it without a parent, and its deeper origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âghâz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âghâz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âghâz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âghâz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with âghâz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *âghâz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to take place, then the Persian for to last, then say âghâz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to take place, then the Persian for to last, then say *âghâz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آغاز (âghâz) mean? (\"A beginning, a start\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C302-aghaz-shodan",
+      "sequence": 15410,
+      "title": "آغاز شدن (âghâz shodan) — to begin, to start (formal)",
+      "headword": "آغاز شدن",
+      "romanization": "âghâz shodan",
+      "gloss": "to begin, to start (formal)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f305b2ff1517ecc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to last, then the Persian for a beginning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آغاز شدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آغاز شدن (âghâz shodan) — \"to begin, to start (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جشن ساعت هفت شب آغاز شد. Jashn sâ'at-e haft-e shab âghâz shod. The celebration began at seven in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "The thing itself begins: âghâz mishavad. With a doer the verb is âghâz kardan, \"to begin something\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "âghâz shodan joins âghâz \"a beginning\", a native word whose deeper origin is not settled, with shodan \"to become\", inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âghâz shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âghâz shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âghâz shodan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âghâz shodan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with âghâz shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *âghâz shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to last, then the Persian for a beginning, then say âghâz shodan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to last, then the Persian for a beginning, then say *âghâz shodan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آغاز شدن (âghâz shodan) mean? (\"To begin, to start (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C302-payan",
+      "sequence": 15420,
+      "title": "پایان (pâyân) — an end, an ending",
+      "headword": "پایان",
+      "romanization": "pâyân",
+      "gloss": "an end, an ending",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebe063cb4737e9c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a beginning, then the Persian for to begin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پایان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پایان (pâyân) — \"an end, an ending\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پایان (pâyân) فیلم را دوست نداشتم. Pâyân-e film râ dust nadâshtam. I did not like the end of the film."
+            },
+            {
+              "kind": "speech",
+              "text": "Dar pâyân \"in the end\"; be pâyân residan \"to come to an end\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pâyân is a native Persian word, usually traced to Middle Persian pāyān, \"end\"; EtymDB lists no entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pâyân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pâyân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pâyân, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pâyân*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pâyân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pâyân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a beginning, then the Persian for to begin, then say pâyân again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a beginning, then the Persian for to begin, then say *pâyân* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پایان (pâyân) mean? (\"An end, an ending\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C302-payan-yaftan",
+      "sequence": 15430,
+      "title": "پایان یافتن (pâyân yâftan) — to come to an end",
+      "headword": "پایان یافتن",
+      "romanization": "pâyân yâftan",
+      "gloss": "to come to an end",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:897a66e8ef1d7698",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to begin, then the Persian for an end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پایان یافتن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پایان یافتن (pâyân yâftan) — \"to come to an end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جنگ بعد از هشت سال پایان یافت. Jang ba'd az hasht sâl pâyân yâft. The war came to an end after eight years."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; in speech tamâm shod. Present stem yâb-: pâyân miyâbad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pâyân yâftan joins pâyân \"end\" and yâftan \"to find, to attain\", both native Persian words: literally \"to find an end\". EtymDB lists neither."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pâyân yâftan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pâyân yâftan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pâyân yâftan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pâyân yâftan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pâyân yâftan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pâyân yâftan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to begin, then the Persian for an end, then say pâyân yâftan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to begin, then the Persian for an end, then say *pâyân yâftan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پایان یافتن (pâyân yâftan) mean? (\"To come to an end\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C302-saranjam",
+      "sequence": 15440,
+      "title": "سرانجام (saranjâm) — finally, at last",
+      "headword": "سرانجام",
+      "romanization": "saranjâm",
+      "gloss": "finally, at last",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b1db3c84e39dfb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an end, then the Persian for to come to an end."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سرانجام",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرانجام (saranjâm) — \"finally, at last\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سرانجام (saranjâm) بعد از سه ساعت به خانه رسیدیم. Saranjâm ba'd az se sâ'at be khâne residim. Finally, after three hours, we reached home."
+            },
+            {
+              "kind": "speech",
+              "text": "Written and storytelling Persian; in speech bel-akhare. Also a noun, \"outcome\": saranjâm-e kâr \"the outcome of the affair\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "saranjâm joins sar \"head\" and anjâm \"end, completion\", both native Persian words. EtymDB lists the compound with no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saranjâm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saranjâm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saranjâm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saranjâm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with saranjâm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *saranjâm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an end, then the Persian for to come to an end, then say saranjâm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an end, then the Persian for to come to an end, then say *saranjâm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سرانجام (saranjâm) mean? (\"Finally, at last\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

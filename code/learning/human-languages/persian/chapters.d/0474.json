@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Rain",
+  "label": "ch:fa-rain",
+  "canDo": "I can talk about the rain: raining, a downpour, drizzle, the rain stopping and floodwater.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C474-seylab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about the rain: raining, a downpour, drizzle, the rain stopping and floodwater.",
+    "assesses": [
+      "FA-LEX-C474-RAGBAR-03",
+      "FA-LEX-C474-RAGBAR-04",
+      "FA-LEX-C474-RAGBAR-05"
+    ]
+  }
+}

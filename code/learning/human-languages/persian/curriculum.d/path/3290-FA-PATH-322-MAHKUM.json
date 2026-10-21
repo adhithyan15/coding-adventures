@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-322-MAHKUM",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-322-MAHKUM"
+  ],
+  "after": []
+}

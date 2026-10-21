@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Studying for exams",
+  "label": "ch:fa-studying-for-exams",
+  "canDo": "I can say how I revise and concentrate, talk about cheating, lecture notes and homework.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C401-taklif",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can say how I revise and concentrate, talk about cheating, lecture notes and homework.",
+    "assesses": [
+      "FA-LEX-C401-MORUR-03",
+      "FA-LEX-C401-MORUR-04",
+      "FA-LEX-C401-MORUR-05"
+    ]
+  }
+}

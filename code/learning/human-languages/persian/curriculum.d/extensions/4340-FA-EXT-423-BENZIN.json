@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-423-BENZIN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can fill up the car: the petrol station, filling up, the tank, running out and the car wash.",
+  "prerequisites": []
+}

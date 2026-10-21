@@ -1,0 +1,11 @@
+{
+  "id": "FA-C313-kholase-kardan",
+  "pathSegment": "FA-PATH-313-AMAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-313-AMAR",
+      "order": 4
+    }
+  ]
+}

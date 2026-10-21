@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C397-gozine",
+    "language": "persian",
+    "chapter": 397,
+    "sequence": 20330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0aff68a801156b73"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C467-baghche",
+  "pathSegment": "FA-PATH-467-BAGH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-467-BAGH",
+      "order": 1
+    }
+  ]
+}

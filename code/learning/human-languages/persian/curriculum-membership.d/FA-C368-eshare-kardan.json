@@ -1,0 +1,11 @@
+{
+  "id": "FA-C368-eshare-kardan",
+  "pathSegment": "FA-PATH-368-TAHLIL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-368-TAHLIL",
+      "order": 4
+    }
+  ]
+}

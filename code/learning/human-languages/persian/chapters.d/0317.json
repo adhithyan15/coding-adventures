@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Chase and escape",
+  "label": "ch:fa-chase-and-escape",
+  "canDo": "I can tell how someone was chased, hid, fled, vanished and was found out.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C317-low-raftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can tell how someone was chased, hid, fled, vanished and was found out.",
+    "assesses": [
+      "FA-LEX-C317-TAQIB-03",
+      "FA-LEX-C317-TAQIB-04",
+      "FA-LEX-C317-TAQIB-05"
+    ]
+  }
+}

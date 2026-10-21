@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Shortcuts, hills and bridges",
+  "label": "ch:fa-shortcuts-hills-and-bridges",
+  "canDo": "I can describe the road ahead: a shortcut, an uphill stretch, a downhill stretch, an underpass and a flyover.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C448-rugozar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can describe the road ahead: a shortcut, an uphill stretch, a downhill stretch, an underpass and a flyover.",
+    "assesses": [
+      "FA-LEX-C448-MIYANBOR-03",
+      "FA-LEX-C448-MIYANBOR-04",
+      "FA-LEX-C448-MIYANBOR-05"
+    ]
+  }
+}

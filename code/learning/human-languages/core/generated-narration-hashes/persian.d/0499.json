@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:b46f8e024c9ba8de",
+  "lessonIds": [
+    "FA-C499-bikhabi",
+    "FA-C499-khoropof-kardan",
+    "FA-C499-kabus",
+    "FA-C499-khabalud",
+    "FA-C499-khab-mandan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch499.txt",
+  "json": "persian/narration/ch499.json",
+  "textHash": "fnv1a64:676e142f807533da",
+  "jsonHash": "fnv1a64:54cd7c4139a289cf",
+  "findings": []
+}

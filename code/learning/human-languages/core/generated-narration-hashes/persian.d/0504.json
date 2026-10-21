@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:38faefee94b76f12",
+  "lessonIds": [
+    "FA-C504-dusti",
+    "FA-C504-dust-shodan",
+    "FA-C504-rabete",
+    "FA-C504-gharibe",
+    "FA-C504-hamdigar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch504.txt",
+  "json": "persian/narration/ch504.json",
+  "textHash": "fnv1a64:59e88494ea42be28",
+  "jsonHash": "fnv1a64:709e64d7d5fe9299",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:65153ab4cef88660",
+  "lessonIds": [
+    "FA-C520-navazande",
+    "FA-C520-ahangsaz",
+    "FA-C520-orkestr",
+    "FA-C520-goruh-e-kor",
+    "FA-C520-albom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch520.txt",
+  "json": "persian/narration/ch520.json",
+  "textHash": "fnv1a64:ee3fbdb1ae991297",
+  "jsonHash": "fnv1a64:974f527de1742fa0",
+  "findings": []
+}

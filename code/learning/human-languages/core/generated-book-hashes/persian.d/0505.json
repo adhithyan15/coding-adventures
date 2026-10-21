@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:6527078bb37c3568",
+  "lessonIds": [
+    "FA-C505-hemayat-kardan",
+    "FA-C505-sarzanesh-kardan",
+    "FA-C505-deldari-dadan",
+    "FA-C505-baghal-kardan",
+    "FA-C505-navazesh-kardan"
+  ],
+  "tex": "persian/book/chapters/ch505-support-and-comfort.tex"
+}

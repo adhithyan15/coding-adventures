@@ -1,0 +1,11 @@
+{
+  "id": "FA-C350-kakh",
+  "pathSegment": "FA-PATH-350-PADESHAH",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-350-PADESHAH",
+      "order": 2
+    }
+  ]
+}

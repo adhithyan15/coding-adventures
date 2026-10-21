@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C496-lase",
+    "language": "persian",
+    "chapter": 496,
+    "sequence": 25460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b81d4cddc83e1bdd"
+  },
+  "findings": []
+}

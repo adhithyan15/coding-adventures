@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:8884f93c773046cb",
+  "lessonIds": [
+    "FA-C524-kargardan",
+    "FA-C524-filmname",
+    "FA-C524-filmbardar",
+    "FA-C524-naqsh-bazi-kardan",
+    "FA-C524-honarpishe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch524.txt",
+  "json": "persian/narration/ch524.json",
+  "textHash": "fnv1a64:5d0240aaf35b9bb8",
+  "jsonHash": "fnv1a64:9f13fc072606dcbb",
+  "findings": []
+}

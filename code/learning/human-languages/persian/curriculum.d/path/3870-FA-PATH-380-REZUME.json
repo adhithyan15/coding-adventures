@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-380-REZUME",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-380-REZUME"
+  ],
+  "after": []
+}

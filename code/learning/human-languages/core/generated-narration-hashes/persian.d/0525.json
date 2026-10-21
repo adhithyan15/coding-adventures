@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:50570ee4ce2a626c",
+  "lessonIds": [
+    "FA-C525-naqqash",
+    "FA-C525-bum",
+    "FA-C525-qalam-mu",
+    "FA-C525-abrang",
+    "FA-C525-galeri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch525.txt",
+  "json": "persian/narration/ch525.json",
+  "textHash": "fnv1a64:debc650f73440e13",
+  "jsonHash": "fnv1a64:0395e76be50c6d87",
+  "findings": []
+}

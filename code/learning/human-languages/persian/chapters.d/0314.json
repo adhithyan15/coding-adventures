@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Events and taking part",
+  "label": "ch:fa-events-and-taking-part",
+  "canDo": "I can talk about an event: what took place, where it was held, who organised it and who took part.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C314-sherkat-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can talk about an event: what took place, where it was held, who organised it and who took part.",
+    "assesses": [
+      "FA-LEX-C314-RUYDAD-03",
+      "FA-LEX-C314-RUYDAD-04",
+      "FA-LEX-C314-RUYDAD-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C464-beyane",
+  "pathSegment": "FA-PATH-464-MAGHAZE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-464-MAGHAZE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:1767b5c22307791b",
+  "lessonIds": [
+    "FA-C336-talaq",
+    "FA-C336-talaq-gereftan",
+    "FA-C336-bive",
+    "FA-C336-yatim",
+    "FA-C336-sarparasti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch336.txt",
+  "json": "persian/narration/ch336.json",
+  "textHash": "fnv1a64:904944a49807eb02",
+  "jsonHash": "fnv1a64:997662a0b8a2d23f",
+  "findings": []
+}

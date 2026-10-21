@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C428-aber-e-piyade",
+    "language": "persian",
+    "chapter": 428,
+    "sequence": 21910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd3f3014c0b7638e"
+  },
+  "findings": []
+}

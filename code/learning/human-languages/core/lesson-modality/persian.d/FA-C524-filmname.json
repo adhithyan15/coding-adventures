@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C524-filmname",
+    "language": "persian",
+    "chapter": 524,
+    "sequence": 26860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26bb1bc9432db52f"
+  },
+  "findings": []
+}

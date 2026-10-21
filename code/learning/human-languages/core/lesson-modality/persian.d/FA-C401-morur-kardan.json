@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C401-morur-kardan",
+    "language": "persian",
+    "chapter": 401,
+    "sequence": 20500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:661b8e11df65ad8b"
+  },
+  "findings": []
+}

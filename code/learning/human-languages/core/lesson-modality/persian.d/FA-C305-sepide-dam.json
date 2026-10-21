@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C305-sepide-dam",
+    "language": "persian",
+    "chapter": 305,
+    "sequence": 15550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d4b8b35fdea55cb"
+  },
+  "findings": []
+}

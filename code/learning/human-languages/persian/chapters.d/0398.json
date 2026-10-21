@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Will it work",
+  "label": "ch:fa-will-it-work",
+  "canDo": "I can say whether a plan is feasible and practical, talk about the budget and the priorities, and weigh up the options.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C398-sanjidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can say whether a plan is feasible and practical, talk about the budget and the priorities, and weigh up the options.",
+    "assesses": [
+      "FA-LEX-C398-AMALI-03",
+      "FA-LEX-C398-AMALI-04",
+      "FA-LEX-C398-AMALI-05"
+    ]
+  }
+}

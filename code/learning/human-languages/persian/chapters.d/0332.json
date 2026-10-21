@@ -1,0 +1,19 @@
+{
+  "chapter": 332,
+  "title": "Birth and upbringing",
+  "label": "ch:fa-birth-and-upbringing",
+  "canDo": "I can talk about a pregnancy, a birth, being born, a newborn baby and bringing a child up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C332-tarbiyat-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can talk about a pregnancy, a birth, being born, a newborn baby and bringing a child up.",
+    "assesses": [
+      "FA-LEX-C332-BARDAR-03",
+      "FA-LEX-C332-BARDAR-04",
+      "FA-LEX-C332-BARDAR-05"
+    ]
+  }
+}

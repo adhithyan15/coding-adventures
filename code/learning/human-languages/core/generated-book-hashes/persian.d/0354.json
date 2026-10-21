@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:00038ecc2bed78bb",
+  "lessonIds": [
+    "FA-C354-kashf-kardan",
+    "FA-C354-ekhtera-kardan",
+    "FA-C354-tasis-kardan",
+    "FA-C354-katibe",
+    "FA-C354-virane"
+  ],
+  "tex": "persian/book/chapters/ch354-discoveries.tex"
+}

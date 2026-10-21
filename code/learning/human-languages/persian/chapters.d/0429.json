@@ -1,0 +1,19 @@
+{
+  "chapter": 429,
+  "title": "The railway",
+  "label": "ch:fa-the-railway",
+  "canDo": "I can talk about the railway: the railway itself, platforms, carriages, compartments and the rails.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C429-reyl",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can talk about the railway: the railway itself, platforms, carriages, compartments and the rails.",
+    "assesses": [
+      "FA-LEX-C429-RAHAHAN-03",
+      "FA-LEX-C429-RAHAHAN-04",
+      "FA-LEX-C429-RAHAHAN-05"
+    ]
+  }
+}

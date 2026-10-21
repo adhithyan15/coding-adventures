@@ -1,0 +1,11 @@
+{
+  "id": "FA-C411-bedehi",
+  "pathSegment": "FA-PATH-411-QARZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-411-QARZ",
+      "order": 2
+    }
+  ]
+}

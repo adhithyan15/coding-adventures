@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:15e8e0780e0e2a25",
+  "lessonIds": [
+    "FA-C462-haraj",
+    "FA-C462-arzidan",
+    "FA-C462-kharid-kardan",
+    "FA-C462-forush-raftan",
+    "FA-C462-jabe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch462.txt",
+  "json": "persian/narration/ch462.json",
+  "textHash": "fnv1a64:582051519cf15a77",
+  "jsonHash": "fnv1a64:b1fdcf7e0b998dfc",
+  "findings": []
+}

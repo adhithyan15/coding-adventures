@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-302-AGHAZ",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-302-AGHAZ"
+  ],
+  "after": []
+}

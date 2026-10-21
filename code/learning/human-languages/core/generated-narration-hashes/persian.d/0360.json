@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:c04bc0c44cf79a17",
+  "lessonIds": [
+    "FA-C360-aqide",
+    "FA-C360-didgah",
+    "FA-C360-negaresh",
+    "FA-C360-motaqed-budan",
+    "FA-C360-nazariye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch360.txt",
+  "json": "persian/narration/ch360.json",
+  "textHash": "fnv1a64:e319c2eddd6fc95c",
+  "jsonHash": "fnv1a64:b9a395e59fdd44e4",
+  "findings": []
+}

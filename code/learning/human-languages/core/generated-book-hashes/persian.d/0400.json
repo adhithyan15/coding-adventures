@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:02c243b7b45451d4",
+  "lessonIds": [
+    "FA-C400-daneshkade",
+    "FA-C400-shahriye",
+    "FA-C400-pazirofte-shodan",
+    "FA-C400-bursiye",
+    "FA-C400-vahed"
+  ],
+  "tex": "persian/book/chapters/ch400-getting-into-university.tex"
+}

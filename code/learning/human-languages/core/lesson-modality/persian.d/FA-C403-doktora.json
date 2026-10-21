@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C403-doktora",
+    "language": "persian",
+    "chapter": 403,
+    "sequence": 20640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:edd7eed248db8142"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C345-ruzi-ruzegari",
+    "language": "persian",
+    "chapter": 345,
+    "sequence": 17610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cc824f6400d337e"
+  },
+  "findings": []
+}

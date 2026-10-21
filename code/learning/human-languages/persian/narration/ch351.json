@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 351,
+  "title": "War and victory",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2c2f2e491a258c9c",
+  "lessons": [
+    {
+      "id": "FA-C351-sepah",
+      "sequence": 17910,
+      "title": "سپاه (sepâh) — an army",
+      "headword": "سپاه",
+      "romanization": "sepâh",
+      "gloss": "an army",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04c323321a0c2473",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a castle, then the Persian for a crown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سپاه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سپاه (sepâh) — \"an army\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سپاه (sepâh) شب به شهر رسید. Sepâh shab be shahr resid. The army reached the city at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Literary and military; lashkar is a synonym."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sepâh is a native Persian word that EtymDB glosses \"army\" without a parent; it is usually traced to Middle Persian spāh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sepâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sepâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sepâh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sepâh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sepâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sepâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a castle, then the Persian for a crown, then say sepâh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a castle, then the Persian for a crown, then say *sepâh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سپاه (sepâh) mean? (\"An army\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C351-nabard",
+      "sequence": 17920,
+      "title": "نبرد (nabard) — a battle, combat",
+      "headword": "نبرد",
+      "romanization": "nabard",
+      "gloss": "a battle, combat",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65840c4927f9bd82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a crown, then the Persian for an army."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نبرد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نبرد (nabard) — \"a battle, combat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نبرد (nabard) سه روز طول کشید. Nabard se ruz tul keshid. The battle went on for three days."
+            },
+            {
+              "kind": "speech",
+              "text": "Literary; in speech jang."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nabard is a native Persian word that EtymDB glosses \"combat, battle\" without a parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nabard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nabard*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nabard, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nabard*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nabard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nabard*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a crown, then the Persian for an army, then say nabard again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a crown, then the Persian for an army, then say *nabard* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نبرد (nabard) mean? (\"A battle, combat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C351-piruzi",
+      "sequence": 17930,
+      "title": "پیروزی (piruzi) — a victory",
+      "headword": "پیروزی",
+      "romanization": "piruzi",
+      "gloss": "a victory",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22b0efbb511a109f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an army, then the Persian for a battle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پیروزی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیروزی (piruzi) — \"a victory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مردم پیروزی را جشن گرفتند. Mardom piruzi râ jashn gereftand. The people celebrated the victory."
+            },
+            {
+              "kind": "speech",
+              "text": "From piruz \"victorious\". Also a win in sport."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "piruzi is inherited from Middle Persian pērōzīh, \"victory\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piruzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piruzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piruzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piruzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with piruzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *piruzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an army, then the Persian for a battle, then say piruzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an army, then the Persian for a battle, then say *piruzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پیروزی (piruzi) mean? (\"A victory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C351-shekast-dadan",
+      "sequence": 17940,
+      "title": "شکست دادن (shekast dâdan) — to defeat, to beat",
+      "headword": "شکست دادن",
+      "romanization": "shekast dâdan",
+      "gloss": "to defeat, to beat",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed8e24665d2e3361",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a battle, then the Persian for a victory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شکست دادن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شکست دادن (shekast dâdan) — \"to defeat, to beat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سپاه (sepâh) کوچک دشمن را شکست داد. Sepâh-e kuchak doshman râ shekast dâd. The small army defeated the enemy."
+            },
+            {
+              "kind": "speech",
+              "text": "shekast \"a break, a defeat\" + dâdan \"to give\". Present shekast midahad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shekast \"a break, a defeat\" is the past stem of the native verb shekastan \"to break\", and dâdan \"to give\" is inherited Persian: to give someone a defeat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shekast dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shekast dâdan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shekast dâdan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shekast dâdan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shekast dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shekast dâdan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a battle, then the Persian for a victory, then say shekast dâdan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a battle, then the Persian for a victory, then say *shekast dâdan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شکست دادن (shekast dâdan) mean? (\"To defeat, to beat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C351-fath-kardan",
+      "sequence": 17950,
+      "title": "فتح کردن (fath kardan) — to conquer, to capture",
+      "headword": "فتح کردن",
+      "romanization": "fath kardan",
+      "gloss": "to conquer, to capture",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a53bc24aa0f7f59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a victory, then the Persian for to defeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فتح کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فتح کردن (fath kardan) — \"to conquer, to capture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سپاه (sepâh) شهر را بعد از یک ماه فتح کرد. Sepâh shahr râ ba'd az yek mâh fath kard. The army captured the city after a month."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of a summit: qolle râ fath kard \"he conquered the peak\". Present fath mikonad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fath is borrowed from Arabic fatḥ (EtymDB), usually glossed \"an opening, a conquest\". kardan \"to do\" is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fath kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fath kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fath kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fath kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fath kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fath kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a victory, then the Persian for to defeat, then say fath kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a victory, then the Persian for to defeat, then say *fath kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فتح کردن (fath kardan) mean? (\"To conquer, to capture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

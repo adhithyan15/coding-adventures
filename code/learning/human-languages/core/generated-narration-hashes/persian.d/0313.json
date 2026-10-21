@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:2980688f1349df54",
+  "lessonIds": [
+    "FA-C313-amar",
+    "FA-C313-baravard-kardan",
+    "FA-C313-takid-kardan",
+    "FA-C313-kholase",
+    "FA-C313-kholase-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch313.txt",
+  "json": "persian/narration/ch313.json",
+  "textHash": "fnv1a64:42b17d7a66603133",
+  "jsonHash": "fnv1a64:51c31280e09a65ed",
+  "findings": []
+}

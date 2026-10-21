@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C290-miravam",
+    "language": "persian",
+    "chapter": 290,
+    "sequence": 14900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d5aa84c6170ea46"
+  },
+  "findings": []
+}

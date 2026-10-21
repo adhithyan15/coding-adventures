@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:837fc5905e76026d",
+  "lessonIds": [
+    "FA-C481-sabur",
+    "FA-C481-bisabr",
+    "FA-C481-tahammol-kardan",
+    "FA-C481-khunsard",
+    "FA-C481-asabani-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch481.txt",
+  "json": "persian/narration/ch481.json",
+  "textHash": "fnv1a64:9f04858ad83f17e1",
+  "jsonHash": "fnv1a64:0afe868ea8647bbc",
+  "findings": []
+}

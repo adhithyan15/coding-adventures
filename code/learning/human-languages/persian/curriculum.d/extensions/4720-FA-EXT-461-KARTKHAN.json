@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-461-KARTKHAN",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can pay in different ways: the card machine, a card-to-card transfer, credit, small change and the exchange office.",
+  "prerequisites": []
+}

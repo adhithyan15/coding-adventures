@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Couriers, phones and agents",
+  "label": "ch:fa-couriers-phones-and-agents",
+  "canDo": "I can use services in town: a courier, a postbox, a SIM card, an estate agency and getting in touch.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C456-tamas-gereftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can use services in town: a courier, a postbox, a SIM card, an estate agency and getting in touch.",
+    "assesses": [
+      "FA-LEX-C456-PEYK-03",
+      "FA-LEX-C456-PEYK-04",
+      "FA-LEX-C456-PEYK-05"
+    ]
+  }
+}

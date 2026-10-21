@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C517-tar",
+    "language": "persian",
+    "chapter": 517,
+    "sequence": 26510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f6c8029a54803b4"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:bf2f9b2577ebf35b",
+  "lessonIds": [
+    "FA-C479-ranginkaman",
+    "FA-C479-nasim",
+    "FA-C479-derakhshidan",
+    "FA-C479-ghorub-kardan",
+    "FA-C479-tolu-kardan",
+    "FA-R479-review-476-479",
+    "FA-R479-review-final-479"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch479.txt",
+  "json": "persian/narration/ch479.json",
+  "textHash": "fnv1a64:c3a8ead03464fc00",
+  "jsonHash": "fnv1a64:bde58c7ccee79086",
+  "findings": []
+}

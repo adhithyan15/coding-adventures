@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C529-naqd-kardan",
+    "language": "persian",
+    "chapter": 529,
+    "sequence": 27130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:703c5c48ff336a01"
+  },
+  "findings": []
+}

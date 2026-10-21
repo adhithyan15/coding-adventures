@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C499-khabalud",
+    "language": "persian",
+    "chapter": 499,
+    "sequence": 25600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9793758c826dffa0"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:c7196769989fe082",
+  "lessonIds": [
+    "FA-C339-eyd",
+    "FA-C339-khane-tekani",
+    "FA-C339-samanu",
+    "FA-C339-senjed",
+    "FA-C339-mahi-qermez",
+    "FA-R339-review-332-339"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch339.txt",
+  "json": "persian/narration/ch339.json",
+  "textHash": "fnv1a64:fefe7005b1c352b5",
+  "jsonHash": "fnv1a64:df7a7311344078da",
+  "findings": []
+}

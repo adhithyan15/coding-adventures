@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:132d03f7df150568",
+  "lessonIds": [
+    "FA-C422-kaput",
+    "FA-C422-motor",
+    "FA-C422-roghan",
+    "FA-C422-estart-zadan",
+    "FA-C422-khamush-shodan"
+  ],
+  "tex": "persian/book/chapters/ch422-under-the-bonnet.tex"
+}

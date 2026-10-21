@@ -1,0 +1,11 @@
+{
+  "id": "FA-C454-saatsaz",
+  "pathSegment": "FA-PATH-454-KAFFASH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-454-KAFFASH",
+      "order": 4
+    }
+  ]
+}

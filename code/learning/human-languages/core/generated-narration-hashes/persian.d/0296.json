@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:e1015b8deb2abd94",
+  "lessonIds": [
+    "FA-C296-khoshhal-budam",
+    "FA-C296-ghaza",
+    "FA-W296-gheyn",
+    "FA-C296-omidvaram-ke",
+    "FA-R296-feelings-and-hopes"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "persian/narration/ch296.txt",
+  "json": "persian/narration/ch296.json",
+  "textHash": "fnv1a64:c4bef3d107cf4ec3",
+  "jsonHash": "fnv1a64:25a2278758b732ea",
+  "findings": []
+}

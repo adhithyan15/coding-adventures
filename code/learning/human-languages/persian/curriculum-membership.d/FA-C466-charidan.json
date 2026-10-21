@@ -1,0 +1,11 @@
+{
+  "id": "FA-C466-charidan",
+  "pathSegment": "FA-PATH-466-CHUPAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-466-CHUPAN",
+      "order": 4
+    }
+  ]
+}

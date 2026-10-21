@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Prices and the economy",
+  "label": "ch:fa-prices-and-the-economy",
+  "canDo": "I can talk about the economy, inflation and high prices, subsidies and rates.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C413-nerkh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can talk about the economy, inflation and high prices, subsidies and rates.",
+    "assesses": [
+      "FA-LEX-C413-EQTESAD-03",
+      "FA-LEX-C413-EQTESAD-04",
+      "FA-LEX-C413-EQTESAD-05"
+    ]
+  }
+}

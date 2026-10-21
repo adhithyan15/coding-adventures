@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-427-TAMIRGAH",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-427-TAMIRGAH"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:288d5f145ebee98e",
+  "lessonIds": [
+    "FA-C468-ghar",
+    "FA-C468-damane",
+    "FA-C468-gardane",
+    "FA-C468-kuhpaye",
+    "FA-C468-soud-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch468.txt",
+  "json": "persian/narration/ch468.json",
+  "textHash": "fnv1a64:17de4bfac66e2559",
+  "jsonHash": "fnv1a64:68f9e25412f45182",
+  "findings": []
+}

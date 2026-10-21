@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 449,
+  "title": "Following a route",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0185bb2c7b710dab",
+  "lessons": [
+    {
+      "id": "FA-C449-masiryab",
+      "sequence": 22980,
+      "title": "مسیریاب (masiryâb) — a satnav, a GPS; a route-finding app",
+      "headword": "مسیریاب",
+      "romanization": "masiryâb",
+      "gloss": "a satnav, a GPS; a route-finding app",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12d6546d8c8b5d48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an underpass, then the Persian for a flyover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسیریاب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسیریاب (masiryâb) — \"a satnav, a GPS; a route-finding app\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بدون مسیریاب در این شهر گم میشویم. Bedun-e masiryâb dar in shahr gom mishavim. Without a satnav we get lost in this town."
+            },
+            {
+              "kind": "speech",
+              "text": "masir 'route' + yâb 'finding', from yâftan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "masiryâb is a modern compound of masir 'route', a loan usually traced to Arabic masīr, and native yâb, the present stem of yâftan 'to find'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masiryâb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masiryâb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masiryâb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masiryâb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with masiryâb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *masiryâb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an underpass, then the Persian for a flyover, then say masiryâb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an underpass, then the Persian for a flyover, then say *masiryâb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسیریاب (masiryâb) mean? (\"A satnav, a GPS; a route-finding app\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C449-donbal-kardan",
+      "sequence": 22990,
+      "title": "دنبال کردن (donbâl kardan) — to follow",
+      "headword": "دنبال کردن",
+      "romanization": "donbâl kardan",
+      "gloss": "to follow",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee0a2d0d2b7ea2af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a flyover, then the Persian for a satnav."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دنبال کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دنبال کردن (donbâl kardan) — \"to follow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ما ماشین دوستمان را تا روستا دنبال کردیم. Mâ mâshin-e dustemân râ tâ rustâ donbâl kardim. We followed our friend's car to the village."
+            },
+            {
+              "kind": "speech",
+              "text": "donbâl 'behind, the tail' + kardan. Also to look for: donbâl-e kelid migardam."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "donbâl kardan is built from native donbâl 'tail, the back', whose older history is not settled, and kardan 'to do', inherited from Middle Persian kardan (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "donbâl kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *donbâl kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "donbâl kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *donbâl kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with donbâl kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *donbâl kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a flyover, then the Persian for a satnav, then say donbâl kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a flyover, then the Persian for a satnav, then say *donbâl kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دنبال کردن (donbâl kardan) mean? (\"To follow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C449-nazdik-shodan",
+      "sequence": 23000,
+      "title": "نزدیک شدن (nazdik shodan) — to approach, to get near",
+      "headword": "نزدیک شدن",
+      "romanization": "nazdik shodan",
+      "gloss": "to approach, to get near",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da43f1c99a0ac55c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a satnav, then the Persian for to follow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نزدیک شدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزدیک شدن (nazdik shodan) — \"to approach, to get near\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قطار به ایستگاه نزدیک شد. Qatâr be istgâh nazdik shod. The train approached the station."
+            },
+            {
+              "kind": "speech",
+              "text": "nazdik 'near' + shodan; the place takes be."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nazdik shodan is built from native nazdik 'near', usually traced to Middle Persian nazdīk, and the native verb shodan 'to become'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazdik shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazdik shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazdik shodan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazdik shodan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nazdik shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nazdik shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a satnav, then the Persian for to follow, then say nazdik shodan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a satnav, then the Persian for to follow, then say *nazdik shodan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نزدیک شدن (nazdik shodan) mean? (\"To approach, to get near\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C449-gozashtan",
+      "sequence": 23010,
+      "title": "گذشتن (gozashtan) — to pass (by, through); to go by (of time)",
+      "headword": "گذشتن",
+      "romanization": "gozashtan",
+      "gloss": "to pass (by, through); to go by (of time)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0de65725894fc81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to follow, then the Persian for to approach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گذشتن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گذشتن (gozashtan) — \"to pass (by, through); to go by (of time)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اتوبوس از کنار دریا گذشت. Otobus az kenâr-e daryâ gozasht. The bus went past the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "Present stem gozar-: migozarad. Of time: do sâl gozasht — two years went by."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gozashtan is inherited: EtymDB traces it to a Middle Persian verb (written wtštn') meaning 'to pass, to cross, to die'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gozashtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gozashtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gozashtan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gozashtan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gozashtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gozashtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to follow, then the Persian for to approach, then say gozashtan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to follow, then the Persian for to approach, then say *gozashtan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گذشتن (gozashtan) mean? (\"To pass (by, through); to go by (of time)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C449-kuche-pas-kuche",
+      "sequence": 23020,
+      "title": "کوچه پس کوچه (kuche-pas-kuche) — the back streets, a maze of lanes",
+      "headword": "کوچه پس کوچه",
+      "romanization": "kuche-pas-kuche",
+      "gloss": "the back streets, a maze of lanes",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:486649a04ca47b3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to approach, then the Persian for to pass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کوچه پس کوچه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کوچه پس کوچه (kuche-pas-kuche) — \"the back streets, a maze of lanes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در کوچه پس کوچه های شهر قدیمی قدم زدیم. Dar kuche-pas-kuche-hâ-ye shahr-e qadimi qadam zadim. We walked through the back streets of the old town."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally 'lane behind lane'. Usually in the plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kuche-pas-kuche is a native compound of kuche 'lane', from ku 'street', and pas 'behind', inherited from Middle Persian pas (EtymDB): lane after lane."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuche-pas-kuche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuche-pas-kuche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuche-pas-kuche, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuche-pas-kuche*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kuche-pas-kuche",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kuche-pas-kuche*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to approach, then the Persian for to pass, then say kuche-pas-kuche again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to approach, then the Persian for to pass, then say *kuche-pas-kuche* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کوچه پس کوچه (kuche-pas-kuche) mean? (\"The back streets, a maze of lanes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

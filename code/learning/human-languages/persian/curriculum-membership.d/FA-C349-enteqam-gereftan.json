@@ -1,0 +1,11 @@
+{
+  "id": "FA-C349-enteqam-gereftan",
+  "pathSegment": "FA-PATH-349-KHIYANAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-349-KHIYANAT",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Writing Verse",
+  "label": "ch:fa-writing-verse",
+  "canDo": "I can talk about writing and reciting poetry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C522-takhayyol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can talk about writing and reciting poetry.",
+    "assesses": [
+      "FA-LEX-C522-VERSE-03",
+      "FA-LEX-C522-VERSE-04",
+      "FA-LEX-C522-VERSE-05"
+    ]
+  }
+}

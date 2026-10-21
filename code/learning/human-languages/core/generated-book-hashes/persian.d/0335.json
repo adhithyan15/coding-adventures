@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:0e63e55ddb11cf51",
+  "lessonIds": [
+    "FA-C335-arusi",
+    "FA-C335-arus",
+    "FA-C335-hanabandan",
+    "FA-C335-mehriye",
+    "FA-C335-jahiziye"
+  ],
+  "tex": "persian/book/chapters/ch335-the-wedding.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Pride and Modesty",
+  "label": "ch:fa-pride-and-modesty",
+  "canDo": "I can talk about pride and modesty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C480-khodnamayi-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can talk about pride and modesty.",
+    "assesses": [
+      "FA-LEX-C480-PRIDE-03",
+      "FA-LEX-C480-PRIDE-04",
+      "FA-LEX-C480-PRIDE-05"
+    ]
+  }
+}

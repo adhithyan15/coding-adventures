@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-515-MOVES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe moves in a game.",
+  "prerequisites": []
+}

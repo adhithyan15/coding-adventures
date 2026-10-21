@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C306-tey",
+    "language": "persian",
+    "chapter": 306,
+    "sequence": 15630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fab57c4c6f61d99"
+  },
+  "findings": []
+}

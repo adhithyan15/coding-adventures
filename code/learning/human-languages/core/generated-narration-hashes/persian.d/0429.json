@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:b7bcfc1fae46e7c0",
+  "lessonIds": [
+    "FA-C429-rah-ahan",
+    "FA-C429-sakku",
+    "FA-C429-vagon",
+    "FA-C429-kupe",
+    "FA-C429-reyl"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch429.txt",
+  "json": "persian/narration/ch429.json",
+  "textHash": "fnv1a64:a2b53fe5ff94b2d8",
+  "jsonHash": "fnv1a64:eb2240c33161f806",
+  "findings": []
+}

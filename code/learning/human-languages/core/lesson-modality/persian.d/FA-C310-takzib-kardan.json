@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C310-takzib-kardan",
+    "language": "persian",
+    "chapter": 310,
+    "sequence": 15810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bdf9833d691f6f5"
+  },
+  "findings": []
+}

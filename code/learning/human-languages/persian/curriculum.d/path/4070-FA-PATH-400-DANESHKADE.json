@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-400-DANESHKADE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-400-DANESHKADE"
+  ],
+  "after": []
+}

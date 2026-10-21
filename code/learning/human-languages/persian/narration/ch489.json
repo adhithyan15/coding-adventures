@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 489,
+  "title": "Manners and Temperament",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5de44a7cda57982f",
+  "lessons": [
+    {
+      "id": "FA-C489-moaddab",
+      "sequence": 25060,
+      "title": "مودب (mo'addab) — polite, well-mannered",
+      "headword": "مودب",
+      "romanization": "mo'addab",
+      "gloss": "polite, well-mannered",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a89b69cca330e61c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for generous, then the Persian for caring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مودب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مودب (mo'addab) — \"polite, well-mannered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بچه های آنها خیلی مودب هستند. bachchehâ-ye ânhâ kheyli mo'addab hastand. Their children are very polite."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on adab 'good manners'. The opposite is biadab."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mo'addab is a loan, usually traced to Arabic muʾaddab, 'well-bred', a word built on adab, 'manners'. EtymDB has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mo'addab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mo'addab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mo'addab, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mo'addab*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mo'addab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mo'addab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for generous, then the Persian for caring, then say mo'addab again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for generous, then the Persian for caring, then say *mo'addab* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مودب (mo'addab) mean? (\"Polite, well-mannered\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C489-biadab",
+      "sequence": 25070,
+      "title": "بیادب (biadab) — rude, impolite",
+      "headword": "بیادب",
+      "romanization": "biadab",
+      "gloss": "rude, impolite",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5494b96973ba02e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for caring, then the Persian for polite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بیادب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بیادب (biadab) — \"rude, impolite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آن مرد با فروشنده بیادب بود. ân mard bâ forushande biadab bud. That man was rude to the shop assistant."
+            },
+            {
+              "kind": "speech",
+              "text": "bi- 'without' + adab 'manners'. bâ kasi biadab budan — to be rude to someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "biadab is built in Persian from the prefix bi-, 'without', and adab, 'manners', a loan usually traced to Arabic adab. EtymDB has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biadab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biadab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biadab, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biadab*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with biadab",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *biadab*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for caring, then the Persian for polite, then say biadab again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for caring, then the Persian for polite, then say *biadab* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بیادب (biadab) mean? (\"Rude, impolite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C489-zudranj",
+      "sequence": 25080,
+      "title": "زودرنج (zudranj) — touchy, easily hurt",
+      "headword": "زودرنج",
+      "romanization": "zudranj",
+      "gloss": "touchy, easily hurt",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c4b23691e665d59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for polite, then the Persian for rude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زودرنج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زودرنج (zudranj) — \"touchy, easily hurt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او زودرنج است و با کوچکترین حرفی ناراحت میشود. u zudranj ast va bâ kuchektarin harfi nârâhat mishavad. She's touchy and gets upset at the smallest remark."
+            },
+            {
+              "kind": "speech",
+              "text": "zud 'quickly' + ranj 'hurt', the noun behind ranjidan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zudranj is built on two native Persian words: zud, 'quickly', and ranj, 'suffering', the noun behind ranjidan: quick to be hurt. EtymDB has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zudranj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zudranj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zudranj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zudranj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zudranj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zudranj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for polite, then the Persian for rude, then say zudranj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for polite, then the Persian for rude, then say *zudranj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زودرنج (zudranj) mean? (\"Touchy, easily hurt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C489-kamru",
+      "sequence": 25090,
+      "title": "کمرو (kamru) — shy, timid (in company)",
+      "headword": "کمرو",
+      "romanization": "kamru",
+      "gloss": "shy, timid (in company)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8603c225dff8d018",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for rude, then the Persian for touchy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کمرو",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کمرو (kamru) — \"shy, timid (in company)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پسرشان کمرو است و در مهمانی حرف نمیزند. pesarashân kamru ast va dar mehmâni harf nemizanad. Their son is shy and doesn't talk at parties."
+            },
+            {
+              "kind": "speech",
+              "text": "kam 'little' + ru 'face': little face, little boldness. The opposite is porru 'cheeky'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kamru is built on two native Persian words, kam, 'little', and ru, 'face'. It is the mirror of porru, 'cheeky', built on por, 'full'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kamru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kamru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kamru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kamru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for rude, then the Persian for touchy, then say kamru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for rude, then the Persian for touchy, then say *kamru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کمرو (kamru) mean? (\"Shy, timid (in company)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C489-maskhare-kardan",
+      "sequence": 25100,
+      "title": "مسخره کردن (maskhare kardan) — to make fun of, to mock",
+      "headword": "مسخره کردن",
+      "romanization": "maskhare kardan",
+      "gloss": "to make fun of, to mock",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3f1a7c2268243f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for touchy, then the Persian for shy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسخره کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسخره کردن (maskhare kardan) — \"to make fun of, to mock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او لباس من را مسخره کرد. u lebâs-e man râ maskhare kard. He made fun of my clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "maskhare 'ridiculous; a laughing stock' + kardan; present stem kon-. The person mocked takes râ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "maskhare comes from Arabic masḫara, 'buffoon, anything ridiculous' (EtymDB). kardan, 'to do', is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maskhare kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maskhare kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maskhare kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maskhare kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with maskhare kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *maskhare kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for touchy, then the Persian for shy, then say maskhare kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for touchy, then the Persian for shy, then say *maskhare kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسخره کردن (maskhare kardan) mean? (\"To make fun of, to mock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

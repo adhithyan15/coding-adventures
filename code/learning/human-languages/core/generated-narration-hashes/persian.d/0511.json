@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:2879819eb8632d17",
+  "lessonIds": [
+    "FA-C511-eski",
+    "FA-C511-chador-zadan",
+    "FA-C511-asb-savari",
+    "FA-C511-piyade-ravi",
+    "FA-C511-qayeqrani",
+    "FA-R511-review-504-511"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch511.txt",
+  "json": "persian/narration/ch511.json",
+  "textHash": "fnv1a64:42f56920750dceab",
+  "jsonHash": "fnv1a64:7f9704a161ae1494",
+  "findings": []
+}

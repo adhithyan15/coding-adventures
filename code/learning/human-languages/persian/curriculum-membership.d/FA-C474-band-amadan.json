@@ -1,0 +1,11 @@
+{
+  "id": "FA-C474-band-amadan",
+  "pathSegment": "FA-PATH-474-RAGBAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-474-RAGBAR",
+      "order": 3
+    }
+  ]
+}
