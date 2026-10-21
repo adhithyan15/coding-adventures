@@ -357,7 +357,9 @@ def read_subsets(report: Report, directory: Path) -> dict[str, dict[str, str]]:
     return subsets
 
 
-def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | None:
+def corpus_cases(
+    report: Report, directory: Path, subset: str, releases: set[str] | None = None
+) -> set[str] | None:
     """Positive case names of a subset's corpus, or None when it has none.
 
     A case is `<name>.<ext>` + `<name>.expect` + `<name>.cite`; a negative
@@ -407,6 +409,12 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
             report.error(f"{where}: a profile override needs the plain .expect")
         if any(s.startswith("reject@") for s in suffixes) and not positive:
             report.error(f"{where}: a release refusal override needs the plain .expect")
+        for suffix in sorted(s for s in suffixes if s.startswith("reject@")):
+            named = suffix.removeprefix("reject@")
+            if releases is not None and named not in releases:
+                report.error(
+                    f"{where}: .{printable(repr(suffix))} names no releases.csv row"
+                )
         if positive:
             cases.add(stem)
     return cases
@@ -530,9 +538,10 @@ def check_claimed_corpora(
     for row in rows:
         if not row.get("__malformed__"):
             claimed |= split_list(row["iir_status"]) | split_list(row["backend_status"])
+    releases = {row["release"] for row in rows if not row.get("__malformed__")}
     cases: dict[str, set[str]] = {}
     for subset in sorted(claimed & subsets):
-        found = corpus_cases(report, directory, subset)
+        found = corpus_cases(report, directory, subset, releases)
         if not found:
             report.error(
                 f"subset {subset!r} is claimed at stage I or B but corpus/{subset}/ "

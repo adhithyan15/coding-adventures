@@ -479,6 +479,7 @@ class SubsetsTest(Fixture):
         self.case("lang", "s", "orphan", "rb", "reject", "expect@p18")
         self.case("lang", "s", "relrefuse", "rb", "expect", "cite", "reject@1.0")
         self.case("lang", "s", "relorphan", "rb", "reject", "reject@1.0")
+        self.case("lang", "s", "relbogus", "rb", "expect", "cite", "reject@9.9")
         self.case("lang", "s", "bad name", "rb", "expect", "cite")
         lines = [HEADER, row("1.0", "1990-01-01", "", "partial,P,s,s,-,p")]
         errors = self.errors("lang", lines)
@@ -490,6 +491,7 @@ class SubsetsTest(Fixture):
             "corpus/s/neither: needs exactly one of .expect or .reject",
             "corpus/s/orphan: a profile override needs the plain .expect",
             "corpus/s/relorphan: a release refusal override needs the plain .expect",
+            "corpus/s/relbogus: .'reject@9.9' names no releases.csv row",
             "corpus/s/bad name: case name must match",
         ):
             self.assertTrue(any(fragment in e for e in errors), (fragment, errors))
