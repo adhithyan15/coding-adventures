@@ -38,7 +38,6 @@ loop scope. `tests/regression_for_head_shadow.rs` compiles the issue's matrix at
 SIMPLE and ADVANCED, checks that the outer declaration survives and pins the
 output bytes, and, when `node` is installed, checks that the output prints
 what the source prints.
-
 ### Added - actual bounded provenance chronology (CV03)
 
 Traced compilation starts a fresh checked chronology log before input graph
@@ -170,6 +169,24 @@ ACL rejection. Strict all-target Linux/macOS cross-checks pass; native Unix runt
 and final complete security review remain pending. All 20 Windows publication
 units and four artifact process tests pass after integration. #16905 remains draft.
 
+### Fixed - WHITESPACE_ONLY keeps newline statement boundaries (#17840, CCR-080 #15867)
+
+WHITESPACE_ONLY dropped every newline without restoring the statement
+boundary it supplied. `a()⏎b()` compiled to the SyntaxError `a()b()`, and so
+did any semicolon-light program.
+
+The token path now splices a `;` wherever ECMAScript ASI inserts one. The
+positions come from `javascript_parser::asi::asi_insertion_points`. The
+end-of-input point is also CCR-080's missing program-final `;` after a
+`do…while`. Two follow-on fixes keep the output byte-identical to upstream:
+
+- An ASI `;` that lands directly in a class body is dropped.
+- The gap-074/076/079 body flatten also takes a single statement that ends
+  in its own `;` (`with(o){a();}` → `with(o)a();`).
+
+`tests/regression_ws_newline_asi.rs` checks 23 shapes against bytes captured
+from the `v20260915` jar, and confirms each output parses under node.
+
 ### Fixed locally - fresh verification opens during policy preflight (CV02)
 
 Independent review found that retained probe handles continued to permit policy
@@ -181,6 +198,31 @@ while the separate empty probe has its intended policy, reopen its active path
 with production verification access and verify identity, zero length and policy.
 Unsupported verification policies now reject before original mutation.
 
+### Changed - refuse private class elements, as upstream does (CCR-075 slice 1, #15860, CLOC44)
+
+Upstream `v20260915` rejects every private element with
+`JSC_UNSUPPORTED_LANGUAGE_FEATURE` ("Private elements."). The owner decided
+that closurec refuses what Closure refuses, so closurec now rejects them too.
+Every input is scanned before compilation, and a refused program produces:
+
+- stderr byte-identical to upstream's: one located error with an excerpt and
+  caret per occurrence, plus the extra error a `static` field gets, then
+  `N error(s), 0 warning(s)`;
+- exit status `min(N, 127)`;
+- no stdout, no output file and no sidecar.
+
+The ladder gains a third verdict, `DeclinedIdentically`. A rung upstream
+refuses records `expected.exit` and `expected.stderr` from the jar, and
+counts as agreement when closurec declines identically. The three
+`private_field` rungs moved there: the ledger drops from 59 to 56, and parity
+is now 56/58, 37/58 and 25/58. The four CCR-081 `simple-private-*` fixtures
+now assert the identical refusal. They had pinned closurec's old output.
+
+Diagnostics stay byte-identical up to 16 MiB. Past that, closurec stops
+printing error blocks but keeps the true count and exit status, because
+upstream's output grows with errors × line length on a hostile line. Memory
+stays proportional to the input. See CLOC44 for both.
+
 ### Fixed - a constant `switch` no longer loses a nested `break` (#17842)
 
 `while(c--){switch(1){case 1:if(x)break;b();break}d()}` collapsed the switch,
@@ -188,6 +230,11 @@ so its inner `break` exited the loop and `d()` never ran. The fix is in
 `closure-pass-dce`. `tests/regression_switch_collapse_break.rs` runs both
 shapes under node at SIMPLE and ADVANCED.
 
+### Fixed - dead code after a top-level `throw` is dropped (CCR-086, #15923)
+
+`throw 1;console.log(1);` now compiles to `throw 1;` at SIMPLE and ADVANCED,
+as upstream does. The fix is in `closure-pass-dce`.
+`tests/regression_toplevel_throw.rs` pins five rows captured from the jar.
 ### Fixed locally - verified Windows publication policies (CV02)
 
 Create prepared directories and files with atomically protected current-user

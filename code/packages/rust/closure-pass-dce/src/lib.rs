@@ -448,6 +448,34 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
         .map(|item| dce_program_item(item, st))
         .collect();
 
+    // CCR-086 (#15923): drop the dead tail after a top-level `throw`, as
+    // `dce_block_statement` does inside blocks. Upstream:
+    // `throw 1;console.log(1);` → `throw 1;`. Same hoisting guard: a tail
+    // holding any declaration (`var`, `function`, `class`, `let`, `const`)
+    // or a compound statement is kept whole.
+    let terminator = new_body
+        .iter()
+        .position(|item| matches!(item, ProgramItem::Statement(s) if is_terminator(s)));
+    if let Some(t) = terminator {
+        let tail = &new_body[t + 1..];
+        let safe = tail.iter().all(|item| match item {
+            ProgramItem::Statement(s) => tail_is_safe_to_truncate(std::slice::from_ref(s)),
+            ProgramItem::Declaration(_) => false,
+        });
+        if !tail.is_empty() && safe {
+            let removed: Vec<Option<String>> = tail.iter().map(program_item_cv).collect();
+            let before = new_body.len();
+            new_body.truncate(t + 1);
+            st.record_deletion(
+                &removed,
+                &prog.cv,
+                "removed-dead-code",
+                &format!("program with {} top-level items", before),
+                &format!("dropped {} items after top-level terminator", before - (t + 1)),
+            );
+        }
+    }
+
     // NOTE (CCR-053): `debugger` statements are NOT stripped here, and were
     // until 2026-09-23. The removed code claimed it was "matching upstream
     // Closure exactly". It was not — see `preserves_debugger_statement_in_block`
@@ -4273,4 +4301,54 @@ mod tests {
         let (_, contribs, _, _) = run_pass(program_with_function(body, Some("fn.1")));
         assert!(contribs.iter().any(|c| c.tag == "switch_collapsed_to_matched_case"));
     }
+
+    // ---- CCR-086 (#15923): dead tail after a top-level `throw` ----------
+
+    fn throw_item() -> ProgramItem {
+        ProgramItem::Statement(Statement::throw_statement(
+            coding_adventures_javascript_ast::ThrowStatement { cv: None, argument: num(1.0) },
+        ))
+    }
+
+    fn run_top(body: Vec<ProgramItem>) -> Program {
+        let mut prog = program();
+        prog.body = body;
+        run_pass(prog).0
+    }
+
+    #[test]
+    fn ccr086_drops_statements_after_a_top_level_throw() {
+        // throw 1; g(); debugger; → throw 1;
+        let out = run_top(vec![
+            throw_item(),
+            ProgramItem::Statement(expr_stmt(ident("g"))),
+            ProgramItem::Statement(debugger_stmt()),
+        ]);
+        assert_eq!(out.body.len(), 1, "{:?}", out.body);
+    }
+
+    #[test]
+    fn ccr086_keeps_statements_before_the_throw() {
+        // f(); throw 1; g(); → f(); throw 1;
+        let out = run_top(vec![
+            ProgramItem::Statement(expr_stmt(ident("f"))),
+            throw_item(),
+            ProgramItem::Statement(expr_stmt(ident("g"))),
+        ]);
+        assert_eq!(out.body.len(), 2, "{:?}", out.body);
+    }
+
+    #[test]
+    fn ccr086_a_declaration_keeps_the_whole_tail() {
+        // throw 1; g(); function h(){} — `h` hoists, so nothing is dropped.
+        let out = run_top(vec![
+            throw_item(),
+            ProgramItem::Statement(expr_stmt(ident("g"))),
+            ProgramItem::Statement(func_decl_stmt("h")),
+        ]);
+        assert_eq!(out.body.len(), 3, "{:?}", out.body);
+        let out = run_top(vec![throw_item(), ProgramItem::Statement(let_decl_stmt("y"))]);
+        assert_eq!(out.body.len(), 2, "{:?}", out.body);
+    }
 }
+
