@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:a66b85930918a20a",
+  "lessonIds": [
+    "AR-C285-ray",
+    "AR-C285-ataqidu-anna",
+    "AR-C285-sual",
+    "AR-W285-hamza-on-waw",
+    "AR-C285-li-dhalika-fa",
+    "AR-R285-opinion-and-so"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "arabic/narration/ch285.txt",
+  "json": "arabic/narration/ch285.json",
+  "textHash": "fnv1a64:d69999f73306f5c0",
+  "jsonHash": "fnv1a64:d54695527c823f62",
+  "findings": []
+}

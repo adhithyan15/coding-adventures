@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:63ed6fc64075c724",
+  "lessonIds": [
+    "AR-C288-dhahab-wa-iyab",
+    "AR-C288-taira",
+    "AR-W288-hamza-on-yaa",
+    "AR-C288-masul",
+    "AR-C288-fatani",
+    "AR-R288-at-the-station"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "arabic/narration/ch288.txt",
+  "json": "arabic/narration/ch288.json",
+  "textHash": "fnv1a64:c03591f02ba62436",
+  "jsonHash": "fnv1a64:1589a34e2462ba12",
+  "findings": []
+}

@@ -62,7 +62,14 @@ it("pins Arabic lesson-content budgets", () =>
     // W04-W06 writing lessons and the thaman, mudarris and ahlan anchors, so the
     // payoff can assess all 33 of the chapter's atoms. It introduces nothing: no
     // idiom, sense or culture claim.
-    lessons: 1383,
+    // 1383 -> 1428: chapters 283-292, the B1 core, realize the five B1 spine
+    // nodes with 45 lessons: 22 grammar lessons, eight word and phrase lessons
+    // (kāna, ḥakā, raʾy, suʾāl, kayfa aṣilu ilā, tadhkirat dhahāb wa-iyāb,
+    // ṭāʾira, masʾūl, tajriba, iʿtamada), a reading, the letter lessons for ؤ
+    // and ئ, a six-line writing task and ten reviews. RE-MEASURED against the
+    // tree. None introduces an idiom, a sense or a culture claim, so those stay
+    // at 2 / 3 / 14.
+    lessons: 1428,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

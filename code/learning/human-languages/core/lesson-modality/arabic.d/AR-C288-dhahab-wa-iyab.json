@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C288-dhahab-wa-iyab",
+    "language": "arabic",
+    "chapter": 288,
+    "sequence": 16640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d7e3590ed7ee876"
+  },
+  "findings": []
+}

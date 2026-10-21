@@ -1,0 +1,11 @@
+{
+  "id": "AR-C284-indama",
+  "pathSegment": "AR-PATH-284-STORY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-284-STORY",
+      "order": 2
+    }
+  ]
+}

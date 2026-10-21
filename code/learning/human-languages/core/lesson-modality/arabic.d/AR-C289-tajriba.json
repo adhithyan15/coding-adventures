@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C289-tajriba",
+    "language": "arabic",
+    "chapter": 289,
+    "sequence": 16710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8829c5a1e54058bc"
+  },
+  "findings": []
+}

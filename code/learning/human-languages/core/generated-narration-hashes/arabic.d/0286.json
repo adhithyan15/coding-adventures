@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:76939c5fe61adef5",
+  "lessonIds": [
+    "AR-C286-an-adhhaba",
+    "AR-C286-yajibu-an",
+    "AR-C286-bi-sabab",
+    "AR-C286-sawfa",
+    "AR-R286-advice-and-reasons"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch286.txt",
+  "json": "arabic/narration/ch286.json",
+  "textHash": "fnv1a64:d021c60df5cedf8a",
+  "jsonHash": "fnv1a64:82f340d81ff7784c",
+  "findings": []
+}

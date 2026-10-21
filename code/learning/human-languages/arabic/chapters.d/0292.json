@@ -1,0 +1,18 @@
+{
+  "chapter": 292,
+  "title": "Would, And Six Lines About A Trip",
+  "label": "ch:ar-would-and-six-lines",
+  "canDo": "I can say what I would do if things were different, say that a plan depends on something, and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-W292-sitta-sutur",
+    "kind": "task",
+    "summary": "Complete AR-W292-sitta-sutur: six connected lines to one reader about a trip, with a scene, events in order, a reason and a condition.",
+    "assesses": [
+      "AR-GRAMMAR-C292-LAW-01",
+      "AR-GRAMMAR-C292-LAYTA-01"
+    ]
+  }
+}

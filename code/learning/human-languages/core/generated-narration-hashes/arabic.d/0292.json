@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:b604523220e6068c",
+  "lessonIds": [
+    "AR-C292-itamada",
+    "AR-C292-yatamidu-ala",
+    "AR-C292-law",
+    "AR-R292-would-and-depends",
+    "AR-W292-sitta-sutur"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "arabic/narration/ch292.txt",
+  "json": "arabic/narration/ch292.json",
+  "textHash": "fnv1a64:88b443e4a6c18671",
+  "jsonHash": "fnv1a64:968c8375e916cdc2",
+  "findings": []
+}

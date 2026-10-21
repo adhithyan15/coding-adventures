@@ -1,0 +1,790 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 292,
+  "title": "Would, And Six Lines About A Trip",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:b604523220e6068c",
+  "lessons": [
+    {
+      "id": "AR-C292-itamada",
+      "sequence": 16800,
+      "title": "اعتمد (iʿtamada) — to depend on",
+      "headword": "اعتمد",
+      "romanization": "iʿtamada",
+      "gloss": "to depend on, to rely on — with ʿalā, 'on'",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4c8b72cc91a2de3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, we'll watch a film\". (Idhā amṭarat, fa-sa-nushāhidu fīlman.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sometimes you cannot give the result yet, because it hangs on something else. This is the verb for hanging on something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اعتمد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعتمد — iʿtamada — \"he depended, he relied\", with على, ʿalā, \"on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اعتمدت على صديقي. — iʿtamadtu ʿalā ṣadīqī — I relied on my friend."
+            },
+            {
+              "kind": "speech",
+              "text": "The present is yaʿtamidu, he depends; aʿtamidu ʿalayka, I'm counting on you. It has the same shape as iʿtaqada, to believe, and its present aʿtaqidu: one letter apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعتمد (iʿtamada) is built on the native Arabic root ʿ-m-d, \"to prop up, to support\" (Lane). Lane gives iʿtamadtu ʿalā ash-shayʾ as leaning or resting on a thing, and then relying on a person. To depend on something, in Arabic, is to lean your weight on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿtamada, then yaʿtamidu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿtamada*, then *yaʿtamidu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I relied on my friend\" — iʿtamadtu ʿalā ṣadīqī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I relied on my friend\" — *iʿtamadtu ʿalā ṣadīqī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'm counting on you\" — aʿtamidu ʿalayka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'm counting on you\" — *aʿtamidu ʿalayka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We don't depend on money\" — lā naʿtamidu ʿalā al-māl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We don't depend on money\" — *lā naʿtamidu ʿalā al-māl*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اعتمد (iʿtamada) mean? (\"To depend on, to rely on\".) Which little word goes with it? (ʿAlā, on.) Which verb has the same shape? (Iʿtaqada, to believe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C292-yatamidu-ala",
+      "sequence": 16810,
+      "title": "يعتمد على (yaʿtamidu ʿalā) — it depends on",
+      "headword": "يعتمد على",
+      "romanization": "yaʿtamidu ʿalā",
+      "gloss": "it depends on — yaʿtamidu ʿalā for the thing a plan hangs on, and ḥasaba, according to, for a choice that follows it",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eb4954b716cf30c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I relied on my friend\". (Iʿtamadtu ʿalā ṣadīqī.) Then \"if it rains, we won't go out\". (Idhā amṭarat, fa-lan nakhruja.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone asks about your plan, and you do not know yet. That is an answer too."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: it depends on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— هل ستسافر غدا؟ — hal sa-tusāfiru ghadan? — Are you travelling tomorrow? — يعتمد على الطقس. — yaʿtamidu ʿalā aṭ-ṭaqs — It depends on the weather."
+            },
+            {
+              "kind": "speech",
+              "text": "\"It\" is not said: the ya- of yaʿtamidu carries it. Put the thing the plan hangs on after ʿalā: yaʿtamidu ʿalā al-waqt, it depends on the time; yaʿtamidu ʿalayka, it's up to you."
+            },
+            {
+              "kind": "speech",
+              "text": "It answers the same need as a condition with idhā, but leaves the condition open: idhā kāna aṭ-ṭaqs jamīlan, fa-sa-usāfiru says which way it goes; yaʿtamidu ʿalā aṭ-ṭaqs only says what decides."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: ḥasaba, according to",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ḥasaba, from chapter two hundred and sixty-eight, puts the deciding thing in front of a plain statement:"
+            },
+            {
+              "kind": "speech",
+              "text": "حسب الجدول، ينطلق القطار بعد عشر دقائق. — ḥasaba al-jadwal, yanṭaliqu al-qiṭār baʿda ʿashr daqāʾiq — According to the timetable, the train leaves in ten minutes."
+            },
+            {
+              "kind": "speech",
+              "text": "Ḥasaba aṭ-ṭaqs is \"depending on the weather\": sa-nusāfiru bi-l-qiṭār aw bi-l-ḥāfila, ḥasaba aṭ-ṭaqs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Are you travelling tomorrow?\" … \"It depends on the weather\" — hal sa-tusāfiru ghadan? … yaʿtamidu ʿalā aṭ-ṭaqs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Are you travelling tomorrow?\" … \"It depends on the weather\" — *hal sa-tusāfiru ghadan?* … *yaʿtamidu ʿalā aṭ-ṭaqs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It's up to you\" — yaʿtamidu ʿalayka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It's up to you\" — *yaʿtamidu ʿalayka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"According to the timetable, the train leaves in ten minutes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"According to the timetable, the train leaves in ten minutes\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We'll travel by train or by bus, depending on the weather\" — sa-nusāfiru bi-l-qiṭār aw bi-l-ḥāfila, ḥasaba aṭ-ṭaqs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We'll travel by train or by bus, depending on the weather\" — *sa-nusāfiru bi-l-qiṭār aw bi-l-ḥāfila, ḥasaba aṭ-ṭaqs*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It depends on the weather\"? (Yaʿtamidu ʿalā aṭ-ṭaqs.) \"According to the timetable\"? (Ḥasaba al-jadwal.) What does yaʿtamidu leave open that idhā closes? (Which way it goes.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C292-law",
+      "sequence": 16820,
+      "title": "لو (law) — if it were so",
+      "headword": "لو كان عندي وقت لسافرت",
+      "romanization": "law kāna ʿindī waqt la-sāfartu",
+      "gloss": "if I had time, I would travel — law with the past for what is not so, la- on the result, and layta for 'if only'",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34252c5106ca921a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"it depends on the weather\", then \"according to the timetable\". (Yaʿtamidu ʿalā aṭ-ṭaqs, ḥasaba al-jadwal.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Idhā is for what may well happen. For what is not so, and you only imagine, Arabic has a third \"if\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: law, and la- on the result",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لو كان عندي وقت لسافرت. — law kāna ʿindī waqt la-sāfartu — If I had time, I would travel."
+            },
+            {
+              "kind": "speech",
+              "text": "لو — law — takes the past, and so does the result. The result usually carries لـ — la- — written onto it: la-sāfartu, I would have travelled, I would travel. The meaning is \"but I don't have time\". That is the difference from idhā: idhā kāna ʿindī waqt, sa-usāfiru leaves it open; law says it is not so."
+            },
+            {
+              "kind": "speech",
+              "text": "You have said law since chapter six: law samaḥt, \"if you would permit\", the polite \"please\" that does not take the yes for granted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: if I were you, and if only",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لو كنت مكانك لذهبت إلى الطبيب. — law kuntu makānaka la-dhahabtu ilā aṭ-ṭabīb — If I were you, I'd go to the doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word, \"if I were in your place\". ليت — layta, \"if only\" — wishes without a result: laytanī kuntu ghaniyyan, if only I were rich; laytanī kuntu hunāka, if only I had been there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I had time, I would travel\" — law kāna ʿindī waqt la-sāfartu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I had time, I would travel\" — *law kāna ʿindī waqt la-sāfartu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the open one, with idhā — idhā kāna ʿindī waqt, sa-usāfiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the open one, with *idhā* — *idhā kāna ʿindī waqt, sa-usāfiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I were you, I'd go to the doctor\" — law kuntu makānaka la-dhahabtu ilā aṭ-ṭabīb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I were you, I'd go to the doctor\" — *law kuntu makānaka la-dhahabtu ilā aṭ-ṭabīb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If only I were rich\" — laytanī kuntu ghaniyyan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If only I were rich\" — *laytanī kuntu ghaniyyan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wish of your own with law and la-, then one with atamannā an",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wish of your own with *law* and *la-*, then one with *atamannā an*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If I had time, I would travel\"? (Law kāna ʿindī waqt la-sāfartu.) What goes on the result? (La-.) Which \"if\" says \"but it is not so\"? (Law.) \"If only\"? (Layta.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R292-would-and-depends",
+      "sequence": 16830,
+      "title": "Review — would, if only, and it depends",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "three kinds of 'if' side by side — idhā for what may well happen, yaʿtamidu ʿalā for what is still open, law and layta for what is not so",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:834b76893366e097",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, we'll watch a film at home\". (Idhā amṭarat, fa-sa-nushāhidu fīlman fī al-manzil.) Then \"if you arrive early\", with the other \"if\". (In waṣalta mubakkiran.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three lessons, and three distances from the facts. Idhā: it may well happen, idhā kāna ʿindī waqt, sa-usāfiru. Yaʿtamidu ʿalā: it is still open, yaʿtamidu ʿalā al-waqt. Law: it is not so, law kāna ʿindī waqt la-sāfartu; and layta, the wish with no result."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three, on one question:"
+            },
+            {
+              "kind": "speech",
+              "text": "— hal sa-tusāfiru? — yaʿtamidu ʿalā al-ʿamal. law kāna ʿindī waqt la-sāfartu al-usbūʿa al-qādim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It depends on the person in charge\" — yaʿtamidu ʿalā al-masʾūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It depends on the person in charge\" — *yaʿtamidu ʿalā al-masʾūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If I were you, I would ask the way\" — law kuntu makānaka la-saʾaltu: kayfa aṣilu ilā al-maḥaṭṭa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If I were you, I would ask the way\" — *law kuntu makānaka la-saʾaltu: kayfa aṣilu ilā al-maḥaṭṭa?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You ought to ask the client\" — yanbaghī an tasʾala al-ʿamīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You ought to ask the client\" — *yanbaghī an tasʾala al-ʿamīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Take the first street on the right\" — khudh ash-shāriʿa al-awwala ʿalā al-yamīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Take the first street on the right\" — *khudh ash-shāriʿa al-awwala ʿalā al-yamīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If only the sentence were shorter\" — layta al-jumlata kānat aqṣar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If only the sentence were shorter\" — *layta al-jumlata kānat aqṣar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If it were a new experience, I would try it\" — law kānat tajribatan jadīdatan la-jarrabtuhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If it were a new experience, I would try it\" — *law kānat tajribatan jadīdatan la-jarrabtuhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing you would do law kāna ʿindī waqt, and one you will do idhā something happens",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing you would do *law kāna ʿindī waqt*, and one you will do *idhā* something happens]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which \"if\" says it is not so? (Law.) What goes on its result? (La-.) \"It depends on the time\"? (Yaʿtamidu ʿalā al-waqt.) \"If only\"? (Layta.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W292-sitta-sutur",
+      "sequence": 16840,
+      "title": "Six lines about a trip",
+      "headword": "(six lines)",
+      "romanization": "",
+      "gloss": "six connected Arabic lines to one reader about a trip — a scene, events in order, a reason, a feeling, and a last line with a condition or a wish",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:e78d9830e4d33bbf",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Wrap-up recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Wrap-up recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter forty-five asked for four lines that held together. This one asks for six, and they tell a story."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pick one reader: a friend, by name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A told story is not a list of events. It has a scene, in kāna and kāna with the present. It has events in the plain past, put in order with awwalan, thumma, ʿindamā and fī an-nihāya. It has at least one reason, with li-anna, bi-sabab or fa-, and a feeling, with kuntu and -an, or shaʿartu bi-."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A good one ends by looking forward or wishing: atamannā an …, idhā … fa-sa- …, or law … la- …."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "At B1 a connected text runs longer than six lines. Six lines is the first step towards it, not the whole of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — connected composition",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "On paper, right to left, write six lines to your reader about a trip, real or invented, one line for each of these:"
+            },
+            {
+              "kind": "speech",
+              "text": "the scene: when it was, with qabla or al-māḍī, and the weather, with kāna;"
+            },
+            {
+              "kind": "speech",
+              "text": "where you went and who was with you, with maʿa, and the ticket: tadhkirat dhahāb wa-iyāb or dhahāb faqaṭ, and from which platform;"
+            },
+            {
+              "kind": "speech",
+              "text": "the first thing that happened, with awwalan or ʿindamā;"
+            },
+            {
+              "kind": "speech",
+              "text": "the next thing, with thumma or baʿda an, and a reason, with li-anna, bi-sabab, as-sababu huwa anna or fa-, or what you had to do, with kāna yajibu an;"
+            },
+            {
+              "kind": "speech",
+              "text": "how it ended and how you felt, with fī an-nihāya and kuntu … -an or shaʿartu bi-;"
+            },
+            {
+              "kind": "speech",
+              "text": "one line forward: atamannā an, a real idhā, or law … la-."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Use only words you already write. The whole exercise is choosing the right past for each line, and joining them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now read your lines as you read the trip to the sea in chapter two hundred and eighty-four. Mark every verb S for scene or E for event. Line one should be mostly S; lines three and four mostly E. A line about the weather marked E is the commonest slip: change amṭarat back to kāna aṭ-ṭaqs mumṭiran if you meant the scene."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then three spelling checks. Every wa- and fa- is joined to the next word, with no space: وكان, فذهبنا. Every -an after kāna on a word without ة has its ا: سعيدا. And each hamza sits on its seat: سؤال with ؤ, طائرة with ئ."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Last, read line six alone. If it has idhā, is the verb after it in the past? If it has law, does the result carry la-?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 284,
+  "title": "A Story, In Order",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:f0a6fea7f1b42b16",
+  "lessons": [
+    {
+      "id": "AR-C284-awwalan-thumma",
+      "sequence": 16450,
+      "title": "أولا، ثم، بعد ذلك (awwalan, thumma, baʿda dhālika) — first, then, after that",
+      "headword": "أولا، ثم، بعد ذلك",
+      "romanization": "awwalan, thumma, baʿda dhālika",
+      "gloss": "the steps of a story — awwalan to open, thumma and baʿda dhālika to move on, fī an-nihāya to close",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7ab8a04752507fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"we went\", \"we ate\", \"we came back\". (Dhahabnā, akalnā, rajaʿnā.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three events in a row are a list. A few small words turn them into a story, and you already own most of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: first, then, after that",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Awwalan opens the first step. Thumma moves to the next, with a little time between. Baʿda dhālika, \"after that\", is baʿda with dhālika, \"that\", the same dhālika that sits inside li-dhālika."
+            },
+            {
+              "kind": "speech",
+              "text": "أولا ذهبنا إلى السوق، ثم أكلنا في مطعم، وبعد ذلك رجعنا إلى الفندق. — awwalan dhahabnā ilā as-sūq, thumma akalnā fī maṭʿam, wa-baʿda dhālika rajaʿnā ilā al-funduq — First we went to the market, then we ate in a restaurant, and after that we went back to the hotel."
+            },
+            {
+              "kind": "speech",
+              "text": "Each joiner stands at the head of its own step, and each step has its own past verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: closing the story",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "في النهاية — fī an-nihāya — \"in the end\". Nihāya is \"an end\", from the root of intahā, \"to end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "في النهاية وجدت المفتاح. — fī an-nihāya wajadtu al-miftāḥ — In the end I found the key."
+            },
+            {
+              "kind": "speech",
+              "text": "Akhīran, \"at last\", closes a story too, and it usually carries relief: the thing you were waiting for came."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awwalan … thumma … baʿda dhālika … fī an-nihāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awwalan … thumma … baʿda dhālika … fī an-nihāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"First we went to the market\" — awwalan dhahabnā ilā as-sūq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"First we went to the market\" — *awwalan dhahabnā ilā as-sūq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"then we ate in a restaurant\" — thumma akalnā fī maṭʿam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"then we ate in a restaurant\" — *thumma akalnā fī maṭʿam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"and after that we went back to the hotel\" — wa-baʿda dhālika rajaʿnā ilā al-funduq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"and after that we went back to the hotel\" — *wa-baʿda dhālika rajaʿnā ilā al-funduq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In the end I found the key\" — fī an-nihāya wajadtu al-miftāḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In the end I found the key\" — *fī an-nihāya wajadtu al-miftāḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"After that\"? (Baʿda dhālika.) \"In the end\"? (Fī an-nihāya.) Which root does nihāya share with \"to end\"? (N-h-y, as in intahā.) Which closer often carries relief? (Akhīran, at last.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C284-haka",
+      "sequence": 16460,
+      "title": "حكى (ḥakā) — to tell a story",
+      "headword": "حكى",
+      "romanization": "ḥakā",
+      "gloss": "to tell (a story); to relate — the verb for passing a story on",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16bc78c24682f017",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"first\", \"then\", \"after that\". (Awwalan, thumma, baʿda dhālika.) And the Arabic for a story. (Qiṣṣa.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can put a story in order now. This is the verb for handing it on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حكى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حكى — ḥakā — \"he told (a story)\", \"to tell, to relate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حكت جدتي قصة جميلة. — ḥakat jaddatī qiṣṣatan jamīla — My grandmother told a lovely story."
+            },
+            {
+              "kind": "speech",
+              "text": "It ends like qaḍā, and it bends the same way: ḥakaytu, I told, as qaḍaytu, I spent. The present is yaḥkī, he tells, and with kāna in front, kānat taḥkī, she used to tell."
+            },
+            {
+              "kind": "speech",
+              "text": "Qāla reports what somebody said; ḥakā passes on a whole story, a piece of news or something that happened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حكى (ḥakā) is built on the native Arabic root ḥ-k-y, \"to relate, to narrate; to imitate\" (Lane). Lane gives both senses side by side: to tell a story is to say again what was said or done, and to imitate is to do again what someone did."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥakā, then ḥakaytu and ḥakat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥakā*, then *ḥakaytu* and *ḥakat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My grandmother told a lovely story\" — ḥakat jaddatī qiṣṣatan jamīla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My grandmother told a lovely story\" — *ḥakat jaddatī qiṣṣatan jamīla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She used to tell a story every day\" — kānat taḥkī qiṣṣatan kulla yawm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She used to tell a story every day\" — *kānat taḥkī qiṣṣatan kulla yawm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He said\", then \"he told a story\" — qāla, ḥakā qiṣṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He said\", then \"he told a story\" — *qāla*, *ḥakā qiṣṣa*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حكى (ḥakā) mean? (\"To tell a story\".) \"I told\"? (Ḥakaytu, like qaḍaytu.) \"He tells\"? (Yaḥkī.) What else can the root mean, in Lane? (To imitate.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C284-indama",
+      "sequence": 16470,
+      "title": "عندما (ʿindamā) — when, in a story",
+      "headword": "عندما",
+      "romanization": "ʿindamā",
+      "gloss": "when, in a told story — ʿindamā with the past ties one event to the next, and baʿda an puts one after another",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:467cb965c21d084e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"she told a story\". (Ḥakat qiṣṣa.) Then say ḥīnamā jāʾa, kataba, \"when he came, he wrote\"."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ḥīnamā has a twin that you will hear far more often in a story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: ʿindamā and the past",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عندما — ʿindamā — \"when\". It is ʿinda, \"at\", with mā after it, as ḥīnamā is ḥīna, \"time\", with mā. Put a past verb after it, and the clause names the moment the next event hangs on:"
+            },
+            {
+              "kind": "speech",
+              "text": "عندما وصلنا إلى المطار، اتصلت بزوجتي. — ʿindamā waṣalnā ilā al-maṭār, ittaṣaltu bi-zawjatī — When we arrived at the airport, I phoned my wife."
+            },
+            {
+              "kind": "speech",
+              "text": "The ʿindamā clause can follow as well: ittaṣaltu bi-zawjatī ʿindamā waṣalnā. Either way, the arrival comes first and the call second."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one event after another",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Baʿda means \"after\" before a noun: baʿda al-ʿashāʾ, after dinner. Before a whole clause it takes an, \"that\", and the past:"
+            },
+            {
+              "kind": "speech",
+              "text": "بعد أن أكلنا، خرجنا. — baʿda an akalnā, kharajnā — After we had eaten, we went out."
+            },
+            {
+              "kind": "speech",
+              "text": "So a story can be ordered two ways: by joiners, awwalan … thumma, or by clauses, ʿindamā and baʿda an. Good stories mix them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿindamā waṣalnā ilā al-maṭār, ittaṣaltu bi-zawjatī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿindamā waṣalnā ilā al-maṭār, ittaṣaltu bi-zawjatī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same two events the other way round — ittaṣaltu bi-zawjatī ʿindamā waṣalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same two events the other way round — *ittaṣaltu bi-zawjatī ʿindamā waṣalnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After dinner\", then \"after we had eaten\" — baʿda al-ʿashāʾ, baʿda an akalnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After dinner\", then \"after we had eaten\" — *baʿda al-ʿashāʾ*, *baʿda an akalnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baʿda an akalnā, kharajnā, wa-fī an-nihāya rajaʿnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baʿda an akalnā, kharajnā, wa-fī an-nihāya rajaʿnā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two pieces make ʿindamā? (ʿInda and mā.) Its twin? (Ḥīnamā.) What does baʿda take before a clause? (An, then the past.) In ʿindamā waṣalnā, ittaṣaltu, which came first? (The arrival.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C284-qissat-rihla",
+      "sequence": 16480,
+      "title": "(reading) — a trip to the sea, told in both pasts",
+      "headword": "(reading)",
+      "romanization": "",
+      "gloss": "a summer trip to a village by the sea in eighty-two words — the first Arabic passage in this book that tells a story, in both pasts, and not one word of it new",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:a35f1197fd8043c4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Chapter forty-two gave you a whole encounter to read: a greeting, a choice and a goodbye. This passage is a story, eighty-two words long, and it happened last summer."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every word in it was taught before this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "في الصيف الماضي سافرت مع صديقي إلى قرية صغيرة قريبة من البحر. كان الطقس جميلا. عندما (ʿindamā) وصلنا، ذهبنا أولا إلى الفندق. ثم أكلنا السمك في مطعم صغير، وكان الطعام لذيذا. وبعد ذلك سبحنا في البحر. في المساء كنا نشرب الشاي، وكان صديقي يحكي قصة طويلة. كنت أستمع وأضحك. ذات مرة كنا نمشي في القرية عندما (ʿindamā) أمطرت. بعد أن رجعنا إلى الفندق، قرأنا وشربنا القهوة. في النهاية رجعنا بالقطار إلى المدينة. وعندما وصلت إلى المنزل، حكيت القصة لجدتي. كانت الرحلة قصيرة وجميلة جدا."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping. Do not translate as you go; let the sentences arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then read it a second time and sort every verb into one of two piles: the scene, or what happened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The events: sāfartu, waṣalnā, dhahabnā, akalnā, sabaḥnā, amṭarat, rajaʿnā, qaraʾnā, ḥakaytu. Each one happened and was over, and awwalan, thumma, baʿda dhālika and fī an-nihāya keep them in order."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The scene: the weather, the good food, the tea in the evening. Kāna paints it, and so does kāna with the present: kunnā nashrabu, kāna ṣadīqī yaḥkī, kuntu astamiʿu. After kāna an adjective takes -an: jamīlan, ladhīdhan. Chapter two hundred and eighty-nine comes back to that."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In the rain, both pasts meet: kunnā namshī, the walk still running, and ʿindamā amṭarat, the rain that cut into it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the passage aloud, once, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the passage aloud, once, without stopping]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "AR-C284-qissat-rihla-qitar",
+              "prompt": "How did they travel back to the city?",
+              "assesses": [
+                "AR-SKILL-C284-READ-NARRATIVE-01",
+                "AR-GRAMMAR-C284-INDAMA-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "by train",
+                "بالقطار",
+                "bi-l-qitar",
+                "bi-l-qiṭār",
+                "train"
+              ],
+              "feedback": {
+                "correct": "Fī an-nihāya rajaʿnā bi-l-qiṭār ilā al-madīna.",
+                "incorrect": "By train: rajaʿnā bi-l-qiṭār."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "AR-C284-qissat-rihla-masaa",
+              "prompt": "What was the friend doing in the evenings?",
+              "assesses": [
+                "AR-SKILL-C284-READ-NARRATIVE-01",
+                "AR-GRAMMAR-C283-SCENE-EVENT-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "telling a long story",
+                "telling a story",
+                "yahki qissa",
+                "yaḥkī qiṣṣa",
+                "يحكي قصة"
+              ],
+              "feedback": {
+                "correct": "Kāna ṣadīqī yaḥkī qiṣṣatan ṭawīla: scene, still running.",
+                "incorrect": "Telling a long story: kāna ṣadīqī yaḥkī qiṣṣatan ṭawīla."
+              }
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "AR-C284-qissat-rihla-funduq",
+              "prompt": "What did they do after they got back to the hotel?",
+              "assesses": [
+                "AR-SKILL-C284-READ-NARRATIVE-01",
+                "AR-GRAMMAR-C284-BADA-AN-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "they read and drank coffee",
+                "read and drank coffee",
+                "drank coffee",
+                "qaraʾna wa-sharibna al-qahwa",
+                "قرأنا وشربنا القهوة"
+              ],
+              "feedback": {
+                "correct": "Baʿda an rajaʿnā ilā al-funduq, qaraʾnā wa-sharibnā al-qahwa.",
+                "incorrect": "They read and drank coffee: qaraʾnā wa-sharibnā al-qahwa."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words in that passage were new? (None.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is kunnā namshī built with kāna? (The walk was still going on when the rain came: it is scene.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who heard the story at the end? (The grandmother: ḥakaytu al-qiṣṣa li-jaddatī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R284-a-story-in-order",
+      "sequence": 16490,
+      "title": "Review — a story, in order",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a short story told aloud in order — awwalan, thumma, baʿda dhālika, ʿindamā, baʿda an, fī an-nihāya, with ḥakā to hand it on",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:df2752cd8fd4da59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was reading\", then \"I was at the office\". (Kuntu aqraʾu, kuntu fī al-maktab.) And the Arabic for a page. (Ṣafḥa.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four lessons, and a story has its order. Joiners at the head of each step: awwalan, thumma, baʿda dhālika, fī an-nihāya. Clauses that name the moment: ʿindamā with the past, and baʿda an with the past. And ḥakā, to hand the whole thing on."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One small story, in four steps:"
+            },
+            {
+              "kind": "speech",
+              "text": "أولا ذهبت إلى العمل، ثم كتبت رسالة. عندما رجعت، حكيت القصة لصديقي. — awwalan dhahabtu ilā al-ʿamal, thumma katabtu risāla. ʿindamā rajaʿtu, ḥakaytu al-qiṣṣa li-ṣadīqī — First I went to work, then I wrote a letter. When I came back, I told my friend the story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awwalan dhahabtu ilā al-ʿamal, thumma katabtu risāla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awwalan dhahabtu ilā al-ʿamal, thumma katabtu risāla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿindamā rajaʿtu, ḥakaytu al-qiṣṣa li-ṣadīqī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿindamā rajaʿtu, ḥakaytu al-qiṣṣa li-ṣadīqī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"After the client came, the pharmacist phoned\" — baʿda an jāʾa al-ʿamīl, ittaṣala aṣ-ṣaydalī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"After the client came, the pharmacist phoned\" — *baʿda an jāʾa al-ʿamīl, ittaṣala aṣ-ṣaydalī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trip to the sea in three steps: where you went first, what you did then, how it ended",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trip to the sea in three steps: where you went first, what you did then, how it ended]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one scene line for it — kāna aṭ-ṭaqs jamīlan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one scene line for it — *kāna aṭ-ṭaqs jamīlan*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"After that\"? (Baʿda dhālika.) \"When we arrived\", in a story? (ʿIndamā waṣalnā.) \"After we had eaten\"? (Baʿda an akalnā.) \"I told the story\"? (Ḥakaytu al-qiṣṣa.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

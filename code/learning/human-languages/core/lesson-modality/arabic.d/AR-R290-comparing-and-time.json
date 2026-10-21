@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R290-comparing-and-time",
+    "language": "arabic",
+    "chapter": 290,
+    "sequence": 16760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79b73ef84c0ef9e8"
+  },
+  "findings": []
+}

@@ -30,10 +30,16 @@ it("pins Arabic's root ledger", () => {
     // writing lessons) moved onto the bare `s-l-m` that AR-C01-salam already
     // introduced. 942 -> 941 roots; the root's payoffs go 2 + 5 -> 8 in one
     // entry, which is the reuse the split had been hiding.
-    roots: 941,
-    underspent: 913,
-    neverSpent: 695,
-    payoffDistribution: { "0": 695, "1": 166, "2": 52, "3": 19, "4": 7, "6": 1, "8": 1 },
+    //
+    // The B1 core (chapters 283-292) adds three new roots, ḥ-k-y (ḥakā),
+    // ʾ-w-b (iyāb) and ʿ-m-d (iʿtamada): 941 -> 944. Its other word, phrase and
+    // grammar lessons reuse roots the track already had (k-w-n, r-a-y, s-a-l
+    // twice, w-ṣ-l, dh-h-b, ṭ-y-r, j-r-b, w-j-b, s-b-b), which is where the new
+    // payoffs come from. RE-MEASURED against the tree, not derived.
+    roots: 944,
+    underspent: 915,
+    neverSpent: 694,
+    payoffDistribution: { "0": 694, "1": 166, "2": 55, "3": 19, "4": 8, "6": 1, "8": 1 },
     underspentPercent: 97,
   });
 });

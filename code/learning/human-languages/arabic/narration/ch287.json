@@ -1,0 +1,451 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 287,
+  "title": "Asking The Way",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:2f6b56e7a8571efa",
+  "lessons": [
+    {
+      "id": "AR-C287-kayfa-asilu",
+      "sequence": 16610,
+      "title": "كيف أصل إلى (kayfa aṣilu ilā) — how do I get to …?",
+      "headword": "كيف أصل إلى",
+      "romanization": "kayfa aṣilu ilā",
+      "gloss": "how do I get to — kayfa aṣilu ilā, after min faḍlik, to ask a stranger the way",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38d2a8350ca11468",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I will travel tomorrow\". (Sa-usāfiru ghadan.) Then \"I want to go to the market\". (Urīdu an adhhaba ilā as-sūq.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are in a city you do not know. This is what you say to the first person who stops."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كيف أصل إلى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كيف أصل إلى — kayfa aṣilu ilā — \"how do I get to\", word for word \"how do I arrive at\"."
+            },
+            {
+              "kind": "speech",
+              "text": "من فضلك، كيف أصل إلى المحطة؟ — min faḍlik, kayfa aṣilu ilā al-maḥaṭṭa? — Excuse me, how do I get to the station?"
+            },
+            {
+              "kind": "speech",
+              "text": "Aṣilu, I arrive, is the present of waṣala, and the root's w has dropped, as it did in yajibu. To a woman, say min faḍliki."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the questions around it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two shorter questions often come with it. أين — ayna, \"where\": ayna al-matḥaf?, where is the museum? And هل with baʿīd or qarīb: hal al-matḥaf baʿīd?, is the museum far? The answer may be qarīb min hunā, near here, or baʿīd qalīlan, a little far."
+            },
+            {
+              "kind": "speech",
+              "text": "The answer to kayfa aṣilu is a set of orders, which the next lesson builds."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أصل (aṣilu) is built on the native Arabic root w-ṣ-l, \"to reach, to join\" (Lane), the root of waṣala, \"he arrived\", and of ittaṣala, \"he phoned\", a call that joins two people. كيف (kayfa) and إلى (ilā) are inherited particles, not built on three-letter roots."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "min faḍlik, kayfa aṣilu ilā al-maḥaṭṭa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *min faḍlik, kayfa aṣilu ilā al-maḥaṭṭa?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same, to a woman, for the museum — min faḍliki, kayfa aṣilu ilā al-matḥaf?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same, to a woman, for the museum — *min faḍliki, kayfa aṣilu ilā al-matḥaf?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Is the museum far?\" — hal al-matḥaf baʿīd?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Is the museum far?\" — *hal al-matḥaf baʿīd?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How do I get to the station?\" (Kayfa aṣilu ilā al-maḥaṭṭa?) Which verb is inside aṣilu? (Waṣala, to arrive.) Which letter of its root has dropped? (The w.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C287-idhhab",
+      "sequence": 16620,
+      "title": "اذهب مستقيما (idhhab mustaqīman) — go straight on",
+      "headword": "اذهب مستقيما",
+      "romanization": "idhhab mustaqīman",
+      "gloss": "go straight on — the order, built from the present: drop ta-, add i- or u- in front, and -ī for a woman; khudh for 'take'",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4541394da8352e57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the way to the station. (Min faḍlik, kayfa aṣilu ilā al-maḥaṭṭa?) Then ask someone to say it again. (Karrir min faḍlik.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Karrir was an order. The answer to your question will be a string of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: an order from the present",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Start from \"you do it\": tadhhabu, you go. Take off the ta- and the final vowel, and -dhhab is left, which cannot open with two consonants. Arabic puts a short vowel in front: u- when the stem's vowel is u, and i- otherwise."
+            },
+            {
+              "kind": "speech",
+              "text": "tadhhabu becomes اذهب idhhab, go, taʿburu becomes اعبر uʿbur, cross, taktubu becomes اكتب uktub, write."
+            },
+            {
+              "kind": "speech",
+              "text": "To a woman, add -ī: idhhabī, uʿburī. One common order is short and irregular: خذ khudh, take, from akhadha; to a woman, khudhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the way, in orders",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اذهب مستقيما، ثم خذ الشارع الأول على اليمين. — idhhab mustaqīman, thumma khudh ash-shāriʿa al-awwala ʿalā al-yamīn — Go straight on, then take the first street on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "اعبر الجسر، والمحطة على اليسار. — uʿbur al-jisr, wa-l-maḥaṭṭa ʿalā al-yasār — Cross the bridge, and the station is on the left."
+            },
+            {
+              "kind": "speech",
+              "text": "Mustaqīman, with -an, says how you go. ʿAlā al-yamīn and ʿalā al-yasār say where a thing is. Thumma strings the steps together, as it did in a story."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tadhhabu … idhhab; taʿburu … uʿbur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tadhhabu* … *idhhab*; *taʿburu* … *uʿbur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Go straight on\" — idhhab mustaqīman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Go straight on\" — *idhhab mustaqīman*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Take the first street on the right\" — khudh ash-shāriʿa al-awwala ʿalā al-yamīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Take the first street on the right\" — *khudh ash-shāriʿa al-awwala ʿalā al-yamīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Cross the bridge\", to a woman — uʿburī al-jisr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Cross the bridge\", to a woman — *uʿburī al-jisr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole answer — idhhab mustaqīman, thumma uʿbur al-jisr, wa-l-maḥaṭṭa ʿalā al-yasār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole answer — *idhhab mustaqīman, thumma uʿbur al-jisr, wa-l-maḥaṭṭa ʿalā al-yasār*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does an order come from? (The present, with ta- taken off.) \"Go\"? (Idhhab.) \"Take\"? (Khudh, the short one.) \"On the left\"? (ʿAlā al-yasār.) What do you add for a woman? (-ī: idhhabī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R287-asking-the-way",
+      "sequence": 16630,
+      "title": "Review — asking the way, and following it",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "asking the way and following the answer — kayfa aṣilu ilā, ayna, hal … baʿīd, and the orders idhhab, khudh, uʿbur",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4572e41476d4587",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I must go now\" and \"you ought to rest\". (Yajibu an adhhaba al-ān, yanbaghī an tastarīḥa.) Then \"I won't go, because of the rain\". (Lan adhhaba, bi-sabab al-maṭar.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two lessons, and both halves of a conversation in the street. Your half: min faḍlik, kayfa aṣilu ilā …?, with ayna and hal … baʿīd? beside it. Their half: orders, the present with its ta- taken off, strung together with thumma."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One exchange, whole:"
+            },
+            {
+              "kind": "speech",
+              "text": "— min faḍlik, kayfa aṣilu ilā al-funduq? — idhhab mustaqīman, thumma khudh ash-shāriʿa al-awwala ʿalā al-yasār. — hal huwa baʿīd? — lā, qarīb min hunā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Excuse me, how do I get to the hotel?\" — min faḍlik, kayfa aṣilu ilā al-funduq?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Excuse me, how do I get to the hotel?\" — *min faḍlik, kayfa aṣilu ilā al-funduq?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Where is the museum?\" — ayna al-matḥaf?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Where is the museum?\" — *ayna al-matḥaf?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Go straight on, then take the first street on the left\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Go straight on, then take the first street on the left\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The station is at the corner\" — al-maḥaṭṭa ʿinda az-zāwiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The station is at the corner\" — *al-maḥaṭṭa ʿinda az-zāwiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the way from your door to the centre of your own city, in three orders",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the way from your door to the centre of your own city, in three orders]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"How do I get to …?\" (Kayfa aṣilu ilā …?) \"Cross\"? (Uʿbur.) \"Take\", to a woman? (Khudhī.) \"On the right\"? (ʿAlā al-yamīn.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-290-COMPARE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can compare two things, name the best, and say how long something has gone on or how long ago it happened.",
+  "prerequisites": []
+}

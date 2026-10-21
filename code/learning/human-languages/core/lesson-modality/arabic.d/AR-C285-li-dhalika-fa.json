@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C285-li-dhalika-fa",
+    "language": "arabic",
+    "chapter": 285,
+    "sequence": 16540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b6b2d86365bdb9d"
+  },
+  "findings": []
+}
