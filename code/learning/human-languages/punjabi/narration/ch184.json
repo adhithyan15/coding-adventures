@@ -3,8 +3,8 @@
   "language": "punjabi",
   "chapter": 184,
   "title": "Next Week, Last Week",
-  "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2b09d2671046ecd0",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:c8b5b4f82c0df72c",
   "lessons": [
     {
       "id": "PA-C184-time-return",
@@ -14,23 +14,13 @@
       "romanization": "haftaa / mahiinaa",
       "gloss": "return to week and month before nearby-time forms",
       "script": "gurmukhi",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "eyes-or-hands-step"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e499bd3791f15f39",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
-        ],
-        "waitUntilStopped": [
-          "Warm-up",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
-      },
+      "sourceHash": "fnv1a64:f152d9dadf5d80a5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -45,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read ਹਫ਼ਤਾ, then ਮਹੀਨਾ."
+              "text": "Say ਹਫ਼ਤਾ, then ਮਹੀਨਾ."
             }
           ]
         },
@@ -56,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One card names a week. One card names a month. Say each base form twice. The next cards will change only the ending or add one nearby-time word."
+              "text": "One word names a week. One word names a month. Say each base form twice. The next steps will change only the ending or add one nearby-time word."
             }
           ]
         },
@@ -107,7 +97,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which card says “a week”? Which says “a month”? (ਹਫ਼ਤਾ; ਮਹੀਨਾ.)"
+              "text": "Which word means “a week”? Which means “a month”? (ਹਫ਼ਤਾ; ਮਹੀਨਾ.)"
             },
             {
               "kind": "speech",

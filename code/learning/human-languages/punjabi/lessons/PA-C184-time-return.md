@@ -36,12 +36,12 @@ reviews_of: [PA-C85-hafta, PA-C86-mahina]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C85-ADJ85-05, PA-LEX-C86-TIME86-01] -->
 
-[PAUSE 2s] Read **ਹਫ਼ਤਾ**, then **ਮਹੀਨਾ**.
+[PAUSE 2s] Say **ਹਫ਼ਤਾ**, then **ਮਹੀਨਾ**.
 
 ## Grammar Lens: keep the two time ideas steady
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C85-ADJ85-05, PA-LEX-C86-TIME86-01] -->
 
-One card names a week. One card names a month. Say each base form twice. The next cards will change only the ending or add one nearby-time word.
+One word names a week. One word names a month. Say each base form twice. The next steps will change only the ending or add one nearby-time word.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C85-ADJ85-05, PA-LEX-C86-TIME86-01] -->
@@ -53,6 +53,6 @@ One card names a week. One card names a month. Say each base form twice. The nex
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C85-ADJ85-05, PA-LEX-C86-TIME86-01] -->
 
-[PAUSE 3s] Which card says “a week”? Which says “a month”? (**ਹਫ਼ਤਾ; ਮਹੀਨਾ**.)
+[PAUSE 3s] Which word means “a week”? Which means “a month”? (**ਹਫ਼ਤਾ; ਮਹੀਨਾ**.)
 
 This review introduces no new written target.
