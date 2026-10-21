@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Back then and since",
+  "label": "ch:fa-back-then-and-since",
+  "canDo": "I can place events in the past: at that time, in the old days, later on, from then on and recently.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C304-akhiran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can place events in the past: at that time, in the old days, later on, from then on and recently.",
+    "assesses": [
+      "FA-LEX-C304-DARANZAMAN-03",
+      "FA-LEX-C304-DARANZAMAN-04",
+      "FA-LEX-C304-DARANZAMAN-05"
+    ]
+  }
+}

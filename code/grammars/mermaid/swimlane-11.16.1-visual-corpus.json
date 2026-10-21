@@ -72,6 +72,7 @@
     "edge-identifiers",
     "edge-class-styles",
     "edge-label-typography-styles",
+    "edge-label-typography-layout",
     "positional-link-styles",
     "positional-link-curves",
     "edge-animation-config",
@@ -103,6 +104,7 @@
     "flowchart-title-top-margin",
     "flowchart-subgraph-title-margins",
     "markdown-string-labels",
+    "multiline-markdown-string-labels",
     "cross-lane-rank-constraints",
     "rank-crossing-optimization"
   ]

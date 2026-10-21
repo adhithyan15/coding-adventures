@@ -3211,6 +3211,11 @@ pub fn whitespace_only_minify(
     let mut prev_emitted_tok: Option<&lexer::token::Token> = None;
 
     let mut idx = 0usize;
+    // CCR-084 slice 2 (#15919): which `;` tokens terminate a `throw`? Indexed
+    // by position in `kept`, which the emit loop below never mutates. See
+    // `throw_terminators`.
+    let throw_terminator = throw_terminators(&kept);
+
     while idx < kept.len() {
         let tok = kept[idx];
         let val = tok.value.as_str();
@@ -3622,8 +3627,9 @@ pub fn whitespace_only_minify(
         }
 
         // Rule A: drop `;` directly before `}`, UNLESS the
-        // `;` is a body slot (body_position_next).
-        if val == ";" && !body_position_next {
+        // `;` is a body slot (body_position_next), or it ends a `throw`:
+        // upstream forces that one (CCR-084, `function f(){throw 1;}`).
+        if val == ";" && !body_position_next && !throw_terminator[idx] {
             if let Some(next) = kept.get(idx + 1) {
                 if next.value == "}" {
                     // Skip this `;`. We are still at a stmt
@@ -6166,6 +6172,87 @@ fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
         );
     }
     matches!(tok.type_, lexer::token::TokenType::Name)
+}
+
+/// For each token in `kept`, does it terminate a `throw` statement?
+/// (CCR-084 slice 2, #15919)
+///
+/// Upstream ends every `throw` with a forced `;`. The `CodeGenerator` calls
+/// `endStatement(/* needSemiColon= */ true, …)`, "otherwise safari can't
+/// parse this". So that `;` survives even right before a `}`, where
+/// gap-030 rule A drops every other terminator:
+///
+/// | source                    | upstream WHITESPACE_ONLY   |
+/// |---------------------------|----------------------------|
+/// | `function f(){throw 1}`   | `function f(){throw 1;};`  |
+/// | `function f(){return}`    | `function f(){return};`    |
+///
+/// After the #17840 ASI splice every `throw` ends in a `;`, so the terminator
+/// is simply the first `;` at the `throw`'s own nesting depth, which skips a
+/// function body inside the thrown expression.
+///
+/// `throw` is a reserved word, so it names a property or method only after
+/// `.`/`?.` (`a.throw(1)`), before `:` (`{throw:1}`), or as a method
+/// (`throw(){…}`, a `(…)` followed by `{`). Those are skipped.
+fn throw_terminators(kept: &[&lexer::token::Token]) -> Vec<bool> {
+    let opens = |t: &lexer::token::Token| {
+        is_structural_punct(t, "(") || is_structural_punct(t, "[") || is_structural_punct(t, "{")
+    };
+    let closes = |t: &lexer::token::Token| {
+        is_structural_punct(t, ")") || is_structural_punct(t, "]") || is_structural_punct(t, "}")
+    };
+    // `(` index → its `)` index, in one pass, for the `throw(…){` method test.
+    let mut close_of = vec![usize::MAX; kept.len()];
+    let mut parens: Vec<usize> = Vec::new();
+    for (k, t) in kept.iter().enumerate() {
+        if is_structural_punct(t, "(") {
+            parens.push(k);
+        } else if is_structural_punct(t, ")") {
+            if let Some(o) = parens.pop() {
+                close_of[o] = k;
+            }
+        }
+    }
+
+    // One pass. `pending` holds the depth at which each open `throw` waits for
+    // its `;`. A closer that drops below a throw's depth abandons it: it left
+    // its block without one. Each token is visited once, so the whole scan is
+    // linear even for deeply nested or terminator-less input.
+    let mut marks = vec![false; kept.len()];
+    let mut pending: Vec<i32> = Vec::new();
+    let mut depth: i32 = 0;
+    for (i, t) in kept.iter().enumerate() {
+        if opens(t) {
+            depth += 1;
+        } else if closes(t) {
+            depth -= 1;
+            while pending.last().is_some_and(|&d| d > depth) {
+                pending.pop();
+            }
+        } else if is_structural_punct(t, ";") {
+            if pending.last() == Some(&depth) {
+                marks[i] = true;
+                // Every throw waiting at this depth ends here. Two can only
+                // pile up when ASI couldn't run and the first had no `;`.
+                while pending.last() == Some(&depth) {
+                    pending.pop();
+                }
+            }
+        } else if t.value == "throw" && is_word_like(t) {
+            let after_dot = i > 0
+                && (is_structural_punct(kept[i - 1], ".")
+                    || is_structural_punct(kept[i - 1], "?."));
+            let property_key = kept.get(i + 1).is_some_and(|n| is_structural_punct(n, ":"));
+            // `throw(…){` is a method named `throw`, not a statement.
+            let method = kept.get(i + 1).is_some_and(|n| is_structural_punct(n, "("))
+                && close_of[i + 1] != usize::MAX
+                && kept.get(close_of[i + 1] + 1).is_some_and(|n| is_structural_punct(n, "{"));
+            if !after_dot && !property_key && !method {
+                pending.push(depth);
+            }
+        }
+    }
+    marks
 }
 
 fn is_word_like(tok: &lexer::token::Token) -> bool {

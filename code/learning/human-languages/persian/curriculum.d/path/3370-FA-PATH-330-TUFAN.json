@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-330-TUFAN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-330-TUFAN"
+  ],
+  "after": []
+}

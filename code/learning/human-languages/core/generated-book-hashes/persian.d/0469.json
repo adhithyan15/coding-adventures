@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:ec28607d50a526fa",
+  "lessonIds": [
+    "FA-C469-mordab",
+    "FA-C469-talab",
+    "FA-C469-nahr",
+    "FA-C469-sadd",
+    "FA-C469-jari-shodan"
+  ],
+  "tex": "persian/book/chapters/ch469-water-in-the-land.tex"
+}

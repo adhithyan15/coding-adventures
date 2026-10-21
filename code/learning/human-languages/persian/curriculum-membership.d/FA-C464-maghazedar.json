@@ -1,0 +1,11 @@
+{
+  "id": "FA-C464-maghazedar",
+  "pathSegment": "FA-PATH-464-MAGHAZE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-464-MAGHAZE",
+      "order": 1
+    }
+  ]
+}

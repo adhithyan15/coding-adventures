@@ -5,6 +5,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.9.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **`write_f64_py` / `write_f64_js` are `Lowered`.** The new `CALL_BUILTIN_F64`
+  bytecode (0x51, `<idx:u16> <reg>`) calls the embedder-registered handler with
+  one `Value::Float`, rebuilt from the register's bits. The handler formats the
+  value; lang-aot's harness uses `vm_core::float_format`, the same code as the
+  VM's default builtins.
+- **`f64` registers, narrowly.** `const_f64` now compiles to the float's bit
+  pattern in an i64 register. An `f64`-typed parameter is loaded by the new
+  `PARAM_F64 <reg>` prologue bytecode (0x52), which requires a `Value::Float`
+  argument and fails the call closed otherwise. A float passed to any other
+  parameter is still coerced to 0, as before, so raw float bits can never
+  reach integer code. This last point came from the security review. Only the two float writers may read such a
+  register. Any other instruction that touches one refuses compilation, as
+  every `f64` function did before: integer arithmetic, a comparison, `mov`,
+  `ret`, a plain `call_builtin`, or an integer overwrite. So float bits can
+  never be read as an integer, and those functions still run on the
+  interpreter tier. `write_f64_*` on a register that is not provably a float
+  also refuses.
+- `op_support`'s agreement test now compiles each one-op function with its
+  parameter list (`compile_function`), as `JITCore` does.
+
 ## [0.8.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
 
 - **`GenericCirJit` bytecodes `ADD_OVF_I64` (0x18), `SUB_OVF_I64` (0x19),

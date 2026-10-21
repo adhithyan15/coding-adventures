@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Playing an Instrument",
+  "label": "ch:fa-playing-an-instrument",
+  "canDo": "I can talk about playing an instrument.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C518-kuk-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about playing an instrument.",
+    "assesses": [
+      "FA-LEX-C518-PLAYING-03",
+      "FA-LEX-C518-PLAYING-04",
+      "FA-LEX-C518-PLAYING-05"
+    ]
+  }
+}

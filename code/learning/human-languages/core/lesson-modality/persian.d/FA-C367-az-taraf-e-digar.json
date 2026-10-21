@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C367-az-taraf-e-digar",
+    "language": "persian",
+    "chapter": 367,
+    "sequence": 18750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98104ca09c6e3419"
+  },
+  "findings": []
+}

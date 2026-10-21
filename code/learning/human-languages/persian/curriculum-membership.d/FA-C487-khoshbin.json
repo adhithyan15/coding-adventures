@@ -1,0 +1,11 @@
+{
+  "id": "FA-C487-khoshbin",
+  "pathSegment": "FA-PATH-487-HOPE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-487-HOPE",
+      "order": 1
+    }
+  ]
+}

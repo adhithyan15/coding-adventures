@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:16524292ceb3b1bc",
+  "lessonIds": [
+    "FA-C475-rad-o-barq",
+    "FA-C475-saeqe",
+    "FA-C475-ghorresh-kardan",
+    "FA-C475-tondbad",
+    "FA-C475-gerdbad",
+    "FA-R475-review-468-475"
+  ],
+  "tex": "persian/book/chapters/ch475-storms.tex"
+}

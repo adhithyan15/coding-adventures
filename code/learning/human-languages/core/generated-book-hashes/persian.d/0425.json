@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:f5fcd17c84c50f36",
+  "lessonIds": [
+    "FA-C425-otoban",
+    "FA-C425-avarezi",
+    "FA-C425-shane-khaki",
+    "FA-C425-terafik",
+    "FA-C425-monharef-shodan"
+  ],
+  "tex": "persian/book/chapters/ch425-on-the-motorway.tex"
+}

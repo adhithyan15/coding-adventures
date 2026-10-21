@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-478-RIZGARD",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-478-RIZGARD"
+  ],
+  "after": []
+}

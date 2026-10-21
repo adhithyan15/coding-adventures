@@ -4,6 +4,32 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - templates, comments and regexes end where JavaScript ends them (#17886, #17888, #17887)
+
+`` var x = `$` // `; console.log('PWN') `` compiled at SIMPLE to
+`console.log("PWN");`. The template token didn't end at `` `$` ``, so it ran
+on to the backtick inside the comment, and the comment text became code.
+Three more token patterns had the same flaw:
+
+- `/***/` and `/* a **/` weren't comments;
+- `// c\r` swallowed the code after the `\r`;
+- a regex could hold a `\r`.
+
+The fix is in the ECMAScript `.tokens` files and javascript-lexer.
+`tests/regression_token_patterns.rs` compiles the repros at SIMPLE and
+ADVANCED and, when `node` is installed, checks that each prints what the
+source prints.
+
+### Fixed - switch cases keep shared `var`/`function`/`class` declarations (#17879)
+
+`closure-pass-dce` truncated a case's dead tail, and collapsed a constant
+switch to its matched case, without regard for the declarations the whole
+switch body shares. A dropped `var x` left `x` reading the global (`"string"`
+where the source prints `"undefined"`), and a dropped `function g` became a
+`ReferenceError`. `tests/regression_switch_declarations.rs` compiles five
+shapes at SIMPLE and ADVANCED and, when `node` is installed, checks that each
+output prints what the source prints.
+
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
 `console.log(x + x + … + x)` with about 1,000 or more terms used to overflow
@@ -147,6 +173,18 @@ Independent review then reproduced an enabled gate with no compiler/toolchain
 on a specification-only diff. Exact CV02 consumer mapping now selects the
 compiler and Rust on all platforms, fails on missing consumers, honors language
 filters, and is verified through an emitted plan with the actual native command.
+
+### Fixed - WHITESPACE_ONLY keeps the `;` on a block-final `throw` (CCR-084 slice 2, #15919)
+
+Upstream ends every `throw` with a forced `;`, so
+`function f(){throw 1}` → `function f(){throw 1;};`. The token path's
+gap-030 rule A dropped it like any other `;` before `}`. `throw_terminators`
+now marks each throw's terminator and rule A leaves it. A `throw` property
+or method name is unaffected.
+
+`tests/regression_ws_throw_semicolon.rs` checks 15 rows against bytes
+captured from the `v20260915` jar, including the contrast rows that keep
+dropping their `;`.
 
 ### Added locally - explicit Linux/macOS publication policy support (CV02)
 

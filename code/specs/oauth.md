@@ -755,6 +755,33 @@ anchor, or validate a path. Complete RFC 4518 and schema-specific Name
 comparison, algorithm routing and link authentication, full path construction
 and validation, trust-anchor and name constraints, revocation, TLS, HTTP, and
 network effects remain blockers.
+The RSA SHA-256 issuer-link composition can now consume that non-copyable
+selection evidence directly. It derives the exact child and selected candidate
+from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
+and exact child-signature checks without a second Name callback. This closes a
+cross-certificate mixing gap between selection and authentication for the one
+implemented algorithm, but does not add algorithm routing, construct or
+validate a complete path, recognize trust, process constraints or revocation,
+or provide TLS, HTTP, OAuth transport, or network authority.
+Certificate-wide role policy can now bind caller-owned critical-extension
+recognition and algorithm-independent role semantics to the same exact decoded
+certificate. The non-copyable result prevents checking critical extensions on
+one certificate while embedding role evidence from another, and unknown
+critical extensions fail before role acceptance. Binding-sensitive downstream
+APIs must consume that outer result rather than detached lower-level role
+evidence. Recognition still is not semantic validation of other critical
+extensions, and this composition adds no algorithm routing, signature,
+complete path, trust, time, identity, revocation, TLS, HTTP, OAuth transport,
+or network authority.
+Selected RSA SHA-256 issuer authentication can now consume that outer issuing-CA
+role-policy evidence alongside the non-copyable candidate-selection evidence.
+It fails before key or signature work unless both inputs retain the same exact
+candidate certificate and the role-policy evidence was built for the issuing-CA
+role. A distinct non-copyable result retains both proofs so later consumers can
+require this stronger composition without confusing it with the earlier narrow
+issuer-link result. This does not turn recognition into semantic validation of
+other critical extensions or add complete path construction, constraints,
+trust, time, revocation, TLS, HTTP, OAuth transport, or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

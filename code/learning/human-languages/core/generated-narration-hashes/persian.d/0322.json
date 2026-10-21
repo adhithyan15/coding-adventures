@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:85ff6364ca82c644",
+  "lessonIds": [
+    "FA-C322-mahkum-shodan",
+    "FA-C322-tabrae-shodan",
+    "FA-C322-zendani",
+    "FA-C322-vasiqe",
+    "FA-C322-azad-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch322.txt",
+  "json": "persian/narration/ch322.json",
+  "textHash": "fnv1a64:6bd52732ec5f5392",
+  "jsonHash": "fnv1a64:f8719d2e0f853f46",
+  "findings": []
+}

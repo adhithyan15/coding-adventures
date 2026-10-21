@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:86f3afd647d8f349",
+  "lessonIds": [
+    "FA-C369-ellat",
+    "FA-C369-amel",
+    "FA-C369-baes-shodan",
+    "FA-C369-sabab-shodan",
+    "FA-C369-be-ellat-e"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch369.txt",
+  "json": "persian/narration/ch369.json",
+  "textHash": "fnv1a64:8926c549b442472c",
+  "jsonHash": "fnv1a64:d0684869769e9db2",
+  "findings": []
+}

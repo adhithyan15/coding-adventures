@@ -72,6 +72,7 @@
 //!     language: "test".into(),
 //!     exports: vec![],
 //!     imports: vec![],
+//!     release: None,
 //! };
 //!
 //! let ll = lower_iir_to_llvm(&module, &IIRLlvmConfig::default())
@@ -89,6 +90,7 @@ use std::fmt;
 /// LANG83: this backend's declaration for every standard operation (see the
 /// module docs and `code/specs/LANG83-iir-standard-operation-registry.md`).
 pub mod op_support;
+mod lang83_f64;
 pub use op_support::{op_support, OP_SUPPORT};
 
 // ===========================================================================
@@ -369,6 +371,12 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // `linkonce_odr` `@__iir_write_i64` (libc `printf("%lld")`), so it needs no
     // host shim and shares libc's `stdout` with `putchar`.
     "write_i64",
+    // LANG83 PR6a — shortest round-trip float output, Python `repr` / JS
+    // `Number#toString` layout, no newline. Both lower to the module's own
+    // `linkonce_odr` `@__iir_write_f64(double, i32 layout)` (see
+    // `lang83_f64.rs`), which writes with libc `putchar`.
+    "write_f64_py",
+    "write_f64_js",
     "putchar",
     "getchar",
     "input_i64",
@@ -859,6 +867,9 @@ pub fn lower_iir_to_llvm(
     // explicit `trap`, or the defined traps of the floor-division ops) — each
     // gets one self-contained definition / message constant.
     let mut used_write_i64 = false;
+    // LANG83 PR6a: either float writer pulls in the module-local
+    // `@__iir_write_f64` definitions (and `putchar`, which they write with).
+    let mut used_write_f64 = false;
     let mut trap_kinds: std::collections::BTreeSet<u32> = std::collections::BTreeSet::new();
     // LANG83 PR4: the `*.with.overflow` intrinsics the checked ops call, each
     // declared once.
@@ -944,6 +955,10 @@ pub fn lower_iir_to_llvm(
                     match name.as_str() {
                         "print_i64" => used_print_i64 = true,
                         "write_i64" => used_write_i64 = true,
+                        "write_f64_py" | "write_f64_js" => {
+                            used_write_f64 = true;
+                            used_putchar = true;
+                        }
                         "putchar" => used_putchar = true,
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
@@ -965,11 +980,27 @@ pub fn lower_iir_to_llvm(
             }
         }
     }
+    // LANG83 PR6a: the float writer's module-local definitions are all named
+    // `@__iir_*`; a module function with such a name would be a duplicate
+    // definition that clang rejects with a confusing error. Refuse it here.
+    if used_write_f64 {
+        if let Some(f) = module.functions.iter().find(|f| f.name.starts_with("__iir_")) {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: f.name.clone(),
+                detail: "a module function may not use the reserved `__iir_` prefix of the \
+                         float writer's module-local definitions"
+                    .into(),
+            });
+        }
+    }
     if used_print_i64 {
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");
     }
     emit_lang83_runtime(&mut out, used_write_i64, &trap_kinds);
+    if used_write_f64 {
+        out.push_str(lang83_f64::LANG83_F64_RUNTIME_LL);
+    }
     if !used_ovf_intrinsics.is_empty() {
         out.push('\n');
         for name in &used_ovf_intrinsics {
@@ -4523,6 +4554,15 @@ fn lower_call_builtin(
         "write_i64" => {
             let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
             out.push_str(&format!("  call void @__iir_write_i64(i64 {val})\n"));
+            Ok(())
+        }
+        // ── write_f64_py / write_f64_js — LANG83 PR6a ───────────────────
+        // One module-local routine; the second argument picks the layout
+        // (0 = Python repr, 1 = JavaScript toString).
+        "write_f64_py" | "write_f64_js" => {
+            let val = resolve_operand(instr.srcs.get(1), &state.env, "double", state.fn_name)?;
+            let layout = i32::from(name == "write_f64_js");
+            out.push_str(&format!("  call void @__iir_write_f64(double {val}, i32 {layout})\n"));
             Ok(())
         }
         "print_i64" => {

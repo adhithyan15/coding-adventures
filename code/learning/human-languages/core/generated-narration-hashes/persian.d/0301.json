@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:382a7b349e1b2b43",
+  "lessonIds": [
+    "FA-C301-ettefaq-oftadan",
+    "FA-C301-ruy-dadan",
+    "FA-C301-be-voqu-peyvastan",
+    "FA-C301-surat-gereftan",
+    "FA-C301-davam-avardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch301.txt",
+  "json": "persian/narration/ch301.json",
+  "textHash": "fnv1a64:5de7a73b55ba91a1",
+  "jsonHash": "fnv1a64:93ac2fb68b2a4714",
+  "findings": []
+}

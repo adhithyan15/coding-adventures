@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## Unreleased — LANG84 phase 5a (the Ruby IIR path on the R0 pairs)
+
+### Added
+- `release_parser_grammar(release)`: the compiled parser grammar of one
+  paired release (exact IDs only), for LANG84 C8 `cst_contract` tests in
+  IIR compilers. `ruby-iir-compiler` uses it to check that every rule it
+  dispatches on exists in each release it claims.
+
+### Changed
+- `%` joins the `rb-int-puts` grammars of every pair (`term` accepts
+  `PERCENT` beside `STAR` and `SLASH`), cited to `parse.y` (`%left '*' '/'
+  '%'` and the `'%'` production) at each tag. `ruby3.3.6`/`ruby3.3.7` are
+  regenerated copies of `ruby3.3.5`; `_grammar.rs` regenerated (class hashes
+  change, membership does not). New stage-P probes: `puts(7 % 3)`,
+  `puts(-7 % 2 * 3 / 4)`, `puts(1 %\n2)`; negatives `puts(1 %)`, `puts(% 2)`.
+- `DEFAULT_RELEASE` (`3.3.6`) now claims `iir_status` `rb-int-puts`
+  (LANG84 C4.4), so its doc no longer calls it provisional.
+
+### Security
+- `resolve_release` escapes control characters (`char::escape_debug`) in a
+  requested ID before echoing it in `UnknownRelease`: a newline in a
+  `--lang ruby@...` value could otherwise forge a log line and an ESC drive
+  a terminal. Same fix Perl's frontend received in LANG84 phase 4a.
+
 ## Unreleased — LANG84 release selection (R0)
 
 - **Token budget (security review).** `FrontendBudgets::max_tokens` (default

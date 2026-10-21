@@ -1,0 +1,11 @@
+{
+  "id": "FA-R296-feelings-and-hopes",
+  "pathSegment": "FA-PATH-296-FEELING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-296-FEELING",
+      "order": 4
+    }
+  ]
+}

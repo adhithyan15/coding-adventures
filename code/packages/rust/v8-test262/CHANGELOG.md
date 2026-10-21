@@ -2,6 +2,24 @@
 
 ## 0.1.0 — unreleased
 
+- **56 more tests parse; the token-pattern fixes (#17886, #17888) add 18 of
+  them to #17840's 38.** `annexB/language/comments/single-line-html-close-asi.js`
+  (sloppy and strict) is removed here as well as in #17898, so this PR's
+  gate doesn't depend on merge order. It only ever "passed" by reading an
+  Annex B HTML close comment as code (#17884).
+
+- **38 more tests parse after javascript-parser's ASI work (#17840), and
+  two leave the list.** #17875's insertion points and postfix `++`/`--`
+  restricted production let 38 more programs parse, so `--update` added
+  them. `annexB/language/comments/single-line-html-close-asi.js` (sloppy and
+  strict) was removed by hand, the only removal this grow-only list has had.
+  It had "passed" only because `[23]⏎-->[0]` lexed as `[23]-- > [0]`,
+  reading an Annex B HTML close comment as code. The restricted production
+  now makes that a parse error, which fails closed instead of running
+  comment text. The owner approved the removal. Real HTML-comment support is
+  #17884. #17875 merged with this check red, because the check isn't
+  required; this restores the gate on main.
+
 - **The budget rises to 4 MiB.** `parser` now shares memoised subtrees, so
   `string-upper-lower-mapping.js` parses in about 3 GB and five seconds and is
   judged again (it is on the pass list in both modes). `PARSE_BUDGET_BYTES`

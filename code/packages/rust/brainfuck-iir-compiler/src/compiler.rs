@@ -142,6 +142,7 @@ pub fn compile_to_iir(ast: &GrammarASTNode, module_name: &str) -> IIRModule {
         language: "brainfuck".to_string(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 

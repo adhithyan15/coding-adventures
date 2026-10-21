@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C311-be-gofte",
+    "language": "persian",
+    "chapter": 311,
+    "sequence": 15870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5569982fd9b04f8c"
+  },
+  "findings": []
+}

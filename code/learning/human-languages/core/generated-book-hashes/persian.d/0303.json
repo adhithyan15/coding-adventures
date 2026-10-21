@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:d59a7ee1f90627f0",
+  "lessonIds": [
+    "FA-C303-ebteda",
+    "FA-C303-nakhost",
+    "FA-C303-angah",
+    "FA-C303-dast-e-akhar",
+    "FA-C303-dar-nahayat"
+  ],
+  "tex": "persian/book/chapters/ch303-first-then-and-in-the-end.tex"
+}

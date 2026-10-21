@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-412-SARMAYE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-412-SARMAYE"
+  ],
+  "after": []
+}

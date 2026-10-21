@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:81c83ea76ed1e99e",
+  "lessonIds": [
+    "FA-C431-parvaz",
+    "FA-C431-parvaz-kardan",
+    "FA-C431-forud-amadan",
+    "FA-C431-havapeymayi",
+    "FA-C431-kart-e-parvaz"
+  ],
+  "tex": "persian/book/chapters/ch431-flying.tex"
+}

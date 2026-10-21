@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C419-harim-e-khosusi",
+    "language": "persian",
+    "chapter": 419,
+    "sequence": 21420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47bd7c123d35a077"
+  },
+  "findings": []
+}

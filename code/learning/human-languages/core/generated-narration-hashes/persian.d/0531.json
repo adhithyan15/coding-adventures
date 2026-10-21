@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:9009d9b3dc10cd93",
+  "lessonIds": [
+    "FA-C531-mostanad",
+    "FA-C531-kartun",
+    "FA-C531-zirnevis",
+    "FA-C531-duble",
+    "FA-C531-kanal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch531.txt",
+  "json": "persian/narration/ch531.json",
+  "textHash": "fnv1a64:615cbc4de59769f8",
+  "jsonHash": "fnv1a64:12a60972a27030e7",
+  "findings": []
+}

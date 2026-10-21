@@ -1,0 +1,11 @@
+{
+  "id": "FA-C519-tarane",
+  "pathSegment": "FA-PATH-519-SINGING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-519-SINGING",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C421-buq-zadan",
+  "pathSegment": "FA-PATH-421-BUGH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-421-BUGH",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "Legends and heroes",
+  "label": "ch:fa-legends-and-heroes",
+  "canDo": "I can talk about legends, myths, heroes, dragons and demons.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R347-review-340-347",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can talk about legends, myths, heroes, dragons and demons.",
+    "assesses": [
+      "FA-LEX-C347-AFSANE-03",
+      "FA-LEX-C347-AFSANE-04",
+      "FA-LEX-C347-AFSANE-05"
+    ]
+  }
+}

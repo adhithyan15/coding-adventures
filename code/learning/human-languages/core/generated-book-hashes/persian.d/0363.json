@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:fa4b4a98a5d5ba6d",
+  "lessonIds": [
+    "FA-C363-eddea",
+    "FA-C363-eddea-kardan",
+    "FA-C363-esbat-kardan",
+    "FA-C363-sabet-shodan",
+    "FA-C363-shavahed"
+  ],
+  "tex": "persian/book/chapters/ch363-claims-and-proof.tex"
+}

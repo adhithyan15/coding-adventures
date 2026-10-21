@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:1af4f1a3892f2207",
+  "lessonIds": [
+    "FA-C448-miyanbor",
+    "FA-C448-sarbalayi",
+    "FA-C448-saraziri",
+    "FA-C448-zirgozar",
+    "FA-C448-rugozar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch448.txt",
+  "json": "persian/narration/ch448.json",
+  "textHash": "fnv1a64:858bcfdb1c83a842",
+  "jsonHash": "fnv1a64:c62379ba2ecec29c",
+  "findings": []
+}

@@ -19,8 +19,9 @@ and the JIT.
 use perl_iir_compiler::{compile_source_at, FrontendBudgets, FrontendError};
 
 let budgets = FrontendBudgets::default();
-// None = DEFAULT_RELEASE (the unversioned LANG81 pair for now).
+// None = DEFAULT_RELEASE: the inventory release 5.38.0, grounded in tag v5.38.0.
 let module = compile_source_at("print(1 + 2);", None, "demo", &budgets)?;
+assert_eq!(module.release.as_deref(), Some("5.38.0")); // recorded provenance
 // Any checked inventory release, by exact ID.
 let module = compile_source_at("print(1 + 2);", Some("5.004_72"), "demo", &budgets)?;
 // Pending and unknown IDs are typed errors; nothing falls back.
@@ -33,7 +34,22 @@ assert!(matches!(
 Every error after resolution names the release; lexer and parser errors
 carry line and column, and `Unsupported` carries the CST rule and span.
 `FrontendBudgets` bounds source bytes (64 KiB by default), parser depth and
-IIR instructions.
+IIR instructions. The unversioned LANG81 `perl.tokens`/`perl.grammar` pair
+is no longer reachable from this crate (LANG84 C4.5); it remains only behind
+`perl-lexer::tokenize_perl` and `perl-parser::parse_perl`.
+
+## Contract tests (LANG84 C5, C8)
+
+- `cargo test -p perl-iir-compiler cst_contract` checks, for every checked
+  release, that its compiled grammar has every rule (`CST_RULES`) and token
+  type (`CST_TOKEN_TYPES`) the compiler dispatches on, lexes every spelling
+  it compares (`CST_TOKEN_SPELLINGS`) as one token, and parses the corpus
+  into exactly the shapes the compiler destructures.
+- `hostile_inputs_end_in_typed_errors_in_a_child_process` re-runs this test
+  binary as a child that feeds deep nesting, long operator chains,
+  unterminated constructs, floods and oversized input through three
+  releases. Every probe must end in a typed error or a bounded result; a
+  stack overflow or abort shows up as the child's signal.
 
 Run the bounded example with `cargo run --manifest-path
 code/packages/rust/Cargo.toml -p perl-iir-compiler --bin plvm --

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:a4d79593eb6289fa",
+  "lessonIds": [
+    "FA-C447-nabsh",
+    "FA-C447-pelak",
+    "FA-C447-kodposti",
+    "FA-C447-asli",
+    "FA-C447-fari"
+  ],
+  "tex": "persian/book/chapters/ch447-corners-and-house-numbers.tex"
+}

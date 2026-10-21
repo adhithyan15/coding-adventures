@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:c89d470dc895d642",
+  "lessonIds": [
+    "FA-C461-kartkhan",
+    "FA-C461-kart-be-kart-kardan",
+    "FA-C461-nesye",
+    "FA-C461-pul-e-khord",
+    "FA-C461-sarrafi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch461.txt",
+  "json": "persian/narration/ch461.json",
+  "textHash": "fnv1a64:5ccdecffd477e355",
+  "jsonHash": "fnv1a64:b51e0ad92d68681b",
+  "findings": []
+}

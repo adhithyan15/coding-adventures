@@ -1,0 +1,11 @@
+{
+  "id": "FA-C481-bisabr",
+  "pathSegment": "FA-PATH-481-PATIENCE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-481-PATIENCE",
+      "order": 1
+    }
+  ]
+}

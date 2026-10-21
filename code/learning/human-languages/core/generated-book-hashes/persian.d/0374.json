@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:94b2d4147a2a8735",
+  "lessonIds": [
+    "FA-C374-behbud",
+    "FA-C374-behbud-yaftan",
+    "FA-C374-pishraft",
+    "FA-C374-pishraft-kardan",
+    "FA-C374-aqab-mandan"
+  ],
+  "tex": "persian/book/chapters/ch374-getting-better.tex"
+}

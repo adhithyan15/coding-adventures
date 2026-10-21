@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Devices and software",
+  "label": "ch:fa-devices-and-software",
+  "canDo": "I can talk about software and hardware, files, uploading and technical support.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C418-poshtibani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can talk about software and hardware, files, uploading and technical support.",
+    "assesses": [
+      "FA-LEX-C418-NARMAFZAR-03",
+      "FA-LEX-C418-NARMAFZAR-04",
+      "FA-LEX-C418-NARMAFZAR-05"
+    ]
+  }
+}

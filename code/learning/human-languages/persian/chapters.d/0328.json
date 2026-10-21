@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Fire",
+  "label": "ch:fa-fire",
+  "canDo": "I can talk about a fire: a blaze, something catching fire, flames, smoke and sparks.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C328-jaraqe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can talk about a fire: a blaze, something catching fire, flames, smoke and sparks.",
+    "assesses": [
+      "FA-LEX-C328-ATASHSUZI-03",
+      "FA-LEX-C328-ATASHSUZI-04",
+      "FA-LEX-C328-ATASHSUZI-05"
+    ]
+  }
+}

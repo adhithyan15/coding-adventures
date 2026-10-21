@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Following a route",
+  "label": "ch:fa-following-a-route",
+  "canDo": "I can follow a route: the satnav, following, getting closer, passing by and the back streets.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C449-kuche-pas-kuche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can follow a route: the satnav, following, getting closer, passing by and the back streets.",
+    "assesses": [
+      "FA-LEX-C449-MASIRYAB-03",
+      "FA-LEX-C449-MASIRYAB-04",
+      "FA-LEX-C449-MASIRYAB-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C327-zende-mandan",
+  "pathSegment": "FA-PATH-327-EMDADGAR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-327-EMDADGAR",
+      "order": 3
+    }
+  ]
+}

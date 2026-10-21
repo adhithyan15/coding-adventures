@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:6b250e1cba724a86",
+  "lessonIds": [
+    "FA-C338-khatm",
+    "FA-C338-aza",
+    "FA-C338-tasliyat-goftan",
+    "FA-C338-vasiyat",
+    "FA-C338-ers"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch338.txt",
+  "json": "persian/narration/ch338.json",
+  "textHash": "fnv1a64:c85ddc2266eae81f",
+  "jsonHash": "fnv1a64:9a1fcc1d2f628014",
+  "findings": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 370,
+  "title": "Results and consequences",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4973360db829c0c8",
+  "lessons": [
+    {
+      "id": "FA-C370-payamad",
+      "sequence": 18910,
+      "title": "پیامد (payâmad) — a consequence, an outcome",
+      "headword": "پیامد",
+      "romanization": "payâmad",
+      "gloss": "a consequence, an outcome",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9dba26ed61a7ea3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to bring about, then the Persian for owing to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پیامد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیامد (payâmad) — \"a consequence, an outcome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "این تصمیم پیامدهای مهمی داشت. in tasmim payâmadhâ-ye mohemmi dâsht. This decision had important consequences."
+            },
+            {
+              "kind": "speech",
+              "text": "Native and formal: pay \"trace, footstep\" + âmad \"came\". Plural payâmadhâ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پیامد (payâmad) is a native Persian compound built from pay \"footstep, trace\" and âmad, the past stem of âmadan \"to come\", which EtymDB traces to PIE gʷem- \"to step\": what comes in the footsteps of an act."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "payâmad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *payâmad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "payâmad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *payâmad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with payâmad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *payâmad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to bring about, then the Persian for owing to, then say payâmad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to bring about, then the Persian for owing to, then say *payâmad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پیامد (payâmad) mean? (\"A consequence, an outcome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C370-avaqeb",
+      "sequence": 18920,
+      "title": "عواقب ('avâqeb) — repercussions, bad consequences",
+      "headword": "عواقب",
+      "romanization": "'avâqeb",
+      "gloss": "repercussions, bad consequences",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b33c8e2ab5c5163a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for owing to, then the Persian for a consequence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عواقب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عواقب ('avâqeb) — \"repercussions, bad consequences\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او به عواقب کارش فکر نکرد. u be 'avâqeb-e kârash fekr nakard. He did not think about the consequences of his action."
+            },
+            {
+              "kind": "speech",
+              "text": "An Arabic broken plural of 'âqebat \"end, outcome\". In nearly every case the consequences are bad ones."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عواقب ('avâqeb) is usually traced to Arabic 'awāqib, a broken plural of 'āqiba \"end, outcome\": what follows at the end."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'avâqeb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'avâqeb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'avâqeb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'avâqeb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'avâqeb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'avâqeb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for owing to, then the Persian for a consequence, then say 'avâqeb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for owing to, then the Persian for a consequence, then say *'avâqeb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عواقب ('avâqeb) mean? (\"Repercussions, bad consequences\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C370-dar-natije",
+      "sequence": 18930,
+      "title": "در نتیجه (dar natije) — as a result, consequently",
+      "headword": "در نتیجه",
+      "romanization": "dar natije",
+      "gloss": "as a result, consequently",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e165892361ccc3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a consequence, then the Persian for repercussions."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: در نتیجه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "در نتیجه (dar natije) — \"as a result, consequently\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او زیاد کار کرد و در نتیجه بیمار شد. u ziyâd kâr kard va dar natije bimâr shod. He worked too much, and as a result he fell ill."
+            },
+            {
+              "kind": "speech",
+              "text": "Dar \"in\" + natije \"result\". A whole clause follows; dar natije-ye + noun means \"as a result of\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "در نتیجه (dar natije) joins the inherited Persian preposition dar \"in\" to natije, from Arabic natīja \"result\" (EtymDB): in the result."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dar natije",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dar natije*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dar natije, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dar natije*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dar natije",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dar natije*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a consequence, then the Persian for repercussions, then say dar natije again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a consequence, then the Persian for repercussions, then say *dar natije* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does در نتیجه (dar natije) mean? (\"As a result, consequently\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C370-monjar-shodan",
+      "sequence": 18940,
+      "title": "منجر شدن (monjar shodan) — to lead to, to result in",
+      "headword": "منجر شدن",
+      "romanization": "monjar shodan",
+      "gloss": "to lead to, to result in",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f653b998fbc4a31d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for repercussions, then the Persian for as a result."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منجر شدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منجر شدن (monjar shodan) — \"to lead to, to result in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "این اشتباه به یک دعوای بزرگ منجر شد. in eshtebâh be yek da'vâ-ye bozorg monjar shod. This mistake led to a big quarrel."
+            },
+            {
+              "kind": "speech",
+              "text": "Takes be: be chizi monjar shodan. Formal. Stem shav-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منجر is usually traced to Arabic munjarr \"drawn along\"; with the Persian verb shodan \"to become\", one thing is drawn along into another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "monjar shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *monjar shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "monjar shodan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *monjar shodan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with monjar shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *monjar shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for repercussions, then the Persian for as a result, then say monjar shodan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for repercussions, then the Persian for as a result, then say *monjar shodan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منجر شدن (monjar shodan) mean? (\"To lead to, to result in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C370-natije-gereftan",
+      "sequence": 18950,
+      "title": "نتیجه گرفتن (natije gereftan) — to conclude, to infer",
+      "headword": "نتیجه گرفتن",
+      "romanization": "natije gereftan",
+      "gloss": "to conclude, to infer",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00c2923d2bf838f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for as a result, then the Persian for to lead to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نتیجه گرفتن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نتیجه گرفتن (natije gereftan) — \"to conclude, to infer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "از حرفهای او نتیجه گرفتم که خسته است. az harfhâ-ye u natije gereftam ke khaste ast. From what he said I concluded that he was tired."
+            },
+            {
+              "kind": "speech",
+              "text": "Natije \"result\" + gereftan \"to take\" (present stem gir-). Also to get results."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نتیجه گرفتن (natije gereftan) is literally \"to take a result\": natije comes from Arabic natīja \"result\" (EtymDB), and gereftan \"to take\" is the inherited Persian verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natije gereftan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natije gereftan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natije gereftan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natije gereftan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with natije gereftan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *natije gereftan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for as a result, then the Persian for to lead to, then say natije gereftan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for as a result, then the Persian for to lead to, then say *natije gereftan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نتیجه گرفتن (natije gereftan) mean? (\"To conclude, to infer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

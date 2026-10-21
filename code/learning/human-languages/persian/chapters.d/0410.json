@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Parties and new laws",
+  "label": "ch:fa-parties-and-new-laws",
+  "canDo": "I can talk about political parties, say that a bill was sent to parliament and passed, and talk about documents and citizenship.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C410-tabeiyyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can talk about political parties, say that a bill was sent to parliament and passed, and talk about documents and citizenship.",
+    "assesses": [
+      "FA-LEX-C410-LAYEHE-03",
+      "FA-LEX-C410-LAYEHE-04",
+      "FA-LEX-C410-LAYEHE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:0aa0943540d53ff3",
+  "lessonIds": [
+    "FA-C465-mazrae",
+    "FA-C465-gandom",
+    "FA-C465-shalizar",
+    "FA-C465-takestan",
+    "FA-C465-shokhm-zadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch465.txt",
+  "json": "persian/narration/ch465.json",
+  "textHash": "fnv1a64:db48db9c4343457d",
+  "jsonHash": "fnv1a64:83ea6443d0e40b99",
+  "findings": []
+}

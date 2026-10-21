@@ -1,0 +1,11 @@
+{
+  "id": "FA-C394-tazmin-kardan",
+  "pathSegment": "FA-PATH-394-RISK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-394-RISK",
+      "order": 2
+    }
+  ]
+}

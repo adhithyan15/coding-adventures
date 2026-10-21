@@ -1,9 +1,4 @@
 {
-  "omits": [
-    "CONDITIONAL-REAL",
-    "CONNECTIVE-IF",
-    "MODAL-WOULD",
-    "CONDITION-DEPENDS"
-  ],
+  "omits": [],
   "relocates": {}
 }

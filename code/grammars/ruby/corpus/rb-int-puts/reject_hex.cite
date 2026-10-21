@@ -1,0 +1,4 @@
+oracle: host ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+command: ruby reject_hex.rb
+ruby: exit 0, stdout '16\n' (Ruby accepts it)
+rb-int-puts: rejected with Parse: hexadecimal literals lex (R0) but the rb-int-puts grammar admits decimal NUMBER only

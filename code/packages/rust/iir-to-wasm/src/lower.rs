@@ -1310,6 +1310,11 @@ fn has_control_flow(fn_: &IIRFunction) -> bool {
 struct Lang83Imports {
     write_i64: Option<u32>,
     trap: Option<u32>,
+    /// LANG83 PR6a: the function index of the in-module
+    /// `$__iir_write_f64(f64, i32 layout)` (NOT an import — see
+    /// `lang83_f64.rs`), present when the module uses `write_f64_py` or
+    /// `write_f64_js`.
+    write_f64: Option<u32>,
 }
 
 /// Emit WASM bytes for a single IIR instruction.
@@ -4200,6 +4205,29 @@ fn emit_instr(
                 // - dest    = None (void)
                 // LANG83 PR1b `write_i64` → `env.__write_i64(i64)`: decimal, no
                 // newline. An i32-slot argument is sign-extended first.
+                // LANG83 PR6a `write_f64_py` / `write_f64_js` → the in-module
+                // `$__iir_write_f64(x, layout)`; layout 0 = Python repr,
+                // 1 = JavaScript toString. The operand must be an f64 local:
+                // anything else would make an ill-typed call.
+                "write_f64_py" | "write_f64_js" => {
+                    let val_slot = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+                    let is_f64 = local_type_hints
+                        .get(&val_slot)
+                        .is_some_and(|h| matches!(hint_to_value_type(h), Some(ValueType::F64)));
+                    if !is_f64 {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: format!("call_builtin \"{name}\" requires an f64 operand"),
+                        });
+                    }
+                    let fn_idx = lang83.write_f64.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: format!("call_builtin \"{name}\": no $__iir_write_f64 helper (internal error)"),
+                    })?;
+                    code.extend(encode_local_get(val_slot));
+                    code.extend(encode_i32_const(i32::from(name == "write_f64_js")));
+                    code.extend(encode_call(fn_idx));
+                }
                 "write_i64" => {
                     let val_slot = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
                     let fn_idx = lang83.write_i64.ok_or_else(|| IIRWasmError::UnsupportedOp {
@@ -5627,6 +5655,9 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                     if let Some(Operand::Var(name)) = instr.srcs.first() {
                         match name.as_str() {
                             "putchar" => uses_putchar = true,
+                            // LANG83 PR6a: the in-module float writer prints
+                            // through `env.putchar`, byte by byte.
+                            "write_f64_py" | "write_f64_js" => uses_putchar = true,
                             "getchar" => uses_getchar = true,
                             // G2: `print_i64` reuses the same
                             // `env.__print_i64` import the `io_out`
@@ -5781,7 +5812,25 @@ pub fn lower_iir_to_wasm(
     let uses_str_eq_runtime = features.uses_str_eq_runtime;
     let uses_str_cmp_runtime = features.uses_str_cmp_runtime;
     let string_literals = features.string_literals;
-    let string_data = features.string_data;
+    let mut string_data = features.string_data;
+    // LANG83 PR6a: a module that prints a float reserves the float writer's
+    // scratch region (five big integers, the digit buffer, `k` — see
+    // `lang83_f64.rs`) at the END of its static data, 8-byte aligned. Static
+    // data is never written by anything else, and the bump allocator starts
+    // after it (`__array_bump` is initialised to `string_data.len()`), so no
+    // string, array or runtime block can overlap the region.
+    let lang83_uses_write_f64 = module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
+        i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
+    });
+    let f64_scratch: Option<u32> = if lang83_uses_write_f64 {
+        string_data.resize(string_data.len().next_multiple_of(8), 0);
+        let base = string_data.len() as u32;
+        string_data.resize(string_data.len() + crate::lang83_f64::F64_SCRATCH_BYTES, 0);
+        Some(base)
+    } else {
+        None
+    };
     let runtime_str_vars = features.runtime_str_vars;
     let runtime_str_blocks = features.runtime_str_blocks;
 
@@ -5924,6 +5973,18 @@ pub fn lower_iir_to_wasm(
     } else {
         None
     };
+
+    // LANG83 PR6a: the float writer's eleven in-module helpers are appended
+    // after `$__ensure_capacity` (or wherever the helpers before it end), so
+    // their indices follow on. `$__iir_write_f64` is the last of them.
+    let f64_helpers_base: Option<u32> = f64_scratch.map(|_| {
+        fn_idx_base
+            + module.functions.len() as u32
+            + u32::from(uses_str_eq_runtime)
+            + u32::from(uses_str_cmp_runtime)
+            + u32::from(uses_memory)
+    });
+    lang83.write_f64 = f64_helpers_base.map(|base| base + crate::lang83_f64::WRITE_F64_OFFSET);
 
     // ── Step 4: Lower each function ──────────────────────────────────────────
 
@@ -6327,6 +6388,21 @@ pub fn lower_iir_to_wasm(
         code.push(build_ensure_capacity_helper());
     }
 
+    // LANG83 PR6a: append the float writer's helpers (see `lang83_f64.rs`),
+    // matching `f64_helpers_base` above.
+    if let (Some(base), Some(scratch)) = (f64_helpers_base, f64_scratch) {
+        let putchar = putchar_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+            function: "<module>".to_string(),
+            op: "write_f64_*: no env.putchar import (internal error)".to_string(),
+        })?;
+        for (ty, body) in crate::lang83_f64::build_f64_helpers(base, putchar, scratch) {
+            let type_idx = types.len() as u32 + struct_type_offset;
+            types.push(ty);
+            functions.push(type_idx);
+            code.push(body);
+        }
+    }
+
     // ── Step 5: Assemble WasmModule ──────────────────────────────────────────
 
     // If the module uses $LispyPair, register the struct type.
@@ -6428,6 +6504,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -6557,6 +6634,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
         assert!(matches!(result, Err(IIRWasmError::ValidationFailed(_))));

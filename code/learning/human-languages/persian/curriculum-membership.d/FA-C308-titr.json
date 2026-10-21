@@ -1,0 +1,11 @@
+{
+  "id": "FA-C308-titr",
+  "pathSegment": "FA-PATH-308-GOZARESH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-308-GOZARESH",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-452-NOBAT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with offices: my turn, getting an appointment, being kept waiting, the payment slip and tax.",
+  "prerequisites": []
+}

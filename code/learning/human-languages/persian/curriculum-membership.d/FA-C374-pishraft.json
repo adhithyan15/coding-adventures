@@ -1,0 +1,11 @@
+{
+  "id": "FA-C374-pishraft",
+  "pathSegment": "FA-PATH-374-BEHBUD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-374-BEHBUD",
+      "order": 2
+    }
+  ]
+}

@@ -16,7 +16,7 @@
 //!
 //! ## Supported languages today
 //!
-//! All twelve variants below are wired through the shared IIR driver. Coverage is
+//! Every variant below is wired through the shared IIR driver. Coverage is
 //! feature-specific; see `code/specs/LANG-VM-FEATURE-COVERAGE.md` for executable
 //! proofs, backend exclusions and follow-up work.
 //!
@@ -32,8 +32,26 @@
 //! | ALGOL 60 | `algol-iir-compiler` |
 //! | FLOW-MATIC | `flow-matic-iir-compiler` |
 //! | COBOL-60 | `cobol-iir-compiler` |
+//! | Ruby | `ruby-iir-compiler` (LANG84 phase 5a; default release `3.3.6`) |
 //! | Macsyma | `macsyma-iir-compiler` |
-//! | Perl | `perl-iir-compiler` (LANG84 phase 4a; default release) |
+//! | Perl | `perl-iir-compiler` (LANG84; any checked release, default `5.38.0`) |
+//!
+//! ## Release selection (LANG84)
+//!
+//! A language with a release inventory compiles against exactly one of its
+//! releases. [`compile_source_to_iir_at`] takes the release explicitly, the
+//! CLI takes it as `--lang perl@5.004_72`, and naming none uses the
+//! frontend's `DEFAULT_RELEASE`:
+//!
+//! ```text
+//!   --lang perl            ──► LanguageRequest { Perl, None }          ──► Perl 5.38.0
+//!   --lang perl@5.004_72   ──► LanguageRequest { Perl, Some("5.004_72") } ──► Perl 5.004_72
+//!   --lang perl@5.38       ──► UnknownRelease   (not an inventory ID; no guessing)
+//!   --lang perl@1.001      ──► ReleaseNotAvailable (inventoried, grammar pending)
+//!   --lang twig@1          ──► UnknownRelease   (Twig has no release inventory)
+//! ```
+//!
+//! The resolved ID is recorded in the produced module's `release` field.
 //!
 //! ## How to add a language
 //!
@@ -112,6 +130,14 @@ pub enum Language {
     /// WORKING-STORAGE via the `cobol-iir-compiler` frontend; `main` returns an
     /// i64 exit code.
     Cobol60,
+    /// Ruby — the `rb-int-puts` subset (`puts` of `+ - * / %` integer
+    /// arithmetic) via `ruby-iir-compiler`, compiled against the frontend's
+    /// default release (`3.3.6`, LANG84 phase 5a). The compiler walks the
+    /// tree that the generic `GrammarLexer`/`GrammarParser` build from
+    /// `ruby3.3.6.tokens`/`.grammar`, and emits only LANG83 registry ops:
+    /// `/` is `i64_div_floor`, `%` is `i64_mod_floor` (a zero divisor traps
+    /// `Trap.DivZero`), `puts` is `print_i64`. No backend has Ruby code.
+    Ruby,
     /// Macsyma — the v0 integer-arithmetic/assignment/unevaluated-symbolic-
     /// `Apply` slice via the `macsyma-iir-compiler` frontend, over the same
     /// tagged-word `dynval-runtime` value model McCarthy Lisp uses (see
@@ -121,9 +147,11 @@ pub enum Language {
     /// frontend rather than its own `Language` variant).
     Macsyma,
     /// Perl — the bounded integer `print` subset (LANG81) via
-    /// `perl-iir-compiler`, compiled against its default release (LANG84
-    /// phase 4a). `print` lowers to the LANG83 `write_i64` builtin, so every
-    /// backend that lowers LANG83 runs it with no Perl-specific code.
+    /// `perl-iir-compiler`, compiled against one checked release of
+    /// `code/grammars/perl/releases.csv` (LANG84): `5.38.0` by default, or any
+    /// other through [`compile_source_to_iir_at`] / `--lang perl@<release>`.
+    /// `print` lowers to the LANG83 `write_i64` builtin, so every backend
+    /// that lowers LANG83 runs it with no Perl-specific code.
     Perl,
 }
 
@@ -140,6 +168,7 @@ impl fmt::Display for Language {
             Language::Algol60 => write!(f, "algol60"),
             Language::FlowMatic => write!(f, "flow-matic"),
             Language::Cobol60 => write!(f, "cobol60"),
+            Language::Ruby => write!(f, "ruby"),
             Language::Macsyma => write!(f, "macsyma"),
             Language::Perl => write!(f, "perl"),
         }
@@ -163,17 +192,135 @@ impl Language {
             "algol" | "algol60" | "algol-60" | "a60" => Ok(Self::Algol60),
             "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
             "cobol" | "cobol60" | "cobol-60" | "cob" => Ok(Self::Cobol60),
+            "ruby" | "rb" => Ok(Self::Ruby),
             "macsyma" | "mac" => Ok(Self::Macsyma),
             "perl" | "pl" => Ok(Self::Perl),
             other => Err(format!(
-                "unknown language {other:?}; expected one of: twig, nib, \
+                "unknown language \"{}\"; expected one of: twig, nib, ruby (or rb), \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, macrooct, \
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
                  (or algol / algol-60 / a60), flow-matic (or fm / b0), \
                  cobol60 (or cobol / cobol-60 / cob), macsyma (or mac), \
-                 perl (or pl)")),
+                 perl (or pl)", echo_release(other))),
         }
     }
+}
+
+impl Language {
+    /// Whether this language's frontend resolves releases from a
+    /// `releases.csv` inventory (LANG84 C4). Only those languages accept a
+    /// `@<release>` suffix or a `Some(release)`.
+    pub fn has_release_inventory(self) -> bool {
+        matches!(self, Language::Perl)
+    }
+}
+
+/// A `--lang` value: a [`Language`] plus, optionally, the exact release
+/// to compile against (LANG84 "Selection API").
+///
+/// `LanguageRequest::parse("perl@5.004_72")` splits on the **first** `@`;
+/// the release text is passed to the frontend verbatim, which accepts only
+/// an exact inventory ID. A plain [`Language`] converts into a request with
+/// no release, so every `compile_file_to_*` entry point accepts either.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageRequest {
+    /// The source language.
+    pub language: Language,
+    /// The requested release ID, or `None` for the frontend's default.
+    pub release: Option<String>,
+}
+
+impl LanguageRequest {
+    /// Parse `<lang>` or `<lang>@<release>`.
+    ///
+    /// Only the shape is checked here. Whether the release exists is the
+    /// frontend's question, answered at compile time with a typed
+    /// [`LangAotError::UnknownRelease`] or [`LangAotError::ReleaseNotAvailable`].
+    pub fn parse(s: &str) -> Result<Self, String> {
+        let Some((language, release)) = s.split_once('@') else {
+            return Ok(Self { language: Language::parse(s)?, release: None });
+        };
+        let language = Language::parse(language)?;
+        if release.is_empty() {
+            return Err(format!(
+                "--lang {language}@ names no release; omit `@` for the default release"
+            ));
+        }
+        Ok(Self { language, release: Some(release.to_string()) })
+    }
+
+    /// The requested release, if any.
+    pub fn release(&self) -> Option<&str> {
+        self.release.as_deref()
+    }
+}
+
+impl From<Language> for LanguageRequest {
+    fn from(language: Language) -> Self {
+        Self { language, release: None }
+    }
+}
+
+impl fmt::Display for LanguageRequest {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match &self.release {
+            Some(release) => write!(f, "{}@{}", self.language, echo_release(release)),
+            None => write!(f, "{}", self.language),
+        }
+    }
+}
+
+/// The most release text any `lang-aot` diagnostic echoes back.
+const MAX_ECHOED_RELEASE_CHARS: usize = 64;
+
+/// Bound and neutralize caller-supplied release text before it enters a
+/// diagnostic: at most 64 characters, each passed through
+/// `char::escape_debug`, so a newline or terminal escape in a `--lang`
+/// value prints as visible `\n` / `\u{1b}` text instead of acting.
+fn echo_release(release: &str) -> String {
+    let mut chars = release.chars();
+    let head: String = chars
+        .by_ref()
+        .take(MAX_ECHOED_RELEASE_CHARS)
+        .flat_map(char::escape_debug)
+        .collect();
+    if chars.next().is_some() {
+        format!("{head}…")
+    } else {
+        head
+    }
+}
+
+/// Make text from a public error field safe to print, whoever built it.
+///
+/// [`LangAotError::UnknownRelease`] and [`LangAotError::ReleaseNotAvailable`]
+/// have public `String` fields, so `Display` cannot assume a constructor
+/// already ran [`echo_release`]. This pass is the backstop, and it uses the
+/// same Unicode tables as `echo_release` (`char::escape_debug`) rather than a
+/// hand-picked list: every non-ASCII character that `escape_debug` considers
+/// unprintable (bidi overrides, U+2028/U+2029, tag characters, Hangul
+/// fillers, …) and every ASCII control becomes `\u{..}`-style text, and the
+/// length is capped. `escape_debug` treats the blank Hangul fillers as
+/// ordinary letters, so those four are escaped explicitly. Printable ASCII
+/// — the backslash included — passes through untouched, so text
+/// `echo_release` already escaped is not escaped a second time.
+fn neutralize(text: &str) -> String {
+    const MAX_SHOWN_CHARS: usize = 512;
+    let mut chars = text.chars();
+    let mut shown = String::new();
+    for c in chars.by_ref().take(MAX_SHOWN_CHARS) {
+        if c.is_ascii() && !c.is_ascii_control() {
+            shown.push(c);
+        } else if matches!(c, '\u{115F}' | '\u{1160}' | '\u{3164}' | '\u{FFA0}') {
+            shown.extend(c.escape_unicode());
+        } else {
+            shown.extend(c.escape_debug());
+        }
+    }
+    if chars.next().is_some() {
+        shown.push('…');
+    }
+    shown
 }
 
 /// Detect a [`Language`] from a file extension.  Returns `None` if the
@@ -192,6 +339,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "algol" | "alg" | "a60" => Some(Language::Algol60),
         "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
         "cobol" | "cob" | "cbl" => Some(Language::Cobol60),
+        "rb" => Some(Language::Ruby),
         "mac" => Some(Language::Macsyma),
         "pl" => Some(Language::Perl),
         _ => None,
@@ -207,6 +355,26 @@ pub enum LangAotError {
         language: Language,
         /// What the user/developer needs to do to unblock it.
         guidance: &'static str,
+    },
+    /// The requested release is not an inventory ID of this language
+    /// (LANG84 C4.2), or the language has no release inventory at all.
+    UnknownRelease {
+        /// Which language the release was requested for.
+        language: Language,
+        /// The request, truncated and with control characters escaped.
+        release: String,
+        /// Up to five inventory IDs sharing the longest prefix with it.
+        nearest: Vec<String>,
+    },
+    /// The release is in the inventory but cannot compile yet (LANG84 C4.3),
+    /// for example because its grammar pair is still `pending`.
+    ReleaseNotAvailable {
+        /// Which language the release was requested for.
+        language: Language,
+        /// The inventory ID.
+        release: String,
+        /// Why it is not available (`"pending"`).
+        stage: String,
     },
     /// The frontend rejected the source (parse / type-check error).
     FrontendError {
@@ -373,6 +541,24 @@ impl fmt::Display for LangAotError {
         match self {
             LangAotError::UnsupportedLanguage { language, guidance } => write!(f,
                 "lang-aot: no Rust IIR frontend for {language} yet — {guidance}"),
+            LangAotError::UnknownRelease { language, release, nearest } => {
+                // Every constructor here escapes `release` (`echo_release`,
+                // or the frontend's own echo), so it is quoted rather than
+                // `{:?}`-formatted, which would escape its backslashes a
+                // second time; `neutralize` is the backstop for a value
+                // built elsewhere, and is a no-op on escaped text.
+                write!(f, "{language}: unknown release \"{}\"", neutralize(release))?;
+                if !language.has_release_inventory() {
+                    write!(f, " ({language} has no release inventory)")?;
+                } else if !nearest.is_empty() {
+                    let nearest: Vec<_> = nearest.iter().map(|id| neutralize(id)).collect();
+                    write!(f, "; nearest inventory IDs: {}", nearest.join(", "))?;
+                }
+                Ok(())
+            }
+            LangAotError::ReleaseNotAvailable { language, release, stage } => write!(f,
+                "{language}: release {} has no grammar pair yet ({})",
+                neutralize(release), neutralize(stage)),
             LangAotError::FrontendError { language, message } => write!(f,
                 "{language}: {message}"),
             LangAotError::AotError(e) => write!(f, "{e}"),
@@ -434,6 +620,32 @@ pub fn compile_source_to_iir(
     source: &str,
     module_name: &str,
 ) -> Result<IIRModule, LangAotError> {
+    compile_source_to_iir_at(language, None, source, module_name)
+}
+
+/// Compile source text to an [`IIRModule`] against exactly one release
+/// (LANG84 "Selection API").
+///
+/// `release` is `None` for the frontend's `DEFAULT_RELEASE`, or an exact
+/// inventory ID such as `Some("5.004_72")`. The produced module records the
+/// resolved ID in `IIRModule::release`. Nothing falls back: an ID that is not
+/// in the inventory is [`LangAotError::UnknownRelease`] (with up to five
+/// suggestions), an inventoried ID without a grammar pair is
+/// [`LangAotError::ReleaseNotAvailable`], and `Some(_)` for a language with
+/// no release inventory is `UnknownRelease` too.
+pub fn compile_source_to_iir_at(
+    language: Language,
+    release: Option<&str>,
+    source: &str,
+    module_name: &str,
+) -> Result<IIRModule, LangAotError> {
+    if let (Some(release), false) = (release, language.has_release_inventory()) {
+        return Err(LangAotError::UnknownRelease {
+            language,
+            release: echo_release(release),
+            nearest: Vec::new(),
+        });
+    }
     match language {
         Language::Twig => {
             twig_ir_compiler::compile_source(source, module_name)
@@ -514,6 +726,22 @@ pub fn compile_source_to_iir(
                     message: format!("{e}"),
                 })
         }
+        // LANG84 phase 5a: the frontend's default release with the untrusted
+        // budgets. `compile_source_at` already selects any profiled release;
+        // routing `compile_source_to_iir_at`'s `release` / `--lang
+        // ruby@<release>` here (and listing Ruby in `has_release_inventory`)
+        // reuses Perl's phase 4b API and is phase 5b. Until then a
+        // `ruby@<release>` request is refused before this arm is reached.
+        Language::Ruby => ruby_iir_compiler::compile_source_at(
+            source,
+            None,
+            module_name,
+            &ruby_iir_compiler::FrontendBudgets::default(),
+        )
+        .map_err(|e| LangAotError::FrontendError {
+            language,
+            message: format!("{e}"),
+        }),
         Language::Macsyma => {
             macsyma_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
@@ -521,24 +749,50 @@ pub fn compile_source_to_iir(
                     message: format!("{e}"),
                 })
         }
-        // LANG84 phase 4a: the default release only. `compile_source_at` in
-        // the frontend already selects any checked inventory release; the
-        // lang-aot side of that (`compile_source_to_iir_at`, `--lang
-        // perl@<release>`) is phase 4b. The module uses only LANG83 registry
+        // LANG84: exactly one checked release, chosen by the caller or the
+        // frontend's DEFAULT_RELEASE. The frontend already bounds and escapes
+        // any release text it echoes. The module uses only LANG83 registry
         // ops — `print` is `write_i64` — so no backend needs a Perl case.
         Language::Perl => {
+            use perl_iir_compiler::FrontendError as Perl;
             perl_iir_compiler::compile_source_at(
                 source,
-                None,
+                release,
                 module_name,
                 &perl_iir_compiler::FrontendBudgets::default(),
             )
-            .map_err(|e| LangAotError::FrontendError {
-                language,
-                message: format!("{e}"),
+            .map_err(|e| match e {
+                Perl::UnknownRelease { release, nearest } => LangAotError::UnknownRelease {
+                    language,
+                    release,
+                    nearest: nearest.iter().map(|id| id.to_string()).collect(),
+                },
+                Perl::ReleaseNotAvailable { release, stage } => {
+                    LangAotError::ReleaseNotAvailable {
+                        language,
+                        release,
+                        stage: stage.to_string(),
+                    }
+                }
+                other => LangAotError::FrontendError {
+                    language,
+                    message: format!("{other}"),
+                },
             })
         }
     }
+}
+
+/// The one place a `compile_file_to_*` entry point turns its source into
+/// IIR, so a `--lang perl@<release>` request reaches the frontend from every
+/// one of them (a plain [`Language`] is a request with no release).
+fn compile_request_to_iir(
+    request: impl Into<LanguageRequest>,
+    source: &str,
+    module_name: &str,
+) -> Result<IIRModule, LangAotError> {
+    let request = request.into();
+    compile_source_to_iir_at(request.language, request.release(), source, module_name)
 }
 
 // ---------------------------------------------------------------------------
@@ -569,11 +823,11 @@ pub fn compile_source_to_iir(
 pub fn compile_file_to_llvm_ir(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
     // LANG83: this textual-IR path lowers directly rather than through
     // `compile_iir_to_llvm`, so it must run the registry check itself —
     // every code-generation entry point refuses unsupported ops before
@@ -1497,11 +1751,12 @@ pub fn compile_iir_to_beam(mut module: IIRModule, module_name: &str) -> Result<V
 pub fn compile_file_to_jvm(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("Main");
-    let bytes = compile_source_to_jvm(language, &source, stem)?;
+    let class = compile_iir_to_jvm_class(compile_request_to_iir(language, &source, stem)?, stem)?;
+    let bytes = iir_to_jvm_class_file::serialize_jvm_class_file(&class);
     std::fs::write(out, bytes)?;
     Ok(())
 }
@@ -1513,11 +1768,11 @@ pub fn compile_file_to_jvm(
 pub fn compile_file_to_wasm(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let bytes = compile_source_to_wasm(language, &source, stem)?;
+    let bytes = compile_iir_to_wasm(compile_request_to_iir(language, &source, stem)?)?;
     std::fs::write(out, bytes)?;
     Ok(())
 }
@@ -1551,11 +1806,11 @@ pub fn compile_file_to_wasm(
 pub fn compile_file_to_riscv32_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Route through aot_core::infer + aot_core::specialise, then let the
     // RISC-V backend lay out the whole module. This keeps the selected entry
@@ -1638,11 +1893,11 @@ pub fn compile_file_to_riscv32_bin(
 pub fn compile_file_to_intel8008_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Phase 6 of the historical-arch backend migration: route
     // through aot_core::infer + aot_core::specialise +
@@ -1722,11 +1977,11 @@ pub fn compile_file_to_intel8008_bin(
 pub fn compile_file_to_armv7_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Phase 5 of the historical-arch backend migration: route
     // through `aot_core` + `armv7-backend` (which itself returns
@@ -1799,11 +2054,11 @@ pub fn compile_file_to_armv7_bin(
 pub fn compile_file_to_arm1_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Second lane of the 9-architecture expansion: route through
     // `aot_core` + `arm1-backend` (which itself returns
@@ -1870,11 +2125,11 @@ pub fn compile_file_to_arm1_bin(
 pub fn compile_file_to_mos6502_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Fifth lane of the 9-architecture expansion: route through
     // `aot_core` + `mos6502-backend`, same per-function-loop pattern as
@@ -1939,11 +2194,11 @@ pub fn compile_file_to_mos6502_bin(
 pub fn compile_file_to_m68k_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Eighth lane of the 9-architecture expansion: route through
     // `aot_core` + `m68k-backend`, same per-function-loop pattern as
@@ -2019,11 +2274,11 @@ pub fn compile_file_to_m68k_bin(
 pub fn compile_file_to_mips_r2000_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // First lane of the 9-architecture expansion: route through
     // `aot_core` + `mips-r2000-backend` (which itself returns
@@ -2096,11 +2351,11 @@ pub fn compile_file_to_mips_r2000_bin(
 pub fn compile_file_to_z80_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Seventh lane of the 9-architecture expansion: route through
     // `aot_core` + `z80-backend`, same per-function-loop pattern as
@@ -2172,11 +2427,11 @@ pub fn compile_file_to_z80_bin(
 pub fn compile_file_to_intel8051_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Fourth lane of the 9-architecture expansion: route through
     // `aot_core` + `intel8051-backend`, same per-function-loop pattern
@@ -2246,11 +2501,11 @@ pub fn compile_file_to_intel8051_bin(
 pub fn compile_file_to_intel8086_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Ninth and final lane of the 9-architecture expansion: route
     // through `aot_core` + `intel8086-backend`, same per-function-loop
@@ -2327,11 +2582,11 @@ pub fn compile_file_to_intel8086_bin(
 pub fn compile_file_to_sparc_v8_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Sixth lane of the 9-architecture expansion: route through
     // `aot_core` + `sparc-v8-backend` (which itself returns
@@ -2407,11 +2662,11 @@ pub fn compile_file_to_sparc_v8_bin(
 pub fn compile_file_to_intel4004_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Phase 4 of the historical-arch backend migration: route
     // through `aot_core` + `intel4004-backend` instead of the
@@ -2528,11 +2783,11 @@ pub fn compile_file_to_intel4004_bin(
 pub fn compile_file_to_ge225_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Phase 3 of the historical-arch backend migration: route
     // through `aot_core` + `ge225-backend` instead of the legacy
@@ -2632,11 +2887,11 @@ pub fn compile_file_to_ge225_bin(
 pub fn compile_file_to_ibm704_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // L4: route through aot_core::infer + aot_core::specialise +
     // ibm704_backend::compile_at per function, same pattern as the
@@ -2720,11 +2975,11 @@ pub fn compile_file_to_ibm704_bin(
 pub fn compile_file_to_intel8080_bin(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
 
     // Third lane of the 9-architecture expansion: route through
     // aot_core::infer + aot_core::specialise + intel8080_backend::compile
@@ -2756,11 +3011,11 @@ pub fn compile_file_to_intel8080_bin(
 pub fn compile_file_to_linux_executable(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
     compile_iir_to_host_executable(&module, out)
 }
 
@@ -2785,11 +3040,11 @@ pub fn compile_iir_to_host_executable(module: &IIRModule, out: &Path) -> Result<
 pub fn compile_file_to_windows_executable(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
     compile_iir_to_host_executable(&module, out)
 }
 
@@ -2798,11 +3053,11 @@ pub fn compile_file_to_windows_executable(
 pub fn compile_file_to_macos_executable(
     src: &Path,
     out: &Path,
-    language: Language,
+    language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
     let source = std::fs::read_to_string(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
-    let module = compile_source_to_iir(language, &source, stem)?;
+    let module = compile_request_to_iir(language, &source, stem)?;
     // Always the ARM64 Mach-O path (on any Unix host), so check the AArch64
     // declaration explicitly rather than `Backend::native_host()`.
     check_module_for(Backend::Aarch64, &module)?;
@@ -3005,6 +3260,143 @@ mod tests {
         assert_eq!(kept.functions[0].return_type, "i64", "the return type keeps its width too");
     }
 
+    /// LANG84 "Selection API": `<lang>@<release>` splits on the FIRST `@`
+    /// and leaves the release text to the frontend.
+    #[test]
+    fn language_request_parses_an_optional_release() {
+        assert_eq!(
+            LanguageRequest::parse("perl").unwrap(),
+            LanguageRequest { language: Language::Perl, release: None }
+        );
+        assert_eq!(
+            LanguageRequest::parse("pl@5.004_72").unwrap(),
+            LanguageRequest { language: Language::Perl, release: Some("5.004_72".into()) }
+        );
+        // Only the first `@` splits; the rest is the frontend's to refuse.
+        assert_eq!(LanguageRequest::parse("perl@a@b").unwrap().release(), Some("a@b"));
+        assert!(LanguageRequest::parse("perl@").unwrap_err().contains("names no release"));
+        assert!(LanguageRequest::parse("klingon@1").unwrap_err().contains("unknown language"));
+        // A bare `Language` is a request for the default release.
+        assert_eq!(LanguageRequest::from(Language::Twig).release(), None);
+        assert_eq!(LanguageRequest::parse("perl@5.38.0").unwrap().to_string(), "perl@5.38.0");
+        // `Language::parse` itself never accepts a release suffix.
+        assert!(Language::parse("perl@5.38.0").is_err());
+    }
+
+    #[test]
+    fn compile_source_to_iir_at_selects_and_records_one_release() {
+        let src = "print(1 + 2);";
+        let default = compile_source_to_iir(Language::Perl, src, "p").unwrap();
+        assert_eq!(default.release.as_deref(), Some("5.38.0"));
+        for release in ["5.38.0", "5.004_72", "1.000"] {
+            let module = compile_source_to_iir_at(Language::Perl, Some(release), src, "p").unwrap();
+            assert_eq!(module.release.as_deref(), Some(release));
+            assert_eq!(format!("{:?}", module.functions), format!("{:?}", default.functions));
+        }
+        // Languages without an inventory record no release.
+        assert_eq!(compile_source_to_iir(Language::Twig, "42", "t").unwrap().release, None);
+    }
+
+    #[test]
+    fn release_errors_are_typed_and_never_fall_back() {
+        let src = "print(1);";
+        match compile_source_to_iir_at(Language::Perl, Some("5.38"), src, "p") {
+            Err(LangAotError::UnknownRelease { language: Language::Perl, release, nearest }) => {
+                assert_eq!(release, "5.38");
+                assert!(!nearest.is_empty() && nearest.len() <= 5, "{nearest:?}");
+                assert!(nearest.iter().all(|id| id.starts_with("5.38")), "{nearest:?}");
+            }
+            other => panic!("expected UnknownRelease, got {other:?}"),
+        }
+        match compile_source_to_iir_at(Language::Perl, Some("1.001"), src, "p") {
+            Err(e @ LangAotError::ReleaseNotAvailable { language: Language::Perl, .. }) => {
+                assert_eq!(e.to_string(), "perl: release 1.001 has no grammar pair yet (pending)");
+            }
+            other => panic!("expected ReleaseNotAvailable, got {other:?}"),
+        }
+        assert!(matches!(
+            compile_source_to_iir_at(Language::Perl, Some(""), src, "p"),
+            Err(LangAotError::UnknownRelease { .. })
+        ));
+        // A language with no inventory refuses any release, and hostile
+        // release text is bounded and escaped before it is echoed.
+        let hostile = format!("1\n\u{1b}[2J{}", "x".repeat(10_000));
+        let error = compile_source_to_iir_at(Language::Twig, Some(&hostile), "42", "t").unwrap_err();
+        let LangAotError::UnknownRelease { language: Language::Twig, ref release, ref nearest } = error
+        else {
+            panic!("expected UnknownRelease, got {error:?}");
+        };
+        assert!(nearest.is_empty());
+        assert!(release.ends_with('…') && release.len() < 200, "{release:?}");
+        let message = error.to_string();
+        assert!(!message.chars().any(char::is_control), "{message:?}");
+        assert!(message.contains("twig has no release inventory"), "{message}");
+        // Errors after resolution name the release they ran against.
+        let parse = compile_source_to_iir_at(Language::Perl, Some("5.004_72"), "print(", "p")
+            .unwrap_err()
+            .to_string();
+        assert!(parse.starts_with("perl: Perl 5.004_72: "), "{parse}");
+    }
+
+    /// Security review (LANG84 4b): `Display` escapes release text even when
+    /// a caller builds the public error variants directly, without escaping
+    /// twice what `echo_release` already escaped; `Language::parse` bounds
+    /// what it echoes.
+    #[test]
+    fn release_errors_neutralize_text_built_outside_this_crate() {
+        let hidden = |c: char| {
+            c.is_control()
+                || ('\u{202a}'..='\u{202e}').contains(&c)
+                || ('\u{2066}'..='\u{2069}').contains(&c)
+                || matches!(c, '\u{2028}' | '\u{2029}' | '\u{3164}')
+                || ('\u{e0000}'..='\u{e007f}').contains(&c)
+        };
+        let forged = LangAotError::ReleaseNotAvailable {
+            language: Language::Perl,
+            release: "1\u{1b}[2J\u{202e}\u{2028}\u{e0041}\u{3164}".into(),
+            stage: "\r\n".into(),
+        }
+        .to_string();
+        assert!(!forged.chars().any(hidden), "{forged:?}");
+        assert!(forged.contains("\\u{1b}") && forged.contains("\\u{202e}"), "{forged}");
+        assert!(forged.contains("\\u{2028}") && forged.contains("\\u{e0041}"), "{forged}");
+        // Printable non-ASCII text is shown as itself.
+        assert_eq!(neutralize("5.38.0-é"), "5.38.0-é");
+        let forged = LangAotError::UnknownRelease {
+            language: Language::Perl,
+            release: "x".repeat(10_000),
+            nearest: vec!["\u{7}".into()],
+        }
+        .to_string();
+        assert!(forged.len() < 1_000 && !forged.chars().any(char::is_control), "{forged:?}");
+        // Already-escaped text passes through unchanged (no double escape).
+        assert_eq!(neutralize(&echo_release("a\nb")), "a\\nb");
+        let long = format!("{}\u{1b}", "q".repeat(100_000));
+        let error = Language::parse(&long).unwrap_err();
+        assert!(error.len() < 1_000 && !error.chars().any(char::is_control), "{}", error.len());
+    }
+
+    #[test]
+    fn file_entry_points_honour_a_release_request() {
+        let dir = tempfile::tempdir().unwrap();
+        let src = dir.path().join("p.pl");
+        // 251 digits: lexes under 1.000 (unbounded scanner, then refused as
+        // out of range) but not under 5.38.0, whose toke.c bounds it at 250.
+        std::fs::write(&src, format!("print({});", "9".repeat(251))).unwrap();
+        let out = dir.path().join("p.ll");
+        let error = |request: LanguageRequest| {
+            compile_file_to_llvm_ir(&src, &out, request).unwrap_err().to_string()
+        };
+        assert!(error(LanguageRequest::parse("perl").unwrap()).contains("Perl 5.38.0: Perl parse failed"));
+        assert!(error(LanguageRequest::parse("perl@1.000").unwrap()).contains("Perl 1.000: Perl integer exceeds"));
+        let pending = compile_file_to_llvm_ir(&src, &out, LanguageRequest::parse("perl@1.001").unwrap());
+        assert!(matches!(pending, Err(LangAotError::ReleaseNotAvailable { .. })));
+        std::fs::write(&src, "print(6 * 7);").unwrap();
+        compile_file_to_llvm_ir(&src, &out, LanguageRequest::parse("perl@5.004_72").unwrap()).unwrap();
+        compile_file_to_llvm_ir(&src, &out, Language::Perl).unwrap();
+        assert!(std::fs::read_to_string(&out).unwrap().contains("define"));
+    }
+
     #[test]
     fn parse_language_aliases() {
         assert_eq!(Language::parse("twig").unwrap(), Language::Twig);
@@ -3029,6 +3421,27 @@ mod tests {
         assert_eq!(
             Language::parse(&Language::McCarthyLisp.to_string()).unwrap(),
             Language::McCarthyLisp
+        );
+    }
+
+    /// LANG84 phase 5a: `--lang ruby`/`rb` and `.rb` reach `ruby-iir-compiler`
+    /// on its default release, and its typed errors surface as frontend errors.
+    #[test]
+    fn ruby_language_parses_displays_detects_and_compiles() {
+        for alias in ["ruby", "rb"] {
+            assert_eq!(Language::parse(alias).unwrap(), Language::Ruby);
+        }
+        assert_eq!(Language::Ruby.to_string(), "ruby");
+        assert_eq!(Language::parse(&Language::Ruby.to_string()).unwrap(), Language::Ruby);
+        assert_eq!(detect_language_from_path(Path::new("prog.rb")), Some(Language::Ruby));
+        assert!(Language::parse("bogus").unwrap_err().contains("ruby (or rb)"));
+        let module = compile_source_to_iir(Language::Ruby, "puts(7 / -2, 7 % -2)", "m").unwrap();
+        let ops: Vec<_> = module.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        assert!(ops.contains(&"i64_div_floor") && ops.contains(&"i64_mod_floor"), "{ops:?}");
+        let error = compile_source_to_iir(Language::Ruby, "puts -7", "m").unwrap_err();
+        assert!(
+            matches!(&error, LangAotError::FrontendError { language: Language::Ruby, message } if message.contains("3.3.6")),
+            "{error:?}"
         );
     }
 

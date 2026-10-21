@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-322-MAHKUM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone was sentenced or cleared, held in prison, let out on bail and released.",
+  "prerequisites": []
+}

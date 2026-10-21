@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:19749d0c758e1e31",
+  "lessonIds": [
+    "FA-C446-jahat",
+    "FA-C446-qotbnama",
+    "FA-C446-kilometr",
+    "FA-C446-masafat",
+    "FA-C446-dur-shodan"
+  ],
+  "tex": "persian/book/chapters/ch446-directions-and-distances.tex"
+}

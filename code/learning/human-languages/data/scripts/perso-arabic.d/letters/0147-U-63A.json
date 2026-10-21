@@ -1,0 +1,18 @@
+{
+  "glyph": "غ",
+  "sound": "gh",
+  "role": "consonant",
+  "forms": {
+    "isolated": "غ",
+    "initial": "غـ",
+    "medial": "ـغـ",
+    "final": "ـغ"
+  },
+  "components": [
+    "small open head",
+    "trailing bowl",
+    "one dot above"
+  ],
+  "strokeOrder": [],
+  "notes": "ع with one dot above. In modern Tehran Persian it is said like ق. Its stroke order is deliberately left empty: no Persian-scoped source for it has been verified yet."
+}

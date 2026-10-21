@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:ec87ef59320170ab",
+  "lessonIds": [
+    "FA-C411-qarz-gereftan",
+    "FA-C411-qarz-dadan",
+    "FA-C411-bedehi",
+    "FA-C411-bedehkar",
+    "FA-C411-talabkar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch411.txt",
+  "json": "persian/narration/ch411.json",
+  "textHash": "fnv1a64:0801618d545b54d3",
+  "jsonHash": "fnv1a64:8602c250c93b589f",
+  "findings": []
+}

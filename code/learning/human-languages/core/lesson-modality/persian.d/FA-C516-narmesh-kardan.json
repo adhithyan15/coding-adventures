@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C516-narmesh-kardan",
+    "language": "persian",
+    "chapter": 516,
+    "sequence": 26440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a831c71090804fc"
+  },
+  "findings": []
+}

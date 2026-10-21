@@ -1,0 +1,19 @@
+{
+  "chapter": 392,
+  "title": "Likely or unlikely",
+  "label": "ch:fa-likely-or-unlikely",
+  "canDo": "I can say how likely something is, that it is possible, that it is unlikely and that it is not yet definite.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C392-qati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 392: I can say how likely something is, that it is possible, that it is unlikely and that it is not yet definite.",
+    "assesses": [
+      "FA-LEX-C392-EHTEMAL-03",
+      "FA-LEX-C392-EHTEMAL-04",
+      "FA-LEX-C392-EHTEMAL-05"
+    ]
+  }
+}

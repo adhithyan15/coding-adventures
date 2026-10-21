@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Sales",
+  "label": "ch:fa-sales",
+  "canDo": "I can talk about sales and spending: a sale, being worth it, doing the shopping, selling well and a box.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C462-jabe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can talk about sales and spending: a sale, being worth it, doing the shopping, selling well and a box.",
+    "assesses": [
+      "FA-LEX-C462-HARAJ-03",
+      "FA-LEX-C462-HARAJ-04",
+      "FA-LEX-C462-HARAJ-05"
+    ]
+  }
+}

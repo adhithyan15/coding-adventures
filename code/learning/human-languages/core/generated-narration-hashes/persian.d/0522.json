@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:4d258e37660eb18a",
+  "lessonIds": [
+    "FA-C522-qafiye",
+    "FA-C522-sorudan",
+    "FA-C522-dekleme-kardan",
+    "FA-C522-elham-gereftan",
+    "FA-C522-takhayyol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch522.txt",
+  "json": "persian/narration/ch522.json",
+  "textHash": "fnv1a64:0a108ce74b08244e",
+  "jsonHash": "fnv1a64:a5aa3a155ccef568",
+  "findings": []
+}

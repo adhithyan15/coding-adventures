@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-472-TABIAT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-472-TABIAT"
+  ],
+  "after": []
+}

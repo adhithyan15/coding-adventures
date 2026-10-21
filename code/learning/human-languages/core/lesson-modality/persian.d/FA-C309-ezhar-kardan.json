@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C309-ezhar-kardan",
+    "language": "persian",
+    "chapter": 309,
+    "sequence": 15800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18258350c73a966a"
+  },
+  "findings": []
+}

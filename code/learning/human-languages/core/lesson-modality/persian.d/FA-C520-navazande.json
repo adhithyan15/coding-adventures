@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C520-navazande",
+    "language": "persian",
+    "chapter": 520,
+    "sequence": 26650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6ff8c79b1a5e22d"
+  },
+  "findings": []
+}

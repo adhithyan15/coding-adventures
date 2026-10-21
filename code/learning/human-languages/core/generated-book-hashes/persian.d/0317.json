@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:4395274bc3ee991b",
+  "lessonIds": [
+    "FA-C317-taqib-kardan",
+    "FA-C317-qayem-shodan",
+    "FA-C317-gorikhtan",
+    "FA-C317-napadid-shodan",
+    "FA-C317-low-raftan"
+  ],
+  "tex": "persian/book/chapters/ch317-chase-and-escape.tex"
+}

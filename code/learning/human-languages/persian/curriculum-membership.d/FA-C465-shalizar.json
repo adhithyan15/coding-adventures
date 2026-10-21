@@ -1,0 +1,11 @@
+{
+  "id": "FA-C465-shalizar",
+  "pathSegment": "FA-PATH-465-MAZRAE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-465-MAZRAE",
+      "order": 2
+    }
+  ]
+}

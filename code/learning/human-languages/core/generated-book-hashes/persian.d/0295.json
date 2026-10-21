@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:a1b9636da084e7de",
+  "lessonIds": [
+    "FA-C295-raft-o-bargasht",
+    "FA-C295-az-dast-dadan",
+    "FA-C295-masul",
+    "FA-W295-hamze",
+    "FA-R295-at-the-station"
+  ],
+  "tex": "persian/book/chapters/ch295-a-ticket-and-a-missed-train.tex"
+}

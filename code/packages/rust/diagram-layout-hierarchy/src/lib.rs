@@ -336,6 +336,10 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let node_height = diagram.flowchart_config.padding
         .map(|padding| 26.0 + padding * 2.0).unwrap_or(54.0).max(54.0);
     let node_gap = diagram.flowchart_config.rank_spacing.unwrap_or(42.0);
+    let rank_gap = diagram.edges.iter().filter_map(|edge| edge.label.as_ref().map(|label| {
+        let (width, height) = swimlane_edge_label_size(diagram, edge, label);
+        if horizontal_flow { width } else { height }
+    })).fold(node_gap, |gap, label_extent| gap.max(label_extent + 12.0));
     let cross_lane_ranks = swimlane_cross_lane_ranks(diagram);
     let max_rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.values().max().copied()).unwrap_or(0);
     let rank_slot_width = diagram.nodes.iter().map(|node|
@@ -356,9 +360,9 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     let lane_cross = if horizontal_flow { 150.0 } else { (rank_slot_width + 18.0).max(150.0) }
         + 60.0 * max_group_depth as f64;
     let lane_along = if cross_lane_ranks.is_some() && horizontal_flow {
-        lane_header + (max_rank + 1) as f64 * rank_slot_width + max_rank as f64 * node_gap + 40.0
+        lane_header + (max_rank + 1) as f64 * rank_slot_width + max_rank as f64 * rank_gap + 40.0
     } else if cross_lane_ranks.is_some() {
-        lane_header + (max_rank + 1) as f64 * node_height + max_rank as f64 * node_gap + 28.0
+        lane_header + (max_rank + 1) as f64 * node_height + max_rank as f64 * rank_gap + 28.0
     } else if horizontal_flow {
         diagram.lanes.iter().map(|lane| {
             let widths = lane.node_ids.iter().filter_map(|node_id| {
@@ -368,18 +372,18 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                         diagram.flowchart_config.wrapping_width, diagram.flowchart_config.padding,
                     ))
             }).collect::<Vec<_>>();
-            let gap_units = lane.node_ids.windows(2).map(|pair|
-                swimlane_link_gap_units(diagram, &pair[0], &pair[1])
-            ).sum::<usize>();
-            lane_header + widths.iter().sum::<f64>() + node_gap * gap_units as f64 + 48.0
+            let gaps = lane.node_ids.windows(2).map(|pair|
+                swimlane_link_gap(diagram, &pair[0], &pair[1], node_gap, true)
+            ).sum::<f64>();
+            lane_header + widths.iter().sum::<f64>() + gaps + 48.0
         }).fold(0.0, f64::max)
     } else {
         diagram.lanes.iter().map(|lane| {
-            let gap_units = lane.node_ids.windows(2).map(|pair|
-                swimlane_link_gap_units(diagram, &pair[0], &pair[1])
-            ).sum::<usize>();
+            let gaps = lane.node_ids.windows(2).map(|pair|
+                swimlane_link_gap(diagram, &pair[0], &pair[1], node_gap, false)
+            ).sum::<f64>();
             lane_header + lane.node_ids.len().max(1) as f64 * node_height
-                + (gap_units + 1) as f64 * node_gap + 28.0
+                + gaps + node_gap + 28.0
         }).fold(0.0, f64::max)
     };
     let (width, height) = if horizontal_flow {
@@ -454,13 +458,13 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             let rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.get(node_id)).copied();
             let (node_x, node_y) = if let (true, Some(rank)) = (horizontal_flow, rank) {
                 (
-                    x + lane_header + 20.0 + rank as f64 * (rank_slot_width + node_gap),
+                    x + lane_header + 20.0 + rank as f64 * (rank_slot_width + rank_gap),
                     y + (lane_cross - resolved_node_height) / 2.0,
                 )
             } else if let Some(rank) = rank {
                 (
                     x + (lane_cross - resolved_node_width) / 2.0,
-                    y + lane_header + 20.0 + rank as f64 * (node_height + node_gap)
+                    y + lane_header + 20.0 + rank as f64 * (node_height + rank_gap)
                         + (node_height - resolved_node_height) / 2.0,
                 )
             } else if horizontal_flow {
@@ -485,11 +489,11 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 width: resolved_node_width,
                 height: resolved_node_height,
             });
-            let gap_units = member_ids.get(node_index + 1).map(|next_id|
-                swimlane_link_gap_units(diagram, node_id, next_id)
-            ).unwrap_or(1);
-            horizontal_cursor += resolved_node_width + node_gap * gap_units as f64;
-            vertical_cursor += node_height + node_gap * gap_units as f64;
+            let gap = member_ids.get(node_index + 1).map(|next_id|
+                swimlane_link_gap(diagram, node_id, next_id, node_gap, horizontal_flow)
+            ).unwrap_or(node_gap);
+            horizontal_cursor += resolved_node_width + gap;
+            vertical_cursor += node_height + gap;
         }
     }
     let mut groups = Vec::<LayoutedSwimlaneGroup>::new();
@@ -538,11 +542,25 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             let (from, to) = swimlane_edge_endpoints(
                 from_center, *from_width, *from_height, to_center, *to_width, *to_height,
             );
+            let (label_width, label_height) = edge.label.as_ref()
+                .map(|label| swimlane_edge_label_size(diagram, edge, label))
+                .unwrap_or((0.0, 0.0));
+            let label_position = edge.label.as_ref().map(|_| {
+                let midpoint = Point { x: (from.x + to.x) / 2.0, y: (from.y + to.y) / 2.0 };
+                if horizontal_flow {
+                    Point { x: midpoint.x, y: midpoint.y - label_height / 2.0 - 3.0 }
+                } else {
+                    Point { x: midpoint.x + label_width / 2.0 + 3.0, y: midpoint.y }
+                }
+            });
             Some(LayoutedSwimlaneEdge {
                 id: edge.id.clone(),
                 from,
                 to,
                 label: edge.label.clone(),
+                label_position,
+                label_width,
+                label_height,
                 kind: edge.kind,
                 start_marker: edge.start_marker,
                 end_marker: edge.end_marker,
@@ -689,6 +707,62 @@ fn swimlane_link_gap_units(diagram: &SwimlaneDiagram, first: &str, second: &str)
     diagram.edges.iter().filter(|edge|
         (edge.from == first && edge.to == second) || (edge.from == second && edge.to == first)
     ).map(|edge| edge.min_length).max().unwrap_or(1).max(1)
+}
+
+fn swimlane_link_gap(
+    diagram: &SwimlaneDiagram,
+    first: &str,
+    second: &str,
+    base_gap: f64,
+    horizontal_flow: bool,
+) -> f64 {
+    diagram.edges.iter().filter(|edge|
+        (edge.from == first && edge.to == second) || (edge.from == second && edge.to == first)
+    ).fold(base_gap, |gap, edge| {
+        let minimum_gap = base_gap * edge.min_length.max(1) as f64;
+        let label_gap = edge.label.as_ref().map(|label| {
+            let (width, height) = swimlane_edge_label_size(diagram, edge, label);
+            (if horizontal_flow { width } else { height }) + 12.0
+        }).unwrap_or(0.0);
+        gap.max(minimum_gap).max(label_gap)
+    })
+}
+
+fn swimlane_edge_label_size(
+    diagram: &SwimlaneDiagram,
+    edge: &diagram_ir::SwimlaneEdge,
+    label: &DiagramLabel,
+) -> (f64, f64) {
+    let font_size = edge.style.font_size.or(diagram.theme.font_size).unwrap_or(13.0);
+    let font_scale = font_size / 13.0;
+    let base_bold = edge.style.font_weight.unwrap_or(400) >= 600;
+    let base_italic = edge.style.font_italic.unwrap_or(false);
+    let longest_line = if label.spans.is_empty() {
+        label.lines().map(|line| line.chars().count() as f64 *
+            if base_bold { 1.06 } else { 1.0 } * if base_italic { 1.02 } else { 1.0 }
+        ).fold(0.0, f64::max)
+    } else {
+        let mut longest = 0.0_f64;
+        let mut current = 0.0_f64;
+        for span in &label.spans {
+            let width = if base_bold || span.bold { 1.06 } else { 1.0 }
+                * if base_italic || span.italic { 1.02 } else { 1.0 };
+            for character in span.text.chars() {
+                if character == '\n' {
+                    longest = longest.max(current);
+                    current = 0.0;
+                } else {
+                    current += width;
+                }
+            }
+        }
+        longest.max(current)
+    };
+    let line_count = label.lines().count().max(1) as f64;
+    let width = (longest_line * 7.2 * font_scale + 16.0)
+        .clamp(104.0, diagram.flowchart_config.wrapping_width.unwrap_or(360.0).max(104.0));
+    let height = (line_count * font_size * 1.2 + 6.0).max(22.0);
+    (width, height)
 }
 
 fn swimlane_edge_endpoints(
@@ -1149,6 +1223,55 @@ mod tests {
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);
         assert!(layout.nodes[0].x + layout.nodes[0].width < layout.lanes[0].x + layout.lanes[0].width);
+    }
+
+    #[test]
+    fn swimlane_layout_reserves_multiline_edge_label_clearance() {
+        use diagram_ir::{DiagramLabel, DiagramShape, EdgeMarker, SwimlaneDiagram, SwimlaneEdge, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode};
+        let mut diagram = SwimlaneDiagram {
+            direction: DiagramDirection::Lr, title: None, accessibility_title: None,
+            accessibility_description: None,
+            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(),
+                node_ids: vec!["request".into(), "done".into()], classes: Vec::new(), style: Default::default() }],
+            groups: vec![],
+            nodes: vec![
+                SwimlaneNode { id: "request".into(), label: "Request".into(), lane_id: Some("lane".into()),
+                    shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "done".into(), label: "Done".into(), lane_id: Some("lane".into()),
+                    shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() },
+            ],
+            edges: vec![SwimlaneEdge {
+                id: None, from: "request".into(), to: "done".into(),
+                label: Some(DiagramLabel::new("Needs\napproval")), kind: SwimlaneEdgeKind::Directed,
+                start_marker: EdgeMarker::None, end_marker: EdgeMarker::Point, min_length: 1,
+                classes: Vec::new(), style: Default::default(), animate: false, animation: None, curve: None,
+            }],
+            links: Vec::new(), callbacks: Vec::new(), line_hops: None, automatic_lane_ordering: false,
+            ignore_cross_lane_edges: true, optimize_ranks_by_crossings: true,
+            flowchart_config: Default::default(), theme: Default::default(),
+        };
+
+        let layout = layout_swimlane(&diagram);
+        let edge = &layout.edges[0];
+        let gap = layout.nodes[1].x - (layout.nodes[0].x + layout.nodes[0].width);
+        assert!(edge.label_height > 22.0);
+        assert!(gap + 1e-9 >= edge.label_width + 12.0);
+        assert!(edge.label_position.is_some());
+
+        diagram.direction = DiagramDirection::Tb;
+        let vertical = layout_swimlane(&diagram);
+        let edge = &vertical.edges[0];
+        let gap = vertical.nodes[1].y - (vertical.nodes[0].y + vertical.nodes[0].height);
+        assert!(gap + 1e-9 >= edge.label_height + 12.0);
+        assert!(edge.label_position.as_ref().unwrap().x > (edge.from.x + edge.to.x) / 2.0);
+
+        diagram.edges[0].label = Some(DiagramLabel::new("A deliberately long edge label"));
+        let plain_width = layout_swimlane(&diagram).edges[0].label_width;
+        diagram.edges[0].style.font_weight = Some(700);
+        diagram.edges[0].style.font_italic = Some(true);
+        let emphasized_width = layout_swimlane(&diagram).edges[0].label_width;
+        assert!(emphasized_width > plain_width,
+            "edge weight and italic style must participate in label measurement");
     }
 
     #[test]

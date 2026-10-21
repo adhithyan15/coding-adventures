@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:6d6c2007eaa1fb56",
+  "lessonIds": [
+    "FA-C455-shahrbazi",
+    "FA-C455-park-e-jangali",
+    "FA-C455-namayeshgah",
+    "FA-C455-farhangsara",
+    "FA-C455-tatil-shodan"
+  ],
+  "tex": "persian/book/chapters/ch455-out-and-about.tex"
+}

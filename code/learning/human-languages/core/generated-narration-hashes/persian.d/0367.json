@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:bba2d9b3e1e507df",
+  "lessonIds": [
+    "FA-C367-az-taraf-e-digar",
+    "FA-C367-be-ebarat-e-digar",
+    "FA-C367-amma",
+    "FA-C367-ba-in-vojud",
+    "FA-C367-harchand",
+    "FA-R367-review-360-367"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch367.txt",
+  "json": "persian/narration/ch367.json",
+  "textHash": "fnv1a64:dd301c11ee4a7f27",
+  "jsonHash": "fnv1a64:7ea11669cdd4ee79",
+  "findings": []
+}

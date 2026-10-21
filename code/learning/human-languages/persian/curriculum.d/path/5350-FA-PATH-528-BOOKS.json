@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-528-BOOKS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-528-BOOKS"
+  ],
+  "after": []
+}

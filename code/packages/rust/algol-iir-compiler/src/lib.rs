@@ -4774,7 +4774,6 @@ impl Compiler {
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
                 let mut rooted = None;
                 let mut rooted_index = None;
-                let mut saw_division = false;
                 let mut static_terms = Vec::new();
                 for (index, piece) in sequence.iter().enumerate() {
                     if index % 2 == 0 {
@@ -4805,13 +4804,16 @@ impl Compiler {
                         };
                         match op.as_str() {
                             "*" => {}
-                            "/" => saw_division = true,
+                            "/" => {}
                             _ => return None,
                         }
                     }
                 }
                 let mut proof = rooted?;
-                if saw_division && rooted_index != Some(0) {
+                let rooted_index = rooted_index?;
+                if rooted_index > 0
+                    && matches!(sequence.get(rooted_index - 1), Some(Piece::Op(op)) if op == "/")
+                {
                     return None;
                 }
                 for (operator, units) in static_terms {
@@ -14795,12 +14797,37 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_commuted_exact_divided_local_name_actual_branches()
+    {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((6 * sign(pick())) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(12 / 2 * sign(pick()) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier((2 * ((sign(pick()) * 4) + 2)) / 2))) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((6 * sign(left)) + 6) else ((9 * sign(right)) + 6)) / 3); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "commuted numerator factors remain exactly divisible for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_calling_selectors_reject_inexact_divided_local_name_actual_branches() {
         for source in [
             "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 2) / 3); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(((sign(pick()) * 4) + 1) / 2); output(result) end",
             "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 2; result := entier((sign(pick()) * 4) / divisor); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 4) / 0); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((6 / sign(pick())) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(3 / 2 * sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("inexact, dynamic, and zero divisors must fail closed");

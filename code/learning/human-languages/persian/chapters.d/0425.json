@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "On the motorway",
+  "label": "ch:fa-on-the-motorway",
+  "canDo": "I can talk about the motorway: the motorway itself, the toll, the hard shoulder, the traffic and swerving.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C425-monharef-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about the motorway: the motorway itself, the toll, the hard shoulder, the traffic and swerving.",
+    "assesses": [
+      "FA-LEX-C425-OTOBAN-03",
+      "FA-LEX-C425-OTOBAN-04",
+      "FA-LEX-C425-OTOBAN-05"
+    ]
+  }
+}

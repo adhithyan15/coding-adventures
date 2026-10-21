@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 305,
+  "title": "Dawn, morning and the day after",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0325516bc3fb4c9f",
+  "lessons": [
+    {
+      "id": "FA-C305-sepide-dam",
+      "sequence": 15550,
+      "title": "سپیده دم (sepide dam) — dawn, daybreak",
+      "headword": "سپیده دم",
+      "romanization": "sepide dam",
+      "gloss": "dawn, daybreak",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d4b8b35fdea55cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for from then on, then the Persian for recently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سپیده دم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سپیده دم (sepide dam) — \"dawn, daybreak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ما سپیده دم راه افتادیم. Mâ sepide dam râh oftâdim. We set off at dawn."
+            },
+            {
+              "kind": "speech",
+              "text": "Literary; in speech sobh-e zud. sepide \"whiteness\" + dam \"breath, moment\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sepide \"whiteness, the dawn\" (EtymDB) is built on sepid \"white\", and dam here is the Persian word for \"breath, moment\": the moment of whiteness. EtymDB gives neither a parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sepide dam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sepide dam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sepide dam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sepide dam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sepide dam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sepide dam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for from then on, then the Persian for recently, then say sepide dam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for from then on, then the Persian for recently, then say *sepide dam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سپیده دم (sepide dam) mean? (\"Dawn, daybreak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C305-bamdad",
+      "sequence": 15560,
+      "title": "بامداد (bâmdâd) — early morning, the small hours",
+      "headword": "بامداد",
+      "romanization": "bâmdâd",
+      "gloss": "early morning, the small hours",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:418f16aea47ff504",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for recently, then the Persian for dawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بامداد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بامداد (bâmdâd) — \"early morning, the small hours\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زلزله ساعت چهار بامداد اتفاق افتاد. Zelzele sâ'at-e chahâr-e bâmdâd ettefâq oftâd. The earthquake happened at four in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "The news gives night-time hours with bâmdâd: sâ'at-e se-ye bâmdâd \"3 a.m.\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bâmdâd is inherited from Middle Persian bāmdād, \"dawn, morning\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâmdâd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâmdâd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâmdâd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâmdâd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bâmdâd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bâmdâd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for recently, then the Persian for dawn, then say bâmdâd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for recently, then the Persian for dawn, then say *bâmdâd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بامداد (bâmdâd) mean? (\"Early morning, the small hours\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C305-farda-ye-an-ruz",
+      "sequence": 15570,
+      "title": "فردای آن روز (fardâ-ye ân ruz) — the next day, the following day",
+      "headword": "فردای آن روز",
+      "romanization": "fardâ-ye ân ruz",
+      "gloss": "the next day, the following day",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b60c8992ff1501b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for dawn, then the Persian for early morning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فردای آن روز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فردای آن روز (fardâ-ye ân ruz) — \"the next day, the following day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "فردای آن روز (fardâ-ye ân ruz) دوباره به بیمارستان رفتیم. Fardâ-ye ân ruz dobâre be bimârestân raftim. The next day we went to the hospital again."
+            },
+            {
+              "kind": "speech",
+              "text": "In a story set in the past, fardâ alone would mean \"tomorrow\"; this phrase, or ruz-e ba'd, gives \"the day after\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fardâ \"tomorrow\", ân \"that\" and ruz \"day\" are inherited Persian; EtymDB takes ruz back through Middle Persian to Old Persian rauča-, \"day\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fardâ-ye ân ruz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fardâ-ye ân ruz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fardâ-ye ân ruz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fardâ-ye ân ruz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fardâ-ye ân ruz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fardâ-ye ân ruz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for dawn, then the Persian for early morning, then say fardâ-ye ân ruz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for dawn, then the Persian for early morning, then say *fardâ-ye ân ruz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فردای آن روز (fardâ-ye ân ruz) mean? (\"The next day, the following day\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C305-hengam",
+      "sequence": 15580,
+      "title": "هنگام (hengâm) — the time, the season (formal); at the time of",
+      "headword": "هنگام",
+      "romanization": "hengâm",
+      "gloss": "the time, the season (formal); at the time of",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8354b3aa770a2df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for early morning, then the Persian for the next day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هنگام",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هنگام (hengâm) — \"the time, the season (formal); at the time of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هنگام (hengâm) غروب به ساحل رسیدیم. Hengâm-e ghorub be sâhel residim. We reached the beach at sunset."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal, with the ezafe: hengâm-e shâm \"at dinner time\". Hengâmi ke \"when\" opens a clause."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hengâm is a native Persian word. EtymDB lists it without a parent, and its deeper origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hengâm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hengâm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hengâm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hengâm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with hengâm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *hengâm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for early morning, then the Persian for the next day, then say hengâm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for early morning, then the Persian for the next day, then say *hengâm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هنگام (hengâm) mean? (\"The time, the season (formal); at the time of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C305-shabane-ruz",
+      "sequence": 15590,
+      "title": "شبانه روز (shabâne ruz) — round the clock, day and night; a full day",
+      "headword": "شبانه روز",
+      "romanization": "shabâne ruz",
+      "gloss": "round the clock, day and night; a full day",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14fce500e2c410d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for the next day, then the Persian for the time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شبانه روز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شبانه روز (shabâne ruz) — \"round the clock, day and night; a full day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او در بیمارستان شبانه روز کار میکرد. U dar bimârestân shabâne ruz kâr mikard. She worked round the clock at the hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a noun, a full twenty-four hours: do shabâne ruz \"two days and nights\". Built from shab \"night\" with -âne and ruz \"day\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shabâne ruz joins shabâne \"nightly\", built on shab \"night\", with ruz \"day\"; both are inherited Persian. EtymDB takes ruz back through Middle Persian to Old Persian rauča-, and sets shab beside Sanskrit kṣap- \"night\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shabâne ruz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shabâne ruz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shabâne ruz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shabâne ruz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shabâne ruz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shabâne ruz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for the next day, then the Persian for the time, then say shabâne ruz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for the next day, then the Persian for the time, then say *shabâne ruz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شبانه روز (shabâne ruz) mean? (\"Round the clock, day and night; a full day\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

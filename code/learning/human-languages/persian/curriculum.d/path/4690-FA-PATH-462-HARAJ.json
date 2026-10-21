@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-462-HARAJ",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-462-HARAJ"
+  ],
+  "after": []
+}

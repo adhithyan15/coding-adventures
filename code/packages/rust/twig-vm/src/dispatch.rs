@@ -3514,6 +3514,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::UnsupportedOpcode(s) if s == "not_a_real_opcode"));
@@ -3543,6 +3544,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::FellOffEnd(s) if s == "main"));
@@ -3583,6 +3585,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::UnknownFunction(s) if s == "ghost"));
@@ -3617,6 +3620,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let mut budget = ExecutionBudget::new();
         let mut globals = Globals::new();
@@ -3946,6 +3950,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::NotCallable(_)));
@@ -3995,6 +4000,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let err = run(&module).unwrap_err();
         match err {
@@ -4094,6 +4100,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -4627,6 +4634,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
 
         // First call.  load_property errors with NoSuchProperty
@@ -5148,6 +5156,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -5244,6 +5253,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let result = run(&module).unwrap();
         assert_eq!(result.as_int(), Some(42), "expected 42, got {result}");
@@ -5399,6 +5409,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let result = run(&module).unwrap();
         assert_eq!(result.as_int(), Some(12), "expected 12, got {result}");
@@ -5437,6 +5448,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let err = run(&module).unwrap_err();
         assert!(
@@ -5478,6 +5490,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let err = run(&module).unwrap_err();
         assert!(matches!(err, RunError::NotCallable(_)));

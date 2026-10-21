@@ -1,0 +1,11 @@
+{
+  "id": "FA-C350-malake",
+  "pathSegment": "FA-PATH-350-PADESHAH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-350-PADESHAH",
+      "order": 1
+    }
+  ]
+}

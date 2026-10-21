@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 345,
+  "output": "persian/book/chapters/ch345-once-upon-a-time.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

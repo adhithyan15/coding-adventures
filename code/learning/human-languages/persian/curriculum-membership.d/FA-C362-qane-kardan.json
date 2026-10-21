@@ -1,0 +1,11 @@
+{
+  "id": "FA-C362-qane-kardan",
+  "pathSegment": "FA-PATH-362-ESTEDLAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-362-ESTEDLAL",
+      "order": 4
+    }
+  ]
+}

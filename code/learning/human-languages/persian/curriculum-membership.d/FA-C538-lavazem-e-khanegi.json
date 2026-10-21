@@ -1,0 +1,11 @@
+{
+  "id": "FA-C538-lavazem-e-khanegi",
+  "pathSegment": "FA-PATH-538-APPLIANCES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-538-APPLIANCES",
+      "order": 2
+    }
+  ]
+}

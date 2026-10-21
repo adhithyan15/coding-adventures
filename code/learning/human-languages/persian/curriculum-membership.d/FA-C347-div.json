@@ -1,0 +1,11 @@
+{
+  "id": "FA-C347-div",
+  "pathSegment": "FA-PATH-347-AFSANE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-347-AFSANE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 373,
+  "title": "Rising and falling",
+  "label": "ch:fa-rising-and-falling",
+  "canDo": "I can talk about an increase and a decrease, say that numbers went up, that something was reduced and that a city grew.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C373-roshd-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can talk about an increase and a decrease, say that numbers went up, that something was reduced and that a city grew.",
+    "assesses": [
+      "FA-LEX-C373-AFZAYESH-03",
+      "FA-LEX-C373-AFZAYESH-04",
+      "FA-LEX-C373-AFZAYESH-05"
+    ]
+  }
+}

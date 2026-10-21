@@ -299,6 +299,10 @@
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@-- submit --> review release@-- release --> done\nclassDef urgent font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass submit urgent\nstyle release font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d"
     },
     {
+      "name": "edge-label-typography-layout",
+      "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  done[Done]\nend\nrequest styled@-- \"`Requires **additional** _review_`\" --> done\nclassDef emphasis font-size:20px,font-weight:500,font-style:normal,color:#7c2d12\nclass styled emphasis"
+    },
+    {
       "name": "positional-link-styles",
       "source": "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\nend\na --> b\nb --> c\nc --> d\nlinkStyle default stroke:#64748b,stroke-width:2px\nlinkStyle 0, 2 stroke:#dc2626,stroke-width:5px,stroke-dasharray:7 3,color:#991b1b;"
     },
@@ -421,6 +425,10 @@
     {
       "name": "markdown-string-labels",
       "source": "swimlane-beta LR\nsubgraph \"`**Intake**`\"\n  request[\"`Review **carefully**\\n_then act_`\"] -- \"`**Approved**`\" --> done[Done]\n  subgraph queue [\"`_Queue_`\"]\n    wait[\"`Wait *briefly*`\"]\n  end\nend"
+    },
+    {
+      "name": "multiline-markdown-string-labels",
+      "source": "swimlane-beta LR\nsubgraph \"`Customer\n**Care**`\"\n  request[\"`Review **carefully**\n_then act_`\"]\n  done[Done]\n  request -- \"`Needs\n**approval**`\" --> done\n  subgraph queue [\"`Review\n_queue_`\"]\n    wait[Wait]\n  end\nend"
     },
     {
       "name": "cross-lane-rank-constraints",

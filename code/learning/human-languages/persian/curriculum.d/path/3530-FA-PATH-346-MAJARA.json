@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-346-MAJARA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-346-MAJARA"
+  ],
+  "after": []
+}

@@ -1,5 +1,24 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
+## [0.52.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `local.get x; i32.const
+  layout; call $__iir_write_f64`. Eleven in-module functions
+  (`src/lang83_f64.rs`) carry the Burger–Dybvig shortest-digits core (40-limb
+  big integers in a 1 664-byte scratch region reserved at the end of the
+  static data, before the bump allocator) and the Python / JavaScript layout.
+  They print through `env.putchar`, the only import they need. A non-`f64`
+  operand is a compile error.
+- Checked on the in-process runtime against host `python3` / `node` (90-value
+  table), and on V8 (`node`, the emitted module) against 535 432 + 402 112
+  oracle values: no mismatch.
+
 ## [0.51.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
 
 - **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**

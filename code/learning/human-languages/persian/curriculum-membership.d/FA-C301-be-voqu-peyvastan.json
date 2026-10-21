@@ -1,0 +1,11 @@
+{
+  "id": "FA-C301-be-voqu-peyvastan",
+  "pathSegment": "FA-PATH-301-ETTEFAQ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-301-ETTEFAQ",
+      "order": 2
+    }
+  ]
+}

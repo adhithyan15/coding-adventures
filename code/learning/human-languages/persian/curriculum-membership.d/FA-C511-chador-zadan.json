@@ -1,0 +1,11 @@
+{
+  "id": "FA-C511-chador-zadan",
+  "pathSegment": "FA-PATH-511-OUTDOORS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-511-OUTDOORS",
+      "order": 1
+    }
+  ]
+}

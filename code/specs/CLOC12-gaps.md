@@ -1450,6 +1450,55 @@ deleted:
 `tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
 such tails, which is the CCR-082 review fix.
 
+### #17879 — DCE dropped declarations a switch body shares
+
+**Resolved (soundness).** A switch body is one scope: a `var` in any case is
+hoisted to the function, and a `function`/`class` in any case is visible to
+every case. DCE's per-case dead-tail truncation now applies
+`tail_is_safe_to_truncate`. The constant-discriminant collapse, and the
+no-match collapse to `;`, decline unless every discarded case is safe to
+drop.
+
+**Still open (size):** upstream folds these further. For example,
+`switch(2){case 1: var x=1; break; case 2: return typeof x}` becomes
+`return"undefined"`. closurec keeps the switch.
+
+### #17886 / #17888 / #17887 — token patterns that ran past the token's end
+
+**Resolved (soundness).** In every ES `.tokens` file:
+
+| Token | Was | Problem | Now |
+|---|---|---|---|
+| templates (HEAD, NO_SUB, MIDDLE, TAIL) | `([^`\\$]\|\\.\|\$[^{])*` | `\$[^{]` ate `$` plus the backtick, so `` `$` `` didn't end | `([^`\\$]\|\\.\|\$+([^{`\\$]\|\\.))*\$*` |
+| `BLOCK_COMMENT` | `\/\*([^*]\|\*[^\/])*\*\/` | ate the `*` of `*/`, so `/***/` wasn't a comment | `\/\*[^*]*\*+([^\/*][^*]*\*+)*\/` |
+| `LINE_COMMENT`, `HASHBANG` | `[^\n]*` | ran past `\r` | `[^\n\r]*` |
+| `REGEX` body | `[^\/\\\n]\|\\.` | could hold `\r` | `[^\/\\\n\r]\|\\[^\n\r]` |
+
+Each mismatch let comment or string text be lexed as code, or swallowed
+code. At SIMPLE, `` var x = `$` // `; f() `` ran `f()`.
+
+**Still open:**
+
+- U+2028 and U+2029 also end lines. They are not in these patterns, because
+  every language's lexer reads the shared `.tokens` files and their regex
+  engines disagree on those escapes. A raw U+2028 or U+2029 in a regex is
+  handled by the javascript-lexer refusal check (#17875 follow-up).
+- A regex vs. division after `}` (#17886 review) is a lexer-mode problem,
+  not a pattern problem.
+- **Copies still on the old patterns.** CI doesn't check these for drift, so
+  they keep the old exploitable patterns until regenerated:
+  - the TypeScript and Go compiled JavaScript grammars;
+  - the Perl JavaScript lexer's `_Grammar_es20*.pm`;
+  - every TypeScript lexer: `code/grammars/typescript/ts*.tokens` and their
+    Rust, Perl, TypeScript and Go compiled copies.
+
+  closurec uses only the Rust javascript-lexer.
+- **Line continuation.** A `$` directly before a template line continuation
+  (`` `$\⏎` ``) no longer lexes. The new `$` alternative uses `\\.`, and `.`
+  doesn't match a newline. This fails closed, as `` `a\⏎` `` already did.
+  The fix is `\\[\s\S]` in the template bodies, once the Lua pattern
+  converter is confirmed to accept it.
+
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 
 **Landed (AST + emitter + passes):** `Expression::FunctionExpression` is now a

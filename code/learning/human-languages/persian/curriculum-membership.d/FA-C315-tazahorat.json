@@ -1,0 +1,11 @@
+{
+  "id": "FA-C315-tazahorat",
+  "pathSegment": "FA-PATH-315-KHABARFOWRI",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-315-KHABARFOWRI",
+      "order": 3
+    }
+  ]
+}

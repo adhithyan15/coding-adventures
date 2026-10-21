@@ -1,0 +1,11 @@
+{
+  "id": "FA-C381-motakhasses",
+  "pathSegment": "FA-PATH-381-SARPARAST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-381-SARPARAST",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C475-saeqe",
+    "language": "persian",
+    "chapter": 475,
+    "sequence": 24320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abd233fc155f631b"
+  },
+  "findings": []
+}

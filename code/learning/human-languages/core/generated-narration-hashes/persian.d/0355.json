@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:13557e21bbb742c0",
+  "lessonIds": [
+    "FA-C355-dastur-e-pokht",
+    "FA-C355-mavad",
+    "FA-C355-peymane",
+    "FA-C355-alak-kardan",
+    "FA-C355-khis-kardan",
+    "FA-R355-review-348-355"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch355.txt",
+  "json": "persian/narration/ch355.json",
+  "textHash": "fnv1a64:3e6b114778bb2536",
+  "jsonHash": "fnv1a64:67352897b1586ad6",
+  "findings": []
+}

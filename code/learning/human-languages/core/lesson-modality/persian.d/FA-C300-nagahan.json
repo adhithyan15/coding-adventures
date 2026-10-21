@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C300-nagahan",
+    "language": "persian",
+    "chapter": 300,
+    "sequence": 15300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5e0da5fa20c218b"
+  },
+  "findings": []
+}

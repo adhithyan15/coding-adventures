@@ -1,0 +1,11 @@
+{
+  "id": "FA-C396-be-taviq-andakhtan",
+  "pathSegment": "FA-PATH-396-MONSAREF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-396-MONSAREF",
+      "order": 2
+    }
+  ]
+}

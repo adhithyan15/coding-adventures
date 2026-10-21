@@ -1,0 +1,11 @@
+{
+  "id": "FA-C405-gheyr-e-qanuni",
+  "pathSegment": "FA-PATH-405-QANUNI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-405-QANUNI",
+      "order": 1
+    }
+  ]
+}

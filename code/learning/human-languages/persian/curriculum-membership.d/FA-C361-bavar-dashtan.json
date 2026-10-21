@@ -1,0 +1,11 @@
+{
+  "id": "FA-C361-bavar-dashtan",
+  "pathSegment": "FA-PATH-361-MOVAFEQAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-361-MOVAFEQAT",
+      "order": 3
+    }
+  ]
+}

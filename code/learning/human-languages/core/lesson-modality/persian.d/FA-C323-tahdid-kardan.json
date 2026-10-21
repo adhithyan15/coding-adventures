@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C323-tahdid-kardan",
+    "language": "persian",
+    "chapter": 323,
+    "sequence": 16490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:823c7e9b99df091a"
+  },
+  "findings": []
+}
