@@ -2,11 +2,12 @@
 name = "perl-iir-compiler"
 version = "0.1.0"
 edition = "2021"
-description = "Bounded Perl source-to-InterpreterIR compiler for LANG81"
+description = "Bounded, release-selectable Perl source-to-InterpreterIR compiler (LANG81, LANG84)"
 
 [dependencies]
 coding-adventures-perl-lexer = { path = "../perl-lexer" }
 coding-adventures-perl-parser = { path = "../perl-parser" }
+lexer = { path = "../lexer" }
 interpreter-ir = { path = "../interpreter-ir" }
 parser = { path = "../parser" }
 vm-core = { path = "../vm-core" }

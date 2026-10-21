@@ -222,8 +222,8 @@ GC-linked integration tests use the static archive path reported by Cargo, so
 builds the archive in an isolated temporary target directory containing spaces.
 
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
-BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, and Macsyma** to
-native executables through the shared LANG VM chain.
+BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, Macsyma, and
+Perl** to native executables through the shared LANG VM chain.
 
 The language matrix compares text output using LF line endings, accepting the
 equivalent CRLF produced by Windows text runtimes. It preserves lone carriage
@@ -694,6 +694,23 @@ kind; the conformance suite proves that ("print, then trap") on WASM, VM, JIT,
 LLVM, native and JVM. Modules using the PR1b i64 operations keep the wide i64
 value model on the JVM (they are never narrowed to `i32`). See
 `code/specs/LANG83-iir-standard-operation-registry.md`.
+
+**Perl (LANG84 phase 4a).** `--lang perl` (or `pl`, or a `.pl` file) compiles
+the bounded LANG81 integer `print` subset with `perl-iir-compiler` on its
+default release. Perl's `print` is `write_i64`, so no backend has Perl-specific
+code. Eleven `lang_matrix` rows declare all eight executable columns, and three
+named tests guard them:
+
+```sh
+cargo test -p lang-aot --test lang_matrix perl_rows_ -- --nocapture
+```
+
+`perl_rows_agree_with_the_host_perl_oracle` re-checks every expected output
+against a host `perl` (the compiled programs never run on it), and
+`perl_rows_pass_the_lang83_check_on_all_nine_backends` runs
+`check_module_for` on all nine backends. Selecting another Perl release
+through lang-aot (`--lang perl@<release>`) is phase 4b; the frontend already
+does it (`perl_iir_compiler::compile_source_at`).
 
 Since LANG83 PR4 every backend also lowers the overflow-checked
 `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf`: the exact

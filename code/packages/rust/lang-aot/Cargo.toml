@@ -20,6 +20,8 @@ algol-iir-compiler = { path = "../algol-iir-compiler" }
 flow-matic-iir-compiler = { path = "../flow-matic-iir-compiler" }
 cobol-iir-compiler = { path = "../cobol-iir-compiler" }
 macsyma-iir-compiler = { path = "../macsyma-iir-compiler" }
+# LANG84 phase 4a: Perl's bounded integer `print` subset (print = LANG83 write_i64).
+perl-iir-compiler = { path = "../perl-iir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }
