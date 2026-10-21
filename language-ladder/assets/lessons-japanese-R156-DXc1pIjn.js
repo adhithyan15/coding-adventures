@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R157-review-152-157
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 9410
+chapter: 157
+type: review
+headword: (dialogue)
+gloss: a review of chapters 152-157
+concept_tag: REVIEW
+prerequisites: [JA-C152-shitaku, JA-C152-isogu, JA-C152-dekakeru, JA-C152-wasureru, JA-C152-okureru, JA-C153-gaishutsu, JA-C153-kitaku, JA-C153-wasuremono, JA-C153-nakusu, JA-C153-maniau, JA-C154-fudan, JA-C154-kuse, JA-C154-nichijou, JA-C154-kurasu, JA-C154-nareru, JA-C155-hikkosu, JA-C155-hakobu, JA-C155-ugokasu, JA-C155-kagu, JA-C155-genkan, JA-C156-oshiire, JA-C156-hikidashi, JA-C156-shosai, JA-C156-ireru, JA-C156-naraberu, JA-C157-shokutaku, JA-C157-kabin, JA-C157-kazaru, JA-C157-kakeru, JA-C157-oku]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C152-READY152-01, JA-LEX-C152-READY152-02, JA-LEX-C152-READY152-03, JA-LEX-C152-READY152-04, JA-LEX-C152-READY152-05, JA-LEX-C153-OUTING153-01, JA-LEX-C153-OUTING153-02, JA-LEX-C153-OUTING153-03, JA-LEX-C153-OUTING153-04, JA-LEX-C153-OUTING153-05, JA-LEX-C154-HABIT154-01, JA-LEX-C154-HABIT154-02, JA-LEX-C154-HABIT154-03, JA-LEX-C154-HABIT154-04, JA-LEX-C154-HABIT154-05, JA-LEX-C155-MOVE155-01, JA-LEX-C155-MOVE155-02, JA-LEX-C155-MOVE155-03, JA-LEX-C155-MOVE155-04, JA-LEX-C155-MOVE155-05, JA-LEX-C156-CLOSET156-01, JA-LEX-C156-CLOSET156-02, JA-LEX-C156-CLOSET156-03, JA-LEX-C156-CLOSET156-04, JA-LEX-C156-CLOSET156-05, JA-LEX-C157-TABLE157-01, JA-LEX-C157-TABLE157-02, JA-LEX-C157-TABLE157-03, JA-LEX-C157-TABLE157-04, JA-LEX-C157-TABLE157-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C152-READY152-01, JA-LEX-C152-READY152-02, JA-LEX-C152-READY152-03, JA-LEX-C152-READY152-04, JA-LEX-C152-READY152-05, JA-LEX-C153-OUTING153-01, JA-LEX-C153-OUTING153-02, JA-LEX-C153-OUTING153-03, JA-LEX-C153-OUTING153-04, JA-LEX-C153-OUTING153-05, JA-LEX-C154-HABIT154-01, JA-LEX-C154-HABIT154-02, JA-LEX-C154-HABIT154-03, JA-LEX-C154-HABIT154-04, JA-LEX-C154-HABIT154-05, JA-LEX-C155-MOVE155-01, JA-LEX-C155-MOVE155-02, JA-LEX-C155-MOVE155-03, JA-LEX-C155-MOVE155-04, JA-LEX-C155-MOVE155-05, JA-LEX-C156-CLOSET156-01, JA-LEX-C156-CLOSET156-02, JA-LEX-C156-CLOSET156-03, JA-LEX-C156-CLOSET156-04, JA-LEX-C156-CLOSET156-05, JA-LEX-C157-TABLE157-01, JA-LEX-C157-TABLE157-02, JA-LEX-C157-TABLE157-03, JA-LEX-C157-TABLE157-04, JA-LEX-C157-TABLE157-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C152-shitaku, JA-C152-isogu, JA-C152-dekakeru, JA-C152-wasureru, JA-C152-okureru, JA-C153-gaishutsu, JA-C153-kitaku, JA-C153-wasuremono, JA-C153-nakusu, JA-C153-maniau, JA-C154-fudan, JA-C154-kuse, JA-C154-nichijou, JA-C154-kurasu, JA-C154-nareru, JA-C155-hikkosu, JA-C155-hakobu, JA-C155-ugokasu, JA-C155-kagu, JA-C155-genkan, JA-C156-oshiire, JA-C156-hikidashi, JA-C156-shosai, JA-C156-ireru, JA-C156-naraberu, JA-C157-shokutaku, JA-C157-kabin, JA-C157-kazaru, JA-C157-kakeru, JA-C157-oku]
+---
+
+# Words from chapters 152–157 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C152-READY152-01, JA-LEX-C152-READY152-02] -->
+
+[PAUSE 3s] Say the Japanese for preparations and to hurry.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C152-READY152-01, JA-LEX-C152-READY152-02, JA-LEX-C152-READY152-03, JA-LEX-C152-READY152-04, JA-LEX-C152-READY152-05, JA-LEX-C153-OUTING153-01, JA-LEX-C153-OUTING153-02, JA-LEX-C153-OUTING153-03, JA-LEX-C153-OUTING153-04, JA-LEX-C153-OUTING153-05, JA-LEX-C154-HABIT154-01, JA-LEX-C154-HABIT154-02, JA-LEX-C154-HABIT154-03, JA-LEX-C154-HABIT154-04, JA-LEX-C154-HABIT154-05, JA-LEX-C155-MOVE155-01, JA-LEX-C155-MOVE155-02, JA-LEX-C155-MOVE155-03, JA-LEX-C155-MOVE155-04, JA-LEX-C155-MOVE155-05, JA-LEX-C156-CLOSET156-01, JA-LEX-C156-CLOSET156-02, JA-LEX-C156-CLOSET156-03, JA-LEX-C156-CLOSET156-04, JA-LEX-C156-CLOSET156-05, JA-LEX-C157-TABLE157-01, JA-LEX-C157-TABLE157-02, JA-LEX-C157-TABLE157-03, JA-LEX-C157-TABLE157-04, JA-LEX-C157-TABLE157-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: preparations, to hurry, to go out, to forget, to be late]
+- [YOU SAY: going out, coming home, something left behind, to lose, to be in time]
+- [YOU SAY: usually, a habit, everyday life, to get by, to get used to]
+- [YOU SAY: to move house, to carry, to shift, furniture, the front entrance]
+- [YOU SAY: a closet, a drawer, a home office, to put in, to arrange in a row]
+- [YOU SAY: a dining table, a vase, to decorate, to hang, to put]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C152-READY152-01, JA-LEX-C152-READY152-02, JA-LEX-C152-READY152-03, JA-LEX-C152-READY152-04, JA-LEX-C152-READY152-05, JA-LEX-C153-OUTING153-01, JA-LEX-C153-OUTING153-02, JA-LEX-C153-OUTING153-03, JA-LEX-C153-OUTING153-04, JA-LEX-C153-OUTING153-05, JA-LEX-C154-HABIT154-01, JA-LEX-C154-HABIT154-02, JA-LEX-C154-HABIT154-03, JA-LEX-C154-HABIT154-04, JA-LEX-C154-HABIT154-05, JA-LEX-C155-MOVE155-01, JA-LEX-C155-MOVE155-02, JA-LEX-C155-MOVE155-03, JA-LEX-C155-MOVE155-04, JA-LEX-C155-MOVE155-05, JA-LEX-C156-CLOSET156-01, JA-LEX-C156-CLOSET156-02, JA-LEX-C156-CLOSET156-03, JA-LEX-C156-CLOSET156-04, JA-LEX-C156-CLOSET156-05, JA-LEX-C157-TABLE157-01, JA-LEX-C157-TABLE157-02, JA-LEX-C157-TABLE157-03, JA-LEX-C157-TABLE157-04, JA-LEX-C157-TABLE157-05] -->
+<!-- hl-activity: {"id":"JA-R157-review-152-157-type","kind":"text","assesses":["JA-LEX-C152-READY152-01"],"prompt":"Type the Japanese for 'preparations'.","answer":"したく","accepted":["shitaku"],"feedback":{"correct":"Right: したく (shitaku) is 'preparations; getting things ready'.","incorrect":"'Preparations' is したく (shitaku)."},"response_seconds":10} -->
+
+[PAUSE 3s] Preparations? (**したく**, *shitaku*.) To hurry? (**いそぐ**, *isogu*.) To go out? (**でかける**, *dekakeru*.) To forget? (**わすれる**, *wasureru*.) To be late? (**おくれる**, *okureru*.) Going out? (**がいしゅつ**, *gaishutsu*.) Coming home? (**きたく**, *kitaku*.) Something left behind? (**わすれもの**, *wasuremono*.) To lose? (**なくす**, *nakusu*.) To be in time? (**まにあう**, *maniau*.) Usually? (**ふだん**, *fudan*.) A habit? (**くせ**, *kuse*.) Everyday life? (**にちじょう**, *nichijō*.) To get by? (**くらす**, *kurasu*.) To get used to? (**なれる**, *nareru*.) To move house? (**ひっこす**, *hikkosu*.) To carry? (**はこぶ**, *hakobu*.) To shift? (**うごかす**, *ugokasu*.) Furniture? (**かぐ**, *kagu*.) The front entrance? (**げんかん**, *genkan*.) A closet? (**おしいれ**, *oshiire*.) A drawer? (**ひきだし**, *hikidashi*.) A home office? (**しょさい**, *shosai*.) To put in? (**いれる**, *ireru*.) To arrange in a row? (**ならべる**, *naraberu*.) A dining table? (**しょくたく**, *shokutaku*.) A vase? (**かびん**, *kabin*.) To decorate? (**かざる**, *kazaru*.) To hang? (**かける**, *kakeru*.) To put? (**おく**, *oku*.)
+`;export{t};

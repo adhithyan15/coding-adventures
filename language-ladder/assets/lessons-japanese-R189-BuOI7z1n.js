@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R189-review-184-189
+spine_node: SPINE-READ-PRACTICAL-TEXTS
+sequence: 11320
+chapter: 189
+type: review
+headword: (dialogue)
+gloss: a review of chapters 184-189
+concept_tag: REVIEW
+prerequisites: [JA-C184-shinamono, JA-C184-retsu, JA-C184-torikaeru, JA-C184-zenbu, JA-C184-choudo, JA-C185-waribiki, JA-C185-yasuuri, JA-C185-urikire, JA-C185-kakaru, JA-C185-tariru, JA-C186-amaru, JA-C186-chokin, JA-C186-tameru, JA-C186-ryoukin, JA-C186-zeikin, JA-C187-azukeru, JA-C187-orosu, JA-C187-tsuuchou, JA-C187-kariru, JA-C187-ryougae, JA-C188-yuubinkyoku, JA-C188-kitte, JA-C188-hagaki, JA-C188-okuru, JA-C188-kakitome, JA-C189-hakaru, JA-C189-todokeru, JA-C189-uketoru, JA-C189-watasu, JA-C189-omiyage]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C184-GOODS184-01, JA-LEX-C184-GOODS184-02, JA-LEX-C184-GOODS184-03, JA-LEX-C184-GOODS184-04, JA-LEX-C184-GOODS184-05, JA-LEX-C185-SALE185-01, JA-LEX-C185-SALE185-02, JA-LEX-C185-SALE185-03, JA-LEX-C185-SALE185-04, JA-LEX-C185-SALE185-05, JA-LEX-C186-SAVE186-01, JA-LEX-C186-SAVE186-02, JA-LEX-C186-SAVE186-03, JA-LEX-C186-SAVE186-04, JA-LEX-C186-SAVE186-05, JA-LEX-C187-BANK187-01, JA-LEX-C187-BANK187-02, JA-LEX-C187-BANK187-03, JA-LEX-C187-BANK187-04, JA-LEX-C187-BANK187-05, JA-LEX-C188-POST188-01, JA-LEX-C188-POST188-02, JA-LEX-C188-POST188-03, JA-LEX-C188-POST188-04, JA-LEX-C188-POST188-05, JA-LEX-C189-PARCEL189-01, JA-LEX-C189-PARCEL189-02, JA-LEX-C189-PARCEL189-03, JA-LEX-C189-PARCEL189-04, JA-LEX-C189-PARCEL189-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C184-GOODS184-01, JA-LEX-C184-GOODS184-02, JA-LEX-C184-GOODS184-03, JA-LEX-C184-GOODS184-04, JA-LEX-C184-GOODS184-05, JA-LEX-C185-SALE185-01, JA-LEX-C185-SALE185-02, JA-LEX-C185-SALE185-03, JA-LEX-C185-SALE185-04, JA-LEX-C185-SALE185-05, JA-LEX-C186-SAVE186-01, JA-LEX-C186-SAVE186-02, JA-LEX-C186-SAVE186-03, JA-LEX-C186-SAVE186-04, JA-LEX-C186-SAVE186-05, JA-LEX-C187-BANK187-01, JA-LEX-C187-BANK187-02, JA-LEX-C187-BANK187-03, JA-LEX-C187-BANK187-04, JA-LEX-C187-BANK187-05, JA-LEX-C188-POST188-01, JA-LEX-C188-POST188-02, JA-LEX-C188-POST188-03, JA-LEX-C188-POST188-04, JA-LEX-C188-POST188-05, JA-LEX-C189-PARCEL189-01, JA-LEX-C189-PARCEL189-02, JA-LEX-C189-PARCEL189-03, JA-LEX-C189-PARCEL189-04, JA-LEX-C189-PARCEL189-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C184-shinamono, JA-C184-retsu, JA-C184-torikaeru, JA-C184-zenbu, JA-C184-choudo, JA-C185-waribiki, JA-C185-yasuuri, JA-C185-urikire, JA-C185-kakaru, JA-C185-tariru, JA-C186-amaru, JA-C186-chokin, JA-C186-tameru, JA-C186-ryoukin, JA-C186-zeikin, JA-C187-azukeru, JA-C187-orosu, JA-C187-tsuuchou, JA-C187-kariru, JA-C187-ryougae, JA-C188-yuubinkyoku, JA-C188-kitte, JA-C188-hagaki, JA-C188-okuru, JA-C188-kakitome, JA-C189-hakaru, JA-C189-todokeru, JA-C189-uketoru, JA-C189-watasu, JA-C189-omiyage]
+---
+
+# Words from chapters 184–189 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C184-GOODS184-01, JA-LEX-C184-GOODS184-02] -->
+
+[PAUSE 3s] Say the Japanese for goods and queue.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C184-GOODS184-01, JA-LEX-C184-GOODS184-02, JA-LEX-C184-GOODS184-03, JA-LEX-C184-GOODS184-04, JA-LEX-C184-GOODS184-05, JA-LEX-C185-SALE185-01, JA-LEX-C185-SALE185-02, JA-LEX-C185-SALE185-03, JA-LEX-C185-SALE185-04, JA-LEX-C185-SALE185-05, JA-LEX-C186-SAVE186-01, JA-LEX-C186-SAVE186-02, JA-LEX-C186-SAVE186-03, JA-LEX-C186-SAVE186-04, JA-LEX-C186-SAVE186-05, JA-LEX-C187-BANK187-01, JA-LEX-C187-BANK187-02, JA-LEX-C187-BANK187-03, JA-LEX-C187-BANK187-04, JA-LEX-C187-BANK187-05, JA-LEX-C188-POST188-01, JA-LEX-C188-POST188-02, JA-LEX-C188-POST188-03, JA-LEX-C188-POST188-04, JA-LEX-C188-POST188-05, JA-LEX-C189-PARCEL189-01, JA-LEX-C189-PARCEL189-02, JA-LEX-C189-PARCEL189-03, JA-LEX-C189-PARCEL189-04, JA-LEX-C189-PARCEL189-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: goods, queue, to exchange, all of it, exactly]
+- [YOU SAY: discount, bargain sale, sold out, to cost, to be enough]
+- [YOU SAY: to be in surplus, savings, to save up, fee, tax]
+- [YOU SAY: to deposit, to withdraw, bankbook, to borrow, money exchange]
+- [YOU SAY: post office, stamp, postcard, to send, registered mail]
+- [YOU SAY: to weigh, to deliver, to accept, to hand over, souvenir]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C184-GOODS184-01, JA-LEX-C184-GOODS184-02, JA-LEX-C184-GOODS184-03, JA-LEX-C184-GOODS184-04, JA-LEX-C184-GOODS184-05, JA-LEX-C185-SALE185-01, JA-LEX-C185-SALE185-02, JA-LEX-C185-SALE185-03, JA-LEX-C185-SALE185-04, JA-LEX-C185-SALE185-05, JA-LEX-C186-SAVE186-01, JA-LEX-C186-SAVE186-02, JA-LEX-C186-SAVE186-03, JA-LEX-C186-SAVE186-04, JA-LEX-C186-SAVE186-05, JA-LEX-C187-BANK187-01, JA-LEX-C187-BANK187-02, JA-LEX-C187-BANK187-03, JA-LEX-C187-BANK187-04, JA-LEX-C187-BANK187-05, JA-LEX-C188-POST188-01, JA-LEX-C188-POST188-02, JA-LEX-C188-POST188-03, JA-LEX-C188-POST188-04, JA-LEX-C188-POST188-05, JA-LEX-C189-PARCEL189-01, JA-LEX-C189-PARCEL189-02, JA-LEX-C189-PARCEL189-03, JA-LEX-C189-PARCEL189-04, JA-LEX-C189-PARCEL189-05] -->
+<!-- hl-activity: {"id":"JA-R189-review-184-189-type","kind":"text","assesses":["JA-LEX-C184-GOODS184-01"],"prompt":"Type the Japanese for 'goods'.","answer":"しなもの","accepted":["shinamono"],"feedback":{"correct":"Right: しなもの (shinamono) is 'goods; article, item'.","incorrect":"'Goods' is しなもの (shinamono)."},"response_seconds":10} -->
+
+[PAUSE 3s] Goods? (**しなもの**, *shinamono*.) Queue? (**れつ**, *retsu*.) To exchange? (**とりかえる**, *torikaeru*.) All of it? (**ぜんぶ**, *zenbu*.) Exactly? (**ちょうど**, *chōdo*.) Discount? (**わりびき**, *waribiki*.) Bargain sale? (**やすうり**, *yasuuri*.) Sold out? (**うりきれ**, *urikire*.) To cost? (**かかる**, *kakaru*.) To be enough? (**たりる**, *tariru*.) To be in surplus? (**あまる**, *amaru*.) Savings? (**ちょきん**, *chokin*.) To save up? (**ためる**, *tameru*.) Fee? (**りょうきん**, *ryōkin*.) Tax? (**ぜいきん**, *zeikin*.) To deposit? (**あずける**, *azukeru*.) To withdraw? (**おろす**, *orosu*.) Bankbook? (**つうちょう**, *tsūchō*.) To borrow? (**かりる**, *kariru*.) Money exchange? (**りょうがえ**, *ryōgae*.) Post office? (**ゆうびんきょく**, *yūbinkyoku*.) Stamp? (**きって**, *kitte*.) Postcard? (**はがき**, *hagaki*.) To send? (**おくる**, *okuru*.) Registered mail? (**かきとめ**, *kakitome*.) To weigh? (**はかる**, *hakaru*.) To deliver? (**とどける**, *todokeru*.) To accept? (**うけとる**, *uketoru*.) To hand over? (**わたす**, *watasu*.) Souvenir? (**おみやげ**, *omiyage*.)
+`;export{t};

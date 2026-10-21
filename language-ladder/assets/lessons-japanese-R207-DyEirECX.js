@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R209-review-204-209
+spine_node: SPINE-TALK-ABOUT-FUTURE
+sequence: 12610
+chapter: 209
+type: review
+headword: (dialogue)
+gloss: a review of chapters 204-209
+concept_tag: REVIEW
+prerequisites: [JA-C204-ryokou, JA-C204-ryokan, JA-C204-kenbutsu, JA-C204-yoru, JA-C204-yado, JA-C205-madoguchi, JA-C205-ekiin, JA-C205-kaisatsuguchi, JA-C205-katamichi, JA-C205-oufuku, JA-C206-norimono, JA-C206-koutsuu, JA-C206-juutai, JA-C206-joukyaku, JA-C206-yoyaku, JA-C207-tenki, JA-C207-furu, JA-C207-yuki, JA-C207-hareru, JA-C207-kumoru, JA-C208-hare, JA-C208-kumori, JA-C208-tenkiyohou, JA-C208-sora, JA-C208-taifuu, JA-C209-haru, JA-C209-aki, JA-C209-kisetsu, JA-C209-sakura, JA-C209-chiru]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C204-TRIP204-01, JA-LEX-C204-TRIP204-02, JA-LEX-C204-TRIP204-03, JA-LEX-C204-TRIP204-04, JA-LEX-C204-TRIP204-05, JA-LEX-C205-TICKET205-01, JA-LEX-C205-TICKET205-02, JA-LEX-C205-TICKET205-03, JA-LEX-C205-TICKET205-04, JA-LEX-C205-TICKET205-05, JA-LEX-C206-TRAFFIC206-01, JA-LEX-C206-TRAFFIC206-02, JA-LEX-C206-TRAFFIC206-03, JA-LEX-C206-TRAFFIC206-04, JA-LEX-C206-TRAFFIC206-05, JA-LEX-C207-WEATHER207-01, JA-LEX-C207-WEATHER207-02, JA-LEX-C207-WEATHER207-03, JA-LEX-C207-WEATHER207-04, JA-LEX-C207-WEATHER207-05, JA-LEX-C208-FORECAST208-01, JA-LEX-C208-FORECAST208-02, JA-LEX-C208-FORECAST208-03, JA-LEX-C208-FORECAST208-04, JA-LEX-C208-FORECAST208-05, JA-LEX-C209-SEASON209-01, JA-LEX-C209-SEASON209-02, JA-LEX-C209-SEASON209-03, JA-LEX-C209-SEASON209-04, JA-LEX-C209-SEASON209-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C204-TRIP204-01, JA-LEX-C204-TRIP204-02, JA-LEX-C204-TRIP204-03, JA-LEX-C204-TRIP204-04, JA-LEX-C204-TRIP204-05, JA-LEX-C205-TICKET205-01, JA-LEX-C205-TICKET205-02, JA-LEX-C205-TICKET205-03, JA-LEX-C205-TICKET205-04, JA-LEX-C205-TICKET205-05, JA-LEX-C206-TRAFFIC206-01, JA-LEX-C206-TRAFFIC206-02, JA-LEX-C206-TRAFFIC206-03, JA-LEX-C206-TRAFFIC206-04, JA-LEX-C206-TRAFFIC206-05, JA-LEX-C207-WEATHER207-01, JA-LEX-C207-WEATHER207-02, JA-LEX-C207-WEATHER207-03, JA-LEX-C207-WEATHER207-04, JA-LEX-C207-WEATHER207-05, JA-LEX-C208-FORECAST208-01, JA-LEX-C208-FORECAST208-02, JA-LEX-C208-FORECAST208-03, JA-LEX-C208-FORECAST208-04, JA-LEX-C208-FORECAST208-05, JA-LEX-C209-SEASON209-01, JA-LEX-C209-SEASON209-02, JA-LEX-C209-SEASON209-03, JA-LEX-C209-SEASON209-04, JA-LEX-C209-SEASON209-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C204-ryokou, JA-C204-ryokan, JA-C204-kenbutsu, JA-C204-yoru, JA-C204-yado, JA-C205-madoguchi, JA-C205-ekiin, JA-C205-kaisatsuguchi, JA-C205-katamichi, JA-C205-oufuku, JA-C206-norimono, JA-C206-koutsuu, JA-C206-juutai, JA-C206-joukyaku, JA-C206-yoyaku, JA-C207-tenki, JA-C207-furu, JA-C207-yuki, JA-C207-hareru, JA-C207-kumoru, JA-C208-hare, JA-C208-kumori, JA-C208-tenkiyohou, JA-C208-sora, JA-C208-taifuu, JA-C209-haru, JA-C209-aki, JA-C209-kisetsu, JA-C209-sakura, JA-C209-chiru]
+---
+
+# Words from chapters 204–209 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C204-TRIP204-01, JA-LEX-C204-TRIP204-02] -->
+
+[PAUSE 3s] Say the Japanese for a trip and a Japanese inn.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C204-TRIP204-01, JA-LEX-C204-TRIP204-02, JA-LEX-C204-TRIP204-03, JA-LEX-C204-TRIP204-04, JA-LEX-C204-TRIP204-05, JA-LEX-C205-TICKET205-01, JA-LEX-C205-TICKET205-02, JA-LEX-C205-TICKET205-03, JA-LEX-C205-TICKET205-04, JA-LEX-C205-TICKET205-05, JA-LEX-C206-TRAFFIC206-01, JA-LEX-C206-TRAFFIC206-02, JA-LEX-C206-TRAFFIC206-03, JA-LEX-C206-TRAFFIC206-04, JA-LEX-C206-TRAFFIC206-05, JA-LEX-C207-WEATHER207-01, JA-LEX-C207-WEATHER207-02, JA-LEX-C207-WEATHER207-03, JA-LEX-C207-WEATHER207-04, JA-LEX-C207-WEATHER207-05, JA-LEX-C208-FORECAST208-01, JA-LEX-C208-FORECAST208-02, JA-LEX-C208-FORECAST208-03, JA-LEX-C208-FORECAST208-04, JA-LEX-C208-FORECAST208-05, JA-LEX-C209-SEASON209-01, JA-LEX-C209-SEASON209-02, JA-LEX-C209-SEASON209-03, JA-LEX-C209-SEASON209-04, JA-LEX-C209-SEASON209-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a trip, a Japanese inn, sightseeing, to drop in, lodging]
+- [YOU SAY: a ticket window, a station attendant, a ticket gate, one way, a round trip]
+- [YOU SAY: a vehicle, traffic, a traffic jam, a passenger, a booking]
+- [YOU SAY: the weather, to fall, snow, to clear up, to cloud over]
+- [YOU SAY: fine weather, cloudy weather, a weather forecast, the sky, a typhoon]
+- [YOU SAY: spring, autumn, a season, a cherry tree, to scatter]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C204-TRIP204-01, JA-LEX-C204-TRIP204-02, JA-LEX-C204-TRIP204-03, JA-LEX-C204-TRIP204-04, JA-LEX-C204-TRIP204-05, JA-LEX-C205-TICKET205-01, JA-LEX-C205-TICKET205-02, JA-LEX-C205-TICKET205-03, JA-LEX-C205-TICKET205-04, JA-LEX-C205-TICKET205-05, JA-LEX-C206-TRAFFIC206-01, JA-LEX-C206-TRAFFIC206-02, JA-LEX-C206-TRAFFIC206-03, JA-LEX-C206-TRAFFIC206-04, JA-LEX-C206-TRAFFIC206-05, JA-LEX-C207-WEATHER207-01, JA-LEX-C207-WEATHER207-02, JA-LEX-C207-WEATHER207-03, JA-LEX-C207-WEATHER207-04, JA-LEX-C207-WEATHER207-05, JA-LEX-C208-FORECAST208-01, JA-LEX-C208-FORECAST208-02, JA-LEX-C208-FORECAST208-03, JA-LEX-C208-FORECAST208-04, JA-LEX-C208-FORECAST208-05, JA-LEX-C209-SEASON209-01, JA-LEX-C209-SEASON209-02, JA-LEX-C209-SEASON209-03, JA-LEX-C209-SEASON209-04, JA-LEX-C209-SEASON209-05] -->
+<!-- hl-activity: {"id":"JA-R209-review-204-209-type","kind":"text","assesses":["JA-LEX-C204-TRIP204-01"],"prompt":"Type the Japanese for 'a trip'.","answer":"りょこう","accepted":["ryokō","ryokou","ryokoo","ryoko"],"feedback":{"correct":"Right: りょこう (ryokō) is 'a trip; travel'.","incorrect":"'A trip' is りょこう (ryokō)."},"response_seconds":10} -->
+
+[PAUSE 3s] A trip? (**りょこう**, *ryokō*.) A Japanese inn? (**りょかん**, *ryokan*.) Sightseeing? (**けんぶつ**, *kenbutsu*.) To drop in? (**よる**, *yoru*.) Lodging? (**やど**, *yado*.) A ticket window? (**まどぐち**, *madoguchi*.) A station attendant? (**えきいん**, *ekiin*.) A ticket gate? (**かいさつぐち**, *kaisatsuguchi*.) One way? (**かたみち**, *katamichi*.) A round trip? (**おうふく**, *ōfuku*.) A vehicle? (**のりもの**, *norimono*.) Traffic? (**こうつう**, *kōtsū*.) A traffic jam? (**じゅうたい**, *jūtai*.) A passenger? (**じょうきゃく**, *jōkyaku*.) A booking? (**よやく**, *yoyaku*.) The weather? (**てんき**, *tenki*.) To fall? (**ふる**, *furu*.) Snow? (**ゆき**, *yuki*.) To clear up? (**はれる**, *hareru*.) To cloud over? (**くもる**, *kumoru*.) Fine weather? (**はれ**, *hare*.) Cloudy weather? (**くもり**, *kumori*.) A weather forecast? (**てんきよほう**, *tenkiyohō*.) The sky? (**そら**, *sora*.) A typhoon? (**たいふう**, *taifū*.) Spring? (**はる**, *haru*.) Autumn? (**あき**, *aki*.) A season? (**きせつ**, *kisetsu*.) A cherry tree? (**さくら**, *sakura*.) To scatter? (**ちる**, *chiru*.)
+`;export{t};

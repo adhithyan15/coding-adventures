@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: JA-R151-review-146-151
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 9100
+chapter: 151
+type: review
+headword: (dialogue)
+gloss: a review of chapters 146-151
+concept_tag: REVIEW
+prerequisites: [JA-C146-nemuru, JA-C146-gussuri, JA-C146-sameru, JA-C146-okosu, JA-C146-suimin, JA-C147-arau, JA-C147-migaku, JA-C147-abiru, JA-C147-yu, JA-C147-sekken, JA-C148-kaminoke, JA-C148-karu, JA-C148-hige, JA-C148-hayasu, JA-C148-keshou, JA-C149-kiru, JA-C149-nugu, JA-C149-kaburu, JA-C149-youfuku, JA-C149-shitagi, JA-C150-uwagi, JA-C150-tebukuro, JA-C150-hazusu, JA-C150-musubu, JA-C150-yubiwa, JA-C151-kimono, JA-C151-obi, JA-C151-tabi, JA-C151-sode, JA-C151-niau]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [JA-LEX-C146-SLEEP146-01, JA-LEX-C146-SLEEP146-02, JA-LEX-C146-SLEEP146-03, JA-LEX-C146-SLEEP146-04, JA-LEX-C146-SLEEP146-05, JA-LEX-C147-WASH147-01, JA-LEX-C147-WASH147-02, JA-LEX-C147-WASH147-03, JA-LEX-C147-WASH147-04, JA-LEX-C147-WASH147-05, JA-LEX-C148-HAIR148-01, JA-LEX-C148-HAIR148-02, JA-LEX-C148-HAIR148-03, JA-LEX-C148-HAIR148-04, JA-LEX-C148-HAIR148-05, JA-LEX-C149-DRESS149-01, JA-LEX-C149-DRESS149-02, JA-LEX-C149-DRESS149-03, JA-LEX-C149-DRESS149-04, JA-LEX-C149-DRESS149-05, JA-LEX-C150-GLOVES150-01, JA-LEX-C150-GLOVES150-02, JA-LEX-C150-GLOVES150-03, JA-LEX-C150-GLOVES150-04, JA-LEX-C150-GLOVES150-05, JA-LEX-C151-KIMONO151-01, JA-LEX-C151-KIMONO151-02, JA-LEX-C151-KIMONO151-03, JA-LEX-C151-KIMONO151-04, JA-LEX-C151-KIMONO151-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [JA-LEX-C146-SLEEP146-01, JA-LEX-C146-SLEEP146-02, JA-LEX-C146-SLEEP146-03, JA-LEX-C146-SLEEP146-04, JA-LEX-C146-SLEEP146-05, JA-LEX-C147-WASH147-01, JA-LEX-C147-WASH147-02, JA-LEX-C147-WASH147-03, JA-LEX-C147-WASH147-04, JA-LEX-C147-WASH147-05, JA-LEX-C148-HAIR148-01, JA-LEX-C148-HAIR148-02, JA-LEX-C148-HAIR148-03, JA-LEX-C148-HAIR148-04, JA-LEX-C148-HAIR148-05, JA-LEX-C149-DRESS149-01, JA-LEX-C149-DRESS149-02, JA-LEX-C149-DRESS149-03, JA-LEX-C149-DRESS149-04, JA-LEX-C149-DRESS149-05, JA-LEX-C150-GLOVES150-01, JA-LEX-C150-GLOVES150-02, JA-LEX-C150-GLOVES150-03, JA-LEX-C150-GLOVES150-04, JA-LEX-C150-GLOVES150-05, JA-LEX-C151-KIMONO151-01, JA-LEX-C151-KIMONO151-02, JA-LEX-C151-KIMONO151-03, JA-LEX-C151-KIMONO151-04, JA-LEX-C151-KIMONO151-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-japanese-tokyo
+reviews_of: [JA-C146-nemuru, JA-C146-gussuri, JA-C146-sameru, JA-C146-okosu, JA-C146-suimin, JA-C147-arau, JA-C147-migaku, JA-C147-abiru, JA-C147-yu, JA-C147-sekken, JA-C148-kaminoke, JA-C148-karu, JA-C148-hige, JA-C148-hayasu, JA-C148-keshou, JA-C149-kiru, JA-C149-nugu, JA-C149-kaburu, JA-C149-youfuku, JA-C149-shitagi, JA-C150-uwagi, JA-C150-tebukuro, JA-C150-hazusu, JA-C150-musubu, JA-C150-yubiwa, JA-C151-kimono, JA-C151-obi, JA-C151-tabi, JA-C151-sode, JA-C151-niau]
+---
+
+# Words for the day and the home: a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C146-SLEEP146-01, JA-LEX-C146-SLEEP146-02] -->
+
+[PAUSE 3s] Say the Japanese for to fall asleep and soundly.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C146-SLEEP146-01, JA-LEX-C146-SLEEP146-02, JA-LEX-C146-SLEEP146-03, JA-LEX-C146-SLEEP146-04, JA-LEX-C146-SLEEP146-05, JA-LEX-C147-WASH147-01, JA-LEX-C147-WASH147-02, JA-LEX-C147-WASH147-03, JA-LEX-C147-WASH147-04, JA-LEX-C147-WASH147-05, JA-LEX-C148-HAIR148-01, JA-LEX-C148-HAIR148-02, JA-LEX-C148-HAIR148-03, JA-LEX-C148-HAIR148-04, JA-LEX-C148-HAIR148-05, JA-LEX-C149-DRESS149-01, JA-LEX-C149-DRESS149-02, JA-LEX-C149-DRESS149-03, JA-LEX-C149-DRESS149-04, JA-LEX-C149-DRESS149-05, JA-LEX-C150-GLOVES150-01, JA-LEX-C150-GLOVES150-02, JA-LEX-C150-GLOVES150-03, JA-LEX-C150-GLOVES150-04, JA-LEX-C150-GLOVES150-05, JA-LEX-C151-KIMONO151-01, JA-LEX-C151-KIMONO151-02, JA-LEX-C151-KIMONO151-03, JA-LEX-C151-KIMONO151-04, JA-LEX-C151-KIMONO151-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to fall asleep, soundly, to wake up, to wake someone, sleep]
+- [YOU SAY: to wash, to polish, to pour over oneself, hot water, soap]
+- [YOU SAY: the hair on one's head, to trim, a beard, to grow a beard, make-up]
+- [YOU SAY: to wear, to take off, to wear on the head, Western clothes, underwear]
+- [YOU SAY: a jacket, gloves, to remove, to tie, a ring]
+- [YOU SAY: a kimono, a kimono sash, split-toe socks, a sleeve, to suit]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C146-SLEEP146-01, JA-LEX-C146-SLEEP146-02, JA-LEX-C146-SLEEP146-03, JA-LEX-C146-SLEEP146-04, JA-LEX-C146-SLEEP146-05, JA-LEX-C147-WASH147-01, JA-LEX-C147-WASH147-02, JA-LEX-C147-WASH147-03, JA-LEX-C147-WASH147-04, JA-LEX-C147-WASH147-05, JA-LEX-C148-HAIR148-01, JA-LEX-C148-HAIR148-02, JA-LEX-C148-HAIR148-03, JA-LEX-C148-HAIR148-04, JA-LEX-C148-HAIR148-05, JA-LEX-C149-DRESS149-01, JA-LEX-C149-DRESS149-02, JA-LEX-C149-DRESS149-03, JA-LEX-C149-DRESS149-04, JA-LEX-C149-DRESS149-05, JA-LEX-C150-GLOVES150-01, JA-LEX-C150-GLOVES150-02, JA-LEX-C150-GLOVES150-03, JA-LEX-C150-GLOVES150-04, JA-LEX-C150-GLOVES150-05, JA-LEX-C151-KIMONO151-01, JA-LEX-C151-KIMONO151-02, JA-LEX-C151-KIMONO151-03, JA-LEX-C151-KIMONO151-04, JA-LEX-C151-KIMONO151-05] -->
+<!-- hl-activity: {"id":"JA-R151-review-146-151-type","kind":"text","assesses":["JA-LEX-C146-SLEEP146-01"],"prompt":"Type the Japanese for 'to fall asleep'.","answer":"ねむる","accepted":["nemuru"],"feedback":{"correct":"Right: ねむる (nemuru) is 'to fall asleep; to sleep'.","incorrect":"'To fall asleep' is ねむる (nemuru)."},"response_seconds":10} -->
+
+[PAUSE 3s] To fall asleep? (**ねむる**, *nemuru*.) Soundly? (**ぐっすり**, *gussuri*.) To wake up? (**さめる**, *sameru*.) To wake someone? (**おこす**, *okosu*.) Sleep? (**すいみん**, *suimin*.) To wash? (**あらう**, *arau*.) To polish? (**みがく**, *migaku*.) To pour over oneself? (**あびる**, *abiru*.) Hot water? (**ゆ**, *yu*.) Soap? (**せっけん**, *sekken*.) The hair on one's head? (**かみのけ**, *kaminoke*.) To trim? (**かる**, *karu*.) A beard? (**ひげ**, *hige*.) To grow a beard? (**はやす**, *hayasu*.) Make-up? (**けしょう**, *keshō*.) To wear? (**きる**, *kiru*.) To take off? (**ぬぐ**, *nugu*.) To wear on the head? (**かぶる**, *kaburu*.) Western clothes? (**ようふく**, *yōfuku*.) Underwear? (**したぎ**, *shitagi*.) A jacket? (**うわぎ**, *uwagi*.) Gloves? (**てぶくろ**, *tebukuro*.) To remove? (**はずす**, *hazusu*.) To tie? (**むすぶ**, *musubu*.) A ring? (**ゆびわ**, *yubiwa*.) A kimono? (**きもの**, *kimono*.) A kimono sash? (**おび**, *obi*.) Split-toe socks? (**たび**, *tabi*.) A sleeve? (**そで**, *sode*.) To suit? (**にあう**, *niau*.)
+`;export{t};
