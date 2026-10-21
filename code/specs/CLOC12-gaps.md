@@ -1492,6 +1492,19 @@ before ES2015.
   (`javascript_parser`, which CI checks for drift) are regenerated. The Lua
   `_grammar_es*.lua` files are not checked by CI and need a separate refresh.
 
+### #17879 — DCE dropped declarations a switch body shares
+
+**Resolved (soundness).** A switch body is one scope: a `var` in any case is
+hoisted to the function, and a `function`/`class` in any case is visible to
+every case. DCE's per-case dead-tail truncation now applies
+`tail_is_safe_to_truncate`. The constant-discriminant collapse, and the
+no-match collapse to `;`, decline unless every discarded case is safe to
+drop.
+
+**Still open (size):** upstream folds these further. For example,
+`switch(2){case 1: var x=1; break; case 2: return typeof x}` becomes
+`return"undefined"`. closurec keeps the switch.
+
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 
 **Landed (AST + emitter + passes):** `Expression::FunctionExpression` is now a

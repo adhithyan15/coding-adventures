@@ -912,7 +912,7 @@ noted.
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
 | Python | GL (indentation mode) | GP | CST | 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned; no CSV | Compliant; selection hard-coded to `"3.12"` | Phase 7 |
-| Perl | GL | GP | CST | 117 partial versioned pairs; `releases.csv` 776 rows | Compliant; frontend uses the **unversioned** pair, no selection | Phase 4 |
+| Perl | GL | GP | CST | 117 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is still the **unversioned** pair; `Language::Perl` on all nine backends (4a) | Phases 4b, 4c |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
 | Derive, Wolfram | GL + `drop_bracketed_newlines` | GP | CST | unversioned | Compliant (C3 hook) | Optional E3 replacement; inventories |
@@ -1091,6 +1091,87 @@ corpus.
   their line exist, and are then deleted. They are never selectable through
   the release API.
 
+**Phase 4a result (2026-10-20).** Perl's default release is declared on all
+eight executable `lang_matrix` columns and passes the LANG83 check on all
+nine backends, and release selection is real in the frontend. CLR and BEAM
+execute in CI; the authoring host had no `dotnet` or `erl`.
+
+- `grammar-tools generate-rust-compiled-grammars perl` uses the generic
+  release-family path that Ruby R0 introduced (`RustReleaseFamilySpec`). It
+  reads the release list from `releases.csv` by header name, compiles every
+  non-pending pair, canonicalizes each (line numbers zeroed, source name
+  blanked), and emits one `g_<12 hex of SHA-256>` module per distinct
+  grammar. The 117 checked pairs collapse to 5 token and 2 parser tables.
+  Generated: `SUPPORTED_RELEASES` (the 117), `INVENTORY` in the parser table
+  (`(release, grammar_stage)` for all 776 rows), `token_grammar(release)` /
+  `parser_grammar(release)` returning `None` for pending and unknown IDs,
+  `grammar_class(release)`, and `unversioned_token_grammar()` /
+  `unversioned_parser_grammar()` for the LANG81 pair, which is never
+  reachable as release `""`. Perl's pre-schema inventory has no
+  `grammar_stage` column until phase 2b, so its family declares
+  `StageSource::DerivedFromStatus`: the stage is derived by the migration
+  rule above (`pending` → `none`, otherwise `P`). Every family's reader
+  refuses quoted rows, field-count mismatches, unsafe or duplicate IDs, and
+  unknown statuses or stages.
+- `perl_iir_compiler::compile_source_at(source, release, module_name,
+  &FrontendBudgets)` resolves `release` in `release.rs` (exact IDs only, no
+  version ordering), then lexes and parses with that release's tables. Typed
+  `FrontendError` variants: `UnknownRelease` (with up to five
+  longest-prefix suggestions, caller text truncated to 64 characters with
+  control characters escaped),
+  `ReleaseNotAvailable { stage: "pending" }`, `Budget`, `Lex` and `Parse`
+  (line and column), `Unsupported` (rule plus start and end span). All name
+  the release. `compile_source` delegates with `None`.
+- `print` lowers to `call_builtin write_i64`; the Perl-only `pl_print_int`
+  builtin is gone, so the module holds only LANG83 registry builtins and
+  ungated scalar ops (`const`, `neg`, `add`, `sub`, `mul`, `ret_void`).
+- `Language::Perl` (`--lang perl`/`pl`, `.pl`) compiles with
+  `compile_source_at(.., None, ..)`. Eleven `lang_matrix` rows declare all
+  eight executable columns. `perl_rows_agree_with_the_host_perl_oracle`
+  checks every expectation against the host `perl` (v5.38.2 locally), and
+  `perl_rows_pass_the_lang83_check_on_all_nine_backends` runs
+  `check_module_for` on all nine backends. The matrix WASM host and VM/JIT
+  runners gained `write_i64` on the shared ordered sink.
+- Per release: every one of the 117 checked releases lowers the frontend's
+  corpus to IIR identical to the default's and runs it on vm-core. Tests also
+  show the releases differ where their sources say they do: a CR is a lex
+  error under 5.003_26 and whitespace under 5.004_72, and a 251-digit literal
+  lexes under 1.000 but not under 5.004_72. The per-crate tests pin the
+  compiled tables against the inventory and against each pair parsed fresh,
+  which acts as the regeneration check for this family.
+
+Divergences from this spec, deferred deliberately:
+
+- `DEFAULT_RELEASE` is `Release::Unversioned`, not an inventory ID, so C4.1
+  and C4.4 are not yet met for a compile that names no release. A
+  `perl5.38.2` partial pair already exists whose token and parser grammars
+  equal the unversioned pair apart from comments. Phase 4b decides between
+  moving the default to `5.38.2` and building the `perl5.38.0` pair this
+  section asks for.
+- `IIRModule` has no `release` field yet, and lang-aot has no
+  `compile_source_to_iir_at`, `--lang perl@<release>` or `UnknownRelease` /
+  `ReleaseNotAvailable` variants. Adding a field to `IIRModule` touches every
+  crate that builds one, so it goes with the lang-aot selection API in 4b.
+- No `ReleaseProfile`: the integer `print` subset has no semantic difference
+  between releases. The first profile comes with the first construct that
+  needs one.
+- `/`, `%` and `int()` are not in the subset, so 4a emits no
+  `i64_div_floor`/`i64_mod_floor` and no matrix row traps. Perl's `/` is
+  float division and needs the LANG83 float family.
+- The CI `rust-grammar-regen-check` job does not list `perl`; the crate
+  tests above stand in for it. The 117 pairs are not yet swept across the
+  backends (4c), and `subsets.csv`/`iir_status` wait for phase 2b.
+
+Remaining phase 4 slices:
+
+- **4b.** Default release on an inventory ID (`5.38.2` or a new
+  `perl5.38.0` pair); `IIRModule.release`; `compile_source_to_iir_at`,
+  `--lang perl@<release>` and the two `LangAotError` variants; a
+  `cst_contract` test (C8); hostile-input probes in a child process (C5).
+- **4c.** Release sweep: B(pl-int-print) for every checked release on the
+  backends, bounded per [CI bounding](#ci-bounding), with the corpus under
+  `code/grammars/perl/corpus/` once 2b's `subsets.csv` exists.
+
 ### Wire every IIR frontend into lang-aot
 
 Add `Language` variants with release support for Python, JavaScript, Ruby and
@@ -1169,7 +1250,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.8 | E6 adjacency predicates and ASI | ~800 lines |
 | | 3.9 | E7 goal-directed lexing and binding predicates (largest; may split into lattice and bindings) | ~2,500 lines over 2–3 PRs |
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
-| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b): compile versioned pairs; `compile_source_at`; `perl5.38.0` pair; `print` → `write_i64`; `Language::Perl`; matrix rows; release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
+| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b:** default on an inventory release (`perl5.38.0` pair, or the existing `5.38.2`); `IIRModule.release`; lang-aot release API. **4c:** release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family | ~2,000 lines over 3 PRs |

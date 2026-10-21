@@ -3845,6 +3845,16 @@ line "Target" [35, 50, 68, 82]"##,
                     matches!(instruction, PaintInstruction::Rect(_))
                 ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
             }
+            if matches!(fixture_name, "markdown-string-labels" | "multiline-markdown-string-labels") {
+                assert!(layout.lanes[0].label.markdown.is_some());
+                assert!(layout.groups[0].label.markdown.is_some());
+                assert!(layout.nodes.iter().find(|node| node.id == "request").unwrap().label.markdown.is_some());
+                assert!(layout.edges.iter().find(|edge| edge.label.is_some()).unwrap()
+                    .label.as_ref().unwrap().markdown.is_some());
+                assert!(scene.instructions.iter().filter(|instruction| matches!(
+                    instruction, PaintInstruction::GlyphRun(run) if !run.glyphs.is_empty()
+                )).count() >= 9, "Markdown spans must lower to separate backend-neutral glyph runs");
+            }
             if fixture_name == "theme-variables" {
                 assert_eq!(layout.theme.main_background, "#ffe1ef");
                 assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,

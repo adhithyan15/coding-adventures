@@ -1,89 +1,39 @@
 //! Integration test for the `tests/diff/simple-private-getter/` fixture.
 //!
-//! Exercises a **private accessor** (`get #x(){}`, a `ClassMember::Method` with
-//! `MethodKind::Get` and a `PropertyKey::PrivateName` key) end-to-end at SIMPLE —
-//! the CLOC12.179 bridge extension of the `private_method_definition` node to the
-//! get/set accessor forms, on top of the private-method bridge (CLOC12.178) and
-//! the `PropertyKey::PrivateName` node + emit arms (CLOC12.177).
-//!
-//! The fixture is `class C { get #x(){ return 1 + 2 } }` compiled at SIMPLE.
-//! Two facts prove the whole pipeline ran through the private accessor:
-//!   1. the class round-trips with a `get #x` accessor — proving the bridge
-//!      lowered the `private_method_definition` node (get form) to a
-//!      `ClassMember::Method`, not a WHITESPACE_ONLY fallback; and
-//!   2. the accessor body folds — `1 + 2` → `3` — proving the SIMPLE pipeline
-//!      descended INTO the getter's body. A WHITESPACE_ONLY fallback would leave
-//!      `1+2` intact.
-//! Before this bridge extension a private getter DECLINED, dropping the file to
-//! WHITESPACE_ONLY (`class C{get #x(){return 1+2}};`) and assertion (2) failed.
+//! The pinned reference compiler (`closure-compiler-v20260915`) refuses this
+//! input with `JSC_UNSUPPORTED_LANGUAGE_FEATURE` ("Private elements."). Since
+//! CCR-075 (#15860), closurec refuses it the same way: `expected.stderr` and
+//! `expected.exit` were captured from the jar, the stderr must match byte for
+//! byte, and there must be no stdout. Before CCR-075 closurec compiled this
+//! input, and this fixture pinned that output.
 
 use std::process::Command;
 
 const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
-
-fn read_flags() -> Vec<String> {
-    let raw = std::fs::read_to_string("tests/diff/simple-private-getter/flags.txt")
-        .expect("read flags.txt");
-    raw.lines()
-        .filter(|l| !l.is_empty())
-        .map(|s| s.to_string())
-        .collect()
-}
+const DIR: &str = "tests/diff/simple-private-getter";
 
 #[test]
-fn simple_private_getter_folds_body() {
-    let flags = read_flags();
-    let out = Command::new(BINARY)
-        .args(&flags)
-        .output()
-        .expect("run closurec");
+fn simple_private_getter_is_refused_like_upstream() {
+    let flags: Vec<String> = std::fs::read_to_string(format!("{DIR}/flags.txt"))
+        .expect("read flags.txt")
+        .lines()
+        .filter(|l| !l.is_empty())
+        .map(str::to_string)
+        .collect();
+    let out = Command::new(BINARY).args(&flags).output().expect("run closurec");
 
-    assert!(
-        out.status.success(),
-        "exit: {:?}, stderr: {}",
-        out.status.code(),
-        String::from_utf8_lossy(&out.stderr),
-    );
+    let want_exit: i32 = std::fs::read_to_string(format!("{DIR}/expected.exit"))
+        .expect("read expected.exit")
+        .trim()
+        .parse()
+        .expect("expected.exit is a number");
+    let want_stderr = std::fs::read(format!("{DIR}/expected.stderr")).expect("read expected.stderr");
 
-    let actual = String::from_utf8_lossy(&out.stdout);
-    let expected = std::fs::read_to_string("tests/diff/simple-private-getter/expected.stdout")
-        .expect("read expected.stdout");
+    assert_eq!(out.status.code(), Some(want_exit), "exit status");
+    assert!(out.stdout.is_empty(), "a refused input must produce no output");
     assert_eq!(
-        actual.trim_end_matches('\n'),
-        expected.trim_end_matches('\n'),
-        "mismatch.\nactual:\n{actual}\nexpected:\n{expected}",
-    );
-
-    // Guard the *point* of the fixture. (The `get #x` needs its inter-token
-    // space, so only strip for the fold check where it doesn't matter.)
-    // (1) the class round-tripped with a `get #x` private accessor.
-    assert!(
-        actual.contains("get #x("),
-        "private getter did not round-trip with a `get #x(` accessor: {actual}"
-    );
-    // (2) the accessor body folded — proving the pipeline descended INTO the
-    //     getter's body (`1+2`→`3`). A WHITESPACE_ONLY fallback would leave the
-    //     arithmetic intact.
-    let a = actual.replace(' ', "");
-    assert!(
-        a.contains("return3"),
-        "private getter body did not fold to `return 3`: {actual}"
-    );
-    assert!(
-        !a.contains("1+2"),
-        "unfolded arithmetic present — pipeline fell back to WHITESPACE_ONLY: {actual}"
-    );
-    // (3) a class *declaration* terminates with `};` when it is the LAST
-    //     program item (oracle-verified: the real Closure emits
-    //     `class C{m(){return 3}};`) and is NOT paren-wrapped (unlike the
-    //     class *expression* form `(class …);`). NOTE: the trailing `;` used
-    //     to double as a WHITESPACE_ONLY-fallback detector; it no longer can,
-    //     since both paths now end in `;`. The constant-fold assertion above
-    //     is the real fallback discriminator — a whitespace-only pass cannot
-    //     fold, so a folded body proves the optimizing pipeline ran.
-    let t = actual.trim_end_matches('\n');
-    assert!(
-        t.ends_with("};") && !t.starts_with('('),
-        "class declaration must terminate with a semicolon as the last program item and not be paren-wrapped: {actual}"
+        String::from_utf8_lossy(&out.stderr),
+        String::from_utf8_lossy(&want_stderr),
+        "diagnostics must match upstream byte for byte"
     );
 }

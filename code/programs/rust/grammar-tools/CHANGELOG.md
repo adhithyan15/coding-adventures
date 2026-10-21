@@ -1,5 +1,27 @@
 # Changelog — grammar-tools (Rust program)
 
+## [2.3.0] - 2026-10-20
+
+### Added — Perl joins the LANG84 release families (phase 4a)
+- `generate-rust-compiled-grammars perl` uses the generic release-family path
+  (`RustReleaseFamilySpec`) instead of a Perl-only generator. Perl's 117
+  checked pairs become 5 token and 2 parser tables; its generated API matches
+  Ruby's (`SUPPORTED_RELEASES`, `grammar_class`, the exact-ID selector, and
+  `INVENTORY` in the parser table).
+- `RustReleaseFamilySpec.legacy_token_grammar`: also embed the unversioned
+  `<prefix>.tokens` as `unversioned_token_grammar()` (Perl on, Ruby off).
+- `RustReleaseFamilySpec.stage_source`: `Column` (the LANG84 schema; the
+  `grammar_stage` column is required) or `DerivedFromStatus` for an inventory
+  that predates it (Perl until LANG84 2b), which derives the stage by the
+  spec's migration rule (`pending` → `none`, otherwise `P`).
+
+### Security
+- The release-inventory reader now also refuses duplicate release IDs and
+  unknown `grammar_status` / `grammar_stage` values, on top of quoted rows,
+  field-count mismatches and unsafe IDs. A trailing `\r` is dropped so a
+  CRLF checkout reads like an LF one. Ruby's generated tables are unchanged
+  byte for byte.
+
 ## [2.2.0] - 2026-10-20
 
 ### Added — LANG84 release families
