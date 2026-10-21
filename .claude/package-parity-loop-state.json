@@ -16,15 +16,11 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
+  "active_pr": 17905,
   "last_ci_action": {
-    "observed_at": "2026-10-21T05:55:30.754403+00:00",
-    "pr_number": 17738,
-    "state": "merged",
-    "head": "0fba2a598ae44b4b7456c807547bfd6e44b0c325",
-    "merge_commit": "69b5174dcb2900a1be108f3a82457f944807a47d",
-    "required_gates": "SUCCESS",
-    "action": "External merge verified; full inventory and saved audits incorporated before successor selection."
+    "observed_at": "2026-10-21T06:22:16.040789+00:00",
+    "pr_number": 17905,
+    "action": "Ready PR opened after final package/race/vet/build/fuzz/security/61package unforced execution validation; awaiting live final-head checks. No auto-merge while pending."
   },
   "last_inventory": {
     "revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
@@ -22637,12 +22633,12 @@
     {
       "id": "compiler-ir-bf03-go-core-profile-adoption",
       "title": "Qualify the existing go compiler IR against the BF03 neutral core profile",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "compiler-ir-aot-neutral-conformance"
       ],
       "branch": "codex/parity-bf03-go-20261021",
-      "pr_number": null,
+      "pr_number": 17905,
       "delivery_class": "portable",
       "selection_blocked": false,
       "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
@@ -22737,7 +22733,9 @@
         ],
         "limitations": "Native BUILD execution on Windows; otherplatformdetectorplans tested, actualcrossplatformpackageCI pending. No reviewed exception or wholelane claim.",
         "receipt": "bf03-go-local-validation-receipt.json"
-      }
+      },
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17905",
+      "ready_for_review_at": "2026-10-21T06:22:16.040789+00:00"
     },
     {
       "id": "compiler-ir-bf03-haskell-core-profile-adoption",
