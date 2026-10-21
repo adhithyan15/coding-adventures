@@ -950,6 +950,26 @@ class MosaicLinuxRuntimeJobTests(unittest.TestCase):
                 )
         self.assertNotIn("matrix.", self.lane_job)
 
+    def test_build_still_installs_what_flutter_on_linux_needs(self) -> None:
+        """Package builds run `flutter build linux` whenever Flutter is on
+        PATH, and that needs GTK 3's headers. The Flutter lane used to
+        install them inside `build`; when it moved out, venture-browser
+        failed on a shard with `gtk+-3.0` not found. So wherever `build`
+        installs Flutter on Linux, it must install GTK too, after Flutter
+        and before the package build."""
+
+        flutter = self.build_job.index("      - name: Set up Flutter\n")
+        install = self.build_job.index("      - name: Install Flutter Linux desktop dependencies\n")
+        step = self.build_job[install : self.build_job.index("\n      - name:", install)]
+        self.assertIn(
+            "if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' && runner.os == 'Linux'\n",
+            step,
+        )
+        self.assertIn("bash code/scripts/ci/apt-install.sh libgtk-3-dev xvfb", step)
+        self.assertLess(flutter, install)
+        self.assertLess(install, self.build_job.index("      - name: Full build on main merge\n"))
+        self.assertLess(install, self.build_job.index("      - name: Build and test affected packages\n"))
+
     def test_ci_gate_requires_the_job(self) -> None:
         gate = job_text(self.workflow, "ci-gate")
         needs = re.search(r"\n    needs: \[(.*)\]\n", gate)

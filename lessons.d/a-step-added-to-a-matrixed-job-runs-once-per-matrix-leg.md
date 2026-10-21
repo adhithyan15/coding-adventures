@@ -29,7 +29,19 @@ Fix: the lane moved to its own job, `mosaic-linux-runtime`, which needs
 it. A test in `test_mosaic_compose_runtime_ci_acceptance.py` pins the steps
 to that job and keeps them out of `build`.
 
+The move then broke one shard. The Flutter lane ran
+`sudo apt-get install -y libgtk-3-dev xvfb` inside `build`, and a package
+build later in the same job relied on that without saying so:
+venture-browser's `build-all.sh` runs `flutter build linux` whenever
+`flutter` is on PATH, and failed with `gtk+-3.0` not found. A step's side
+effects (apt packages, `rustup target add`, `cargo install`, `GITHUB_ENV`
+and `GITHUB_PATH` writes) are part of the environment for every later step
+in its job. `build` now installs GTK itself, under the same condition that
+installs Flutter.
+
 Next time:
+- Before moving steps out of a job, list everything they install or export,
+  and check whether any later step or package build uses it.
 - Before adding a step to `build`, ask whether its result depends on which
   shard runs it. If not (an acceptance lane, a one-off oracle, an app
   build), give it a job of its own.

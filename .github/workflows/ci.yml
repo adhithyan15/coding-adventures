@@ -3859,6 +3859,20 @@ jobs:
         shell: bash
         run: flutter config --enable-native-assets
 
+      # `flutter build linux` needs GTK 3's development headers, and package
+      # builds run it whenever `flutter` is on PATH (venture-browser's
+      # build-all.sh, for one). They used to get the headers by accident: the
+      # Mosaic Flutter lane installed them earlier in this job. That lane now
+      # runs in `mosaic-linux-runtime`, so the build installs what Flutter on
+      # Linux needs itself, under the same condition that installs Flutter.
+      # xvfb comes along because the lane installed it too.
+      - name: Install Flutter Linux desktop dependencies
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        shell: bash
+        run: |
+          bash code/scripts/ci/apt-install.sh libgtk-3-dev xvfb
+
       - name: Set up Swift (Windows)
         if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
         shell: pwsh
