@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C183-karde",
+    "language": "punjabi",
+    "chapter": 183,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78c5339a19f27d67"
+  },
+  "findings": []
+}
