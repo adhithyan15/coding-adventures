@@ -1481,6 +1481,9 @@ backend immediately) come before the enabler-dependent items.
   Static nonzero whole-number division may reduce that transform when a
   conservative common-divisor proof shows that every possible path value is
   exactly divisible; inexact and dynamic divisors remain conservative.
+  Static whole-number numerator factors may precede the sign-rooted transform
+  when multiplication alone connects them to its root; division before the
+  root remains conservative.
   Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

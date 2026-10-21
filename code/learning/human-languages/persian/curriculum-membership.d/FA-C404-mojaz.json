@@ -1,0 +1,11 @@
+{
+  "id": "FA-C404-mojaz",
+  "pathSegment": "FA-PATH-404-MOQARRARAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-404-MOQARRARAT",
+      "order": 2
+    }
+  ]
+}

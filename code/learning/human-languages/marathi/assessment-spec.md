@@ -132,6 +132,20 @@ instructional supports, not pass evidence.
 | writing | 20 | complete a practical form, then write a 30–40 word message for a named reader and purpose |
 | speaking | 10 | personal interview, 1-minute prepared description, and a simple transactional role-play; 5 minutes preparation |
 
+The A1 writing lessons must first establish independent, untimed, no-model
+responses for both task types. Only then may they introduce a generous partial
+timer and a separate full-task timer. Each training lesson, including a bounded
+post-timer repair, stays within five minutes; neither timer is a substitute for
+the 20-minute whole-paper mock. The form still requests six to eight practical
+fields, and the message still asks for 30–40 Marathi words addressed to a named
+reader for a stated purpose. Timed production is recorded only for an actual
+timed response, not for a declaration or an untimed rehearsal. Feedback must
+separately inspect task fulfilment, organisation, Marathi language control, and
+Devanagari orthographic control; one short, bounded repair can follow scoring
+without changing the timed first-attempt evidence. These checkpoints are
+training evidence, not an A1-readiness claim: two scored full mocks and human
+validation remain required below.
+
 ### A2
 
 | paper | minutes | required task envelope |

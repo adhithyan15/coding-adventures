@@ -1,0 +1,11 @@
+{
+  "id": "FA-C510-ozv-shodan",
+  "pathSegment": "FA-PATH-510-LEISURE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-510-LEISURE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-422-KAPUT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about what is under the bonnet: the engine, the oil, starting the car and a car that stalls.",
+  "prerequisites": []
+}

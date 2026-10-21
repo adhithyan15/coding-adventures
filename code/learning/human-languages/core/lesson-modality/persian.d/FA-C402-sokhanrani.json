@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C402-sokhanrani",
+    "language": "persian",
+    "chapter": 402,
+    "sequence": 20590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83a0f4c40e5d35b7"
+  },
+  "findings": []
+}

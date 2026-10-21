@@ -1,0 +1,11 @@
+{
+  "id": "FA-C401-taqallob-kardan",
+  "pathSegment": "FA-PATH-401-MORUR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-401-MORUR",
+      "order": 2
+    }
+  ]
+}

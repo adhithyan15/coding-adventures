@@ -1,0 +1,11 @@
+{
+  "id": "FA-C532-kontorol",
+  "pathSegment": "FA-PATH-532-WATCHING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-532-WATCHING",
+      "order": 1
+    }
+  ]
+}

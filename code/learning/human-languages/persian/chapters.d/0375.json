@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Pros and cons",
+  "label": "ch:fa-pros-and-cons",
+  "canDo": "I can weigh up the advantages and flaws of something, say that it is harmful, that it is worth it and that it paid off.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R375-review-368-375",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can weigh up the advantages and flaws of something, say that it is harmful, that it is worth it and that it paid off.",
+    "assesses": [
+      "FA-LEX-C375-MAZIYYAT-03",
+      "FA-LEX-C375-MAZIYYAT-04",
+      "FA-LEX-C375-MAZIYYAT-05"
+    ]
+  }
+}

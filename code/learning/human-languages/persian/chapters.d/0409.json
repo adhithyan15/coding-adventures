@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Government and elections",
+  "label": "ch:fa-government-and-elections",
+  "canDo": "I can talk about government and politics, elections and voting, and parliament.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C409-majles",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about government and politics, elections and voting, and parliament.",
+    "assesses": [
+      "FA-LEX-C409-HOKUMAT-03",
+      "FA-LEX-C409-HOKUMAT-04",
+      "FA-LEX-C409-HOKUMAT-05"
+    ]
+  }
+}

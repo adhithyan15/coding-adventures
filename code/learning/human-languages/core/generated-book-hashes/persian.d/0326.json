@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:6fdbd76aae80c5ea",
+  "lessonIds": [
+    "FA-C326-masdum",
+    "FA-C326-jerahat",
+    "FA-C326-khunrizi",
+    "FA-C326-bihush-shodan",
+    "FA-C326-be-hush-amadan"
+  ],
+  "tex": "persian/book/chapters/ch326-the-injured.tex"
+}

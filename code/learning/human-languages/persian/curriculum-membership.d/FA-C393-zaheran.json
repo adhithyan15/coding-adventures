@@ -1,0 +1,11 @@
+{
+  "id": "FA-C393-zaheran",
+  "pathSegment": "FA-PATH-393-ETMINAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-393-ETMINAN",
+      "order": 4
+    }
+  ]
+}

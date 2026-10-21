@@ -1,0 +1,11 @@
+{
+  "id": "FA-C482-azorde",
+  "pathSegment": "FA-PATH-482-HURT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-482-HURT",
+      "order": 2
+    }
+  ]
+}

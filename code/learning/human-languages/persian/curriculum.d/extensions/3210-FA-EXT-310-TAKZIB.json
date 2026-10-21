@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-310-TAKZIB",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that a report was denied, confirmed, followed up and passed on to someone.",
+  "prerequisites": []
+}

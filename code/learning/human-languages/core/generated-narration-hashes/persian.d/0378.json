@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:8dfacf5e03066bcb",
+  "lessonIds": [
+    "FA-C378-dastmozd",
+    "FA-C378-daramad",
+    "FA-C378-ezafe-kari",
+    "FA-C378-padash",
+    "FA-C378-mazaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch378.txt",
+  "json": "persian/narration/ch378.json",
+  "textHash": "fnv1a64:e600630b67948614",
+  "jsonHash": "fnv1a64:25506b22f3fb1bc6",
+  "findings": []
+}

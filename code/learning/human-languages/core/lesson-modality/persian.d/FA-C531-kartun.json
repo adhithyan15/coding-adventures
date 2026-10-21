@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C531-kartun",
+    "language": "persian",
+    "chapter": 531,
+    "sequence": 27220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e6484dac494ed83"
+  },
+  "findings": []
+}

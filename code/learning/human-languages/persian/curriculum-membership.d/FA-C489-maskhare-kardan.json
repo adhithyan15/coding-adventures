@@ -1,0 +1,11 @@
+{
+  "id": "FA-C489-maskhare-kardan",
+  "pathSegment": "FA-PATH-489-MANNERS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-489-MANNERS",
+      "order": 4
+    }
+  ]
+}

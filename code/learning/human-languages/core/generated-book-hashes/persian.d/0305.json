@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:f08bb6ca380eecc4",
+  "lessonIds": [
+    "FA-C305-sepide-dam",
+    "FA-C305-bamdad",
+    "FA-C305-farda-ye-an-ruz",
+    "FA-C305-hengam",
+    "FA-C305-shabane-ruz"
+  ],
+  "tex": "persian/book/chapters/ch305-dawn-morning-and-the-day-after.tex"
+}

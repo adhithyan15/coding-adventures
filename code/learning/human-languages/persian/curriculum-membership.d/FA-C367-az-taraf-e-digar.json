@@ -1,0 +1,11 @@
+{
+  "id": "FA-C367-az-taraf-e-digar",
+  "pathSegment": "FA-PATH-367-AMMA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-367-AMMA",
+      "order": 0
+    }
+  ]
+}

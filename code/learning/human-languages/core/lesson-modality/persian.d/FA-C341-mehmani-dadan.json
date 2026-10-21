@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C341-mehmani-dadan",
+    "language": "persian",
+    "chapter": 341,
+    "sequence": 17400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5198eab9c7673fd"
+  },
+  "findings": []
+}

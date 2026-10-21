@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:e199c36f7936772d",
+  "lessonIds": [
+    "FA-C408-kolahbardari",
+    "FA-C408-serqat",
+    "FA-C408-reshve",
+    "FA-C408-fesad",
+    "FA-C408-etteham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch408.txt",
+  "json": "persian/narration/ch408.json",
+  "textHash": "fnv1a64:10297cd03d2b9573",
+  "jsonHash": "fnv1a64:66aaa51baa955732",
+  "findings": []
+}

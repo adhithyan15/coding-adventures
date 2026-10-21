@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-424-SORAT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-424-SORAT"
+  ],
+  "after": []
+}

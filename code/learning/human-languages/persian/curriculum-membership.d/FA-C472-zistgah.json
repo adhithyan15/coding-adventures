@@ -1,0 +1,11 @@
+{
+  "id": "FA-C472-zistgah",
+  "pathSegment": "FA-PATH-472-TABIAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-472-TABIAT",
+      "order": 4
+    }
+  ]
+}

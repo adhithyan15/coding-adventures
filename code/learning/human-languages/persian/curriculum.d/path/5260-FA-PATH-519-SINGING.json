@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-519-SINGING",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-519-SINGING"
+  ],
+  "after": []
+}

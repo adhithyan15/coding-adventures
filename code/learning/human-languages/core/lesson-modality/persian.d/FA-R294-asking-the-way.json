@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R294-asking-the-way",
+    "language": "persian",
+    "chapter": 294,
+    "sequence": 15084,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2d28c14928c81ed"
+  },
+  "findings": []
+}

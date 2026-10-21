@@ -1,0 +1,11 @@
+{
+  "id": "FA-C425-shane-khaki",
+  "pathSegment": "FA-PATH-425-OTOBAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-425-OTOBAN",
+      "order": 2
+    }
+  ]
+}

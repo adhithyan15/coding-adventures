@@ -1,0 +1,11 @@
+{
+  "id": "FA-C506-raft-o-amad-kardan",
+  "pathSegment": "FA-PATH-506-TIES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-506-TIES",
+      "order": 3
+    }
+  ]
+}

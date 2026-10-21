@@ -1,0 +1,11 @@
+{
+  "id": "FA-C406-mohakeme",
+  "pathSegment": "FA-PATH-406-QAZI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-406-QAZI",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C469-sadd",
+    "language": "persian",
+    "chapter": 469,
+    "sequence": 24040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d8d61eec029d417"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C437-pansiyon",
+  "pathSegment": "FA-PATH-437-MOSAFERKHANE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-437-MOSAFERKHANE",
+      "order": 2
+    }
+  ]
+}

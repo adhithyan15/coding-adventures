@@ -1,0 +1,896 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 539,
+  "title": "Garden, Pets and Get-togethers",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:76acd7114a99d537",
+  "lessons": [
+    {
+      "id": "FA-C539-abyari-kardan",
+      "sequence": 27620,
+      "title": "آبیاری کردن (âbyâri kardan) — to water (plants)",
+      "headword": "آبیاری کردن",
+      "romanization": "âbyâri kardan",
+      "gloss": "to water (plants)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4f177c9e8521bf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to heat, then the Persian for to get cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آبیاری کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آبیاری کردن (âbyâri kardan) — \"to water (plants)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پدرم عصرها گلها را آبیاری میکند. pedaram 'asrhâ golhâ râ âbyâri mikonad. My father waters the flowers in the afternoons."
+            },
+            {
+              "kind": "speech",
+              "text": "âbyâri 'irrigation' + kardan. In speech also âb dâdan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "âbyâri is built on native âb, 'water', which EtymDB traces to Middle Persian (EtymDB); the rest is usually explained as yâri, 'help': helping with water. kardan is inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âbyâri kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âbyâri kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âbyâri kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âbyâri kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with âbyâri kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *âbyâri kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to heat, then the Persian for to get cold, then say âbyâri kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to heat, then the Persian for to get cold, then say *âbyâri kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آبیاری کردن (âbyâri kardan) mean? (\"To water (plants)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C539-chaman-zadan",
+      "sequence": 27630,
+      "title": "چمن زدن (chaman zadan) — to mow the lawn",
+      "headword": "چمن زدن",
+      "romanization": "chaman zadan",
+      "gloss": "to mow the lawn",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cbcfc7921cd3166",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to get cold, then the Persian for to water."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چمن زدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چمن زدن (chaman zadan) — \"to mow the lawn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "همسایه ما هر هفته چمن میزند. hamsâye-ye mâ har hafte chaman mizanad. Our neighbour mows the lawn every week."
+            },
+            {
+              "kind": "speech",
+              "text": "chaman 'lawn, grass' + zadan 'to strike'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chaman is the Persian word for a lawn; EtymDB lists it beside chamidan, 'to stroll' (EtymDB), but its origin is not settled. zadan, 'to strike', is inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaman zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaman zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaman zadan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chaman zadan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with chaman zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *chaman zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to get cold, then the Persian for to water, then say chaman zadan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to get cold, then the Persian for to water, then say *chaman zadan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چمن زدن (chaman zadan) mean? (\"To mow the lawn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C539-heyvan-e-khanegi",
+      "sequence": 27640,
+      "title": "حیوان خانگی (heyvân-e khânegi) — a pet",
+      "headword": "حیوان خانگی",
+      "romanization": "heyvân-e khânegi",
+      "gloss": "a pet",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8076f2f24151f87c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to water, then the Persian for to mow the lawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حیوان خانگی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حیوان خانگی (heyvân-e khânegi) — \"a pet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ما یک گربه به عنوان حیوان خانگی داریم. mâ yek gorbe be 'onvân-e heyvân-e khânegi dârim. We have a cat as a pet."
+            },
+            {
+              "kind": "speech",
+              "text": "heyvân 'animal' + khânegi 'of the home'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "heyvân-e khânegi is built in Persian on heyvân, from Arabic ḥayawān, 'animal' (EtymDB), and khânegi, 'of the home', from native khâne, 'house'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heyvân-e khânegi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heyvân-e khânegi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heyvân-e khânegi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heyvân-e khânegi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with heyvân-e khânegi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *heyvân-e khânegi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to water, then the Persian for to mow the lawn, then say heyvân-e khânegi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to water, then the Persian for to mow the lawn, then say *heyvân-e khânegi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حیوان خانگی (heyvân-e khânegi) mean? (\"A pet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C539-ghaza-dadan",
+      "sequence": 27650,
+      "title": "غذا دادن (ghazâ dâdan) — to feed",
+      "headword": "غذا دادن",
+      "romanization": "ghazâ dâdan",
+      "gloss": "to feed",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97e440e92a3159c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to mow the lawn, then the Persian for a pet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غذا دادن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غذا دادن (ghazâ dâdan) — \"to feed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دخترم هر صبح به ماهیها غذا میدهد. dokhtaram har sobh be mâhihâ ghazâ midahad. My daughter feeds the fish every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "be kasi ghazâ dâdan; ghazâ 'food' + dâdan 'to give'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ghazâ comes from Arabic ġiḏāʾ, 'nourishment, food' (EtymDB). dâdan, 'to give', is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghazâ dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghazâ dâdan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghazâ dâdan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghazâ dâdan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ghazâ dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ghazâ dâdan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to mow the lawn, then the Persian for a pet, then say ghazâ dâdan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to mow the lawn, then the Persian for a pet, then say *ghazâ dâdan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غذا دادن (ghazâ dâdan) mean? (\"To feed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C539-dowrehami",
+      "sequence": 27660,
+      "title": "دورهمی (dowrehami) — a get-together (of family or friends)",
+      "headword": "دورهمی",
+      "romanization": "dowrehami",
+      "gloss": "a get-together (of family or friends)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7b94090b91e4a96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a pet, then the Persian for to feed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دورهمی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دورهمی (dowrehami) — \"a get-together (of family or friends)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آخر هفته ها در خانه مادربزرگ دورهمی داریم. âkhar-e haftehâ dar khâne-ye mâdarbozorg dowrehami dârim. At weekends we have a get-together at grandmother's house."
+            },
+            {
+              "kind": "speech",
+              "text": "Colloquial: dowr-e ham 'around each other' + -i."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dowrehami is built in Persian on dowr, 'circle, round', a loan usually traced to Arabic dawr, and native ham, 'together', with -i: sitting round together. EtymDB has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dowrehami",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dowrehami*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dowrehami, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dowrehami*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dowrehami",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dowrehami*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a pet, then the Persian for to feed, then say dowrehami again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a pet, then the Persian for to feed, then say *dowrehami* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دورهمی (dowrehami) mean? (\"A get-together (of family or friends)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R539-review-536-539",
+      "sequence": 27670,
+      "title": "Free Time, the Arts and Home",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 536-539",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a80146a0655bfc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for to tidy up and to dry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to tidy up, to dry, to make a mess, untidy, rubbish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to tidy up, to dry, to make a mess, untidy, rubbish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to decorate with paint, wallpaper, to move, to break down, a landlord",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to decorate with paint, wallpaper, to move, to break down, a landlord]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tenant, a microwave, household appliances, to heat, to get cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tenant, a microwave, household appliances, to heat, to get cold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to water, to mow the lawn, a pet, to feed, a get-together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to water, to mow the lawn, a pet, to feed, a get-together]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To tidy up? (جمع کردن.) To dry? (خشک کردن.) To make a mess? (شلوغ کردن.) Untidy? (نامرتب.) Rubbish? (آشغال.) To decorate with paint? (رنگ کردن.) Wallpaper? (کاغذ دیواری.) To move? (جابجا کردن.) To break down? (خراب شدن.) A landlord? (صاحبخانه.) A tenant? (مستاجر.) A microwave? (مایکروویو.) Household appliances? (لوازم خانگی.) To heat? (گرم کردن.) To get cold? (سرد شدن.) To water? (آبیاری کردن (âbyâri kardan).) To mow the lawn? (چمن زدن (chaman zadan).) A pet? (حیوان خانگی (heyvân-e khânegi).) To feed? (غذا دادن (ghazâ dâdan).) A get-together? (دورهمی (dowrehami).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R539-review-final-539",
+      "sequence": 27680,
+      "title": "Garden, Pets and Get-togethers — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 539",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:006a73cc9b2d1616",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for to water and to mow the lawn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to water, to mow the lawn, a pet, to feed, a get-together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to water, to mow the lawn, a pet, to feed, a get-together]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To water? (آبیاری کردن (âbyâri kardan).) To mow the lawn? (چمن زدن (chaman zadan).) A pet? (حیوان خانگی (heyvân-e khânegi).) To feed? (غذا دادن (ghazâ dâdan).) A get-together? (دورهمی (dowrehami).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

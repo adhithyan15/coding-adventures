@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Camping",
+  "label": "ch:fa-camping",
+  "canDo": "I can talk about camping: a tent, a sleeping bag, firewood, going for an outing and stopping for the night.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C470-otraq-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can talk about camping: a tent, a sleeping bag, firewood, going for an outing and stopping for the night.",
+    "assesses": [
+      "FA-LEX-C470-CHADOR-03",
+      "FA-LEX-C470-CHADOR-04",
+      "FA-LEX-C470-CHADOR-05"
+    ]
+  }
+}

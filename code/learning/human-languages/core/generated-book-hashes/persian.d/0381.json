@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:0e5f81b490f2a9a0",
+  "lessonIds": [
+    "FA-C381-sarparast",
+    "FA-C381-moaven",
+    "FA-C381-karshenas",
+    "FA-C381-motakhasses",
+    "FA-C381-vazife"
+  ],
+  "tex": "persian/book/chapters/ch381-roles-at-work.tex"
+}

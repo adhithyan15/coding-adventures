@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C496-rag",
+    "language": "persian",
+    "chapter": 496,
+    "sequence": 25440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b423c51c085607c"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:c6dcc20f4f8c50ce",
+  "lessonIds": [
+    "FA-C325-zamin-khordan",
+    "FA-C325-pich-khordan",
+    "FA-C325-asib-didan",
+    "FA-C325-sadame-didan",
+    "FA-C325-shekastegi"
+  ],
+  "tex": "persian/book/chapters/ch325-falls-and-injuries.tex"
+}

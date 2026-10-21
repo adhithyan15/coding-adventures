@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-434-PELLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get around by metro and bus: the escalator, the route, the fare, getting a seat and missing the bus.",
+  "prerequisites": []
+}

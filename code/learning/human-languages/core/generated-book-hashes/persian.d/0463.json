@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:d3af54ba676aae74",
+  "lessonIds": [
+    "FA-C463-sowghati",
+    "FA-C463-sanaye-e-dasti",
+    "FA-C463-gelim",
+    "FA-C463-javaher",
+    "FA-C463-atr"
+  ],
+  "tex": "persian/book/chapters/ch463-souvenirs.tex"
+}

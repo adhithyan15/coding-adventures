@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:668210dbf6be5619",
+  "lessonIds": [
+    "FA-C352-bastan",
+    "FA-C352-bastani",
+    "FA-C352-tamaddon",
+    "FA-C352-emperaturi",
+    "FA-C352-selsele"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch352.txt",
+  "json": "persian/narration/ch352.json",
+  "textHash": "fnv1a64:abf918f232a81c28",
+  "jsonHash": "fnv1a64:7455176e055f154c",
+  "findings": []
+}

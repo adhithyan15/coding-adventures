@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-425-OTOBAN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-425-OTOBAN"
+  ],
+  "after": []
+}

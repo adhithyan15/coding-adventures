@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:cf8b0286b324baa0",
+  "lessonIds": [
+    "FA-C345-qesse",
+    "FA-C345-ruzi-ruzegari",
+    "FA-C345-yeki-bud-yeki-nabud",
+    "FA-C345-qesse-gu",
+    "FA-C345-ravi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch345.txt",
+  "json": "persian/narration/ch345.json",
+  "textHash": "fnv1a64:61bf7c4d9018640e",
+  "jsonHash": "fnv1a64:a96a02ce2d8e0811",
+  "findings": []
+}

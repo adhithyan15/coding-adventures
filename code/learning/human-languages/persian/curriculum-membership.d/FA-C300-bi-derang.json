@@ -1,0 +1,11 @@
+{
+  "id": "FA-C300-bi-derang",
+  "pathSegment": "FA-PATH-300-NAGAHAN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-300-NAGAHAN",
+      "order": 2
+    }
+  ]
+}

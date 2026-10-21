@@ -1,0 +1,11 @@
+{
+  "id": "FA-C306-dar-hamin-hal",
+  "pathSegment": "FA-PATH-306-TADRIJ",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-306-TADRIJ",
+      "order": 1
+    }
+  ]
+}

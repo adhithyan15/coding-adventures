@@ -1,0 +1,11 @@
+{
+  "id": "FA-C509-varaq-bazi-kardan",
+  "pathSegment": "FA-PATH-509-GAMES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-509-GAMES",
+      "order": 4
+    }
+  ]
+}

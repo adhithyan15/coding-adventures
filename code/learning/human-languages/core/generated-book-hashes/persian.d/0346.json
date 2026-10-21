@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:eb0340c79f52503d",
+  "lessonIds": [
+    "FA-C346-majara",
+    "FA-C346-revayat",
+    "FA-C346-revayat-kardan",
+    "FA-C346-naql-kardan",
+    "FA-C346-yadavari-kardan"
+  ],
+  "tex": "persian/book/chapters/ch346-telling-the-story.tex"
+}

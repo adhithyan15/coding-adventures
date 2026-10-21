@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R495-review-488-495",
+    "language": "persian",
+    "chapter": 495,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8c6e138c608e983"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C323-kolahbardar",
+    "language": "persian",
+    "chapter": 323,
+    "sequence": 16470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdf9c996e6a19a3d"
+  },
+  "findings": []
+}

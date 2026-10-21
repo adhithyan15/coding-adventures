@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-336-TALAQ",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-336-TALAQ"
+  ],
+  "after": []
+}

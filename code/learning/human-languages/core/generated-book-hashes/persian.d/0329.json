@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:8946d85a10de25eb",
+  "lessonIds": [
+    "FA-C329-enfejar",
+    "FA-C329-monfajer-shodan",
+    "FA-C329-tarakidan",
+    "FA-C329-nasht-kardan",
+    "FA-C329-khakestar"
+  ],
+  "tex": "persian/book/chapters/ch329-explosions-and-leaks.tex"
+}

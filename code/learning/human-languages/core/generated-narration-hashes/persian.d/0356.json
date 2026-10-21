@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:db7707ca8c851b15",
+  "lessonIds": [
+    "FA-C356-riz-kardan",
+    "FA-C356-charkh-kardan",
+    "FA-C356-leh-kardan",
+    "FA-C356-taft-dadan",
+    "FA-C356-piyaz-dagh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch356.txt",
+  "json": "persian/narration/ch356.json",
+  "textHash": "fnv1a64:92b18b7a2702e0c5",
+  "jsonHash": "fnv1a64:8ac79c5b25e258b1",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "At the Doctor",
+  "label": "ch:fa-at-the-doctor",
+  "canDo": "I can describe a visit to the doctor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C493-chekap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can describe a visit to the doctor.",
+    "assesses": [
+      "FA-LEX-C493-DOCTOR-03",
+      "FA-LEX-C493-DOCTOR-04",
+      "FA-LEX-C493-DOCTOR-05"
+    ]
+  }
+}

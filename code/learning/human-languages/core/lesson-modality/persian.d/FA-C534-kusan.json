@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C534-kusan",
+    "language": "persian",
+    "chapter": 534,
+    "sequence": 27390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1bde6dc3dfb9215"
+  },
+  "findings": []
+}

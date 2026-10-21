@@ -1,0 +1,11 @@
+{
+  "id": "FA-C513-rekord-zadan",
+  "pathSegment": "FA-PATH-513-SCORES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-513-SCORES",
+      "order": 3
+    }
+  ]
+}

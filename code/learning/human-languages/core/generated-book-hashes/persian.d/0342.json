@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:474a36a60f556e31",
+  "lessonIds": [
+    "FA-C342-tazyin-kardan",
+    "FA-C342-cheraghani",
+    "FA-C342-atash-bazi",
+    "FA-C342-rezhe",
+    "FA-C342-shadi"
+  ],
+  "tex": "persian/book/chapters/ch342-lights-and-fireworks.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:76f594cc7f8ec715",
+  "lessonIds": [
+    "FA-C331-viran-shodan",
+    "FA-C331-foru-rikhtan",
+    "FA-C331-avar",
+    "FA-C331-takhliye-kardan",
+    "FA-C331-panah-bordan",
+    "FA-R331-review-324-331"
+  ],
+  "tex": "persian/book/chapters/ch331-disaster.tex"
+}

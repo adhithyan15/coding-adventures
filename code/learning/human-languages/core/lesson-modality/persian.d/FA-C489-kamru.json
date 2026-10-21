@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C489-kamru",
+    "language": "persian",
+    "chapter": 489,
+    "sequence": 25090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8603c225dff8d018"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:7019b796b8a75ed3",
+  "lessonIds": [
+    "FA-C450-markaz",
+    "FA-C450-hume",
+    "FA-C450-borj",
+    "FA-C450-mojassame",
+    "FA-C450-favvare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch450.txt",
+  "json": "persian/narration/ch450.json",
+  "textHash": "fnv1a64:cf9cfefc730e5a55",
+  "jsonHash": "fnv1a64:fba8d617cea662de",
+  "findings": []
+}

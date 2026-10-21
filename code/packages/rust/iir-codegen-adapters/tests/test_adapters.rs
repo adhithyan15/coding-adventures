@@ -33,6 +33,7 @@ fn void_module() -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -59,6 +60,7 @@ fn add_i32_module() -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -85,6 +87,7 @@ fn mul_i64_module() -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -121,6 +124,7 @@ fn two_function_module() -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -133,6 +137,7 @@ fn empty_module() -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -151,6 +156,7 @@ fn unsupported_op_module() -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 

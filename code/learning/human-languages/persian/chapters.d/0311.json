@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "Sources and details",
+  "label": "ch:fa-sources-and-details",
+  "canDo": "I can say where news came from: a source, according to someone, quoting someone, the details and a news agency.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C311-khabargozari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can say where news came from: a source, according to someone, quoting someone, the details and a news agency.",
+    "assesses": [
+      "FA-LEX-C311-MANBA-03",
+      "FA-LEX-C311-MANBA-04",
+      "FA-LEX-C311-MANBA-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:ac98a97f5213dd7d",
+  "lessonIds": [
+    "FA-C530-dastan-e-kutah",
+    "FA-C530-shakhsiyat-e-asli",
+    "FA-C530-tarsnak",
+    "FA-C530-ghamangiz",
+    "FA-C530-khandedar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch530.txt",
+  "json": "persian/narration/ch530.json",
+  "textHash": "fnv1a64:d0b2a4e8d5ade142",
+  "jsonHash": "fnv1a64:282b0325e4e4daaa",
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:01ea170f97f53d70",
+  "lessonIds": [
+    "FA-C467-bagh",
+    "FA-C467-baghche",
+    "FA-C467-baghban",
+    "FA-C467-chaman",
+    "FA-C467-haras-kardan",
+    "FA-R467-review-460-467"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch467.txt",
+  "json": "persian/narration/ch467.json",
+  "textHash": "fnv1a64:fd797f57ed6c8da1",
+  "jsonHash": "fnv1a64:e47f030cc213fb77",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Singing",
+  "label": "ch:fa-singing",
+  "canDo": "I can talk about singing and songs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R519-review-512-519",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about singing and songs.",
+    "assesses": [
+      "FA-LEX-C519-SINGING-03",
+      "FA-LEX-C519-SINGING-04",
+      "FA-LEX-C519-SINGING-05"
+    ]
+  }
+}

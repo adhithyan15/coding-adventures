@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:3025596cd473f497",
+  "lessonIds": [
+    "FA-C502-gahvare",
+    "FA-C502-lalayi",
+    "FA-C502-pushak",
+    "FA-C502-kaleske",
+    "FA-C502-shir-dadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch502.txt",
+  "json": "persian/narration/ch502.json",
+  "textHash": "fnv1a64:a22f88282e036582",
+  "jsonHash": "fnv1a64:37cb6869eff22ef7",
+  "findings": []
+}

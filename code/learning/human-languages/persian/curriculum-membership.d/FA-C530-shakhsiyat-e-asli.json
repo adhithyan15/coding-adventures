@@ -1,0 +1,11 @@
+{
+  "id": "FA-C530-shakhsiyat-e-asli",
+  "pathSegment": "FA-PATH-530-STORIES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-530-STORIES",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C377-rah-e-hall",
+    "language": "persian",
+    "chapter": 377,
+    "sequence": 19280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:252a016908b0ea15"
+  },
+  "findings": []
+}

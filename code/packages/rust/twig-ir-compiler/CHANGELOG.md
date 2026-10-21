@@ -1,5 +1,11 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
 ## 0.46.0 - Unreleased - LANG84 decision 6: the compiler walks the `GrammarASTNode` CST
 
 LANG84's rule is that the IIR compiler walks the parse tree: no hand-written

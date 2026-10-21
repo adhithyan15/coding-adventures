@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-387-MOHAJERAT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-387-MOHAJERAT"
+  ],
+  "after": []
+}

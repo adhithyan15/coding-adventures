@@ -1,0 +1,11 @@
+{
+  "id": "FA-C365-towjih-kardan",
+  "pathSegment": "FA-PATH-365-QEZAVAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-365-QEZAVAT",
+      "order": 4
+    }
+  ]
+}

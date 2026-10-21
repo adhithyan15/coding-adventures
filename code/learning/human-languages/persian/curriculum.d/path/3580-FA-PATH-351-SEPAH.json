@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-351-SEPAH",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-351-SEPAH"
+  ],
+  "after": []
+}

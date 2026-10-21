@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 25,
-  "sourceHash": "fnv1a64:cbe4bd6d629ba5dd",
+  "sourceHash": "fnv1a64:cc9ec73cd1cd3d55",
   "lessonIds": [
     "MR-A1F04-first-three-select",
     "MR-A1F05-last-three-select",
@@ -12,13 +12,15 @@
     "MR-A1F10-first-three-delayed",
     "MR-A1F11-last-three-delayed",
     "MR-A1F12-six-field-supported",
-    "MR-A1F13-six-field-independent"
+    "MR-A1F13-six-field-independent",
+    "MR-A1F14-partial-timer",
+    "MR-A1F15-timed-form"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch25.txt",
   "json": "marathi/narration/ch25.json",
-  "textHash": "fnv1a64:d4273385fa7b80ed",
-  "jsonHash": "fnv1a64:f5a8b6f1d9492ee9",
+  "textHash": "fnv1a64:34c3a7a11d9f3432",
+  "jsonHash": "fnv1a64:ebd0d54ad55e0f7e",
   "findings": []
 }

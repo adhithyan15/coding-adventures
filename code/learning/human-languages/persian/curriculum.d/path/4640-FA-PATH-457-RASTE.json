@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-457-RASTE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-457-RASTE"
+  ],
+  "after": []
+}

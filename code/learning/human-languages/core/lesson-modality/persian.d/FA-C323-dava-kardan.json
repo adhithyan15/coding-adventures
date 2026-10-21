@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C323-dava-kardan",
+    "language": "persian",
+    "chapter": 323,
+    "sequence": 16500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82c565ffcdaddb18"
+  },
+  "findings": []
+}

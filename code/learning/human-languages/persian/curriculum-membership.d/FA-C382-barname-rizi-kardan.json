@@ -1,0 +1,11 @@
+{
+  "id": "FA-C382-barname-rizi-kardan",
+  "pathSegment": "FA-PATH-382-PROZHE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-382-PROZHE",
+      "order": 2
+    }
+  ]
+}

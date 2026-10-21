@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Serious crime",
+  "label": "ch:fa-serious-crime",
+  "canDo": "I can talk about serious crimes: a crime, a murder, a murderer, an attack and a weapon.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C318-aslahe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can talk about serious crimes: a crime, a murder, a murderer, an attack and a weapon.",
+    "assesses": [
+      "FA-LEX-C318-JENAYAT-03",
+      "FA-LEX-C318-JENAYAT-04",
+      "FA-LEX-C318-JENAYAT-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C420-ranandegi-kardan",
+  "pathSegment": "FA-PATH-420-FARMAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-420-FARMAN",
+      "order": 1
+    }
+  ]
+}

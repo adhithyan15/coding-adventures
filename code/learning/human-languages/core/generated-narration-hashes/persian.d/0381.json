@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:39686bb81ed8e3f1",
+  "lessonIds": [
+    "FA-C381-sarparast",
+    "FA-C381-moaven",
+    "FA-C381-karshenas",
+    "FA-C381-motakhasses",
+    "FA-C381-vazife"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch381.txt",
+  "json": "persian/narration/ch381.json",
+  "textHash": "fnv1a64:6f37136e15ada2d6",
+  "jsonHash": "fnv1a64:3f0d4497b13a31fd",
+  "findings": []
+}

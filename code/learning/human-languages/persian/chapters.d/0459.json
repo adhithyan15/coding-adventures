@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Goods",
+  "label": "ch:fa-goods",
+  "canDo": "I can talk about goods: what something is made of, products, the genuine article, fakes and the guarantee.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R459-review-452-459",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can talk about goods: what something is made of, products, the genuine article, fakes and the guarantee.",
+    "assesses": [
+      "FA-LEX-C459-JENS-03",
+      "FA-LEX-C459-JENS-04",
+      "FA-LEX-C459-JENS-05"
+    ]
+  }
+}

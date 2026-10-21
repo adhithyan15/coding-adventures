@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-314-RUYDAD",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-314-RUYDAD"
+  ],
+  "after": []
+}

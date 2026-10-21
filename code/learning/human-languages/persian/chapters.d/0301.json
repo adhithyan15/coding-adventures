@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "Things happen",
+  "label": "ch:fa-things-happen",
+  "canDo": "I can say that something happened, occurred, came about, took place and lasted.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C301-davam-avardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say that something happened, occurred, came about, took place and lasted.",
+    "assesses": [
+      "FA-LEX-C301-ETTEFAQ-03",
+      "FA-LEX-C301-ETTEFAQ-04",
+      "FA-LEX-C301-ETTEFAQ-05"
+    ]
+  }
+}

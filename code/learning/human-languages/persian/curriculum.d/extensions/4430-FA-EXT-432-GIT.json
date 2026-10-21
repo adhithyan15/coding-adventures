@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-432-GIT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get through the airport: the gate, the passport, excess baggage, the security search and the flight attendant.",
+  "prerequisites": []
+}
