@@ -21,6 +21,25 @@ The lexer operates in **indentation mode**, meaning it tracks leading whitespace
 
 The default version is **3.12**.
 
+## LANG84 release tables
+
+Besides the minor lines above, the crate embeds one token table per tagged
+CPython release that has a LANG84 pair (`code/grammars/python/python<release>.tokens`):
+
+```rust
+use coding_adventures_python_lexer::releases::{token_grammar, SUPPORTED_RELEASES};
+
+assert!(SUPPORTED_RELEASES.contains(&"3.13.16"));
+let grammar = token_grammar("3.13.16").expect("paired release");
+assert!(token_grammar("3.12").is_none()); // a minor line is not a release
+```
+
+The pairs are partial: they lex only the `py-int-print` neighbourhood (see
+`code/grammars/python/README.md`). The release-selected lexer and parser with
+budgets and typed errors are `tokenize_python_at` and `parse_python_at` in
+`coding-adventures-python-parser`. Release IDs and minor-line versions never
+select each other's tables (LANG84 C4).
+
 ## How it fits in the stack
 
 ```

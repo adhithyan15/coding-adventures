@@ -1,0 +1,5 @@
+print(- -5)
+print(-(3 - 10))
+print(2 * -3 * 4)
+print(+7, )
+print(-+3)
