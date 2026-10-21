@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+### Fixed - switch cases keep the declarations the whole switch shares (#17879)
+
+A switch body is one scope: a `var` in any case is hoisted to the function,
+and a `function`/`class` in any case is visible to every case. DCE dropped
+them in two places:
+
+- **Case-tail truncation.** The dead tail after a case's `break`, `return`
+  or `throw` was dropped without the hoisting guard. It is now dropped only
+  when `tail_is_safe_to_truncate` allows it, as in the block path.
+- **Constant-switch collapse.** Collapsing to the matched case discarded
+  every other case. It now declines unless each discarded case is safe to
+  drop. The no-match collapse to `;` gets the same check.
+
+```js
+var x='glob'; function f(){switch(2){case 1: var x=1; break; case 2: return typeof x}}
+// before: function f(){return typeof x}  -> "string"; the source returns "undefined"
+```
+
+Seven new unit tests cover this.
+
 ### Fixed - drop the dead tail after a top-level `throw` (CCR-086, #15923)
 
 `dce_program` now truncates a program's tail after a top-level terminator,

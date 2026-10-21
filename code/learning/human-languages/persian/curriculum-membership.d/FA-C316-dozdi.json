@@ -1,0 +1,11 @@
+{
+  "id": "FA-C316-dozdi",
+  "pathSegment": "FA-PATH-316-DOZD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-316-DOZD",
+      "order": 1
+    }
+  ]
+}

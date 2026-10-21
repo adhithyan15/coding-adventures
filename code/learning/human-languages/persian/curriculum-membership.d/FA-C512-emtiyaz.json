@@ -1,0 +1,11 @@
+{
+  "id": "FA-C512-emtiyaz",
+  "pathSegment": "FA-PATH-512-FANS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-512-FANS",
+      "order": 4
+    }
+  ]
+}

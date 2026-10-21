@@ -1,0 +1,11 @@
+{
+  "id": "FA-R295-at-the-station",
+  "pathSegment": "FA-PATH-295-TICKET",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-295-TICKET",
+      "order": 4
+    }
+  ]
+}

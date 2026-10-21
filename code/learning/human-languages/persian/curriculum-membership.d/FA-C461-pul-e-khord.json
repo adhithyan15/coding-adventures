@@ -1,0 +1,11 @@
+{
+  "id": "FA-C461-pul-e-khord",
+  "pathSegment": "FA-PATH-461-KARTKHAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-461-KARTKHAN",
+      "order": 3
+    }
+  ]
+}

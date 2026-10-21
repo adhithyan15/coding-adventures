@@ -1,0 +1,11 @@
+{
+  "id": "FA-C392-qati",
+  "pathSegment": "FA-PATH-392-EHTEMAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-392-EHTEMAL",
+      "order": 4
+    }
+  ]
+}

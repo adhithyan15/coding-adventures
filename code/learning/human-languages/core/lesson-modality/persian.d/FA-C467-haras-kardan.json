@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C467-haras-kardan",
+    "language": "persian",
+    "chapter": 467,
+    "sequence": 23940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5d509afdb8b90dc"
+  },
+  "findings": []
+}

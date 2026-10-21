@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C423-bak",
+    "language": "persian",
+    "chapter": 423,
+    "sequence": 21670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a51a8879bc1e9d86"
+  },
+  "findings": []
+}

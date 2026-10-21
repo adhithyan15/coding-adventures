@@ -4,6 +4,16 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - switch cases keep shared `var`/`function`/`class` declarations (#17879)
+
+`closure-pass-dce` truncated a case's dead tail, and collapsed a constant
+switch to its matched case, without regard for the declarations the whole
+switch body shares. A dropped `var x` left `x` reading the global (`"string"`
+where the source prints `"undefined"`), and a dropped `function g` became a
+`ReferenceError`. `tests/regression_switch_declarations.rs` compiles five
+shapes at SIMPLE and ADVANCED and, when `node` is installed, checks that each
+output prints what the source prints.
+
 ### Fixed - long expression chains fail cleanly instead of aborting (#16009, CLOC42)
 
 `console.log(x + x + … + x)` with about 1,000 or more terms used to overflow

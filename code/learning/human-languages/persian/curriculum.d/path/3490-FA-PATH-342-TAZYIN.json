@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-342-TAZYIN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-342-TAZYIN"
+  ],
+  "after": []
+}

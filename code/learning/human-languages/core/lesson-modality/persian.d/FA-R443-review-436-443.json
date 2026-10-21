@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R443-review-436-443",
+    "language": "persian",
+    "chapter": 443,
+    "sequence": 22720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0a1f43d0ae57337"
+  },
+  "findings": []
+}

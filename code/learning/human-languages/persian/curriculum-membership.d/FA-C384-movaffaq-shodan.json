@@ -1,0 +1,11 @@
+{
+  "id": "FA-C384-movaffaq-shodan",
+  "pathSegment": "FA-PATH-384-ETESAB",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-384-ETESAB",
+      "order": 3
+    }
+  ]
+}

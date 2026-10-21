@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C374-pishraft-kardan",
+    "language": "persian",
+    "chapter": 374,
+    "sequence": 19140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24ed8510b051a000"
+  },
+  "findings": []
+}

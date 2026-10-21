@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C368-tahlil-kardan",
+    "language": "persian",
+    "chapter": 368,
+    "sequence": 18820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2ea3a8c2168741c"
+  },
+  "findings": []
+}

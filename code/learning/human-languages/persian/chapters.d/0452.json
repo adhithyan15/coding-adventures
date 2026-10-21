@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Offices and queues",
+  "label": "ch:fa-offices-and-queues",
+  "canDo": "I can deal with offices: my turn, getting an appointment, being kept waiting, the payment slip and tax.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C452-maliyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can deal with offices: my turn, getting an appointment, being kept waiting, the payment slip and tax.",
+    "assesses": [
+      "FA-LEX-C452-NOBAT-03",
+      "FA-LEX-C452-NOBAT-04",
+      "FA-LEX-C452-NOBAT-05"
+    ]
+  }
+}

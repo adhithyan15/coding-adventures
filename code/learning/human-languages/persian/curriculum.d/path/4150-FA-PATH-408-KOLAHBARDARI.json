@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-408-KOLAHBARDARI",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-408-KOLAHBARDARI"
+  ],
+  "after": []
+}

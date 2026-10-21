@@ -1,0 +1,24 @@
+{
+  "chapter": 290,
+  "title": "The Past, Seen Two Ways",
+  "label": "ch:fa-the-past-seen-two-ways",
+  "canDo": "I can say what I do now, what I did, and what was going on, setting a scene in the mi- past and dropping events into it with the plain past.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R290-the-past-two-ways",
+    "kind": "production",
+    "summary": "Complete FA-R290-the-past-two-ways: a scene in the mi- past and an event that cuts into it, joined with dar hali ke.",
+    "assesses": [
+      "FA-GRAMMAR-PRESENT-MI-01",
+      "FA-GRAMMAR-NEGATIVE-NE-01",
+      "FA-GRAMMAR-SIMPLE-PAST-01",
+      "FA-GRAMMAR-RA-OBJECT-01",
+      "FA-LEX-C290-GOZASHTE-01",
+      "FA-SCRIPT-C290-ZAL-01",
+      "FA-GRAMMAR-PAST-CONTINUOUS-01",
+      "FA-GRAMMAR-SCENE-EVENT-01"
+    ]
+  }
+}

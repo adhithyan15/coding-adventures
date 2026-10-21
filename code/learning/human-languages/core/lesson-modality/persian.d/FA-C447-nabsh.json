@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C447-nabsh",
+    "language": "persian",
+    "chapter": 447,
+    "sequence": 22880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6b080e6ee43fd3c"
+  },
+  "findings": []
+}

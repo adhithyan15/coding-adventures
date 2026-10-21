@@ -167,6 +167,7 @@ pub fn merge_modules<'a>(
         language,
         exports: Vec::new(), // Merged module is self-contained.
         imports: Vec::new(),
+        release: None,
     }
 }
 

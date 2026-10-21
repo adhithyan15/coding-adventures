@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-294-WAY",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-294-WAY"
+  ],
+  "after": []
+}

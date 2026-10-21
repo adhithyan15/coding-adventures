@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Looking closely",
+  "label": "ch:fa-looking-closely",
+  "canDo": "I can analyse something, give my impression of it, draw a conclusion and mention a point.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C368-eshare-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can analyse something, give my impression of it, draw a conclusion and mention a point.",
+    "assesses": [
+      "FA-LEX-C368-TAHLIL-03",
+      "FA-LEX-C368-TAHLIL-04",
+      "FA-LEX-C368-TAHLIL-05"
+    ]
+  }
+}

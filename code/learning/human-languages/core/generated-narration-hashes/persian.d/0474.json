@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:3b325fa6fa72662b",
+  "lessonIds": [
+    "FA-C474-baridan",
+    "FA-C474-ragbar",
+    "FA-C474-namnam",
+    "FA-C474-band-amadan",
+    "FA-C474-seylab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch474.txt",
+  "json": "persian/narration/ch474.json",
+  "textHash": "fnv1a64:806ebf2025e549a9",
+  "jsonHash": "fnv1a64:3627d84a448693a2",
+  "findings": []
+}

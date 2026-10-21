@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:f31224d58f98fede",
+  "lessonIds": [
+    "FA-C417-shabake",
+    "FA-C417-shabake-ye-ejtemai",
+    "FA-C417-ettesal",
+    "FA-C417-dastresi",
+    "FA-C417-majazi"
+  ],
+  "tex": "persian/book/chapters/ch417-online.tex"
+}

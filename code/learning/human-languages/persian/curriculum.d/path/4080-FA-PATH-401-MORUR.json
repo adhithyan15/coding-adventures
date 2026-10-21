@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-401-MORUR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-401-MORUR"
+  ],
+  "after": []
+}

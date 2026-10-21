@@ -1,0 +1,11 @@
+{
+  "id": "FA-C329-monfajer-shodan",
+  "pathSegment": "FA-PATH-329-ENFEJAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-329-ENFEJAR",
+      "order": 1
+    }
+  ]
+}

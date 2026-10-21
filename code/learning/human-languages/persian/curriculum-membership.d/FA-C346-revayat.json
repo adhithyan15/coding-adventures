@@ -1,0 +1,11 @@
+{
+  "id": "FA-C346-revayat",
+  "pathSegment": "FA-PATH-346-MAJARA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-346-MAJARA",
+      "order": 1
+    }
+  ]
+}

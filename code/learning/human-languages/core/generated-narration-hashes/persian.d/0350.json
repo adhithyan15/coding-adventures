@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:6290ec3c4aa3a9f9",
+  "lessonIds": [
+    "FA-C350-padeshah",
+    "FA-C350-malake",
+    "FA-C350-kakh",
+    "FA-C350-qale",
+    "FA-C350-taj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch350.txt",
+  "json": "persian/narration/ch350.json",
+  "textHash": "fnv1a64:0f974bdd74ac5762",
+  "jsonHash": "fnv1a64:f7b7306101d119b3",
+  "findings": []
+}

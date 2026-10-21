@@ -1,0 +1,11 @@
+{
+  "id": "FA-C355-mavad",
+  "pathSegment": "FA-PATH-355-DASTURPOKHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-355-DASTURPOKHT",
+      "order": 1
+    }
+  ]
+}

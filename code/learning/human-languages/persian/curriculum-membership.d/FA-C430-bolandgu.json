@@ -1,0 +1,11 @@
+{
+  "id": "FA-C430-bolandgu",
+  "pathSegment": "FA-PATH-430-MAGHSAD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-430-MAGHSAD",
+      "order": 4
+    }
+  ]
+}

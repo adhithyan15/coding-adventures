@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Making Films",
+  "label": "ch:fa-making-films",
+  "canDo": "I can talk about how films are made.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C524-honarpishe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about how films are made.",
+    "assesses": [
+      "FA-LEX-C524-FILM-03",
+      "FA-LEX-C524-FILM-04",
+      "FA-LEX-C524-FILM-05"
+    ]
+  }
+}

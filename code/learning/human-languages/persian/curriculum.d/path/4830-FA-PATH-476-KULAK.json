@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-476-KULAK",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-476-KULAK"
+  ],
+  "after": []
+}

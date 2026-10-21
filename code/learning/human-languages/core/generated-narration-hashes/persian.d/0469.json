@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:eb380267fc1e3f7c",
+  "lessonIds": [
+    "FA-C469-mordab",
+    "FA-C469-talab",
+    "FA-C469-nahr",
+    "FA-C469-sadd",
+    "FA-C469-jari-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch469.txt",
+  "json": "persian/narration/ch469.json",
+  "textHash": "fnv1a64:937a715b58581bd0",
+  "jsonHash": "fnv1a64:4885cf2ef0c70369",
+  "findings": []
+}

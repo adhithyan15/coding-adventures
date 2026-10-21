@@ -1,0 +1,11 @@
+{
+  "id": "FA-C398-sanjidan",
+  "pathSegment": "FA-PATH-398-AMALI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-398-AMALI",
+      "order": 4
+    }
+  ]
+}

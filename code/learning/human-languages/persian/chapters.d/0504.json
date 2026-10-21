@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Friends",
+  "label": "ch:fa-friends",
+  "canDo": "I can talk about friendship.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C504-hamdigar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about friendship.",
+    "assesses": [
+      "FA-LEX-C504-FRIENDS-03",
+      "FA-LEX-C504-FRIENDS-04",
+      "FA-LEX-C504-FRIENDS-05"
+    ]
+  }
+}

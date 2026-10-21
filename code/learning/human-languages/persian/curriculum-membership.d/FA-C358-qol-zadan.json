@@ -1,0 +1,11 @@
+{
+  "id": "FA-C358-qol-zadan",
+  "pathSegment": "FA-PATH-358-QABLAME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-358-QABLAME",
+      "order": 2
+    }
+  ]
+}

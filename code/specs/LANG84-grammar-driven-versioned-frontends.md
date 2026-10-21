@@ -912,7 +912,7 @@ noted.
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
 | Python | GL (indentation mode) | GP | CST | 5 release pairs (3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I for all five, `Language::Python` on all nine backends). LANG79's float pilot still uses the legacy `"3.12"` minor line | 7b/7c |
-| Perl | GL | GP | CST | 117 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is still the **unversioned** pair; `Language::Perl` on all nine backends (4a) | Phases 4b, 4c |
+| Perl | GL | GP | CST | 118 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is the inventory release `5.38.0` and the unversioned pair is off the IIR path (4b); `IIRModule.release` recorded; `Language::Perl` on all nine backends with `--lang perl@<release>` (4a, 4b) | Phase 4c |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
 | Derive, Wolfram | GL + `drop_bracketed_newlines` | GP | CST | unversioned | Compliant (C3 hook) | Optional E3 replacement; inventories |
@@ -1142,16 +1142,14 @@ execute in CI; the authoring host had no `dotnet` or `erl`.
 
 Divergences from this spec, deferred deliberately:
 
-- `DEFAULT_RELEASE` is `Release::Unversioned`, not an inventory ID, so C4.1
-  and C4.4 are not yet met for a compile that names no release. A
-  `perl5.38.2` partial pair already exists whose token and parser grammars
-  equal the unversioned pair apart from comments. Phase 4b decides between
-  moving the default to `5.38.2` and building the `perl5.38.0` pair this
-  section asks for.
-- `IIRModule` has no `release` field yet, and lang-aot has no
+- `DEFAULT_RELEASE` was `Release::Unversioned`, not an inventory ID, so C4.1
+  and C4.4 were not met for a compile that named no release. A
+  `perl5.38.2` partial pair already existed whose token and parser grammars
+  equal the unversioned pair apart from comments. *Resolved in 4b: the owner
+  chose to build the `perl5.38.0` pair this section asks for.*
+- `IIRModule` had no `release` field, and lang-aot had no
   `compile_source_to_iir_at`, `--lang perl@<release>` or `UnknownRelease` /
-  `ReleaseNotAvailable` variants. Adding a field to `IIRModule` touches every
-  crate that builds one, so it goes with the lang-aot selection API in 4b.
+  `ReleaseNotAvailable` variants. *Resolved in 4b.*
 - No `ReleaseProfile`: the integer `print` subset has no semantic difference
   between releases. The first profile comes with the first construct that
   needs one.
@@ -1162,12 +1160,95 @@ Divergences from this spec, deferred deliberately:
   tests above stand in for it. The 117 pairs are not yet swept across the
   backends (4c), and `subsets.csv`/`iir_status` wait for phase 2b.
 
-Remaining phase 4 slices:
+**Phase 4b result (2026-10-20).** Every Perl compile now resolves to an
+inventory release, including one that names none, and the release is
+selectable and recorded end to end.
 
-- **4b.** Default release on an inventory ID (`5.38.2` or a new
-  `perl5.38.0` pair); `IIRModule.release`; `compile_source_to_iir_at`,
-  `--lang perl@<release>` and the two `LangAotError` variants; a
-  `cst_contract` test (C8); hostile-input probes in a child process (C5).
+- **Default release.** `DEFAULT_RELEASE` is `5.38.0` (`DEFAULT_RELEASE_ID`),
+  a new partial pair built the LANG82 way from the `v5.38.0` tag's own
+  blobs, retrieved 2026-10-20 through a blob-less fetch of the tag: tag
+  object `f47267bec5921b10a8cc16545c9fdf11972c5f2d`, commit
+  `76298ae68aa7796f0ffc05095b127d23f4b2de8f`, `perly.y`
+  `c0c09092c5e9305af5638535effebf18ea62cfe3`, `toke.c`
+  `1f81b3614c9a186468098cb15216c1dfe7ab3f2c`, `keywords.h`
+  `feae6f6dce7ac861ac1ca207c097e51209a2191b`, `parser.h`
+  `46d6a19c7b1e8638c26ceaa8b30dfa3e75b8f62c` (blob IDs re-hashed locally
+  with `git hash-object`). The pair's rules and what grounds each are in its
+  header and in LANG82. The decisive difference from the unversioned pair is
+  `scan_num`'s 250-digit decimal bound (`tokenbuf[256]` minus six reserved
+  bytes), which `perl.tokens` lacked. Its rules equal 5.004_72's, so the
+  generator puts both in one table class (118 pairs, still 5 token and 2
+  parser tables). The `releases.csv` row is `partial` (LANG82 header; the
+  LANG84 columns wait for 2b). `v5.38.2` has the same three syntax blobs, so
+  the host `perl` v5.38.2 oracle runs the same tokenizer and grammar.
+- **C4.5.** `perl_iir_compiler::Release` is a newtype over one checked
+  inventory ID, obtainable only from `resolve_release` or `DEFAULT_RELEASE`.
+  `Release::Unversioned` is gone, so the IIR path cannot reach `perl.tokens`
+  or `perl.grammar`. Those stay for `tokenize_perl`/`parse_perl`.
+- **C4.1.** `interpreter_ir::IIRModule` has `release: Option<String>`.
+  `compile_ast_at` sets it. All 161 struct literals elsewhere in the
+  repository (14 crates, doc examples included) name `release: None`.
+- **Selection API.** `lang_aot::compile_source_to_iir_at(language, release,
+  source, module_name)`, with `compile_source_to_iir` delegating with `None`.
+  `LanguageRequest { language, release }` and `LanguageRequest::parse`
+  split `--lang perl@<release>` on the first `@`. Every `compile_file_to_*`
+  entry point takes `impl Into<LanguageRequest>`, so the CLI's release
+  reaches every emit mode. New `LangAotError::UnknownRelease { language,
+  release, nearest }` and `ReleaseNotAvailable { language, release, stage }`
+  are mapped from the frontend's variants. Release text is bounded to 64
+  characters, and control characters are escaped before it is echoed.
+- **C8.** `perl_iir_compiler::cst` names every rule, token type and spelling
+  the compiler dispatches on (`CST_RULES`, `CST_TOKEN_TYPES`,
+  `CST_TOKEN_SPELLINGS`), and the compiler uses those constants.
+  `tests::cst_contract` checks every checked release's compiled grammar
+  against them and parses the corpus into exactly the destructured shapes.
+- **C5.** `tests::hostile_probes` re-runs the test binary as a child (77
+  probes over the default, 1.000 and 5.004_72). The parent fails on a signal
+  (verified by planting an unbounded-depth parse, which the child reported as
+  SIGABRT), on a non-zero exit, or on a missing completion marker. It kills
+  a child still running after 600 s, and it clears `RUST_MIN_STACK` so the
+  probes run on the default test stack.
+- **Security review.** A sibling session reviewed the change and found
+  nothing exploitable: three low and three informational findings, all
+  addressed. `LangAotError`'s `Display` neutralizes release text a caller
+  built itself, without escaping twice. `Language::parse` bounds what it
+  echoes. New tests show that lex errors never echo control or bidi
+  characters, and that near-miss release spellings are `UnknownRelease`.
+
+Divergences from this spec in 4b:
+
+- **C4.4.** CI cannot assert a non-empty `iir_status` for the default yet:
+  Perl's `releases.csv` keeps the LANG82 header until the 2b migration. The
+  tests assert instead that `DEFAULT_RELEASE_ID` is a checked
+  (non-pending) row with compiled tables and resolves to itself.
+- **C8.** "Every release whose `iir_status` is non-empty" is read as every
+  checked release, for the same reason. The shape assertions run on the
+  frontend's own corpus, because `code/grammars/perl/corpus/` waits for 2b
+  and 4c.
+- **Selection API.** `Language::parse` does not split on `@`.
+  `LanguageRequest::parse` does, because `Language` is a `Copy` enum used as
+  a value and as a key in tests. The source-level helpers
+  (`compile_source_to_llvm`, `_wasm`, `_jvm`, …) still take a plain
+  `Language` and use the default release. Release-aware code calls
+  `compile_source_to_iir_at` and then the `compile_iir_to_*` entry point. A
+  release for a language with no inventory is `UnknownRelease` (empty
+  `nearest`), not a separate variant.
+- **`IIRModule.release` is not serialised.** The binary format stays 1.1,
+  and `deserialise` yields `None`, as for the transient profiling fields.
+  Carrying it would need a format bump that the other IIR readers must
+  accept first.
+- **C5 budgets.** The 16,384-item CST budget, which the compiler applies to
+  every tree including source-derived ones, also bounds flat operator
+  chains and statement lists: about 2,000 terms compile and 20,000 are a
+  typed `Unsupported`. The compiler folds `{ }` repetitions iteratively and
+  allocates no nested tree, so no separate 512-term spine budget applies.
+- **Known gap, not fixed here.** `perl5.38.2` has the same `toke.c` blob as
+  5.38.0 but keeps an unbounded `INT`. `perl5.44.0` and `perl5.45.3` also
+  have unbounded `INT` rules, and their evidence is pod files, not
+  `toke.c`. Correcting them is a separate LANG82 follow-up.
+
+Remaining phase 4 slice:
+
 - **4c.** Release sweep: B(pl-int-print) for every checked release on the
   backends, bounded per [CI bounding](#ci-bounding), with the corpus under
   `code/grammars/perl/corpus/` once 2b's `subsets.csv` exists.
@@ -1351,6 +1432,9 @@ Decisions and deviations:
   `--lang python@<release>`, the lang-aot `UnknownRelease` and
   `ReleaseNotAvailable` variants, and matrix rows on releases other than
   the default. These are the shared lang-aot release API (phases 4b and 5b).
+  Phase 4b has since landed that API with Perl as its only inventory
+  language, so until 7b a `python@<release>` request is refused as
+  `UnknownRelease` and a Python module leaves `IIRModule.release` as `None`.
 
 ### Wire every IIR frontend into lang-aot
 
@@ -1430,7 +1514,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.8 | E6 adjacency predicates and ASI | ~800 lines |
 | | 3.9 | E7 goal-directed lexing and binding predicates (largest; may split into lattice and bindings) | ~2,500 lines over 2–3 PRs |
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
-| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b:** default on an inventory release (`perl5.38.0` pair, or the existing `5.38.2`); `IIRModule.release`; lang-aot release API. **4c:** release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
+| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c:** release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b/7c:** lang-aot release selection and the boundary sweep, Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |

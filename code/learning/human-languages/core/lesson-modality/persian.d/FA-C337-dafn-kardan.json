@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C337-dafn-kardan",
+    "language": "persian",
+    "chapter": 337,
+    "sequence": 17220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:769cd929bc3fa0aa"
+  },
+  "findings": []
+}

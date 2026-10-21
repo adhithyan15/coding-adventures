@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C521-robai",
+    "language": "persian",
+    "chapter": 521,
+    "sequence": 26730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb0db320cadb4265"
+  },
+  "findings": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 24,
-  "sourceHash": "fnv1a64:38905d0ad2bbe192",
+  "sourceHash": "fnv1a64:8c031e608e673bda",
   "lessonIds": [
     "MR-A1M01-reader-greeting",
     "MR-A1M02-name-line",
@@ -20,13 +20,15 @@
     "MR-A1M15-skills-block-two",
     "MR-A1M16-closing-block",
     "MR-A1M17-guided-message",
-    "MR-A1M18-independent-message"
+    "MR-A1M18-independent-message",
+    "MR-A1M19-partial-timer",
+    "MR-A1M20-timed-message"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch24.txt",
   "json": "marathi/narration/ch24.json",
-  "textHash": "fnv1a64:b0ad8e67ca7ec441",
-  "jsonHash": "fnv1a64:c30a0bc51d51512b",
+  "textHash": "fnv1a64:6d2adccfbb5649a1",
+  "jsonHash": "fnv1a64:093834e6c1a95533",
   "findings": []
 }

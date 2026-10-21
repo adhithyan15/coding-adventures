@@ -1,0 +1,11 @@
+{
+  "id": "FA-C315-sarmaqale",
+  "pathSegment": "FA-PATH-315-KHABARFOWRI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-315-KHABARFOWRI",
+      "order": 2
+    }
+  ]
+}

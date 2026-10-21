@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Once upon a time",
+  "label": "ch:fa-once-upon-a-time",
+  "canDo": "I can begin and tell a folk tale, and talk about the storyteller and the narrator.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C345-ravi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can begin and tell a folk tale, and talk about the storyteller and the narrator.",
+    "assesses": [
+      "FA-LEX-C345-QESSE-03",
+      "FA-LEX-C345-QESSE-04",
+      "FA-LEX-C345-QESSE-05"
+    ]
+  }
+}

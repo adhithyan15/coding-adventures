@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-356-RIZKARDAN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-356-RIZKARDAN"
+  ],
+  "after": []
+}

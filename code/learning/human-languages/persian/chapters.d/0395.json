@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "It depends",
+  "label": "ch:fa-it-depends",
+  "canDo": "I can say what something depends on, talk about the circumstances and say what happens as soon as or as long as something is true.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C395-ta-zamani-ke",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can say what something depends on, talk about the circumstances and say what happens as soon as or as long as something is true.",
+    "assesses": [
+      "FA-LEX-C395-BASTE-03",
+      "FA-LEX-C395-BASTE-04",
+      "FA-LEX-C395-BASTE-05"
+    ]
+  }
+}

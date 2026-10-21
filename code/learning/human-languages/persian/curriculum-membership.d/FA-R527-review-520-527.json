@@ -1,0 +1,11 @@
+{
+  "id": "FA-R527-review-520-527",
+  "pathSegment": "FA-PATH-527-TALENT",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-527-TALENT",
+      "order": 5
+    }
+  ]
+}

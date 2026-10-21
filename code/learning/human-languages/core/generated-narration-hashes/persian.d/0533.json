@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:30a6e6bf00ad7f38",
+  "lessonIds": [
+    "FA-C533-mojri",
+    "FA-C533-tanz",
+    "FA-C533-komedi",
+    "FA-C533-pakhsh-shodan",
+    "FA-C533-khire-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch533.txt",
+  "json": "persian/narration/ch533.json",
+  "textHash": "fnv1a64:ab2c8b1419872116",
+  "jsonHash": "fnv1a64:d5c8ef67c2589772",
+  "findings": []
+}

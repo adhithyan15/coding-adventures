@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C538-lavazem-e-khanegi",
+    "language": "persian",
+    "chapter": 538,
+    "sequence": 27590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0b1359d674d0f16"
+  },
+  "findings": []
+}

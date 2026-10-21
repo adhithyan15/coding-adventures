@@ -1,0 +1,11 @@
+{
+  "id": "FA-C340-ayin",
+  "pathSegment": "FA-PATH-340-EYDI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-340-EYDI",
+      "order": 2
+    }
+  ]
+}

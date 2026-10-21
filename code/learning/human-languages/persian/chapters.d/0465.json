@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "On the farm",
+  "label": "ch:fa-on-the-farm",
+  "canDo": "I can talk about farming: a farm, wheat, rice paddies, vineyards and ploughing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C465-shokhm-zadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can talk about farming: a farm, wheat, rice paddies, vineyards and ploughing.",
+    "assesses": [
+      "FA-LEX-C465-MAZRAE-03",
+      "FA-LEX-C465-MAZRAE-04",
+      "FA-LEX-C465-MAZRAE-05"
+    ]
+  }
+}

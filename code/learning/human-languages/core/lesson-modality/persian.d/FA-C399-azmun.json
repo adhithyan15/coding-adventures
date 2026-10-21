@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C399-azmun",
+    "language": "persian",
+    "chapter": 399,
+    "sequence": 20400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d65292fcf84c1480"
+  },
+  "findings": []
+}

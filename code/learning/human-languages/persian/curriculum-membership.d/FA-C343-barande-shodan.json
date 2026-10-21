@@ -1,0 +1,11 @@
+{
+  "id": "FA-C343-barande-shodan",
+  "pathSegment": "FA-PATH-343-BARANDE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-343-BARANDE",
+      "order": 0
+    }
+  ]
+}

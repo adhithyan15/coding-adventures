@@ -1,0 +1,11 @@
+{
+  "id": "FA-C446-kilometr",
+  "pathSegment": "FA-PATH-446-JAHAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-446-JAHAT",
+      "order": 2
+    }
+  ]
+}

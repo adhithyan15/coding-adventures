@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 519,
+  "title": "Singing",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:59ef3520ec805203",
+  "lessons": [
+    {
+      "id": "FA-C519-avaz-khandan",
+      "sequence": 26590,
+      "title": "آواز خواندن (âvâz khândan) — to sing",
+      "headword": "آواز خواندن",
+      "romanization": "âvâz khândan",
+      "gloss": "to sing",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7c5189f6185eff9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to play, then the Persian for to tune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آواز خواندن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آواز خواندن (âvâz khândan) — \"to sing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مادرم در آشپزخانه آواز میخواند. mâdaram dar âshpazkhâne âvâz mikhânad. My mother sings in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "âvâz 'song, voice' + khândan 'to read, to sing'; present stem khân-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "âvâz is inherited: EtymDB traces it to a Middle Persian word for 'voice, sound, tune' and lists Latin vōx, 'voice', as a cousin (EtymDB). khândan is inherited too."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âvâz khândan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âvâz khândan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âvâz khândan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âvâz khândan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with âvâz khândan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *âvâz khândan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to play, then the Persian for to tune, then say âvâz khândan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to play, then the Persian for to tune, then say *âvâz khândan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آواز خواندن (âvâz khândan) mean? (\"To sing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C519-zemzeme-kardan",
+      "sequence": 26600,
+      "title": "زمزمه کردن (zemzeme kardan) — to hum, to murmur",
+      "headword": "زمزمه کردن",
+      "romanization": "zemzeme kardan",
+      "gloss": "to hum, to murmur",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39a79d385341979a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to tune, then the Persian for to sing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زمزمه کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زمزمه کردن (zemzeme kardan) — \"to hum, to murmur\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او در حمام آهنگ زمزمه میکند. u dar hammâm âhang zemzeme mikonad. He hums tunes in the bath."
+            },
+            {
+              "kind": "speech",
+              "text": "zemzeme 'a murmur' + kardan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zemzeme is a loan, usually traced to Arabic zamzama, 'a low murmuring'. EtymDB has no entry for it. kardan is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zemzeme kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zemzeme kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zemzeme kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zemzeme kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zemzeme kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zemzeme kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to tune, then the Persian for to sing, then say zemzeme kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to tune, then the Persian for to sing, then say *zemzeme kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زمزمه کردن (zemzeme kardan) mean? (\"To hum, to murmur\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C519-tarane",
+      "sequence": 26610,
+      "title": "ترانه (tarâne) — a song (popular)",
+      "headword": "ترانه",
+      "romanization": "tarâne",
+      "gloss": "a song (popular)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee299d09960cb181",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to sing, then the Persian for to hum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ترانه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترانه (tarâne) — \"a song (popular)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "این ترانه را از رادیو شنیدم. in tarâne râ az râdiyo shenidam. I heard this song on the radio."
+            },
+            {
+              "kind": "speech",
+              "text": "A popular song; âhang is the tune, tarâne the song with words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tarâne is usually taken as a native Persian word for a song, but EtymDB lists it without a source, and its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarâne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarâne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarâne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarâne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tarâne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tarâne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to sing, then the Persian for to hum, then say tarâne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to sing, then the Persian for to hum, then say *tarâne* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ترانه (tarâne) mean? (\"A song (popular)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C519-ritm",
+      "sequence": 26620,
+      "title": "ریتم (ritm) — rhythm",
+      "headword": "ریتم",
+      "romanization": "ritm",
+      "gloss": "rhythm",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf648eb4538b13e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to hum, then the Persian for a song."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ریتم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ریتم (ritm) — \"rhythm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بچه ها با ریتم موسیقی دست میزدند. bachchehâ bâ ritm-e musiqi dast mizadand. The children were clapping along to the music."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural ritmhâ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ritm is a modern loan, usually traced to French rythme, 'rhythm'. EtymDB has no entry for the Persian word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ritm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ritm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ritm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ritm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ritm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ritm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to hum, then the Persian for a song, then say ritm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to hum, then the Persian for a song, then say *ritm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ریتم (ritm) mean? (\"Rhythm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C519-not",
+      "sequence": 26630,
+      "title": "نت (not) — a musical note; sheet music",
+      "headword": "نت",
+      "romanization": "not",
+      "gloss": "a musical note; sheet music",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4508de7abca70f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a song, then the Persian for rhythm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نت (not) — \"a musical note; sheet music\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او بدون نت پیانو میزند. u bedun-e not piyâno mizanad. He plays the piano without sheet music."
+            },
+            {
+              "kind": "speech",
+              "text": "not khândan — to read music."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "not is a loan, usually traced to French note, 'note'. EtymDB links the spelling only to English net, a different word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *not*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "not, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *not*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *not*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a song, then the Persian for rhythm, then say not again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a song, then the Persian for rhythm, then say *not* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نت (not) mean? (\"A musical note; sheet music\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R519-review-512-519",
+      "sequence": 26640,
+      "title": "Words from chapters 512–519 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 512-519",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8c10dc21af9572d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a fan and an athlete."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fan, an athlete, an opponent, a league, a point",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fan, an athlete, an opponent, a league, a point]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a loser, equal, a best result, to set a new best, to score a goal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a loser, equal, a best result, to set a new best, to score a goal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "volleyball, basketball, tennis, a racket, a goalkeeper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: volleyball, basketball, tennis, a racket, a goalkeeper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to shoot, to pass, to hurl, to wrestle, weightlifting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to shoot, to pass, to hurl, to wrestle, weightlifting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stretch, yoga, fitness, energetic, to be lazy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stretch, yoga, fitness, energetic, to be lazy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a piano, a violin, a tar, a santur, a tombak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a piano, a violin, a tar, a santur, a tombak]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a setar, a daf, a drum, to play, to tune",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a setar, a daf, a drum, to play, to tune]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sing, to hum, a song, rhythm, a musical note",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sing, to hum, a song, rhythm, a musical note]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A fan? (هوادار.) An athlete? (ورزشکار.) An opponent? (حریف.) A league? (لیگ.) A point? (امتیاز.) A loser? (بازنده.) Equal? (مساوی.) A best result? (رکورد.) To set a new best? (رکورد زدن.) To score a goal? (گل زدن.) Volleyball? (والیبال.) Basketball? (بسکتبال.) Tennis? (تنیس.) A racket? (راکت.) A goalkeeper? (دروازه بان.) To shoot? (شوت کردن.) To pass? (پاس دادن.) To hurl? (پرتاب کردن.) To wrestle? (کشتی گرفتن.) Weightlifting? (وزنه برداری.) To stretch? (نرمش کردن.) Yoga? (یوگا.) Fitness? (تناسب اندام.) Energetic? (پرانرژی.) To be lazy? (تنبلی کردن.) A piano? (پیانو.) A violin? (ویولن.) A tar? (تار.) A santur? (سنتور.) A tombak? (تنبک.) A setar? (سه تار.) A daf? (دف.) A drum? (طبل.) To play? (نواختن.) To tune? (کوک کردن.) To sing? (آواز خواندن (âvâz khândan).) To hum? (زمزمه کردن (zemzeme kardan).) A song? (ترانه (tarâne).) Rhythm? (ریتم (ritm).) A musical note? (نت (not).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

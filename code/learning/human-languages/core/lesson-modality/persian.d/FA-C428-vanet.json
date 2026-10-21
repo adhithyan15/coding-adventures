@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C428-vanet",
+    "language": "persian",
+    "chapter": 428,
+    "sequence": 21940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60d1ff8230d0135b"
+  },
+  "findings": []
+}

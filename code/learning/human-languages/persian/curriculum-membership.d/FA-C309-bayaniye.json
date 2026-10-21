@@ -1,0 +1,11 @@
+{
+  "id": "FA-C309-bayaniye",
+  "pathSegment": "FA-PATH-309-SOKHANGU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-309-SOKHANGU",
+      "order": 1
+    }
+  ]
+}

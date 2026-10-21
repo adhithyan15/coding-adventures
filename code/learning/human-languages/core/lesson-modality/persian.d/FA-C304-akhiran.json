@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C304-akhiran",
+    "language": "persian",
+    "chapter": 304,
+    "sequence": 15540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aead9dc8c6ec6aed"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-306-TADRIJ",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-306-TADRIJ"
+  ],
+  "after": []
+}

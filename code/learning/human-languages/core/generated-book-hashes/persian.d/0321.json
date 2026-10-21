@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:c8c7bb57ce2c04b1",
+  "lessonIds": [
+    "FA-C321-qasam-khordan",
+    "FA-C321-shahadat-dadan",
+    "FA-C321-eqrar-kardan",
+    "FA-C321-low-dadan",
+    "FA-C321-gonahkar"
+  ],
+  "tex": "persian/book/chapters/ch321-owning-up.tex"
+}

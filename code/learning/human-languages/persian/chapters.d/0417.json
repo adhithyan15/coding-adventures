@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Online",
+  "label": "ch:fa-online",
+  "canDo": "I can talk about networks and social media, my internet connection, access to the internet and online classes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C417-majazi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can talk about networks and social media, my internet connection, access to the internet and online classes.",
+    "assesses": [
+      "FA-LEX-C417-SHABAKE-03",
+      "FA-LEX-C417-SHABAKE-04",
+      "FA-LEX-C417-SHABAKE-05"
+    ]
+  }
+}

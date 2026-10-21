@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "News and reports",
+  "label": "ch:fa-news-and-reports",
+  "canDo": "I can talk about the news: a report, reporting something, a reporter, a headline and the news itself.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C308-akhbar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about the news: a report, reporting something, a reporter, a headline and the news itself.",
+    "assesses": [
+      "FA-LEX-C308-GOZARESH-03",
+      "FA-LEX-C308-GOZARESH-04",
+      "FA-LEX-C308-GOZARESH-05"
+    ]
+  }
+}

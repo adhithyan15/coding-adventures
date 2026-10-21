@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:e65f2ab19bb91304",
+  "lessonIds": [
+    "FA-C460-vitrin",
+    "FA-C460-pasazh",
+    "FA-C460-porov-kardan",
+    "FA-C460-otaq-e-porov",
+    "FA-C460-pasandidan"
+  ],
+  "tex": "persian/book/chapters/ch460-window-shopping.tex"
+}

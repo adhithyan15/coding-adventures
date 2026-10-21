@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:4703f5414c9317a2",
+  "lessonIds": [
+    "FA-C446-jahat",
+    "FA-C446-qotbnama",
+    "FA-C446-kilometr",
+    "FA-C446-masafat",
+    "FA-C446-dur-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch446.txt",
+  "json": "persian/narration/ch446.json",
+  "textHash": "fnv1a64:04e1eb78700ef78a",
+  "jsonHash": "fnv1a64:703034ccf1719543",
+  "findings": []
+}

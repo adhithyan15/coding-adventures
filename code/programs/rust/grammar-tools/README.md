@@ -49,7 +49,7 @@ spec's migration rule (`pending` → `none`, otherwise `P`).
 
 ```bash
 grammar-tools generate-rust-compiled-grammars ruby     # 5 pairs
-grammar-tools generate-rust-compiled-grammars perl     # 117 pairs -> 5 + 2 tables
+grammar-tools generate-rust-compiled-grammars perl     # 118 pairs -> 5 + 2 tables
 grammar-tools generate-rust-compiled-grammars python   # 5 pairs -> 3 + 1 tables, + 6 minor lines
 ```
 

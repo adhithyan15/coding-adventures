@@ -1,0 +1,11 @@
+{
+  "id": "FA-C494-iyadat-kardan",
+  "pathSegment": "FA-PATH-494-CARE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-494-CARE",
+      "order": 0
+    }
+  ]
+}

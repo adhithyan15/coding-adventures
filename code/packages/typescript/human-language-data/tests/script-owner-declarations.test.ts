@@ -64,7 +64,10 @@ const CONFIGS = [
   // be borrowed. They enter closure when a Persian-scoped citation exists.
   // digits 0 -> 10: the Persian digits ۰-۹ get rows of their own (an optional
   // `digits/` section, HL25), each carrying its POH-Db stroke-order citation.
-  { language: "persian", script: "perso-arabic", letters: 26, marks: 1, digits: 10 },
+  // 26 -> 33: the B1 core (chapters 290-299) adds ع غ ژ ث ذ ض and ئ, each after
+  // the word that holds it. Like ج and ص they carry an empty strokeOrder: no
+  // Persian-scoped stroke-order source has been verified for them yet.
+  { language: "persian", script: "perso-arabic", letters: 33, marks: 1, digits: 10 },
   // 29 -> 30: ஸ (U+0BB8), taught alone in TA-S129 and read inside நமஸ்காரம்,
   // gets its row once its order is cited to LipiTk's Tamil recognizer.
   { language: "tamil", script: "tamil", letters: 30, marks: 9, digits: 0 },

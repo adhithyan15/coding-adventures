@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "For this reason",
+  "label": "ch:fa-for-this-reason",
+  "canDo": "I can give a reason with because of and due to, and draw the result with for this reason, hence and therefore.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C371-ba-tavajjoh-be",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can give a reason with because of and due to, and draw the result with for this reason, hence and therefore.",
+    "assesses": [
+      "FA-LEX-C371-DALIL-03",
+      "FA-LEX-C371-DALIL-04",
+      "FA-LEX-C371-DALIL-05"
+    ]
+  }
+}

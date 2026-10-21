@@ -1,0 +1,17 @@
+{
+  "glyph": "ث",
+  "sound": "s",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ث",
+    "initial": "ثـ",
+    "medial": "ـثـ",
+    "final": "ـث"
+  },
+  "components": [
+    "be-series tooth and bowl",
+    "three dots above"
+  ],
+  "strokeOrder": [],
+  "notes": "Used mainly in Arabic-derived Persian words; pronounced s in modern Persian, like س and ص. Its stroke order is deliberately left empty: no Persian-scoped source for it has been verified yet."
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-452-NOBAT",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-452-NOBAT"
+  ],
+  "after": []
+}

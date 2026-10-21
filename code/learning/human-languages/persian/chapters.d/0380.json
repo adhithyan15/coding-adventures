@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Applying for work",
+  "label": "ch:fa-applying-for-work",
+  "canDo": "I can talk about sending a CV, signing a contract, getting a promotion and doing an internship.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C380-karamuzi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can talk about sending a CV, signing a contract, getting a promotion and doing an internship.",
+    "assesses": [
+      "FA-LEX-C380-REZUME-03",
+      "FA-LEX-C380-REZUME-04",
+      "FA-LEX-C380-REZUME-05"
+    ]
+  }
+}

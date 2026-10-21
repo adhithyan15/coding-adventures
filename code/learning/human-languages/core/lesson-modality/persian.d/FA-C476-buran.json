@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C476-buran",
+    "language": "persian",
+    "chapter": 476,
+    "sequence": 24380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:371d39f88f6e21a6"
+  },
+  "findings": []
+}

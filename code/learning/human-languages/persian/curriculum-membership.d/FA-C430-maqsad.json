@@ -1,0 +1,11 @@
+{
+  "id": "FA-C430-maqsad",
+  "pathSegment": "FA-PATH-430-MAGHSAD",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-430-MAGHSAD",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C522-dekleme-kardan",
+  "pathSegment": "FA-PATH-522-VERSE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-522-VERSE",
+      "order": 2
+    }
+  ]
+}

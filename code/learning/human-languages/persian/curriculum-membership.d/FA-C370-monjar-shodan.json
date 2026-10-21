@@ -1,0 +1,11 @@
+{
+  "id": "FA-C370-monjar-shodan",
+  "pathSegment": "FA-PATH-370-PAYAMAD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-370-PAYAMAD",
+      "order": 3
+    }
+  ]
+}

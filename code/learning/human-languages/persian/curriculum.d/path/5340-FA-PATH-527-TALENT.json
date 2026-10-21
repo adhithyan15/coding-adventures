@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-527-TALENT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-527-TALENT"
+  ],
+  "after": []
+}

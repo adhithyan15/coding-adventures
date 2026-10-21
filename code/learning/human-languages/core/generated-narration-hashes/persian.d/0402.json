@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:632b7086be53126a",
+  "lessonIds": [
+    "FA-C402-tahqiq",
+    "FA-C402-pazhuhesh",
+    "FA-C402-maqale",
+    "FA-C402-payan-name",
+    "FA-C402-sokhanrani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch402.txt",
+  "json": "persian/narration/ch402.json",
+  "textHash": "fnv1a64:2ef2cd77cb2d0e5e",
+  "jsonHash": "fnv1a64:3f21f6ef1e400d14",
+  "findings": []
+}

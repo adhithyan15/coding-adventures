@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-418-NARMAFZAR",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-418-NARMAFZAR"
+  ],
+  "after": []
+}

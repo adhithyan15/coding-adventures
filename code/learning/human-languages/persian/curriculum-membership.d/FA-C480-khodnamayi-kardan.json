@@ -1,0 +1,11 @@
+{
+  "id": "FA-C480-khodnamayi-kardan",
+  "pathSegment": "FA-PATH-480-PRIDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-480-PRIDE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C539-heyvan-e-khanegi",
+    "language": "persian",
+    "chapter": 539,
+    "sequence": 27640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8076f2f24151f87c"
+  },
+  "findings": []
+}

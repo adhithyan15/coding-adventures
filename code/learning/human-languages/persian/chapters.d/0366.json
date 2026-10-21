@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Discussion and debate",
+  "label": "ch:fa-discussion-and-debate",
+  "canDo": "I can talk about a discussion or a debate, say that people argued, mention talks between countries, object and give an example.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C366-mesal-zadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can talk about a discussion or a debate, say that people argued, mention talks between countries, object and give an example.",
+    "assesses": [
+      "FA-LEX-C366-BAHS-03",
+      "FA-LEX-C366-BAHS-04",
+      "FA-LEX-C366-BAHS-05"
+    ]
+  }
+}

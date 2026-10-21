@@ -1,0 +1,11 @@
+{
+  "id": "FA-C445-obur-kardan",
+  "pathSegment": "FA-PATH-445-TAGHATO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-445-TAGHATO",
+      "order": 4
+    }
+  ]
+}

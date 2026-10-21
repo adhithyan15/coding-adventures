@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:23319ee6400b9ff4",
+  "lessonIds": [
+    "FA-C337-marg",
+    "FA-C337-dargozashtan",
+    "FA-C337-fowt-kardan",
+    "FA-C337-dafn-kardan",
+    "FA-C337-qabr"
+  ],
+  "tex": "persian/book/chapters/ch337-death.tex"
+}

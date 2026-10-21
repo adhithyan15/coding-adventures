@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:34c2ce11a774b8cf",
+  "lessonIds": [
+    "FA-C433-sak",
+    "FA-C433-bar-bastan",
+    "FA-C433-badraqe-kardan",
+    "FA-C433-esteqbal-kardan",
+    "FA-C433-ajale-kardan"
+  ],
+  "tex": "persian/book/chapters/ch433-packing-and-goodbyes.tex"
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 291,
+  "title": "Then, And In The End --- A Story In Order",
+  "label": "ch:fa-a-story-in-order",
+  "canDo": "I can tell a short story in order with avval, ba'd and dar akhar, join events with vaqti, and read a connected story of about a hundred words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R291-a-story-in-order",
+    "kind": "production",
+    "summary": "Complete FA-R291-a-story-in-order: retell a short trip in order, with a scene, two events and an ending.",
+    "assesses": [
+      "FA-LEX-C291-TARIF-KARDAN-01",
+      "FA-SCRIPT-C291-EYN-01",
+      "FA-GRAMMAR-BAD-THEN-01",
+      "FA-GRAMMAR-DAR-AKHAR-01",
+      "FA-GRAMMAR-VAGHTI-01",
+      "FA-GRAMMAR-BA-WITH-01",
+      "FA-GRAMMAR-STORY-ORDER-01",
+      "FA-SKILL-READ-NARRATIVE-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C321-gonahkar",
+  "pathSegment": "FA-PATH-321-QASAM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-321-QASAM",
+      "order": 4
+    }
+  ]
+}

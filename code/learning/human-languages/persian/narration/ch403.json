@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 403,
+  "title": "Degrees and graduation",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9886f00d89eb7dee",
+  "lessons": [
+    {
+      "id": "FA-C403-faregh-ot-tahsil",
+      "sequence": 20600,
+      "title": "فارغ التحصیل (fâregh ot-tahsil) — a graduate",
+      "headword": "فارغ التحصیل",
+      "romanization": "fâregh ot-tahsil",
+      "gloss": "a graduate",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dd28a8d8b9b8b78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a thesis, then the Persian for a lecture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فارغ التحصیل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فارغ التحصیل (fâregh ot-tahsil) — \"a graduate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او سال گذشته فارغ التحصیل شد. u sâl-e gozashte fâregh ot-tahsil shod. He graduated last year."
+            },
+            {
+              "kind": "speech",
+              "text": "An Arabic phrase, literally \"free of study\". Fâregh ot-tahsil shodan — to graduate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فارغ التحصیل (fâregh ot-tahsil) is usually traced to the Arabic phrase fārigh al-taḥṣīl, \"free of study\": fārigh \"free, done\" + al- \"the\" + taḥṣīl \"study\". A graduate has finished studying."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fâregh ot-tahsil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fâregh ot-tahsil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fâregh ot-tahsil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fâregh ot-tahsil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with fâregh ot-tahsil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *fâregh ot-tahsil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a thesis, then the Persian for a lecture, then say fâregh ot-tahsil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a thesis, then the Persian for a lecture, then say *fâregh ot-tahsil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فارغ التحصیل (fâregh ot-tahsil) mean? (\"A graduate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C403-tahsilat",
+      "sequence": 20610,
+      "title": "تحصیلات (tahsilât) — education, schooling",
+      "headword": "تحصیلات",
+      "romanization": "tahsilât",
+      "gloss": "education, schooling",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8176b755e3da867",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a lecture, then the Persian for a graduate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تحصیلات",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحصیلات (tahsilât) — \"education, schooling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پدرم تحصیلات دانشگاهی ندارد. pedaram tahsilât-e dâneshgâhi nadârad. My father does not have a university education."
+            },
+            {
+              "kind": "speech",
+              "text": "The Arabic-style plural of tahsil \"study\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحصیلات (tahsilât) is the Arabic-style plural of tahsil \"study\", usually traced to Arabic taḥṣīl \"obtaining, acquiring\": education is what you have acquired."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahsilât",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahsilât*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tahsilât, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tahsilât*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tahsilât",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tahsilât*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a lecture, then the Persian for a graduate, then say tahsilât again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a lecture, then the Persian for a graduate, then say *tahsilât* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تحصیلات (tahsilât) mean? (\"Education, schooling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C403-erae-dadan",
+      "sequence": 20620,
+      "title": "ارائه دادن (erâ'e dâdan) — to present, to submit",
+      "headword": "ارائه دادن",
+      "romanization": "erâ'e dâdan",
+      "gloss": "to present, to submit",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a452ac1a2245a0e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a graduate, then the Persian for education."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ارائه دادن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارائه دادن (erâ'e dâdan) — \"to present, to submit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هر دانشجو باید یک مقاله ارائه دهد. har dâneshju bâyad yek maqâle erâ'e dahad. Every student must present a paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Erâ'e \"presentation\" + dâdan (stem deh-). Formal; spelled with ئ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارائه is usually traced to Arabic irā'a \"showing\"; with dâdan \"to give\", which EtymDB traces to PIE deh₃-, it means to put something before people."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "erâ'e dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *erâ'e dâdan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "erâ'e dâdan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *erâ'e dâdan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with erâ'e dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *erâ'e dâdan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a graduate, then the Persian for education, then say erâ'e dâdan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a graduate, then the Persian for education, then say *erâ'e dâdan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ارائه دادن (erâ'e dâdan) mean? (\"To present, to submit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C403-lisans",
+      "sequence": 20630,
+      "title": "لیسانس (lisâns) — a bachelor's degree",
+      "headword": "لیسانس",
+      "romanization": "lisâns",
+      "gloss": "a bachelor's degree",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5abc12d22996813d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for education, then the Persian for to present."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لیسانس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لیسانس (lisâns) — \"a bachelor's degree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او لیسانس زبان انگلیسی دارد. u lisâns-e zabân-e engelisi dârad. She has a bachelor's degree in English."
+            },
+            {
+              "kind": "speech",
+              "text": "A French loan; the official term is kârshenâsi. Fowq-e lisâns — a master's degree."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لیسانس (lisâns) is usually traced to French licence, a university degree, from Latin licentia \"freedom, leave\" (Lewis & Short)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lisâns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lisâns*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lisâns, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lisâns*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lisâns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lisâns*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for education, then the Persian for to present, then say lisâns again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for education, then the Persian for to present, then say *lisâns* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لیسانس (lisâns) mean? (\"A bachelor's degree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C403-doktora",
+      "sequence": 20640,
+      "title": "دکترا (doktorâ) — a doctorate, a PhD",
+      "headword": "دکترا",
+      "romanization": "doktorâ",
+      "gloss": "a doctorate, a PhD",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edd7eed248db8142",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to present, then the Persian for a bachelor's degree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دکترا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دکترا (doktorâ) — \"a doctorate, a PhD\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عمویم دکترای شیمی دارد. 'amuyam doktorâ-ye shimi dârad. My uncle has a doctorate in chemistry."
+            },
+            {
+              "kind": "speech",
+              "text": "Doktorâ gereftan — to get a PhD."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دکترا (doktorâ) is usually traced to French doctorat \"doctorate\", built on Latin doctor \"teacher\" (Lewis & Short), from docere \"to teach\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doktorâ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doktorâ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doktorâ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doktorâ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with doktorâ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *doktorâ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to present, then the Persian for a bachelor's degree, then say doktorâ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to present, then the Persian for a bachelor's degree, then say *doktorâ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دکترا (doktorâ) mean? (\"A doctorate, a PhD\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

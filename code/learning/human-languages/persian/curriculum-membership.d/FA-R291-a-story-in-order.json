@@ -1,0 +1,11 @@
+{
+  "id": "FA-R291-a-story-in-order",
+  "pathSegment": "FA-PATH-291-STORY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-291-STORY",
+      "order": 5
+    }
+  ]
+}

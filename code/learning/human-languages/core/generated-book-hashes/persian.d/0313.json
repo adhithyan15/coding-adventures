@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:d5b21bff3c853f39",
+  "lessonIds": [
+    "FA-C313-amar",
+    "FA-C313-baravard-kardan",
+    "FA-C313-takid-kardan",
+    "FA-C313-kholase",
+    "FA-C313-kholase-kardan"
+  ],
+  "tex": "persian/book/chapters/ch313-numbers-and-summaries.tex"
+}

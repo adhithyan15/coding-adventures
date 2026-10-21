@@ -1,0 +1,11 @@
+{
+  "id": "FA-C487-badbin",
+  "pathSegment": "FA-PATH-487-HOPE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-487-HOPE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 320,
+  "title": "Detectives and clues",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d0dc8dee54fbe413",
+  "lessons": [
+    {
+      "id": "FA-C320-karagah",
+      "sequence": 16320,
+      "title": "کارآگاه (kârâgâh) — a detective",
+      "headword": "کارآگاه",
+      "romanization": "kârâgâh",
+      "gloss": "a detective",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77e74143f677d1a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to be arrested, then the Persian for to detain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کارآگاه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کارآگاه (kârâgâh) — \"a detective\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کارآگاه (kârâgâh) همه چیز را با دقت نگاه کرد. Kârâgâh hame chiz râ bâ deqqat negâh kard. The detective looked at everything carefully."
+            },
+            {
+              "kind": "speech",
+              "text": "kâr \"work\" + âgâh \"aware\": one who is aware of the case."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kârâgâh is a modern compound built from Persian kâr \"work\" and âgâh \"aware, informed\", both native words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kârâgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kârâgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kârâgâh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kârâgâh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kârâgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kârâgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to be arrested, then the Persian for to detain, then say kârâgâh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to be arrested, then the Persian for to detain, then say *kârâgâh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کارآگاه (kârâgâh) mean? (\"A detective\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C320-sarnakh",
+      "sequence": 16330,
+      "title": "سرنخ (sarnakh) — a clue, a lead",
+      "headword": "سرنخ",
+      "romanization": "sarnakh",
+      "gloss": "a clue, a lead",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c97411029daf7eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to detain, then the Persian for a detective."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سرنخ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرنخ (sarnakh) — \"a clue, a lead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پلیس هنوز هیچ سرنخی ندارد. Polis hanuz hich sarnakhi nadârad. The police still have no clue."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally \"the end of the thread\": sar \"head, end\" + nakh \"thread\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sarnakh joins sar \"head, end\" and nakh \"thread\", both native Persian: the loose end that leads to the rest. EtymDB lists no entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarnakh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarnakh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarnakh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarnakh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sarnakh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sarnakh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to detain, then the Persian for a detective, then say sarnakh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to detain, then the Persian for a detective, then say *sarnakh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سرنخ (sarnakh) mean? (\"A clue, a lead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C320-raddepa",
+      "sequence": 16340,
+      "title": "ردپا (radd-e pâ) — a footprint, a trace",
+      "headword": "ردپا",
+      "romanization": "radd-e pâ",
+      "gloss": "a footprint, a trace",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a4f19394508b5d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a detective, then the Persian for a clue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ردپا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ردپا (radd-e pâ) — \"a footprint, a trace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "روی برف ردپای یک گرگ بود. Ru-ye barf radd-e pâ-ye yek gorg bud. There were a wolf's footprints in the snow."
+            },
+            {
+              "kind": "speech",
+              "text": "radd \"trace\" + pâ \"foot\". Also figurative: the trace someone left behind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pâ \"foot\" is inherited Persian. The origin of radd \"trace, track\" is not settled, and EtymDB lists no entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "radd-e pâ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *radd-e pâ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "radd-e pâ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *radd-e pâ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with radd-e pâ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *radd-e pâ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a detective, then the Persian for a clue, then say radd-e pâ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a detective, then the Persian for a clue, then say *radd-e pâ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ردپا (radd-e pâ) mean? (\"A footprint, a trace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C320-asar-e-angosht",
+      "sequence": 16350,
+      "title": "اثر انگشت (asar-e angosht) — a fingerprint",
+      "headword": "اثر انگشت",
+      "romanization": "asar-e angosht",
+      "gloss": "a fingerprint",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4fcd8b94948573b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a clue, then the Persian for a footprint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اثر انگشت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اثر انگشت (asar-e angosht) — \"a fingerprint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "روی لیوان اثر انگشت بود. Ru-ye livân asar-e angosht bud. There were fingerprints on the glass."
+            },
+            {
+              "kind": "speech",
+              "text": "asar \"trace, mark\" + angosht \"finger\". The Arabic asar is written with ث."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "asar is borrowed from Arabic athar, \"track, trace\" (EtymDB); angosht \"finger\" is native Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asar-e angosht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asar-e angosht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asar-e angosht, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asar-e angosht*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with asar-e angosht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *asar-e angosht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a clue, then the Persian for a footprint, then say asar-e angosht again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a clue, then the Persian for a footprint, then say *asar-e angosht* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اثر انگشت (asar-e angosht) mean? (\"A fingerprint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C320-bazjuyi",
+      "sequence": 16360,
+      "title": "بازجویی (bâzjuyi) — an interrogation, questioning",
+      "headword": "بازجویی",
+      "romanization": "bâzjuyi",
+      "gloss": "an interrogation, questioning",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69af776feef4b8c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a footprint, then the Persian for a fingerprint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بازجویی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بازجویی (bâzjuyi) — \"an interrogation, questioning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بازجویی (bâzjuyi) مظنون سه ساعت طول کشید. Bâzjuyi-ye maznun se sâ'at tul keshid. The questioning of the suspect took three hours."
+            },
+            {
+              "kind": "speech",
+              "text": "bâz \"again\" + ju \"seeking\", from jostan \"to seek\". Bâzjuyi kardan is \"to interrogate\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bâzjuyi joins bâz \"again\" and ju-, the present stem of jostan \"to seek\", with the noun suffix -i. All of it is native Persian; EtymDB lists no entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâzjuyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâzjuyi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâzjuyi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâzjuyi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bâzjuyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bâzjuyi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a footprint, then the Persian for a fingerprint, then say bâzjuyi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a footprint, then the Persian for a fingerprint, then say *bâzjuyi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بازجویی (bâzjuyi) mean? (\"An interrogation, questioning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C341-pazirayi-kardan",
+  "pathSegment": "FA-PATH-341-MEHMANI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-341-MEHMANI",
+      "order": 1
+    }
+  ]
+}

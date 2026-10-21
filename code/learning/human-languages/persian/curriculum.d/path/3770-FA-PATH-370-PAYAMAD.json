@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-370-PAYAMAD",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-370-PAYAMAD"
+  ],
+  "after": []
+}

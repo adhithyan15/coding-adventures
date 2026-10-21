@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 421,
+  "title": "Horn, lights and mirrors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:05668e2f0a9c9289",
+  "lessons": [
+    {
+      "id": "FA-C421-buq",
+      "sequence": 21550,
+      "title": "بوق (buq) — a horn (of a car)",
+      "headword": "بوق",
+      "romanization": "buq",
+      "gloss": "a horn (of a car)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb58500ca4bac318",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to change gear, then the Persian for a clutch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بوق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بوق (buq) — \"a horn (of a car)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بوق (buq) این ماشین خیلی بلند است. Buq-e in mâshin kheyli boland ast. This car's horn is very loud."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an old trumpet made of horn or brass."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "buq was borrowed from Arabic and is usually traced to Arabic būq 'a trumpet'. EtymDB does not list the word, so the line is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with buq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *buq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to change gear, then the Persian for a clutch, then say buq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to change gear, then the Persian for a clutch, then say *buq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بوق (buq) mean? (\"A horn (of a car)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C421-buq-zadan",
+      "sequence": 21560,
+      "title": "بوق زدن (buq zadan) — to honk, to sound the horn",
+      "headword": "بوق زدن",
+      "romanization": "buq zadan",
+      "gloss": "to honk, to sound the horn",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a7fd4eff6a134fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a clutch, then the Persian for a horn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بوق زدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بوق زدن (buq zadan) — \"to honk, to sound the horn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "راننده تاکسی جلوی خانه ما دو بار بوق زد. Rânande-ye tâksi jolow-ye khâne-ye mâ do bâr buq zad. The taxi driver honked twice in front of our house."
+            },
+            {
+              "kind": "speech",
+              "text": "buq + zadan (to strike). Present stem zan-: buq mizanad — he honks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "buq zadan is built from buq 'horn', a loan usually traced to Arabic būq 'a trumpet', and the native verb zadan 'to strike'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buq zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buq zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buq zadan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buq zadan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with buq zadan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *buq zadan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a clutch, then the Persian for a horn, then say buq zadan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a clutch, then the Persian for a horn, then say *buq zadan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بوق زدن (buq zadan) mean? (\"To honk, to sound the horn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C421-cheragh",
+      "sequence": 21570,
+      "title": "چراغ (cherâgh) — a light, a lamp",
+      "headword": "چراغ",
+      "romanization": "cherâgh",
+      "gloss": "a light, a lamp",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b130497cf57fcb12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a horn, then the Persian for to honk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چراغ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چراغ (cherâgh) — \"a light, a lamp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شب چراغهای ماشین را روشن میکنیم. Shab cherâgh-hâ-ye mâshin râ roshan mikonim. At night we switch on the car's lights."
+            },
+            {
+              "kind": "speech",
+              "text": "Cherâgh-e qermez — a red light; cherâgh-e râhnamâ — an indicator."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cherâgh is inherited: EtymDB traces it to Middle Persian čirāgh 'lamp' and also links it with a Parthian form of the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cherâgh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cherâgh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cherâgh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cherâgh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with cherâgh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *cherâgh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a horn, then the Persian for to honk, then say cherâgh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a horn, then the Persian for to honk, then say *cherâgh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چراغ (cherâgh) mean? (\"A light, a lamp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C421-barfpakkon",
+      "sequence": 21580,
+      "title": "برف پاک کن (barfpâkkon) — a windscreen wiper",
+      "headword": "برف پاک کن",
+      "romanization": "barfpâkkon",
+      "gloss": "a windscreen wiper",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39cf581558ac1b38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to honk, then the Persian for a light."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: برف پاک کن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "برف پاک کن (barfpâkkon) — \"a windscreen wiper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در باران برف پاک کن تند کار میکند. Dar bârân barfpâkkon tond kâr mikonad. In the rain the wiper works fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally 'snow-cleaner': barf 'snow' + pâk 'clean' + kon 'doing'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "barfpâkkon is a native compound of barf 'snow', inherited from Middle Persian wafr (EtymDB), pâk 'clean', from Middle Persian pāk (EtymDB), and kon, the present stem of kardan 'to do'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barfpâkkon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barfpâkkon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "barfpâkkon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *barfpâkkon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with barfpâkkon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *barfpâkkon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to honk, then the Persian for a light, then say barfpâkkon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to honk, then the Persian for a light, then say *barfpâkkon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does برف پاک کن (barfpâkkon) mean? (\"A windscreen wiper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C421-ayene-baghal",
+      "sequence": 21590,
+      "title": "آینه بغل (âyene-baghal) — a side mirror (of a car)",
+      "headword": "آینه بغل",
+      "romanization": "âyene-baghal",
+      "gloss": "a side mirror (of a car)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c246f93bfc21df68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a light, then the Persian for a windscreen wiper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آینه بغل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آینه بغل (âyene-baghal) — \"a side mirror (of a car)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آینه بغل (âyene-baghal) ماشین من شکست. Âyene-baghal-e mâshin-e man shekast. The side mirror of my car broke."
+            },
+            {
+              "kind": "speech",
+              "text": "âyene 'mirror' + baghal 'side'. The mirror inside the car is âyene-ye vasat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "âyene-baghal is built from native âyene 'mirror' and baghal 'side, armpit', whose origin is not settled. EtymDB lists neither âyene with older forms nor the Persian baghal, so both parts are hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âyene-baghal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âyene-baghal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âyene-baghal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âyene-baghal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with âyene-baghal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *âyene-baghal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a light, then the Persian for a windscreen wiper, then say âyene-baghal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a light, then the Persian for a windscreen wiper, then say *âyene-baghal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آینه بغل (âyene-baghal) mean? (\"A side mirror (of a car)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C505-navazesh-kardan",
+  "pathSegment": "FA-PATH-505-SUPPORT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-505-SUPPORT",
+      "order": 4
+    }
+  ]
+}

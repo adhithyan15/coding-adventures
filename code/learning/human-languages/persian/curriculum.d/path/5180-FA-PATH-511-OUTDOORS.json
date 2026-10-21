@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-511-OUTDOORS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-511-OUTDOORS"
+  ],
+  "after": []
+}

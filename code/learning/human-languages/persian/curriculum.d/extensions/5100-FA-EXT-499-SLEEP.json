@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-499-SLEEP",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about how I sleep.",
+  "prerequisites": []
+}

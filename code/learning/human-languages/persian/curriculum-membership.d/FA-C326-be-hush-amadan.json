@@ -1,0 +1,11 @@
+{
+  "id": "FA-C326-be-hush-amadan",
+  "pathSegment": "FA-PATH-326-MASDUM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-326-MASDUM",
+      "order": 4
+    }
+  ]
+}

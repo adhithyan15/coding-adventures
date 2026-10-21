@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:94ec3e1dbe54b6f1",
+  "lessonIds": [
+    "FA-C300-nagahan",
+    "FA-C300-belafasele",
+    "FA-C300-bi-derang",
+    "FA-C300-hamin-ke",
+    "FA-C300-ettefaqi"
+  ],
+  "tex": "persian/book/chapters/ch300-suddenly-and-at-once.tex"
+}

@@ -976,7 +976,7 @@ fn rust_release_family_for_package(package_stem: &str) -> Option<RustReleaseFami
             stage_source: StageSource::Column,
             legacy_versions: &[],
         }),
-        // LANG84 phase 4a. Perl's 117 checked partial pairs collapse to a
+        // LANG84 phase 4a. Perl's checked partial pairs collapse to a
         // handful of distinct grammars. Both halves of the unversioned
         // `perl.tokens`/`perl.grammar` pair (LANG81's execution grammar) stay
         // reachable as `unversioned_*()`, never as the `""` release.

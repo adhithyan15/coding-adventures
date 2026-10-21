@@ -1,0 +1,11 @@
+{
+  "id": "FA-C342-tazyin-kardan",
+  "pathSegment": "FA-PATH-342-TAZYIN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-342-TAZYIN",
+      "order": 0
+    }
+  ]
+}

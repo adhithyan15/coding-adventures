@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-514-BALL",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-514-BALL"
+  ],
+  "after": []
+}

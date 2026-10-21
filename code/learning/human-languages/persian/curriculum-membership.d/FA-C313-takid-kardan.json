@@ -1,0 +1,11 @@
+{
+  "id": "FA-C313-takid-kardan",
+  "pathSegment": "FA-PATH-313-AMAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-313-AMAR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C498-rezhim-gereftan",
+  "pathSegment": "FA-PATH-498-WEIGHT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-498-WEIGHT",
+      "order": 2
+    }
+  ]
+}

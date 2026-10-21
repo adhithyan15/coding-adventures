@@ -1,5 +1,11 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
 ## [0.51.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
 
 - **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**

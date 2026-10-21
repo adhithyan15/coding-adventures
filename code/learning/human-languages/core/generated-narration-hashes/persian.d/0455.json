@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:8f2e7c1b3314b556",
+  "lessonIds": [
+    "FA-C455-shahrbazi",
+    "FA-C455-park-e-jangali",
+    "FA-C455-namayeshgah",
+    "FA-C455-farhangsara",
+    "FA-C455-tatil-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch455.txt",
+  "json": "persian/narration/ch455.json",
+  "textHash": "fnv1a64:7e659ec52bef684e",
+  "jsonHash": "fnv1a64:ac68c3034ecad3b3",
+  "findings": []
+}

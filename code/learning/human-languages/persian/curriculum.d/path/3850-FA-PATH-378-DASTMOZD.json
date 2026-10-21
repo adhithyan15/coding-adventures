@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-378-DASTMOZD",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-378-DASTMOZD"
+  ],
+  "after": []
+}

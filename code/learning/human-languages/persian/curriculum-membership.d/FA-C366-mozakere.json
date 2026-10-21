@@ -1,0 +1,11 @@
+{
+  "id": "FA-C366-mozakere",
+  "pathSegment": "FA-PATH-366-BAHS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-366-BAHS",
+      "order": 2
+    }
+  ]
+}
