@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C184-zenbu",
+    "language": "japanese",
+    "chapter": 184,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:374f3f5f3e51424b"
+  },
+  "findings": []
+}

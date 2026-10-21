@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 233,
+  "title": "Swimming and Running",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5255ddea1c2c4abb",
+  "lessons": [
+    {
+      "id": "JA-C233-asobu",
+      "sequence": 14060,
+      "title": "あそぶ (asobu) — to play; to have fun",
+      "headword": "あそぶ",
+      "romanization": "asobu",
+      "gloss": "to play; to have fun",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9f8a7a8deeb1e33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to refuse, then the Japanese for to inform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あそぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あそぶ — asobu — \"to play; to have fun\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きのう こうえんで ともだちと あそびました。 — kinō kōen de tomodachi to asobimashita — \"Yesterday I played with friends in the park.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あそびます, asobimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あそぶ (asobu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asobu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asobu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asobu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asobu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinō kōen de tomodachi to asobimashita — Yesterday I played with friends in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinō kōen de tomodachi to asobimashita* — Yesterday I played with friends in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to refuse, then the Japanese for to inform, then say asobu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to refuse, then the Japanese for to inform, then say *asobu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あそぶ (asobu) mean? (\"To play; to have fun\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C233-asobu-type",
+              "prompt": "Say the Japanese for 'to play'.",
+              "assesses": [
+                "JA-LEX-C233-SPORT233-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あそぶ",
+                "asobu"
+              ],
+              "feedback": {
+                "correct": "Right: あそぶ (asobu) is 'to play; to have fun'.",
+                "incorrect": "'To play' is あそぶ (asobu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C233-oyogu",
+      "sequence": 14070,
+      "title": "およぐ (oyogu) — to swim",
+      "headword": "およぐ",
+      "romanization": "oyogu",
+      "gloss": "to swim",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6598c18c7155d6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to inform, then the Japanese for to play."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: およぐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "およぐ — oyogu — \"to swim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんしゅう うみで およぎました。 — senshū umi de oyogimashita — \"Last week I swam in the sea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite およぎます, oyogimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "およぐ (oyogu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oyogu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oyogu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oyogu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oyogu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senshū umi de oyogimashita — Last week I swam in the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senshū umi de oyogimashita* — Last week I swam in the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to inform, then the Japanese for to play, then say oyogu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to inform, then the Japanese for to play, then say *oyogu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does およぐ (oyogu) mean? (\"To swim\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C233-oyogu-type",
+              "prompt": "Say the Japanese for 'to swim'.",
+              "assesses": [
+                "JA-LEX-C233-SPORT233-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "およぐ",
+                "oyogu"
+              ],
+              "feedback": {
+                "correct": "Right: およぐ (oyogu) is 'to swim'.",
+                "incorrect": "'To swim' is およぐ (oyogu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C233-suiei",
+      "sequence": 14080,
+      "title": "すいえい (suiei) — swimming; swimming as a sport",
+      "headword": "すいえい",
+      "romanization": "suiei",
+      "gloss": "swimming; swimming as a sport",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4236ed931a1810b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to play, then the Japanese for to swim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すいえい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいえい — suiei — \"swimming; swimming as a sport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつやすみに すいえいを ならいました。 — natsuyasumi ni suiei o naraimashita — \"I took swimming lessons in the summer holidays.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいえい (suiei) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sui, \"water\" (Middle Chinese sywijX) and ei, \"swim\" (hjwaengH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suiei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suiei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suiei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suiei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsuyasumi ni suiei o naraimashita — I took swimming lessons in the summer holidays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsuyasumi ni suiei o naraimashita* — I took swimming lessons in the summer holidays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to play, then the Japanese for to swim, then say suiei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to play, then the Japanese for to swim, then say *suiei* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すいえい (suiei) mean? (\"Swimming; swimming as a sport\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C233-suiei-type",
+              "prompt": "Say the Japanese for 'swimming'.",
+              "assesses": [
+                "JA-LEX-C233-SPORT233-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すいえい",
+                "suiei"
+              ],
+              "feedback": {
+                "correct": "Right: すいえい (suiei) is 'swimming; swimming as a sport'.",
+                "incorrect": "'Swimming' is すいえい (suiei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C233-hashiru",
+      "sequence": 14090,
+      "title": "はしる (hashiru) — to run",
+      "headword": "はしる",
+      "romanization": "hashiru",
+      "gloss": "to run",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8541ad15e70577f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to swim, then the Japanese for swimming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はしる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はしる — hashiru — \"to run\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けさ こうえんを はしりました。 — kesa kōen o hashirimashita — \"This morning I ran in the park.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はしります, hashirimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はしる (hashiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hashiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hashiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hashiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hashiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kesa kōen o hashirimashita — This morning I ran in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kesa kōen o hashirimashita* — This morning I ran in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to swim, then the Japanese for swimming, then say hashiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to swim, then the Japanese for swimming, then say *hashiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はしる (hashiru) mean? (\"To run\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C233-hashiru-type",
+              "prompt": "Say the Japanese for 'to run'.",
+              "assesses": [
+                "JA-LEX-C233-SPORT233-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はしる",
+                "hashiru"
+              ],
+              "feedback": {
+                "correct": "Right: はしる (hashiru) is 'to run'.",
+                "incorrect": "'To run' is はしる (hashiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C233-undou",
+      "sequence": 14100,
+      "title": "うんどう (undō) — exercise; physical training",
+      "headword": "うんどう",
+      "romanization": "undō",
+      "gloss": "exercise; physical training",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4413d0f2b5865efd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for swimming, then the Japanese for to run."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うんどう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うんどう — undō — \"exercise; physical training\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きのう ちちと うんどうを しました。 — kinō chichi to undō o shimashita — \"Yesterday I exercised with my father.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うんどう (undō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are un, \"carry, transport\" (Middle Chinese hjunH) and dō, \"move\" (duwngX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "undō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *undō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "undō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *undō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinō chichi to undō o shimashita — Yesterday I exercised with my father.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinō chichi to undō o shimashita* — Yesterday I exercised with my father.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for swimming, then the Japanese for to run, then say undō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for swimming, then the Japanese for to run, then say *undō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うんどう (undō) mean? (\"Exercise; physical training\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C233-undou-type",
+              "prompt": "Say the Japanese for 'exercise'.",
+              "assesses": [
+                "JA-LEX-C233-SPORT233-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うんどう",
+                "undō",
+                "undou",
+                "undoo",
+                "undo"
+              ],
+              "feedback": {
+                "correct": "Right: うんどう (undō) is 'exercise; physical training'.",
+                "incorrect": "'Exercise' is うんどう (undō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C169-tamani",
+  "pathSegment": "JA-PATH-169-OFTEN169",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-169-OFTEN169",
+      "order": 1
+    }
+  ]
+}

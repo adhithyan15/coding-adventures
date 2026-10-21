@@ -1,0 +1,11 @@
+{
+  "id": "JA-C206-koutsuu",
+  "pathSegment": "JA-PATH-206-TRAFFIC206",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-206-TRAFFIC206",
+      "order": 1
+    }
+  ]
+}

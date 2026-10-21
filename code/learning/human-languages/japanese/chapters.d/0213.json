@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Sun, Moon and Stars",
+  "label": "ch:ja-sun-moon-and-stars",
+  "canDo": "I can talk about the sun, the moon and the stars.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C213-atatamaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can talk about the sun, the moon and the stars.",
+    "assesses": [
+      "JA-LEX-C213-SKY213-03",
+      "JA-LEX-C213-SKY213-04",
+      "JA-LEX-C213-SKY213-05"
+    ]
+  }
+}

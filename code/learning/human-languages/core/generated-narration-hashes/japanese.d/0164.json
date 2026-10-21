@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:c048e5176f2c9466",
+  "lessonIds": [
+    "JA-C164-kayoubi",
+    "JA-C164-suiyoubi",
+    "JA-C164-mokuyoubi",
+    "JA-C164-kinyoubi",
+    "JA-C164-nichiyoubi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch164.txt",
+  "json": "japanese/narration/ch164.json",
+  "textHash": "fnv1a64:a66ebbe29acf2ba0",
+  "jsonHash": "fnv1a64:805b9d00d7653a1f",
+  "findings": []
+}

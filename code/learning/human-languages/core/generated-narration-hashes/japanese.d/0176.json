@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:2b5950489395d3f5",
+  "lessonIds": [
+    "JA-C176-shouyu",
+    "JA-C176-miso",
+    "JA-C176-waru",
+    "JA-C176-musu",
+    "JA-C176-itameru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch176.txt",
+  "json": "japanese/narration/ch176.json",
+  "textHash": "fnv1a64:3d5a2a3b014411a5",
+  "jsonHash": "fnv1a64:adf96448446608c8",
+  "findings": []
+}

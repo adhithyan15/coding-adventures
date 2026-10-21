@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C208-taifuu",
+    "language": "japanese",
+    "chapter": 208,
+    "sequence": 12550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:069a8333d1d9b52b"
+  },
+  "findings": []
+}

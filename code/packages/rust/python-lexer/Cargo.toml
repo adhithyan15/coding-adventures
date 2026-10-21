@@ -1,8 +1,8 @@
 [package]
 name = "coding-adventures-python-lexer"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Python lexer — tokenizes Python source code using the grammar-driven lexer and versioned python.tokens grammar files (2.7 through 3.12)"
+description = "Python lexer — compiled token tables for the grammar-driven lexer: LANG84 release pairs (python<release>.tokens) and the legacy minor-line python2.7–3.12 files"
 
 [dependencies]
 grammar-tools = { path = "../grammar-tools" }

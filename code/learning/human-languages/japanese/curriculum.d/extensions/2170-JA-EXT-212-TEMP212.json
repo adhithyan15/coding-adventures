@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-212-TEMP212",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how hot or cold it will get.",
+  "prerequisites": []
+}

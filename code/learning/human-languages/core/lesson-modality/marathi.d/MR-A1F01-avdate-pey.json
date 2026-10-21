@@ -9,14 +9,16 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block"
+      "writing-block",
+      "eyes-or-hands-step"
     ],
     "coreModality": "pen",
     "coreReasons": [
-      "writing-type"
+      "writing-type",
+      "eyes-or-hands-step"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:15edca10387ab7dd",
+    "sourceHash": "fnv1a64:31fb07a3c1f412a1",
     "detachableSegments": [
       "Writing — observe and trace one pair"
     ],

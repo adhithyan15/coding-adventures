@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 155,
+  "title": "Moving House and Shifting Furniture",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:19fb23cc61643105",
+  "lessons": [
+    {
+      "id": "JA-C155-hikkosu",
+      "sequence": 9260,
+      "title": "ひっこす (hikkosu) — to move house",
+      "headword": "ひっこす",
+      "romanization": "hikkosu",
+      "gloss": "to move house",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c74ba28847f2a39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get by, then the Japanese for to get used to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひっこす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひっこす — hikkosu — \"to move house\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おじさんは よく ひっこします。 — ojisan wa yoku hikkoshimasu — \"My uncle often moves house.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひっこします, hikkoshimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひっこす (hikkosu) is native Japanese, built from hiki, \"pulling\", the stem of hiku, and kosu, \"to cross over\", joined with a held k; both parts are inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikkosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikkosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikkosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikkosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojisan wa yoku hikkoshimasu — My uncle often moves house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojisan wa yoku hikkoshimasu* — My uncle often moves house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get by, then the Japanese for to get used to, then say hikkosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get by, then the Japanese for to get used to, then say *hikkosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひっこす (hikkosu) mean? (\"To move house\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C155-hikkosu-type",
+              "prompt": "Say the Japanese for 'to move house'.",
+              "assesses": [
+                "JA-LEX-C155-MOVE155-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひっこす",
+                "hikkosu"
+              ],
+              "feedback": {
+                "correct": "Right: ひっこす (hikkosu) is 'to move house'.",
+                "incorrect": "'To move house' is ひっこす (hikkosu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C155-hakobu",
+      "sequence": 9270,
+      "title": "はこぶ (hakobu) — to carry",
+      "headword": "はこぶ",
+      "romanization": "hakobu",
+      "gloss": "to carry",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:289b1aa0bbd76820",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get used to, then the Japanese for to move house."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はこぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はこぶ — hakobu — \"to carry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちと にもつを はこびます。 — chichi to nimotsu o hakobimasu — \"I carry the luggage with my father.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はこびます, hakobimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はこぶ (hakobu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakobu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakobu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakobu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakobu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi to nimotsu o hakobimasu — I carry the luggage with my father.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi to nimotsu o hakobimasu* — I carry the luggage with my father.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get used to, then the Japanese for to move house, then say hakobu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get used to, then the Japanese for to move house, then say *hakobu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はこぶ (hakobu) mean? (\"To carry\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C155-hakobu-type",
+              "prompt": "Say the Japanese for 'to carry'.",
+              "assesses": [
+                "JA-LEX-C155-MOVE155-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はこぶ",
+                "hakobu"
+              ],
+              "feedback": {
+                "correct": "Right: はこぶ (hakobu) is 'to carry'.",
+                "incorrect": "'To carry' is はこぶ (hakobu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C155-ugokasu",
+      "sequence": 9280,
+      "title": "うごかす (ugokasu) — to shift; to move (something)",
+      "headword": "うごかす",
+      "romanization": "ugokasu",
+      "gloss": "to shift; to move (something)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82fd59b5803929d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to move house, then the Japanese for to carry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うごかす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うごかす — ugokasu — \"to shift; to move (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つくえを うごかします。 — tsukue o ugokashimasu — \"I shift the desk.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うごかします, ugokashimasu; a godan verb. Its intransitive partner is うごく, ugoku."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うごかす (ugokasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as ugoku, \"to move\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugokasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ugokasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ugokasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ugokasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukue o ugokashimasu — I shift the desk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukue o ugokashimasu* — I shift the desk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to move house, then the Japanese for to carry, then say ugokasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to move house, then the Japanese for to carry, then say *ugokasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うごかす (ugokasu) mean? (\"To shift; to move (something)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C155-ugokasu-type",
+              "prompt": "Say the Japanese for 'to shift'.",
+              "assesses": [
+                "JA-LEX-C155-MOVE155-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うごかす",
+                "ugokasu"
+              ],
+              "feedback": {
+                "correct": "Right: うごかす (ugokasu) is 'to shift; to move (something)'.",
+                "incorrect": "'To shift' is うごかす (ugokasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C155-kagu",
+      "sequence": 9290,
+      "title": "かぐ (kagu) — furniture",
+      "headword": "かぐ",
+      "romanization": "kagu",
+      "gloss": "furniture",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2721677986eceb23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to carry, then the Japanese for to shift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かぐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かぐ — kagu — \"furniture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この へやは かぐが すくないです。 — kono heya wa kagu ga sukunai desu — \"This room has little furniture.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かぐ (kagu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ka, \"house, home\" (Middle Chinese kae) and gu, \"tool, utensil\" (gjuH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kagu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kagu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kagu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kagu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono heya wa kagu ga sukunai desu — This room has little furniture.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono heya wa kagu ga sukunai desu* — This room has little furniture.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to carry, then the Japanese for to shift, then say kagu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to carry, then the Japanese for to shift, then say *kagu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かぐ (kagu) mean? (\"Furniture\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C155-kagu-type",
+              "prompt": "Say the Japanese for 'furniture'.",
+              "assesses": [
+                "JA-LEX-C155-MOVE155-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かぐ",
+                "kagu"
+              ],
+              "feedback": {
+                "correct": "Right: かぐ (kagu) is 'furniture'.",
+                "incorrect": "'Furniture' is かぐ (kagu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C155-genkan",
+      "sequence": 9300,
+      "title": "げんかん (genkan) — the front entrance; the entry hall",
+      "headword": "げんかん",
+      "romanization": "genkan",
+      "gloss": "the front entrance; the entry hall",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a9cca5a5f11e599",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to shift, then the Japanese for furniture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: げんかん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんかん — genkan — \"the front entrance; the entry hall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "げんかんで くつを ぬぎます。 — genkan de kutsu o nugimasu — \"I take off my shoes in the entry hall.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんかん (genkan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, \"dark, deep\" (Middle Chinese hwen) and kan, \"barrier, gateway\" (kwaen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genkan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genkan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genkan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genkan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genkan de kutsu o nugimasu — I take off my shoes in the entry hall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genkan de kutsu o nugimasu* — I take off my shoes in the entry hall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to shift, then the Japanese for furniture, then say genkan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to shift, then the Japanese for furniture, then say *genkan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does げんかん (genkan) mean? (\"The front entrance; the entry hall\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C155-genkan-type",
+              "prompt": "Say the Japanese for 'the front entrance'.",
+              "assesses": [
+                "JA-LEX-C155-MOVE155-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "げんかん",
+                "genkan"
+              ],
+              "feedback": {
+                "correct": "Right: げんかん (genkan) is 'the front entrance; the entry hall'.",
+                "incorrect": "'The front entrance' is げんかん (genkan)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

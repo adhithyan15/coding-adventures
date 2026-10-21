@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 161,
+  "title": "Washing, Spreading and Drying",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:708b66641afb34ec",
+  "lessons": [
+    {
+      "id": "JA-C161-sentaku",
+      "sequence": 9570,
+      "title": "せんたく (sentaku) — washing clothes; the washing",
+      "headword": "せんたく",
+      "romanization": "sentaku",
+      "gloss": "washing clothes; the washing",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87691812f83eca9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to make dirty, then the Japanese for dirty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せんたく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんたく — sentaku — \"washing clothes; the washing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんたくは あにの しごとです。 — sentaku wa ani no shigoto desu — \"The washing is my elder brother's job.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんたく (sentaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"wash\", whose sound matches the rhyme book's senX although it gives \"wash\" under sejX, and taku, \"rinse\" (Middle Chinese draewk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sentaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sentaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sentaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sentaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sentaku wa ani no shigoto desu — The washing is my elder brother's job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sentaku wa ani no shigoto desu* — The washing is my elder brother's job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to make dirty, then the Japanese for dirty, then say sentaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to make dirty, then the Japanese for dirty, then say *sentaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せんたく (sentaku) mean? (\"Washing clothes; the washing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C161-sentaku-type",
+              "prompt": "Say the Japanese for 'washing clothes'.",
+              "assesses": [
+                "JA-LEX-C161-LAUNDRY161-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せんたく",
+                "sentaku"
+              ],
+              "feedback": {
+                "correct": "Right: せんたく (sentaku) is 'washing clothes; the washing'.",
+                "incorrect": "'Washing clothes' is せんたく (sentaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C161-nureru",
+      "sequence": 9580,
+      "title": "ぬれる (nureru) — to get wet",
+      "headword": "ぬれる",
+      "romanization": "nureru",
+      "gloss": "to get wet",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fa63efcaed463c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for dirty, then the Japanese for washing clothes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぬれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬれる — nureru — \"to get wet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あめで くつが ぬれます。 — ame de kutsu ga nuremasu — \"My shoes get wet in the rain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ぬれます, nuremasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬれる (nureru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nureru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nureru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nureru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nureru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame de kutsu ga nuremasu — My shoes get wet in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame de kutsu ga nuremasu* — My shoes get wet in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for dirty, then the Japanese for washing clothes, then say nureru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for dirty, then the Japanese for washing clothes, then say *nureru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぬれる (nureru) mean? (\"To get wet\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C161-nureru-type",
+              "prompt": "Say the Japanese for 'to get wet'.",
+              "assesses": [
+                "JA-LEX-C161-LAUNDRY161-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぬれる",
+                "nureru"
+              ],
+              "feedback": {
+                "correct": "Right: ぬれる (nureru) is 'to get wet'.",
+                "incorrect": "'To get wet' is ぬれる (nureru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C161-hirogeru",
+      "sequence": 9590,
+      "title": "ひろげる (hirogeru) — to spread out; to unfold",
+      "headword": "ひろげる",
+      "romanization": "hirogeru",
+      "gloss": "to spread out; to unfold",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8f6049ac013488d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for washing clothes, then the Japanese for to get wet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひろげる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひろげる — hirogeru — \"to spread out; to unfold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふとんを ゆかに ひろげます。 — futon o yuka ni hirogemasu — \"I spread the futon out on the floor.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ひろげます, hirogemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひろげる (hirogeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hirogeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hirogeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hirogeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hirogeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futon o yuka ni hirogemasu — I spread the futon out on the floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futon o yuka ni hirogemasu* — I spread the futon out on the floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for washing clothes, then the Japanese for to get wet, then say hirogeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for washing clothes, then the Japanese for to get wet, then say *hirogeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひろげる (hirogeru) mean? (\"To spread out; to unfold\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C161-hirogeru-type",
+              "prompt": "Say the Japanese for 'to spread out'.",
+              "assesses": [
+                "JA-LEX-C161-LAUNDRY161-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひろげる",
+                "hirogeru"
+              ],
+              "feedback": {
+                "correct": "Right: ひろげる (hirogeru) is 'to spread out; to unfold'.",
+                "incorrect": "'To spread out' is ひろげる (hirogeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C161-kawaku",
+      "sequence": 9600,
+      "title": "かわく (kawaku) — to get dry",
+      "headword": "かわく",
+      "romanization": "kawaku",
+      "gloss": "to get dry",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdfc96d67830abc6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get wet, then the Japanese for to spread out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かわく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かわく — kawaku — \"to get dry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつは せんたくものが よく かわきます。 — natsu wa sentakumono ga yoku kawakimasu — \"In summer the laundry dries well.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かわきます, kawakimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かわく (kawaku) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kawaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kawaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kawaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kawaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsu wa sentakumono ga yoku kawakimasu — In summer the laundry dries well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsu wa sentakumono ga yoku kawakimasu* — In summer the laundry dries well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get wet, then the Japanese for to spread out, then say kawaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get wet, then the Japanese for to spread out, then say *kawaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かわく (kawaku) mean? (\"To get dry\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C161-kawaku-type",
+              "prompt": "Say the Japanese for 'to get dry'.",
+              "assesses": [
+                "JA-LEX-C161-LAUNDRY161-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かわく",
+                "kawaku"
+              ],
+              "feedback": {
+                "correct": "Right: かわく (kawaku) is 'to get dry'.",
+                "incorrect": "'To get dry' is かわく (kawaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C161-kawakasu",
+      "sequence": 9610,
+      "title": "かわかす (kawakasu) — to dry (something)",
+      "headword": "かわかす",
+      "romanization": "kawakasu",
+      "gloss": "to dry (something)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7dd662cf387eae62",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to spread out, then the Japanese for to get dry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かわかす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かわかす — kawakasu — \"to dry (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふとんを かわかします。 — futon o kawakashimasu — \"I dry the futon.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かわかします, kawakashimasu; a godan verb. Its intransitive partner is かわく, kawaku."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かわかす (kawakasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as kawaku, \"to get dry\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kawakasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kawakasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kawakasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kawakasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futon o kawakashimasu — I dry the futon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futon o kawakashimasu* — I dry the futon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to spread out, then the Japanese for to get dry, then say kawakasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to spread out, then the Japanese for to get dry, then say *kawakasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かわかす (kawakasu) mean? (\"To dry (something)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C161-kawakasu-type",
+              "prompt": "Say the Japanese for 'to dry'.",
+              "assesses": [
+                "JA-LEX-C161-LAUNDRY161-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かわかす",
+                "kawakasu"
+              ],
+              "feedback": {
+                "correct": "Right: かわかす (kawakasu) is 'to dry (something)'.",
+                "incorrect": "'To dry' is かわかす (kawakasu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

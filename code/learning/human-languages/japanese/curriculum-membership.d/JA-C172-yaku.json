@@ -1,0 +1,11 @@
+{
+  "id": "JA-C172-yaku",
+  "pathSegment": "JA-PATH-172-MEALS172",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-172-MEALS172",
+      "order": 4
+    }
+  ]
+}

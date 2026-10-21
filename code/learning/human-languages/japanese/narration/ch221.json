@@ -1,0 +1,951 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 221,
+  "title": "Fever, Pain and Treatment",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fa0790fa4760b246",
+  "lessons": [
+    {
+      "id": "JA-C221-taion",
+      "sequence": 13180,
+      "title": "たいおん (taion) — body temperature",
+      "headword": "たいおん",
+      "romanization": "taion",
+      "gloss": "body temperature",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8735111590ad2c53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to lose weight, then the Japanese for an appetite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいおん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいおん — taion — \"body temperature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいおんは たかいですか。 — taion wa takai desu ka — \"Is your temperature high?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいおん (taion) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"body\" (Middle Chinese thejX) and on, \"warm\" ('won) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taion*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taion, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taion*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taion wa takai desu ka — Is your temperature high?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taion wa takai desu ka* — Is your temperature high?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to lose weight, then the Japanese for an appetite, then say taion again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to lose weight, then the Japanese for an appetite, then say *taion* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいおん (taion) mean? (\"Body temperature\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C221-taion-type",
+              "prompt": "Say the Japanese for 'body temperature'.",
+              "assesses": [
+                "JA-LEX-C221-FEVER221-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいおん",
+                "taion"
+              ],
+              "feedback": {
+                "correct": "Right: たいおん (taion) is 'body temperature'.",
+                "incorrect": "'Body temperature' is たいおん (taion)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C221-sagaru",
+      "sequence": 13190,
+      "title": "さがる (sagaru) — to go down; to drop",
+      "headword": "さがる",
+      "romanization": "sagaru",
+      "gloss": "to go down; to drop",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc56e77ac6e8b578",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an appetite, then the Japanese for body temperature."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さがる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さがる — sagaru — \"to go down; to drop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねつは さがりましたか。 — netsu wa sagarimashita ka — \"Has your fever gone down?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さがります, sagarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さがる (sagaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sagaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sagaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "netsu wa sagarimashita ka — Has your fever gone down?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *netsu wa sagarimashita ka* — Has your fever gone down?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an appetite, then the Japanese for body temperature, then say sagaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an appetite, then the Japanese for body temperature, then say *sagaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さがる (sagaru) mean? (\"To go down; to drop\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C221-sagaru-type",
+              "prompt": "Say the Japanese for 'to go down'.",
+              "assesses": [
+                "JA-LEX-C221-FEVER221-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さがる",
+                "sagaru"
+              ],
+              "feedback": {
+                "correct": "Right: さがる (sagaru) is 'to go down; to drop'.",
+                "incorrect": "'To go down' is さがる (sagaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C221-itamu",
+      "sequence": 13200,
+      "title": "いたむ (itamu) — to ache; to hurt",
+      "headword": "いたむ",
+      "romanization": "itamu",
+      "gloss": "to ache; to hurt",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:118e447c156d1fc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for body temperature, then the Japanese for to go down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いたむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いたむ — itamu — \"to ache; to hurt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はが いたみますか。 — ha ga itamimasu ka — \"Does your tooth ache?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite いたみます, itamimasu; a godan verb. The noun いたみ, itami, means \"pain\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いたむ (itamu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itamu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itamu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itamu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itamu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ha ga itamimasu ka — Does your tooth ache?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ha ga itamimasu ka* — Does your tooth ache?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for body temperature, then the Japanese for to go down, then say itamu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for body temperature, then the Japanese for to go down, then say *itamu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いたむ (itamu) mean? (\"To ache; to hurt\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C221-itamu-type",
+              "prompt": "Say the Japanese for 'to ache'.",
+              "assesses": [
+                "JA-LEX-C221-FEVER221-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いたむ",
+                "itamu"
+              ],
+              "feedback": {
+                "correct": "Right: いたむ (itamu) is 'to ache; to hurt'.",
+                "incorrect": "'To ache' is いたむ (itamu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C221-chiryou",
+      "sequence": 13210,
+      "title": "ちりょう (chiryō) — treatment; medical care",
+      "headword": "ちりょう",
+      "romanization": "chiryō",
+      "gloss": "treatment; medical care",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65339c80b75b9bdf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to go down, then the Japanese for to ache."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちりょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちりょう — chiryō — \"treatment; medical care\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちりょうは まだ おわりません。 — chiryō wa mada owarimasen — \"The treatment is not over yet.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちりょう (chiryō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chi, \"to govern, cure\" (Middle Chinese dri) and ryō, \"to heal\" (ljewH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiryō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiryō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiryō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiryō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiryō wa mada owarimasen — The treatment is not over yet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiryō wa mada owarimasen* — The treatment is not over yet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to go down, then the Japanese for to ache, then say chiryō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to go down, then the Japanese for to ache, then say *chiryō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちりょう (chiryō) mean? (\"Treatment; medical care\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C221-chiryou-type",
+              "prompt": "Say the Japanese for 'treatment'.",
+              "assesses": [
+                "JA-LEX-C221-FEVER221-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちりょう",
+                "chiryō",
+                "chiryou",
+                "chiryoo",
+                "chiryo"
+              ],
+              "feedback": {
+                "correct": "Right: ちりょう (chiryō) is 'treatment; medical care'.",
+                "incorrect": "'Treatment' is ちりょう (chiryō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C221-yobou",
+      "sequence": 13220,
+      "title": "よぼう (yobō) — prevention",
+      "headword": "よぼう",
+      "romanization": "yobō",
+      "gloss": "prevention",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c765741d77533f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to ache, then the Japanese for treatment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よぼう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よぼう — yobō — \"prevention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "よぼうの ちゅうしゃですか。 — yobō no chūsha desu ka — \"Is it a preventive injection?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よぼう (yobō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yo, \"beforehand\" (Middle Chinese yoH) and bō, \"to ward off\" (bjang) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yobō no chūsha desu ka — Is it a preventive injection?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yobō no chūsha desu ka* — Is it a preventive injection?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to ache, then the Japanese for treatment, then say yobō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to ache, then the Japanese for treatment, then say *yobō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よぼう (yobō) mean? (\"Prevention\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C221-yobou-type",
+              "prompt": "Say the Japanese for 'prevention'.",
+              "assesses": [
+                "JA-LEX-C221-FEVER221-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よぼう",
+                "yobō",
+                "yobou",
+                "yoboo",
+                "yobo"
+              ],
+              "feedback": {
+                "correct": "Right: よぼう (yobō) is 'prevention'.",
+                "incorrect": "'Prevention' is よぼう (yobō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R221-review-216-221",
+      "sequence": 13230,
+      "title": "Words from chapters 216–221 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 216-221",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4cada787df9c4c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for an illness and condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an illness, condition, to get tired, to get better, to shiver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an illness, condition, to get tired, to get better, to shiver]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a patient, a consultation, an injection, a dentist, a cavity",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a patient, a consultation, an injection, a dentist, a cavity]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "going into hospital, leaving hospital, surgery, a wound, life",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: going into hospital, leaving hospital, surgery, a wound, life]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fall over, to slip, to snap, to collapse, an injury",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fall over, to slip, to snap, to collapse, an injury]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "health, robust, to gain weight, to lose weight, an appetite",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: health, robust, to gain weight, to lose weight, an appetite]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "body temperature, to go down, to ache, treatment, prevention",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: body temperature, to go down, to ache, treatment, prevention]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An illness? (びょうき, byōki.) Condition? (ぐあい, guai.) To get tired? (つかれる, tsukareru.) To get better? (なおる, naoru.) To shiver? (ふるえる, furueru.) A patient? (かんじゃ, kanja.) A consultation? (しんさつ, shinsatsu.) An injection? (ちゅうしゃ, chūsha.) A dentist? (はいしゃ, haisha.) A cavity? (むしば, mushiba.) Going into hospital? (にゅういん, nyūin.) Leaving hospital? (たいいん, taiin.) Surgery? (しゅじゅつ, shujutsu.) A wound? (きず, kizu.) Life? (いのち, inochi.) To fall over? (ころぶ, korobu.) To slip? (すべる, suberu.) To snap? (おれる, oreru.) To collapse? (たおれる, taoreru.) An injury? (けが, kega.) Health? (けんこう, kenkō.) Robust? (じょうぶ, jōbu.) To gain weight? (ふとる, futoru.) To lose weight? (やせる, yaseru.) An appetite? (しょくよく, shokuyoku.) Body temperature? (たいおん, taion.) To go down? (さがる, sagaru.) To ache? (いたむ, itamu.) Treatment? (ちりょう, chiryō.) Prevention? (よぼう, yobō.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R221-review-216-221-type",
+              "prompt": "Say the Japanese for 'an illness'.",
+              "assesses": [
+                "JA-LEX-C216-UNWELL216-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "びょうき",
+                "byōki",
+                "byouki",
+                "byooki",
+                "byoki"
+              ],
+              "feedback": {
+                "correct": "Right: びょうき (byōki) is 'an illness; a disease'.",
+                "incorrect": "'An illness' is びょうき (byōki)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

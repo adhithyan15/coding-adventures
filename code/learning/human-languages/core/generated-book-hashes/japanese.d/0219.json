@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:1a2f7a23003d91cb",
+  "lessonIds": [
+    "JA-C219-korobu",
+    "JA-C219-suberu",
+    "JA-C219-oreru",
+    "JA-C219-taoreru",
+    "JA-C219-kega"
+  ],
+  "tex": "japanese/book/chapters/ch219-slips-falls-and-breaks.tex"
+}

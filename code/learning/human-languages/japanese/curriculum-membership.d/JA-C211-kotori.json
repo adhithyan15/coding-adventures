@@ -1,0 +1,11 @@
+{
+  "id": "JA-C211-kotori",
+  "pathSegment": "JA-PATH-211-ANIMAL211",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-211-ANIMAL211",
+      "order": 3
+    }
+  ]
+}

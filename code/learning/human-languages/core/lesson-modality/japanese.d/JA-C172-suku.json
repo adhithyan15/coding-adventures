@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C172-suku",
+    "language": "japanese",
+    "chapter": 172,
+    "sequence": 10420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7075456d2c691347"
+  },
+  "findings": []
+}

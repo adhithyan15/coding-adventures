@@ -1,0 +1,11 @@
+{
+  "id": "JA-C235-keru",
+  "pathSegment": "JA-PATH-235-BALL235",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-235-BALL235",
+      "order": 1
+    }
+  ]
+}

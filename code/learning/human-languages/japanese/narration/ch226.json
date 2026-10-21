@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 226,
+  "title": "Questions and Exams",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ef748195b1732607",
+  "lessons": [
+    {
+      "id": "JA-C226-shitsumon",
+      "sequence": 13700,
+      "title": "しつもん (shitsumon) — a question",
+      "headword": "しつもん",
+      "romanization": "shitsumon",
+      "gloss": "a question",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9b2c4dc180f5f2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to look up, then the Japanese for a dictionary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しつもん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しつもん — shitsumon — \"a question\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がくせいは せんせいに しつもんを します。 — gakusei wa sensei ni shitsumon o shimasu — \"The students ask the teacher questions.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しつもん (shitsumon) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shitsu, \"substance\" (Middle Chinese tsyit) and mon, \"ask\" (mjunH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitsumon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitsumon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitsumon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitsumon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakusei wa sensei ni shitsumon o shimasu — The students ask the teacher questions.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakusei wa sensei ni shitsumon o shimasu* — The students ask the teacher questions.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to look up, then the Japanese for a dictionary, then say shitsumon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to look up, then the Japanese for a dictionary, then say *shitsumon* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しつもん (shitsumon) mean? (\"A question\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C226-shitsumon-type",
+              "prompt": "Say the Japanese for 'a question'.",
+              "assesses": [
+                "JA-LEX-C226-EXAM226-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しつもん",
+                "shitsumon"
+              ],
+              "feedback": {
+                "correct": "Right: しつもん (shitsumon) is 'a question'.",
+                "incorrect": "'A question' is しつもん (shitsumon)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C226-kotaeru",
+      "sequence": 13710,
+      "title": "こたえる (kotaeru) — to reply; to answer",
+      "headword": "こたえる",
+      "romanization": "kotaeru",
+      "gloss": "to reply; to answer",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1de0314aac408f79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a dictionary, then the Japanese for a question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こたえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こたえる — kotaeru — \"to reply; to answer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんせいは しつもんに ていねいに こたえます。 — sensei wa shitsumon ni teinei ni kotaemasu — \"The teacher replies to questions politely.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こたえます, kotaemasu; an ichidan verb. The noun こたえ, kotae, \"an answer\", comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こたえる (kotaeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensei wa shitsumon ni teinei ni kotaemasu — The teacher replies to questions politely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensei wa shitsumon ni teinei ni kotaemasu* — The teacher replies to questions politely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a dictionary, then the Japanese for a question, then say kotaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a dictionary, then the Japanese for a question, then say *kotaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こたえる (kotaeru) mean? (\"To reply; to answer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C226-kotaeru-type",
+              "prompt": "Say the Japanese for 'to reply'.",
+              "assesses": [
+                "JA-LEX-C226-EXAM226-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こたえる",
+                "kotaeru"
+              ],
+              "feedback": {
+                "correct": "Right: こたえる (kotaeru) is 'to reply; to answer'.",
+                "incorrect": "'To reply' is こたえる (kotaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C226-shiken",
+      "sequence": 13720,
+      "title": "しけん (shiken) — an exam; a test",
+      "headword": "しけん",
+      "romanization": "shiken",
+      "gloss": "an exam; a test",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4819d19016228e7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a question, then the Japanese for to reply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しけん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しけん — shiken — \"an exam; a test\"."
+            },
+            {
+              "kind": "speech",
+              "text": "がっこうは まいしゅう しけんが あります。 — gakkō wa maishū shiken ga arimasu — \"The school has an exam every week.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しけん (shiken) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shi, \"try\" (Middle Chinese syiH) and ken, \"verify\" (ngjemH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shiken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shiken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakkō wa maishū shiken ga arimasu — The school has an exam every week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakkō wa maishū shiken ga arimasu* — The school has an exam every week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a question, then the Japanese for to reply, then say shiken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a question, then the Japanese for to reply, then say *shiken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しけん (shiken) mean? (\"An exam; a test\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C226-shiken-type",
+              "prompt": "Say the Japanese for 'an exam'.",
+              "assesses": [
+                "JA-LEX-C226-EXAM226-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しけん",
+                "shiken"
+              ],
+              "feedback": {
+                "correct": "Right: しけん (shiken) is 'an exam; a test'.",
+                "incorrect": "'An exam' is しけん (shiken)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C226-ukeru",
+      "sequence": 13730,
+      "title": "うける (ukeru) — to take an exam; to receive",
+      "headword": "うける",
+      "romanization": "ukeru",
+      "gloss": "to take an exam; to receive",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73813b8b97618b8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to reply, then the Japanese for an exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うける — ukeru — \"to take an exam; to receive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには らいねん しけんを うけます。 — ani wa rainen shiken o ukemasu — \"My elder brother takes an exam next year.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うけます, ukemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うける (ukeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa rainen shiken o ukemasu — My elder brother takes an exam next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa rainen shiken o ukemasu* — My elder brother takes an exam next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to reply, then the Japanese for an exam, then say ukeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to reply, then the Japanese for an exam, then say *ukeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うける (ukeru) mean? (\"To take an exam; to receive\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C226-ukeru-type",
+              "prompt": "Say the Japanese for 'to take an exam'.",
+              "assesses": [
+                "JA-LEX-C226-EXAM226-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うける",
+                "ukeru"
+              ],
+              "feedback": {
+                "correct": "Right: うける (ukeru) is 'to take an exam; to receive'.",
+                "incorrect": "'To take an exam' is うける (ukeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C226-ten",
+      "sequence": 13740,
+      "title": "てん (ten) — a mark; a score; a point",
+      "headword": "てん",
+      "romanization": "ten",
+      "gloss": "a mark; a score; a point",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e81e200b27c3588b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an exam, then the Japanese for to take an exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てん — ten — \"a mark; a score; a point\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あにの しけんの てんは いいです。 — ani no shiken no ten wa ii desu — \"My elder brother's exam mark is good.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てん (ten) is Sino-Japanese (kango): one Chinese character read with its on'yomi, a reading borrowed from Chinese: ten, \"dot, mark\" (Middle Chinese temX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ten, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ten*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani no shiken no ten wa ii desu — My elder brother's exam mark is good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani no shiken no ten wa ii desu* — My elder brother's exam mark is good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an exam, then the Japanese for to take an exam, then say ten again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an exam, then the Japanese for to take an exam, then say *ten* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てん (ten) mean? (\"A mark; a score; a point\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C226-ten-type",
+              "prompt": "Say the Japanese for 'a mark'.",
+              "assesses": [
+                "JA-LEX-C226-EXAM226-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てん",
+                "ten"
+              ],
+              "feedback": {
+                "correct": "Right: てん (ten) is 'a mark; a score; a point'.",
+                "incorrect": "'A mark' is てん (ten)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

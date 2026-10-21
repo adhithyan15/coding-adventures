@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C246-kenka",
+    "language": "japanese",
+    "chapter": 246,
+    "sequence": 14740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a19d154bca56b8e"
+  },
+  "findings": []
+}

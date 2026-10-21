@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Meat and Milk",
+  "label": "ch:ja-meat-and-milk",
+  "canDo": "I can name meats and milk and keep food cold.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C178-hiyasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can name meats and milk and keep food cold.",
+    "assesses": [
+      "JA-LEX-C178-MEAT178-03",
+      "JA-LEX-C178-MEAT178-04",
+      "JA-LEX-C178-MEAT178-05"
+    ]
+  }
+}

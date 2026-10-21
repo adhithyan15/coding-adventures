@@ -3,6 +3,14 @@
 **Status:** Draft, 2026-10-07. This is the first bounded Python-to-IIR slice
 under LANG78's four-language frontend program.
 
+**Relationship to LANG84 (2026-10-20).** LANG84 phase 7a added a second,
+independent Python path to `python-iir-compiler`. It is the integer subset
+`py-int-print` on per-release grammar pairs (`compile_source_at`), and it runs
+on every backend. This pilot is unchanged. It still parses with the legacy
+minor-line grammar `"3.12"` and runs on `vm-core`, and its API keeps its
+signatures. It moves to release pairs once LANG83's float formatting exists
+(LANG84 7b/7c).
+
 ## Pipeline
 
 Python 3.12 source is tokenized and parsed by the existing Rust `python-lexer`

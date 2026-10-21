@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Habits and Everyday Life",
+  "label": "ch:ja-habits-and-everyday-life",
+  "canDo": "I can describe my usual days and habits.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C154-nareru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can describe my usual days and habits.",
+    "assesses": [
+      "JA-LEX-C154-HABIT154-03",
+      "JA-LEX-C154-HABIT154-04",
+      "JA-LEX-C154-HABIT154-05"
+    ]
+  }
+}

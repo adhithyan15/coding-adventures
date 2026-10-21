@@ -12,29 +12,34 @@ type: writing
 headword: "माझं नाव अरुण आहे."
 gloss: copy the already-practised identity sentence as one message line
 romanization: "mājhaṁ nāv Aruṇ āhe"
-prerequisites: [MR-A1M01-reader-greeting]
+prerequisites: [MR-A1M01-reader-greeting, MR-A1F01-mitrache-naav]
 sounds: []
 roots: []
 duration:
-  max_seconds: 180
+  max_seconds: 195
 requires:
-  knowledge: []
+  knowledge: [MR-A1-FORM-LABEL-MITRACHE-NAAV, MR-A1-FORM-POSSESSIVE-NEUTER]
 introduces:
   knowledge: [MR-A1-MESSAGE-LINE-NAME]
 practises:
-  knowledge: [MR-A1-MESSAGE-LINE-GREETING, MR-A1-MESSAGE-LINE-NAME]
+  knowledge: [MR-A1-FORM-LABEL-MITRACHE-NAAV, MR-A1-FORM-POSSESSIVE-NEUTER, MR-A1-MESSAGE-LINE-GREETING, MR-A1-MESSAGE-LINE-NAME]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [MR-A1M01-reader-greeting, MR-C02-majhe-naav-aahe, MR-C02-practice]
+reviews_of: [MR-A1M01-reader-greeting, MR-A1F01-mitrache-naav, MR-C02-majhe-naav-aahe, MR-C02-practice]
 ---
 
 # Add the sender's name
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[MR-A1-MESSAGE-LINE-NAME]; assesses=[MR-A1-MESSAGE-LINE-GREETING] -->
+<!-- hl-knowledge: introduces=[MR-A1-MESSAGE-LINE-NAME]; assesses=[MR-A1-FORM-LABEL-MITRACHE-NAAV, MR-A1-FORM-POSSESSIVE-NEUTER, MR-A1-MESSAGE-LINE-GREETING] -->
+
+Before looking back, recall the form label for a friend's name. Write it from
+memory and circle the **-चे** ending that agrees with neuter **नाव**. Check the
+form page only after writing it. Now turn from a friend's name to the sender's
+own name in the message.
 
 Write yesterday's reader greeting from memory. The next line is not new
 Marathi: **माझं नाव अरुण आहे.** already appeared in the introduction recap.

@@ -35,8 +35,12 @@ stay conservative. A non-unit static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
 whole-number factors may precede the sign-rooted numerator, including exact
 divisions among those factors, when multiplication connects the resulting
-prefix to that root; division by the root stays conservative. Unary
-signs, arithmetic composition with finite static operands, and real-valued
+prefix to that root; division by the root stays conservative. Positive
+variable-free whole-number powers may raise the exact sign-rooted integer
+transform within the existing exponent-unroll cap while checked exponentiation
+remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
+stay conservative. Unary signs, arithmetic composition with finite static
+operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
 results may also widen through a real name formal. Other real name-actual
@@ -225,8 +229,8 @@ GC-linked integration tests use the static archive path reported by Cargo, so
 builds the archive in an isolated temporary target directory containing spaces.
 
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
-BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, Macsyma, and
-Perl** to native executables through the shared LANG VM chain.
+BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, Macsyma, Perl,
+and Python** to native executables through the shared LANG VM chain.
 
 The language matrix compares text output using LF line endings, accepting the
 equivalent CRLF produced by Windows text runtimes. It preserves lone carriage
@@ -1276,3 +1280,32 @@ CLR simulator. Acceptance depends on the actual IIR: dynamic helper boundaries,
 McCarthy `ref<any>` and Nib narrow types remain unsupported, and the CLR01
 out-of-i32 literal gate remains in force. No type inference or fallback occurs.
 The default encoded API, CLI and textual result ABI retain their behavior.
+
+## Python on every backend (LANG84 phase 7a)
+
+`--lang python` (or `py`, or a `.py` file) compiles the `py-int-print`
+subset: `print(<expr>)` and `print()` over decimal integers, parentheses,
+unary `+`/`-` and `+ - * // %`. It goes through
+`python_iir_compiler::compile_source_at` on the frontend's default release,
+3.13.16. The compiler walks the tree that the generic
+`GrammarLexer`/`GrammarParser` build from `python3.13.16.tokens` and
+`.grammar`, and emits only LANG83 registry ops:
+
+| Python | IIR |
+|---|---|
+| `a + b`, `a - b`, `a * b`, `-a` | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` (PR4) |
+| `a // b`, `a % b` | `i64_div_floor`, `i64_mod_floor` |
+| `print(a)`, `print()` | `print_i64`, `putchar 10` |
+
+No backend has Python code. Python's ints are unbounded and these are
+`i64`. Where CPython would print a bigger int, the program prints what it
+has so far and stops with `Trap.Overflow`: a stated divergence, with bignum
+promotion left for later. A zero divisor stops it with `Trap.DivZero`, like
+`ZeroDivisionError`.
+
+The eighteen `lang_matrix` Python rows are every accepted case of
+`code/grammars/python/corpus/py-int-print/`, and they declare all eight
+executable columns. Nine of them are `StdoutThenTrap` rows, which check the
+output written before the trap *and* the kind each column reports. LANG79's
+float pilot (`python_iir_compiler::compile_source`) is a separate API and is
+not reachable from `lang-aot`.

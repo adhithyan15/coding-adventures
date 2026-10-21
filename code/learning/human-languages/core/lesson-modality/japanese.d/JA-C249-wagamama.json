@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C249-wagamama",
+    "language": "japanese",
+    "chapter": 249,
+    "sequence": 14930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9663753091d2754e"
+  },
+  "findings": []
+}

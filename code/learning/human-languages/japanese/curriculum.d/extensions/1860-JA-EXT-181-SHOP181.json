@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-181-SHOP181",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask prices and say what a shop sells.",
+  "prerequisites": []
+}

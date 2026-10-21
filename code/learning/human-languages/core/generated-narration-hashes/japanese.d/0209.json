@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:7624323ba1467633",
+  "lessonIds": [
+    "JA-C209-haru",
+    "JA-C209-aki",
+    "JA-C209-kisetsu",
+    "JA-C209-sakura",
+    "JA-C209-chiru",
+    "JA-R209-review-204-209"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch209.txt",
+  "json": "japanese/narration/ch209.json",
+  "textHash": "fnv1a64:75aa71ef17249b27",
+  "jsonHash": "fnv1a64:46fd572a43d43be2",
+  "findings": []
+}

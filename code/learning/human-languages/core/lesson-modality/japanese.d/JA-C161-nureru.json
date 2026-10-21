@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C161-nureru",
+    "language": "japanese",
+    "chapter": 161,
+    "sequence": 9580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fa63efcaed463c2"
+  },
+  "findings": []
+}

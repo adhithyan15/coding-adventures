@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Promises, Lies and Secrets",
+  "label": "ch:ja-promises-lies-and-secrets",
+  "canDo": "I can ask about promises and secrets and say what someone does not believe.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C248-utagau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can ask about promises and secrets and say what someone does not believe.",
+    "assesses": [
+      "JA-LEX-C248-TRUST248-03",
+      "JA-LEX-C248-TRUST248-04",
+      "JA-LEX-C248-TRUST248-05"
+    ]
+  }
+}

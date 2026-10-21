@@ -1,0 +1,11 @@
+{
+  "id": "JA-C236-kiku",
+  "pathSegment": "JA-PATH-236-FILM236",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-236-FILM236",
+      "order": 2
+    }
+  ]
+}

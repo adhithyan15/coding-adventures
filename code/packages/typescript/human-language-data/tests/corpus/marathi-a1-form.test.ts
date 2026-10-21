@@ -1,5 +1,8 @@
 import { expect, it } from "vitest";
+import { measureContinuity } from "../../src/continuity.js";
 import { loadTrackLessons } from "../../src/loader.js";
+import { deriveLessonModality } from "../../src/modality.js";
+import { narrateLesson, renderLessonNarrationText } from "../../src/narration.js";
 import { readingOrder } from "../../src/ramp.js";
 
 const FORM_IDS = [
@@ -14,6 +17,41 @@ const FORM_IDS = [
   "MR-A1F12-six-field-supported",
   "MR-A1F13-six-field-independent",
 ];
+
+it("retrieves all six Marathi A1 form labels and their agreement in every due window", () => {
+  const formAtoms = new Set([
+    "MR-A1-FORM-LABEL-NAAV",
+    "MR-A1-FORM-LABEL-SHAHAR",
+    "MR-A1-FORM-LABEL-BHASHA",
+    "MR-A1-FORM-LABEL-AVDATE-PEY",
+    "MR-A1-FORM-LABEL-AVADTI-KRUTI",
+    "MR-A1-FORM-LABEL-MITRACHE-NAAV",
+    "MR-A1-FORM-AGREEMENT-NEUTER",
+    "MR-A1-FORM-AGREEMENT-FEMININE",
+    "MR-A1-FORM-POSSESSIVE-NEUTER",
+  ]);
+  const lessons = loadTrackLessons("marathi");
+  expect(measureContinuity(lessons).reinforcement.filter(({ atom }) => formAtoms.has(atom))).toEqual([]);
+
+  for (const id of [
+    "MR-A1F01-shahar",
+    "MR-A1F01-bhasha",
+    "MR-A1F01-avdate-pey",
+    "MR-A1F01-avadti-kruti",
+    "MR-A1M02-name-line",
+  ]) {
+    const lesson = lessons.find((candidate) => candidate.realization.lessonId === id);
+    expect(lesson?.body).toContain("Before looking back");
+    expect(Number(lesson?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(300);
+    expect(lesson).toBeDefined();
+    if (!lesson) continue;
+    const warmup = deriveLessonModality(lesson).blocks.find((block) => block.title === "Warm-up");
+    expect(warmup?.eyesOrHandsSteps.length).toBeGreaterThan(0);
+    const narration = narrateLesson(lesson);
+    expect(narration.notice?.waitUntilStopped).toContain("Warm-up");
+    expect(renderLessonNarrationText(narration)).toContain("[once you have stopped driving");
+  }
+});
 
 it("removes support gently before Marathi's independent A1 practical form", () => {
   const lessons = loadTrackLessons("marathi")

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:071968b192f627d2",
+  "lessonIds": [
+    "JA-C170-saraishuu",
+    "JA-C170-sarainen",
+    "JA-C170-shougatsu",
+    "JA-C170-iwau",
+    "JA-C170-sugosu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch170.txt",
+  "json": "japanese/narration/ch170.json",
+  "textHash": "fnv1a64:058433d8ee684014",
+  "jsonHash": "fnv1a64:698da31c6dceabc5",
+  "findings": []
+}

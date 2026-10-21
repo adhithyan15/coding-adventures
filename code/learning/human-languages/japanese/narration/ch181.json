@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 181,
+  "title": "Prices and Selling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:445d17d7696e73d9",
+  "lessons": [
+    {
+      "id": "JA-C181-kaimono",
+      "sequence": 10860,
+      "title": "かいもの (kaimono) — shopping; purchases",
+      "headword": "かいもの",
+      "romanization": "kaimono",
+      "gloss": "shopping; purchases",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42002fc4f7986115",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to grip, then the Japanese for rice ball."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かいもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいもの — kaimono — \"shopping; purchases\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まちで かいものを します。 — machi de kaimono o shimasu — \"I go shopping in town.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいもの (kaimono) is native Japanese, built from kai, the stem of kau, \"to buy\", and mono, \"thing\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaimono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaimono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaimono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaimono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "machi de kaimono o shimasu — I go shopping in town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *machi de kaimono o shimasu* — I go shopping in town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to grip, then the Japanese for rice ball, then say kaimono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to grip, then the Japanese for rice ball, then say *kaimono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かいもの (kaimono) mean? (\"Shopping; purchases\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C181-kaimono-type",
+              "prompt": "Say the Japanese for 'shopping'.",
+              "assesses": [
+                "JA-LEX-C181-SHOP181-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かいもの",
+                "kaimono"
+              ],
+              "feedback": {
+                "correct": "Right: かいもの (kaimono) is 'shopping; purchases'.",
+                "incorrect": "'Shopping' is かいもの (kaimono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C181-nedan",
+      "sequence": 10870,
+      "title": "ねだん (nedan) — price; cost",
+      "headword": "ねだん",
+      "romanization": "nedan",
+      "gloss": "price; cost",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3d920dce35a49ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for rice ball, then the Japanese for shopping."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねだん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねだん — nedan — \"price; cost\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ねだんは せんえんです。 — nedan wa sen'en desu — \"The price is a thousand yen.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねだん (nedan) is built from native ne, \"price, value\", and Sino-Japanese dan, \"grade, step\", a reading borrowed from Chinese (Middle Chinese dwanH) (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedan wa sen'en desu — The price is a thousand yen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedan wa sen'en desu* — The price is a thousand yen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for rice ball, then the Japanese for shopping, then say nedan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for rice ball, then the Japanese for shopping, then say *nedan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねだん (nedan) mean? (\"Price; cost\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C181-nedan-type",
+              "prompt": "Say the Japanese for 'price'.",
+              "assesses": [
+                "JA-LEX-C181-SHOP181-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねだん",
+                "nedan"
+              ],
+              "feedback": {
+                "correct": "Right: ねだん (nedan) is 'price; cost'.",
+                "incorrect": "'Price' is ねだん (nedan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C181-ikura",
+      "sequence": 10880,
+      "title": "いくら (ikura) — how much",
+      "headword": "いくら",
+      "romanization": "ikura",
+      "gloss": "how much",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8112e7041fb8e4c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for shopping, then the Japanese for price."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いくら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いくら — ikura — \"how much\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この ほんは いくらですか。 — kono hon wa ikura desu ka — \"How much is this book?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いくら (ikura) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi; JMdict marks it as usually written in kana (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono hon wa ikura desu ka — How much is this book?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono hon wa ikura desu ka* — How much is this book?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for shopping, then the Japanese for price, then say ikura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for shopping, then the Japanese for price, then say *ikura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いくら (ikura) mean? (\"How much\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C181-ikura-type",
+              "prompt": "Say the Japanese for 'how much'.",
+              "assesses": [
+                "JA-LEX-C181-SHOP181-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いくら",
+                "ikura"
+              ],
+              "feedback": {
+                "correct": "Right: いくら (ikura) is 'how much'.",
+                "incorrect": "'How much' is いくら (ikura)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C181-uru",
+      "sequence": 10890,
+      "title": "うる (uru) — to sell",
+      "headword": "うる",
+      "romanization": "uru",
+      "gloss": "to sell",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ca37a50029a7a9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for price, then the Japanese for how much."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うる — uru — \"to sell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あの みせは やさいを うります。 — ano mise wa yasai o urimasu — \"That shop sells vegetables.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うります, urimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うる (uru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano mise wa yasai o urimasu — That shop sells vegetables.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano mise wa yasai o urimasu* — That shop sells vegetables.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for price, then the Japanese for how much, then say uru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for price, then the Japanese for how much, then say *uru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うる (uru) mean? (\"To sell\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C181-uru-type",
+              "prompt": "Say the Japanese for 'to sell'.",
+              "assesses": [
+                "JA-LEX-C181-SHOP181-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うる",
+                "uru"
+              ],
+              "feedback": {
+                "correct": "Right: うる (uru) is 'to sell'.",
+                "incorrect": "'To sell' is うる (uru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C181-ureru",
+      "sequence": 10900,
+      "title": "うれる (ureru) — to sell well; to be popular",
+      "headword": "うれる",
+      "romanization": "ureru",
+      "gloss": "to sell well; to be popular",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48de4d25d3f84d83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for how much, then the Japanese for to sell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うれる — ureru — \"to sell well; to be popular\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この ほんは よく うれます。 — kono hon wa yoku uremasu — \"This book sells well.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うれます, uremasu; an ichidan verb. Its transitive partner is うる (uru), \"to sell\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うれる (ureru) is a native Japanese word, inherited rather than borrowed, built on the same stem as uru, \"to sell\"; its kanji was attached later (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ureru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ureru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ureru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ureru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono hon wa yoku uremasu — This book sells well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono hon wa yoku uremasu* — This book sells well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for how much, then the Japanese for to sell, then say ureru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for how much, then the Japanese for to sell, then say *ureru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うれる (ureru) mean? (\"To sell well; to be popular\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C181-ureru-type",
+              "prompt": "Say the Japanese for 'to sell well'.",
+              "assesses": [
+                "JA-LEX-C181-SHOP181-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うれる",
+                "ureru"
+              ],
+              "feedback": {
+                "correct": "Right: うれる (ureru) is 'to sell well; to be popular'.",
+                "incorrect": "'To sell well' is うれる (ureru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

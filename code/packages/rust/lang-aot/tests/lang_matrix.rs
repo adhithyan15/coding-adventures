@@ -5422,6 +5422,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - positive static powers retain exact sign-rooted integer
+    // transforms when their worst-case magnitude remains within 2^53.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then ((sign(left) + 2) ^ 2) else ((sign(right) + 2) ^ 2)); output(result) end",
+        expect: Expect::Stdout("9"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -9327,6 +9336,57 @@ fn main() { out(1, VALUE); }\n",
     Prog { lang: Language::Perl, ext: "pl", src: "print(0); print(-0); print(-(3 - 10));", expect: Expect::Stdout("007"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
     // Newlines and tabs between statements are whitespace, not output.
     Prog { lang: Language::Perl, ext: "pl", src: "print(1);\nprint(2);\n\tprint(3);\n", expect: Expect::Stdout("123"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Python — LANG84 phase 7a: the `py-int-print` subset on the default
+    // release 3.13.16. The compiler walks the tree that the generic
+    // GrammarLexer/GrammarParser build from `python3.13.16.tokens`/`.grammar`
+    // and emits only LANG83 registry ops: `+ - *` and unary `-` are the PR4
+    // checked ops `i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`, `//`
+    // is `i64_div_floor`, `%` is `i64_mod_floor`, `print` is `print_i64`,
+    // `print()` is `putchar 10`. These are the first matrix rows that emit a
+    // PR4 op, and the first `StdoutThenTrap` rows whose kind is
+    // `Trap.Overflow`.
+    //
+    // Every source below is a case of `code/grammars/python/corpus/py-int-print/`
+    // verbatim, and every expectation is that case's `.expect` trimmed. Host
+    // CPython 3.13.16 produced them, except that where CPython prints an int
+    // outside i64 the subset traps (`python_rows_are_py_int_print_corpus_cases`
+    // and `python_rows_agree_with_the_host_python_oracle` re-check both).
+    // `* // %` bind tighter than `+ -`; both levels associate left: 1 + 6 - (2 % 3) = 5.
+    Prog { lang: Language::Python, ext: "py", src: "print(1 + 2)\nprint(1 + 2 * 3 - 8 // 4 % 3)\nprint((1 + 2) * 3)\nprint(10 - 3 - 2)\n", expect: Expect::Stdout("3\n5\n9\n5"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Python's `//` rounds toward negative infinity (LANG83 `i64_div_floor`), unlike C, the JVM or the CLR.
+    Prog { lang: Language::Python, ext: "py", src: "print(7 // 2)\nprint(-7 // 2)\nprint(7 // -2)\nprint(-7 // -2)\n", expect: Expect::Stdout("3\n-4\n-4\n3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Python's `%` takes the divisor's sign (LANG83 `i64_mod_floor`).
+    Prog { lang: Language::Python, ext: "py", src: "print(7 % 3)\nprint(-7 % 3)\nprint(7 % -3)\nprint(-7 % -3)\n", expect: Expect::Stdout("1\n2\n-2\n-1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Nested unary minus (`i64_neg_ovf`) and plus (no op), and a trailing comma in the call.
+    Prog { lang: Language::Python, ext: "py", src: "print(- -5)\nprint(-(3 - 10))\nprint(2 * -3 * 4)\nprint(+7, )\nprint(-+3)\n", expect: Expect::Stdout("5\n7\n-24\n7\n-3"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // PEP 515 `_` separators (3.6+; 3.0a1 refuses them) and the zero spellings `00` and `0_0`.
+    Prog { lang: Language::Python, ext: "py", src: "print(1_000_000 * 3)\nprint(0_0 + 00)\n", expect: Expect::Stdout("3000000\n0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `print()` writes one newline (`putchar 10`); `;` between statements and after the last.
+    Prog { lang: Language::Python, ext: "py", src: "print(1)\nprint()\nprint(2); print(3);\nprint(4,)\n", expect: Expect::Stdout("1\n\n2\n3\n4"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Comments, blank lines, newlines inside parentheses and a backslash continuation.
+    Prog { lang: Language::Python, ext: "py", src: "# a comment\n\nprint(1 +\n      2)\nprint(\n    3\n)  # trailing comment\nprint(5 \\\n      - 6)\n", expect: Expect::Stdout("3\n3\n-1"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // Both ends of i64, a product just under 2^62, and `MIN // 1`.
+    Prog { lang: Language::Python, ext: "py", src: "print(9223372036854775807)\nprint(-9223372036854775807 - 1)\nprint(46340 * 46340 * 46340 * 46340)\nprint((-9223372036854775807 - 1) // 1)\n", expect: Expect::Stdout("9223372036854775807\n-9223372036854775808\n4611307862899360000\n-9223372036854775808"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A known -1 divisor is folded (`a // -1` = `i64_neg_ovf a`, `a % -1` = 0): `MIN % -1` never reaches a machine `rem`.
+    Prog { lang: Language::Python, ext: "py", src: "print(7 // -1, )\nprint((-9223372036854775807 - 1) % -1)\nprint(9223372036854775807 // -1)\nprint(-7 % -1)\n", expect: Expect::Stdout("-7\n0\n-9223372036854775807\n0"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `ZeroDivisionError` after output: `1` is flushed, then `Trap.DivZero`; the third statement never runs.
+    Prog { lang: Language::Python, ext: "py", src: "print(1)\nprint(2 // 0)\nprint(3)\n", expect: Expect::StdoutThenTrap("1", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A zero modulus traps too, with nothing printed first.
+    Prog { lang: Language::Python, ext: "py", src: "print(5 % 0)\n", expect: Expect::StdoutThenTrap("", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // A divisor that is zero only after evaluation.
+    Prog { lang: Language::Python, ext: "py", src: "print(4)\nprint(10 // (5 - 5))\n", expect: Expect::StdoutThenTrap("4", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // The argument is evaluated before `print` writes, so the trapping call prints nothing.
+    Prog { lang: Language::Python, ext: "py", src: "print(2)\nprint(0 * (1 // 0))\n", expect: Expect::StdoutThenTrap("2", "Trap.DivZero"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // CPython prints 2^63 here; this i64 subset stops with `Trap.Overflow` after the earlier output (stated divergence).
+    Prog { lang: Language::Python, ext: "py", src: "print(1)\nprint(9223372036854775807 + 1)\nprint(2)\n", expect: Expect::StdoutThenTrap("1", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `MIN - 1` leaves i64: `i64_sub_ovf` traps.
+    Prog { lang: Language::Python, ext: "py", src: "print(-9223372036854775807 - 2)\n", expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // 3037000500^2 is just past `MAX`: `i64_mul_ovf` traps.
+    Prog { lang: Language::Python, ext: "py", src: "print(5)\nprint(3037000500 * 3037000500)\n", expect: Expect::StdoutThenTrap("5", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `-MIN` is the one negation that overflows: `i64_neg_ovf` traps.
+    Prog { lang: Language::Python, ext: "py", src: "print(-(-9223372036854775807 - 1))\n", expect: Expect::StdoutThenTrap("", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
+    // `MIN // -1` is folded to `-MIN`, which traps `Trap.Overflow` (CPython: 2^63).
+    Prog { lang: Language::Python, ext: "py", src: "print(0)\nprint((-9223372036854775807 - 1) // -1)\n", expect: Expect::StdoutThenTrap("0", "Trap.Overflow"), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam] },
 ];
 
 /// Is a usable native linker present on this host? On Linux/macOS the AOT path uses
@@ -12407,6 +12467,10 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Cobol60, 59, 472),
         // Perl: LANG84 phase 4a's eleven integer-`print` rows, all eight columns.
         (Language::Perl, 11, 88),
+        // Python: LANG84 phase 7a's eighteen py-int-print rows (nine of them
+        // StdoutThenTrap: four Trap.DivZero, five Trap.Overflow), all eight
+        // columns.
+        (Language::Python, 18, 144),
     ];
 
     for (lang, want_rows, want_cells) in expected {
@@ -23831,6 +23895,32 @@ fn algol_pathwise_exact_prefix_divided_local_name_actual_runtime_real_output_run
 }
 
 #[test]
+fn algol_pathwise_exact_powered_sign_integer_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(if choose() then ((sign(left) + 2) ^ 2) else ((sign(right) + 2) ^ 2))",
+                )
+        })
+        .expect("the pathwise exact powered sign-integer program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the exact powered sign-integer program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
 fn algol_static_conditional_while_effect_runs_on_every_available_standard_backend() {
     let program = PROGRAMS
         .iter()
@@ -25929,4 +26019,199 @@ fn perl_rows_pass_the_lang83_check_on_all_nine_backends() {
             });
         }
     }
+}
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 7a — Python `py-int-print` on every backend
+// ---------------------------------------------------------------------------
+
+fn python_rows() -> Vec<&'static Prog> {
+    let rows: Vec<_> = PROGRAMS.iter().filter(|p| p.lang == Language::Python).collect();
+    assert!(!rows.is_empty(), "PROGRAMS has no Python rows");
+    rows
+}
+
+/// The `py-int-print` corpus directory, read from `subsets.csv` by header.
+fn python_corpus_dir() -> std::path::PathBuf {
+    let grammars = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/python");
+    let text = std::fs::read_to_string(grammars.join("subsets.csv")).expect("python subsets.csv");
+    let mut lines = text.lines().filter(|l| !l.starts_with('#'));
+    let header: Vec<&str> = lines.next().expect("subsets.csv header").split(',').collect();
+    let column = |name: &str| header.iter().position(|h| *h == name).expect("subsets.csv column");
+    let (subset, dir) = (column("subset"), column("corpus_dir"));
+    let row = lines
+        .map(|l| l.split(',').collect::<Vec<_>>())
+        .find(|cells| cells[subset] == "py-int-print")
+        .expect("py-int-print is declared");
+    grammars.join(row[dir])
+}
+
+/// Every Python row on every backend it declares, as one named test so a
+/// Python regression is reported as one. A runner that returns `None` while
+/// its toolchain is present fails rather than skips.
+#[test]
+fn python_rows_run_on_every_available_backend() {
+    let (mut ran, mut skipped, mut trapped) = (0usize, 0usize, 0usize);
+    for program in python_rows() {
+        assert_eq!(
+            program.backends,
+            &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+            "every Python row declares all eight columns: {:?}",
+            program.src
+        );
+        for &backend in program.backends {
+            let available = match backend {
+                NativeAot => native_linker_ok(),
+                _ => toolchain_available(backend),
+            };
+            match run(backend, program) {
+                Some(result) => {
+                    trapped += usize::from(matches!(result, RunResult::TrappedAfter { .. }));
+                    assert_cell(backend, program, result);
+                    ran += 1;
+                }
+                None => {
+                    assert!(!available, "Python {backend:?} silently skipped: {:?}", program.src);
+                    skipped += 1;
+                }
+            }
+        }
+    }
+    assert!(ran > 0 && trapped > 0);
+    eprintln!("Python matrix: {ran} cells executed ({trapped} trapped as expected), {skipped} skipped");
+}
+
+/// The rows are the corpus: each source is a `.py` case verbatim and each
+/// expectation its `.expect`, and every accepted case that applies to the
+/// default release is a row, so the matrix cannot drift from what the
+/// frontend's own stage-I test (and the oracle) checked.
+#[test]
+fn python_rows_are_py_int_print_corpus_cases() {
+    let dir = python_corpus_dir();
+    let mut cases: Vec<(String, String, String)> = std::fs::read_dir(&dir)
+        .expect("py-int-print corpus")
+        .filter_map(|entry| {
+            let path = entry.expect("corpus entry").path();
+            if path.extension()? != "py" {
+                return None;
+            }
+            let expect = std::fs::read_to_string(path.with_extension("expect")).ok()?;
+            let name = path.file_stem()?.to_string_lossy().into_owned();
+            Some((name, std::fs::read_to_string(&path).expect("corpus source"), expect))
+        })
+        .collect();
+    cases.sort();
+    let rows = python_rows();
+    for program in &rows {
+        let Some((_, _, expect)) = cases.iter().find(|(_, source, _)| source == program.src) else {
+            panic!("Python row is not a py-int-print corpus case: {:?}", program.src);
+        };
+        let (stdout, trap) = match expect.rfind("trap:") {
+            Some(at) => (expect[..at].trim(), Some(expect[at + 5..].trim())),
+            None => (expect.trim(), None),
+        };
+        match (&program.expect, trap) {
+            (Expect::Stdout(want), None) => assert_eq!(*want, stdout, "{:?}", program.src),
+            (Expect::StdoutThenTrap(want, kind), Some(trap)) => {
+                assert_eq!((*want, *kind), (stdout, trap), "{:?}", program.src)
+            }
+            (other, _) => panic!("{:?}: {other:?} disagrees with the corpus {expect:?}", program.src),
+        }
+    }
+    // The other direction: no accepted case is left out of the matrix.
+    for (name, source, _) in &cases {
+        assert!(rows.iter().any(|p| p.src == source), "corpus case {name} has no matrix row");
+    }
+    assert_eq!(rows.len(), cases.len());
+}
+
+/// The oracle: host CPython 3.13 must print each row's stdout. For a
+/// `Trap.DivZero` row it must stop with `ZeroDivisionError` after that
+/// stdout. For a `Trap.Overflow` row it must print that stdout and then an
+/// integer outside `i64` (where CPython has a bigger int, this subset stops:
+/// the stated divergence). The compiled programs never run on it. Skips
+/// (loudly) without a `python3` on the 3.13 line.
+#[test]
+fn python_rows_agree_with_the_host_python_oracle() {
+    let version = match Command::new("python3").args(["-I", "-c", "import sys; print(sys.version.split()[0])"]).output() {
+        Ok(out) if out.status.success() => String::from_utf8_lossy(&out.stdout).trim().to_string(),
+        _ => {
+            eprintln!("SKIP Python oracle: no `python3` on PATH");
+            return;
+        }
+    };
+    if !version.starts_with("3.13.") {
+        eprintln!("SKIP Python oracle: python3 {version} is not the 3.13 line these rows target");
+        return;
+    }
+    for program in python_rows() {
+        // `-c` with the source as its own argument: no shell, no temp file.
+        let out = Command::new("python3").args(["-I", "-c", program.src]).output().expect("python3 ran once already");
+        // Windows interpreters write text-mode stdout ("\r\n"); the rows
+        // record the language's output, so fold the line ending back.
+        let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
+        match program.expect {
+            Expect::Stdout(want) => {
+                assert!(out.status.success(), "{version} failed {:?}", program.src);
+                assert_eq!(stdout.trim(), want, "{version}: {:?}", program.src);
+            }
+            Expect::StdoutThenTrap(want, "Trap.DivZero") => {
+                assert!(!out.status.success(), "{version} did not raise on {:?}", program.src);
+                assert!(String::from_utf8_lossy(&out.stderr).contains("ZeroDivisionError"));
+                assert_eq!(stdout.trim(), want, "{version}: {:?}", program.src);
+            }
+            Expect::StdoutThenTrap(want, "Trap.Overflow") => {
+                assert!(out.status.success(), "{version} failed {:?}", program.src);
+                let lines: Vec<&str> = stdout.lines().collect();
+                let before = if want.is_empty() { 0 } else { want.lines().count() };
+                assert_eq!(lines[..before].join("\n"), want, "{version}: {:?}", program.src);
+                let value: i128 = lines[before].parse().expect("CPython printed an integer");
+                assert!(i64::try_from(value).is_err(), "{version}: {value} fits in i64: {:?}", program.src);
+            }
+            ref other => panic!("no Python oracle for {other:?}"),
+        }
+    }
+    eprintln!("Python oracle: {} rows agree with CPython {version}", python_rows().len());
+}
+
+/// LANG84 C7.3: every row's module passes `check_module_for` on all nine
+/// LANG83 backends (CLR, BEAM and AArch64 included, whatever this host can
+/// run) and holds only registry ops: the PR4 checked arithmetic,
+/// `i64_div_floor` / `i64_mod_floor`, `print_i64` / `putchar`, plus the
+/// ungated `const`/`ret`. No wrapping `add`/`sub`/`mul`/`neg` survives.
+#[test]
+fn python_rows_pass_the_lang83_check_on_all_nine_backends() {
+    let mut checked_ops = 0;
+    for program in python_rows() {
+        let module = lang_aot::compile_source_to_iir(Language::Python, program.src, "c7")
+            .unwrap_or_else(|e| panic!("{:?}: {e}", program.src));
+        for instr in module.functions.iter().flat_map(|f| &f.instructions) {
+            match interpreter_ir::op_registry::registry_name(instr) {
+                Some(name) => {
+                    assert!(
+                        [
+                            "i64_add_ovf",
+                            "i64_sub_ovf",
+                            "i64_mul_ovf",
+                            "i64_neg_ovf",
+                            "i64_div_floor",
+                            "i64_mod_floor",
+                            "print_i64",
+                            "putchar",
+                        ]
+                        .contains(&name),
+                        "{:?}: unexpected registry op {name}",
+                        program.src
+                    );
+                    checked_ops += usize::from(name.starts_with("i64_"));
+                }
+                None => assert!(["const", "ret"].contains(&instr.op.as_str()), "{:?}: {instr:?}", program.src),
+            }
+        }
+        for backend in lang_aot::op_check::Backend::ALL {
+            lang_aot::op_check::check_module_for(backend, &module)
+                .unwrap_or_else(|e| panic!("{:?} refused on {}: {e}", program.src, backend.name()));
+        }
+    }
+    assert!(checked_ops > 0, "the rows must exercise the LANG83 checked and floor ops");
 }

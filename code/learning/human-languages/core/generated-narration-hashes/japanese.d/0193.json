@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:0c71bc595e1cfcc8",
+  "lessonIds": [
+    "JA-C193-jinja",
+    "JA-C193-tera",
+    "JA-C193-eigakan",
+    "JA-C193-bijutsukan",
+    "JA-C193-mieru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch193.txt",
+  "json": "japanese/narration/ch193.json",
+  "textHash": "fnv1a64:1ef83addc1430b61",
+  "jsonHash": "fnv1a64:c04ca86deb7d25e3",
+  "findings": []
+}

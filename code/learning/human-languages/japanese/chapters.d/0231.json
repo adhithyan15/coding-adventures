@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Calls and Messages",
+  "label": "ch:ja-calls-and-messages",
+  "canDo": "I can talk about phone calls, numbers and replies.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C231-tsutaeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can talk about phone calls, numbers and replies.",
+    "assesses": [
+      "JA-LEX-C231-PHONE231-03",
+      "JA-LEX-C231-PHONE231-04",
+      "JA-LEX-C231-PHONE231-05"
+    ]
+  }
+}

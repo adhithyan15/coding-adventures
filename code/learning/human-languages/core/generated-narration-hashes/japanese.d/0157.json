@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:670a3b05cbd49b3a",
+  "lessonIds": [
+    "JA-C157-shokutaku",
+    "JA-C157-kabin",
+    "JA-C157-kazaru",
+    "JA-C157-kakeru",
+    "JA-C157-oku",
+    "JA-R157-review-152-157"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch157.txt",
+  "json": "japanese/narration/ch157.json",
+  "textHash": "fnv1a64:9c694d9e9881e336",
+  "jsonHash": "fnv1a64:b04391a65488ca6e",
+  "findings": []
+}

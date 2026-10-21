@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:6c5cc376d8145c6c",
+  "lessonIds": [
+    "JA-C170-saraishuu",
+    "JA-C170-sarainen",
+    "JA-C170-shougatsu",
+    "JA-C170-iwau",
+    "JA-C170-sugosu"
+  ],
+  "tex": "japanese/book/chapters/ch170-the-new-year-and-the-weeks-after-next.tex"
+}

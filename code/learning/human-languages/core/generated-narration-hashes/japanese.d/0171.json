@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:3b6c0dae64b3aa18",
+  "lessonIds": [
+    "JA-C171-saisho",
+    "JA-C171-mazu",
+    "JA-C171-tsugi",
+    "JA-C171-saigo",
+    "JA-C171-sorosoro",
+    "JA-R171-review-170-171",
+    "JA-R171-review-final-171"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch171.txt",
+  "json": "japanese/narration/ch171.json",
+  "textHash": "fnv1a64:3933cc3e9e358d3b",
+  "jsonHash": "fnv1a64:6e6370a1c8636b47",
+  "findings": []
+}

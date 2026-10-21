@@ -1,0 +1,11 @@
+{
+  "id": "JA-C207-yuki",
+  "pathSegment": "JA-PATH-207-WEATHER207",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-207-WEATHER207",
+      "order": 2
+    }
+  ]
+}

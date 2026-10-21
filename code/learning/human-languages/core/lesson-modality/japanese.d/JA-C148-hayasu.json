@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C148-hayasu",
+    "language": "japanese",
+    "chapter": 148,
+    "sequence": 8930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ba921fd6db3f5fb"
+  },
+  "findings": []
+}
