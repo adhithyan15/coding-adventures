@@ -2,6 +2,14 @@
 
 ## 0.1.0 — unreleased
 
+- **165 more tests parse: #17840's 38, plus block-level declarations and
+  their redeclaration early errors (#17877).** Blocks and case clauses now
+  hold function and class declarations, and javascript-parser enforces
+  §14.2.1/§14.12.1 redeclaration early errors. Without the latter, ~200
+  redeclaration tests that had only "passed" because blocks couldn't hold
+  declarations would have regressed. `annexB/language/comments/single-line-html-close-asi.js`
+  is removed here too, as in #17898 (#17884).
+
 - **The budget rises to 4 MiB.** `parser` now shares memoised subtrees, so
   `string-upper-lower-mapping.js` parses in about 3 GB and five seconds and is
   judged again (it is on the pass list in both modes). `PARSE_BUDGET_BYTES`
