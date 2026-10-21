@@ -32,6 +32,54 @@ function safeHref(value) {
   return escapeHtmlAttribute(href);
 }
 
+const MOSAIC_FOCUS_SIGNATURE = ["aria-label", "name", "placeholder", "oninput", "onchange", "onkeydown", "onclick"];
+
+function mosaicFocusSignature(element) {
+  return [element.tagName, ...MOSAIC_FOCUS_SIGNATURE.map(name => element.getAttribute(name) ?? "")].join("\u0000");
+}
+
+function mosaicFocusTwins(root, name, signature) {
+  return [...root.querySelectorAll("*")].filter(element => element.localName === name && mosaicFocusSignature(element) === signature);
+}
+
+function mosaicCaptureFocus(root) {
+  try {
+    const active = root.activeElement;
+    if (!active) return null;
+    const signature = mosaicFocusSignature(active);
+    const twins = mosaicFocusTwins(root, active.localName, signature);
+    const state = { signature, name: active.localName, occurrence: twins.indexOf(active), count: twins.length, scrollTop: active.scrollTop };
+    if (typeof active.selectionStart === "number") {
+      state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+    }
+    return state;
+  } catch {
+    return null;
+  }
+}
+
+function mosaicRestoreFocus(root, state) {
+  if (state === null || state.occurrence < 0) return;
+  try {
+    const twins = mosaicFocusTwins(root, state.name, state.signature);
+    if (twins.length !== state.count) return;
+    const element = twins[state.occurrence];
+    if (element === undefined) return;
+    element.focus({ preventScroll: true });
+    if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
+      const length = String(element.value ?? "").length;
+      try {
+        element.setSelectionRange(Math.min(state.selection[0], length), Math.min(state.selection[1], length), state.selection[2]);
+      } catch {
+        // Some input types (number, email) refuse a selection; focus is enough.
+      }
+    }
+    element.scrollTop = state.scrollTop;
+  } catch {
+    // Restoring focus is a courtesy; it must never break a render.
+  }
+}
+
 class MosFormulaBar extends HTMLElement {
   static get observedAttributes() {
     return ["cell-address", "formula", "read-only"];
@@ -49,7 +97,9 @@ class MosFormulaBar extends HTMLElement {
     const cellAddress = this.getAttribute("cell-address") ?? "";
     const formula = this.getAttribute("formula") ?? "";
     const readOnly = this.getAttribute("read-only") === "true";
-    this.shadowRoot.innerHTML = `<div style="display: flex; flex-direction: row; background: #252526; padding: 4px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #3f3f46"><span style="font-family: monospace; font-size: 12px; color: #9d9d9d; background: #2d2d30; min-width: 48px; padding: 4px; text-align: right; margin-right: 8px">${escapeHtml(cellAddress)}</span><input type="text" style="font-family: monospace; font-size: 13px; flex: 1; border-style: none; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #3f3f46; background: transparent; color: #cccccc; padding: 4px; outline: none; width: 100%" value="${escapeHtmlAttribute(formula)}" placeholder="Enter formula"${readOnly ? " readonly" : ""} onchange="this.getRootNode().host.dispatch({type:'formulaChange',value:event.target.value})" onkeydown="if(event.key==='Enter')this.getRootNode().host.dispatch({type:'commit'});if(event.key==='Escape')this.getRootNode().host.dispatch({type:'cancel'});" /></div>`;
+    const mosaicFocus = mosaicCaptureFocus(this.shadowRoot);
+    this.shadowRoot.innerHTML = `<div style="display: flex; flex-direction: row; background: #252526; padding: 4px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #3f3f46"><span style="font-family: monospace; font-size: 12px; color: #9d9d9d; background: #2d2d30; min-width: 48px; padding: 4px; text-align: right; margin-right: 8px">${escapeHtml(cellAddress)}</span><input type="text" style="font-family: monospace; font-size: 13px; flex: 1; border-style: none; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #3f3f46; background: transparent; color: #cccccc; padding: 4px; outline: none; width: 100%" value="${escapeHtmlAttribute(formula)}" placeholder="Enter formula"${readOnly ? " readonly" : ""} oninput="if(!event.isComposing)this.getRootNode().host.dispatch({type:'formulaChange',value:event.target.value})" oncompositionend="this.getRootNode().host.dispatch({type:'formulaChange',value:event.target.value})" onkeydown="if(event.key==='Enter')this.getRootNode().host.dispatch({type:'commit'});if(event.key==='Escape')this.getRootNode().host.dispatch({type:'cancel'});" /></div>`;
+    mosaicRestoreFocus(this.shadowRoot, mosaicFocus);
   }
 
   dispatch(event) {

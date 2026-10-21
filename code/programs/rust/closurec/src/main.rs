@@ -78,6 +78,8 @@ use std::process::ExitCode;
 // CLOC11.19 added `defines` for --define / -D value substitution.
 // CLOC11.30 added `wrapper` for --output_wrapper / --output_wrapper_file.
 pub mod charset;
+// CCR-075: refuse what Closure refuses (spec CLOC44).
+pub mod refusals;
 pub mod config;
 pub mod defines;
 pub mod globs;

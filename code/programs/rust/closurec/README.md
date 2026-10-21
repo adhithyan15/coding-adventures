@@ -121,6 +121,7 @@ cargo run --example cli_surface_audit -- \
 | 0    | Success. |
 | 1    | CLI parse error, or SIMPLE/ADVANCED compilation failed during parse, typed-AST bridging, an optimization pass, or emission. |
 | 2    | Execution failure outside the typed pipeline, including input/output and glob errors. |
+| N    | The pinned reference compiler refuses this input, so closurec does too (CCR-075, [CLOC44](../../../specs/CLOC44-refuse-what-closure-refuses.md)). The exit status is upstream's: the error count, capped at 127. Stderr carries upstream's diagnostics byte for byte, and nothing else is written. |
 | 70   | Internal error (`cli.spec.json` malformed — bug in *us*). `EX_SOFTWARE` per `sysexits.h`. |
 
 Compiler diagnostics are written to stderr. A failed SIMPLE/ADVANCED compile
@@ -305,15 +306,15 @@ runtime validation remains pending CI. Cross-compilation is not ACL runtime evid
 
 `tests/diff/ladder_*` is an ordered complexity ladder compiled by both
 `closurec` and the pinned Closure `v20260915` oracle. The fixture and
-divergence-ledger checks on 2026-09-26 cover 57 rungs:
+divergence-ledger checks on 2026-10-20 cover 58 rungs:
 
 | Level | Rungs agreeing | |
 |-------|---------------:|---|
-| `WHITESPACE_ONLY` | 54 / 57 | 95% |
-| `SIMPLE` | 35 / 57 | 61% |
-| `ADVANCED` | 24 / 57 | 42% |
+| `WHITESPACE_ONLY` | 56 / 58 | 97% |
+| `SIMPLE` | 37 / 58 | 64% |
+| `ADVANCED` | 25 / 58 | 43% |
 
-All 57 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
+All 58 rungs are committed as fixtures under `tests/diff/ladder_*`. Agreement falls as the amount of claimed optimization rises. The `ADVANCED`
 figure flatters it: most of its agreements are rungs with nothing to optimize.
 Upstream `ADVANCED` reduces whole programs to their observable effect —
 `var o={a:1,b:2};console.log(o.a)` becomes `console.log(1)` — where `closurec`

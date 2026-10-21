@@ -16,7 +16,7 @@
 //!
 //! ## Supported languages today
 //!
-//! All ten variants below are wired through the shared IIR driver. Coverage is
+//! Every variant below is wired through the shared IIR driver. Coverage is
 //! feature-specific; see `code/specs/LANG-VM-FEATURE-COVERAGE.md` for executable
 //! proofs, backend exclusions and follow-up work.
 //!
@@ -33,6 +33,7 @@
 //! | FLOW-MATIC | `flow-matic-iir-compiler` |
 //! | COBOL-60 | `cobol-iir-compiler` |
 //! | Macsyma | `macsyma-iir-compiler` |
+//! | Perl | `perl-iir-compiler` (LANG84 phase 4a; default release) |
 //! | Python | `python-iir-compiler` (LANG84 phase 7a `py-int-print`; default release `3.13.16`) |
 //!
 //! ## How to add a language
@@ -120,6 +121,11 @@ pub enum Language {
     /// descendant, but is wired here as a thin re-export of this same
     /// frontend rather than its own `Language` variant).
     Macsyma,
+    /// Perl — the bounded integer `print` subset (LANG81) via
+    /// `perl-iir-compiler`, compiled against its default release (LANG84
+    /// phase 4a). `print` lowers to the LANG83 `write_i64` builtin, so every
+    /// backend that lowers LANG83 runs it with no Perl-specific code.
+    Perl,
     /// Python — the `py-int-print` subset (`print` of `+ - * // %` integer
     /// arithmetic) via `python-iir-compiler`'s release path, compiled against
     /// the frontend's default release (`3.13.16`, LANG84 phase 7a). The
@@ -146,6 +152,7 @@ impl fmt::Display for Language {
             Language::FlowMatic => write!(f, "flow-matic"),
             Language::Cobol60 => write!(f, "cobol60"),
             Language::Macsyma => write!(f, "macsyma"),
+            Language::Perl => write!(f, "perl"),
             Language::Python => write!(f, "python"),
         }
     }
@@ -169,6 +176,7 @@ impl Language {
             "flow-matic" | "flowmatic" | "flow" | "fm" | "b0" => Ok(Self::FlowMatic),
             "cobol" | "cobol60" | "cobol-60" | "cob" => Ok(Self::Cobol60),
             "macsyma" | "mac" => Ok(Self::Macsyma),
+            "perl" | "pl" => Ok(Self::Perl),
             "python" | "py" => Ok(Self::Python),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
@@ -176,7 +184,7 @@ impl Language {
                  mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
                  (or algol / algol-60 / a60), flow-matic (or fm / b0), \
                  cobol60 (or cobol / cobol-60 / cob), macsyma (or mac), \
-                 python (or py)")),
+                 perl (or pl), python (or py)")),
         }
     }
 }
@@ -198,6 +206,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "flowmatic" | "fm" | "b0" => Some(Language::FlowMatic),
         "cobol" | "cob" | "cbl" => Some(Language::Cobol60),
         "mac" => Some(Language::Macsyma),
+        "pl" => Some(Language::Perl),
         "py" => Some(Language::Python),
         _ => None,
     }
@@ -525,6 +534,23 @@ pub fn compile_source_to_iir(
                     language,
                     message: format!("{e}"),
                 })
+        }
+        // LANG84 phase 4a: the default release only. `compile_source_at` in
+        // the frontend already selects any checked inventory release; the
+        // lang-aot side of that (`compile_source_to_iir_at`, `--lang
+        // perl@<release>`) is phase 4b. The module uses only LANG83 registry
+        // ops — `print` is `write_i64` — so no backend needs a Perl case.
+        Language::Perl => {
+            perl_iir_compiler::compile_source_at(
+                source,
+                None,
+                module_name,
+                &perl_iir_compiler::FrontendBudgets::default(),
+            )
+            .map_err(|e| LangAotError::FrontendError {
+                language,
+                message: format!("{e}"),
+            })
         }
         // LANG84 phase 7a: the release path on the frontend's default release
         // with the untrusted budgets. LANG79's float pilot

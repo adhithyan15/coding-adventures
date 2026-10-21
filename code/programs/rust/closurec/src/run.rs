@@ -151,6 +151,10 @@ pub enum CompilerError {
     /// The compile fails closed rather than running on the caller's smaller
     /// stack, where an input inside `MAX_CHAIN_SPINE` could overflow it.
     CompilerThread { message: String },
+    /// The pinned reference compiler refuses this input, so closurec does too
+    /// (CCR-075). `stderr` is upstream's diagnostic text, byte for byte; no
+    /// output is produced. The exit status is the error count, capped at 127.
+    Refused { stderr: String, errors: usize },
 }
 
 fn compilation_level_name(level: CompilationLevel) -> &'static str {
@@ -186,6 +190,7 @@ impl std::fmt::Display for CompilerError {
             CompilerError::Define(e) => write!(f, "{e}"),
             CompilerError::Wrapper(e) => write!(f, "{e}"),
             CompilerError::PrintTree(e) => write!(f, "{e}"),
+            CompilerError::Refused { stderr, .. } => write!(f, "{stderr}"),
             CompilerError::CompilerThread { message } => write!(
                 f,
                 "could not start the compiler thread with a {} MiB stack: {message}",
@@ -222,6 +227,7 @@ impl CompilerError {
     pub(crate) fn exit_code(&self) -> u8 {
         match self {
             Self::TypedPipeline { .. } | Self::Provenance { .. } => 1,
+            Self::Refused { errors, .. } => crate::refusals::exit_status(*errors),
             _ => 2,
         }
     }
@@ -1222,6 +1228,34 @@ fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput,
             stderr_text: String::new(),
             wrote_files: Vec::new(),
         });
+    }
+
+    // Step 1b (CCR-075): refuse what Closure refuses. Every input is scanned
+    // before any work starts, so a refused program writes nothing: no
+    // JavaScript, no output file, no sidecar. Errors come out in input order,
+    // then by position, as upstream reports them.
+    {
+        let es_version = map_language_in_to_es_version(config);
+        let mut files: Vec<(String, String)> = Vec::with_capacity(inputs.len());
+        let mut refused = Vec::new();
+        for path in &inputs {
+            let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
+                path: path.clone(),
+                kind: e.kind(),
+                message: e.to_string(),
+            })?;
+            let found = crate::refusals::scan(files.len(), &contents, es_version);
+            if !found.is_empty() {
+                refused.extend(found);
+            }
+            files.push((crate::refusals::display_path(&path.to_string_lossy()), contents));
+        }
+        if !refused.is_empty() {
+            return Err(CompilerError::Refused {
+                stderr: crate::refusals::render(&refused, &files),
+                errors: refused.len(),
+            });
+        }
     }
 
     // Step 2: read every resolved input, then transform per
