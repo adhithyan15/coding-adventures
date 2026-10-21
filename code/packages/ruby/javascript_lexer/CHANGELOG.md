@@ -2,6 +2,11 @@
 
 All notable changes to `coding_adventures_javascript_lexer` will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- Regenerated `_grammar_es*.rb` after the ECMAScript token patterns were fixed (#17886, #17888, #17887). A template now ends at `` `$` ``, `/***/` is a block comment, line comments and hashbangs stop at `\r`, and a regex can't hold a `\r`.
+
 ## [0.2.1] - 2026-08-17
 
 ### Fixed
