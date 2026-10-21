@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FA-R535-review-528-535
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27460
+chapter: 535
+type: review
+headword: (dialogue)
+gloss: a review of chapters 528-535
+concept_tag: REVIEW
+prerequisites: [FA-C528-ketabforushi, FA-C528-onvan, FA-C528-jeld, FA-C528-nasher, FA-C528-motarjem, FA-C529-nevisande, FA-C529-montaqed, FA-C529-naqd-kardan, FA-C529-motalee-kardan, FA-C529-kerm-e-ketab, FA-C530-dastan-e-kutah, FA-C530-shakhsiyat-e-asli, FA-C530-tarsnak, FA-C530-ghamangiz, FA-C530-khandedar, FA-C531-mostanad, FA-C531-kartun, FA-C531-zirnevis, FA-C531-duble, FA-C531-kanal, FA-C532-ekran, FA-C532-kontorol, FA-C532-safhe-ye-namayesh, FA-C532-padkast, FA-C532-hedfon, FA-C533-mojri, FA-C533-tanz, FA-C533-komedi, FA-C533-pakhsh-shodan, FA-C533-khire-shodan, FA-C534-mobleman, FA-C534-abazhur, FA-C534-qaliche, FA-C534-kusan, FA-C534-lahaf, FA-C535-shumine, FA-C535-rakhtekhab, FA-C535-denj, FA-C535-khanedar, FA-C535-kadbanu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FA-LEX-C528-BOOKS-01, FA-LEX-C528-BOOKS-02, FA-LEX-C528-BOOKS-03, FA-LEX-C528-BOOKS-04, FA-LEX-C528-BOOKS-05, FA-LEX-C529-READERS-01, FA-LEX-C529-READERS-02, FA-LEX-C529-READERS-03, FA-LEX-C529-READERS-04, FA-LEX-C529-READERS-05, FA-LEX-C530-STORIES-01, FA-LEX-C530-STORIES-02, FA-LEX-C530-STORIES-03, FA-LEX-C530-STORIES-04, FA-LEX-C530-STORIES-05, FA-LEX-C531-SCREEN-01, FA-LEX-C531-SCREEN-02, FA-LEX-C531-SCREEN-03, FA-LEX-C531-SCREEN-04, FA-LEX-C531-SCREEN-05, FA-LEX-C532-WATCHING-01, FA-LEX-C532-WATCHING-02, FA-LEX-C532-WATCHING-03, FA-LEX-C532-WATCHING-04, FA-LEX-C532-WATCHING-05, FA-LEX-C533-MEDIA-01, FA-LEX-C533-MEDIA-02, FA-LEX-C533-MEDIA-03, FA-LEX-C533-MEDIA-04, FA-LEX-C533-MEDIA-05, FA-LEX-C534-FURNISH-01, FA-LEX-C534-FURNISH-02, FA-LEX-C534-FURNISH-03, FA-LEX-C534-FURNISH-04, FA-LEX-C534-FURNISH-05, FA-LEX-C535-COSY-01, FA-LEX-C535-COSY-02, FA-LEX-C535-COSY-03, FA-LEX-C535-COSY-04, FA-LEX-C535-COSY-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FA-LEX-C528-BOOKS-01, FA-LEX-C528-BOOKS-02, FA-LEX-C528-BOOKS-03, FA-LEX-C528-BOOKS-04, FA-LEX-C528-BOOKS-05, FA-LEX-C529-READERS-01, FA-LEX-C529-READERS-02, FA-LEX-C529-READERS-03, FA-LEX-C529-READERS-04, FA-LEX-C529-READERS-05, FA-LEX-C530-STORIES-01, FA-LEX-C530-STORIES-02, FA-LEX-C530-STORIES-03, FA-LEX-C530-STORIES-04, FA-LEX-C530-STORIES-05, FA-LEX-C531-SCREEN-01, FA-LEX-C531-SCREEN-02, FA-LEX-C531-SCREEN-03, FA-LEX-C531-SCREEN-04, FA-LEX-C531-SCREEN-05, FA-LEX-C532-WATCHING-01, FA-LEX-C532-WATCHING-02, FA-LEX-C532-WATCHING-03, FA-LEX-C532-WATCHING-04, FA-LEX-C532-WATCHING-05, FA-LEX-C533-MEDIA-01, FA-LEX-C533-MEDIA-02, FA-LEX-C533-MEDIA-03, FA-LEX-C533-MEDIA-04, FA-LEX-C533-MEDIA-05, FA-LEX-C534-FURNISH-01, FA-LEX-C534-FURNISH-02, FA-LEX-C534-FURNISH-03, FA-LEX-C534-FURNISH-04, FA-LEX-C534-FURNISH-05, FA-LEX-C535-COSY-01, FA-LEX-C535-COSY-02, FA-LEX-C535-COSY-03, FA-LEX-C535-COSY-04, FA-LEX-C535-COSY-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FA-C528-ketabforushi, FA-C528-onvan, FA-C528-jeld, FA-C528-nasher, FA-C528-motarjem, FA-C529-nevisande, FA-C529-montaqed, FA-C529-naqd-kardan, FA-C529-motalee-kardan, FA-C529-kerm-e-ketab, FA-C530-dastan-e-kutah, FA-C530-shakhsiyat-e-asli, FA-C530-tarsnak, FA-C530-ghamangiz, FA-C530-khandedar, FA-C531-mostanad, FA-C531-kartun, FA-C531-zirnevis, FA-C531-duble, FA-C531-kanal, FA-C532-ekran, FA-C532-kontorol, FA-C532-safhe-ye-namayesh, FA-C532-padkast, FA-C532-hedfon, FA-C533-mojri, FA-C533-tanz, FA-C533-komedi, FA-C533-pakhsh-shodan, FA-C533-khire-shodan, FA-C534-mobleman, FA-C534-abazhur, FA-C534-qaliche, FA-C534-kusan, FA-C534-lahaf, FA-C535-shumine, FA-C535-rakhtekhab, FA-C535-denj, FA-C535-khanedar, FA-C535-kadbanu]
+---
+
+# Words from chapters 528–535 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C528-BOOKS-01, FA-LEX-C528-BOOKS-02] -->
+
+[PAUSE 3s] Say the Persian for a bookshop and a title.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C528-BOOKS-01, FA-LEX-C528-BOOKS-02, FA-LEX-C528-BOOKS-03, FA-LEX-C528-BOOKS-04, FA-LEX-C528-BOOKS-05, FA-LEX-C529-READERS-01, FA-LEX-C529-READERS-02, FA-LEX-C529-READERS-03, FA-LEX-C529-READERS-04, FA-LEX-C529-READERS-05, FA-LEX-C530-STORIES-01, FA-LEX-C530-STORIES-02, FA-LEX-C530-STORIES-03, FA-LEX-C530-STORIES-04, FA-LEX-C530-STORIES-05, FA-LEX-C531-SCREEN-01, FA-LEX-C531-SCREEN-02, FA-LEX-C531-SCREEN-03, FA-LEX-C531-SCREEN-04, FA-LEX-C531-SCREEN-05, FA-LEX-C532-WATCHING-01, FA-LEX-C532-WATCHING-02, FA-LEX-C532-WATCHING-03, FA-LEX-C532-WATCHING-04, FA-LEX-C532-WATCHING-05, FA-LEX-C533-MEDIA-01, FA-LEX-C533-MEDIA-02, FA-LEX-C533-MEDIA-03, FA-LEX-C533-MEDIA-04, FA-LEX-C533-MEDIA-05, FA-LEX-C534-FURNISH-01, FA-LEX-C534-FURNISH-02, FA-LEX-C534-FURNISH-03, FA-LEX-C534-FURNISH-04, FA-LEX-C534-FURNISH-05, FA-LEX-C535-COSY-01, FA-LEX-C535-COSY-02, FA-LEX-C535-COSY-03, FA-LEX-C535-COSY-04, FA-LEX-C535-COSY-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a bookshop, a title, a volume, a publisher, a translator]
+- [YOU SAY: a writer, a critic, to review, to study, a bookworm]
+- [YOU SAY: a short story, the main character, scary, tragic, funny]
+- [YOU SAY: a documentary, a cartoon, subtitles, dubbed, a TV channel]
+- [YOU SAY: a screening, a remote control, a screen, a podcast, headphones]
+- [YOU SAY: a presenter, satire, a comedy, to be broadcast, to stare]
+- [YOU SAY: furniture, a lamp, a rug, a cushion, a quilt]
+- [YOU SAY: a fireplace, bedding, cosy, a homemaker, a capable housewife]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C528-BOOKS-01, FA-LEX-C528-BOOKS-02, FA-LEX-C528-BOOKS-03, FA-LEX-C528-BOOKS-04, FA-LEX-C528-BOOKS-05, FA-LEX-C529-READERS-01, FA-LEX-C529-READERS-02, FA-LEX-C529-READERS-03, FA-LEX-C529-READERS-04, FA-LEX-C529-READERS-05, FA-LEX-C530-STORIES-01, FA-LEX-C530-STORIES-02, FA-LEX-C530-STORIES-03, FA-LEX-C530-STORIES-04, FA-LEX-C530-STORIES-05, FA-LEX-C531-SCREEN-01, FA-LEX-C531-SCREEN-02, FA-LEX-C531-SCREEN-03, FA-LEX-C531-SCREEN-04, FA-LEX-C531-SCREEN-05, FA-LEX-C532-WATCHING-01, FA-LEX-C532-WATCHING-02, FA-LEX-C532-WATCHING-03, FA-LEX-C532-WATCHING-04, FA-LEX-C532-WATCHING-05, FA-LEX-C533-MEDIA-01, FA-LEX-C533-MEDIA-02, FA-LEX-C533-MEDIA-03, FA-LEX-C533-MEDIA-04, FA-LEX-C533-MEDIA-05, FA-LEX-C534-FURNISH-01, FA-LEX-C534-FURNISH-02, FA-LEX-C534-FURNISH-03, FA-LEX-C534-FURNISH-04, FA-LEX-C534-FURNISH-05, FA-LEX-C535-COSY-01, FA-LEX-C535-COSY-02, FA-LEX-C535-COSY-03, FA-LEX-C535-COSY-04, FA-LEX-C535-COSY-05] -->
+
+[PAUSE 3s] A bookshop? (**کتابفروشی**.) A title? (**عنوان**.) A volume? (**جلد**.) A publisher? (**ناشر**.) A translator? (**مترجم**.) A writer? (**نویسنده**.) A critic? (**منتقد**.) To review? (**نقد کردن**.) To study? (**مطالعه کردن**.) A bookworm? (**کرم کتاب**.) A short story? (**داستان کوتاه**.) The main character? (**شخصیت اصلی**.) Scary? (**ترسناک**.) Tragic? (**غم انگیز**.) Funny? (**خنده دار**.) A documentary? (**مستند**.) A cartoon? (**کارتون**.) Subtitles? (**زیرنویس**.) Dubbed? (**دوبله**.) A TV channel? (**کانال**.) A screening? (**اکران**.) A remote control? (**کنترل**.) A screen? (**صفحه نمایش**.) A podcast? (**پادکست**.) Headphones? (**هدفون**.) A presenter? (**مجری**.) Satire? (**طنز**.) A comedy? (**کمدی**.) To be broadcast? (**پخش شدن**.) To stare? (**خیره شدن**.) Furniture? (**مبلمان**.) A lamp? (**آباژور**.) A rug? (**قالیچه**.) A cushion? (**کوسن**.) A quilt? (**لحاف**.) A fireplace? (**شومینه**.) Bedding? (**رختخواب**.) Cosy? (**دنج**.) A homemaker? (**خانه دار**.) A capable housewife? (**کدبانو**.)
+`;export{t};

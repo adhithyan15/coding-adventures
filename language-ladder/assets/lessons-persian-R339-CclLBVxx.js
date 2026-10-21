@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FA-R339-review-332-339
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17340
+chapter: 339
+type: review
+headword: (dialogue)
+gloss: a review of chapters 332-339
+concept_tag: REVIEW
+prerequisites: [FA-C332-bardar, FA-C332-zayman, FA-C332-be-donya-amadan, FA-C332-nowzad, FA-C332-tarbiyat-kardan, FA-C333-nowjavani, FA-C333-danesh-amukhte, FA-C333-sarbazi, FA-C333-miyansali, FA-C333-piri, FA-C334-asheq-shodan, FA-C334-khastegari, FA-C334-khastegari-kardan, FA-C334-namzadi, FA-C334-aqd, FA-C335-arusi, FA-C335-arus, FA-C335-hanabandan, FA-C335-mehriye, FA-C335-jahiziye, FA-C336-talaq, FA-C336-talaq-gereftan, FA-C336-bive, FA-C336-yatim, FA-C336-sarparasti, FA-C337-marg, FA-C337-dargozashtan, FA-C337-fowt-kardan, FA-C337-dafn-kardan, FA-C337-qabr, FA-C338-khatm, FA-C338-aza, FA-C338-tasliyat-goftan, FA-C338-vasiyat, FA-C338-ers, FA-C339-eyd, FA-C339-khane-tekani, FA-C339-samanu, FA-C339-senjed, FA-C339-mahi-qermez]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FA-LEX-C332-BARDAR-01, FA-LEX-C332-BARDAR-02, FA-LEX-C332-BARDAR-03, FA-LEX-C332-BARDAR-04, FA-LEX-C332-BARDAR-05, FA-LEX-C333-NOWJAVANI-01, FA-LEX-C333-NOWJAVANI-02, FA-LEX-C333-NOWJAVANI-03, FA-LEX-C333-NOWJAVANI-04, FA-LEX-C333-NOWJAVANI-05, FA-LEX-C334-ASHEQ-01, FA-LEX-C334-ASHEQ-02, FA-LEX-C334-ASHEQ-03, FA-LEX-C334-ASHEQ-04, FA-LEX-C334-ASHEQ-05, FA-LEX-C335-ARUSI-01, FA-LEX-C335-ARUSI-02, FA-LEX-C335-ARUSI-03, FA-LEX-C335-ARUSI-04, FA-LEX-C335-ARUSI-05, FA-LEX-C336-TALAQ-01, FA-LEX-C336-TALAQ-02, FA-LEX-C336-TALAQ-03, FA-LEX-C336-TALAQ-04, FA-LEX-C336-TALAQ-05, FA-LEX-C337-MARG-01, FA-LEX-C337-MARG-02, FA-LEX-C337-MARG-03, FA-LEX-C337-MARG-04, FA-LEX-C337-MARG-05, FA-LEX-C338-KHATM-01, FA-LEX-C338-KHATM-02, FA-LEX-C338-KHATM-03, FA-LEX-C338-KHATM-04, FA-LEX-C338-KHATM-05, FA-LEX-C339-EYD-01, FA-LEX-C339-EYD-02, FA-LEX-C339-EYD-03, FA-LEX-C339-EYD-04, FA-LEX-C339-EYD-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FA-LEX-C332-BARDAR-01, FA-LEX-C332-BARDAR-02, FA-LEX-C332-BARDAR-03, FA-LEX-C332-BARDAR-04, FA-LEX-C332-BARDAR-05, FA-LEX-C333-NOWJAVANI-01, FA-LEX-C333-NOWJAVANI-02, FA-LEX-C333-NOWJAVANI-03, FA-LEX-C333-NOWJAVANI-04, FA-LEX-C333-NOWJAVANI-05, FA-LEX-C334-ASHEQ-01, FA-LEX-C334-ASHEQ-02, FA-LEX-C334-ASHEQ-03, FA-LEX-C334-ASHEQ-04, FA-LEX-C334-ASHEQ-05, FA-LEX-C335-ARUSI-01, FA-LEX-C335-ARUSI-02, FA-LEX-C335-ARUSI-03, FA-LEX-C335-ARUSI-04, FA-LEX-C335-ARUSI-05, FA-LEX-C336-TALAQ-01, FA-LEX-C336-TALAQ-02, FA-LEX-C336-TALAQ-03, FA-LEX-C336-TALAQ-04, FA-LEX-C336-TALAQ-05, FA-LEX-C337-MARG-01, FA-LEX-C337-MARG-02, FA-LEX-C337-MARG-03, FA-LEX-C337-MARG-04, FA-LEX-C337-MARG-05, FA-LEX-C338-KHATM-01, FA-LEX-C338-KHATM-02, FA-LEX-C338-KHATM-03, FA-LEX-C338-KHATM-04, FA-LEX-C338-KHATM-05, FA-LEX-C339-EYD-01, FA-LEX-C339-EYD-02, FA-LEX-C339-EYD-03, FA-LEX-C339-EYD-04, FA-LEX-C339-EYD-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FA-C332-bardar, FA-C332-zayman, FA-C332-be-donya-amadan, FA-C332-nowzad, FA-C332-tarbiyat-kardan, FA-C333-nowjavani, FA-C333-danesh-amukhte, FA-C333-sarbazi, FA-C333-miyansali, FA-C333-piri, FA-C334-asheq-shodan, FA-C334-khastegari, FA-C334-khastegari-kardan, FA-C334-namzadi, FA-C334-aqd, FA-C335-arusi, FA-C335-arus, FA-C335-hanabandan, FA-C335-mehriye, FA-C335-jahiziye, FA-C336-talaq, FA-C336-talaq-gereftan, FA-C336-bive, FA-C336-yatim, FA-C336-sarparasti, FA-C337-marg, FA-C337-dargozashtan, FA-C337-fowt-kardan, FA-C337-dafn-kardan, FA-C337-qabr, FA-C338-khatm, FA-C338-aza, FA-C338-tasliyat-goftan, FA-C338-vasiyat, FA-C338-ers, FA-C339-eyd, FA-C339-khane-tekani, FA-C339-samanu, FA-C339-senjed, FA-C339-mahi-qermez]
+---
+
+# Words from chapters 332–339 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C332-BARDAR-01, FA-LEX-C332-BARDAR-02] -->
+
+[PAUSE 3s] Say the Persian for pregnant and childbirth.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C332-BARDAR-01, FA-LEX-C332-BARDAR-02, FA-LEX-C332-BARDAR-03, FA-LEX-C332-BARDAR-04, FA-LEX-C332-BARDAR-05, FA-LEX-C333-NOWJAVANI-01, FA-LEX-C333-NOWJAVANI-02, FA-LEX-C333-NOWJAVANI-03, FA-LEX-C333-NOWJAVANI-04, FA-LEX-C333-NOWJAVANI-05, FA-LEX-C334-ASHEQ-01, FA-LEX-C334-ASHEQ-02, FA-LEX-C334-ASHEQ-03, FA-LEX-C334-ASHEQ-04, FA-LEX-C334-ASHEQ-05, FA-LEX-C335-ARUSI-01, FA-LEX-C335-ARUSI-02, FA-LEX-C335-ARUSI-03, FA-LEX-C335-ARUSI-04, FA-LEX-C335-ARUSI-05, FA-LEX-C336-TALAQ-01, FA-LEX-C336-TALAQ-02, FA-LEX-C336-TALAQ-03, FA-LEX-C336-TALAQ-04, FA-LEX-C336-TALAQ-05, FA-LEX-C337-MARG-01, FA-LEX-C337-MARG-02, FA-LEX-C337-MARG-03, FA-LEX-C337-MARG-04, FA-LEX-C337-MARG-05, FA-LEX-C338-KHATM-01, FA-LEX-C338-KHATM-02, FA-LEX-C338-KHATM-03, FA-LEX-C338-KHATM-04, FA-LEX-C338-KHATM-05, FA-LEX-C339-EYD-01, FA-LEX-C339-EYD-02, FA-LEX-C339-EYD-03, FA-LEX-C339-EYD-04, FA-LEX-C339-EYD-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: pregnant, childbirth, to be born, a newborn baby, to bring up]
+- [YOU SAY: adolescence, a graduate, military service, middle age, old age]
+- [YOU SAY: to fall in love, a marriage proposal, to propose marriage, an engagement, the marriage contract]
+- [YOU SAY: a wedding, a bride, a henna night, a mahr, a trousseau]
+- [YOU SAY: a divorce, to get divorced, a widow, an orphan, custody]
+- [YOU SAY: death, to pass away, to die, to bury, a grave]
+- [YOU SAY: a memorial gathering, mourning, to offer condolences, a will, an inheritance]
+- [YOU SAY: a festival, spring cleaning, samanu, oleaster, a goldfish]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C332-BARDAR-01, FA-LEX-C332-BARDAR-02, FA-LEX-C332-BARDAR-03, FA-LEX-C332-BARDAR-04, FA-LEX-C332-BARDAR-05, FA-LEX-C333-NOWJAVANI-01, FA-LEX-C333-NOWJAVANI-02, FA-LEX-C333-NOWJAVANI-03, FA-LEX-C333-NOWJAVANI-04, FA-LEX-C333-NOWJAVANI-05, FA-LEX-C334-ASHEQ-01, FA-LEX-C334-ASHEQ-02, FA-LEX-C334-ASHEQ-03, FA-LEX-C334-ASHEQ-04, FA-LEX-C334-ASHEQ-05, FA-LEX-C335-ARUSI-01, FA-LEX-C335-ARUSI-02, FA-LEX-C335-ARUSI-03, FA-LEX-C335-ARUSI-04, FA-LEX-C335-ARUSI-05, FA-LEX-C336-TALAQ-01, FA-LEX-C336-TALAQ-02, FA-LEX-C336-TALAQ-03, FA-LEX-C336-TALAQ-04, FA-LEX-C336-TALAQ-05, FA-LEX-C337-MARG-01, FA-LEX-C337-MARG-02, FA-LEX-C337-MARG-03, FA-LEX-C337-MARG-04, FA-LEX-C337-MARG-05, FA-LEX-C338-KHATM-01, FA-LEX-C338-KHATM-02, FA-LEX-C338-KHATM-03, FA-LEX-C338-KHATM-04, FA-LEX-C338-KHATM-05, FA-LEX-C339-EYD-01, FA-LEX-C339-EYD-02, FA-LEX-C339-EYD-03, FA-LEX-C339-EYD-04, FA-LEX-C339-EYD-05] -->
+
+[PAUSE 3s] Pregnant? (**باردار**.) Childbirth? (**زایمان**.) To be born? (**به دنیا آمدن**.) A newborn baby? (**نوزاد**.) To bring up? (**تربیت کردن**.) Adolescence? (**نوجوانی**.) A graduate? (**دانش آموخته**.) Military service? (**سربازی**.) Middle age? (**میانسالی**.) Old age? (**پیری**.) To fall in love? (**عاشق شدن**.) A marriage proposal? (**خواستگاری**.) To propose marriage? (**خواستگاری کردن**.) An engagement? (**نامزدی**.) The marriage contract? (**عقد**.) A wedding? (**عروسی**.) A bride? (**عروس**.) A henna night? (**حنابندان**.) A mahr? (**مهریه**.) A trousseau? (**جهیزیه**.) A divorce? (**طلاق**.) To get divorced? (**طلاق گرفتن**.) A widow? (**بیوه**.) An orphan? (**یتیم**.) Custody? (**سرپرستی**.) Death? (**مرگ**.) To pass away? (**درگذشتن**.) To die? (**فوت کردن**.) To bury? (**دفن کردن**.) A grave? (**قبر**.) A memorial gathering? (**ختم**.) Mourning? (**عزا**.) To offer condolences? (**تسلیت گفتن**.) A will? (**وصیت**.) An inheritance? (**ارث**.) A festival? (**عید**.) Spring cleaning? (**خانه تکانی**.) Samanu? (**سمنو**.) Oleaster? (**سنجد**.) A goldfish? (**ماهی قرمز**.)
+`;export{t};

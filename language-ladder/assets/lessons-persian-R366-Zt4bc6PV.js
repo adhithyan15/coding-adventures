@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FA-R367-review-360-367
+spine_node: SPINE-GIVE-REASONS
+sequence: 18800
+chapter: 367
+type: review
+headword: (dialogue)
+gloss: a review of chapters 360-367
+concept_tag: REVIEW
+prerequisites: [FA-C360-aqide, FA-C360-didgah, FA-C360-negaresh, FA-C360-motaqed-budan, FA-C360-nazariye, FA-C361-movafeqat-kardan, FA-C361-mokhalefat-kardan, FA-C361-mokhalef, FA-C361-bavar-dashtan, FA-C361-shak-dashtan, FA-C362-estedlal, FA-C362-estedlal-kardan, FA-C362-manteq, FA-C362-manteqi, FA-C362-qane-kardan, FA-C363-eddea, FA-C363-eddea-kardan, FA-C363-esbat-kardan, FA-C363-sabet-shodan, FA-C363-shavahed, FA-C364-vaqeiyyat, FA-C364-haqiqat, FA-C364-dar-vaqe, FA-C364-shayee, FA-C364-enkar-kardan, FA-C365-qezavat-kardan, FA-C365-enteqad, FA-C365-enteqad-kardan, FA-C365-eghraq-kardan, FA-C365-towjih-kardan, FA-C366-bahs, FA-C366-bahs-kardan, FA-C366-mozakere, FA-C366-eteraz, FA-C366-mesal-zadan, FA-C367-az-taraf-e-digar, FA-C367-be-ebarat-e-digar, FA-C367-amma, FA-C367-ba-in-vojud, FA-C367-harchand]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FA-LEX-C360-AQIDE-01, FA-LEX-C360-AQIDE-02, FA-LEX-C360-AQIDE-03, FA-LEX-C360-AQIDE-04, FA-LEX-C360-AQIDE-05, FA-LEX-C361-MOVAFEQAT-01, FA-LEX-C361-MOVAFEQAT-02, FA-LEX-C361-MOVAFEQAT-03, FA-LEX-C361-MOVAFEQAT-04, FA-LEX-C361-MOVAFEQAT-05, FA-LEX-C362-ESTEDLAL-01, FA-LEX-C362-ESTEDLAL-02, FA-LEX-C362-ESTEDLAL-03, FA-LEX-C362-ESTEDLAL-04, FA-LEX-C362-ESTEDLAL-05, FA-LEX-C363-EDDEA-01, FA-LEX-C363-EDDEA-02, FA-LEX-C363-EDDEA-03, FA-LEX-C363-EDDEA-04, FA-LEX-C363-EDDEA-05, FA-LEX-C364-VAQEIYYAT-01, FA-LEX-C364-VAQEIYYAT-02, FA-LEX-C364-VAQEIYYAT-03, FA-LEX-C364-VAQEIYYAT-04, FA-LEX-C364-VAQEIYYAT-05, FA-LEX-C365-QEZAVAT-01, FA-LEX-C365-QEZAVAT-02, FA-LEX-C365-QEZAVAT-03, FA-LEX-C365-QEZAVAT-04, FA-LEX-C365-QEZAVAT-05, FA-LEX-C366-BAHS-01, FA-LEX-C366-BAHS-02, FA-LEX-C366-BAHS-03, FA-LEX-C366-BAHS-04, FA-LEX-C366-BAHS-05, FA-LEX-C367-AMMA-01, FA-LEX-C367-AMMA-02, FA-LEX-C367-AMMA-03, FA-LEX-C367-AMMA-04, FA-LEX-C367-AMMA-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FA-LEX-C360-AQIDE-01, FA-LEX-C360-AQIDE-02, FA-LEX-C360-AQIDE-03, FA-LEX-C360-AQIDE-04, FA-LEX-C360-AQIDE-05, FA-LEX-C361-MOVAFEQAT-01, FA-LEX-C361-MOVAFEQAT-02, FA-LEX-C361-MOVAFEQAT-03, FA-LEX-C361-MOVAFEQAT-04, FA-LEX-C361-MOVAFEQAT-05, FA-LEX-C362-ESTEDLAL-01, FA-LEX-C362-ESTEDLAL-02, FA-LEX-C362-ESTEDLAL-03, FA-LEX-C362-ESTEDLAL-04, FA-LEX-C362-ESTEDLAL-05, FA-LEX-C363-EDDEA-01, FA-LEX-C363-EDDEA-02, FA-LEX-C363-EDDEA-03, FA-LEX-C363-EDDEA-04, FA-LEX-C363-EDDEA-05, FA-LEX-C364-VAQEIYYAT-01, FA-LEX-C364-VAQEIYYAT-02, FA-LEX-C364-VAQEIYYAT-03, FA-LEX-C364-VAQEIYYAT-04, FA-LEX-C364-VAQEIYYAT-05, FA-LEX-C365-QEZAVAT-01, FA-LEX-C365-QEZAVAT-02, FA-LEX-C365-QEZAVAT-03, FA-LEX-C365-QEZAVAT-04, FA-LEX-C365-QEZAVAT-05, FA-LEX-C366-BAHS-01, FA-LEX-C366-BAHS-02, FA-LEX-C366-BAHS-03, FA-LEX-C366-BAHS-04, FA-LEX-C366-BAHS-05, FA-LEX-C367-AMMA-01, FA-LEX-C367-AMMA-02, FA-LEX-C367-AMMA-03, FA-LEX-C367-AMMA-04, FA-LEX-C367-AMMA-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FA-C360-aqide, FA-C360-didgah, FA-C360-negaresh, FA-C360-motaqed-budan, FA-C360-nazariye, FA-C361-movafeqat-kardan, FA-C361-mokhalefat-kardan, FA-C361-mokhalef, FA-C361-bavar-dashtan, FA-C361-shak-dashtan, FA-C362-estedlal, FA-C362-estedlal-kardan, FA-C362-manteq, FA-C362-manteqi, FA-C362-qane-kardan, FA-C363-eddea, FA-C363-eddea-kardan, FA-C363-esbat-kardan, FA-C363-sabet-shodan, FA-C363-shavahed, FA-C364-vaqeiyyat, FA-C364-haqiqat, FA-C364-dar-vaqe, FA-C364-shayee, FA-C364-enkar-kardan, FA-C365-qezavat-kardan, FA-C365-enteqad, FA-C365-enteqad-kardan, FA-C365-eghraq-kardan, FA-C365-towjih-kardan, FA-C366-bahs, FA-C366-bahs-kardan, FA-C366-mozakere, FA-C366-eteraz, FA-C366-mesal-zadan, FA-C367-az-taraf-e-digar, FA-C367-be-ebarat-e-digar, FA-C367-amma, FA-C367-ba-in-vojud, FA-C367-harchand]
+---
+
+# Reasons and opinions — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C360-AQIDE-01, FA-LEX-C360-AQIDE-02] -->
+
+[PAUSE 3s] Say the Persian for an opinion and a point of view.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C360-AQIDE-01, FA-LEX-C360-AQIDE-02, FA-LEX-C360-AQIDE-03, FA-LEX-C360-AQIDE-04, FA-LEX-C360-AQIDE-05, FA-LEX-C361-MOVAFEQAT-01, FA-LEX-C361-MOVAFEQAT-02, FA-LEX-C361-MOVAFEQAT-03, FA-LEX-C361-MOVAFEQAT-04, FA-LEX-C361-MOVAFEQAT-05, FA-LEX-C362-ESTEDLAL-01, FA-LEX-C362-ESTEDLAL-02, FA-LEX-C362-ESTEDLAL-03, FA-LEX-C362-ESTEDLAL-04, FA-LEX-C362-ESTEDLAL-05, FA-LEX-C363-EDDEA-01, FA-LEX-C363-EDDEA-02, FA-LEX-C363-EDDEA-03, FA-LEX-C363-EDDEA-04, FA-LEX-C363-EDDEA-05, FA-LEX-C364-VAQEIYYAT-01, FA-LEX-C364-VAQEIYYAT-02, FA-LEX-C364-VAQEIYYAT-03, FA-LEX-C364-VAQEIYYAT-04, FA-LEX-C364-VAQEIYYAT-05, FA-LEX-C365-QEZAVAT-01, FA-LEX-C365-QEZAVAT-02, FA-LEX-C365-QEZAVAT-03, FA-LEX-C365-QEZAVAT-04, FA-LEX-C365-QEZAVAT-05, FA-LEX-C366-BAHS-01, FA-LEX-C366-BAHS-02, FA-LEX-C366-BAHS-03, FA-LEX-C366-BAHS-04, FA-LEX-C366-BAHS-05, FA-LEX-C367-AMMA-01, FA-LEX-C367-AMMA-02, FA-LEX-C367-AMMA-03, FA-LEX-C367-AMMA-04, FA-LEX-C367-AMMA-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an opinion, a point of view, an attitude, to believe, a theory]
+- [YOU SAY: to agree, to oppose, opposed, to believe in, to doubt]
+- [YOU SAY: an argument, to argue, logic, logical, to convince]
+- [YOU SAY: a claim, to claim, to prove, to be proven, evidence]
+- [YOU SAY: a fact, the truth, in fact, a rumour, to deny]
+- [YOU SAY: to judge, criticism, to criticise, to exaggerate, to justify]
+- [YOU SAY: a discussion, to discuss, a negotiation, an objection, to give an example]
+- [YOU SAY: on the other hand, in other words, but, nevertheless, although]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C360-AQIDE-01, FA-LEX-C360-AQIDE-02, FA-LEX-C360-AQIDE-03, FA-LEX-C360-AQIDE-04, FA-LEX-C360-AQIDE-05, FA-LEX-C361-MOVAFEQAT-01, FA-LEX-C361-MOVAFEQAT-02, FA-LEX-C361-MOVAFEQAT-03, FA-LEX-C361-MOVAFEQAT-04, FA-LEX-C361-MOVAFEQAT-05, FA-LEX-C362-ESTEDLAL-01, FA-LEX-C362-ESTEDLAL-02, FA-LEX-C362-ESTEDLAL-03, FA-LEX-C362-ESTEDLAL-04, FA-LEX-C362-ESTEDLAL-05, FA-LEX-C363-EDDEA-01, FA-LEX-C363-EDDEA-02, FA-LEX-C363-EDDEA-03, FA-LEX-C363-EDDEA-04, FA-LEX-C363-EDDEA-05, FA-LEX-C364-VAQEIYYAT-01, FA-LEX-C364-VAQEIYYAT-02, FA-LEX-C364-VAQEIYYAT-03, FA-LEX-C364-VAQEIYYAT-04, FA-LEX-C364-VAQEIYYAT-05, FA-LEX-C365-QEZAVAT-01, FA-LEX-C365-QEZAVAT-02, FA-LEX-C365-QEZAVAT-03, FA-LEX-C365-QEZAVAT-04, FA-LEX-C365-QEZAVAT-05, FA-LEX-C366-BAHS-01, FA-LEX-C366-BAHS-02, FA-LEX-C366-BAHS-03, FA-LEX-C366-BAHS-04, FA-LEX-C366-BAHS-05, FA-LEX-C367-AMMA-01, FA-LEX-C367-AMMA-02, FA-LEX-C367-AMMA-03, FA-LEX-C367-AMMA-04, FA-LEX-C367-AMMA-05] -->
+
+[PAUSE 3s] An opinion? (**عقیده**.) A point of view? (**دیدگاه**.) An attitude? (**نگرش**.) To believe? (**معتقد بودن**.) A theory? (**نظریه**.) To agree? (**موافقت کردن**.) To oppose? (**مخالفت کردن**.) Opposed? (**مخالف**.) To believe in? (**باور داشتن**.) To doubt? (**شک داشتن**.) An argument? (**استدلال**.) To argue? (**استدلال کردن**.) Logic? (**منطق**.) Logical? (**منطقی**.) To convince? (**قانع کردن**.) A claim? (**ادعا**.) To claim? (**ادعا کردن**.) To prove? (**اثبات کردن**.) To be proven? (**ثابت شدن**.) Evidence? (**شواهد**.) A fact? (**واقعیت**.) The truth? (**حقیقت**.) In fact? (**در واقع**.) A rumour? (**شایعه**.) To deny? (**انکار کردن**.) To judge? (**قضاوت کردن**.) Criticism? (**انتقاد**.) To criticise? (**انتقاد کردن**.) To exaggerate? (**اغراق کردن**.) To justify? (**توجیه کردن**.) A discussion? (**بحث**.) To discuss? (**بحث کردن**.) A negotiation? (**مذاکره**.) An objection? (**اعتراض**.) To give an example? (**مثال زدن**.) On the other hand? (**از طرف دیگر**.) In other words? (**به عبارت دیگر**.) But? (**اما**.) Nevertheless? (**با این وجود**.) Although? (**هرچند**.)
+`;export{t};

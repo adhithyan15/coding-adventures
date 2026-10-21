@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FA-R315-review-308-315
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 16110
+chapter: 315
+type: review
+headword: (dialogue)
+gloss: a review of chapters 308-315
+concept_tag: REVIEW
+prerequisites: [FA-C308-gozaresh, FA-C308-gozaresh-dadan, FA-C308-gozareshgar, FA-C308-titr, FA-C308-akhbar, FA-C309-sokhangu, FA-C309-bayaniye, FA-C309-ettelaiye, FA-C309-elam-kardan, FA-C309-ezhar-kardan, FA-C310-takzib-kardan, FA-C310-tayid-kardan, FA-C310-peygiri-kardan, FA-C310-khabar-dadan, FA-C310-ettela-dadan, FA-C311-manba, FA-C311-be-gofte, FA-C311-be-naql-az, FA-C311-joziyat, FA-C311-khabargozari, FA-C312-montasher-kardan, FA-C312-pakhsh-kardan, FA-C312-guyande, FA-C312-binande, FA-C312-pushesh-e-khabari, FA-C313-amar, FA-C313-baravard-kardan, FA-C313-takid-kardan, FA-C313-kholase, FA-C313-kholase-kardan, FA-C314-ruydad, FA-C314-vaqee, FA-C314-bargozar-shodan, FA-C314-bargozar-kardan, FA-C314-sherkat-kardan, FA-C315-khabar-e-fowri, FA-C315-ruzname-negar, FA-C315-sarmaqale, FA-C315-tazahorat, FA-C315-shoar]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FA-LEX-C308-GOZARESH-01, FA-LEX-C308-GOZARESH-02, FA-LEX-C308-GOZARESH-03, FA-LEX-C308-GOZARESH-04, FA-LEX-C308-GOZARESH-05, FA-LEX-C309-SOKHANGU-01, FA-LEX-C309-SOKHANGU-02, FA-LEX-C309-SOKHANGU-03, FA-LEX-C309-SOKHANGU-04, FA-LEX-C309-SOKHANGU-05, FA-LEX-C310-TAKZIB-01, FA-LEX-C310-TAKZIB-02, FA-LEX-C310-TAKZIB-03, FA-LEX-C310-TAKZIB-04, FA-LEX-C310-TAKZIB-05, FA-LEX-C311-MANBA-01, FA-LEX-C311-MANBA-02, FA-LEX-C311-MANBA-03, FA-LEX-C311-MANBA-04, FA-LEX-C311-MANBA-05, FA-LEX-C312-MONTASHER-01, FA-LEX-C312-MONTASHER-02, FA-LEX-C312-MONTASHER-03, FA-LEX-C312-MONTASHER-04, FA-LEX-C312-MONTASHER-05, FA-LEX-C313-AMAR-01, FA-LEX-C313-AMAR-02, FA-LEX-C313-AMAR-03, FA-LEX-C313-AMAR-04, FA-LEX-C313-AMAR-05, FA-LEX-C314-RUYDAD-01, FA-LEX-C314-RUYDAD-02, FA-LEX-C314-RUYDAD-03, FA-LEX-C314-RUYDAD-04, FA-LEX-C314-RUYDAD-05, FA-LEX-C315-KHABARFOWRI-01, FA-LEX-C315-KHABARFOWRI-02, FA-LEX-C315-KHABARFOWRI-03, FA-LEX-C315-KHABARFOWRI-04, FA-LEX-C315-KHABARFOWRI-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FA-LEX-C308-GOZARESH-01, FA-LEX-C308-GOZARESH-02, FA-LEX-C308-GOZARESH-03, FA-LEX-C308-GOZARESH-04, FA-LEX-C308-GOZARESH-05, FA-LEX-C309-SOKHANGU-01, FA-LEX-C309-SOKHANGU-02, FA-LEX-C309-SOKHANGU-03, FA-LEX-C309-SOKHANGU-04, FA-LEX-C309-SOKHANGU-05, FA-LEX-C310-TAKZIB-01, FA-LEX-C310-TAKZIB-02, FA-LEX-C310-TAKZIB-03, FA-LEX-C310-TAKZIB-04, FA-LEX-C310-TAKZIB-05, FA-LEX-C311-MANBA-01, FA-LEX-C311-MANBA-02, FA-LEX-C311-MANBA-03, FA-LEX-C311-MANBA-04, FA-LEX-C311-MANBA-05, FA-LEX-C312-MONTASHER-01, FA-LEX-C312-MONTASHER-02, FA-LEX-C312-MONTASHER-03, FA-LEX-C312-MONTASHER-04, FA-LEX-C312-MONTASHER-05, FA-LEX-C313-AMAR-01, FA-LEX-C313-AMAR-02, FA-LEX-C313-AMAR-03, FA-LEX-C313-AMAR-04, FA-LEX-C313-AMAR-05, FA-LEX-C314-RUYDAD-01, FA-LEX-C314-RUYDAD-02, FA-LEX-C314-RUYDAD-03, FA-LEX-C314-RUYDAD-04, FA-LEX-C314-RUYDAD-05, FA-LEX-C315-KHABARFOWRI-01, FA-LEX-C315-KHABARFOWRI-02, FA-LEX-C315-KHABARFOWRI-03, FA-LEX-C315-KHABARFOWRI-04, FA-LEX-C315-KHABARFOWRI-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FA-C308-gozaresh, FA-C308-gozaresh-dadan, FA-C308-gozareshgar, FA-C308-titr, FA-C308-akhbar, FA-C309-sokhangu, FA-C309-bayaniye, FA-C309-ettelaiye, FA-C309-elam-kardan, FA-C309-ezhar-kardan, FA-C310-takzib-kardan, FA-C310-tayid-kardan, FA-C310-peygiri-kardan, FA-C310-khabar-dadan, FA-C310-ettela-dadan, FA-C311-manba, FA-C311-be-gofte, FA-C311-be-naql-az, FA-C311-joziyat, FA-C311-khabargozari, FA-C312-montasher-kardan, FA-C312-pakhsh-kardan, FA-C312-guyande, FA-C312-binande, FA-C312-pushesh-e-khabari, FA-C313-amar, FA-C313-baravard-kardan, FA-C313-takid-kardan, FA-C313-kholase, FA-C313-kholase-kardan, FA-C314-ruydad, FA-C314-vaqee, FA-C314-bargozar-shodan, FA-C314-bargozar-kardan, FA-C314-sherkat-kardan, FA-C315-khabar-e-fowri, FA-C315-ruzname-negar, FA-C315-sarmaqale, FA-C315-tazahorat, FA-C315-shoar]
+---
+
+# Words from chapters 308–315 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C308-GOZARESH-01, FA-LEX-C308-GOZARESH-02] -->
+
+[PAUSE 3s] Say the Persian for a report and to report.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C308-GOZARESH-01, FA-LEX-C308-GOZARESH-02, FA-LEX-C308-GOZARESH-03, FA-LEX-C308-GOZARESH-04, FA-LEX-C308-GOZARESH-05, FA-LEX-C309-SOKHANGU-01, FA-LEX-C309-SOKHANGU-02, FA-LEX-C309-SOKHANGU-03, FA-LEX-C309-SOKHANGU-04, FA-LEX-C309-SOKHANGU-05, FA-LEX-C310-TAKZIB-01, FA-LEX-C310-TAKZIB-02, FA-LEX-C310-TAKZIB-03, FA-LEX-C310-TAKZIB-04, FA-LEX-C310-TAKZIB-05, FA-LEX-C311-MANBA-01, FA-LEX-C311-MANBA-02, FA-LEX-C311-MANBA-03, FA-LEX-C311-MANBA-04, FA-LEX-C311-MANBA-05, FA-LEX-C312-MONTASHER-01, FA-LEX-C312-MONTASHER-02, FA-LEX-C312-MONTASHER-03, FA-LEX-C312-MONTASHER-04, FA-LEX-C312-MONTASHER-05, FA-LEX-C313-AMAR-01, FA-LEX-C313-AMAR-02, FA-LEX-C313-AMAR-03, FA-LEX-C313-AMAR-04, FA-LEX-C313-AMAR-05, FA-LEX-C314-RUYDAD-01, FA-LEX-C314-RUYDAD-02, FA-LEX-C314-RUYDAD-03, FA-LEX-C314-RUYDAD-04, FA-LEX-C314-RUYDAD-05, FA-LEX-C315-KHABARFOWRI-01, FA-LEX-C315-KHABARFOWRI-02, FA-LEX-C315-KHABARFOWRI-03, FA-LEX-C315-KHABARFOWRI-04, FA-LEX-C315-KHABARFOWRI-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a report, to report, a reporter, a headline, the news]
+- [YOU SAY: a spokesperson, a statement, a notice, to announce, to state]
+- [YOU SAY: to refute, to confirm, to follow up, to let someone know, to inform]
+- [YOU SAY: a source, according to, quoting, details, a news agency]
+- [YOU SAY: to publish, to broadcast, a newsreader, a viewer, news coverage]
+- [YOU SAY: statistics, to estimate, to stress, a summary, to summarise]
+- [YOU SAY: an event, an incident, to be held, to hold, to take part]
+- [YOU SAY: breaking news, a journalist, an editorial, a demonstration, a slogan]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C308-GOZARESH-01, FA-LEX-C308-GOZARESH-02, FA-LEX-C308-GOZARESH-03, FA-LEX-C308-GOZARESH-04, FA-LEX-C308-GOZARESH-05, FA-LEX-C309-SOKHANGU-01, FA-LEX-C309-SOKHANGU-02, FA-LEX-C309-SOKHANGU-03, FA-LEX-C309-SOKHANGU-04, FA-LEX-C309-SOKHANGU-05, FA-LEX-C310-TAKZIB-01, FA-LEX-C310-TAKZIB-02, FA-LEX-C310-TAKZIB-03, FA-LEX-C310-TAKZIB-04, FA-LEX-C310-TAKZIB-05, FA-LEX-C311-MANBA-01, FA-LEX-C311-MANBA-02, FA-LEX-C311-MANBA-03, FA-LEX-C311-MANBA-04, FA-LEX-C311-MANBA-05, FA-LEX-C312-MONTASHER-01, FA-LEX-C312-MONTASHER-02, FA-LEX-C312-MONTASHER-03, FA-LEX-C312-MONTASHER-04, FA-LEX-C312-MONTASHER-05, FA-LEX-C313-AMAR-01, FA-LEX-C313-AMAR-02, FA-LEX-C313-AMAR-03, FA-LEX-C313-AMAR-04, FA-LEX-C313-AMAR-05, FA-LEX-C314-RUYDAD-01, FA-LEX-C314-RUYDAD-02, FA-LEX-C314-RUYDAD-03, FA-LEX-C314-RUYDAD-04, FA-LEX-C314-RUYDAD-05, FA-LEX-C315-KHABARFOWRI-01, FA-LEX-C315-KHABARFOWRI-02, FA-LEX-C315-KHABARFOWRI-03, FA-LEX-C315-KHABARFOWRI-04, FA-LEX-C315-KHABARFOWRI-05] -->
+
+[PAUSE 3s] A report? (**گزارش**.) To report? (**گزارش دادن**.) A reporter? (**گزارشگر**.) A headline? (**تیتر**.) The news? (**اخبار**.) A spokesperson? (**سخنگو**.) A statement? (**بیانیه**.) A notice? (**اطلاعیه**.) To announce? (**اعلام کردن**.) To state? (**اظهار کردن**.) To refute? (**تکذیب کردن**.) To confirm? (**تایید کردن**.) To follow up? (**پیگیری کردن**.) To let someone know? (**خبر دادن**.) To inform? (**اطلاع دادن**.) A source? (**منبع**.) According to? (**به گفته**.) Quoting? (**به نقل از**.) Details? (**جزئیات**.) A news agency? (**خبرگزاری**.) To publish? (**منتشر کردن**.) To broadcast? (**پخش کردن**.) A newsreader? (**گوینده**.) A viewer? (**بیننده**.) News coverage? (**پوشش خبری**.) Statistics? (**آمار**.) To estimate? (**برآورد کردن**.) To stress? (**تاکید کردن**.) A summary? (**خلاصه**.) To summarise? (**خلاصه کردن**.) An event? (**رویداد**.) An incident? (**واقعه**.) To be held? (**برگزار شدن**.) To hold? (**برگزار کردن**.) To take part? (**شرکت کردن**.) Breaking news? (**خبر فوری**.) A journalist? (**روزنامه نگار**.) An editorial? (**سرمقاله**.) A demonstration? (**تظاهرات**.) A slogan? (**شعار**.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FA-R331-review-324-331
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 16930
+chapter: 331
+type: review
+headword: (dialogue)
+gloss: a review of chapters 324-331
+concept_tag: REVIEW
+prerequisites: [FA-C324-hadese, FA-C324-sanehe, FA-C324-tasadof-kardan, FA-C324-barkhord-kardan, FA-C324-vazhgun-shodan, FA-C325-zamin-khordan, FA-C325-pich-khordan, FA-C325-asib-didan, FA-C325-sadame-didan, FA-C325-shekastegi, FA-C326-masdum, FA-C326-jerahat, FA-C326-khunrizi, FA-C326-bihush-shodan, FA-C326-be-hush-amadan, FA-C327-emdadgar, FA-C327-urzhans, FA-C327-azhir, FA-C327-zende-mandan, FA-C327-ghariq-e-nejat, FA-C328-atash-suzi, FA-C328-atash-gereftan, FA-C328-shole, FA-C328-dud, FA-C328-jaraqe, FA-C329-enfejar, FA-C329-monfajer-shodan, FA-C329-tarakidan, FA-C329-nasht-kardan, FA-C329-khakestar, FA-C330-tufan, FA-C330-gharq-shodan, FA-C330-soqut-kardan, FA-C330-hoshdar, FA-C330-hoshdar-dadan, FA-C331-viran-shodan, FA-C331-foru-rikhtan, FA-C331-avar, FA-C331-takhliye-kardan, FA-C331-panah-bordan]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FA-LEX-C324-HADESE-01, FA-LEX-C324-HADESE-02, FA-LEX-C324-HADESE-03, FA-LEX-C324-HADESE-04, FA-LEX-C324-HADESE-05, FA-LEX-C325-ZAMINKHORDAN-01, FA-LEX-C325-ZAMINKHORDAN-02, FA-LEX-C325-ZAMINKHORDAN-03, FA-LEX-C325-ZAMINKHORDAN-04, FA-LEX-C325-ZAMINKHORDAN-05, FA-LEX-C326-MASDUM-01, FA-LEX-C326-MASDUM-02, FA-LEX-C326-MASDUM-03, FA-LEX-C326-MASDUM-04, FA-LEX-C326-MASDUM-05, FA-LEX-C327-EMDADGAR-01, FA-LEX-C327-EMDADGAR-02, FA-LEX-C327-EMDADGAR-03, FA-LEX-C327-EMDADGAR-04, FA-LEX-C327-EMDADGAR-05, FA-LEX-C328-ATASHSUZI-01, FA-LEX-C328-ATASHSUZI-02, FA-LEX-C328-ATASHSUZI-03, FA-LEX-C328-ATASHSUZI-04, FA-LEX-C328-ATASHSUZI-05, FA-LEX-C329-ENFEJAR-01, FA-LEX-C329-ENFEJAR-02, FA-LEX-C329-ENFEJAR-03, FA-LEX-C329-ENFEJAR-04, FA-LEX-C329-ENFEJAR-05, FA-LEX-C330-TUFAN-01, FA-LEX-C330-TUFAN-02, FA-LEX-C330-TUFAN-03, FA-LEX-C330-TUFAN-04, FA-LEX-C330-TUFAN-05, FA-LEX-C331-VIRAN-01, FA-LEX-C331-VIRAN-02, FA-LEX-C331-VIRAN-03, FA-LEX-C331-VIRAN-04, FA-LEX-C331-VIRAN-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FA-LEX-C324-HADESE-01, FA-LEX-C324-HADESE-02, FA-LEX-C324-HADESE-03, FA-LEX-C324-HADESE-04, FA-LEX-C324-HADESE-05, FA-LEX-C325-ZAMINKHORDAN-01, FA-LEX-C325-ZAMINKHORDAN-02, FA-LEX-C325-ZAMINKHORDAN-03, FA-LEX-C325-ZAMINKHORDAN-04, FA-LEX-C325-ZAMINKHORDAN-05, FA-LEX-C326-MASDUM-01, FA-LEX-C326-MASDUM-02, FA-LEX-C326-MASDUM-03, FA-LEX-C326-MASDUM-04, FA-LEX-C326-MASDUM-05, FA-LEX-C327-EMDADGAR-01, FA-LEX-C327-EMDADGAR-02, FA-LEX-C327-EMDADGAR-03, FA-LEX-C327-EMDADGAR-04, FA-LEX-C327-EMDADGAR-05, FA-LEX-C328-ATASHSUZI-01, FA-LEX-C328-ATASHSUZI-02, FA-LEX-C328-ATASHSUZI-03, FA-LEX-C328-ATASHSUZI-04, FA-LEX-C328-ATASHSUZI-05, FA-LEX-C329-ENFEJAR-01, FA-LEX-C329-ENFEJAR-02, FA-LEX-C329-ENFEJAR-03, FA-LEX-C329-ENFEJAR-04, FA-LEX-C329-ENFEJAR-05, FA-LEX-C330-TUFAN-01, FA-LEX-C330-TUFAN-02, FA-LEX-C330-TUFAN-03, FA-LEX-C330-TUFAN-04, FA-LEX-C330-TUFAN-05, FA-LEX-C331-VIRAN-01, FA-LEX-C331-VIRAN-02, FA-LEX-C331-VIRAN-03, FA-LEX-C331-VIRAN-04, FA-LEX-C331-VIRAN-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FA-C324-hadese, FA-C324-sanehe, FA-C324-tasadof-kardan, FA-C324-barkhord-kardan, FA-C324-vazhgun-shodan, FA-C325-zamin-khordan, FA-C325-pich-khordan, FA-C325-asib-didan, FA-C325-sadame-didan, FA-C325-shekastegi, FA-C326-masdum, FA-C326-jerahat, FA-C326-khunrizi, FA-C326-bihush-shodan, FA-C326-be-hush-amadan, FA-C327-emdadgar, FA-C327-urzhans, FA-C327-azhir, FA-C327-zende-mandan, FA-C327-ghariq-e-nejat, FA-C328-atash-suzi, FA-C328-atash-gereftan, FA-C328-shole, FA-C328-dud, FA-C328-jaraqe, FA-C329-enfejar, FA-C329-monfajer-shodan, FA-C329-tarakidan, FA-C329-nasht-kardan, FA-C329-khakestar, FA-C330-tufan, FA-C330-gharq-shodan, FA-C330-soqut-kardan, FA-C330-hoshdar, FA-C330-hoshdar-dadan, FA-C331-viran-shodan, FA-C331-foru-rikhtan, FA-C331-avar, FA-C331-takhliye-kardan, FA-C331-panah-bordan]
+---
+
+# Words from chapters 324–331 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C324-HADESE-01, FA-LEX-C324-HADESE-02] -->
+
+[PAUSE 3s] Say the Persian for a mishap and a disaster.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C324-HADESE-01, FA-LEX-C324-HADESE-02, FA-LEX-C324-HADESE-03, FA-LEX-C324-HADESE-04, FA-LEX-C324-HADESE-05, FA-LEX-C325-ZAMINKHORDAN-01, FA-LEX-C325-ZAMINKHORDAN-02, FA-LEX-C325-ZAMINKHORDAN-03, FA-LEX-C325-ZAMINKHORDAN-04, FA-LEX-C325-ZAMINKHORDAN-05, FA-LEX-C326-MASDUM-01, FA-LEX-C326-MASDUM-02, FA-LEX-C326-MASDUM-03, FA-LEX-C326-MASDUM-04, FA-LEX-C326-MASDUM-05, FA-LEX-C327-EMDADGAR-01, FA-LEX-C327-EMDADGAR-02, FA-LEX-C327-EMDADGAR-03, FA-LEX-C327-EMDADGAR-04, FA-LEX-C327-EMDADGAR-05, FA-LEX-C328-ATASHSUZI-01, FA-LEX-C328-ATASHSUZI-02, FA-LEX-C328-ATASHSUZI-03, FA-LEX-C328-ATASHSUZI-04, FA-LEX-C328-ATASHSUZI-05, FA-LEX-C329-ENFEJAR-01, FA-LEX-C329-ENFEJAR-02, FA-LEX-C329-ENFEJAR-03, FA-LEX-C329-ENFEJAR-04, FA-LEX-C329-ENFEJAR-05, FA-LEX-C330-TUFAN-01, FA-LEX-C330-TUFAN-02, FA-LEX-C330-TUFAN-03, FA-LEX-C330-TUFAN-04, FA-LEX-C330-TUFAN-05, FA-LEX-C331-VIRAN-01, FA-LEX-C331-VIRAN-02, FA-LEX-C331-VIRAN-03, FA-LEX-C331-VIRAN-04, FA-LEX-C331-VIRAN-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a mishap, a disaster, to crash, to collide, to overturn]
+- [YOU SAY: to fall over, to get twisted, to get hurt, to be harmed, a fracture]
+- [YOU SAY: injured, a wound, bleeding, to faint, to come round]
+- [YOU SAY: a rescue worker, the emergency services, a siren, to survive, a lifeguard]
+- [YOU SAY: a fire, to catch fire, a flame, smoke, a spark]
+- [YOU SAY: an explosion, to explode, to burst, to leak, ash]
+- [YOU SAY: a storm, to drown, to crash down, a warning, to warn]
+- [YOU SAY: to be destroyed, to collapse, rubble, to evacuate, to take shelter]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C324-HADESE-01, FA-LEX-C324-HADESE-02, FA-LEX-C324-HADESE-03, FA-LEX-C324-HADESE-04, FA-LEX-C324-HADESE-05, FA-LEX-C325-ZAMINKHORDAN-01, FA-LEX-C325-ZAMINKHORDAN-02, FA-LEX-C325-ZAMINKHORDAN-03, FA-LEX-C325-ZAMINKHORDAN-04, FA-LEX-C325-ZAMINKHORDAN-05, FA-LEX-C326-MASDUM-01, FA-LEX-C326-MASDUM-02, FA-LEX-C326-MASDUM-03, FA-LEX-C326-MASDUM-04, FA-LEX-C326-MASDUM-05, FA-LEX-C327-EMDADGAR-01, FA-LEX-C327-EMDADGAR-02, FA-LEX-C327-EMDADGAR-03, FA-LEX-C327-EMDADGAR-04, FA-LEX-C327-EMDADGAR-05, FA-LEX-C328-ATASHSUZI-01, FA-LEX-C328-ATASHSUZI-02, FA-LEX-C328-ATASHSUZI-03, FA-LEX-C328-ATASHSUZI-04, FA-LEX-C328-ATASHSUZI-05, FA-LEX-C329-ENFEJAR-01, FA-LEX-C329-ENFEJAR-02, FA-LEX-C329-ENFEJAR-03, FA-LEX-C329-ENFEJAR-04, FA-LEX-C329-ENFEJAR-05, FA-LEX-C330-TUFAN-01, FA-LEX-C330-TUFAN-02, FA-LEX-C330-TUFAN-03, FA-LEX-C330-TUFAN-04, FA-LEX-C330-TUFAN-05, FA-LEX-C331-VIRAN-01, FA-LEX-C331-VIRAN-02, FA-LEX-C331-VIRAN-03, FA-LEX-C331-VIRAN-04, FA-LEX-C331-VIRAN-05] -->
+
+[PAUSE 3s] A mishap? (**حادثه**.) A disaster? (**سانحه**.) To crash? (**تصادف کردن**.) To collide? (**برخورد کردن**.) To overturn? (**واژگون شدن**.) To fall over? (**زمین خوردن**.) To get twisted? (**پیچ خوردن**.) To get hurt? (**آسیب دیدن**.) To be harmed? (**صدمه دیدن**.) A fracture? (**شکستگی**.) Injured? (**مصدوم**.) A wound? (**جراحت**.) Bleeding? (**خونریزی**.) To faint? (**بیهوش شدن**.) To come round? (**به هوش آمدن**.) A rescue worker? (**امدادگر**.) The emergency services? (**اورژانس**.) A siren? (**آژیر**.) To survive? (**زنده ماندن**.) A lifeguard? (**غریق نجات**.) A fire? (**آتش سوزی**.) To catch fire? (**آتش گرفتن**.) A flame? (**شعله**.) Smoke? (**دود**.) A spark? (**جرقه**.) An explosion? (**انفجار**.) To explode? (**منفجر شدن**.) To burst? (**ترکیدن**.) To leak? (**نشت کردن**.) Ash? (**خاکستر**.) A storm? (**طوفان**.) To drown? (**غرق شدن**.) To crash down? (**سقوط کردن**.) A warning? (**هشدار**.) To warn? (**هشدار دادن**.) To be destroyed? (**ویران شدن**.) To collapse? (**فرو ریختن**.) Rubble? (**آوار**.) To evacuate? (**تخلیه کردن**.) To take shelter? (**پناه بردن**.)
+`;export{t};

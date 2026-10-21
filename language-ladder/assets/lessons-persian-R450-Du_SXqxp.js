@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FA-R451-review-444-451
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 23130
+chapter: 451
+type: review
+headword: (dialogue)
+gloss: a review of chapters 444-451
+concept_tag: REVIEW
+prerequisites: [FA-C444-neshani, FA-C444-pors-o-ju-kardan, FA-C444-balad-budan, FA-C444-gom-shodan, FA-C444-neshane, FA-C445-taqato, FA-C445-falake, FA-C445-serah, FA-C445-dorahi, FA-C445-obur-kardan, FA-C446-jahat, FA-C446-qotbnama, FA-C446-kilometr, FA-C446-masafat, FA-C446-dur-shodan, FA-C447-nabsh, FA-C447-pelak, FA-C447-kodposti, FA-C447-asli, FA-C447-fari, FA-C448-miyanbor, FA-C448-sarbalayi, FA-C448-saraziri, FA-C448-zirgozar, FA-C448-rugozar, FA-C449-masiryab, FA-C449-donbal-kardan, FA-C449-nazdik-shodan, FA-C449-gozashtan, FA-C449-kuche-pas-kuche, FA-C450-markaz, FA-C450-hume, FA-C450-borj, FA-C450-mojassame, FA-C450-favvare, FA-C451-sholughi, FA-C451-nimkat, FA-C451-saken, FA-C451-rahgozar, FA-C451-hamshahri]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FA-LEX-C444-NESHANI-01, FA-LEX-C444-NESHANI-02, FA-LEX-C444-NESHANI-03, FA-LEX-C444-NESHANI-04, FA-LEX-C444-NESHANI-05, FA-LEX-C445-TAGHATO-01, FA-LEX-C445-TAGHATO-02, FA-LEX-C445-TAGHATO-03, FA-LEX-C445-TAGHATO-04, FA-LEX-C445-TAGHATO-05, FA-LEX-C446-JAHAT-01, FA-LEX-C446-JAHAT-02, FA-LEX-C446-JAHAT-03, FA-LEX-C446-JAHAT-04, FA-LEX-C446-JAHAT-05, FA-LEX-C447-NABSH-01, FA-LEX-C447-NABSH-02, FA-LEX-C447-NABSH-03, FA-LEX-C447-NABSH-04, FA-LEX-C447-NABSH-05, FA-LEX-C448-MIYANBOR-01, FA-LEX-C448-MIYANBOR-02, FA-LEX-C448-MIYANBOR-03, FA-LEX-C448-MIYANBOR-04, FA-LEX-C448-MIYANBOR-05, FA-LEX-C449-MASIRYAB-01, FA-LEX-C449-MASIRYAB-02, FA-LEX-C449-MASIRYAB-03, FA-LEX-C449-MASIRYAB-04, FA-LEX-C449-MASIRYAB-05, FA-LEX-C450-MARKAZ-01, FA-LEX-C450-MARKAZ-02, FA-LEX-C450-MARKAZ-03, FA-LEX-C450-MARKAZ-04, FA-LEX-C450-MARKAZ-05, FA-LEX-C451-SHOLUGHI-01, FA-LEX-C451-SHOLUGHI-02, FA-LEX-C451-SHOLUGHI-03, FA-LEX-C451-SHOLUGHI-04, FA-LEX-C451-SHOLUGHI-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FA-LEX-C444-NESHANI-01, FA-LEX-C444-NESHANI-02, FA-LEX-C444-NESHANI-03, FA-LEX-C444-NESHANI-04, FA-LEX-C444-NESHANI-05, FA-LEX-C445-TAGHATO-01, FA-LEX-C445-TAGHATO-02, FA-LEX-C445-TAGHATO-03, FA-LEX-C445-TAGHATO-04, FA-LEX-C445-TAGHATO-05, FA-LEX-C446-JAHAT-01, FA-LEX-C446-JAHAT-02, FA-LEX-C446-JAHAT-03, FA-LEX-C446-JAHAT-04, FA-LEX-C446-JAHAT-05, FA-LEX-C447-NABSH-01, FA-LEX-C447-NABSH-02, FA-LEX-C447-NABSH-03, FA-LEX-C447-NABSH-04, FA-LEX-C447-NABSH-05, FA-LEX-C448-MIYANBOR-01, FA-LEX-C448-MIYANBOR-02, FA-LEX-C448-MIYANBOR-03, FA-LEX-C448-MIYANBOR-04, FA-LEX-C448-MIYANBOR-05, FA-LEX-C449-MASIRYAB-01, FA-LEX-C449-MASIRYAB-02, FA-LEX-C449-MASIRYAB-03, FA-LEX-C449-MASIRYAB-04, FA-LEX-C449-MASIRYAB-05, FA-LEX-C450-MARKAZ-01, FA-LEX-C450-MARKAZ-02, FA-LEX-C450-MARKAZ-03, FA-LEX-C450-MARKAZ-04, FA-LEX-C450-MARKAZ-05, FA-LEX-C451-SHOLUGHI-01, FA-LEX-C451-SHOLUGHI-02, FA-LEX-C451-SHOLUGHI-03, FA-LEX-C451-SHOLUGHI-04, FA-LEX-C451-SHOLUGHI-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FA-C444-neshani, FA-C444-pors-o-ju-kardan, FA-C444-balad-budan, FA-C444-gom-shodan, FA-C444-neshane, FA-C445-taqato, FA-C445-falake, FA-C445-serah, FA-C445-dorahi, FA-C445-obur-kardan, FA-C446-jahat, FA-C446-qotbnama, FA-C446-kilometr, FA-C446-masafat, FA-C446-dur-shodan, FA-C447-nabsh, FA-C447-pelak, FA-C447-kodposti, FA-C447-asli, FA-C447-fari, FA-C448-miyanbor, FA-C448-sarbalayi, FA-C448-saraziri, FA-C448-zirgozar, FA-C448-rugozar, FA-C449-masiryab, FA-C449-donbal-kardan, FA-C449-nazdik-shodan, FA-C449-gozashtan, FA-C449-kuche-pas-kuche, FA-C450-markaz, FA-C450-hume, FA-C450-borj, FA-C450-mojassame, FA-C450-favvare, FA-C451-sholughi, FA-C451-nimkat, FA-C451-saken, FA-C451-rahgozar, FA-C451-hamshahri]
+---
+
+# Words from chapters 444–451 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C444-NESHANI-01, FA-LEX-C444-NESHANI-02] -->
+
+[PAUSE 3s] Say the Persian for an address and to ask around.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C444-NESHANI-01, FA-LEX-C444-NESHANI-02, FA-LEX-C444-NESHANI-03, FA-LEX-C444-NESHANI-04, FA-LEX-C444-NESHANI-05, FA-LEX-C445-TAGHATO-01, FA-LEX-C445-TAGHATO-02, FA-LEX-C445-TAGHATO-03, FA-LEX-C445-TAGHATO-04, FA-LEX-C445-TAGHATO-05, FA-LEX-C446-JAHAT-01, FA-LEX-C446-JAHAT-02, FA-LEX-C446-JAHAT-03, FA-LEX-C446-JAHAT-04, FA-LEX-C446-JAHAT-05, FA-LEX-C447-NABSH-01, FA-LEX-C447-NABSH-02, FA-LEX-C447-NABSH-03, FA-LEX-C447-NABSH-04, FA-LEX-C447-NABSH-05, FA-LEX-C448-MIYANBOR-01, FA-LEX-C448-MIYANBOR-02, FA-LEX-C448-MIYANBOR-03, FA-LEX-C448-MIYANBOR-04, FA-LEX-C448-MIYANBOR-05, FA-LEX-C449-MASIRYAB-01, FA-LEX-C449-MASIRYAB-02, FA-LEX-C449-MASIRYAB-03, FA-LEX-C449-MASIRYAB-04, FA-LEX-C449-MASIRYAB-05, FA-LEX-C450-MARKAZ-01, FA-LEX-C450-MARKAZ-02, FA-LEX-C450-MARKAZ-03, FA-LEX-C450-MARKAZ-04, FA-LEX-C450-MARKAZ-05, FA-LEX-C451-SHOLUGHI-01, FA-LEX-C451-SHOLUGHI-02, FA-LEX-C451-SHOLUGHI-03, FA-LEX-C451-SHOLUGHI-04, FA-LEX-C451-SHOLUGHI-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an address, to ask around, to know, to get lost, a landmark]
+- [YOU SAY: a crossroads, a roundabout, a T-junction, a fork, to cross]
+- [YOU SAY: a direction, a compass, a kilometre, a distance, to move away]
+- [YOU SAY: a, a house number, a postcode, main, side]
+- [YOU SAY: a shortcut, an uphill slope, a downhill slope, an underpass, a flyover]
+- [YOU SAY: a satnav, to follow, to approach, to pass, the back streets]
+- [YOU SAY: a centre, the outskirts, a tower, a statue, a fountain]
+- [YOU SAY: the crowds, a bench, a resident, a passer-by, someone from the same town]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C444-NESHANI-01, FA-LEX-C444-NESHANI-02, FA-LEX-C444-NESHANI-03, FA-LEX-C444-NESHANI-04, FA-LEX-C444-NESHANI-05, FA-LEX-C445-TAGHATO-01, FA-LEX-C445-TAGHATO-02, FA-LEX-C445-TAGHATO-03, FA-LEX-C445-TAGHATO-04, FA-LEX-C445-TAGHATO-05, FA-LEX-C446-JAHAT-01, FA-LEX-C446-JAHAT-02, FA-LEX-C446-JAHAT-03, FA-LEX-C446-JAHAT-04, FA-LEX-C446-JAHAT-05, FA-LEX-C447-NABSH-01, FA-LEX-C447-NABSH-02, FA-LEX-C447-NABSH-03, FA-LEX-C447-NABSH-04, FA-LEX-C447-NABSH-05, FA-LEX-C448-MIYANBOR-01, FA-LEX-C448-MIYANBOR-02, FA-LEX-C448-MIYANBOR-03, FA-LEX-C448-MIYANBOR-04, FA-LEX-C448-MIYANBOR-05, FA-LEX-C449-MASIRYAB-01, FA-LEX-C449-MASIRYAB-02, FA-LEX-C449-MASIRYAB-03, FA-LEX-C449-MASIRYAB-04, FA-LEX-C449-MASIRYAB-05, FA-LEX-C450-MARKAZ-01, FA-LEX-C450-MARKAZ-02, FA-LEX-C450-MARKAZ-03, FA-LEX-C450-MARKAZ-04, FA-LEX-C450-MARKAZ-05, FA-LEX-C451-SHOLUGHI-01, FA-LEX-C451-SHOLUGHI-02, FA-LEX-C451-SHOLUGHI-03, FA-LEX-C451-SHOLUGHI-04, FA-LEX-C451-SHOLUGHI-05] -->
+
+[PAUSE 3s] An address? (**نشانی**.) To ask around? (**پرس و جو کردن**.) To know? (**بلد بودن**.) To get lost? (**گم شدن**.) A landmark? (**نشانه**.) A crossroads? (**تقاطع**.) A roundabout? (**فلکه**.) A T-junction? (**سه راه**.) A fork? (**دوراهی**.) To cross? (**عبور کردن**.) A direction? (**جهت**.) A compass? (**قطب نما**.) A kilometre? (**کیلومتر**.) A distance? (**مسافت**.) To move away? (**دور شدن**.) A? (**نبش**.) A house number? (**پلاک**.) A postcode? (**کدپستی**.) Main? (**اصلی**.) Side? (**فرعی**.) A shortcut? (**میانبر**.) An uphill slope? (**سربالایی**.) A downhill slope? (**سرازیری**.) An underpass? (**زیرگذر**.) A flyover? (**روگذر**.) A satnav? (**مسیریاب**.) To follow? (**دنبال کردن**.) To approach? (**نزدیک شدن**.) To pass? (**گذشتن**.) The back streets? (**کوچه پس کوچه**.) A centre? (**مرکز**.) The outskirts? (**حومه**.) A tower? (**برج**.) A statue? (**مجسمه**.) A fountain? (**فواره**.) The crowds? (**شلوغی**.) A bench? (**نیمکت**.) A resident? (**ساکن**.) A passer-by? (**رهگذر**.) Someone from the same town? (**همشهری**.)
+`;export{t};

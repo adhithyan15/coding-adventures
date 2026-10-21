@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FA-R383-review-376-383
+spine_node: SPINE-GIVE-REASONS
+sequence: 19620
+chapter: 383
+type: review
+headword: (dialogue)
+gloss: a review of chapters 376-383
+concept_tag: REVIEW
+prerequisites: [FA-C376-taqsir, FA-C376-gonah, FA-C376-noqte-ye-zaf, FA-C376-rokh-dadan, FA-C376-eteraf-kardan, FA-C377-bohran, FA-C377-rah-e-hall, FA-C377-jelogiri-kardan, FA-C377-pishgiri, FA-C377-ahamiyyat-dashtan, FA-C378-dastmozd, FA-C378-daramad, FA-C378-ezafe-kari, FA-C378-padash, FA-C378-mazaya, FA-C379-estefa-dadan, FA-C379-ekhraj-kardan, FA-C379-ekhraj-shodan, FA-C379-bikari, FA-C379-bazneshastegi, FA-C380-rezume, FA-C380-qarardad, FA-C380-tarfi, FA-C380-karamuz, FA-C380-karamuzi, FA-C381-sarparast, FA-C381-moaven, FA-C381-karshenas, FA-C381-motakhasses, FA-C381-vazife, FA-C382-prozhe, FA-C382-modiriyyat-kardan, FA-C382-barname-rizi-kardan, FA-C382-sazman, FA-C382-herfei, FA-C383-towlid-kardan, FA-C383-mahsul, FA-C383-reqabat, FA-C383-raqib, FA-C383-tablighat]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FA-LEX-C376-TAQSIR-01, FA-LEX-C376-TAQSIR-02, FA-LEX-C376-TAQSIR-03, FA-LEX-C376-TAQSIR-04, FA-LEX-C376-TAQSIR-05, FA-LEX-C377-BOHRAN-01, FA-LEX-C377-BOHRAN-02, FA-LEX-C377-BOHRAN-03, FA-LEX-C377-BOHRAN-04, FA-LEX-C377-BOHRAN-05, FA-LEX-C378-DASTMOZD-01, FA-LEX-C378-DASTMOZD-02, FA-LEX-C378-DASTMOZD-03, FA-LEX-C378-DASTMOZD-04, FA-LEX-C378-DASTMOZD-05, FA-LEX-C379-ESTEFA-01, FA-LEX-C379-ESTEFA-02, FA-LEX-C379-ESTEFA-03, FA-LEX-C379-ESTEFA-04, FA-LEX-C379-ESTEFA-05, FA-LEX-C380-REZUME-01, FA-LEX-C380-REZUME-02, FA-LEX-C380-REZUME-03, FA-LEX-C380-REZUME-04, FA-LEX-C380-REZUME-05, FA-LEX-C381-SARPARAST-01, FA-LEX-C381-SARPARAST-02, FA-LEX-C381-SARPARAST-03, FA-LEX-C381-SARPARAST-04, FA-LEX-C381-SARPARAST-05, FA-LEX-C382-PROZHE-01, FA-LEX-C382-PROZHE-02, FA-LEX-C382-PROZHE-03, FA-LEX-C382-PROZHE-04, FA-LEX-C382-PROZHE-05, FA-LEX-C383-TOWLID-01, FA-LEX-C383-TOWLID-02, FA-LEX-C383-TOWLID-03, FA-LEX-C383-TOWLID-04, FA-LEX-C383-TOWLID-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FA-LEX-C376-TAQSIR-01, FA-LEX-C376-TAQSIR-02, FA-LEX-C376-TAQSIR-03, FA-LEX-C376-TAQSIR-04, FA-LEX-C376-TAQSIR-05, FA-LEX-C377-BOHRAN-01, FA-LEX-C377-BOHRAN-02, FA-LEX-C377-BOHRAN-03, FA-LEX-C377-BOHRAN-04, FA-LEX-C377-BOHRAN-05, FA-LEX-C378-DASTMOZD-01, FA-LEX-C378-DASTMOZD-02, FA-LEX-C378-DASTMOZD-03, FA-LEX-C378-DASTMOZD-04, FA-LEX-C378-DASTMOZD-05, FA-LEX-C379-ESTEFA-01, FA-LEX-C379-ESTEFA-02, FA-LEX-C379-ESTEFA-03, FA-LEX-C379-ESTEFA-04, FA-LEX-C379-ESTEFA-05, FA-LEX-C380-REZUME-01, FA-LEX-C380-REZUME-02, FA-LEX-C380-REZUME-03, FA-LEX-C380-REZUME-04, FA-LEX-C380-REZUME-05, FA-LEX-C381-SARPARAST-01, FA-LEX-C381-SARPARAST-02, FA-LEX-C381-SARPARAST-03, FA-LEX-C381-SARPARAST-04, FA-LEX-C381-SARPARAST-05, FA-LEX-C382-PROZHE-01, FA-LEX-C382-PROZHE-02, FA-LEX-C382-PROZHE-03, FA-LEX-C382-PROZHE-04, FA-LEX-C382-PROZHE-05, FA-LEX-C383-TOWLID-01, FA-LEX-C383-TOWLID-02, FA-LEX-C383-TOWLID-03, FA-LEX-C383-TOWLID-04, FA-LEX-C383-TOWLID-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FA-C376-taqsir, FA-C376-gonah, FA-C376-noqte-ye-zaf, FA-C376-rokh-dadan, FA-C376-eteraf-kardan, FA-C377-bohran, FA-C377-rah-e-hall, FA-C377-jelogiri-kardan, FA-C377-pishgiri, FA-C377-ahamiyyat-dashtan, FA-C378-dastmozd, FA-C378-daramad, FA-C378-ezafe-kari, FA-C378-padash, FA-C378-mazaya, FA-C379-estefa-dadan, FA-C379-ekhraj-kardan, FA-C379-ekhraj-shodan, FA-C379-bikari, FA-C379-bazneshastegi, FA-C380-rezume, FA-C380-qarardad, FA-C380-tarfi, FA-C380-karamuz, FA-C380-karamuzi, FA-C381-sarparast, FA-C381-moaven, FA-C381-karshenas, FA-C381-motakhasses, FA-C381-vazife, FA-C382-prozhe, FA-C382-modiriyyat-kardan, FA-C382-barname-rizi-kardan, FA-C382-sazman, FA-C382-herfei, FA-C383-towlid-kardan, FA-C383-mahsul, FA-C383-reqabat, FA-C383-raqib, FA-C383-tablighat]
+---
+
+# Words from chapters 376–383 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C376-TAQSIR-01, FA-LEX-C376-TAQSIR-02] -->
+
+[PAUSE 3s] Say the Persian for a fault and a sin.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C376-TAQSIR-01, FA-LEX-C376-TAQSIR-02, FA-LEX-C376-TAQSIR-03, FA-LEX-C376-TAQSIR-04, FA-LEX-C376-TAQSIR-05, FA-LEX-C377-BOHRAN-01, FA-LEX-C377-BOHRAN-02, FA-LEX-C377-BOHRAN-03, FA-LEX-C377-BOHRAN-04, FA-LEX-C377-BOHRAN-05, FA-LEX-C378-DASTMOZD-01, FA-LEX-C378-DASTMOZD-02, FA-LEX-C378-DASTMOZD-03, FA-LEX-C378-DASTMOZD-04, FA-LEX-C378-DASTMOZD-05, FA-LEX-C379-ESTEFA-01, FA-LEX-C379-ESTEFA-02, FA-LEX-C379-ESTEFA-03, FA-LEX-C379-ESTEFA-04, FA-LEX-C379-ESTEFA-05, FA-LEX-C380-REZUME-01, FA-LEX-C380-REZUME-02, FA-LEX-C380-REZUME-03, FA-LEX-C380-REZUME-04, FA-LEX-C380-REZUME-05, FA-LEX-C381-SARPARAST-01, FA-LEX-C381-SARPARAST-02, FA-LEX-C381-SARPARAST-03, FA-LEX-C381-SARPARAST-04, FA-LEX-C381-SARPARAST-05, FA-LEX-C382-PROZHE-01, FA-LEX-C382-PROZHE-02, FA-LEX-C382-PROZHE-03, FA-LEX-C382-PROZHE-04, FA-LEX-C382-PROZHE-05, FA-LEX-C383-TOWLID-01, FA-LEX-C383-TOWLID-02, FA-LEX-C383-TOWLID-03, FA-LEX-C383-TOWLID-04, FA-LEX-C383-TOWLID-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a fault, a sin, a weak point, to happen, to admit]
+- [YOU SAY: a crisis, a solution, to prevent, prevention, to matter]
+- [YOU SAY: a wage, an income, overtime, a bonus, benefits]
+- [YOU SAY: to resign, to dismiss, to be dismissed, unemployment, retirement]
+- [YOU SAY: a CV, a contract, a promotion, a trainee, an internship]
+- [YOU SAY: a supervisor, a deputy, an expert, a specialist, a duty]
+- [YOU SAY: a project, to manage, to plan, an organisation, professional]
+- [YOU SAY: to produce, a product, competition, a rival, advertising]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-C376-TAQSIR-01, FA-LEX-C376-TAQSIR-02, FA-LEX-C376-TAQSIR-03, FA-LEX-C376-TAQSIR-04, FA-LEX-C376-TAQSIR-05, FA-LEX-C377-BOHRAN-01, FA-LEX-C377-BOHRAN-02, FA-LEX-C377-BOHRAN-03, FA-LEX-C377-BOHRAN-04, FA-LEX-C377-BOHRAN-05, FA-LEX-C378-DASTMOZD-01, FA-LEX-C378-DASTMOZD-02, FA-LEX-C378-DASTMOZD-03, FA-LEX-C378-DASTMOZD-04, FA-LEX-C378-DASTMOZD-05, FA-LEX-C379-ESTEFA-01, FA-LEX-C379-ESTEFA-02, FA-LEX-C379-ESTEFA-03, FA-LEX-C379-ESTEFA-04, FA-LEX-C379-ESTEFA-05, FA-LEX-C380-REZUME-01, FA-LEX-C380-REZUME-02, FA-LEX-C380-REZUME-03, FA-LEX-C380-REZUME-04, FA-LEX-C380-REZUME-05, FA-LEX-C381-SARPARAST-01, FA-LEX-C381-SARPARAST-02, FA-LEX-C381-SARPARAST-03, FA-LEX-C381-SARPARAST-04, FA-LEX-C381-SARPARAST-05, FA-LEX-C382-PROZHE-01, FA-LEX-C382-PROZHE-02, FA-LEX-C382-PROZHE-03, FA-LEX-C382-PROZHE-04, FA-LEX-C382-PROZHE-05, FA-LEX-C383-TOWLID-01, FA-LEX-C383-TOWLID-02, FA-LEX-C383-TOWLID-03, FA-LEX-C383-TOWLID-04, FA-LEX-C383-TOWLID-05] -->
+
+[PAUSE 3s] A fault? (**تقصیر**.) A sin? (**گناه**.) A weak point? (**نقطه ضعف**.) To happen? (**رخ دادن**.) To admit? (**اعتراف کردن**.) A crisis? (**بحران**.) A solution? (**راه حل**.) To prevent? (**جلوگیری کردن**.) Prevention? (**پیشگیری**.) To matter? (**اهمیت داشتن**.) A wage? (**دستمزد**.) An income? (**درآمد**.) Overtime? (**اضافه کاری**.) A bonus? (**پاداش**.) Benefits? (**مزایا**.) To resign? (**استعفا دادن**.) To dismiss? (**اخراج کردن**.) To be dismissed? (**اخراج شدن**.) Unemployment? (**بیکاری**.) Retirement? (**بازنشستگی**.) A CV? (**رزومه**.) A contract? (**قرارداد**.) A promotion? (**ترفیع**.) A trainee? (**کارآموز**.) An internship? (**کارآموزی**.) A supervisor? (**سرپرست**.) A deputy? (**معاون**.) An expert? (**کارشناس**.) A specialist? (**متخصص**.) A duty? (**وظیفه**.) A project? (**پروژه**.) To manage? (**مدیریت کردن**.) To plan? (**برنامه ریزی کردن**.) An organisation? (**سازمان**.) Professional? (**حرفه ای**.) To produce? (**تولید کردن**.) A product? (**محصول**.) Competition? (**رقابت**.) A rival? (**رقیب**.) Advertising? (**تبلیغات**.)
+`;export{t};
