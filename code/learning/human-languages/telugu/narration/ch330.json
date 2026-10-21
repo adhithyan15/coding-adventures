@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 330,
+  "title": "The Reporter",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:58a18fdc092da504",
+  "lessons": [
+    {
+      "id": "TE-C330-vilekari",
+      "sequence": 16200,
+      "title": "విలేకరి (vilēkari) — a reporter; a correspondent",
+      "headword": "విలేకరి",
+      "romanization": "vilēkari",
+      "gloss": "a reporter; a correspondent",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1282174b9342ddd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to make off with, then the Telugu for to sense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విలేకరి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విలేకరి — vilēkari — \"a reporter; a correspondent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విలేకరి సాక్షితో మాట్లాడాడు. vilēkari sākṣitō māṭlāḍāḍu. The reporter spoke to the witness."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: విలేకరులు, vilēkarulu."
+            },
+            {
+              "kind": "speech",
+              "text": "A paper's reporter in a town is its విలేకరి (vilēkari) there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విలేకరి (vilēkari) is the Telugu word for a newspaper reporter; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilēkari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilēkari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilēkari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilēkari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilēkari sākṣitō māṭlāḍāḍu. — The reporter spoke to the witness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilēkari sākṣitō māṭlāḍāḍu.* — The reporter spoke to the witness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to make off with, then the Telugu for to sense, then say vilēkari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to make off with, then the Telugu for to sense, then say *vilēkari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విలేకరి (vilēkari) mean? (\"A reporter; a correspondent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C330-patrika",
+      "sequence": 16210,
+      "title": "పత్రిక (patrika) — a periodical; a magazine",
+      "headword": "పత్రిక",
+      "romanization": "patrika",
+      "gloss": "a periodical; a magazine",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58b91a3e89b902ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to sense, then the Telugu for a reporter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పత్రిక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పత్రిక — patrika — \"a periodical; a magazine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ పత్రిక ప్రతి వారం వస్తుంది. ā patrika prati vāraṁ vastundi. That magazine comes out every week."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: పత్రికలు, patrikalu."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the second half of వార్తాపత్రిక, a newspaper: a news sheet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పత్రిక (patrika) is borrowed from Sanskrit pattrikā, \"a leaf for writing upon; a letter, a document\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā patrika prati vāraṁ vastundi. — That magazine comes out every week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā patrika prati vāraṁ vastundi.* — That magazine comes out every week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to sense, then the Telugu for a reporter, then say patrika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to sense, then the Telugu for a reporter, then say *patrika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పత్రిక (patrika) mean? (\"A periodical; a magazine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C330-sirsika",
+      "sequence": 16220,
+      "title": "శీర్షిక (śīrṣika) — a headline; a title",
+      "headword": "శీర్షిక",
+      "romanization": "śīrṣika",
+      "gloss": "a headline; a title",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6951ec91015baacc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a reporter, then the Telugu for a periodical."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: శీర్షిక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శీర్షిక — śīrṣika — \"a headline; a title\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పత్రికలో పెద్ద శీర్షిక వచ్చింది. patrikalō pedda śīrṣika vaccindi. A big headline appeared in the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "The line at the head of a page or a story."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "శీర్షిక (śīrṣika) is a learned word built on Sanskrit śīrṣa, \"the head\" (CDIAL 12497): the words at the head of a story."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śīrṣika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śīrṣika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śīrṣika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śīrṣika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrikalō pedda śīrṣika vaccindi. — A big headline appeared in the paper.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrikalō pedda śīrṣika vaccindi.* — A big headline appeared in the paper.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a reporter, then the Telugu for a periodical, then say śīrṣika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a reporter, then the Telugu for a periodical, then say *śīrṣika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does శీర్షిక (śīrṣika) mean? (\"A headline; a title\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C330-kathanam",
+      "sequence": 16230,
+      "title": "కథనం (kathanaṁ) — a news story; an account",
+      "headword": "కథనం",
+      "romanization": "kathanaṁ",
+      "gloss": "a news story; an account",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac09e940877a016f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a periodical, then the Telugu for a headline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కథనం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కథనం — kathanaṁ — \"a news story; an account\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విలేకరి ఆ సంఘటన మీద కథనం రాశాడు. vilēkari ā saṅghaṭana mīda kathanaṁ rāśāḍu. The reporter wrote a story on that incident."
+            },
+            {
+              "kind": "speech",
+              "text": "A cousin of కథ, a story: the news calls each report a కథనం (kathanaṁ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కథనం (kathanaṁ) is borrowed from Sanskrit kathana, \"narration, telling\" (CDIAL 2702), from the root kath, \"to tell\", which also gives కథ, a story."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathanaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathanaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathanaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathanaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilēkari ā saṅghaṭana mīda kathanaṁ rāśāḍu. — The reporter wrote a story on that incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilēkari ā saṅghaṭana mīda kathanaṁ rāśāḍu.* — The reporter wrote a story on that incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a periodical, then the Telugu for a headline, then say kathanaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a periodical, then the Telugu for a headline, then say *kathanaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కథనం (kathanaṁ) mean? (\"A news story; an account\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C330-pracurincu",
+      "sequence": 16240,
+      "title": "ప్రచురించు (pracuriñcu) — to publish",
+      "headword": "ప్రచురించు",
+      "romanization": "pracuriñcu",
+      "gloss": "to publish",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d11d8de79d332da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a headline, then the Telugu for a news story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రచురించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రచురించు — pracuriñcu — \"to publish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పత్రిక ఆ కథనం ప్రచురించింది. patrika ā kathanaṁ pracuriñcindi. The magazine published that story."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ప్రచురించాను, pracuriñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "A -ఇంచు verb: Telugu makes verbs of Sanskrit words with -ఇంచు, as in ముద్రించు, to print."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రచురించు (pracuriñcu) is built on Sanskrit pracura, \"abundant, plentiful\" (Monier-Williams), with the Telugu verb ending -iñcu: to publish is to spread a text wide."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracuriñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracuriñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracuriñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracuriñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patrika ā kathanaṁ pracuriñcindi. — The magazine published that story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patrika ā kathanaṁ pracuriñcindi.* — The magazine published that story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a headline, then the Telugu for a news story, then say pracuriñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a headline, then the Telugu for a news story, then say *pracuriñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రచురించు (pracuriñcu) mean? (\"To publish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

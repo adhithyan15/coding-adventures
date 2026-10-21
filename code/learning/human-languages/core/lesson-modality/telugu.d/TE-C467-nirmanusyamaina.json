@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C467-nirmanusyamaina",
+    "language": "telugu",
+    "chapter": 467,
+    "sequence": 23520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:758a868d3bcffd9b"
+  },
+  "findings": []
+}

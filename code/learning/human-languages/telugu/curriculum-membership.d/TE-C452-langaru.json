@@ -1,0 +1,11 @@
+{
+  "id": "TE-C452-langaru",
+  "pathSegment": "TE-PATH-452-NAUKA452",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-452-NAUKA452",
+      "order": 3
+    }
+  ]
+}

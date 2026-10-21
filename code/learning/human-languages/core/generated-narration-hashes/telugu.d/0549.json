@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:ecbbc6440e7a06c5",
+  "lessonIds": [
+    "TE-C549-amarcu",
+    "TE-C549-paracu",
+    "TE-C549-veligincu",
+    "TE-C549-ciluku",
+    "TE-C549-alasipovu",
+    "TE-R549-review-542-549",
+    "TE-R549-review-final-549"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch549.txt",
+  "json": "telugu/narration/ch549.json",
+  "textHash": "fnv1a64:cc8ae9823a0dfd48",
+  "jsonHash": "fnv1a64:5decd80ef282f7aa",
+  "findings": []
+}

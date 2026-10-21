@@ -1,0 +1,11 @@
+{
+  "id": "TE-C456-majili",
+  "pathSegment": "TE-PATH-456-SHIKARU456",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-456-SHIKARU456",
+      "order": 4
+    }
+  ]
+}

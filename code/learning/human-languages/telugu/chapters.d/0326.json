@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "A Witness to the War",
+  "label": "ch:te-a-witness-to-the-war",
+  "canDo": "I can say a witness, a war, an incident, to steal and to run away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C326-paripovu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can say a witness, a war, an incident, to steal and to run away.",
+    "assesses": [
+      "TE-LEX-C326-SANGHATANA326-03",
+      "TE-LEX-C326-SANGHATANA326-04",
+      "TE-LEX-C326-SANGHATANA326-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C449-musukupovu",
+    "language": "telugu",
+    "chapter": 449,
+    "sequence": 22600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94ac8640962b86f5"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:49bbf56465d9d205",
+  "lessonIds": [
+    "TE-C454-pailatu",
+    "TE-C454-antarjatiya",
+    "TE-C454-svadesam",
+    "TE-C454-ravana",
+    "TE-C454-saganampu"
+  ],
+  "tex": "telugu/book/chapters/ch454-flying-abroad.tex"
+}

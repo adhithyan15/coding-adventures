@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:2da3aca277cf1263",
+  "lessonIds": [
+    "TE-C527-sadhincu",
+    "TE-C527-ranincu",
+    "TE-C527-viphalamavu",
+    "TE-C527-rajinama",
+    "TE-C527-maneyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch527.txt",
+  "json": "telugu/narration/ch527.json",
+  "textHash": "fnv1a64:6eb81fdea6cb573e",
+  "jsonHash": "fnv1a64:3b65eb5aa4bd88b3",
+  "findings": []
+}

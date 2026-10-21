@@ -1,0 +1,11 @@
+{
+  "id": "TE-C384-amsam",
+  "pathSegment": "TE-PATH-384-SUCANA384",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-384-SUCANA384",
+      "order": 4
+    }
+  ]
+}

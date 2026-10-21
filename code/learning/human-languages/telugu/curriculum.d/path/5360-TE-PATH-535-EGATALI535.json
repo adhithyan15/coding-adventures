@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-535-EGATALI535",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-535-EGATALI535"
+  ],
+  "after": []
+}

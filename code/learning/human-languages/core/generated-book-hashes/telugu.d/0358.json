@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:f2ef98f4548cb9a1",
+  "lessonIds": [
+    "TE-C358-jivincu",
+    "TE-C358-sthirapadu",
+    "TE-C358-taladacuko",
+    "TE-C358-kalaganu",
+    "TE-C358-adrstavasattu"
+  ],
+  "tex": "telugu/book/chapters/ch358-making-a-life.tex"
+}

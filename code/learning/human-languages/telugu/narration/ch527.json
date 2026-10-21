@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 527,
+  "title": "Success and Failure",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2da3aca277cf1263",
+  "lessons": [
+    {
+      "id": "TE-C527-sadhincu",
+      "sequence": 26690,
+      "title": "సాధించు (sādhiñcu) — to achieve; to accomplish",
+      "headword": "సాధించు",
+      "romanization": "sādhiñcu",
+      "gloss": "to achieve; to accomplish",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d97b86a0c25309f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to cooperate, then the Telugu for training."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సాధించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాధించు — sādhiñcu — \"to achieve; to accomplish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పట్టుదలతో ఆమె తన లక్ష్యం సాధించింది. paṭṭudalatō āme tana lakṣyaṁ sādhiñcindi. With determination she achieved her goal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): సాధించాను, sādhiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Its noun సాధన is practice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సాధించు (sādhiñcu) is built on Sanskrit sādhana, \"furthering; completion\" (CDIAL 13334), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sādhiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sādhiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭudalatō āme tana lakṣyaṁ sādhiñcindi. — With determination she achieved her goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭudalatō āme tana lakṣyaṁ sādhiñcindi.* — With determination she achieved her goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to cooperate, then the Telugu for training, then say sādhiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to cooperate, then the Telugu for training, then say *sādhiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సాధించు (sādhiñcu) mean? (\"To achieve; to accomplish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C527-ranincu",
+      "sequence": 26700,
+      "title": "రాణించు (rāṇiñcu) — to excel; to shine",
+      "headword": "రాణించు",
+      "romanization": "rāṇiñcu",
+      "gloss": "to excel; to shine",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b6404ddf273f77a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for training, then the Telugu for to achieve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రాణించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాణించు — rāṇiñcu — \"to excel; to shine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా అమ్మాయి చదువులో బాగా రాణిస్తోంది. mā ammāyi caduvulō bāgā rāṇistōndi. Our daughter is doing very well at her studies."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): రాణించాను, rāṇiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "-లో రాణించు (rāṇiñcu), to excel at."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాణించు (rāṇiñcu) is a Telugu verb for doing well and standing out; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṇiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṇiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṇiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṇiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā ammāyi caduvulō bāgā rāṇistōndi. — Our daughter is doing very well at her studies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā ammāyi caduvulō bāgā rāṇistōndi.* — Our daughter is doing very well at her studies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for training, then the Telugu for to achieve, then say rāṇiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for training, then the Telugu for to achieve, then say *rāṇiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రాణించు (rāṇiñcu) mean? (\"To excel; to shine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C527-viphalamavu",
+      "sequence": 26710,
+      "title": "విఫలమవు (viphalamavu) — to fail; to be unsuccessful",
+      "headword": "విఫలమవు",
+      "romanization": "viphalamavu",
+      "gloss": "to fail; to be unsuccessful",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9e614d15613ad0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to achieve, then the Telugu for to excel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: విఫలమవు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విఫలమవు — viphalamavu — \"to fail; to be unsuccessful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మొదటి ప్రయత్నంలో మేము విఫలమయ్యాము. modaṭi prayatnaṁlō mēmu viphalamayyāmu. We failed at the first attempt."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): విఫలమయ్యాను, viphalamayyānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal: విఫలం, fruitless, + అవు, to become."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "విఫలమవు (viphalamavu) is built from Sanskrit viphala, \"fruitless\" (CDIAL 11803) and the Telugu verb అవు, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viphalamavu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viphalamavu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viphalamavu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viphalamavu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modaṭi prayatnaṁlō mēmu viphalamayyāmu. — We failed at the first attempt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modaṭi prayatnaṁlō mēmu viphalamayyāmu.* — We failed at the first attempt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to achieve, then the Telugu for to excel, then say viphalamavu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to achieve, then the Telugu for to excel, then say *viphalamavu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does విఫలమవు (viphalamavu) mean? (\"To fail; to be unsuccessful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C527-rajinama",
+      "sequence": 26720,
+      "title": "రాజీనామా (rājīnāmā) — a resignation",
+      "headword": "రాజీనామా",
+      "romanization": "rājīnāmā",
+      "gloss": "a resignation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13fc9fbe5794367a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to excel, then the Telugu for to fail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రాజీనామా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాజీనామా — rājīnāmā — \"a resignation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "జీతం సరిపోక అతను రాజీనామా చేశాడు. jītaṁ saripōka atanu rājīnāmā cēśāḍu. His pay was not enough, so he resigned."
+            },
+            {
+              "kind": "speech",
+              "text": "రాజీనామా (rājīnāmā) చేయు, to resign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రాజీనామా (rājīnāmā) is a loan from Persian rāzīnāma, \"a written agreement, a letter of consent\", which reached Telugu through Hindustani."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājīnāmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājīnāmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rājīnāmā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rājīnāmā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jītaṁ saripōka atanu rājīnāmā cēśāḍu. — His pay was not enough, so he resigned.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jītaṁ saripōka atanu rājīnāmā cēśāḍu.* — His pay was not enough, so he resigned.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to excel, then the Telugu for to fail, then say rājīnāmā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to excel, then the Telugu for to fail, then say *rājīnāmā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రాజీనామా (rājīnāmā) mean? (\"A resignation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C527-maneyu",
+      "sequence": 26730,
+      "title": "మానేయు (mānēyu) — to quit; to stop",
+      "headword": "మానేయు",
+      "romanization": "mānēyu",
+      "gloss": "to quit; to stop",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d691e6ead790cfc8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to fail, then the Telugu for a resignation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మానేయు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మానేయు — mānēyu — \"to quit; to stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అన్నయ్య పాత ఉద్యోగం మానేశాడు. annayya pāta udyōgaṁ mānēśāḍu. My elder brother quit his old job."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): మానేశాను, mānēśānu."
+            },
+            {
+              "kind": "speech",
+              "text": "With a job, a habit or study: చదువు మానేయు (mānēyu), to drop out of school."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మానేయు (mānēyu) is native Dravidian: DEDR 4811 lists Telugu mānu, \"to cease, to stop, to give up, to quit\"; vēyu, \"to put\", makes the stopping final."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annayya pāta udyōgaṁ mānēśāḍu. — My elder brother quit his old job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annayya pāta udyōgaṁ mānēśāḍu.* — My elder brother quit his old job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to fail, then the Telugu for a resignation, then say mānēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to fail, then the Telugu for a resignation, then say *mānēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మానేయు (mānēyu) mean? (\"To quit; to stop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

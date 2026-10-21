@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:53fc36eb91e8c5e7",
+  "lessonIds": [
+    "TE-C349-nyayasthanam",
+    "TE-C349-nyayamurti",
+    "TE-C349-nyayavadi",
+    "TE-C349-tirpu",
+    "TE-C349-beyilu",
+    "TE-R349-review-342-349"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch349.txt",
+  "json": "telugu/narration/ch349.json",
+  "textHash": "fnv1a64:99b9eaedae30b8eb",
+  "jsonHash": "fnv1a64:a107f3d3b9820e4d",
+  "findings": []
+}

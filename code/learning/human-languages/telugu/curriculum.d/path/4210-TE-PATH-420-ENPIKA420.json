@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-420-ENPIKA420",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-420-ENPIKA420"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C516-nidralemi",
+    "language": "telugu",
+    "chapter": 516,
+    "sequence": 26160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:491b0f2311d1177b"
+  },
+  "findings": []
+}

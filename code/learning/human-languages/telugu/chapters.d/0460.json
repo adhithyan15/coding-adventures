@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Complaints at the Desk",
+  "label": "ch:te-complaints-at-the-desk",
+  "canDo": "I can say inconvenience, trouble, to inquire, a refund and to double-check.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C460-saricusuko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say inconvenience, trouble, to inquire, a refund and to double-check.",
+    "assesses": [
+      "TE-LEX-C460-ASAUKARYAM460-03",
+      "TE-LEX-C460-ASAUKARYAM460-04",
+      "TE-LEX-C460-ASAUKARYAM460-05"
+    ]
+  }
+}

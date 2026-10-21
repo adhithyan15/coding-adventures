@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:3e01857ff9dd3dac",
+  "lessonIds": [
+    "TE-C364-banisa",
+    "TE-C364-vimukti",
+    "TE-C364-poratam",
+    "TE-C364-tyagam",
+    "TE-C364-virudu"
+  ],
+  "tex": "telugu/book/chapters/ch364-the-price-of-freedom.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:3bab2d4db50a4768",
+  "lessonIds": [
+    "TE-C461-attapette",
+    "TE-C461-vadilivellu",
+    "TE-C461-paresuko",
+    "TE-C461-taralincu",
+    "TE-C461-ceraveyu",
+    "TE-R461-review-454-461"
+  ],
+  "tex": "telugu/book/chapters/ch461-bags-and-boxes.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C378-gayaparacu",
+  "pathSegment": "TE-PATH-378-KOTLATA378",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-378-KOTLATA378",
+      "order": 2
+    }
+  ]
+}

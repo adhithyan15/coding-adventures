@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C519-paramarsincu",
+    "language": "telugu",
+    "chapter": 519,
+    "sequence": 26320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f5ad30d6c104b48"
+  },
+  "findings": []
+}

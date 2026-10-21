@@ -1,0 +1,11 @@
+{
+  "id": "TE-C404-svatantra",
+  "pathSegment": "TE-PATH-404-PEDARIKAM404",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-404-PEDARIKAM404",
+      "order": 3
+    }
+  ]
+}

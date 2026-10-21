@@ -1,0 +1,11 @@
+{
+  "id": "TE-C546-curu",
+  "pathSegment": "TE-PATH-546-INTLO546",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-546-INTLO546",
+      "order": 0
+    }
+  ]
+}

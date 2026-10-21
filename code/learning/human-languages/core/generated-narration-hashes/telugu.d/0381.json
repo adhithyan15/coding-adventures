@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:c6296f17b94ce76f",
+  "lessonIds": [
+    "TE-C381-tegincu",
+    "TE-C381-apaharincu",
+    "TE-C381-vicarincu",
+    "TE-C381-japtu-ceyu",
+    "TE-C381-dandayatra",
+    "TE-R381-review-374-381",
+    "TE-R381-review-final-381"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch381.txt",
+  "json": "telugu/narration/ch381.json",
+  "textHash": "fnv1a64:791c38382c4fd737",
+  "jsonHash": "fnv1a64:e5d9693329495c76",
+  "findings": []
+}

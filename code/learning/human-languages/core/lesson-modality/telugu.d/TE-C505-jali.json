@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C505-jali",
+    "language": "telugu",
+    "chapter": 505,
+    "sequence": 25560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e565bb6e90691ad"
+  },
+  "findings": []
+}

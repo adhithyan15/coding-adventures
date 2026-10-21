@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:4ba2451d797cfa19",
+  "lessonIds": [
+    "TE-C445-rahadari",
+    "TE-C445-lari",
+    "TE-C445-dusukupovu",
+    "TE-C445-nemmadincu",
+    "TE-C445-adupu-tappu",
+    "TE-R445-review-438-445"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch445.txt",
+  "json": "telugu/narration/ch445.json",
+  "textHash": "fnv1a64:1665a022de33524d",
+  "jsonHash": "fnv1a64:edd72026dd44b8dc",
+  "findings": []
+}

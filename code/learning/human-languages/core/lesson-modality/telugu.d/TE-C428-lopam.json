@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C428-lopam",
+    "language": "telugu",
+    "chapter": 428,
+    "sequence": 21380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cafdcf902f819cc6"
+  },
+  "findings": []
+}

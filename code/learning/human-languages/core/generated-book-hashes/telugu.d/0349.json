@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:02eee47d775a70b4",
+  "lessonIds": [
+    "TE-C349-nyayasthanam",
+    "TE-C349-nyayamurti",
+    "TE-C349-nyayavadi",
+    "TE-C349-tirpu",
+    "TE-C349-beyilu",
+    "TE-R349-review-342-349"
+  ],
+  "tex": "telugu/book/chapters/ch349-in-court.tex"
+}

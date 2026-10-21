@@ -1,0 +1,11 @@
+{
+  "id": "TE-C363-anaciveyu",
+  "pathSegment": "TE-PATH-363-TIRUGUBATU363",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-363-TIRUGUBATU363",
+      "order": 2
+    }
+  ]
+}

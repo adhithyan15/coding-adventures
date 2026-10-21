@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:bbe48465a90cbba7",
+  "lessonIds": [
+    "TE-C341-mukhyamsalu",
+    "TE-C341-sampadakudu",
+    "TE-C341-sampadakiyam",
+    "TE-C341-pathakudu",
+    "TE-C341-dhruvikarincu",
+    "TE-R341-review-334-341"
+  ],
+  "tex": "telugu/book/chapters/ch341-today-s-headlines.tex"
+}

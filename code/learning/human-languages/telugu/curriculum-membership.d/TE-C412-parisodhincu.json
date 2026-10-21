@@ -1,0 +1,11 @@
+{
+  "id": "TE-C412-parisodhincu",
+  "pathSegment": "TE-PATH-412-PARISODHANA412",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-412-PARISODHANA412",
+      "order": 1
+    }
+  ]
+}

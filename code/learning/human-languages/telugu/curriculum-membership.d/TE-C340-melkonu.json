@@ -1,0 +1,11 @@
+{
+  "id": "TE-C340-melkonu",
+  "pathSegment": "TE-PATH-340-ANUKOKUNDA340",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-340-ANUKOKUNDA340",
+      "order": 4
+    }
+  ]
+}

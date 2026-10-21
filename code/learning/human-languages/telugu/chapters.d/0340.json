@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Out of the Blue",
+  "label": "ch:te-out-of-the-blue",
+  "canDo": "I can say instantly, unexpectedly, out of the blue, in the end and to wake up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C340-melkonu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say instantly, unexpectedly, out of the blue, in the end and to wake up.",
+    "assesses": [
+      "TE-LEX-C340-ANUKOKUNDA340-03",
+      "TE-LEX-C340-ANUKOKUNDA340-04",
+      "TE-LEX-C340-ANUKOKUNDA340-05"
+    ]
+  }
+}

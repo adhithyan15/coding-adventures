@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-428-LOPAM428",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TE-EXT-428-LOPAM428"
+  ],
+  "after": []
+}

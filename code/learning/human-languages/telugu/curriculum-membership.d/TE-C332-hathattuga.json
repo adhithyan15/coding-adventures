@@ -1,0 +1,11 @@
+{
+  "id": "TE-C332-hathattuga",
+  "pathSegment": "TE-PATH-332-KSHANAM332",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-332-KSHANAM332",
+      "order": 2
+    }
+  ]
+}

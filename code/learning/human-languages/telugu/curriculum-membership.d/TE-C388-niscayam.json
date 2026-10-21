@@ -1,0 +1,11 @@
+{
+  "id": "TE-C388-niscayam",
+  "pathSegment": "TE-PATH-388-SANDEHAM388",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-388-SANDEHAM388",
+      "order": 3
+    }
+  ]
+}

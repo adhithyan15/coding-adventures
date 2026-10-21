@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "At the Office Counter",
+  "label": "ch:te-at-the-office-counter",
+  "canDo": "I can say a counter, a branch office, to fill in, to issue and to sanction.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C462-manjuru-ceyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can say a counter, a branch office, to fill in, to issue and to sanction.",
+    "assesses": [
+      "TE-LEX-C462-KAUNTARU462-03",
+      "TE-LEX-C462-KAUNTARU462-04",
+      "TE-LEX-C462-KAUNTARU462-05"
+    ]
+  }
+}

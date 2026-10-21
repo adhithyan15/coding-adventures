@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:43c42b84fac38bad",
+  "lessonIds": [
+    "TE-C446-egududigudu",
+    "TE-C446-kudupu",
+    "TE-C446-tappincu",
+    "TE-C446-boltapadu",
+    "TE-C446-sottapadu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch446.txt",
+  "json": "telugu/narration/ch446.json",
+  "textHash": "fnv1a64:7f336b396234fad2",
+  "jsonHash": "fnv1a64:3fae5a4abcd154f9",
+  "findings": []
+}

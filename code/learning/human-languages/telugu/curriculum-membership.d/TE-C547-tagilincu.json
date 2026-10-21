@@ -1,0 +1,11 @@
+{
+  "id": "TE-C547-tagilincu",
+  "pathSegment": "TE-PATH-547-INTIPANI547",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-547-INTIPANI547",
+      "order": 4
+    }
+  ]
+}

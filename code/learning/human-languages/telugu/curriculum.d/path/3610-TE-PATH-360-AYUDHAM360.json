@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-360-AYUDHAM360",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-360-AYUDHAM360"
+  ],
+  "after": []
+}

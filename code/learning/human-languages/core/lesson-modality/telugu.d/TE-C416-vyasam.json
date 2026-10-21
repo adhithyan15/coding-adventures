@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C416-vyasam",
+    "language": "telugu",
+    "chapter": 416,
+    "sequence": 20750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:911c1ecfad28ae19"
+  },
+  "findings": []
+}

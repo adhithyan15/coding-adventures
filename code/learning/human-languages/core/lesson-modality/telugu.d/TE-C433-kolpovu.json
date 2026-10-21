@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C433-kolpovu",
+    "language": "telugu",
+    "chapter": 433,
+    "sequence": 21650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ba4c731d091424b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "A Break-In",
+  "label": "ch:te-a-break-in",
+  "canDo": "I can say a theft, to break in, to break open, to make off with and to sense.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C329-pasigattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say a theft, to break in, to break open, to make off with and to sense.",
+    "assesses": [
+      "TE-LEX-C329-DONGATANAM329-03",
+      "TE-LEX-C329-DONGATANAM329-04",
+      "TE-LEX-C329-DONGATANAM329-05"
+    ]
+  }
+}

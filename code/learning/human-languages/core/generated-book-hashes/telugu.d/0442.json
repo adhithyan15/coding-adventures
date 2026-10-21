@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:a6283c3d4ed4f4a7",
+  "lessonIds": [
+    "TE-C442-patta",
+    "TE-C442-metro",
+    "TE-C442-rakapokalu",
+    "TE-C442-kikkirisipovu",
+    "TE-C442-pattalu-tappu"
+  ],
+  "tex": "telugu/book/chapters/ch442-on-the-rails.tex"
+}

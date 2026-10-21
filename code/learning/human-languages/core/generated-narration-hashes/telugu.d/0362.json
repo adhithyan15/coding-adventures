@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:f112041d0dfe5016",
+  "lessonIds": [
+    "TE-C362-poradu",
+    "TE-C362-tarimikottu",
+    "TE-C362-talavancu",
+    "TE-C362-sandhi",
+    "TE-C362-duta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch362.txt",
+  "json": "telugu/narration/ch362.json",
+  "textHash": "fnv1a64:da4e8a093bf9201b",
+  "jsonHash": "fnv1a64:1ce82112826a4585",
+  "findings": []
+}

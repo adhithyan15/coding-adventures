@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C469-tarumaru",
+    "language": "telugu",
+    "chapter": 469,
+    "sequence": 23620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b43603a461b80564"
+  },
+  "findings": []
+}

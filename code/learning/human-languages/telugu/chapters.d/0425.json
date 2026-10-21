@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "Making a Decision",
+  "label": "ch:te-making-a-decision",
+  "canDo": "I can talk about decisions, resolutions and rethinking.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C425-punaralocincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about decisions, resolutions and rethinking.",
+    "assesses": [
+      "TE-LEX-C425-NIRNAYAM425-03",
+      "TE-LEX-C425-NIRNAYAM425-04",
+      "TE-LEX-C425-NIRNAYAM425-05"
+    ]
+  }
+}

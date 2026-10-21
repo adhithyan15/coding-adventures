@@ -1,0 +1,11 @@
+{
+  "id": "TE-C406-paradarsakata",
+  "pathSegment": "TE-PATH-406-AVINITI406",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-406-AVINITI406",
+      "order": 2
+    }
+  ]
+}

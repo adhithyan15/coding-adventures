@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:7e6e55e7a5f27bd4",
+  "lessonIds": [
+    "TE-C454-pailatu",
+    "TE-C454-antarjatiya",
+    "TE-C454-svadesam",
+    "TE-C454-ravana",
+    "TE-C454-saganampu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch454.txt",
+  "json": "telugu/narration/ch454.json",
+  "textHash": "fnv1a64:0ace1bb6c875c48c",
+  "jsonHash": "fnv1a64:4a386833396e7f89",
+  "findings": []
+}

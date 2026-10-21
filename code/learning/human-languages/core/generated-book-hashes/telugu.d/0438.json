@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:2fbdb66498ab9a77",
+  "lessonIds": [
+    "TE-C438-prayanikudu",
+    "TE-C438-prayanincu",
+    "TE-C438-gamyam",
+    "TE-C438-margam",
+    "TE-C438-adugupettu"
+  ],
+  "tex": "telugu/book/chapters/ch438-setting-out.tex"
+}

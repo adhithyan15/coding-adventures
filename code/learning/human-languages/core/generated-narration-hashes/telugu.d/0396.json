@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:eabf16b7deddbba4",
+  "lessonIds": [
+    "TE-C396-ayinappatiki",
+    "TE-C396-marovaipu",
+    "TE-C396-kaga",
+    "TE-C396-viruddham",
+    "TE-C396-adevidhanga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch396.txt",
+  "json": "telugu/narration/ch396.json",
+  "textHash": "fnv1a64:d529075b354f94c5",
+  "jsonHash": "fnv1a64:25140802c8ad267e",
+  "findings": []
+}

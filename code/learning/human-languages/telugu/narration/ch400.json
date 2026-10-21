@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 400,
+  "title": "Elections",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7a0913ab722d0479",
+  "lessons": [
+    {
+      "id": "TE-C400-ennika",
+      "sequence": 19920,
+      "title": "ఎన్నిక (ennika) — an election",
+      "headword": "ఎన్నిక",
+      "romanization": "ennika",
+      "gloss": "an election",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd717bb6fa0b8233",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for injustice, then the Telugu for to honour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎన్నిక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎన్నిక — ennika — \"an election\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వచ్చే నెలలో మా రాష్ట్రంలో ఎన్నికలు జరుగుతాయి. vaccē nelalō mā rāṣṭraṁlō ennikalu jarugutāyi. Elections will be held in our state next month."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ఎన్నికలు, ennikalu."
+            },
+            {
+              "kind": "speech",
+              "text": "Mostly plural: ఎన్నికలు, the elections. It is built on ఎన్ను, to count, to reckon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎన్నిక (ennika) is native Dravidian: DEDR 793 lists Telugu ennika, \"counting, number, esteem\", beside ennu, \"to count, to reckon, to think\"; Telugu now uses it for an election, a choosing by count."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ennika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ennika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ennika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ennika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaccē nelalō mā rāṣṭraṁlō ennikalu jarugutāyi. — Elections will be held in our state next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaccē nelalō mā rāṣṭraṁlō ennikalu jarugutāyi.* — Elections will be held in our state next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for injustice, then the Telugu for to honour, then say ennika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for injustice, then the Telugu for to honour, then say *ennika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎన్నిక (ennika) mean? (\"An election\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C400-abhyarthi",
+      "sequence": 19930,
+      "title": "అభ్యర్థి (abhyarthi) — a candidate; an applicant",
+      "headword": "అభ్యర్థి",
+      "romanization": "abhyarthi",
+      "gloss": "a candidate; an applicant",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:395d7d40e07707ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to honour, then the Telugu for an election."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అభ్యర్థి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభ్యర్థి — abhyarthi — \"a candidate; an applicant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ ఎన్నికలో ఐదుగురు అభ్యర్థులు ఉన్నారు. ā ennikalō aiduguru abhyarthulu unnāru. There are five candidates in that election."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: అభ్యర్థులు, abhyarthulu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also someone who applies for a job or a course."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభ్యర్థి (abhyarthi) is borrowed from Sanskrit abhyarthin, \"asking, requesting\" (Monier-Williams): a candidate is one who asks for a post."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhyarthi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhyarthi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhyarthi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhyarthi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ennikalō aiduguru abhyarthulu unnāru. — There are five candidates in that election.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ennikalō aiduguru abhyarthulu unnāru.* — There are five candidates in that election.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to honour, then the Telugu for an election, then say abhyarthi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to honour, then the Telugu for an election, then say *abhyarthi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అభ్యర్థి (abhyarthi) mean? (\"A candidate; an applicant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C400-ennuko",
+      "sequence": 19940,
+      "title": "ఎన్నుకో (ennukō) — to elect; to vote in",
+      "headword": "ఎన్నుకో",
+      "romanization": "ennukō",
+      "gloss": "to elect; to vote in",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d777ad33cd54bf5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an election, then the Telugu for a candidate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఎన్నుకో",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎన్నుకో — ennukō — \"to elect; to vote in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "విద్యార్థులు ఆమెను తరగతి నాయకురాలిగా ఎన్నుకున్నారు. vidyārthulu āmenu taragati nāyakurāligā ennukunnāru. The students elected her class leader."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఎన్నుకున్నాను, ennukunnānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Close to ఎంచుకో, to choose, which you know; ఎన్నుకో (ennukō) is choosing by a vote."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఎన్నుకో (ennukō) is native Dravidian: ennu, \"to count, to reckon, to judge\" (DEDR 793), with -కో, from konu, \"to take\" (DEDR 2151): to pick out for oneself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ennukō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ennukō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ennukō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ennukō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidyārthulu āmenu taragati nāyakurāligā ennukunnāru. — The students elected her class leader.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidyārthulu āmenu taragati nāyakurāligā ennukunnāru.* — The students elected her class leader.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an election, then the Telugu for a candidate, then say ennukō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an election, then the Telugu for a candidate, then say *ennukō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఎన్నుకో (ennukō) mean? (\"To elect; to vote in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C400-pracaram",
+      "sequence": 19950,
+      "title": "ప్రచారం (pracāraṁ) — a campaign; publicity",
+      "headword": "ప్రచారం",
+      "romanization": "pracāraṁ",
+      "gloss": "a campaign; publicity",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef0c53daf6056ed6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a candidate, then the Telugu for to elect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ప్రచారం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రచారం — pracāraṁ — \"a campaign; publicity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఎన్నికల ప్రచారం నిన్నటితో ముగిసింది. ennikala pracāraṁ ninnaṭitō mugisindi. The election campaign ended yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "ప్రచారం (pracāraṁ) చేయు, to campaign, to spread the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ప్రచారం (pracāraṁ) is borrowed from Sanskrit pracāra, \"roaming; coming forth, manifestation\" (Monier-Williams); in Telugu it is the spreading of a word or a cause."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracāraṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracāraṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ennikala pracāraṁ ninnaṭitō mugisindi. — The election campaign ended yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ennikala pracāraṁ ninnaṭitō mugisindi.* — The election campaign ended yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a candidate, then the Telugu for to elect, then say pracāraṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a candidate, then the Telugu for to elect, then say *pracāraṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ప్రచారం (pracāraṁ) mean? (\"A campaign; publicity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C400-mejariti",
+      "sequence": 19960,
+      "title": "మెజారిటీ (mejāriṭī) — a majority",
+      "headword": "మెజారిటీ",
+      "romanization": "mejāriṭī",
+      "gloss": "a majority",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:732073c125e4d861",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to elect, then the Telugu for a campaign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మెజారిటీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెజారిటీ — mejāriṭī — \"a majority\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆమె పెద్ద మెజారిటీతో గెలిచింది. āme pedda mejāriṭītō gelicindi. She won by a big majority."
+            },
+            {
+              "kind": "speech",
+              "text": "From English; in plain Telugu, ఎక్కువ మంది, most people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెజారిటీ (mejāriṭī) is a loan from English majority."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mejāriṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mejāriṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mejāriṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mejāriṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āme pedda mejāriṭītō gelicindi. — She won by a big majority.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āme pedda mejāriṭītō gelicindi.* — She won by a big majority.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to elect, then the Telugu for a campaign, then say mejāriṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to elect, then the Telugu for a campaign, then say *mejāriṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మెజారిటీ (mejāriṭī) mean? (\"A majority\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

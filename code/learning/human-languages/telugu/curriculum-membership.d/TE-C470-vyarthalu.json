@@ -1,0 +1,11 @@
+{
+  "id": "TE-C470-vyarthalu",
+  "pathSegment": "TE-PATH-470-KALUSHYAM470",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-470-KALUSHYAM470",
+      "order": 1
+    }
+  ]
+}

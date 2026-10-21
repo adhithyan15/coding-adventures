@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C526-paryaveksincu",
+    "language": "telugu",
+    "chapter": 526,
+    "sequence": 26660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c1d4ba1e064d6c3"
+  },
+  "findings": []
+}

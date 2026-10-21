@@ -1,0 +1,11 @@
+{
+  "id": "TE-C428-savarincu",
+  "pathSegment": "TE-PATH-428-LOPAM428",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-428-LOPAM428",
+      "order": 4
+    }
+  ]
+}

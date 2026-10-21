@@ -1,0 +1,21 @@
+{
+  "chapter": 533,
+  "title": "Home Life",
+  "label": "ch:te-home-life",
+  "canDo": "I can talk about married life, family life, hospitality and a good chat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-R533-review-526-533",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about married life, family life, hospitality and a good chat.",
+    "assesses": [
+      "TE-LEX-C533-SAMSARAM533-01",
+      "TE-LEX-C533-SAMSARAM533-02",
+      "TE-LEX-C533-SAMSARAM533-03",
+      "TE-LEX-C533-SAMSARAM533-04",
+      "TE-LEX-C533-SAMSARAM533-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C368-caritrakarudu",
+  "pathSegment": "TE-PATH-368-SASANAM368",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-368-SASANAM368",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 541,
+  "title": "Stage and Screen",
+  "label": "ch:te-stage-and-screen",
+  "canDo": "I can talk about acting, scenes, heroes, comedians and audiences.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-R541-review-534-541",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can talk about acting, scenes, heroes, comedians and audiences.",
+    "assesses": [
+      "TE-LEX-C541-NATAKAM541-01",
+      "TE-LEX-C541-NATAKAM541-02",
+      "TE-LEX-C541-NATAKAM541-03",
+      "TE-LEX-C541-NATAKAM541-04",
+      "TE-LEX-C541-NATAKAM541-05"
+    ]
+  }
+}

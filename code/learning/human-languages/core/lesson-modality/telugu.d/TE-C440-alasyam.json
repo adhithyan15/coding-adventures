@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C440-alasyam",
+    "language": "telugu",
+    "chapter": 440,
+    "sequence": 22100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7c1cc63a8932321"
+  },
+  "findings": []
+}

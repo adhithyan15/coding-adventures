@@ -1,0 +1,21 @@
+{
+  "chapter": 501,
+  "title": "Making Others Feel",
+  "label": "ch:te-making-others-feel",
+  "canDo": "I can say how someone pleased, surprised, honoured, impressed or cheered others.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-R501-review-494-501",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can say how someone pleased, surprised, honoured, impressed or cheered others.",
+    "assesses": [
+      "TE-LEX-C501-NAVVU501-01",
+      "TE-LEX-C501-NAVVU501-02",
+      "TE-LEX-C501-NAVVU501-03",
+      "TE-LEX-C501-NAVVU501-04",
+      "TE-LEX-C501-NAVVU501-05"
+    ]
+  }
+}

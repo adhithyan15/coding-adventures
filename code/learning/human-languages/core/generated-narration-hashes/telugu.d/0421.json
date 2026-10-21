@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:f06aefd887dd4940",
+  "lessonIds": [
+    "TE-C421-apayam",
+    "TE-C421-mundujagratta",
+    "TE-C421-jagrattapadu",
+    "TE-C421-nivarincu",
+    "TE-C421-sandigdham",
+    "TE-R421-review-414-421"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch421.txt",
+  "json": "telugu/narration/ch421.json",
+  "textHash": "fnv1a64:60af9930b0c82ba2",
+  "jsonHash": "fnv1a64:50f69aafbf0483f4",
+  "findings": []
+}

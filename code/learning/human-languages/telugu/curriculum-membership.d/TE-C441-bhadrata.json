@@ -1,0 +1,11 @@
+{
+  "id": "TE-C441-bhadrata",
+  "pathSegment": "TE-PATH-441-PASPORTU441",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-441-PASPORTU441",
+      "order": 3
+    }
+  ]
+}

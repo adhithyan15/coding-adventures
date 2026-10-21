@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-341-SAMPADAKUDU341",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-341-SAMPADAKUDU341"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C334-namakaranam",
+    "language": "telugu",
+    "chapter": 334,
+    "sequence": 16430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e2d9f8876a34e6e"
+  },
+  "findings": []
+}

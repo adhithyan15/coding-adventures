@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:54c4d12e20a411af",
+  "lessonIds": [
+    "TE-C496-badhapadu",
+    "TE-C496-badhapettu",
+    "TE-C496-kungipovu",
+    "TE-C496-kumilipovu",
+    "TE-C496-nisprha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch496.txt",
+  "json": "telugu/narration/ch496.json",
+  "textHash": "fnv1a64:f8161d63c2134578",
+  "jsonHash": "fnv1a64:d0fa75d2cbdbe706",
+  "findings": []
+}

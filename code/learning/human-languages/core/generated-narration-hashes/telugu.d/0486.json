@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:e27659f26c2f0840",
+  "lessonIds": [
+    "TE-C486-kolata",
+    "TE-C486-parimanam",
+    "TE-C486-namuna",
+    "TE-C486-viluva",
+    "TE-C486-tucu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch486.txt",
+  "json": "telugu/narration/ch486.json",
+  "textHash": "fnv1a64:f36a0a9997734b49",
+  "jsonHash": "fnv1a64:176ab83368a299ae",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:d1b58d77c2fbeac4",
+  "lessonIds": [
+    "TE-C526-niyamincu",
+    "TE-C526-nirvahincu",
+    "TE-C526-paryaveksincu",
+    "TE-C526-sahakarincu",
+    "TE-C526-siksana"
+  ],
+  "tex": "telugu/book/chapters/ch526-running-a-team.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-378-KOTLATA378",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-378-KOTLATA378"
+  ],
+  "after": []
+}

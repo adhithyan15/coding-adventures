@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-344-SANTAPAM344",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TE-EXT-344-SANTAPAM344"
+  ],
+  "after": []
+}

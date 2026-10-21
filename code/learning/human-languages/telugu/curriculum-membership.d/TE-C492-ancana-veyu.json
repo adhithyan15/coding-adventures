@@ -1,0 +1,11 @@
+{
+  "id": "TE-C492-ancana-veyu",
+  "pathSegment": "TE-PATH-492-PORABADU492",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-492-PORABADU492",
+      "order": 2
+    }
+  ]
+}

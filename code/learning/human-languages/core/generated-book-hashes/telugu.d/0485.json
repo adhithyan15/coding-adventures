@@ -1,0 +1,14 @@
+{
+  "language": "telugu",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:6adbe21a4617f070",
+  "lessonIds": [
+    "TE-C485-cellimpu",
+    "TE-C485-nagadu",
+    "TE-C485-baki",
+    "TE-C485-marakam",
+    "TE-C485-eggottu",
+    "TE-R485-review-478-485"
+  ],
+  "tex": "telugu/book/chapters/ch485-paying-up.tex"
+}

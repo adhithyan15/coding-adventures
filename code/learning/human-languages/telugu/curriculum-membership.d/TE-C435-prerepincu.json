@@ -1,0 +1,11 @@
+{
+  "id": "TE-C435-prerepincu",
+  "pathSegment": "TE-PATH-435-MEDHAVI435",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-435-MEDHAVI435",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:75c9fbfa292106a8",
+  "lessonIds": [
+    "TE-C430-balaparacu",
+    "TE-C430-balahinaparacu",
+    "TE-C430-samatulyam",
+    "TE-C430-niyantrincu",
+    "TE-C430-parimiti"
+  ],
+  "tex": "telugu/book/chapters/ch430-balance-and-control.tex"
+}

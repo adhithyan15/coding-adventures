@@ -1,0 +1,11 @@
+{
+  "id": "TE-C447-kalibata",
+  "pathSegment": "TE-PATH-447-SIGNALU447",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-447-SIGNALU447",
+      "order": 3
+    }
+  ]
+}

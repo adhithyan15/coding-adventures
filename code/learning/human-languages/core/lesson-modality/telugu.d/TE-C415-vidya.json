@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C415-vidya",
+    "language": "telugu",
+    "chapter": 415,
+    "sequence": 20690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1958ee9f91415419"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C371-sapam",
+    "language": "telugu",
+    "chapter": 371,
+    "sequence": 18340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:914029d75f522881"
+  },
+  "findings": []
+}

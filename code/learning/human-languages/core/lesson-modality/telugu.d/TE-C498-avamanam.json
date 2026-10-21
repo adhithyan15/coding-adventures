@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C498-avamanam",
+    "language": "telugu",
+    "chapter": 498,
+    "sequence": 25210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1e06eee1af268c4"
+  },
+  "findings": []
+}

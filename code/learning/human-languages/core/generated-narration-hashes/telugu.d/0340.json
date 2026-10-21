@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:be3525a69ef188a3",
+  "lessonIds": [
+    "TE-C340-taksanam",
+    "TE-C340-anukokunda",
+    "TE-C340-unnattundi",
+    "TE-C340-tira",
+    "TE-C340-melkonu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch340.txt",
+  "json": "telugu/narration/ch340.json",
+  "textHash": "fnv1a64:bfd407b6e3fe2a73",
+  "jsonHash": "fnv1a64:5a9d073c8a197ac2",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C374-srota",
+    "language": "telugu",
+    "chapter": 374,
+    "sequence": 18480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd0e9f7b33a0efe6"
+  },
+  "findings": []
+}

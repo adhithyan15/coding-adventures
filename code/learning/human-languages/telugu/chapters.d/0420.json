@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Making Choices",
+  "label": "ch:te-making-choices",
+  "canDo": "I can talk about choices, alternatives and giving things up.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TE-C420-vaduluko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about choices, alternatives and giving things up.",
+    "assesses": [
+      "TE-LEX-C420-ENPIKA420-03",
+      "TE-LEX-C420-ENPIKA420-04",
+      "TE-LEX-C420-ENPIKA420-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C542-citrincu",
+    "language": "telugu",
+    "chapter": 542,
+    "sequence": 27470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d68540b0c7ca23b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C445-nemmadincu",
+    "language": "telugu",
+    "chapter": 445,
+    "sequence": 22380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72d492d95b2a7834"
+  },
+  "findings": []
+}

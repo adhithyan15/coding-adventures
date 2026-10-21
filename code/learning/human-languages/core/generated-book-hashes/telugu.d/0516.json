@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:c8b16b9f3a2e1d2d",
+  "lessonIds": [
+    "TE-C516-cupu",
+    "TE-C516-vinikidi",
+    "TE-C516-cevudu",
+    "TE-C516-alerji",
+    "TE-C516-nidralemi"
+  ],
+  "tex": "telugu/book/chapters/ch516-senses.tex"
+}

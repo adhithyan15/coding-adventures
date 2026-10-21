@@ -1,0 +1,11 @@
+{
+  "id": "TE-C501-ascaryaparacu",
+  "pathSegment": "TE-PATH-501-NAVVU501",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-501-NAVVU501",
+      "order": 1
+    }
+  ]
+}

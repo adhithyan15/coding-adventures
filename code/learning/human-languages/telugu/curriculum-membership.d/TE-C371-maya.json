@@ -1,0 +1,11 @@
+{
+  "id": "TE-C371-maya",
+  "pathSegment": "TE-PATH-371-MAYA371",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-371-MAYA371",
+      "order": 1
+    }
+  ]
+}

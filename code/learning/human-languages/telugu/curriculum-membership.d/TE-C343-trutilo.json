@@ -1,0 +1,11 @@
+{
+  "id": "TE-C343-trutilo",
+  "pathSegment": "TE-PATH-343-TRUTILO343",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-343-TRUTILO343",
+      "order": 3
+    }
+  ]
+}

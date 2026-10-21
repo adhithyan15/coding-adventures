@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:2cdb48ed0738979c",
+  "lessonIds": [
+    "TE-C420-empika",
+    "TE-C420-pratyamnayam",
+    "TE-C420-pariganincu",
+    "TE-C420-aicchikam",
+    "TE-C420-vaduluko"
+  ],
+  "tex": "telugu/book/chapters/ch420-making-choices.tex"
+}

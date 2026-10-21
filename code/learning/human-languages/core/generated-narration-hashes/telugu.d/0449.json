@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:96d3e4472284cf77",
+  "lessonIds": [
+    "TE-C449-addanki",
+    "TE-C449-mallimpu",
+    "TE-C449-nilicipovu",
+    "TE-C449-stambhincu",
+    "TE-C449-musukupovu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch449.txt",
+  "json": "telugu/narration/ch449.json",
+  "textHash": "fnv1a64:fbdd80032d6eac3e",
+  "jsonHash": "fnv1a64:e3995c1d50ce407f",
+  "findings": []
+}

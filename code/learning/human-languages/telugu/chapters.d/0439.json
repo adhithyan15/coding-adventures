@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Booking a Berth",
+  "label": "ch:te-booking-a-berth",
+  "canDo": "I can say a reservation, a booking, a berth, a railway coach and a fare.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-C439-kirayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can say a reservation, a booking, a berth, a railway coach and a fare.",
+    "assesses": [
+      "TE-LEX-C439-BOGI439-03",
+      "TE-LEX-C439-BOGI439-04",
+      "TE-LEX-C439-BOGI439-05"
+    ]
+  }
+}

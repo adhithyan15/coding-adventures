@@ -1,0 +1,11 @@
+{
+  "id": "TE-C360-kavacam",
+  "pathSegment": "TE-PATH-360-AYUDHAM360",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-360-AYUDHAM360",
+      "order": 1
+    }
+  ]
+}

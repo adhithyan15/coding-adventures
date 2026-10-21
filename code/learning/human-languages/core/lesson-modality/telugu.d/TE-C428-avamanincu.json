@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C428-avamanincu",
+    "language": "telugu",
+    "chapter": 428,
+    "sequence": 21360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b9ca22a7df8fe2f"
+  },
+  "findings": []
+}

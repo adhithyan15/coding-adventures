@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C485-marakam",
+    "language": "telugu",
+    "chapter": 485,
+    "sequence": 24430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ab8dac54c62f9d3"
+  },
+  "findings": []
+}

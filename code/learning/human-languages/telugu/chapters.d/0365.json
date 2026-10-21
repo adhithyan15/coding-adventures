@@ -1,0 +1,21 @@
+{
+  "chapter": 365,
+  "title": "Spies and Traitors",
+  "label": "ch:te-spies-and-traitors",
+  "canDo": "I can say a scout, a betrayal, a vow, to order and to banish.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-R365-review-358-365",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 365: I can say a scout, a betrayal, a vow, to order and to banish.",
+    "assesses": [
+      "TE-LEX-C365-DROHAM365-01",
+      "TE-LEX-C365-DROHAM365-02",
+      "TE-LEX-C365-DROHAM365-03",
+      "TE-LEX-C365-DROHAM365-04",
+      "TE-LEX-C365-DROHAM365-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "A Public Meeting",
+  "label": "ch:te-a-public-meeting",
+  "canDo": "I can say a drum proclamation, a notable, a public meeting, a speech and to give a speech.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TE-C342-prasangincu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can say a drum proclamation, a notable, a public meeting, a speech and to give a speech.",
+    "assesses": [
+      "TE-LEX-C342-SABHA342-03",
+      "TE-LEX-C342-SABHA342-04",
+      "TE-LEX-C342-SABHA342-05"
+    ]
+  }
+}

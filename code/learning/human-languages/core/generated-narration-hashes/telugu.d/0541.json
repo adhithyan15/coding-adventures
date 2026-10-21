@@ -1,0 +1,20 @@
+{
+  "language": "telugu",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:c094380893327797",
+  "lessonIds": [
+    "TE-C541-natana",
+    "TE-C541-sannivesam",
+    "TE-C541-kathanayakudu",
+    "TE-C541-hasyanatudu",
+    "TE-C541-preksakulu",
+    "TE-R541-review-534-541"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "telugu/narration/ch541.txt",
+  "json": "telugu/narration/ch541.json",
+  "textHash": "fnv1a64:d17ffb87b626c2b0",
+  "jsonHash": "fnv1a64:a3047855bade6c6b",
+  "findings": []
+}

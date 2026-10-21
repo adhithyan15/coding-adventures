@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:ed957eeaf76e1552",
+  "lessonIds": [
+    "TE-C354-kutra",
+    "TE-C354-mabhyapettu",
+    "TE-C354-bayatapettu",
+    "TE-C354-kappipuccu",
+    "TE-C354-gudhacari"
+  ],
+  "tex": "telugu/book/chapters/ch354-a-plot-uncovered.tex"
+}

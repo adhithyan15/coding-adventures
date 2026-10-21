@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:da10e24455e69b08",
+  "lessonIds": [
+    "TE-C419-kakapote",
+    "TE-C419-batti",
+    "TE-C419-minahayimpu",
+    "TE-C419-emainappatiki",
+    "TE-C419-sambhavincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch419.txt",
+  "json": "telugu/narration/ch419.json",
+  "textHash": "fnv1a64:7241dfc9563f4611",
+  "jsonHash": "fnv1a64:8303d6eaf6aa516a",
+  "findings": []
+}

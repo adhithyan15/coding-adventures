@@ -1,0 +1,11 @@
+{
+  "id": "TE-C454-svadesam",
+  "pathSegment": "TE-PATH-454-PAILATU454",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-454-PAILATU454",
+      "order": 2
+    }
+  ]
+}

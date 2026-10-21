@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 404,
+  "title": "Rich and Poor",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0ecc2ff998a6c732",
+  "lessons": [
+    {
+      "id": "TE-C404-pedarikam",
+      "sequence": 20120,
+      "title": "పేదరికం (pēdarikaṁ) — poverty",
+      "headword": "పేదరికం",
+      "romanization": "pēdarikaṁ",
+      "gloss": "poverty",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7b54e3f31888d26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a scheme, then the Telugu for welfare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పేదరికం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పేదరికం — pēdarikaṁ — \"poverty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పేదరికం వల్ల చాలా మంది పిల్లలు చదువుకోలేరు. pēdarikaṁ valla cālā mandi pillalu caduvukōlēru. Because of poverty many children cannot go to school."
+            },
+            {
+              "kind": "speech",
+              "text": "పేద, poor, which you know, + -రికం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పేదరికం (pēdarikaṁ) is native Dravidian: DEDR 4437 lists Telugu pēda, \"poor\", and pēdaṟikamu, \"poverty\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēdarikaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēdarikaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēdarikaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēdarikaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēdarikaṁ valla cālā mandi pillalu caduvukōlēru. — Because of poverty many children cannot go to school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēdarikaṁ valla cālā mandi pillalu caduvukōlēru.* — Because of poverty many children cannot go to school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a scheme, then the Telugu for welfare, then say pēdarikaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a scheme, then the Telugu for welfare, then say *pēdarikaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పేదరికం (pēdarikaṁ) mean? (\"Poverty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C404-dhanika",
+      "sequence": 20130,
+      "title": "ధనిక (dhanika) — rich; wealthy",
+      "headword": "ధనిక",
+      "romanization": "dhanika",
+      "gloss": "rich; wealthy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:745cd3a0e585fe79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for welfare, then the Telugu for poverty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ధనిక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధనిక — dhanika — \"rich; wealthy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ధనిక దేశాలు పేద దేశాలకు సహాయం చేయాలి. dhanika dēśālu pēda dēśālaku sahāyaṁ cēyāli. Rich countries should help poor countries."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun: ధనిక (dhanika) కుటుంబం, a rich family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ధనిక (dhanika) is borrowed from Sanskrit dhanika, \"wealthy, opulent\" (Monier-Williams), from dhana, \"wealth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhanika dēśālu pēda dēśālaku sahāyaṁ cēyāli. — Rich countries should help poor countries.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhanika dēśālu pēda dēśālaku sahāyaṁ cēyāli.* — Rich countries should help poor countries.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for welfare, then the Telugu for poverty, then say dhanika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for welfare, then the Telugu for poverty, then say *dhanika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ధనిక (dhanika) mean? (\"Rich; wealthy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C404-sampada",
+      "sequence": 20140,
+      "title": "సంపద (sampada) — wealth; riches",
+      "headword": "సంపద",
+      "romanization": "sampada",
+      "gloss": "wealth; riches",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2e825824bceb769",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for poverty, then the Telugu for rich."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సంపద",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంపద — sampada — \"wealth; riches\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఆ కుటుంబం దగ్గర చాలా సంపద ఉంది. ā kuṭumbaṁ daggara cālā sampada undi. That family has a great deal of wealth."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a country’s riches: సహజ సంపద (sampada), natural resources."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సంపద (sampada) is borrowed from Sanskrit sampad, \"success\" (CDIAL 12932), which Monier-Williams also glosses \"accomplishment, perfection\"; Telugu uses it for wealth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sampada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sampada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kuṭumbaṁ daggara cālā sampada undi. — That family has a great deal of wealth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kuṭumbaṁ daggara cālā sampada undi.* — That family has a great deal of wealth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for poverty, then the Telugu for rich, then say sampada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for poverty, then the Telugu for rich, then say *sampada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సంపద (sampada) mean? (\"Wealth; riches\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C404-svatantra",
+      "sequence": 20150,
+      "title": "స్వతంత్ర (svatantra) — independent",
+      "headword": "స్వతంత్ర",
+      "romanization": "svatantra",
+      "gloss": "independent",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad8384cba5e99c6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for rich, then the Telugu for wealth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: స్వతంత్ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వతంత్ర — svatantra — \"independent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ఉద్యోగం వచ్చాక ఆమె స్వతంత్ర జీవితం గడుపుతోంది. udyōgaṁ vaccāka āme svatantra jīvitaṁ gaḍuputōndi. Since getting a job she has been living an independent life."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun: స్వతంత్ర (svatantra) జీవితం, an independent life. స్వతంత్రంగా, independently."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "స్వతంత్ర (svatantra) is borrowed from Sanskrit svatantra, \"self-dependent, independent, free\" (Monier-Williams), from sva, \"own\", and tantra, \"a system, a rule\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svatantra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svatantra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svatantra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svatantra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udyōgaṁ vaccāka āme svatantra jīvitaṁ gaḍuputōndi. — Since getting a job she has been living an independent life.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udyōgaṁ vaccāka āme svatantra jīvitaṁ gaḍuputōndi.* — Since getting a job she has been living an independent life.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for rich, then the Telugu for wealth, then say svatantra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for rich, then the Telugu for wealth, then say *svatantra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does స్వతంత్ర (svatantra) mean? (\"Independent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C404-nirudyogam",
+      "sequence": 20160,
+      "title": "నిరుద్యోగం (nirudyōgaṁ) — unemployment",
+      "headword": "నిరుద్యోగం",
+      "romanization": "nirudyōgaṁ",
+      "gloss": "unemployment",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96a1f985ae9bb276",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for wealth, then the Telugu for independent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నిరుద్యోగం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిరుద్యోగం — nirudyōgaṁ — \"unemployment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మా ప్రాంతంలో నిరుద్యోగం పెరిగింది. mā prāntaṁlō nirudyōgaṁ perigindi. Unemployment has risen in our area."
+            },
+            {
+              "kind": "speech",
+              "text": "నిర్-, without, + ఉద్యోగం, a job, which you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నిరుద్యోగం (nirudyōgaṁ) is built from Sanskrit nir-, \"without\", and udyoga, \"exertion, undertaking\" (Monier-Williams), the word Telugu has as ఉద్యోగం, a job."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirudyōgaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirudyōgaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirudyōgaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirudyōgaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā prāntaṁlō nirudyōgaṁ perigindi. — Unemployment has risen in our area.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā prāntaṁlō nirudyōgaṁ perigindi.* — Unemployment has risen in our area.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for wealth, then the Telugu for independent, then say nirudyōgaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for wealth, then the Telugu for independent, then say *nirudyōgaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నిరుద్యోగం (nirudyōgaṁ) mean? (\"Unemployment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

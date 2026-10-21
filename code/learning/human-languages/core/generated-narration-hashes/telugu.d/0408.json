@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:b0f585681eed30be",
+  "lessonIds": [
+    "TE-C408-samajam",
+    "TE-C408-samajika",
+    "TE-C408-sangham",
+    "TE-C408-sabhyudu",
+    "TE-C408-vivaksa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch408.txt",
+  "json": "telugu/narration/ch408.json",
+  "textHash": "fnv1a64:457a0354f8125ba0",
+  "jsonHash": "fnv1a64:406df5fcee5a0a95",
+  "findings": []
+}

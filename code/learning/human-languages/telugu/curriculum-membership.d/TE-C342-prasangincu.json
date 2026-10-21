@@ -1,0 +1,11 @@
+{
+  "id": "TE-C342-prasangincu",
+  "pathSegment": "TE-PATH-342-SABHA342",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-342-SABHA342",
+      "order": 4
+    }
+  ]
+}

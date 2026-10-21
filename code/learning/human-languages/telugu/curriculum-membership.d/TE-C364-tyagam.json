@@ -1,0 +1,11 @@
+{
+  "id": "TE-C364-tyagam",
+  "pathSegment": "TE-PATH-364-VIMUKTI364",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-364-VIMUKTI364",
+      "order": 3
+    }
+  ]
+}

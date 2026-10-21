@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:d12082063f674ae5",
+  "lessonIds": [
+    "TE-C490-cedagottu",
+    "TE-C490-cirigipovu",
+    "TE-C490-masipovu",
+    "TE-C490-cilipovu",
+    "TE-C490-virigipovu"
+  ],
+  "tex": "telugu/book/chapters/ch490-torn-and-crushed.tex"
+}

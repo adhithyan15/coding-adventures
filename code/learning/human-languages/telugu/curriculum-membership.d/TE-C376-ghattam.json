@@ -1,0 +1,11 @@
+{
+  "id": "TE-C376-ghattam",
+  "pathSegment": "TE-PATH-376-SPANDANA376",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-376-SPANDANA376",
+      "order": 3
+    }
+  ]
+}

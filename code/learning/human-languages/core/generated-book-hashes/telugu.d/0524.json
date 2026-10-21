@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:4327a0f2955fe43f",
+  "lessonIds": [
+    "TE-C524-pratibha",
+    "TE-C524-pravinyam",
+    "TE-C524-panitanam",
+    "TE-C524-nerpari",
+    "TE-C524-corava"
+  ],
+  "tex": "telugu/book/chapters/ch524-skill-and-talent.tex"
+}

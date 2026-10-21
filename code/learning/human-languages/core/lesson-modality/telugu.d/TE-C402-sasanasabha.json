@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C402-sasanasabha",
+    "language": "telugu",
+    "chapter": 402,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5d89e9979456d2d"
+  },
+  "findings": []
+}

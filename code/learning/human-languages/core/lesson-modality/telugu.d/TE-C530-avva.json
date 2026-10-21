@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C530-avva",
+    "language": "telugu",
+    "chapter": 530,
+    "sequence": 26880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8ee0d1548f3955a"
+  },
+  "findings": []
+}

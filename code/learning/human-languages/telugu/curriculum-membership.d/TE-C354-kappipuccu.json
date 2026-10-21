@@ -1,0 +1,11 @@
+{
+  "id": "TE-C354-kappipuccu",
+  "pathSegment": "TE-PATH-354-KUTRA354",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-354-KUTRA354",
+      "order": 3
+    }
+  ]
+}

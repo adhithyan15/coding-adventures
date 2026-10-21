@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:6ff51b3a53556b3b",
+  "lessonIds": [
+    "TE-C375-patrikeyudu",
+    "TE-C375-mudrana",
+    "TE-C375-sancalanam",
+    "TE-C375-nivedincu",
+    "TE-C375-spandincu"
+  ],
+  "tex": "telugu/book/chapters/ch375-the-press.tex"
+}

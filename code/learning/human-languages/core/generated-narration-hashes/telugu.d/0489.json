@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:b5bafd478cdf542f",
+  "lessonIds": [
+    "TE-C489-jebudonga",
+    "TE-C489-kalti",
+    "TE-C489-mosapovu",
+    "TE-C489-kullu",
+    "TE-C489-migulu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch489.txt",
+  "json": "telugu/narration/ch489.json",
+  "textHash": "fnv1a64:37222e3099d0b4ce",
+  "jsonHash": "fnv1a64:b281a701c8a5bed6",
+  "findings": []
+}

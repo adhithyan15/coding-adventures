@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:a5a608af79bc0318",
+  "lessonIds": [
+    "TE-C535-egatali",
+    "TE-C535-vekkirincu",
+    "TE-C535-mandalincu",
+    "TE-C535-niladiyu",
+    "TE-C535-mosagincu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch535.txt",
+  "json": "telugu/narration/ch535.json",
+  "textHash": "fnv1a64:fee0b1dc07b228c0",
+  "jsonHash": "fnv1a64:9f14cfe2d28c3669",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:dce1e31ebe7095e4",
+  "lessonIds": [
+    "TE-C449-addanki",
+    "TE-C449-mallimpu",
+    "TE-C449-nilicipovu",
+    "TE-C449-stambhincu",
+    "TE-C449-musukupovu"
+  ],
+  "tex": "telugu/book/chapters/ch449-roads-blocked.tex"
+}

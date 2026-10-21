@@ -1,0 +1,11 @@
+{
+  "id": "TE-C543-abhinandincu",
+  "pathSegment": "TE-PATH-543-KACERI543",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-543-KACERI543",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:21c522228a1b5d53",
+  "lessonIds": [
+    "TE-C467-antastu",
+    "TE-C467-nelamaliga",
+    "TE-C467-prahari",
+    "TE-C467-visalamaina",
+    "TE-C467-nirmanusyamaina"
+  ],
+  "tex": "telugu/book/chapters/ch467-buildings-and-spaces.tex"
+}

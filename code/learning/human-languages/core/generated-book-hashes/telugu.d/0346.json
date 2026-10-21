@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:4ee3581752bed773",
+  "lessonIds": [
+    "TE-C346-niscitartham",
+    "TE-C346-vivaham",
+    "TE-C346-subhalekha",
+    "TE-C346-tali",
+    "TE-C346-ahvanincu"
+  ],
+  "tex": "telugu/book/chapters/ch346-a-wedding.tex"
+}

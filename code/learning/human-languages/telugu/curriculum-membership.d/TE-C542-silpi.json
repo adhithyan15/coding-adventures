@@ -1,0 +1,11 @@
+{
+  "id": "TE-C542-silpi",
+  "pathSegment": "TE-PATH-542-SILPAM542",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-542-SILPAM542",
+      "order": 3
+    }
+  ]
+}

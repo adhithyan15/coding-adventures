@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-520-KOLUKO520",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TE-EXT-520-KOLUKO520"
+  ],
+  "after": []
+}

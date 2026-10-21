@@ -1,0 +1,19 @@
+{
+  "chapter": 548,
+  "title": "In the Kitchen",
+  "label": "ch:te-in-the-kitchen",
+  "canDo": "I can talk about heating, burning, chopping, sifting and tempering.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TE-C548-talimpu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can talk about heating, burning, chopping, sifting and tempering.",
+    "assesses": [
+      "TE-LEX-C548-VANTA548-03",
+      "TE-LEX-C548-VANTA548-04",
+      "TE-LEX-C548-VANTA548-05"
+    ]
+  }
+}

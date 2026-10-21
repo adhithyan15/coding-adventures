@@ -1,0 +1,11 @@
+{
+  "id": "TE-C498-garvapadu",
+  "pathSegment": "TE-PATH-498-SIGGU498",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-498-SIGGU498",
+      "order": 2
+    }
+  ]
+}

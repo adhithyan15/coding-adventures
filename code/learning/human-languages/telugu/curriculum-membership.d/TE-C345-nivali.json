@@ -1,0 +1,11 @@
+{
+  "id": "TE-C345-nivali",
+  "pathSegment": "TE-PATH-345-SMRTI345",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-345-SMRTI345",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 532,
+  "title": "Bringing Up Children",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bfb77c66ed8fb5ae",
+  "lessons": [
+    {
+      "id": "TE-C532-pempakam",
+      "sequence": 26940,
+      "title": "పెంపకం (pempakaṁ) — upbringing",
+      "headword": "పెంపకం",
+      "romanization": "pempakaṁ",
+      "gloss": "upbringing",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db75416440caf903",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an heir, then the Telugu for a lullaby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పెంపకం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెంపకం — pempakaṁ — \"upbringing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పిల్లల మంచి నడవడికి తల్లిదండ్రుల పెంపకమే కారణం. pillala mañci naḍavaḍiki tallidaṇḍrula pempakamē kāraṇaṁ. Good parenting is the reason for the children's good behaviour."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of పెంచు, to raise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పెంపకం (pempakaṁ) is native Dravidian: DEDR 4436 lists Telugu pempakamu, \"rearing\", beside pen(u)cu, \"to nourish, to foster, to rear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pempakaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pempakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pempakaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pempakaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pillala mañci naḍavaḍiki tallidaṇḍrula pempakamē kāraṇaṁ. — Good parenting is the reason for the children's good behaviour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pillala mañci naḍavaḍiki tallidaṇḍrula pempakamē kāraṇaṁ.* — Good parenting is the reason for the children's good behaviour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an heir, then the Telugu for a lullaby, then say pempakaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an heir, then the Telugu for a lullaby, then say *pempakaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పెంపకం (pempakaṁ) mean? (\"Upbringing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C532-garabam",
+      "sequence": 26950,
+      "title": "గారాబం (gārābaṁ) — pampering; indulgence",
+      "headword": "గారాబం",
+      "romanization": "gārābaṁ",
+      "gloss": "pampering; indulgence",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9315e2e7463639e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a lullaby, then the Telugu for upbringing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గారాబం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గారాబం — gārābaṁ — \"pampering; indulgence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అతి గారాబం వల్ల పిల్లలు మొండిగా తయారవుతారు. ati gārābaṁ valla pillalu moṇḍigā tayāravutāru. Too much pampering makes children stubborn."
+            },
+            {
+              "kind": "speech",
+              "text": "గారాబంగా పెంచు, to bring up a child spoilt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గారాబం (gārābaṁ) is a Telugu word for doting indulgence; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gārābaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gārābaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gārābaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gārābaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ati gārābaṁ valla pillalu moṇḍigā tayāravutāru. — Too much pampering makes children stubborn.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ati gārābaṁ valla pillalu moṇḍigā tayāravutāru.* — Too much pampering makes children stubborn.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a lullaby, then the Telugu for upbringing, then say gārābaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a lullaby, then the Telugu for upbringing, then say *gārābaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గారాబం (gārābaṁ) mean? (\"Pampering; indulgence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C532-posincu",
+      "sequence": 26960,
+      "title": "పోషించు (pōṣiñcu) — to support; to provide for",
+      "headword": "పోషించు",
+      "romanization": "pōṣiñcu",
+      "gloss": "to support; to provide for",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f87c0d8c8b2866d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for upbringing, then the Telugu for pampering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పోషించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పోషించు — pōṣiñcu — \"to support; to provide for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "అన్నయ్యే కుటుంబాన్ని పోషించాడు. annayyē kuṭumbānni pōṣiñcāḍu. It was my elder brother who provided for the family."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): పోషించాను, pōṣiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to play a part: పాత్ర పోషించు (pōṣiñcu), to play a role."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పోషించు (pōṣiñcu) is built on Sanskrit poṣaṇa, \"nourishing, fostering, supporting\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōṣiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōṣiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōṣiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōṣiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annayyē kuṭumbānni pōṣiñcāḍu. — It was my elder brother who provided for the family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *annayyē kuṭumbānni pōṣiñcāḍu.* — It was my elder brother who provided for the family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for upbringing, then the Telugu for pampering, then say pōṣiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for upbringing, then the Telugu for pampering, then say *pōṣiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పోషించు (pōṣiñcu) mean? (\"To support; to provide for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C532-bujjagincu",
+      "sequence": 26970,
+      "title": "బుజ్జగించు (bujjagiñcu) — to coax; to cajole",
+      "headword": "బుజ్జగించు",
+      "romanization": "bujjagiñcu",
+      "gloss": "to coax; to cajole",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a969f32996f4849",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for pampering, then the Telugu for to support."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బుజ్జగించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బుజ్జగించు — bujjagiñcu — \"to coax; to cajole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మందు తాగమని అమ్మ పాపను బుజ్జగించింది. mandu tāgamani amma pāpanu bujjagiñcindi. Mum coaxed the little girl to take her medicine."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): బుజ్జగించాను, bujjagiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Gentle persuasion, usually of a child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బుజ్జగించు (bujjagiñcu) is a Telugu verb for coaxing a child; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujjagiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujjagiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujjagiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujjagiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandu tāgamani amma pāpanu bujjagiñcindi. — Mum coaxed the little girl to take her medicine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandu tāgamani amma pāpanu bujjagiñcindi.* — Mum coaxed the little girl to take her medicine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for pampering, then the Telugu for to support, then say bujjagiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for pampering, then the Telugu for to support, then say *bujjagiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బుజ్జగించు (bujjagiñcu) mean? (\"To coax; to cajole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C532-maram",
+      "sequence": 26980,
+      "title": "మారాం (mārāṁ) — a tantrum; whining",
+      "headword": "మారాం",
+      "romanization": "mārāṁ",
+      "gloss": "a tantrum; whining",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68c48c168d8b5886",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to support, then the Telugu for to coax."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మారాం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మారాం — mārāṁ — \"a tantrum; whining\"."
+            },
+            {
+              "kind": "speech",
+              "text": "బొమ్మ కోసం పాప మారాం చేసింది. bomma kōsaṁ pāpa mārāṁ cēsindi. The little girl threw a tantrum for a toy."
+            },
+            {
+              "kind": "speech",
+              "text": "మారాం (mārāṁ) చేయు, to whine and sulk to get something, as small children do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మారాం (mārāṁ) is a Telugu word for a child's whining tantrum; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārāṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārāṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārāṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bomma kōsaṁ pāpa mārāṁ cēsindi. — The little girl threw a tantrum for a toy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bomma kōsaṁ pāpa mārāṁ cēsindi.* — The little girl threw a tantrum for a toy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to support, then the Telugu for to coax, then say mārāṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to support, then the Telugu for to coax, then say *mārāṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మారాం (mārāṁ) mean? (\"A tantrum; whining\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

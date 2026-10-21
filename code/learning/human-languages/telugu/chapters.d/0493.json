@@ -1,0 +1,21 @@
+{
+  "chapter": 493,
+  "title": "Heading Home",
+  "label": "ch:te-heading-home",
+  "canDo": "I can say equipment, to go on, to turn round, to scatter and to turn back.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TE-R493-review-final-493",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can say equipment, to go on, to turn round, to scatter and to turn back.",
+    "assesses": [
+      "TE-LEX-C493-TIRUGU493-01",
+      "TE-LEX-C493-TIRUGU493-02",
+      "TE-LEX-C493-TIRUGU493-03",
+      "TE-LEX-C493-TIRUGU493-04",
+      "TE-LEX-C493-TIRUGU493-05"
+    ]
+  }
+}

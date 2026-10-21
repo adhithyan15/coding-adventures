@@ -1,0 +1,11 @@
+{
+  "id": "TE-C548-jallincu",
+  "pathSegment": "TE-PATH-548-VANTA548",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-548-VANTA548",
+      "order": 3
+    }
+  ]
+}

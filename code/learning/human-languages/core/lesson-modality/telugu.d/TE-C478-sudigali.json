@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C478-sudigali",
+    "language": "telugu",
+    "chapter": 478,
+    "sequence": 24070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e18c192234f1c196"
+  },
+  "findings": []
+}

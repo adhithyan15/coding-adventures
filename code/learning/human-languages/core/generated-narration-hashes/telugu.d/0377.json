@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:2bbfc24802c0d1f8",
+  "lessonIds": [
+    "TE-C377-vipattu",
+    "TE-C377-alajadi",
+    "TE-C377-raksana",
+    "TE-C377-gasti",
+    "TE-C377-carya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch377.txt",
+  "json": "telugu/narration/ch377.json",
+  "textHash": "fnv1a64:3528d2ac0a9ff7d3",
+  "jsonHash": "fnv1a64:82dc18c0c6172caa",
+  "findings": []
+}

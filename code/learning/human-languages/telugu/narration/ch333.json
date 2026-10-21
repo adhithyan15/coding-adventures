@@ -1,0 +1,866 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 333,
+  "title": "At the Police Station",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a3ca7a5ea68cbca9",
+  "lessons": [
+    {
+      "id": "TE-C333-thana",
+      "sequence": 16350,
+      "title": "ఠాణా (ṭhāṇā) — a police station",
+      "headword": "ఠాణా",
+      "romanization": "ṭhāṇā",
+      "gloss": "a police station",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82ef5c68095ba93f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a moment, then the Telugu for to yell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఠాణా",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఠాణా — ṭhāṇā — \"a police station\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వాళ్ళు దొంగతనం గురించి ఠాణాలో చెప్పారు. vāḷḷu doṅgatanaṁ guriñci ṭhāṇālō ceppāru. They reported the theft at the police station."
+            },
+            {
+              "kind": "speech",
+              "text": "An older word for the పోలీసు స్టేషన్; the news still uses it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఠాణా (ṭhāṇā) is a loan from Hindustani thānā, \"a post, a station\", which goes back to Sanskrit sthāna, \"a place\" (CDIAL 13753)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhāṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhāṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhāṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhāṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷḷu doṅgatanaṁ guriñci ṭhāṇālō ceppāru. — They reported the theft at the police station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷḷu doṅgatanaṁ guriñci ṭhāṇālō ceppāru.* — They reported the theft at the police station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a moment, then the Telugu for to yell, then say ṭhāṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a moment, then the Telugu for to yell, then say *ṭhāṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఠాణా (ṭhāṇā) mean? (\"A police station\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C333-kesu",
+      "sequence": 16360,
+      "title": "కేసు (kēsu) — a case (legal)",
+      "headword": "కేసు",
+      "romanization": "kēsu",
+      "gloss": "a case (legal)",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5197aee7f50367f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to yell, then the Telugu for a police station."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కేసు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కేసు — kēsu — \"a case (legal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పోలీసులు దొంగ మీద కేసు పెట్టారు. pōlīsulu doṅga mīda kēsu peṭṭāru. The police filed a case against the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: కేసులు, kēsulu."
+            },
+            {
+              "kind": "speech",
+              "text": "కేసు (kēsu) పెట్టు, to file a case: literally to put a case on someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కేసు (kēsu) is a loan from English case, with the final -ఉ that many loans take, as in బస్సు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kēsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kēsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsulu doṅga mīda kēsu peṭṭāru. — The police filed a case against the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsulu doṅga mīda kēsu peṭṭāru.* — The police filed a case against the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to yell, then the Telugu for a police station, then say kēsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to yell, then the Telugu for a police station, then say *kēsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కేసు (kēsu) mean? (\"A case (legal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C333-daryaptu",
+      "sequence": 16370,
+      "title": "దర్యాప్తు (daryāptu) — an investigation",
+      "headword": "దర్యాప్తు",
+      "romanization": "daryāptu",
+      "gloss": "an investigation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a43d085529948064",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a police station, then the Telugu for a case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: దర్యాప్తు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దర్యాప్తు — daryāptu — \"an investigation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పోలీసులు ఆ సంఘటనపై దర్యాప్తు మొదలుపెట్టారు. pōlīsulu ā saṅghaṭanapai daryāptu modalupeṭṭāru. The police began an investigation into the incident."
+            },
+            {
+              "kind": "speech",
+              "text": "దర్యాప్తు (daryāptu) చేయు, to investigate."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "దర్యాప్తు (daryāptu) is a loan from Persian daryāft, \"finding out, inquiry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daryāptu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daryāptu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daryāptu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daryāptu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsulu ā saṅghaṭanapai daryāptu modalupeṭṭāru. — The police began an investigation into the incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsulu ā saṅghaṭanapai daryāptu modalupeṭṭāru.* — The police began an investigation into the incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a police station, then the Telugu for a case, then say daryāptu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a police station, then the Telugu for a case, then say *daryāptu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does దర్యాప్తు (daryāptu) mean? (\"An investigation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C333-jada",
+      "sequence": 16380,
+      "title": "జాడ (jāḍa) — a trace; a sign",
+      "headword": "జాడ",
+      "romanization": "jāḍa",
+      "gloss": "a trace; a sign",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5872065e4faf3991",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a case, then the Telugu for an investigation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: జాడ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జాడ — jāḍa — \"a trace; a sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "దొంగ జాడ ఎక్కడా దొరకలేదు. doṅga jāḍa ekkaḍā dorakalēdu. No trace of the thief was found anywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "జాడ (jāḍa) తెలియదు, the trace is not known: nobody knows where someone went."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "జాడ (jāḍa) is native Dravidian: DEDR 2442 lists Telugu jāḍa, \"a sign, trace, track\", with Tamil cāṭai, \"a hint, a feature\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doṅga jāḍa ekkaḍā dorakalēdu. — No trace of the thief was found anywhere.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *doṅga jāḍa ekkaḍā dorakalēdu.* — No trace of the thief was found anywhere.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a case, then the Telugu for an investigation, then say jāḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a case, then the Telugu for an investigation, then say *jāḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does జాడ (jāḍa) mean? (\"A trace; a sign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C333-velimudra",
+      "sequence": 16390,
+      "title": "వేలిముద్ర (vēlimudra) — a fingerprint",
+      "headword": "వేలిముద్ర",
+      "romanization": "vēlimudra",
+      "gloss": "a fingerprint",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c690e6a67ed17a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for an investigation, then the Telugu for a trace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వేలిముద్ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేలిముద్ర — vēlimudra — \"a fingerprint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తలుపు మీద దొంగ వేలిముద్రలు ఉన్నాయి. talupu mīda doṅga vēlimudralu unnāyi. The thief's fingerprints are on the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: వేలిముద్రలు, vēlimudralu."
+            },
+            {
+              "kind": "speech",
+              "text": "వేలు, a finger (వేలి- before another word), with ముద్ర, a seal or a print."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వేలిముద్ర (vēlimudra) is a Telugu compound: native vēlu, \"a finger\" (DEDR 5409), and Sanskrit mudrā, \"a seal, a signet\" (CDIAL 10203)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlimudra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlimudra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēlimudra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēlimudra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talupu mīda doṅga vēlimudralu unnāyi. — The thief's fingerprints are on the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talupu mīda doṅga vēlimudralu unnāyi.* — The thief's fingerprints are on the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for an investigation, then the Telugu for a trace, then say vēlimudra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for an investigation, then the Telugu for a trace, then say *vēlimudra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వేలిముద్ర (vēlimudra) mean? (\"A fingerprint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R333-review-326-333",
+      "sequence": 16400,
+      "title": "Witnesses, kings and rumours",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 326-333",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a51416ab14248cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Telugu for a witness and a war."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a witness, a war, an incident, to steal, to run away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a witness, a war, an incident, to steal, to run away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at one time, a king, a queen, a kingdom, to reign over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at one time, a king, a queen, a kingdom, to reign over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at first, afterwards, at long last, the next day, to recall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at first, afterwards, at long last, the next day, to recall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a theft, to break in, to break open, to make off with, to sense",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a theft, to break in, to break open, to make off with, to sense]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reporter, a periodical, a headline, a news story, to publish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reporter, a periodical, a headline, a news story, to publish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flame, an explosion, a life, to rescue, to run for it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flame, an explosion, a life, to rescue, to run for it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "already by then, in the meantime, all of a sudden, a moment, to yell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: already by then, in the meantime, all of a sudden, a moment, to yell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a police station, a case, an investigation, a trace, a fingerprint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a police station, a case, an investigation, a trace, a fingerprint]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A witness? (సాక్షి, sākṣi.) A war? (యుద్ధం, yuddhaṁ.) An incident? (సంఘటన, saṅghaṭana.) To steal? (దొంగిలించు, doṅgiliñcu.) To run away? (పారిపోవు, pāripōvu.) At one time? (ఒకప్పుడు, okappuḍu.) A king? (రాజు, rāju.) A queen? (రాణి, rāṇi.) A kingdom? (రాజ్యం, rājyaṁ.) To reign over? (ఏలు, ēlu.) At first? (తొలుత, toluta.) Afterwards? (అనంతరం, anantaraṁ.) At long last? (ఎట్టకేలకు, eṭṭakēlaku.) The next day? (మరుసటి రోజు, marusaṭi rōju.) To recall? (గుర్తుచేసుకో, gurtucēsukō.) A theft? (దొంగతనం, doṅgatanaṁ.) To break in? (చొరబడు, corabaḍu.) To break open? (బద్దలు కొట్టు, baddalu koṭṭu.) To make off with? (ఎత్తుకుపోవు, ettukupōvu.) To sense? (పసిగట్టు, pasigaṭṭu.) A reporter? (విలేకరి, vilēkari.) A periodical? (పత్రిక, patrika.) A headline? (శీర్షిక, śīrṣika.) A news story? (కథనం, kathanaṁ.) To publish? (ప్రచురించు, pracuriñcu.) A flame? (మంట, maṇṭa.) An explosion? (పేలుడు, pēluḍu.) A life? (ప్రాణం, prāṇaṁ.) To rescue? (రక్షించు, rakṣiñcu.) To run for it? (పరుగులు తీయు, parugulu tīyu.) Already by then? (అప్పటికే, appaṭikē.) In the meantime? (అంతలో, antalō.) All of a sudden? (హఠాత్తుగా, haṭhāttugā.) A moment? (క్షణం, kṣaṇaṁ.) To yell? (అరుచు, arucu.) A police station? (ఠాణా, ṭhāṇā.) A case? (కేసు, kēsu.) An investigation? (దర్యాప్తు, daryāptu.) A trace? (జాడ, jāḍa.) A fingerprint? (వేలిముద్ర, vēlimudra.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

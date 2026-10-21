@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 543,
+  "title": "At a Performance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c3d201ccce56ce41",
+  "lessons": [
+    {
+      "id": "TE-C543-kaceri",
+      "sequence": 27510,
+      "title": "కచేరీ (kacērī) — a concert; a recital",
+      "headword": "కచేరీ",
+      "romanization": "kacērī",
+      "gloss": "a concert; a recital",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0fe447f4d7ae9d63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a sculptor, then the Telugu for a masterpiece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కచేరీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కచేరీ — kacērī — \"a concert; a recital\"."
+            },
+            {
+              "kind": "speech",
+              "text": "శనివారం సాయంత్రం సంగీత కచేరీ జరిగింది. śanivāraṁ sāyantraṁ saṅgīta kacērī jarigindi. There was a music concert on Saturday evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an old word for a government office."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కచేరీ (kacērī) came into Telugu through Hindustani kacahrī, \"a court, an office\"; its earlier origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kacērī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kacērī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kacērī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kacērī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śanivāraṁ sāyantraṁ saṅgīta kacērī jarigindi. — There was a music concert on Saturday evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śanivāraṁ sāyantraṁ saṅgīta kacērī jarigindi.* — There was a music concert on Saturday evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a sculptor, then the Telugu for a masterpiece, then say kacērī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a sculptor, then the Telugu for a masterpiece, then say *kacērī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కచేరీ (kacērī) mean? (\"A concert; a recital\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C543-cappatlu",
+      "sequence": 27520,
+      "title": "చప్పట్లు (cappaṭlu) — applause; clapping",
+      "headword": "చప్పట్లు",
+      "romanization": "cappaṭlu",
+      "gloss": "applause; clapping",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f011c3c73cfe4e97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a masterpiece, then the Telugu for a concert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చప్పట్లు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చప్పట్లు — cappaṭlu — \"applause; clapping\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పాట అయ్యాక అందరూ చప్పట్లు కొట్టారు. pāṭa ayyāka andarū cappaṭlu koṭṭāru. When the song ended, everyone clapped."
+            },
+            {
+              "kind": "speech",
+              "text": "చప్పట్లు (cappaṭlu) కొట్టు, to clap."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చప్పట్లు (cappaṭlu) is native Dravidian: DEDR 2335 lists Telugu cappaṭlu, \"clapping of the hands\", with Tamil cappāṇi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cappaṭlu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cappaṭlu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cappaṭlu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cappaṭlu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṭa ayyāka andarū cappaṭlu koṭṭāru. — When the song ended, everyone clapped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṭa ayyāka andarū cappaṭlu koṭṭāru.* — When the song ended, everyone clapped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a masterpiece, then the Telugu for a concert, then say cappaṭlu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a masterpiece, then the Telugu for a concert, then say *cappaṭlu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చప్పట్లు (cappaṭlu) mean? (\"Applause; clapping\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C543-abhinandincu",
+      "sequence": 27530,
+      "title": "అభినందించు (abhinandiñcu) — to congratulate",
+      "headword": "అభినందించు",
+      "romanization": "abhinandiñcu",
+      "gloss": "to congratulate",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dd7e6167d48b92e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for a concert, then the Telugu for applause."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అభినందించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభినందించు — abhinandiñcu — \"to congratulate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గెలిచిన జట్టును అందరూ అభినందించారు. gelicina jaṭṭunu andarū abhinandiñcāru. Everyone congratulated the winning team."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): అభినందించాను, abhinandiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "అభినందనలు, congratulations."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభినందించు (abhinandiñcu) is built on Sanskrit abhinandana, \"delighting; praising, applauding\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinandiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinandiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinandiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinandiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gelicina jaṭṭunu andarū abhinandiñcāru. — Everyone congratulated the winning team.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gelicina jaṭṭunu andarū abhinandiñcāru.* — Everyone congratulated the winning team.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for a concert, then the Telugu for applause, then say abhinandiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for a concert, then the Telugu for applause, then say *abhinandiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అభినందించు (abhinandiñcu) mean? (\"To congratulate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C543-asvadincu",
+      "sequence": 27540,
+      "title": "ఆస్వాదించు (āsvādiñcu) — to savour; to relish",
+      "headword": "ఆస్వాదించు",
+      "romanization": "āsvādiñcu",
+      "gloss": "to savour; to relish",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b3ff90428e4f0b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for applause, then the Telugu for to congratulate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆస్వాదించు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆస్వాదించు — āsvādiñcu — \"to savour; to relish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మేము ఆ సంగీతాన్ని హాయిగా ఆస్వాదించాము. mēmu ā saṅgītānni hāyigā āsvādiñcāmu. We relished that music at our ease."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ఆస్వాదించాను, āsvādiñcānu."
+            },
+            {
+              "kind": "speech",
+              "text": "Enjoying food, music or a view slowly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆస్వాదించు (āsvādiñcu) is built on Sanskrit āsvādana, \"eating, tasting, enjoying\" (Monier-Williams), with the Telugu verb ending -ఇంచు."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsvādiñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsvādiñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsvādiñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsvādiñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēmu ā saṅgītānni hāyigā āsvādiñcāmu. — We relished that music at our ease.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēmu ā saṅgītānni hāyigā āsvādiñcāmu.* — We relished that music at our ease.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for applause, then the Telugu for to congratulate, then say āsvādiñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for applause, then the Telugu for to congratulate, then say *āsvādiñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆస్వాదించు (āsvādiñcu) mean? (\"To savour; to relish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C543-kolatam",
+      "sequence": 27550,
+      "title": "కోలాటం (kōlāṭaṁ) — a stick dance",
+      "headword": "కోలాటం",
+      "romanization": "kōlāṭaṁ",
+      "gloss": "a stick dance",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1d29e6a03630cf6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for to congratulate, then the Telugu for to savour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కోలాటం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కోలాటం — kōlāṭaṁ — \"a stick dance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పండుగలో ఆడపిల్లలు కోలాటం ఆడారు. paṇḍugalō āḍapillalu kōlāṭaṁ āḍāru. At the festival the girls did the stick dance."
+            },
+            {
+              "kind": "speech",
+              "text": "Dancers strike short sticks in rhythm: కోలు, stick, + ఆటం, play."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కోలాటం (kōlāṭaṁ) is built from కోలు, \"a stick\", and native āṭaṁ, \"play, dance\" (DEDR 347)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōlāṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōlāṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōlāṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōlāṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇḍugalō āḍapillalu kōlāṭaṁ āḍāru. — At the festival the girls did the stick dance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇḍugalō āḍapillalu kōlāṭaṁ āḍāru.* — At the festival the girls did the stick dance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for to congratulate, then the Telugu for to savour, then say kōlāṭaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for to congratulate, then the Telugu for to savour, then say *kōlāṭaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కోలాటం (kōlāṭaṁ) mean? (\"A stick dance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

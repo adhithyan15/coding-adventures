@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C379-padipovu",
+    "language": "telugu",
+    "chapter": 379,
+    "sequence": 18720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bde3627243626d9e"
+  },
+  "findings": []
+}

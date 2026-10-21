@@ -1,0 +1,11 @@
+{
+  "id": "TE-C361-dalam",
+  "pathSegment": "TE-PATH-361-YUDDHABHUMI361",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-361-YUDDHABHUMI361",
+      "order": 1
+    }
+  ]
+}

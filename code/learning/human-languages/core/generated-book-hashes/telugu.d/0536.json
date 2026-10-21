@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:9d3684e4f4399141",
+  "lessonIds": [
+    "TE-C536-vanabhojanam",
+    "TE-C536-kalaksepam",
+    "TE-C536-totapani",
+    "TE-C536-allika",
+    "TE-C536-pekata"
+  ],
+  "tex": "telugu/book/chapters/ch536-free-time.tex"
+}

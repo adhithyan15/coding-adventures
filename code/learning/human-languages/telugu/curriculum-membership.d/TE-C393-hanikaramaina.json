@@ -1,0 +1,11 @@
+{
+  "id": "TE-C393-hanikaramaina",
+  "pathSegment": "TE-PATH-393-PRAYOJANAM393",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-393-PRAYOJANAM393",
+      "order": 3
+    }
+  ]
+}
