@@ -1,0 +1,11 @@
+{
+  "id": "FA-C508-kardasti",
+  "pathSegment": "FA-PATH-508-CRAFTS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-508-CRAFTS",
+      "order": 3
+    }
+  ]
+}

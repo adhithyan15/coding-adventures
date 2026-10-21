@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Mountains and caves",
+  "label": "ch:fa-mountains-and-caves",
+  "canDo": "I can describe the mountains: a cave, a slope, a pass, the foothills and climbing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C468-soud-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can describe the mountains: a cave, a slope, a pass, the foothills and climbing.",
+    "assesses": [
+      "FA-LEX-C468-GHAR-03",
+      "FA-LEX-C468-GHAR-04",
+      "FA-LEX-C468-GHAR-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:f16a7b4cbe0808c5",
+  "lessonIds": [
+    "FA-C311-manba",
+    "FA-C311-be-gofte",
+    "FA-C311-be-naql-az",
+    "FA-C311-joziyat",
+    "FA-C311-khabargozari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch311.txt",
+  "json": "persian/narration/ch311.json",
+  "textHash": "fnv1a64:8b0f15ca8929b308",
+  "jsonHash": "fnv1a64:2bf2322510c5c279",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C523-naqsh",
+  "pathSegment": "FA-PATH-523-THEATRE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-523-THEATRE",
+      "order": 4
+    }
+  ]
+}

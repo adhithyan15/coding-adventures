@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-426-RAHBANDAN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-426-RAHBANDAN"
+  ],
+  "after": []
+}

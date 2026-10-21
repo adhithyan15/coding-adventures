@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-497-BONES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-497-BONES"
+  ],
+  "after": []
+}

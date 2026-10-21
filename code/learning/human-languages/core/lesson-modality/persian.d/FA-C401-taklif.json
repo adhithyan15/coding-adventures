@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C401-taklif",
+    "language": "persian",
+    "chapter": 401,
+    "sequence": 20540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04764a3c026bd4ef"
+  },
+  "findings": []
+}

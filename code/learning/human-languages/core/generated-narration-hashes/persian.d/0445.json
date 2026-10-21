@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:7d945a5ca6d084ac",
+  "lessonIds": [
+    "FA-C445-taqato",
+    "FA-C445-falake",
+    "FA-C445-serah",
+    "FA-C445-dorahi",
+    "FA-C445-obur-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch445.txt",
+  "json": "persian/narration/ch445.json",
+  "textHash": "fnv1a64:859c23ee72731ae8",
+  "jsonHash": "fnv1a64:476a711cc9ba32ba",
+  "findings": []
+}

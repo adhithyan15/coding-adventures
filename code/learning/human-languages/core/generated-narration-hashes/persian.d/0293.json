@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:61d0a021ac5d3ede",
+  "lessonIds": [
+    "FA-C293-beravam",
+    "FA-C293-bayad-beravi",
+    "FA-C293-towzih-dadan",
+    "FA-W293-zad",
+    "FA-C293-dalil-in-ast",
+    "FA-R293-advice-and-reasons"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "persian/narration/ch293.txt",
+  "json": "persian/narration/ch293.json",
+  "textHash": "fnv1a64:7ee54ef2b27b3071",
+  "jsonHash": "fnv1a64:93b3384d784933d3",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-347-AFSANE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-347-AFSANE"
+  ],
+  "after": []
+}

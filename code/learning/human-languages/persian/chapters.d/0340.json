@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Nowruz visits",
+  "label": "ch:fa-nowruz-visits",
+  "canDo": "I can talk about New Year money, the round of family visits, rites, customs and burning wild rue.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C340-espand",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can talk about New Year money, the round of family visits, rites, customs and burning wild rue.",
+    "assesses": [
+      "FA-LEX-C340-EYDI-03",
+      "FA-LEX-C340-EYDI-04",
+      "FA-LEX-C340-EYDI-05"
+    ]
+  }
+}

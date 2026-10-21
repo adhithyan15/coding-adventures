@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:4241a416d12adaf5",
+  "lessonIds": [
+    "FA-C312-montasher-kardan",
+    "FA-C312-pakhsh-kardan",
+    "FA-C312-guyande",
+    "FA-C312-binande",
+    "FA-C312-pushesh-e-khabari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch312.txt",
+  "json": "persian/narration/ch312.json",
+  "textHash": "fnv1a64:259ddad8e5598af3",
+  "jsonHash": "fnv1a64:66d3396e7d7a04cd",
+  "findings": []
+}

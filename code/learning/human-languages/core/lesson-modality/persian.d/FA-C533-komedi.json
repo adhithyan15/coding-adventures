@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C533-komedi",
+    "language": "persian",
+    "chapter": 533,
+    "sequence": 27330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:232db5adfa6b9b62"
+  },
+  "findings": []
+}

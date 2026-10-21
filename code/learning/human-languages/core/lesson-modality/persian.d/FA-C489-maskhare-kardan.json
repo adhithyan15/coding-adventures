@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C489-maskhare-kardan",
+    "language": "persian",
+    "chapter": 489,
+    "sequence": 25100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3f1a7c2268243f1"
+  },
+  "findings": []
+}

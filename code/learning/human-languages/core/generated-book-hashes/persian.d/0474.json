@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:ea674c3c5d9fb368",
+  "lessonIds": [
+    "FA-C474-baridan",
+    "FA-C474-ragbar",
+    "FA-C474-namnam",
+    "FA-C474-band-amadan",
+    "FA-C474-seylab"
+  ],
+  "tex": "persian/book/chapters/ch474-rain.tex"
+}

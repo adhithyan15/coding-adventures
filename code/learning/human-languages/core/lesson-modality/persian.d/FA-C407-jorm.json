@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C407-jorm",
+    "language": "persian",
+    "chapter": 407,
+    "sequence": 20800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c541f49d15194eac"
+  },
+  "findings": []
+}

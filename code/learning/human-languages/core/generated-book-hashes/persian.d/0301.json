@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:0a35c04a2d2ff56c",
+  "lessonIds": [
+    "FA-C301-ettefaq-oftadan",
+    "FA-C301-ruy-dadan",
+    "FA-C301-be-voqu-peyvastan",
+    "FA-C301-surat-gereftan",
+    "FA-C301-davam-avardan"
+  ],
+  "tex": "persian/book/chapters/ch301-things-happen.tex"
+}

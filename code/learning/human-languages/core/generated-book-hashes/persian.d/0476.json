@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:6c65a62c72cdc854",
+  "lessonIds": [
+    "FA-C476-kulak",
+    "FA-C476-buran",
+    "FA-C476-yakhbandan",
+    "FA-C476-yakh-zadan",
+    "FA-C476-ab-shodan"
+  ],
+  "tex": "persian/book/chapters/ch476-snow-and-ice.tex"
+}

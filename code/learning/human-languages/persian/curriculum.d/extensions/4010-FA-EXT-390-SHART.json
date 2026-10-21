@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-390-SHART",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can set a condition with provided that, in the event that and unless, and say what happens otherwise.",
+  "prerequisites": []
+}

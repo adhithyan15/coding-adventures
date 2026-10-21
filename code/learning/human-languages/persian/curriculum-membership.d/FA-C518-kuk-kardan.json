@@ -1,0 +1,11 @@
+{
+  "id": "FA-C518-kuk-kardan",
+  "pathSegment": "FA-PATH-518-PLAYING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-518-PLAYING",
+      "order": 4
+    }
+  ]
+}

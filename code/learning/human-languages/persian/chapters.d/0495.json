@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Inside the Body",
+  "label": "ch:fa-inside-the-body",
+  "canDo": "I can name some organs of the body.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R495-review-488-495",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can name some organs of the body.",
+    "assesses": [
+      "FA-LEX-C495-ORGANS-03",
+      "FA-LEX-C495-ORGANS-04",
+      "FA-LEX-C495-ORGANS-05"
+    ]
+  }
+}

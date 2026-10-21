@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:97e80dad2955693f",
+  "lessonIds": [
+    "FA-C473-ab-o-hava",
+    "FA-C473-havashenasi",
+    "FA-C473-daraje",
+    "FA-C473-taghyir-kardan",
+    "FA-C473-zir-e-sefr"
+  ],
+  "tex": "persian/book/chapters/ch473-the-forecast.tex"
+}

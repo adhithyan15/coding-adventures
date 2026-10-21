@@ -1,0 +1,11 @@
+{
+  "id": "FA-C380-karamuzi",
+  "pathSegment": "FA-PATH-380-REZUME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-380-REZUME",
+      "order": 4
+    }
+  ]
+}

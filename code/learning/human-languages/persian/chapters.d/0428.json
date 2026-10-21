@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Other road users",
+  "label": "ch:fa-other-road-users",
+  "canDo": "I can talk about other road users: pedestrians, motorbikes, lorries, pickups and running someone over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C428-zir-gereftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can talk about other road users: pedestrians, motorbikes, lorries, pickups and running someone over.",
+    "assesses": [
+      "FA-LEX-C428-KAMIYUN-03",
+      "FA-LEX-C428-KAMIYUN-04",
+      "FA-LEX-C428-KAMIYUN-05"
+    ]
+  }
+}

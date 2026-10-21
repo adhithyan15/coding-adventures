@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:01b1720c1611172b",
+  "lessonIds": [
+    "FA-C528-ketabforushi",
+    "FA-C528-onvan",
+    "FA-C528-jeld",
+    "FA-C528-nasher",
+    "FA-C528-motarjem"
+  ],
+  "tex": "persian/book/chapters/ch528-books.tex"
+}

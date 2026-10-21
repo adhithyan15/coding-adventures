@@ -1,0 +1,11 @@
+{
+  "id": "FA-C348-jadu",
+  "pathSegment": "FA-PATH-348-PARI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-348-PARI",
+      "order": 1
+    }
+  ]
+}

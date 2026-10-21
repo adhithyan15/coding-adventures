@@ -1,0 +1,11 @@
+{
+  "id": "FA-C320-bazjuyi",
+  "pathSegment": "FA-PATH-320-KARAGAH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-320-KARAGAH",
+      "order": 4
+    }
+  ]
+}

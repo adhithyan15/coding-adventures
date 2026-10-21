@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:feefa72693e0f65f",
+  "lessonIds": [
+    "FA-C445-taqato",
+    "FA-C445-falake",
+    "FA-C445-serah",
+    "FA-C445-dorahi",
+    "FA-C445-obur-kardan"
+  ],
+  "tex": "persian/book/chapters/ch445-junctions-and-roundabouts.tex"
+}

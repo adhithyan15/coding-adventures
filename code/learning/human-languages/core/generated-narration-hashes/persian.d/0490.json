@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:f2392c89e2b164df",
+  "lessonIds": [
+    "FA-C490-sarmakhordegi",
+    "FA-C490-anfolanza",
+    "FA-C490-atse-kardan",
+    "FA-C490-galudard",
+    "FA-C490-tab-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch490.txt",
+  "json": "persian/narration/ch490.json",
+  "textHash": "fnv1a64:aa2458f89f4612ae",
+  "jsonHash": "fnv1a64:20f31e965543e880",
+  "findings": []
+}

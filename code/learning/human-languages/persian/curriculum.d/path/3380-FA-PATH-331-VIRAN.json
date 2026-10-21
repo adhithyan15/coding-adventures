@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-331-VIRAN",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-331-VIRAN"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Death",
+  "label": "ch:fa-death",
+  "canDo": "I can talk about a death: someone passing away or dying, the burial and the grave.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C337-qabr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can talk about a death: someone passing away or dying, the burial and the grave.",
+    "assesses": [
+      "FA-LEX-C337-MARG-03",
+      "FA-LEX-C337-MARG-04",
+      "FA-LEX-C337-MARG-05"
+    ]
+  }
+}

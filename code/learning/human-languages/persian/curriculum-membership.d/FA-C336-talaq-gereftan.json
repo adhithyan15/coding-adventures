@@ -1,0 +1,11 @@
+{
+  "id": "FA-C336-talaq-gereftan",
+  "pathSegment": "FA-PATH-336-TALAQ",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-336-TALAQ",
+      "order": 1
+    }
+  ]
+}

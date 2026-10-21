@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-328-ATASHSUZI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-328-ATASHSUZI"
+  ],
+  "after": []
+}

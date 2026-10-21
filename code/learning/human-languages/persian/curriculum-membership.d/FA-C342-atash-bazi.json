@@ -1,0 +1,11 @@
+{
+  "id": "FA-C342-atash-bazi",
+  "pathSegment": "FA-PATH-342-TAZYIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-342-TAZYIN",
+      "order": 2
+    }
+  ]
+}

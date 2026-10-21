@@ -1,0 +1,18 @@
+{
+  "glyph": "ض",
+  "sound": "z",
+  "role": "consonant",
+  "forms": {
+    "isolated": "ض",
+    "initial": "ضـ",
+    "medial": "ـضـ",
+    "final": "ـض"
+  },
+  "components": [
+    "wide oval body",
+    "trailing bowl",
+    "one dot above"
+  ],
+  "strokeOrder": [],
+  "notes": "Used in Arabic-derived Persian words; pronounced z in modern Persian. It is ص with one dot above. Its stroke order is deliberately left empty: no Persian-scoped source for it has been verified yet."
+}

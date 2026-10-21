@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:28155d8b21d9b92c",
+  "lessonIds": [
+    "FA-C458-dastforush",
+    "FA-C458-attari",
+    "FA-C458-bazzaz",
+    "FA-C458-omdeforush",
+    "FA-C458-khordeforush"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch458.txt",
+  "json": "persian/narration/ch458.json",
+  "textHash": "fnv1a64:1deec788800c287a",
+  "jsonHash": "fnv1a64:1aa73b99d687311f",
+  "findings": []
+}

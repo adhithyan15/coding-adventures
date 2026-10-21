@@ -1,0 +1,11 @@
+{
+  "id": "FA-C364-enkar-kardan",
+  "pathSegment": "FA-PATH-364-VAQEIYYAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-364-VAQEIYYAT",
+      "order": 4
+    }
+  ]
+}

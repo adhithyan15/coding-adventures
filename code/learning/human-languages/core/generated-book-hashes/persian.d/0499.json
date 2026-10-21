@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:e5d778eb7a737d6e",
+  "lessonIds": [
+    "FA-C499-bikhabi",
+    "FA-C499-khoropof-kardan",
+    "FA-C499-kabus",
+    "FA-C499-khabalud",
+    "FA-C499-khab-mandan"
+  ],
+  "tex": "persian/book/chapters/ch499-sleep.tex"
+}

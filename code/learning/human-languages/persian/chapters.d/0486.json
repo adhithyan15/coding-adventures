@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Joy and Love",
+  "label": "ch:fa-joy-and-love",
+  "canDo": "I can talk about joy, love and dislike.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C486-motenaffer-budan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about joy, love and dislike.",
+    "assesses": [
+      "FA-LEX-C486-JOY-03",
+      "FA-LEX-C486-JOY-04",
+      "FA-LEX-C486-JOY-05"
+    ]
+  }
+}

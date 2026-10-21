@@ -1,0 +1,11 @@
+{
+  "id": "FA-C532-padkast",
+  "pathSegment": "FA-PATH-532-WATCHING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-532-WATCHING",
+      "order": 3
+    }
+  ]
+}

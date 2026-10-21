@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C432-git",
+    "language": "persian",
+    "chapter": 432,
+    "sequence": 22110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1d374aed7c0c746"
+  },
+  "findings": []
+}

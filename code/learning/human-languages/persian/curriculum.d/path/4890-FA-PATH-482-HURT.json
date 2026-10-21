@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-482-HURT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-482-HURT"
+  ],
+  "after": []
+}

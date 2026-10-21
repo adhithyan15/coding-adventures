@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C401-taqallob-kardan",
+    "language": "persian",
+    "chapter": 401,
+    "sequence": 20520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63122dade1ff5428"
+  },
+  "findings": []
+}

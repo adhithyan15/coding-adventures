@@ -1,0 +1,11 @@
+{
+  "id": "FA-C372-nashi-shodan",
+  "pathSegment": "FA-PATH-372-TASIR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-372-TASIR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "People in town",
+  "label": "ch:fa-people-in-town",
+  "canDo": "I can talk about people in town: the crowds, a bench, a resident, a passer-by and someone from my own town.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R451-review-444-451",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can talk about people in town: the crowds, a bench, a resident, a passer-by and someone from my own town.",
+    "assesses": [
+      "FA-LEX-C451-SHOLUGHI-03",
+      "FA-LEX-C451-SHOLUGHI-04",
+      "FA-LEX-C451-SHOLUGHI-05"
+    ]
+  }
+}

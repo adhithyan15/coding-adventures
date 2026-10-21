@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Who said what",
+  "label": "ch:fa-who-said-what",
+  "canDo": "I can say who made a statement: a spokesperson, a statement, a notice, announcing and stating.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C309-ezhar-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can say who made a statement: a spokesperson, a statement, a notice, announcing and stating.",
+    "assesses": [
+      "FA-LEX-C309-SOKHANGU-03",
+      "FA-LEX-C309-SOKHANGU-04",
+      "FA-LEX-C309-SOKHANGU-05"
+    ]
+  }
+}

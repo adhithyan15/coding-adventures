@@ -1,0 +1,11 @@
+{
+  "id": "FA-C440-badbu",
+  "pathSegment": "FA-PATH-440-SARSEDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-440-SARSEDA",
+      "order": 3
+    }
+  ]
+}

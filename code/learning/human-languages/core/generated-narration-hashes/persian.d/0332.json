@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:eea2989f938d98e1",
+  "lessonIds": [
+    "FA-C332-bardar",
+    "FA-C332-zayman",
+    "FA-C332-be-donya-amadan",
+    "FA-C332-nowzad",
+    "FA-C332-tarbiyat-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch332.txt",
+  "json": "persian/narration/ch332.json",
+  "textHash": "fnv1a64:3df828694771235a",
+  "jsonHash": "fnv1a64:2b5dbc8984fbf2bf",
+  "findings": []
+}

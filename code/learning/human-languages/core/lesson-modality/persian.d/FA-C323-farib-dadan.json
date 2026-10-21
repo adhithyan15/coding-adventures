@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C323-farib-dadan",
+    "language": "persian",
+    "chapter": 323,
+    "sequence": 16480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc9ab9c01785b4a9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C317-napadid-shodan",
+  "pathSegment": "FA-PATH-317-TAQIB",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-317-TAQIB",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:391d8bfee50cb4a4",
+  "lessonIds": [
+    "FA-C366-bahs",
+    "FA-C366-bahs-kardan",
+    "FA-C366-mozakere",
+    "FA-C366-eteraz",
+    "FA-C366-mesal-zadan"
+  ],
+  "tex": "persian/book/chapters/ch366-discussion-and-debate.tex"
+}

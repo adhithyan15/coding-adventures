@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R298-if-and-it-depends",
+    "language": "persian",
+    "chapter": 298,
+    "sequence": 15252,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e089ee1de5dd1db8"
+  },
+  "findings": []
+}

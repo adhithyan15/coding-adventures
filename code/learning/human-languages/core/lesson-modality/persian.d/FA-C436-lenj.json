@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C436-lenj",
+    "language": "persian",
+    "chapter": 436,
+    "sequence": 22350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0506147dca0f616"
+  },
+  "findings": []
+}

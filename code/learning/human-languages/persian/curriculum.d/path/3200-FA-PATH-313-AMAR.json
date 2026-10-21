@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-313-AMAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-313-AMAR"
+  ],
+  "after": []
+}

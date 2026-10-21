@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C521-ghazal",
+    "language": "persian",
+    "chapter": 521,
+    "sequence": 26720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:909d8b9c86302503"
+  },
+  "findings": []
+}

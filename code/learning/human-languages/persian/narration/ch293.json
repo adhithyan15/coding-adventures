@@ -1,0 +1,957 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 293,
+  "title": "Advice, And Why",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:61d0a021ac5d3ede",
+  "lessons": [
+    {
+      "id": "FA-C293-beravam",
+      "sequence": 15020,
+      "title": "بروم (beravam) — a going that is wanted, not stated",
+      "headword": "بروم",
+      "romanization": "beravam",
+      "gloss": "the subjunctive: be- in place of mi-, for a going that is wanted, needed or possible rather than stated — and mikhâham, 'I want', in front of it",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a6e390a9b44451a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'm going\", then \"I'm not going\". (Miravam, nemiravam.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both are statements. Advice, plans and wishes talk about a going that has not happened, and Persian gives that its own shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: be- in place of mi-",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Swap mi- for be- and keep the present stem and the endings:"
+            },
+            {
+              "kind": "speech",
+              "text": "be- + rav + -am becomes بروم — beravam — that I go, for me to go."
+            },
+            {
+              "kind": "speech",
+              "text": "So beravi, beravad, beravim, beravid, beravand. The same swap works on any stored stem: bekhânam, benevisam, begiram, and bekharam from kharidan. This is the subjunctive: the verb shape for something wanted, needed or possible rather than reported."
+            },
+            {
+              "kind": "speech",
+              "text": "Three habits to know. A compound verb often leaves be- off, above all in writing: komak konam, fekr konam. Budan has a stem of its own here: bâsham, bâshi, bâshad. And \"not\" is na- in place of be-: naravam."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: mikhâham, and the verb after it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Khâstan, \"to want\", from chapter thirty-eight, has the present stem khâh-: mikhâham, I want; mikhâhi, you want. Whatever you want to do comes after it in the subjunctive:"
+            },
+            {
+              "kind": "speech",
+              "text": "میخواهم بروم. — mikhâham beravam — I want to go."
+            },
+            {
+              "kind": "speech",
+              "text": "میخواهم کتاب بخوانم. — mikhâham ketâb bekhânam — I want to read a book."
+            },
+            {
+              "kind": "speech",
+              "text": "میخواهی بروی؟ — mikhâhi beravi? — Do you want to go?"
+            },
+            {
+              "kind": "speech",
+              "text": "English says \"want to go\", with the plain verb. Persian gives the wanted verb its own person: \"I want that I go\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khâstan goes back, in EtymDB 2.1, to a Middle Persian verb written hwʾstn' in Pahlavi letters, xwāstan. EtymDB has no entry for the prefix be-, so no history is claimed for it here."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beravam, beravi, beravad, then beravim, beravid, beravand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beravam, beravi, beravad*, then *beravim, beravid, beravand*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to go\" — mikhâham beravam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to go\" — *mikhâham beravam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to read a book\", then \"I want to write\" — mikhâham ketâb bekhânam, mikhâham benevisam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to read a book\", then \"I want to write\" — *mikhâham ketâb bekhânam*, *mikhâham benevisam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a want and its reason — film khub ast, barâ-ye hamin mikhâham beravam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a want and its reason — *film khub ast, barâ-ye hamin mikhâham beravam*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What replaces mi- in the subjunctive? (Be-.) \"That it be\"? (Bâshad.) \"Do you want to go?\" (Mikhâhi beravi?) Which verbs often leave be- off? (Compound verbs: komak konam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C293-bayad-beravi",
+      "sequence": 15028,
+      "title": "باید بروی (bâyad beravi) — you should go",
+      "headword": "باید بروی",
+      "romanization": "bâyad beravi",
+      "gloss": "you should go — bâyad stays still and the next verb carries the person, in the subjunctive; and behtar ast for softer advice",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a237bcd5ea57c902",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want to go\". (Mikhâham beravam.) Then the word for \"must, should\". (Bâyad.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Advice is a want that belongs to someone else. It takes the same verb shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: bâyad, and the verb that carries the person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "باید does not change for the person. The verb after it does, in the subjunctive:"
+            },
+            {
+              "kind": "speech",
+              "text": "باید بروی. — bâyad beravi — You should go. You have to go."
+            },
+            {
+              "kind": "speech",
+              "text": "باید بخوابم. — bâyad bekhâbam — I must sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "One word covers \"must\", \"have to\" and \"should\"; the situation and your tone decide how strong it is. With na- it forbids or warns:"
+            },
+            {
+              "kind": "speech",
+              "text": "نباید دیر برسی. — nabâyad dir beresi — You mustn't arrive late."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: behtar ast, the softer one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Behtar, \"better\", from chapter one hundred and sixty-four, with ast, \"it is\", and the subjunctive after it:"
+            },
+            {
+              "kind": "speech",
+              "text": "بهتر است زود بخوابی. — behtar ast zud bekhâbi — You'd better sleep early. It would be better to sleep early."
+            },
+            {
+              "kind": "speech",
+              "text": "Behtar ast advises without pressing. With be nazar-e man in front it is gentler still."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bâyad is usually traced to Middle Persian abāyēd, \"it is needed\". Its last sound is usually read as the -ad of \"he, she, it\": a verb frozen in its \"it\" form, \"it is necessary\". That fits what it does here. It takes no ending of its own, so the person travels to the next verb."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You should go\", then \"I must sleep\" — bâyad beravi, bâyad bekhâbam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You should go\", then \"I must sleep\" — *bâyad beravi*, *bâyad bekhâbam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You mustn't arrive late\" — nabâyad dir beresi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You mustn't arrive late\" — *nabâyad dir beresi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soft advice — behtar ast zud bekhâbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: soft advice — *behtar ast zud bekhâbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a conclusion and the advice from it — pas bâyad zud beravim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a conclusion and the advice from it — *pas bâyad zud beravim*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word carries the person in bâyad beravi? (Beravi.) Why does bâyad stay still? (It is a frozen \"it\" form.) Which is softer, bâyad or behtar ast? (Behtar ast.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C293-towzih-dadan",
+      "sequence": 15036,
+      "title": "توضیح دادن (towzih dâdan) — to explain",
+      "headword": "توضیح دادن",
+      "romanization": "towzih dâdan",
+      "gloss": "to explain — 'to give clarity', the everyday verb for making a thing clear",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa0dfcd545031591",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you should go\". (Bâyad beravi.) Then \"to give\". (Dâdan.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Advice is stronger with its reason. Before the reason, the verb for laying one out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: توضیح دادن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "توضیح دادن — towzih dâdan — \"to explain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او مشکل را توضیح داد. — u moshkel râ towzih dâd — She explained the problem."
+            },
+            {
+              "kind": "speech",
+              "text": "It runs on dâdan, \"to give\", whose present stem is deh-: towzih midaham, I explain; towzih bedahid, in the subjunctive, \"that you explain\". So باید توضیح بدهم, bâyad towzih bedaham, is \"I have to explain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "You have sharh dâdan from chapter two hundred and twenty-three. It lays a thing out at length. Towzih dâdan is the one you reach for every day: make it clear."
+            },
+            {
+              "kind": "speech",
+              "text": "Say tow-zih, two beats, with a breathy h at the end. Its third letter is a z you have not written yet, and the next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "EtymDB 2.1 has no entry for towzih itself. It is the Arabic noun tawḍīḥ, usually explained as \"making clear\", on the root w-ḍ-ḥ of Arabic wāḍiḥ, \"clear, obvious\", which EtymDB does list."
+            },
+            {
+              "kind": "speech",
+              "text": "Dâdan is Persian, and EtymDB takes it back to the Indo-European root for \"to give\" that also gave Latin dō, \"I give\". So the compound is \"to give clarity\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "towzih dâdan, then tow-zih in two beats",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *towzih dâdan*, then *tow-zih* in two beats]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She explained the problem\" — u moshkel râ towzih dâd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She explained the problem\" — *u moshkel râ towzih dâd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I explain\", then \"I have to explain\" — towzih midaham, bâyad towzih bedaham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I explain\", then \"I have to explain\" — *towzih midaham*, *bâyad towzih bedaham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"to lay out at length\" against \"to make clear\" — sharh dâdan, towzih dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"to lay out at length\" against \"to make clear\" — *sharh dâdan*, *towzih dâdan*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"To explain\"? (Towzih dâdan.) What is the present stem of dâdan? (Deh-: midaham.) What is the compound, word for word? (To give clarity.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W293-zad",
+      "sequence": 15044,
+      "title": "ض (zâd) — the letter inside توضیح",
+      "headword": "ض",
+      "romanization": "zâd",
+      "gloss": "zâd — the letter inside توضیح",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:1054eae53ccd50e1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ض",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ض and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ص and ذ once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say توضیح دادن (towzih dâdan), \"to explain\". You met it a moment ago. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ض — zâd, the sound z."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the third letter of توضیح. The و before it offers nothing to the left, so ض (zâd) starts a fresh run, ضیح, in its opening shape."
+            },
+            {
+              "kind": "speech",
+              "text": "It is ص, from chapter twenty-five, with one dot above: the same wide oval body and the same trailing bowl. That makes four ways to write z: ز, ذ, ض (zâd) and ظ, and Persian says all four alike. Arabic keeps them apart in sound; Persian keeps them apart only in spelling, so each word has to be learned with its own z."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ض (zâd) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ض (zâd) inside توضیح",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ض inside **توضیح**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ض (zâd) three times, saying z as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ض three times, saying *z* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ص, then ض (zâd), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ص, then ض, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "توضیح, with the break after و",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **توضیح**, with the break after و]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "توضیح دادن (towzih dâdan) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **توضیح دادن** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ض? (zâd, z.) Which word did it come from? (توضیح دادن, towzih dâdan, \"to explain\".) How many ways to write z do you hold now? (Four: ز ذ ض ظ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C293-dalil-in-ast",
+      "sequence": 15052,
+      "title": "دلیل این است که (dalil in ast ke) — the reason is that",
+      "headword": "دلیل این است که",
+      "romanization": "dalil in ast ke",
+      "gloss": "the reason is that — a whole sentence for the cause, and the choice between be khâter-e with a noun and chon with a sentence",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:712581c848c53b47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a reason\", then \"to explain\". (Dalil, towzih dâdan.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An explanation is more than chon. Sometimes the reason needs a sentence to itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the reason, in a sentence of its own",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دیر رسیدم. دلیل این است که قطار دیر آمد. — dir residam. dalil in ast ke qatâr dir âmad — I arrived late. The reason is that the train came late."
+            },
+            {
+              "kind": "speech",
+              "text": "Dalil, \"the reason\", in ast, \"is this\", and ke, \"that\", which opens the reason the way it opened the thought after fekr mikonam. The event comes first and stands alone; then the reason gets the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a longer explanation, offer it: توضیح بدهم؟, towzih bedaham?, \"shall I explain?\". The subjunctive makes it a question about a thing not yet done."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a noun, or a sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A cause that is one thing takes be khâter-e, with the ezafe joining the noun:"
+            },
+            {
+              "kind": "speech",
+              "text": "به خاطر باران دیر رسیدم. — be khâter-e bârân dir residam — I arrived late because of the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "A cause that is a whole happening takes chon, and a full sentence:"
+            },
+            {
+              "kind": "speech",
+              "text": "چون هوا سرد بود، دیر رسیدم. — chon havâ sard bud, dir residam — Because it was cold, I arrived late."
+            },
+            {
+              "kind": "speech",
+              "text": "So: a noun after be khâter-e, a verb after chon. \"Because of the rain\", but \"because it was cold\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dir residam. dalil in ast ke qatâr dir âmad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dir residam. dalil in ast ke qatâr dir âmad.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "offer to explain — towzih bedaham?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: offer to explain — *towzih bedaham?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"because of the rain\" — be khâter-e bârân dir residam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"because of the rain\" — *be khâter-e bârân dir residam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same cause as a sentence — chon havâ sard bud, dir residam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same cause as a sentence — *chon havâ sard bud, dir residam*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"The reason is that...\"? (Dalil in ast ke...) Which takes a noun, be khâter-e or chon? (Be khâter-e.) \"Shall I explain?\" (Towzih bedaham?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R293-advice-and-reasons",
+      "sequence": 15060,
+      "title": "Review — advice, and why",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a piece of advice and the reason behind it — the subjunctive after mikhâham, bâyad and behtar ast, and dalil in ast ke",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7964f47191f20b7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want to go\", then \"you should go\". (Mikhâham beravam, bâyad beravi.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four lessons, and one new verb shape doing a great deal of work. Be- in place of mi- gives the subjunctive, and it follows mikhâham, bâyad and behtar ast: a thing wanted, needed or advised. The reason comes after, with chon and a sentence, be khâter-e and a noun, or dalil in ast ke when it needs a sentence of its own. Towzih dâdan names what you are doing."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One piece of advice, built the whole way:"
+            },
+            {
+              "kind": "speech",
+              "text": "به نظر من بهتر است زود بخوابی. دلیل این است که فردا باید زود بروی. be nazar-e man behtar ast zud bekhâbi. dalil in ast ke fardâ bâyad zud beravi. If you ask me, you'd better sleep early. The reason is that tomorrow you have to leave early."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the advice you heard, in two sentences, without stopping",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the advice you heard, in two sentences, without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same advice with the cause first — fardâ bâyad zud beravi, barâ-ye hamin behtar ast zud bekhâbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same advice with the cause first — *fardâ bâyad zud beravi, barâ-ye hamin behtar ast zud bekhâbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a conclusion — pas nabâyad dir bekhâbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a conclusion — *pas nabâyad dir bekhâbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "cherâ? — with dalil in ast ke and a reason of your own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: *cherâ?* — with *dalil in ast ke* and a reason of your own]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which three words call for the subjunctive after them? (Mikhâham, bâyad, behtar ast.) \"Shall I explain?\" (Towzih bedaham?) Which letter in توضیح is new to your hand? (ض, zâd.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

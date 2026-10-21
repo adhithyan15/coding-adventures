@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-327-EMDADGAR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-327-EMDADGAR"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C319-gasht",
+  "pathSegment": "FA-PATH-319-MAMUR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-319-MAMUR",
+      "order": 1
+    }
+  ]
+}

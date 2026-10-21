@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 300,
+  "output": "persian/book/chapters/ch300-suddenly-and-at-once.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

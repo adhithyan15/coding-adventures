@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:8d89fb3af18931f1",
+  "lessonIds": [
+    "FA-C330-tufan",
+    "FA-C330-gharq-shodan",
+    "FA-C330-soqut-kardan",
+    "FA-C330-hoshdar",
+    "FA-C330-hoshdar-dadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch330.txt",
+  "json": "persian/narration/ch330.json",
+  "textHash": "fnv1a64:766501fad6478f71",
+  "jsonHash": "fnv1a64:ee887109b8ee7a29",
+  "findings": []
+}

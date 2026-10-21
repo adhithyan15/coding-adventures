@@ -1,0 +1,11 @@
+{
+  "id": "FA-C526-miniyator",
+  "pathSegment": "FA-PATH-526-ART",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-526-ART",
+      "order": 2
+    }
+  ]
+}

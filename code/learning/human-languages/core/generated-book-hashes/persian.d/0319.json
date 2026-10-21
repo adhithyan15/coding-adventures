@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:31b674800e8f5ef4",
+  "lessonIds": [
+    "FA-C319-mamur",
+    "FA-C319-gasht",
+    "FA-C319-maznun",
+    "FA-C319-dastgir-shodan",
+    "FA-C319-bazdasht-kardan"
+  ],
+  "tex": "persian/book/chapters/ch319-police-and-arrests.tex"
+}

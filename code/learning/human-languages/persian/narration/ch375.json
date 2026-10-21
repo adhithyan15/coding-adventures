@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 375,
+  "title": "Pros and cons",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:05e38e2468aae72f",
+  "lessons": [
+    {
+      "id": "FA-C375-maziyyat",
+      "sequence": 19160,
+      "title": "مزیت (maziyat) — an advantage, a merit",
+      "headword": "مزیت",
+      "romanization": "maziyat",
+      "gloss": "an advantage, a merit",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36366bb2d4ebfc7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to make progress, then the Persian for to fall behind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مزیت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مزیت (maziyat) — \"an advantage, a merit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مزیت این کار این است که نزدیک خانه است. maziyat-e in kâr in ast ke nazdik-e khâne ast. The advantage of this job is that it is near home."
+            },
+            {
+              "kind": "speech",
+              "text": "Its Arabic broken plural mazâyâ also means benefits at work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مزیت (maziyat) is usually traced to Arabic maziyya \"merit, distinction\", the quality that sets one thing above another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maziyat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maziyat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maziyat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maziyat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with maziyat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *maziyat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to make progress, then the Persian for to fall behind, then say maziyat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to make progress, then the Persian for to fall behind, then say *maziyat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مزیت (maziyat) mean? (\"An advantage, a merit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C375-eyb",
+      "sequence": 19170,
+      "title": "عیب ('eyb) — a flaw, a defect",
+      "headword": "عیب",
+      "romanization": "'eyb",
+      "gloss": "a flaw, a defect",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0404d5fa9a8e13a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to fall behind, then the Persian for an advantage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عیب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عیب ('eyb) — \"a flaw, a defect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تنها عیب این ماشین رنگ آن است. tanhâ 'eyb-e in mâshin rang-e ân ast. The only flaw of this car is its colour."
+            },
+            {
+              "kind": "speech",
+              "text": "'Eyb nadârad — never mind, it doesn't matter. Plural 'oyub, an Arabic broken plural."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عیب ('eyb) is usually traced to Arabic 'ayb \"fault, blemish\"; in Persian it is a flaw in a thing or in a person."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'eyb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'eyb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'eyb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'eyb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'eyb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'eyb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to fall behind, then the Persian for an advantage, then say 'eyb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to fall behind, then the Persian for an advantage, then say *'eyb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عیب ('eyb) mean? (\"A flaw, a defect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C375-ziyan",
+      "sequence": 19180,
+      "title": "زیان (ziyân) — harm, a loss",
+      "headword": "زیان",
+      "romanization": "ziyân",
+      "gloss": "harm, a loss",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d84e837c3ce5704f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an advantage, then the Persian for a flaw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: زیان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زیان (ziyân) — \"harm, a loss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سیگار برای بدن زیان دارد. sigâr barâye badan ziyân dârad. Smoking is harmful to the body."
+            },
+            {
+              "kind": "speech",
+              "text": "Ziyân dâshtan — to be harmful; ziyân didan — to suffer a loss."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "زیان (ziyân) \"damage, injury\" is listed in EtymDB without a parent; it is an inherited Persian word, usually traced to Middle Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ziyân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ziyân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ziyân, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ziyân*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ziyân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ziyân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an advantage, then the Persian for a flaw, then say ziyân again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an advantage, then the Persian for a flaw, then say *ziyân* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does زیان (ziyân) mean? (\"Harm, a loss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C375-arzesh-dashtan",
+      "sequence": 19190,
+      "title": "ارزش داشتن (arzesh dâshtan) — to be worth it, to be worth",
+      "headword": "ارزش داشتن",
+      "romanization": "arzesh dâshtan",
+      "gloss": "to be worth it, to be worth",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2359192ca22a6b87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a flaw, then the Persian for harm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ارزش داشتن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارزش داشتن (arzesh dâshtan) — \"to be worth it, to be worth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "این فیلم ارزش دیدن دارد. in film arzesh-e didan dârad. This film is worth seeing."
+            },
+            {
+              "kind": "speech",
+              "text": "Arzesh \"value\" + dâshtan (stem dâr-), with an ezafe: arzesh-e … dârad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ارزش داشتن (arzesh dâshtan) is native Persian, built from arzesh \"value\", itself built on arz-, the present stem of arzidan \"to be worth\", and dâshtan \"to have\", the inherited verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arzesh dâshtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arzesh dâshtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arzesh dâshtan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arzesh dâshtan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with arzesh dâshtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *arzesh dâshtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a flaw, then the Persian for harm, then say arzesh dâshtan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a flaw, then the Persian for harm, then say *arzesh dâshtan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ارزش داشتن (arzesh dâshtan) mean? (\"To be worth it, to be worth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C375-natije-dadan",
+      "sequence": 19200,
+      "title": "نتیجه دادن (natije dâdan) — to pay off, to work",
+      "headword": "نتیجه دادن",
+      "romanization": "natije dâdan",
+      "gloss": "to pay off, to work",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c29112cffd1d5937",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for harm, then the Persian for to be worth it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نتیجه دادن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نتیجه دادن (natije dâdan) — \"to pay off, to work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تلاش او بالاخره نتیجه داد. talâsh-e u bâlâkhare natije dâd. Her effort finally paid off."
+            },
+            {
+              "kind": "speech",
+              "text": "Natije \"result\" + dâdan \"to give\" (stem deh-): literally to give a result."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نتیجه دادن (natije dâdan) is literally \"to give a result\": natije comes from Arabic natīja \"result\" (EtymDB), and dâdan \"to give\" is traced by EtymDB to PIE deh₃-."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natije dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natije dâdan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natije dâdan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natije dâdan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with natije dâdan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *natije dâdan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for harm, then the Persian for to be worth it, then say natije dâdan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for harm, then the Persian for to be worth it, then say *natije dâdan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نتیجه دادن (natije dâdan) mean? (\"To pay off, to work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R375-review-368-375",
+      "sequence": 19210,
+      "title": "Words from chapters 368–375 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 368-375",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fefde4f05f9d9ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for an analysis and to analyse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an analysis, to analyse, an impression, a conclusion, to mention",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an analysis, to analyse, an impression, a conclusion, to mention]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cause, a factor, to cause, to bring about, owing to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cause, a factor, to cause, to bring about, owing to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a consequence, repercussions, as a result, to lead to, to conclude",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a consequence, repercussions, as a result, to lead to, to conclude]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "because of, for this reason, hence, therefore, considering",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: because of, for this reason, hence, therefore, considering]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an influence, to influence, to stem from, to give rise to, a reaction",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an influence, to influence, to stem from, to give rise to, a reaction]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an increase, to increase, a decrease, to reduce, to grow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an increase, to increase, a decrease, to reduce, to grow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an improvement, to improve, progress, to make progress, to fall behind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an improvement, to improve, progress, to make progress, to fall behind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an advantage, a flaw, harm, to be worth it, to pay off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an advantage, a flaw, harm, to be worth it, to pay off]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An analysis? (تحلیل.) To analyse? (تحلیل کردن.) An impression? (برداشت.) A conclusion? (نتیجه گیری.) To mention? (اشاره کردن.) A cause? (علت.) A factor? (عامل.) To cause? (باعث شدن.) To bring about? (سبب شدن.) Owing to? (به علت.) A consequence? (پیامد.) Repercussions? (عواقب.) As a result? (در نتیجه.) To lead to? (منجر شدن.) To conclude? (نتیجه گرفتن.) Because of? (به دلیل.) For this reason? (به همین دلیل.) Hence? (از این رو.) Therefore? (لذا.) Considering? (با توجه به.) An influence? (تاثیر.) To influence? (تاثیر گذاشتن.) To stem from? (ناشی شدن.) To give rise to? (موجب شدن.) A reaction? (واکنش.) An increase? (افزایش.) To increase? (افزایش یافتن.) A decrease? (کاهش.) To reduce? (کاهش دادن.) To grow? (رشد کردن.) An improvement? (بهبود.) To improve? (بهبود یافتن.) Progress? (پیشرفت.) To make progress? (پیشرفت کردن.) To fall behind? (عقب ماندن.) An advantage? (مزیت (maziyat).) A flaw? (عیب ('eyb).) Harm? (زیان (ziyân).) To be worth it? (ارزش داشتن (arzesh dâshtan).) To pay off? (نتیجه دادن (natije dâdan).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

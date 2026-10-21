@@ -1,0 +1,11 @@
+{
+  "id": "FA-C450-mojassame",
+  "pathSegment": "FA-PATH-450-MARKAZ",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-450-MARKAZ",
+      "order": 3
+    }
+  ]
+}
