@@ -773,6 +773,15 @@ evidence. Recognition still is not semantic validation of other critical
 extensions, and this composition adds no algorithm routing, signature,
 complete path, trust, time, identity, revocation, TLS, HTTP, OAuth transport,
 or network authority.
+Selected RSA SHA-256 issuer authentication can now consume that outer issuing-CA
+role-policy evidence alongside the non-copyable candidate-selection evidence.
+It fails before key or signature work unless both inputs retain the same exact
+candidate certificate and the role-policy evidence was built for the issuing-CA
+role. A distinct non-copyable result retains both proofs so later consumers can
+require this stronger composition without confusing it with the earlier narrow
+issuer-link result. This does not turn recognition into semantic validation of
+other critical extensions or add complete path construction, constraints,
+trust, time, revocation, TLS, HTTP, OAuth transport, or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
