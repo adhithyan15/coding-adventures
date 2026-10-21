@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:d986824e137f02f6",
+  "lessonIds": [
+    "FA-C387-mohajerat",
+    "FA-C387-mohajer",
+    "FA-C387-aqalliyyat",
+    "FA-C387-aksariyyat",
+    "FA-C387-tabiz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch387.txt",
+  "json": "persian/narration/ch387.json",
+  "textHash": "fnv1a64:abd30df6fa72e5bf",
+  "jsonHash": "fnv1a64:0974cb5139009c00",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:c8ae09539a03c1e5",
+  "lessonIds": [
+    "FA-C342-tazyin-kardan",
+    "FA-C342-cheraghani",
+    "FA-C342-atash-bazi",
+    "FA-C342-rezhe",
+    "FA-C342-shadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch342.txt",
+  "json": "persian/narration/ch342.json",
+  "textHash": "fnv1a64:d7b1d77732171dc5",
+  "jsonHash": "fnv1a64:65779f89b4554a8f",
+  "findings": []
+}

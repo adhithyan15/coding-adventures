@@ -1,0 +1,17 @@
+{
+  "language": "persian",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:85318555d62d6d82",
+  "lessonIds": [
+    "FA-C292-be-nazar-e-man",
+    "FA-C292-baraye-hamin",
+    "FA-R292-opinion-and-result"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "persian/narration/ch292.txt",
+  "json": "persian/narration/ch292.json",
+  "textHash": "fnv1a64:9bfbbf5471c7d78f",
+  "jsonHash": "fnv1a64:c9ec4179e98fed31",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C501-madarshohar",
+  "pathSegment": "FA-PATH-501-INLAWS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-501-INLAWS",
+      "order": 1
+    }
+  ]
+}

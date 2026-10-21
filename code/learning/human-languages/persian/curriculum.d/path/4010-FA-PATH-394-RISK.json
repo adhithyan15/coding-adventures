@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-394-RISK",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-394-RISK"
+  ],
+  "after": []
+}

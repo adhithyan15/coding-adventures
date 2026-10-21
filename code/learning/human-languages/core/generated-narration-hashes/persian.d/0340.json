@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:d4b26a79bf35e646",
+  "lessonIds": [
+    "FA-C340-eydi",
+    "FA-C340-did-o-bazdid",
+    "FA-C340-ayin",
+    "FA-C340-rasm",
+    "FA-C340-espand"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch340.txt",
+  "json": "persian/narration/ch340.json",
+  "textHash": "fnv1a64:3b898c12f722cdec",
+  "jsonHash": "fnv1a64:664bb7526c22307a",
+  "findings": []
+}

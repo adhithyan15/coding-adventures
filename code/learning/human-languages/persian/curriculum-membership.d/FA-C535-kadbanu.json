@@ -1,0 +1,11 @@
+{
+  "id": "FA-C535-kadbanu",
+  "pathSegment": "FA-PATH-535-COSY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-535-COSY",
+      "order": 4
+    }
+  ]
+}

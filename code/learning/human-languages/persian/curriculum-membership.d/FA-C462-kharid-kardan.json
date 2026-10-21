@@ -1,0 +1,11 @@
+{
+  "id": "FA-C462-kharid-kardan",
+  "pathSegment": "FA-PATH-462-HARAJ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-462-HARAJ",
+      "order": 2
+    }
+  ]
+}

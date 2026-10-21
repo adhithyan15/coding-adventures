@@ -1,0 +1,11 @@
+{
+  "id": "FA-C422-roghan",
+  "pathSegment": "FA-PATH-422-KAPUT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-422-KAPUT",
+      "order": 2
+    }
+  ]
+}

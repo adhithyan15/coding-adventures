@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:ed0358e573a9ae30",
+  "lessonIds": [
+    "FA-C491-kamardard",
+    "FA-C491-dandan-dard",
+    "FA-C491-dard-keshidan",
+    "FA-C491-kharesh",
+    "FA-C491-sekseke-kardan"
+  ],
+  "tex": "persian/book/chapters/ch491-aches-and-pains.tex"
+}

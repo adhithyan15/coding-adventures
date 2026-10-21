@@ -1,0 +1,11 @@
+{
+  "id": "FA-C435-mosaferbari",
+  "pathSegment": "FA-PATH-435-DARBAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-435-DARBAST",
+      "order": 2
+    }
+  ]
+}

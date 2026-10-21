@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:a3c54147ba5729a0",
+  "lessonIds": [
+    "FA-C357-khamir",
+    "FA-C357-varz-dadan",
+    "FA-C357-var-amadan",
+    "FA-C357-khamirmaye",
+    "FA-C357-tanur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch357.txt",
+  "json": "persian/narration/ch357.json",
+  "textHash": "fnv1a64:227b394968726eb2",
+  "jsonHash": "fnv1a64:eb7d87215e37608d",
+  "findings": []
+}

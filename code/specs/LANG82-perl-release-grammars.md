@@ -92,10 +92,48 @@ decimal forms until versioned octal tokenization is implemented. Preserve a
 positive `0`/nonzero-decimal probe and add negative `08`, `09`, and `012`
 probes for every affected pair.
 
-The existing unversioned `perl.tokens` and `perl.grammar` remain the bounded
+The existing unversioned `perl.tokens` and `perl.grammar` remained the bounded
 Perl 5.38 LANG81 execution grammar until a separately validated versioned
-pair replaces them. A version selector must never silently fall back to those
-files for a different release.
+pair replaced them. A version selector must never silently fall back to those
+files for a different release. Since LANG84 phase 4b that pair is
+`perl5.38.0`: the IIR frontend's default release, grounded in the `v5.38.0`
+tag (tag object `f47267bec5921b10a8cc16545c9fdf11972c5f2d`, commit
+`76298ae68aa7796f0ffc05095b127d23f4b2de8f`). Its rules cite that tag's own
+blobs: `perly.y` `c0c09092…` (`FUNC ( optexpr )`, `ADDOP`, `MULOP`,
+`PERLY_MINUS term %prec UMINUS`), `toke.c` `1f81b361…` (`LOP(OP_PRINT)`,
+`yyl_hyphen`'s `PREDEC`/`POSTDEC`, CR as whitespace without
+`PERL_STRICT_CR`, and `scan_num`'s decimal copy into the 256-byte
+`tokenbuf` with six bytes reserved, so 250 digits lex and the 251st croaks
+`Number too long`), `keywords.h` `feae6f6d…` (`KEY_print`) and `parser.h`
+`46d6a19c…` (`char tokenbuf[256]`). The three syntax blobs are identical in
+`v5.38.2`, so the host `perl` v5.38.2 used as the LANG81 oracle runs the
+same tokenizer and grammar for this subset. Form feed and vertical tab,
+whitespace upstream, stay outside the subset. The resulting rules equal
+5.004_72's, so both releases share one compiled table class. The
+unversioned files stay only for `tokenize_perl`/`parse_perl`, which are not
+on the IIR path.
+
+The `perl5.38.2` pair predates this check and keeps an unbounded `INT`
+although its `toke.c` is the same blob as 5.38.0's; so do `perl5.44.0` and
+`perl5.45.3`, whose evidence is pod files rather than `toke.c`. 5.38.2's
+bound is a known gap; 5.44.0's and 5.45.3's need checking against their own
+tags. Both are follow-ups, outside phase 4b.
+
+Since LANG84 phase 4a the checked pairs are compiled into `perl-lexer` and
+`perl-parser` (deduplicated by content, release list read from
+`releases.csv`), and `perl_iir_compiler::compile_source_at` selects one by
+exact inventory ID. A pending or unknown ID is a typed error. Flipping a row
+from `pending` to `partial` therefore also means regenerating the tables with
+`grammar-tools generate-rust-compiled-grammars perl`; the two crates' tests
+fail until that is done.
+
+Since LANG84 phase 4a the checked pairs are compiled into `perl-lexer` and
+`perl-parser` (deduplicated by content, release list read from
+`releases.csv`), and `perl_iir_compiler::compile_source_at` selects one by
+exact inventory ID. A pending or unknown ID is a typed error. Flipping a row
+from `pending` to `partial` therefore also means regenerating the tables with
+`grammar-tools generate-rust-compiled-grammars perl`; the two crates' tests
+fail until that is done.
 
 ## Delivery order and gates
 

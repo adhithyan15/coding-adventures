@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Linking ideas",
+  "label": "ch:fa-linking-ideas",
+  "canDo": "I can link two ideas with but and although, add the other side of an argument, put a point in other words and say nevertheless.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R367-review-360-367",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can link two ideas with but and although, add the other side of an argument, put a point in other words and say nevertheless.",
+    "assesses": [
+      "FA-LEX-C367-AMMA-03",
+      "FA-LEX-C367-AMMA-04",
+      "FA-LEX-C367-AMMA-05"
+    ]
+  }
+}

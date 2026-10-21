@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 458,
+  "title": "Sellers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:28155d8b21d9b92c",
+  "lessons": [
+    {
+      "id": "FA-C458-dastforush",
+      "sequence": 23440,
+      "title": "دستفروش (dastforush) — a street vendor, a hawker",
+      "headword": "دستفروش",
+      "romanization": "dastforush",
+      "gloss": "a street vendor, a hawker",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8c67d0898f8c8fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a covered hall in the bazaar, then the Persian for a caravanserai."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دستفروش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دستفروش (dastforush) — \"a street vendor, a hawker\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در مترو یک دستفروش جوراب میفروخت. Dar metro yek dastforush jurâb miforukht. A hawker was selling socks in the metro."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally 'hand-seller': dast 'hand' + forush 'seller'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dastforush is a native compound of dast 'hand', which EtymDB traces to Old Persian dasta-, and forush, the present stem of forukhtan 'to sell', usually traced to Middle Persian frōxtan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dastforush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dastforush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dastforush, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dastforush*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dastforush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dastforush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a covered hall in the bazaar, then the Persian for a caravanserai, then say dastforush again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a covered hall in the bazaar, then the Persian for a caravanserai, then say *dastforush* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دستفروش (dastforush) mean? (\"A street vendor, a hawker\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C458-attari",
+      "sequence": 23450,
+      "title": "عطاری ('attâri) — a herbalist's shop, a herb and spice shop",
+      "headword": "عطاری",
+      "romanization": "'attâri",
+      "gloss": "a herbalist's shop, a herb and spice shop",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b452594d480a35aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a caravanserai, then the Persian for a street vendor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عطاری",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عطاری ('attâri) — \"a herbalist's shop, a herb and spice shop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مادرم از عطاری دارچین خرید. Mâdaram az 'attâri dârchin kharid. My mother bought cinnamon at the herbalist's."
+            },
+            {
+              "kind": "speech",
+              "text": "The seller is the 'attâr. These shops sell dried herbs, spices and old remedies."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "'attâri is built from 'attâr 'a seller of perfumes and herbs', usually traced to Arabic ʿaṭṭār, a word built on ʿiṭr 'perfume', which EtymDB lists, with the Persian ending -i."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'attâri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'attâri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'attâri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'attâri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'attâri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'attâri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a caravanserai, then the Persian for a street vendor, then say 'attâri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a caravanserai, then the Persian for a street vendor, then say *'attâri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عطاری ('attâri) mean? (\"A herbalist's shop, a herb and spice shop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C458-bazzaz",
+      "sequence": 23460,
+      "title": "بزاز (bazzâz) — a draper, a cloth merchant",
+      "headword": "بزاز",
+      "romanization": "bazzâz",
+      "gloss": "a draper, a cloth merchant",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da6af3b6e35f8328",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a street vendor, then the Persian for a herbalist's shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بزاز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بزاز (bazzâz) — \"a draper, a cloth merchant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بزاز (bazzâz) پارچه را با متر اندازه گرفت. Bazzâz pârche râ bâ metr andâze gereft. The draper measured the cloth with a tape."
+            },
+            {
+              "kind": "speech",
+              "text": "An old word; today often pârche-forush."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bazzâz was borrowed from Arabic bazzāz 'draper, cloth merchant' (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bazzâz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bazzâz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bazzâz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bazzâz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bazzâz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bazzâz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a street vendor, then the Persian for a herbalist's shop, then say bazzâz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a street vendor, then the Persian for a herbalist's shop, then say *bazzâz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بزاز (bazzâz) mean? (\"A draper, a cloth merchant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C458-omdeforush",
+      "sequence": 23470,
+      "title": "عمده فروش ('omdeforush) — a wholesaler",
+      "headword": "عمده فروش",
+      "romanization": "'omdeforush",
+      "gloss": "a wholesaler",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d4b21613001dad4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a herbalist's shop, then the Persian for a draper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عمده فروش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عمده فروش ('omdeforush) — \"a wholesaler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عمده فروش ('omdeforush) برنج را کیسه ای میفروشد. 'Omdeforush berenj râ kise-i miforushad. The wholesaler sells rice by the sack."
+            },
+            {
+              "kind": "speech",
+              "text": "'omde 'in bulk' + forush 'seller'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "'omdeforush is built from 'omde 'main part, in bulk', which EtymDB takes from Arabic ʿumda, and native forush, the present stem of forukhtan 'to sell'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'omdeforush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'omdeforush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'omdeforush, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'omdeforush*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'omdeforush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'omdeforush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a herbalist's shop, then the Persian for a draper, then say 'omdeforush again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a herbalist's shop, then the Persian for a draper, then say *'omdeforush* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عمده فروش ('omdeforush) mean? (\"A wholesaler\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C458-khordeforush",
+      "sequence": 23480,
+      "title": "خرده فروش (khordeforush) — a retailer",
+      "headword": "خرده فروش",
+      "romanization": "khordeforush",
+      "gloss": "a retailer",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f92fbf99034e1bb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a draper, then the Persian for a wholesaler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خرده فروش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خرده فروش (khordeforush) — \"a retailer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "خرده فروش (khordeforush) برنج را کیلویی میفروشد. Khordeforush berenj râ kiluyi miforushad. The retailer sells rice by the kilo."
+            },
+            {
+              "kind": "speech",
+              "text": "khorde 'small bits' + forush 'seller'; the opposite of 'omdeforush."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "khordeforush is a native compound of khorde 'small bits', which EtymDB lists, and forush, the present stem of forukhtan 'to sell'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khordeforush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khordeforush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khordeforush, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khordeforush*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with khordeforush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *khordeforush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a draper, then the Persian for a wholesaler, then say khordeforush again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a draper, then the Persian for a wholesaler, then say *khordeforush* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خرده فروش (khordeforush) mean? (\"A retailer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Dust, drought and fog",
+  "label": "ch:fa-dust-drought-and-fog",
+  "canDo": "I can talk about dry and murky weather: dust haze, dust, drought, drying up and fog.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C478-mehalud",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can talk about dry and murky weather: dust haze, dust, drought, drying up and fog.",
+    "assesses": [
+      "FA-LEX-C478-RIZGARD-03",
+      "FA-LEX-C478-RIZGARD-04",
+      "FA-LEX-C478-RIZGARD-05"
+    ]
+  }
+}

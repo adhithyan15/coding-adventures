@@ -1,0 +1,11 @@
+{
+  "id": "FA-C298-zhakat",
+  "pathSegment": "FA-PATH-298-IF",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-298-IF",
+      "order": 1
+    }
+  ]
+}

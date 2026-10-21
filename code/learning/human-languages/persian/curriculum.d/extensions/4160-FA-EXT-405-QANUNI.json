@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-405-QANUNI",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether something is legal or illegal, talk about offences and punishments, and say that I need a permit.",
+  "prerequisites": []
+}

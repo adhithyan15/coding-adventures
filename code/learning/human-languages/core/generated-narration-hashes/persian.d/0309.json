@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:561f613d035fdf7f",
+  "lessonIds": [
+    "FA-C309-sokhangu",
+    "FA-C309-bayaniye",
+    "FA-C309-ettelaiye",
+    "FA-C309-elam-kardan",
+    "FA-C309-ezhar-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch309.txt",
+  "json": "persian/narration/ch309.json",
+  "textHash": "fnv1a64:672394263cb3a891",
+  "jsonHash": "fnv1a64:17192d6201e4dd4f",
+  "findings": []
+}

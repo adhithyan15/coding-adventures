@@ -1,0 +1,11 @@
+{
+  "id": "FA-C512-lig",
+  "pathSegment": "FA-PATH-512-FANS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-512-FANS",
+      "order": 3
+    }
+  ]
+}

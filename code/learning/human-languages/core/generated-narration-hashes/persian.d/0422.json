@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:cdc9b2116d1c576f",
+  "lessonIds": [
+    "FA-C422-kaput",
+    "FA-C422-motor",
+    "FA-C422-roghan",
+    "FA-C422-estart-zadan",
+    "FA-C422-khamush-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch422.txt",
+  "json": "persian/narration/ch422.json",
+  "textHash": "fnv1a64:d6e23879d7d38f5a",
+  "jsonHash": "fnv1a64:0b819ef951c72e5e",
+  "findings": []
+}

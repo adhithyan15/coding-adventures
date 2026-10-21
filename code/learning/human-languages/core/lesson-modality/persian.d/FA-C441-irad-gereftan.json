@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C441-irad-gereftan",
+    "language": "persian",
+    "chapter": 441,
+    "sequence": 22590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2eb933e2d7759bec"
+  },
+  "findings": []
+}

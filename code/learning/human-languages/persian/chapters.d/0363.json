@@ -1,0 +1,19 @@
+{
+  "chapter": 363,
+  "title": "Claims and proof",
+  "label": "ch:fa-claims-and-proof",
+  "canDo": "I can make a claim, say what someone claims, prove a point and talk about the evidence.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C363-shavahed",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can make a claim, say what someone claims, prove a point and talk about the evidence.",
+    "assesses": [
+      "FA-LEX-C363-EDDEA-03",
+      "FA-LEX-C363-EDDEA-04",
+      "FA-LEX-C363-EDDEA-05"
+    ]
+  }
+}

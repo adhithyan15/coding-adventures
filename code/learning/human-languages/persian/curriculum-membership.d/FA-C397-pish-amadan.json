@@ -1,0 +1,11 @@
+{
+  "id": "FA-C397-pish-amadan",
+  "pathSegment": "FA-PATH-397-EHTIYAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-397-EHTIYAT",
+      "order": 3
+    }
+  ]
+}

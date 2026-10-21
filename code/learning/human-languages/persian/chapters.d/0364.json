@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Facts and rumours",
+  "label": "ch:fa-facts-and-rumours",
+  "canDo": "I can tell a fact from a rumour, say what the truth is, correct something with in fact and say that someone denied it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C364-enkar-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can tell a fact from a rumour, say what the truth is, correct something with in fact and say that someone denied it.",
+    "assesses": [
+      "FA-LEX-C364-VAQEIYYAT-03",
+      "FA-LEX-C364-VAQEIYYAT-04",
+      "FA-LEX-C364-VAQEIYYAT-05"
+    ]
+  }
+}

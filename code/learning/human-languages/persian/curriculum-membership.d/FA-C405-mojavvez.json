@@ -1,0 +1,11 @@
+{
+  "id": "FA-C405-mojavvez",
+  "pathSegment": "FA-PATH-405-QANUNI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-405-QANUNI",
+      "order": 4
+    }
+  ]
+}

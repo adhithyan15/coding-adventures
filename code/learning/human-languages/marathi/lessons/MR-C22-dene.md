@@ -2,7 +2,7 @@
 schema_version: 2
 id: MR-C22-dene
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1070
+sequence: 1075
 chapter: 26
 type: word
 headword: देणे

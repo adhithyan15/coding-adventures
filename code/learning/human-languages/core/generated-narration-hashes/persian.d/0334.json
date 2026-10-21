@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:3afcdd50053c1923",
+  "lessonIds": [
+    "FA-C334-asheq-shodan",
+    "FA-C334-khastegari",
+    "FA-C334-khastegari-kardan",
+    "FA-C334-namzadi",
+    "FA-C334-aqd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch334.txt",
+  "json": "persian/narration/ch334.json",
+  "textHash": "fnv1a64:cf79fa7a99d3faf9",
+  "jsonHash": "fnv1a64:b624c083a62be1a8",
+  "findings": []
+}

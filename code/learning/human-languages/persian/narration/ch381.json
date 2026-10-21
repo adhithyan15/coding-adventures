@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 381,
+  "title": "Roles at work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:39686bb81ed8e3f1",
+  "lessons": [
+    {
+      "id": "FA-C381-sarparast",
+      "sequence": 19470,
+      "title": "سرپرست (sarparast) — a supervisor; a guardian",
+      "headword": "سرپرست",
+      "romanization": "sarparast",
+      "gloss": "a supervisor; a guardian",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1901ff25b228df06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a trainee, then the Persian for an internship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سرپرست",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرپرست (sarparast) — \"a supervisor; a guardian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سرپرست ما هر صبح کارها را تقسیم میکند. sarparast-e mâ har sobh kârhâ râ taqsim mikonad. Our supervisor shares out the jobs every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Sar \"head\" + parast, from parastidan \"to serve, to tend\". Also the guardian of a child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرپرست (sarparast) is a native Persian compound built from sar \"head\" + parast, which EtymDB traces to a Middle Persian verb \"to serve, to minister\". A supervisor is the one who looks after the head of the work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarparast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarparast*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarparast, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarparast*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sarparast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sarparast*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a trainee, then the Persian for an internship, then say sarparast again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a trainee, then the Persian for an internship, then say *sarparast* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سرپرست (sarparast) mean? (\"A supervisor; a guardian\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C381-moaven",
+      "sequence": 19480,
+      "title": "معاون (mo'âven) — a deputy, an assistant manager",
+      "headword": "معاون",
+      "romanization": "mo'âven",
+      "gloss": "a deputy, an assistant manager",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2107a54f60756b57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an internship, then the Persian for a supervisor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: معاون",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معاون (mo'âven) — \"a deputy, an assistant manager\"."
+            },
+            {
+              "kind": "speech",
+              "text": "معاون مدرسه با والدین صحبت کرد. mo'âven-e madrese bâ vâledeyn sohbat kard. The deputy head of the school talked with the parents."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural mo'âvenân. Mo'âven-e vazir — a deputy minister."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "معاون (mo'âven) is usually traced to Arabic mu'āwin \"helper, assistant\": the person who helps the head."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mo'âven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mo'âven*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mo'âven, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mo'âven*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mo'âven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mo'âven*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an internship, then the Persian for a supervisor, then say mo'âven again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an internship, then the Persian for a supervisor, then say *mo'âven* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does معاون (mo'âven) mean? (\"A deputy, an assistant manager\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C381-karshenas",
+      "sequence": 19490,
+      "title": "کارشناس (kârshenâs) — an expert, an analyst",
+      "headword": "کارشناس",
+      "romanization": "kârshenâs",
+      "gloss": "an expert, an analyst",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f75c720029808fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a supervisor, then the Persian for a deputy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کارشناس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کارشناس (kârshenâs) — \"an expert, an analyst\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یک کارشناس خانه را دید و قیمت گذاشت. yek kârshenâs khâne râ did va qeymat gozâsht. An expert looked at the house and set a price."
+            },
+            {
+              "kind": "speech",
+              "text": "Kâr \"work\" + shenâs \"knowing\". Kârshenâsi is also a bachelor's degree."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کارشناس (kârshenâs) is native Persian, built from kâr \"work\" + shenâs-, the present stem of shenâkhtan \"to know\", which EtymDB traces through Old Persian to PIE ǵneh₃- \"to know\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kârshenâs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kârshenâs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kârshenâs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kârshenâs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kârshenâs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kârshenâs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a supervisor, then the Persian for a deputy, then say kârshenâs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a supervisor, then the Persian for a deputy, then say *kârshenâs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کارشناس (kârshenâs) mean? (\"An expert, an analyst\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C381-motakhasses",
+      "sequence": 19500,
+      "title": "متخصص (motakhasses) — a specialist (doctor), an expert",
+      "headword": "متخصص",
+      "romanization": "motakhasses",
+      "gloss": "a specialist (doctor), an expert",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dc2551f76da15ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a deputy, then the Persian for an expert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: متخصص",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متخصص (motakhasses) — \"a specialist (doctor), an expert\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دکتر مرا پیش یک متخصص قلب فرستاد. doktor marâ pish-e yek motakhasses-e qalb ferestâd. The doctor sent me to a heart specialist."
+            },
+            {
+              "kind": "speech",
+              "text": "Above all for doctors and skilled trades. Plural motakhassesân."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متخصص (motakhasses) is usually traced to Arabic mutakhaṣṣiṣ \"specialised\", from the same Arabic family as khosusi \"particular, private\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "motakhasses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *motakhasses*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "motakhasses, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *motakhasses*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with motakhasses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *motakhasses*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a deputy, then the Persian for an expert, then say motakhasses again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a deputy, then the Persian for an expert, then say *motakhasses* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does متخصص (motakhasses) mean? (\"A specialist (doctor), an expert\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C381-vazife",
+      "sequence": 19510,
+      "title": "وظیفه (vazife) — a duty, a task",
+      "headword": "وظیفه",
+      "romanization": "vazife",
+      "gloss": "a duty, a task",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:309081141ad4b1a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an expert, then the Persian for a specialist."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وظیفه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وظیفه (vazife) — \"a duty, a task\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کمک به مردم وظیفه ماست. komak be mardom vazife-ye mâst. Helping people is our duty."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural vazâyef, an Arabic broken plural. Vazife dâshtan — to be obliged to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وظیفه (vazife) was borrowed from Arabic waẓīfa \"task, duty, office\" (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vazife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vazife*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vazife, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vazife*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with vazife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *vazife*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an expert, then the Persian for a specialist, then say vazife again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an expert, then the Persian for a specialist, then say *vazife* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وظیفه (vazife) mean? (\"A duty, a task\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

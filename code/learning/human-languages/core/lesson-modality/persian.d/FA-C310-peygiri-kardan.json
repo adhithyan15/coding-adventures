@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C310-peygiri-kardan",
+    "language": "persian",
+    "chapter": 310,
+    "sequence": 15830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e87e3ceae1d960e"
+  },
+  "findings": []
+}

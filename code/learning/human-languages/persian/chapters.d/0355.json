@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Getting ready to cook",
+  "label": "ch:fa-getting-ready-to-cook",
+  "canDo": "I can talk about a recipe, its ingredients, measuring, sifting and soaking.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R355-review-348-355",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can talk about a recipe, its ingredients, measuring, sifting and soaking.",
+    "assesses": [
+      "FA-LEX-C355-DASTURPOKHT-03",
+      "FA-LEX-C355-DASTURPOKHT-04",
+      "FA-LEX-C355-DASTURPOKHT-05"
+    ]
+  }
+}

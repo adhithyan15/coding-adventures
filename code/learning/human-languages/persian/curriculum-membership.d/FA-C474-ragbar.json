@@ -1,0 +1,11 @@
+{
+  "id": "FA-C474-ragbar",
+  "pathSegment": "FA-PATH-474-RAGBAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-474-RAGBAR",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C497-ketf",
+    "language": "persian",
+    "chapter": 497,
+    "sequence": 25470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f402d74ec78cafa2"
+  },
+  "findings": []
+}

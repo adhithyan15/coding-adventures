@@ -212,6 +212,17 @@ pub fn whitespace_only_minify(
         s
     });
 
+    // #17840: the `;` spliced in at ASI points. It is a separate instance from
+    // `synth_semi` so the emit loop can recognise it by address (see the class
+    // body note there). Only `.value`/`.type_` matter for re-stitching.
+    let synth_asi_semi: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = ";".to_string();
+        s.type_ = lexer::token::TokenType::Semicolon;
+        s.type_name = None;
+        s
+    });
+
     // gap-093 needs a synthetic `(`/`)` pair to WRAP a numeric
     // literal that is the object of a member access — `1 .x` and
     // `1..toString()` must become `(1).x` / `(1).toString()`,
@@ -257,11 +268,44 @@ pub fn whitespace_only_minify(
         s
     });
 
-    let mut kept: Vec<_> = tokens
-        .iter()
-        .filter(|t| !is_trivia(t))
-        .filter(|t| !is_eof(t))
-        .collect();
+    // #17840 — restore the statement boundaries that newlines provided.
+    // Dropping trivia drops newlines too, and on its own that turns
+    // `a()⏎b()` into the invalid `a()b()`. The parser's ASI module knows
+    // exactly where ECMAScript inserts a `;`. That covers the line-terminator
+    // rule, `}`/end of input, and restricted productions such as
+    // `return⏎x`. We splice `synth_asi_semi` in at each of those points.
+    // The token vector itself is left alone, because the CV map below is keyed
+    // on pointers into it. A program the grammar can't parse at all keeps the
+    // old behaviour: no insertions, and the same output as before.
+    let asi_points: Vec<usize> = match synth_asi_semi.as_ref() {
+        Some(_) => coding_adventures_javascript_parser::asi::asi_insertion_points(
+            tokens.clone(),
+            version,
+        )
+        .unwrap_or_default(),
+        None => Vec::new(),
+    };
+    let mut kept: Vec<&lexer::token::Token> = Vec::with_capacity(tokens.len() + asi_points.len());
+    {
+        let mut points = asi_points.iter().peekable();
+        for (i, t) in tokens.iter().enumerate() {
+            while points.peek() == Some(&&i) {
+                if let Some(semi) = synth_asi_semi.as_ref() {
+                    kept.push(semi);
+                }
+                points.next();
+            }
+            if !is_trivia(t) && !is_eof(t) {
+                kept.push(t);
+            }
+        }
+        // A point at `tokens.len()` (after everything) is the end of input.
+        for _ in points {
+            if let Some(semi) = synth_asi_semi.as_ref() {
+                kept.push(semi);
+            }
+        }
+    }
 
     // gap-093 + gap-098: NUMBER-followed-by-DOT normalisation. The
     // lexer splits a number's trailing dot off into its own DOT token
@@ -2563,10 +2607,11 @@ pub fn whitespace_only_minify(
     //     depth scan, and the token AFTER `)` must be a `{`;
     //   - the body has NO nested `{` and NO control-flow keyword at
     //     depth 1 (this is also the dangling-else guard for `if`),
-    //     and EXACTLY ZERO top-level `;` (i.e. a single,
-    //     un-terminated statement). Bodies that already end in `;`
-    //     are left to the gap-032 emit-time flatten; multi-statement
-    //     bodies (`{a();b()}`) and empty bodies (`{}`) are untouched.
+    //     and either ZERO top-level `;` (a single un-terminated
+    //     statement) or exactly ONE that is the body's last token (a
+    //     single terminated statement, #17840: the shape the ASI splice
+    //     produces). Multi-statement bodies (`{a();b()}`) and empty
+    //     bodies (`{}`) are untouched.
     //
     // All bracket checks route through `is_structural_punct`, so a
     // literal `"{"`/`")"` can never be mistaken for a delimiter.
@@ -2679,13 +2724,24 @@ pub fn whitespace_only_minify(
             }
             if let Some(bc) = body_close {
                 let non_empty = bc > body_open + 1;
+                // #17840: a single statement whose ONE top-level `;` is its
+                // own terminator, right before the `}`, qualifies too. The
+                // ASI splice turns `with(o){a()}` into `with(o){a();}`
+                // before this pass runs, and the emit-time gap-032 flatten
+                // that handles explicit `;` bodies doesn't cover `with`.
+                let terminated_single = top_semis == 1
+                    && bc > body_open + 2
+                    && is_structural_punct(kept[bc - 1], ";");
                 if non_empty
                     && !has_nested_brace
                     && !has_blocking_keyword
-                    && top_semis == 0
+                    && (top_semis == 0 || terminated_single)
                 {
                     if let Some(semi) = synth_semi.as_ref() {
                         drops.push(body_open); // loop-body `{`
+                        if terminated_single {
+                            drops.push(bc - 1); // the body's own `;`
+                        }
                         kept[bc] = semi; // `}` → synthetic `;`
                         i = bc + 1;
                         continue;
@@ -3074,6 +3130,28 @@ pub fn whitespace_only_minify(
 
     // State machine:
     let mut brace_stack: Vec<BlockKind> = Vec::new();
+    // #17840: parallel to `brace_stack`, whether each open brace is a class
+    // MEMBER body (a method or static block, opened directly in a class
+    // body), and whether the `}` most recently closed was one. See the
+    // class-body ASI note at the top of the emit loop.
+    let mut brace_is_member_body: Vec<bool> = Vec::new();
+    // `)` index in `kept` → its `(` index, computed once (the emit loop never
+    // mutates `kept`), so the member-body test is O(1) per brace.
+    let kept_open_paren: Vec<usize> = {
+        let mut table = vec![usize::MAX; kept.len()];
+        let mut stack = Vec::new();
+        for (k, t) in kept.iter().enumerate() {
+            if is_structural_punct(t, "(") {
+                stack.push(k);
+            } else if is_structural_punct(t, ")") {
+                if let Some(o) = stack.pop() {
+                    table[k] = o;
+                }
+            }
+        }
+        table
+    };
+    let mut closed_member_body = false;
     // ^ for each open `{`, the kind of block it opens.
     //   `BlockKind::Function` triggers gap-030 rule-B (emit
     //   `;` after closing `}`); `BlockKind::TryChain` triggers
@@ -3136,6 +3214,24 @@ pub fn whitespace_only_minify(
     while idx < kept.len() {
         let tok = kept[idx];
         let val = tok.value.as_str();
+
+        // #17840: closurec's grammar wants a separator between class members,
+        // so ASI may place a `;` directly in a class body
+        // (`class P{m(){}⏎n(){}}`). There it would be an empty class element,
+        // which upstream never prints (`class P{m(){}n(){}}`). Drop it.
+        if synth_asi_semi
+            .as_ref()
+            .is_some_and(|semi| std::ptr::eq(tok, semi))
+            && brace_stack.last() == Some(&BlockKind::Class)
+            && closed_member_body
+            && prev_emitted_tok.is_some_and(|p| is_structural_punct(p, "}"))
+        {
+            // Only after a method or static block: `m(){}⏎n(){}` prints
+            // `m(){}n(){}` upstream. A FIELD keeps its `;` (`x=1;y=2`):
+            // without it the output wouldn't parse.
+            idx += 1;
+            continue;
+        }
 
         // gap-045: single-arg arrow function — drop the
         // enclosing parens around a bare-identifier param.
@@ -3645,6 +3741,7 @@ pub fn whitespace_only_minify(
         // try-chain, gets a synthetic `;` appended.
         if val == "}" {
             let kind = brace_stack.pop().unwrap_or(BlockKind::Other);
+            closed_member_body = brace_is_member_body.pop().unwrap_or(false);
             let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
             let next_is_close_brace = next_val == Some("}");
             let next_is_chain_continuation =
@@ -3844,6 +3941,40 @@ pub fn whitespace_only_minify(
             } else {
                 BlockKind::Other
             };
+            // A class member body: opened directly in a class body after
+            // `static` (static block) or after a method's `)`, where the
+            // `(` is not a `function` expression's (`x = function(){}` is
+            // a field).
+            // (`prev_emitted_tok` is already this `{`, so look at `kept`.)
+            // A method's `(` is preceded by its name, perhaps behind `*`,
+            // `async`, `get`/`set` or `static`. A field initialiser has `=`,
+            // `function`, `class` or `extends` among those few tokens.
+            let member_body = brace_stack.last() == Some(&BlockKind::Class)
+                && idx >= 1
+                && (kept[idx - 1].value == "static"
+                    || (is_structural_punct(kept[idx - 1], ")")
+                        && kept_open_paren[idx - 1] != usize::MAX
+                        && {
+                            let p = kept_open_paren[idx - 1];
+                            // Walk back over this member's own header, to the
+                            // `{`/`}`/`;` that ends the previous member. A
+                            // field initialiser has `=`, `function`, `class` or
+                            // `extends` there (`x = function(){}`,
+                            // `x = class extends f(B){}`); a method doesn't.
+                            // Each header is walked once, so this is linear.
+                            (0..p)
+                                .rev()
+                                .map(|k| kept[k])
+                                .take_while(|t| {
+                                    !(is_structural_punct(t, "{")
+                                        || is_structural_punct(t, "}")
+                                        || is_structural_punct(t, ";"))
+                                })
+                                .all(|t| {
+                                    !matches!(t.value.as_str(), "function" | "class" | "extends" | "=")
+                                })
+                        }));
+            brace_is_member_body.push(member_body);
             brace_stack.push(kind);
             next_block_is_try_chain = false;
             next_block_is_switch_body = false;
@@ -9060,13 +9191,14 @@ mod tests {
     /// `if(b)`. The existing no-control-flow-keyword guard prevents
     /// the brace-drop (the body contains `if`). The decisive property
     /// is that the braces survive (verified against the JAR, which
-    /// keeps them too — the only diff is an unrelated EOF trailing
-    /// `;` after the bare `else` arm).
+    /// keeps them too). Since #17840 the EOF `;` that ASI supplies after
+    /// the bare `else` arm is emitted as well, so this is now byte-identical
+    /// to the `v20260915` jar: `if(a){if(b)c()}else d();`.
     #[test]
     fn gap079_dangling_else_kept() {
         assert_eq!(
             minify("if(a){if(b)c()}else d()"),
-            "if(a){if(b)c()}else d()"
+            "if(a){if(b)c()}else d();"
         );
     }
 

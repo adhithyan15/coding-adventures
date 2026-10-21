@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 503,
+  "title": "Children at Play",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d17e6360dda8ba64",
+  "lessons": [
+    {
+      "id": "FA-C503-asbab-bazi",
+      "sequence": 25770,
+      "title": "اسباب بازی (asbâb bâzi) — a toy",
+      "headword": "اسباب بازی",
+      "romanization": "asbâb bâzi",
+      "gloss": "a toy",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07f750b0a403a2ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a pram, then the Persian for to breastfeed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اسباب بازی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اسباب بازی (asbâb bâzi) — \"a toy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اتاق بچه پر از اسباب بازی است. otâq-e bachche por az asbâb bâzi ast. The child's room is full of toys."
+            },
+            {
+              "kind": "speech",
+              "text": "asbâb 'things, gear' (an Arabic plural) + bâzi 'play'. Plural asbâb bâzihâ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "asbâb bâzi is built in Persian on asbâb, 'things, gear', a loan usually traced to the Arabic plural asbāb, and native bâzi, 'play': play things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asbâb bâzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asbâb bâzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asbâb bâzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asbâb bâzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with asbâb bâzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *asbâb bâzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a pram, then the Persian for to breastfeed, then say asbâb bâzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a pram, then the Persian for to breastfeed, then say *asbâb bâzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اسباب بازی (asbâb bâzi) mean? (\"A toy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C503-arusak",
+      "sequence": 25780,
+      "title": "عروسک ('arusak) — a doll",
+      "headword": "عروسک",
+      "romanization": "'arusak",
+      "gloss": "a doll",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15102fa76cf7caab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to breastfeed, then the Persian for a toy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عروسک",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عروسک ('arusak) — \"a doll\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دخترم با عروسکش حرف میزند. dokhtaram bâ 'arusakash harf mizanad. My daughter talks to her doll."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally 'little bride': 'arus 'bride' + the diminutive -ak."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "'arusak is built in Persian on 'arus, 'bride', which was borrowed from Arabic ʿarūs, 'bride, groom' (EtymDB), with the native diminutive -ak."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'arusak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'arusak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'arusak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'arusak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'arusak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'arusak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to breastfeed, then the Persian for a toy, then say 'arusak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to breastfeed, then the Persian for a toy, then say *'arusak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عروسک ('arusak) mean? (\"A doll\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C503-bachchedari",
+      "sequence": 25790,
+      "title": "بچه داری (bachchedâri) — childcare, bringing up children",
+      "headword": "بچه داری",
+      "romanization": "bachchedâri",
+      "gloss": "childcare, bringing up children",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9ea7345d1c03623",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a toy, then the Persian for a doll."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بچه داری",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بچه داری (bachchedâri) — \"childcare, bringing up children\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بچه داری کار سختی است. bachchedâri kâr-e sakhti ast. Bringing up children is hard work."
+            },
+            {
+              "kind": "speech",
+              "text": "bachche 'child' + dâr 'keeping' (stem of dâshtan) + -i."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bachchedâri is built on native Persian bachche, 'child', which EtymDB traces to a Middle Persian word for 'child, baby, cub' (EtymDB), and dâr, the stem of dâshtan, 'to have, to keep'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bachchedâri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bachchedâri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bachchedâri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bachchedâri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bachchedâri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bachchedâri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a toy, then the Persian for a doll, then say bachchedâri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a toy, then the Persian for a doll, then say *bachchedâri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بچه داری (bachchedâri) mean? (\"Childcare, bringing up children\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C503-lus",
+      "sequence": 25800,
+      "title": "لوس (lus) — spoiled (of a child)",
+      "headword": "لوس",
+      "romanization": "lus",
+      "gloss": "spoiled (of a child)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f140a23757b3440",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a doll, then the Persian for childcare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لوس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لوس (lus) — \"spoiled (of a child)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پدربزرگ نوه اش را لوس کرده است. pedarbozorg naveash râ lus karde ast. Grandfather has spoiled his grandchild."
+            },
+            {
+              "kind": "speech",
+              "text": "lus kardan — to spoil; lus shodan — to act spoilt. Colloquial."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lus is a colloquial Persian word, but no source used here gives its history, and its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lus, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lus*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with lus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *lus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a doll, then the Persian for childcare, then say lus again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a doll, then the Persian for childcare, then say *lus* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لوس (lus) mean? (\"Spoiled (of a child)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C503-qayem-mushak",
+      "sequence": 25810,
+      "title": "قایم موشک (qâyem mushak) — hide-and-seek",
+      "headword": "قایم موشک",
+      "romanization": "qâyem mushak",
+      "gloss": "hide-and-seek",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b4b1ced32cb119c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for childcare, then the Persian for spoiled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قایم موشک",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قایم موشک (qâyem mushak) — \"hide-and-seek\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بچه ها در حیاط قایم موشک بازی میکنند. bachchehâ dar hayât qâyem mushak bâzi mikonand. The children are playing hide-and-seek in the yard."
+            },
+            {
+              "kind": "speech",
+              "text": "qâyem 'hidden' + mushak 'little mouse': hiding like a mouse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qâyem mushak is built in Persian on colloquial qâyem, 'hidden', usually traced to Arabic qāʾim, and native mush, 'mouse', usually traced to Middle Persian mūš, with the diminutive -ak."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qâyem mushak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qâyem mushak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qâyem mushak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qâyem mushak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with qâyem mushak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *qâyem mushak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for childcare, then the Persian for spoiled, then say qâyem mushak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for childcare, then the Persian for spoiled, then say *qâyem mushak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قایم موشک (qâyem mushak) mean? (\"Hide-and-seek\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R503-review-496-503",
+      "sequence": 25820,
+      "title": "Words from chapters 496–503 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 496-503",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f16d15e60ef5fa2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for the brain and nerves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brain, nerves, a vein, an eyelid, the gum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brain, nerves, a vein, an eyelid, the gum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shoulder blade, a joint, the navel, the spine, a skull",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shoulder blade, a joint, the navel, the spine, a skull]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lose weight, to put on weight, to go on a diet, a vitamin, being overweight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lose weight, to put on weight, to go on a diet, a vitamin, being overweight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "insomnia, to snore, a nightmare, sleepy, to oversleep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: insomnia, to snore, a nightmare, sleepy, to oversleep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an uncle, an aunt, a paternal cousin, a maternal cousin, a sister's child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an uncle, an aunt, a paternal cousin, a maternal cousin, a sister's child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brother's child, a mother-in-law, a father-in-law, twins, a child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brother's child, a mother-in-law, a father-in-law, twins, a child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cradle, a lullaby, a nappy, a pram, to breastfeed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cradle, a lullaby, a nappy, a pram, to breastfeed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a toy, a doll, childcare, spoiled, hide-and-seek",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a toy, a doll, childcare, spoiled, hide-and-seek]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The brain? (مغز.) Nerves? (اعصاب.) A vein? (رگ.) An eyelid? (پلک.) The gum? (لثه.) A shoulder blade? (کتف.) A joint? (مفصل.) The navel? (ناف.) The spine? (ستون فقرات.) A skull? (جمجمه.) To lose weight? (لاغر شدن.) To put on weight? (چاق شدن.) To go on a diet? (رژیم گرفتن.) A vitamin? (ویتامین.) Being overweight? (چاقی.) Insomnia? (بیخوابی.) To snore? (خروپف کردن.) A nightmare? (کابوس.) Sleepy? (خوابالود.) To oversleep? (خواب ماندن.) An uncle? (عمو.) An aunt? (عمه.) A paternal cousin? (پسرعمو.) A maternal cousin? (دخترخاله.) A sister's child? (خواهرزاده.) A brother's child? (برادرزاده.) A mother-in-law? (مادرشوهر.) A father-in-law? (پدرزن.) Twins? (دوقلو.) A child? (فرزند.) A cradle? (گهواره.) A lullaby? (لالایی.) A nappy? (پوشک.) A pram? (کالسکه.) To breastfeed? (شیر دادن.) A toy? (اسباب بازی (asbâb bâzi).) A doll? (عروسک ('arusak).) Childcare? (بچه داری (bachchedâri).) Spoiled? (لوس (lus).) Hide-and-seek? (قایم موشک (qâyem mushak).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

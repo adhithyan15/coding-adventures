@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Police and lost things",
+  "label": "ch:fa-police-and-lost-things",
+  "canDo": "I can get help with a loss: the police post, something lost, a wallet, the traffic police and dialling a number.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C453-shomare-gereftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can get help with a loss: the police post, something lost, a wallet, the traffic police and dialling a number.",
+    "assesses": [
+      "FA-LEX-C453-PASGAH-03",
+      "FA-LEX-C453-PASGAH-04",
+      "FA-LEX-C453-PASGAH-05"
+    ]
+  }
+}

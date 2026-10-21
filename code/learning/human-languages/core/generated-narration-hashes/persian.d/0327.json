@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:181b0e8c870b9cbf",
+  "lessonIds": [
+    "FA-C327-emdadgar",
+    "FA-C327-urzhans",
+    "FA-C327-azhir",
+    "FA-C327-zende-mandan",
+    "FA-C327-ghariq-e-nejat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch327.txt",
+  "json": "persian/narration/ch327.json",
+  "textHash": "fnv1a64:af4825536004c751",
+  "jsonHash": "fnv1a64:430c53c86e98fadb",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C530-khandedar",
+  "pathSegment": "FA-PATH-530-STORIES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-530-STORIES",
+      "order": 4
+    }
+  ]
+}

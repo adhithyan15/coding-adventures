@@ -1,0 +1,19 @@
+{
+  "chapter": 379,
+  "title": "Leaving a job",
+  "label": "ch:fa-leaving-a-job",
+  "canDo": "I can say that someone resigned, was dismissed or retired, and talk about unemployment.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C379-bazneshastegi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 379: I can say that someone resigned, was dismissed or retired, and talk about unemployment.",
+    "assesses": [
+      "FA-LEX-C379-ESTEFA-03",
+      "FA-LEX-C379-ESTEFA-04",
+      "FA-LEX-C379-ESTEFA-05"
+    ]
+  }
+}

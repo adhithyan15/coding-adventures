@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:080c26ec43dce516",
+  "lessonIds": [
+    "FA-C309-sokhangu",
+    "FA-C309-bayaniye",
+    "FA-C309-ettelaiye",
+    "FA-C309-elam-kardan",
+    "FA-C309-ezhar-kardan"
+  ],
+  "tex": "persian/book/chapters/ch309-who-said-what.tex"
+}

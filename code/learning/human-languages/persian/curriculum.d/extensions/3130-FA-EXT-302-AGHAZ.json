@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-302-AGHAZ",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when something began and when it came to an end.",
+  "prerequisites": []
+}

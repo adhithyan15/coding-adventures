@@ -1,0 +1,11 @@
+{
+  "id": "FA-C531-zirnevis",
+  "pathSegment": "FA-PATH-531-SCREEN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-531-SCREEN",
+      "order": 2
+    }
+  ]
+}

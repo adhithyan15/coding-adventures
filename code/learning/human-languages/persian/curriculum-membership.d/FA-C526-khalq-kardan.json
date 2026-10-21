@@ -1,0 +1,11 @@
+{
+  "id": "FA-C526-khalq-kardan",
+  "pathSegment": "FA-PATH-526-ART",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-526-ART",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:2e6df5c93a565da2",
+  "lessonIds": [
+    "FA-C371-be-dalil-e",
+    "FA-C371-be-hamin-dalil",
+    "FA-C371-az-in-ru",
+    "FA-C371-leza",
+    "FA-C371-ba-tavajjoh-be"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch371.txt",
+  "json": "persian/narration/ch371.json",
+  "textHash": "fnv1a64:0f8d58c326e394bb",
+  "jsonHash": "fnv1a64:d29c8059f737fa96",
+  "findings": []
+}

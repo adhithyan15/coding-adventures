@@ -1,0 +1,11 @@
+{
+  "id": "FA-C443-keyfiyat",
+  "pathSegment": "FA-PATH-443-ANAM",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-443-ANAM",
+      "order": 1
+    }
+  ]
+}

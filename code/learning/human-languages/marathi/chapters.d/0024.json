@@ -2,14 +2,14 @@
   "chapter": 24,
   "title": "A Message for Mira",
   "label": "ch:mr-a1-named-reader-message",
-  "canDo": "I can independently write a 32-word Devanagari message to Mira for a familiar introduction and Marathi-study purpose.",
+  "canDo": "I can write a 30-40-word Devanagari message to Mira for a familiar purpose, first without a timer and then under a three-minute task timer.",
   "spineNodes": [
     "SPINE-NAME-EVERYDAY-ACTIONS"
   ],
   "payoff": {
-    "lesson": "MR-A1M18-independent-message",
+    "lesson": "MR-A1M20-timed-message",
     "kind": "task",
-    "summary": "Without romanization, a line bank, or a visible answer model, write the 30-40-word message from the named reader and purpose alone.",
+    "summary": "After an untimed independent message and a partial timer, write the 30-40-word named-reader message within three minutes without a visible model.",
     "assesses": [
       "MR-A1-MESSAGE-LINE-GREETING",
       "MR-A1-MESSAGE-LINE-NAME",
@@ -24,6 +24,6 @@
       "MR-A1-MESSAGE-LINE-SEE-AGAIN",
       "MR-A1-MESSAGE-LINE-SEE-TOMORROW"
     ],
-    "note": "This is untimed named-reader message evidence, not form completion, timed integration, or full A1 exam readiness."
+    "note": "This is timed message-task evidence only, not a 20-minute whole-paper mock or full A1 exam readiness."
   }
 }

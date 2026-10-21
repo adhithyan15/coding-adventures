@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-470-CHADOR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-470-CHADOR"
+  ],
+  "after": []
+}

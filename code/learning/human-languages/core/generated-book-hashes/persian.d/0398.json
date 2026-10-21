@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:813569a7f00ea454",
+  "lessonIds": [
+    "FA-C398-emkan-pazir",
+    "FA-C398-amali",
+    "FA-C398-budje",
+    "FA-C398-owlaviyyat",
+    "FA-C398-sanjidan"
+  ],
+  "tex": "persian/book/chapters/ch398-will-it-work.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C301-ettefaq-oftadan",
+  "pathSegment": "FA-PATH-301-ETTEFAQ",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-301-ETTEFAQ",
+      "order": 0
+    }
+  ]
+}

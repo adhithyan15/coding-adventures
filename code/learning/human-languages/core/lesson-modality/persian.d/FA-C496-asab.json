@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C496-asab",
+    "language": "persian",
+    "chapter": 496,
+    "sequence": 25430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9295c3de06ebf78"
+  },
+  "findings": []
+}

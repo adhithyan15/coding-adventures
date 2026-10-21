@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:28f3be6b809e3de7",
+  "lessonIds": [
+    "FA-C332-bardar",
+    "FA-C332-zayman",
+    "FA-C332-be-donya-amadan",
+    "FA-C332-nowzad",
+    "FA-C332-tarbiyat-kardan"
+  ],
+  "tex": "persian/book/chapters/ch332-birth-and-upbringing.tex"
+}

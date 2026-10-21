@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:0ab9bc6aed36a10d",
+  "lessonIds": [
+    "FA-C307-avayel",
+    "FA-C307-avaset",
+    "FA-C307-avakher",
+    "FA-C307-astane",
+    "FA-C307-hodudan",
+    "FA-R307-review-300-307"
+  ],
+  "tex": "persian/book/chapters/ch307-early-mid-and-late.tex"
+}

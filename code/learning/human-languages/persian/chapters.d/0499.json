@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Sleep",
+  "label": "ch:fa-sleep",
+  "canDo": "I can talk about how I sleep.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C499-khab-mandan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can talk about how I sleep.",
+    "assesses": [
+      "FA-LEX-C499-SLEEP-03",
+      "FA-LEX-C499-SLEEP-04",
+      "FA-LEX-C499-SLEEP-05"
+    ]
+  }
+}

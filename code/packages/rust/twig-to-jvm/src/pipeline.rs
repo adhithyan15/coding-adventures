@@ -191,6 +191,7 @@ pub fn run_pipeline(
 ///     language: "test".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 ///
 /// let class_file = run_pipeline_from_iir(module, IIRJvmConfig::new("Test")).unwrap();
@@ -262,6 +263,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let config = IIRJvmConfig::new("AddTest");
         let cf = run_pipeline_from_iir(module, config).unwrap();
@@ -286,6 +288,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let config = IIRJvmConfig::new("MyApp");
         let cf = run_pipeline_from_iir(module, config).unwrap();

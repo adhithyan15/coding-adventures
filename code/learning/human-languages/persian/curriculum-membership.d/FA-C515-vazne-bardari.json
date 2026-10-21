@@ -1,0 +1,11 @@
+{
+  "id": "FA-C515-vazne-bardari",
+  "pathSegment": "FA-PATH-515-MOVES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-515-MOVES",
+      "order": 4
+    }
+  ]
+}

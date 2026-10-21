@@ -1,0 +1,21 @@
+{
+  "chapter": 295,
+  "title": "A Ticket, And A Missed Train",
+  "label": "ch:fa-a-ticket-and-a-missed-train",
+  "canDo": "I can ask for a return ticket, say that I missed the train or lost something, and ask for the person in charge.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R295-at-the-station",
+    "kind": "production",
+    "summary": "Complete FA-R295-at-the-station: buy a return ticket, report a missed train, and ask for the person in charge.",
+    "assesses": [
+      "FA-LEX-RAFT-O-BARGASHT-01",
+      "FA-LEX-AZ-DAST-DADAN-01",
+      "FA-GRAMMAR-PROBLEM-PAST-01",
+      "FA-LEX-C295-MASUL-01",
+      "FA-SCRIPT-C295-HAMZE-01"
+    ]
+  }
+}

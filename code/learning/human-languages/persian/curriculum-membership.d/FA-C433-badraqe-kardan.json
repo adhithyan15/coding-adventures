@@ -1,0 +1,11 @@
+{
+  "id": "FA-C433-badraqe-kardan",
+  "pathSegment": "FA-PATH-433-SAK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-433-SAK",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 461,
+  "title": "Paying",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c89d470dc895d642",
+  "lessons": [
+    {
+      "id": "FA-C461-kartkhan",
+      "sequence": 23600,
+      "title": "کارتخوان (kârtkhân) — a card machine, a card reader",
+      "headword": "کارتخوان",
+      "romanization": "kârtkhân",
+      "gloss": "a card machine, a card reader",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca2f0a1677e30f0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a fitting room, then the Persian for to like."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کارتخوان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کارتخوان (kârtkhân) — \"a card machine, a card reader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "کارتخوان (kârtkhân) نانوایی خراب بود. Kârtkhân-e nânvâyi kharâb bud. The bakery's card machine was out of order."
+            },
+            {
+              "kind": "speech",
+              "text": "kârt 'card' + khân 'reader', from khândan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kârtkhân is built from kârt 'card', which EtymDB takes from French carte, and native khân, the present stem of khândan 'to read'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kârtkhân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kârtkhân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kârtkhân, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kârtkhân*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kârtkhân",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kârtkhân*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a fitting room, then the Persian for to like, then say kârtkhân again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a fitting room, then the Persian for to like, then say *kârtkhân* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کارتخوان (kârtkhân) mean? (\"A card machine, a card reader\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C461-kart-be-kart-kardan",
+      "sequence": 23610,
+      "title": "کارت به کارت کردن (kârt-be-kârt kardan) — to transfer money from card to card",
+      "headword": "کارت به کارت کردن",
+      "romanization": "kârt-be-kârt kardan",
+      "gloss": "to transfer money from card to card",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:205e6c89fb159aef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to like, then the Persian for a card machine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کارت به کارت کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کارت به کارت کردن (kârt-be-kârt kardan) — \"to transfer money from card to card\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پول بلیت را برای دوستم کارت به کارت کردم. Pul-e bilit râ barâ-ye dustam kârt-be-kârt kardam. I transferred the ticket money to my friend by card."
+            },
+            {
+              "kind": "speech",
+              "text": "Very common in Iran: money goes from one bank card to another by phone or cash machine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kârt-be-kârt kardan is built from kârt 'card', which EtymDB takes from French carte, twice over with be 'to', and kardan 'to do', inherited from Middle Persian kardan (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kârt-be-kârt kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kârt-be-kârt kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kârt-be-kârt kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kârt-be-kârt kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kârt-be-kârt kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kârt-be-kârt kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to like, then the Persian for a card machine, then say kârt-be-kârt kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to like, then the Persian for a card machine, then say *kârt-be-kârt kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کارت به کارت کردن (kârt-be-kârt kardan) mean? (\"To transfer money from card to card\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C461-nesye",
+      "sequence": 23620,
+      "title": "نسیه (nesye) — on credit, on account (buying now and paying later)",
+      "headword": "نسیه",
+      "romanization": "nesye",
+      "gloss": "on credit, on account (buying now and paying later)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c996ebc02bf5a288",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a card machine, then the Persian for to transfer money from card to card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نسیه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نسیه (nesye) — \"on credit, on account (buying now and paying later)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بقال محله به ما نسیه میدهد. Baqqâl-e mahalle be mâ nesye midahad. The local grocer lets us buy on credit."
+            },
+            {
+              "kind": "speech",
+              "text": "Nesye kharidan — to buy on credit. The opposite is naqd 'cash'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nesye was borrowed from Arabic and is usually traced to Arabic nasīʾa 'deferment, sale on credit'. EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nesye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nesye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nesye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nesye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nesye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nesye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a card machine, then the Persian for to transfer money from card to card, then say nesye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a card machine, then the Persian for to transfer money from card to card, then say *nesye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نسیه (nesye) mean? (\"On credit, on account (buying now and paying later)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C461-pul-e-khord",
+      "sequence": 23630,
+      "title": "پول خرد (pul-e khord) — small change, coins",
+      "headword": "پول خرد",
+      "romanization": "pul-e khord",
+      "gloss": "small change, coins",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:233e75e9f300de0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to transfer money from card to card, then the Persian for on credit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پول خرد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پول خرد (pul-e khord) — \"small change, coins\"."
+            },
+            {
+              "kind": "speech",
+              "text": "راننده تاکسی پول خرد نداشت. Rânande-ye tâksi pul-e khord nadâsht. The taxi driver didn't have any change."
+            },
+            {
+              "kind": "speech",
+              "text": "pul 'money' + khord 'small'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pul-e khord is built from pul 'money', which EtymDB glosses 'change, small money', and native khord 'small, broken', usually traced to Middle Persian xward."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pul-e khord",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pul-e khord*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pul-e khord, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pul-e khord*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pul-e khord",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pul-e khord*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to transfer money from card to card, then the Persian for on credit, then say pul-e khord again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to transfer money from card to card, then the Persian for on credit, then say *pul-e khord* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پول خرد (pul-e khord) mean? (\"Small change, coins\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C461-sarrafi",
+      "sequence": 23640,
+      "title": "صرافی (sarrâfi) — a bureau de change, an exchange office",
+      "headword": "صرافی",
+      "romanization": "sarrâfi",
+      "gloss": "a bureau de change, an exchange office",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dffb5f33ea4f863",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for on credit, then the Persian for small change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صرافی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صرافی (sarrâfi) — \"a bureau de change, an exchange office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در صرافی دلار را به ریال تبدیل کردیم. Dar sarrâfi dolâr râ be riyâl tabdil kardim. At the exchange office we changed dollars into rials."
+            },
+            {
+              "kind": "speech",
+              "text": "The money changer is the sarrâf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sarrâfi is built from sarrâf 'money changer', a loan usually traced to Arabic ṣarrāf, and the Persian ending -i. EtymDB does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarrâfi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarrâfi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarrâfi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarrâfi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sarrâfi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sarrâfi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for on credit, then the Persian for small change, then say sarrâfi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for on credit, then the Persian for small change, then say *sarrâfi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صرافی (sarrâfi) mean? (\"A bureau de change, an exchange office\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:ce6906dc414131e4",
+  "lessonIds": [
+    "FA-C501-baradarzade",
+    "FA-C501-madarshohar",
+    "FA-C501-pedarzan",
+    "FA-C501-doqolu",
+    "FA-C501-farzand"
+  ],
+  "tex": "persian/book/chapters/ch501-in-laws-and-twins.tex"
+}

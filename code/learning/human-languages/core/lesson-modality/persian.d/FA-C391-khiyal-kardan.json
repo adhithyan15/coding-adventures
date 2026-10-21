@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C391-khiyal-kardan",
+    "language": "persian",
+    "chapter": 391,
+    "sequence": 20020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20701f94f80e2422"
+  },
+  "findings": []
+}

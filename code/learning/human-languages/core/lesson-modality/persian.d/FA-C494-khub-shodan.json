@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C494-khub-shodan",
+    "language": "persian",
+    "chapter": 494,
+    "sequence": 25350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e274ed905293307f"
+  },
+  "findings": []
+}

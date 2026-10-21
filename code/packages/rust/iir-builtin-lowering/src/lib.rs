@@ -100,6 +100,7 @@
 //!     language: "twig".into(),
 //!     exports: vec![],
 //!     imports: vec![],
+//!     release: None,
 //! };
 //!
 //! let errors = lower_builtins(&mut module);
@@ -282,6 +283,7 @@ pub fn lower_builtins(module: &mut IIRModule) -> Vec<BuiltinLoweringError> {
 ///     language: "twig".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 ///
 /// let (lowered, errors) = lower_builtins_cloned(&original);

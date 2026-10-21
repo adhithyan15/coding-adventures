@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 432,
+  "title": "At the airport",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:14588f0cdf8bd145",
+  "lessons": [
+    {
+      "id": "FA-C432-git",
+      "sequence": 22110,
+      "title": "گیت (git) — a gate (at an airport)",
+      "headword": "گیت",
+      "romanization": "git",
+      "gloss": "a gate (at an airport)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1d374aed7c0c746",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an airline, then the Persian for a boarding pass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گیت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گیت (git) — \"a gate (at an airport)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مسافران جلوی گیت شماره پنج صف کشیدند. Mosâferân jolow-ye git-e shomâre-ye panj saf keshidand. The passengers queued in front of gate number five."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the security gate you walk through."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "git was borrowed from English and is usually traced to English gate. EtymDB does not list the Persian word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "git",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *git*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "git, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *git*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with git",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *git*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an airline, then the Persian for a boarding pass, then say git again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an airline, then the Persian for a boarding pass, then say *git* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گیت (git) mean? (\"A gate (at an airport)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C432-gozarname",
+      "sequence": 22120,
+      "title": "گذرنامه (gozarnâme) — a passport (formal word)",
+      "headword": "گذرنامه",
+      "romanization": "gozarnâme",
+      "gloss": "a passport (formal word)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66d91435317e2bfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a boarding pass, then the Persian for a gate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: گذرنامه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "گذرنامه (gozarnâme) — \"a passport (formal word)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مامور فرودگاه گذرنامه من را نگاه کرد. Ma'mur-e forudgâh gozarnâme-ye man râ negâh kard. The airport officer looked at my passport."
+            },
+            {
+              "kind": "speech",
+              "text": "The formal word; in speech pâsport is more common. gozar 'passing' + nâme 'letter'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gozarnâme is a native compound, a letter for passing: gozar is the present stem of gozashtan 'to pass', which EtymDB traces to a Middle Persian verb 'to pass, to cross', and nâme 'letter' is usually traced to Middle Persian nāmag."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gozarnâme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gozarnâme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gozarnâme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gozarnâme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with gozarnâme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *gozarnâme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a boarding pass, then the Persian for a gate, then say gozarnâme again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a boarding pass, then the Persian for a gate, then say *gozarnâme* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does گذرنامه (gozarnâme) mean? (\"A passport (formal word)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C432-ezafe-bar",
+      "sequence": 22130,
+      "title": "اضافه بار (ezâfe-bâr) — excess baggage",
+      "headword": "اضافه بار",
+      "romanization": "ezâfe-bâr",
+      "gloss": "excess baggage",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a05c285d977d4e01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a gate, then the Persian for a passport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اضافه بار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اضافه بار (ezâfe-bâr) — \"excess baggage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "چمدان من سنگین بود و اضافه بار دادم. Chamedân-e man sangin bud va ezâfe-bâr dâdam. My suitcase was heavy and I paid for excess baggage."
+            },
+            {
+              "kind": "speech",
+              "text": "ezâfe 'extra' + bâr 'load, luggage'. Ezâfe-bâr dâdan — to pay for excess baggage."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ezâfe-bâr is built from ezâfe 'extra', borrowed from Arabic iḍāfa 'adding, an adjunct' (EtymDB), and native bâr 'load, burden', which EtymDB lists."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ezâfe-bâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ezâfe-bâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ezâfe-bâr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ezâfe-bâr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ezâfe-bâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ezâfe-bâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a gate, then the Persian for a passport, then say ezâfe-bâr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a gate, then the Persian for a passport, then say *ezâfe-bâr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اضافه بار (ezâfe-bâr) mean? (\"Excess baggage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C432-bazrasi-kardan",
+      "sequence": 22140,
+      "title": "بازرسی کردن (bâzrasi kardan) — to search, to inspect (bags or people)",
+      "headword": "بازرسی کردن",
+      "romanization": "bâzrasi kardan",
+      "gloss": "to search, to inspect (bags or people)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02798e0f8d1baa6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a passport, then the Persian for excess baggage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بازرسی کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بازرسی کردن (bâzrasi kardan) — \"to search, to inspect (bags or people)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در فرودگاه کیف مرا بازرسی کردند. Dar forudgâh kif-e marâ bâzrasi kardand. At the airport they searched my bag."
+            },
+            {
+              "kind": "speech",
+              "text": "bâzrasi 'inspection' + kardan. An inspector is a bâzras."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bâzrasi kardan is built from native bâzrasi 'inspection', from bâz 'again, back' and ras, the stem of residan 'to reach', and kardan 'to do', inherited from Middle Persian kardan (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâzrasi kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâzrasi kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bâzrasi kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bâzrasi kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bâzrasi kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bâzrasi kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a passport, then the Persian for excess baggage, then say bâzrasi kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a passport, then the Persian for excess baggage, then say *bâzrasi kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بازرسی کردن (bâzrasi kardan) mean? (\"To search, to inspect (bags or people)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C432-mehmandar",
+      "sequence": 22150,
+      "title": "مهماندار (mehmândâr) — a flight attendant; a host",
+      "headword": "مهماندار",
+      "romanization": "mehmândâr",
+      "gloss": "a flight attendant; a host",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dd3a03bbcc8a0e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for excess baggage, then the Persian for to search."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مهماندار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مهماندار (mehmândâr) — \"a flight attendant; a host\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مهماندار (mehmândâr) به ما آب و چای داد. Mehmândâr be mâ âb va chây dâd. The flight attendant gave us water and tea."
+            },
+            {
+              "kind": "speech",
+              "text": "mehmân 'guest' + dâr 'keeper'. On a plane it is the cabin crew."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mehmândâr is a native compound of mehmân 'guest' and dâr 'holder, keeper', from the stem of dâshtan 'to have, to hold'. EtymDB lists the compound without older forms."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehmândâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehmândâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehmândâr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehmândâr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mehmândâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mehmândâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for excess baggage, then the Persian for to search, then say mehmândâr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for excess baggage, then the Persian for to search, then say *mehmândâr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مهماندار (mehmândâr) mean? (\"A flight attendant; a host\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

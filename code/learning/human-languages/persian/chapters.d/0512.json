@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Teams and Fans",
+  "label": "ch:fa-teams-and-fans",
+  "canDo": "I can talk about teams, fans and points.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C512-emtiyaz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about teams, fans and points.",
+    "assesses": [
+      "FA-LEX-C512-FANS-03",
+      "FA-LEX-C512-FANS-04",
+      "FA-LEX-C512-FANS-05"
+    ]
+  }
+}

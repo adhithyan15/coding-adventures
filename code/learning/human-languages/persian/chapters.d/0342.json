@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Lights and fireworks",
+  "label": "ch:fa-lights-and-fireworks",
+  "canDo": "I can talk about decorating, festive lights, fireworks, a parade and joy.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C342-shadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can talk about decorating, festive lights, fireworks, a parade and joy.",
+    "assesses": [
+      "FA-LEX-C342-TAZYIN-03",
+      "FA-LEX-C342-TAZYIN-04",
+      "FA-LEX-C342-TAZYIN-05"
+    ]
+  }
+}

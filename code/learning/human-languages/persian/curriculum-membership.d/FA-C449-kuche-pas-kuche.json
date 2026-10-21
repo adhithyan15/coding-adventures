@@ -1,0 +1,11 @@
+{
+  "id": "FA-C449-kuche-pas-kuche",
+  "pathSegment": "FA-PATH-449-MASIRYAB",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-449-MASIRYAB",
+      "order": 4
+    }
+  ]
+}

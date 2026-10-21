@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C336-sarparasti",
+    "language": "persian",
+    "chapter": 336,
+    "sequence": 17180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:958952fcf43b361a"
+  },
+  "findings": []
+}

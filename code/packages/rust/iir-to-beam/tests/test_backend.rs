@@ -48,6 +48,7 @@ fn make_module_single(instrs: Vec<IIRInstr>) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -71,6 +72,7 @@ fn make_module_fn(
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -128,6 +130,7 @@ fn test_empty_module_rejected() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let errs = validate_for_beam(&module);
     assert!(!errs.is_empty(), "should reject empty module");
@@ -1181,6 +1184,7 @@ fn test_call_function() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let beam = lower_iir_to_beam(&module, &IIRBeamConfig::new("multi")).unwrap();
     assert!(has_opcode(&beam, OP_CALL), "expected call instruction");
@@ -1212,6 +1216,7 @@ fn test_multi_function_exports() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let beam = lower_iir_to_beam(&module, &IIRBeamConfig::new("two_fn")).unwrap();
     assert_eq!(beam.exports.len(), 2, "expected 2 exports for 2 functions");
@@ -1433,6 +1438,7 @@ fn test_46_alloc_lispy_pair_accepted_by_validator() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let errs = validate_for_beam(&module);
     assert!(
@@ -2307,6 +2313,7 @@ fn test_66_real_erl_closure_adder() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
 
     let errs = validate_for_beam(&module);
@@ -4125,6 +4132,7 @@ fn test_98_real_erl_call_closure_survives_live_across_call() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
 
     let errs = validate_for_beam(&module);
@@ -5866,6 +5874,7 @@ fn beam13_real_erl_repeated_closure_calls_keep_dispatch_valid() {
     let module = IIRModule {
         name: "iir_beam13_closure_stress".into(), functions: vec![helper, main],
         entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![],
+        release: None,
     };
     assert_eq!(beam13_run_real_erl(&module, "iir_beam13_closure_stress"), "7");
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C455-shahrbazi",
+    "language": "persian",
+    "chapter": 455,
+    "sequence": 23290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:690d3697a0ba63a5"
+  },
+  "findings": []
+}

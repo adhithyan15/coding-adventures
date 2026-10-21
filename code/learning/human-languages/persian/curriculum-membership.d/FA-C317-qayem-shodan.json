@@ -1,0 +1,11 @@
+{
+  "id": "FA-C317-qayem-shodan",
+  "pathSegment": "FA-PATH-317-TAQIB",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-317-TAQIB",
+      "order": 1
+    }
+  ]
+}

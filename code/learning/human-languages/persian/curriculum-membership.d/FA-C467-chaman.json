@@ -1,0 +1,11 @@
+{
+  "id": "FA-C467-chaman",
+  "pathSegment": "FA-PATH-467-BAGH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-467-BAGH",
+      "order": 3
+    }
+  ]
+}

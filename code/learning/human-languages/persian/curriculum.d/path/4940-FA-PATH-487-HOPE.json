@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-487-HOPE",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-487-HOPE"
+  ],
+  "after": []
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 537,
+  "title": "Changes at Home",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bca9645e18daa094",
+  "lessons": [
+    {
+      "id": "FA-C537-rang-kardan",
+      "sequence": 27520,
+      "title": "رنگ کردن (rang kardan) — to decorate with paint (a wall or room)",
+      "headword": "رنگ کردن",
+      "romanization": "rang kardan",
+      "gloss": "to decorate with paint (a wall or room)",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17ed6525e8290c7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for untidy, then the Persian for rubbish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رنگ کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رنگ کردن (rang kardan) — \"to decorate with paint (a wall or room)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ما دیوار اتاق را آبی رنگ کردیم. mâ divâr-e otâq râ âbi rang kardim. We painted the wall of the room blue."
+            },
+            {
+              "kind": "speech",
+              "text": "rang 'colour, paint' + kardan. For pictures, naqqâshi kardan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rang kardan is built on two inherited words: rang, 'colour', which EtymDB traces to a Middle Persian word for 'colour, dye' (EtymDB), and kardan, 'to do'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rang kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rang kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rang kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rang kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with rang kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *rang kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for untidy, then the Persian for rubbish, then say rang kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for untidy, then the Persian for rubbish, then say *rang kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رنگ کردن (rang kardan) mean? (\"To decorate with paint (a wall or room)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C537-kaghaz-divari",
+      "sequence": 27530,
+      "title": "کاغذ دیواری (kâghaz divâri) — wallpaper",
+      "headword": "کاغذ دیواری",
+      "romanization": "kâghaz divâri",
+      "gloss": "wallpaper",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bddc3f6d6f9697b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for rubbish, then the Persian for to decorate with paint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کاغذ دیواری",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کاغذ دیواری (kâghaz divâri) — \"wallpaper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "آنها کاغذ دیواری اتاق خواب را عوض کردند. ânhâ kâghaz divâri-ye otâq-e khâb râ 'avaz kardand. They changed the wallpaper in the bedroom."
+            },
+            {
+              "kind": "speech",
+              "text": "kâghaz 'paper' + divâri 'of the wall'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kâghaz divâri joins kâghaz, 'paper', which EtymDB traces to Sogdian, another Iranian language (EtymDB), and divâri, from divâr, 'wall', which it traces to Middle Persian (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kâghaz divâri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kâghaz divâri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kâghaz divâri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kâghaz divâri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kâghaz divâri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kâghaz divâri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for rubbish, then the Persian for to decorate with paint, then say kâghaz divâri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for rubbish, then the Persian for to decorate with paint, then say *kâghaz divâri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کاغذ دیواری (kâghaz divâri) mean? (\"Wallpaper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C537-jabeja-kardan",
+      "sequence": 27540,
+      "title": "جابجا کردن (jâbejâ kardan) — to move (things), to rearrange",
+      "headword": "جابجا کردن",
+      "romanization": "jâbejâ kardan",
+      "gloss": "to move (things), to rearrange",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d41d9928bbc47da0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to decorate with paint, then the Persian for wallpaper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جابجا کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جابجا کردن (jâbejâ kardan) — \"to move (things), to rearrange\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ما مبلها را جابجا کردیم. mâ moblhâ râ jâbejâ kardim. We moved the sofas around."
+            },
+            {
+              "kind": "speech",
+              "text": "jâ 'place' + be 'to' + jâ 'place': place to place. + kardan."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jâbejâ is built on native Persian jâ, 'place', which EtymDB traces to Middle Persian (EtymDB), said twice with be, 'to': from place to place. kardan is inherited."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jâbejâ kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jâbejâ kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jâbejâ kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jâbejâ kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with jâbejâ kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *jâbejâ kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to decorate with paint, then the Persian for wallpaper, then say jâbejâ kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to decorate with paint, then the Persian for wallpaper, then say *jâbejâ kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جابجا کردن (jâbejâ kardan) mean? (\"To move (things), to rearrange\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C537-kharab-shodan",
+      "sequence": 27550,
+      "title": "خراب شدن (kharâb shodan) — to break down; to go wrong",
+      "headword": "خراب شدن",
+      "romanization": "kharâb shodan",
+      "gloss": "to break down; to go wrong",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7f009fb7fca21a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for wallpaper, then the Persian for to move."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خراب شدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خراب شدن (kharâb shodan) — \"to break down; to go wrong\"."
+            },
+            {
+              "kind": "speech",
+              "text": "یخچال دیروز خراب شد. yakhchâl diruz kharâb shod. The fridge broke down yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "kharâb 'broken, ruined' + shodan 'to become'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kharâb comes from Arabic ḫarāb, 'ruin' (EtymDB). shodan, 'to become', is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharâb shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharâb shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kharâb shodan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kharâb shodan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with kharâb shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *kharâb shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for wallpaper, then the Persian for to move, then say kharâb shodan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for wallpaper, then the Persian for to move, then say *kharâb shodan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خراب شدن (kharâb shodan) mean? (\"To break down; to go wrong\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C537-sahebkhane",
+      "sequence": 27560,
+      "title": "صاحبخانه (sâhebkhâne) — a landlord, a landlady; the host",
+      "headword": "صاحبخانه",
+      "romanization": "sâhebkhâne",
+      "gloss": "a landlord, a landlady; the host",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e953406d5a2a332",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to move, then the Persian for to break down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صاحبخانه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صاحبخانه (sâhebkhâne) — \"a landlord, a landlady; the host\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صاحبخانه اجاره را بالا برد. sâhebkhâne ejâre râ bâlâ bord. The landlord put the rent up."
+            },
+            {
+              "kind": "speech",
+              "text": "sâheb 'owner' + khâne 'house'. Also the host at a party."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sâhebkhâne is built in Persian on sâheb, 'owner', from Arabic ṣāḥib, 'companion' (EtymDB), and native khâne, 'house'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sâhebkhâne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sâhebkhâne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sâhebkhâne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sâhebkhâne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with sâhebkhâne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *sâhebkhâne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to move, then the Persian for to break down, then say sâhebkhâne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to move, then the Persian for to break down, then say *sâhebkhâne* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صاحبخانه (sâhebkhâne) mean? (\"A landlord, a landlady; the host\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

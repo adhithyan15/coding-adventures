@@ -1,0 +1,20 @@
+{
+  "chapter": 294,
+  "title": "Asking The Way",
+  "label": "ch:fa-asking-the-way",
+  "canDo": "I can stop someone politely, ask how to get somewhere, and follow directions to the right, to the left and straight on.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R294-asking-the-way",
+    "kind": "production",
+    "summary": "Complete FA-R294-asking-the-way: ask the way to the station and repeat the directions back.",
+    "assesses": [
+      "FA-LEX-BEBAKHSHID-01",
+      "FA-GRAMMAR-CHETOR-MITAVANAM-01",
+      "FA-LEX-DAST-E-RAST-01",
+      "FA-GRAMMAR-POLITE-IMPERATIVE-01"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-434-PELLE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-434-PELLE"
+  ],
+  "after": []
+}

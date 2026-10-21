@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-388-ALUDEGI",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-388-ALUDEGI"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:04094f38f0f7fa79",
+  "lessonIds": [
+    "FA-C425-otoban",
+    "FA-C425-avarezi",
+    "FA-C425-shane-khaki",
+    "FA-C425-terafik",
+    "FA-C425-monharef-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch425.txt",
+  "json": "persian/narration/ch425.json",
+  "textHash": "fnv1a64:7cf2760e9adcb1d2",
+  "jsonHash": "fnv1a64:7429be79d6a0a248",
+  "findings": []
+}

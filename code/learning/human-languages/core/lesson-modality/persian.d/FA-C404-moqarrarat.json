@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C404-moqarrarat",
+    "language": "persian",
+    "chapter": 404,
+    "sequence": 20650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3529ecbd9e1d5ef8"
+  },
+  "findings": []
+}

@@ -2,6 +2,13 @@
 
 All notable changes to the TOML Parser package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Accept an optional token limit in `parseTOML` so bounded callers can stop
+  token allocation before parsing untrusted documents.
+
 ## [0.1.1] — 2026-05-21
 
 ### Changed

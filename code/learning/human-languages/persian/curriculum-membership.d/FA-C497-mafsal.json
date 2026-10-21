@@ -1,0 +1,11 @@
+{
+  "id": "FA-C497-mafsal",
+  "pathSegment": "FA-PATH-497-BONES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-497-BONES",
+      "order": 1
+    }
+  ]
+}

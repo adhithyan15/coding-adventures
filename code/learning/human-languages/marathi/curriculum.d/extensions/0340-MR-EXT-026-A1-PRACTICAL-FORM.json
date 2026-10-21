@@ -3,7 +3,7 @@
   "stage": "A1",
   "kind": "required",
   "category": "writing",
-  "canDo": "I can independently select and write six requested known values in a Marathi Devanagari practical form without a copyable answer model.",
+  "canDo": "I can independently select and write six requested known values in a Marathi Devanagari form, first untimed, then with a partial timer, then under a two-minute task timer.",
   "prerequisites": [
     "MR-EXT-024-A1-FORM-LABELS"
   ]

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:f298f12479d23201",
+  "lessonIds": [
+    "FA-C498-laghar-shodan",
+    "FA-C498-chaq-shodan",
+    "FA-C498-rezhim-gereftan",
+    "FA-C498-vitamin",
+    "FA-C498-chaqi"
+  ],
+  "tex": "persian/book/chapters/ch498-weight-and-diet.tex"
+}

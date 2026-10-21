@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:f022250ba999e62b",
+  "lessonIds": [
+    "FA-C341-mehmani-dadan",
+    "FA-C341-pazirayi-kardan",
+    "FA-C341-kado",
+    "FA-C341-badkonak",
+    "FA-C341-sham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch341.txt",
+  "json": "persian/narration/ch341.json",
+  "textHash": "fnv1a64:09d15d7147e7dec6",
+  "jsonHash": "fnv1a64:9fdd30153a1c1baa",
+  "findings": []
+}

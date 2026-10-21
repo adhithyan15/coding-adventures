@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "In the room",
+  "label": "ch:fa-in-the-room",
+  "canDo": "I can talk about the room: the sheets, the bedspread, the air conditioner, the heating and the view.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C439-manzare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can talk about the room: the sheets, the bedspread, the air conditioner, the heating and the view.",
+    "assesses": [
+      "FA-LEX-C439-MALAFE-03",
+      "FA-LEX-C439-MALAFE-04",
+      "FA-LEX-C439-MALAFE-05"
+    ]
+  }
+}

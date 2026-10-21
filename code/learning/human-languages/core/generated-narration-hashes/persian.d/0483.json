@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:ed8813395e7f566a",
+  "lessonIds": [
+    "FA-C483-sadeq",
+    "FA-C483-sedaqat",
+    "FA-C483-rok",
+    "FA-C483-dorugh-goftan",
+    "FA-C483-dorughgu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch483.txt",
+  "json": "persian/narration/ch483.json",
+  "textHash": "fnv1a64:f8a10206533d6185",
+  "jsonHash": "fnv1a64:7fed43563aaece22",
+  "findings": []
+}

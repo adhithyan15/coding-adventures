@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:6f271e6d64d93463",
+  "lessonIds": [
+    "FA-C314-ruydad",
+    "FA-C314-vaqee",
+    "FA-C314-bargozar-shodan",
+    "FA-C314-bargozar-kardan",
+    "FA-C314-sherkat-kardan"
+  ],
+  "tex": "persian/book/chapters/ch314-events-and-taking-part.tex"
+}

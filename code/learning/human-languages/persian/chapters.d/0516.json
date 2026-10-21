@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Keeping Fit",
+  "label": "ch:fa-keeping-fit",
+  "canDo": "I can talk about keeping fit.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C516-tanbali-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about keeping fit.",
+    "assesses": [
+      "FA-LEX-C516-FITNESS-03",
+      "FA-LEX-C516-FITNESS-04",
+      "FA-LEX-C516-FITNESS-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-495-ORGANS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-495-ORGANS"
+  ],
+  "after": []
+}

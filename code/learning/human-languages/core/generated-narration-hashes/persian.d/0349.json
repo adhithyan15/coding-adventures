@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:66012f3168bd0b89",
+  "lessonIds": [
+    "FA-C349-khiyanat-kardan",
+    "FA-C349-enteqam-gereftan",
+    "FA-C349-jangidan",
+    "FA-C349-koshtan",
+    "FA-C349-asir-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch349.txt",
+  "json": "persian/narration/ch349.json",
+  "textHash": "fnv1a64:70aec1272ad2494e",
+  "jsonHash": "fnv1a64:4624a28b88812347",
+  "findings": []
+}

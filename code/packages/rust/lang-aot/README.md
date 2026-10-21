@@ -30,7 +30,11 @@ an exact binary64 integer; the budget is tracked through parentheses and
 supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
 `2^53`, including exact additive composition; fractional factors, non-unit
-divisors, denominator roots, repeated roots, and oversized products stay
+integer division, denominator roots, repeated roots, and oversized products
+stay conservative. A non-unit static divisor is accepted only when it divides
+every possible exact integer value of the sign-rooted transform. Static
+whole-number factors may precede the sign-rooted numerator when multiplication
+alone connects them to that root; a division before the root stays
 conservative. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
@@ -221,8 +225,8 @@ GC-linked integration tests use the static archive path reported by Cargo, so
 builds the archive in an isolated temporary target directory containing spaces.
 
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
-BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, and Macsyma** to
-native executables through the shared LANG VM chain.
+BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, Macsyma, and
+Perl** to native executables through the shared LANG VM chain.
 
 The language matrix compares text output using LF line endings, accepting the
 equivalent CRLF produced by Windows text runtimes. It preserves lone carriage
@@ -693,6 +697,43 @@ kind; the conformance suite proves that ("print, then trap") on WASM, VM, JIT,
 LLVM, native and JVM. Modules using the PR1b i64 operations keep the wide i64
 value model on the JVM (they are never narrowed to `i32`). See
 `code/specs/LANG83-iir-standard-operation-registry.md`.
+
+**Perl (LANG84 phases 4a, 4b).** `--lang perl` (or `pl`, or a `.pl` file)
+compiles the bounded LANG81 integer `print` subset with `perl-iir-compiler` on
+its default release, `5.38.0`; `--lang perl@<release>` selects any other
+checked row of `code/grammars/perl/releases.csv` exactly. Perl's `print` is `write_i64`, so no backend has Perl-specific
+code. Eleven `lang_matrix` rows declare all eight executable columns, and three
+named tests guard them:
+
+```sh
+cargo test -p lang-aot --test lang_matrix perl_rows_ -- --nocapture
+```
+
+`perl_rows_agree_with_the_host_perl_oracle` re-checks every expected output
+against a host `perl` (the compiled programs never run on it), and
+`perl_rows_pass_the_lang83_check_on_all_nine_backends` runs
+`check_module_for` on all nine backends.
+
+Release selection (LANG84 phase 4b) is the same for the library and the CLI:
+
+```rust
+use lang_aot::{compile_source_to_iir_at, Language, LanguageRequest};
+
+let m = compile_source_to_iir_at(Language::Perl, Some("5.004_72"), "print(1);", "p")?;
+assert_eq!(m.release.as_deref(), Some("5.004_72"));
+// Every compile_file_to_* entry point takes a Language or a LanguageRequest.
+let request = LanguageRequest::parse("perl@5.004_72")?;
+```
+
+```sh
+lang-aot prog.pl --lang perl@5.004_72 --emit=llvm-ir
+```
+
+An ID outside the inventory (`perl@5.38`) is `LangAotError::UnknownRelease`
+with up to five inventory IDs sharing its longest prefix; an inventoried ID
+whose pair is still pending (`perl@1.001`) is `ReleaseNotAvailable`; a
+release for a language without an inventory (`twig@1`) is `UnknownRelease`.
+Nothing falls back to another release.
 
 Since LANG83 PR4 every backend also lowers the overflow-checked
 `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` and `i64_neg_ovf`: the exact
