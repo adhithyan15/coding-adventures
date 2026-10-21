@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+**Rebuilt for the lexer's borrowed callback context (#17914).** The generic
+`lexer` crate changed (`LexerContext::previous_token` is borrowed, not
+cloned), so the `.wasm`'s inputs digest changed. `pkg/spreadsheet_engine.wasm`,
+its `.inputs` stamp and the VisiCalc HTML bundle are regenerated;
+`js/smoke.mjs` and `verify-infinite.mjs` pass.
+
 **The committed `.wasm` is checked against its sources.** `pkg/spreadsheet_engine.wasm`
 had not been rebuilt since 0.14.1 (#7713), so spreadsheet-core fixes such as
 #15541 never reached the VisiCalc web demos that embed it. It is rebuilt now,

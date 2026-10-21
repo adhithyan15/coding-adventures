@@ -6,6 +6,13 @@ All notable changes to the `coding-adventures-javascript-lexer` crate will be do
 
 ### Fixed
 
+- **Security review: no quadratic lexing after a huge token.** Each `-->`
+  comment suppresses two tokens, and the generic lexer copied the last emitted
+  token into every callback context, so a 1 MB string followed by 100,000
+  comment lines allocated about 200 GB. `lexer` now lends that token instead
+  (#17914). `tests/html_close_linear.rs` counts allocated bytes with a
+  counting global allocator and fails if a 200 KB string before 20,000
+  comment lines costs more than 64× its size (the copy cost 8 GB).
 - Annex B `SingleLineHTMLCloseComment`: a `-->` that leads its line (after a
   line terminator, optional whitespace and same-line `/* */` comments, after a
   `/* */` that contains a line terminator, or at the start of the input) is now

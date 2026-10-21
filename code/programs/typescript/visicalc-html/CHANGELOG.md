@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed — engine bundle regenerated (#17914)
+
+- `vendor/spreadsheet-engine-wasm.js` re-embeds `spreadsheet-wasm`'s rebuilt
+  `.wasm` after the generic lexer changed.
+
 ### Changed — generated pieces are written by scripts and checked
 
 - `scripts/build.sh` writes the compiled FormulaBar and Grid fragments into

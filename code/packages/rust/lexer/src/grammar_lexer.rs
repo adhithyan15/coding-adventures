@@ -159,7 +159,12 @@ pub struct LexerContext<'a> {
     /// For example, in JavaScript `/` is a regex literal after `=`, `(`
     /// or `,` but a division operator after `)`, `]`, identifiers, or
     /// numbers. The callback can check `ctx.previous_token()` to decide.
-    previous_token: Option<Token>,
+    ///
+    /// Borrowed, not cloned: a callback can suppress any number of tokens in
+    /// a row (JavaScript's Annex B `-->` comment suppresses two per line), and
+    /// each callback call used to copy this token. A huge string followed by
+    /// many suppressed tokens made lexing quadratic.
+    previous_token: Option<&'a Token>,
 
     /// Per-type bracket nesting depths: (paren, bracket, brace).
     ///
@@ -273,7 +278,7 @@ impl<'a> LexerContext<'a> {
     /// suppressed tokens are not counted. This provides lookbehind
     /// capability for context-sensitive decisions.
     pub fn previous_token(&self) -> Option<&Token> {
-        self.previous_token.as_ref()
+        self.previous_token
     }
 
     // -----------------------------------------------------------------------
@@ -1302,7 +1307,7 @@ impl<'a> GrammarLexer<'a> {
                         pos_after_token: self.byte_pos,
                         actions: Vec::new(),
                         suppressed: false,
-                        previous_token: self.last_emitted_token.clone(),
+                        previous_token: self.last_emitted_token.as_ref(),
                         bracket_depths: self.bracket_depths.clone(),
                         current_token_line: token.line,
                     };
@@ -1313,18 +1318,26 @@ impl<'a> GrammarLexer<'a> {
                     // Put it back.
                     self.on_token = Some(callback);
 
+                    // Consume the context: it borrows `last_emitted_token`,
+                    // which is reassigned below.
+                    let LexerContext {
+                        actions: ctx_actions,
+                        suppressed: ctx_suppressed,
+                        ..
+                    } = ctx;
+
                     // Apply suppression: if the callback suppressed this
                     // token, don't add it to the output.
                     //
                     // F10: capture the (emitted) main token so the declarative
                     // table can fire on IT after the callback's own actions —
                     // not on a callback-synthetic Emit token.
-                    let main_token_for_trans = if ctx.suppressed {
+                    let main_token_for_trans = if ctx_suppressed {
                         None
                     } else {
                         Some(token.clone())
                     };
-                    if !ctx.suppressed {
+                    if !ctx_suppressed {
                         self.bracket_depths.update(&token.value);
                         // Template-substitution depth tracking (gap-044b).
                         match name.as_str() {
@@ -1341,7 +1354,7 @@ impl<'a> GrammarLexer<'a> {
                     }
 
                     // Process actions in order.
-                    for action in ctx.actions {
+                    for action in ctx_actions {
                         match action {
                             ContextAction::Push(group_name) => {
                                 self.group_stack.push(group_name);
