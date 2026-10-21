@@ -9,7 +9,7 @@
 pub const VERSION: &str = "0.147.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 
 use diagram_ir::{
     BlockArrowDirections, BoardCard, BoardColumn, BoardConfig, BoardDiagram, DiagramDirection, DiagramLabel,
@@ -7020,6 +7020,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         optimize_ranks_by_crossings,
         flowchart_config,
         theme,
+        icons: BTreeMap::new(),
     };
     let mut current_lane: Option<usize> = None;
     let mut group_stack = Vec::<usize>::new();
@@ -7154,6 +7155,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             line,
             line_number,
             current_lane.map(|lane| diagram.lanes[lane].id.clone()),
+            &mut diagram.icons,
         )?;
         upsert_swimlane_node(&mut diagram, node, current_lane, group_stack.last().copied());
     }
@@ -7849,6 +7851,7 @@ fn parse_swimlane_edge_chain(
             &line[..operator.at],
             line_number,
             lane.map(|index| diagram.lanes[index].id.clone()),
+            &mut diagram.icons,
         )?;
         let previous = first.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
         for node in first {
@@ -7890,6 +7893,7 @@ fn parse_swimlane_edge_chain(
             node_text,
             line_number,
             lane.map(|index| diagram.lanes[index].id.clone()),
+            &mut diagram.icons,
         )?;
         let next_ids = nodes.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
         for from in &previous {
@@ -7933,6 +7937,7 @@ fn parse_swimlane_node_group(
     value: &str,
     line: usize,
     lane_id: Option<String>,
+    icons: &mut BTreeMap<String, String>,
 ) -> Result<Vec<SwimlaneNode>, ParseError> {
     let mut nodes = Vec::new();
     let mut start = 0;
@@ -7946,13 +7951,14 @@ fn parse_swimlane_node_group(
                     &value[start..index],
                     line,
                     lane_id.clone(),
+                    icons,
                 )?);
                 start = index + character.len_utf8();
             }
             _ => {}
         }
     }
-    nodes.push(parse_swimlane_node(&value[start..], line, lane_id)?);
+    nodes.push(parse_swimlane_node(&value[start..], line, lane_id, icons)?);
     Ok(nodes)
 }
 
@@ -8199,6 +8205,7 @@ fn parse_swimlane_node(
     value: &str,
     line: usize,
     lane_id: Option<String>,
+    icons: &mut BTreeMap<String, String>,
 ) -> Result<SwimlaneNode, ParseError> {
     let (value, classes) = split_swimlane_class_decorators(value.trim());
     let id_end = value
@@ -8212,7 +8219,11 @@ fn parse_swimlane_node(
     let (label, shape) = if suffix.is_empty() {
         (id.to_string(), DiagramShape::RoundedRect)
     } else if suffix.starts_with("@{") {
-        parse_swimlane_shape_attributes(suffix, id, line)?
+        let (label, shape, icon) = parse_swimlane_shape_attributes(suffix, id, line)?;
+        if let Some(icon) = icon {
+            icons.insert(id.to_string(), icon);
+        }
+        (label, shape)
     } else if suffix.starts_with("(((") && suffix.ends_with(")))") {
         (
             suffix[3..suffix.len() - 3].to_string(),
@@ -8307,11 +8318,12 @@ fn parse_swimlane_shape_attributes(
     suffix: &str,
     default_label: &str,
     line: usize,
-) -> Result<(String, DiagramShape), ParseError> {
+) -> Result<(String, DiagramShape, Option<String>), ParseError> {
     let body = suffix.strip_prefix("@{").and_then(|value| value.strip_suffix('}'))
         .ok_or_else(|| swimlane_error(line, "unterminated Swimlane shape attributes"))?;
     let mut label = None;
     let mut shape = None;
+    let mut icon = None;
     for field in split_mermaid_metadata_fields(body) {
         let (key, value) = field.split_once(':')
             .ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require key: value"))?;
@@ -8319,6 +8331,12 @@ fn parse_swimlane_shape_attributes(
         let value = parse_mermaid_metadata_scalar(value.trim());
         match key.as_str() {
             "label" => label = Some(value),
+            "icon" => {
+                if value.trim().is_empty() {
+                    return Err(swimlane_error(line, "Swimlane icon identity must not be empty"));
+                }
+                icon = Some(value);
+            }
             "shape" => {
                 shape = Some(match value.to_ascii_lowercase().as_str() {
                     "rect" | "proc" | "process" | "rectangle" | "squarerect" => DiagramShape::Rect,
@@ -8379,8 +8397,9 @@ fn parse_swimlane_shape_attributes(
             other => return Err(swimlane_error(line, format!("unsupported Swimlane shape attribute {other:?}"))),
         }
     }
-    let shape = shape.ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require shape"))?;
-    Ok((label.unwrap_or_else(|| default_label.to_string()), shape))
+    let shape = shape.or_else(|| icon.as_ref().map(|_| DiagramShape::RoundedRect))
+        .ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require shape"))?;
+    Ok((label.unwrap_or_else(|| default_label.to_string()), shape, icon))
 }
 
 fn split_swimlane_class_decorators(value: &str) -> (&str, Vec<String>) {

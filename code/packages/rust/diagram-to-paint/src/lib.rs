@@ -1552,7 +1552,7 @@ where
             if let Some(family) = &node.style.font_family {
                 label_font.family.clone_from(family);
             }
-            let (label_x, label_y, label_width, label_height) = match node.shape {
+            let (mut label_x, mut label_y, mut label_width, mut label_height) = match node.shape {
                 DiagramShape::CurlyBraceLeft => (node.x + 22.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
                 DiagramShape::CurlyBraceRight => (node.x + 8.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
                 DiagramShape::CurlyBraces => (node.x + 22.0, node.y + 10.0, node.width - 44.0, node.height - 16.0),
@@ -1585,6 +1585,21 @@ where
                     ),
                 ),
             };
+            if diagram.icons.contains_key(&node.id) {
+                label_x = node.x + 8.0;
+                label_y = node.y + 38.0;
+                label_width = node.width - 16.0;
+                label_height = (node.height - 42.0).max(1.0);
+            }
+            if let Some(glyph) = diagram.icon_glyphs.get(&node.id) {
+                let mut icon_font = label_font.clone();
+                icon_font.family.clone_from(&glyph.font_family);
+                icon_font.size = 24.0;
+                text_children.push(text_node(
+                    &glyph.text, node.x + 8.0, node.y + 5.0, node.width - 16.0, 32.0,
+                    icon_font, text_color,
+                ));
+            }
             if node.label.markdown.is_some() {
                 let label_color = node.style.text_color.as_deref()
                     .or(diagram.theme.node_text_color.as_deref())
@@ -1738,6 +1753,13 @@ where
         if let Some(parent_id) = &group.parent_id {
             metadata.insert(format!("swimlane.group.{index}.parent"), parent_id.clone());
         }
+    }
+    for (node_id, icon) in &diagram.icons {
+        metadata.insert(format!("swimlane.node.{node_id}.icon"), icon.clone());
+        metadata.insert(
+            format!("swimlane.node.{node_id}.iconResolved"),
+            diagram.icon_glyphs.contains_key(node_id).to_string(),
+        );
     }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {
