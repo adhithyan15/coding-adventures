@@ -8031,6 +8031,7 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
             _ => 1,
         },
     }))
+    .chain(long_swimlane_operator(value))
     .min_by_key(|operator| (operator.at, usize::MAX - operator.len));
     let labeled = [
         labeled_swimlane_operator_family(
@@ -8052,6 +8053,64 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
         (None, labeled) => labeled,
     }?;
     Some(swimlane_operator_with_id(value, operator))
+}
+
+fn long_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
+    let bytes = value.as_bytes();
+    let mut operators = Vec::new();
+    for at in 0..bytes.len() {
+        let (repeated, minimum, directed_kind, undirected_kind) = match bytes[at] {
+            b'-' if bytes.get(at + 1) == Some(&b'-') => (
+                b'-', 5, SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Undirected,
+            ),
+            b'=' => (b'=', 5, SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick),
+            b'-' if bytes.get(at + 1) == Some(&b'.') => {
+                let dots = bytes[at + 1..].iter().take_while(|byte| **byte == b'.').count();
+                let terminator = at + dots + 1;
+                if dots >= 4 && bytes.get(terminator) == Some(&b'-') {
+                    let directed = bytes.get(terminator + 1) == Some(&b'>');
+                    operators.push(SwimlaneOperator {
+                        at,
+                        len: dots + if directed { 3 } else { 2 },
+                        kind: SwimlaneEdgeKind::Dotted,
+                        start_marker: EdgeMarker::None,
+                        end_marker: if directed { EdgeMarker::Point } else { EdgeMarker::None },
+                        label: None,
+                        min_length: dots,
+                        id: None,
+                    });
+                }
+                continue;
+            }
+            _ => continue,
+        };
+        let run = bytes[at..].iter().take_while(|byte| **byte == repeated).count();
+        let directed = bytes.get(at + run) == Some(&b'>');
+        if directed && run >= minimum {
+            operators.push(SwimlaneOperator {
+                at,
+                len: run + 1,
+                kind: directed_kind,
+                start_marker: EdgeMarker::None,
+                end_marker: EdgeMarker::Point,
+                label: None,
+                min_length: run - 1,
+                id: None,
+            });
+        } else if !directed && run > minimum {
+            operators.push(SwimlaneOperator {
+                at,
+                len: run,
+                kind: undirected_kind,
+                start_marker: EdgeMarker::None,
+                end_marker: EdgeMarker::None,
+                label: None,
+                min_length: run - 2,
+                id: None,
+            });
+        }
+    }
+    operators.into_iter().min_by_key(|operator| (operator.at, usize::MAX - operator.len))
 }
 
 fn swimlane_operator_with_id(value: &str, mut operator: SwimlaneOperator) -> SwimlaneOperator {
