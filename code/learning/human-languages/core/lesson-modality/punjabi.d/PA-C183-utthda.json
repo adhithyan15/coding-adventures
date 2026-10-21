@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C183-utthda",
+    "language": "punjabi",
+    "chapter": 183,
+    "sequence": 9680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:929e0dd386953a14"
+  },
+  "findings": []
+}
