@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Dawn, morning and the day after",
+  "label": "ch:fa-dawn-morning-and-the-day-after",
+  "canDo": "I can say at what time of day something happened, what happened the day after, and for how long.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C305-shabane-ruz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say at what time of day something happened, what happened the day after, and for how long.",
+    "assesses": [
+      "FA-LEX-C305-SEPIDEDAM-03",
+      "FA-LEX-C305-SEPIDEDAM-04",
+      "FA-LEX-C305-SEPIDEDAM-05"
+    ]
+  }
+}

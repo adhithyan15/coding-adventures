@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Rules",
+  "label": "ch:fa-rules",
+  "canDo": "I can say what the regulations are, what is forbidden and what is allowed, and whether people keep or break the rules.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C404-naqz-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can say what the regulations are, what is forbidden and what is allowed, and whether people keep or break the rules.",
+    "assesses": [
+      "FA-LEX-C404-MOQARRARAT-03",
+      "FA-LEX-C404-MOQARRARAT-04",
+      "FA-LEX-C404-MOQARRARAT-05"
+    ]
+  }
+}

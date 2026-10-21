@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:46b0970bebdb853a",
+  "lessonIds": [
+    "FA-C424-sorat",
+    "FA-C424-sorat-gereftan",
+    "FA-C424-sebqat-gereftan",
+    "FA-C424-kenar-zadan",
+    "FA-C424-imeni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch424.txt",
+  "json": "persian/narration/ch424.json",
+  "textHash": "fnv1a64:e81f7650489d1a60",
+  "jsonHash": "fnv1a64:64ad5bf9a12cc964",
+  "findings": []
+}

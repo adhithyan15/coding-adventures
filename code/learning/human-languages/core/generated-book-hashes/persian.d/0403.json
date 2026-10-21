@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:042e4fa2d8017038",
+  "lessonIds": [
+    "FA-C403-faregh-ot-tahsil",
+    "FA-C403-tahsilat",
+    "FA-C403-erae-dadan",
+    "FA-C403-lisans",
+    "FA-C403-doktora"
+  ],
+  "tex": "persian/book/chapters/ch403-degrees-and-graduation.tex"
+}

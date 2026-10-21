@@ -1,0 +1,11 @@
+{
+  "id": "FA-C437-eqamat-kardan",
+  "pathSegment": "FA-PATH-437-MOSAFERKHANE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-437-MOSAFERKHANE",
+      "order": 4
+    }
+  ]
+}

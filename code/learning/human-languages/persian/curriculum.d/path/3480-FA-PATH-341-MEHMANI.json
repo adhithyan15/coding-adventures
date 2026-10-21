@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-341-MEHMANI",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-341-MEHMANI"
+  ],
+  "after": []
+}

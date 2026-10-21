@@ -25,7 +25,7 @@ Source
 
 | Type | Description |
 |------|-------------|
-| `IIRModule` | Top-level container: functions + entry point + language tag |
+| `IIRModule` | Top-level container: functions + entry point + language tag + the source release it was compiled against (`release`, LANG84; `None` for languages without a release inventory) |
 | `IIRFunction` | Named, parameterised sequence of `IIRInstr` |
 | `IIRInstr` | One instruction: `op`, `dest`, `srcs`, `type_hint`, profiling fields |
 | `Operand` | Instruction operand: `Var(name)`, `Int`, `Float`, `Bool`, or `Str` |

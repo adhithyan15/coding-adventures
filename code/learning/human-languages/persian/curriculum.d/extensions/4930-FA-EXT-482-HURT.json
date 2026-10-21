@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-482-HURT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when someone is hurt or offended.",
+  "prerequisites": []
+}

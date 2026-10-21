@@ -1,0 +1,11 @@
+{
+  "id": "FA-C538-sard-shodan",
+  "pathSegment": "FA-PATH-538-APPLIANCES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-538-APPLIANCES",
+      "order": 4
+    }
+  ]
+}

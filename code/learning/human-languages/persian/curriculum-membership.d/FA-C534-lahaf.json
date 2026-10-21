@@ -1,0 +1,11 @@
+{
+  "id": "FA-C534-lahaf",
+  "pathSegment": "FA-PATH-534-FURNISH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-534-FURNISH",
+      "order": 4
+    }
+  ]
+}

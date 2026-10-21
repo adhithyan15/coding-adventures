@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "In court",
+  "label": "ch:fa-in-court",
+  "canDo": "I can talk about a trial, the judge, the accused and the witnesses, and the verdict.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C406-mohakeme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can talk about a trial, the judge, the accused and the witnesses, and the verdict.",
+    "assesses": [
+      "FA-LEX-C406-QAZI-03",
+      "FA-LEX-C406-QAZI-04",
+      "FA-LEX-C406-QAZI-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Opinions and beliefs",
+  "label": "ch:fa-opinions-and-beliefs",
+  "canDo": "I can give my opinion and my point of view, say what I believe and name a theory.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C360-nazariye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can give my opinion and my point of view, say what I believe and name a theory.",
+    "assesses": [
+      "FA-LEX-C360-AQIDE-03",
+      "FA-LEX-C360-AQIDE-04",
+      "FA-LEX-C360-AQIDE-05"
+    ]
+  }
+}

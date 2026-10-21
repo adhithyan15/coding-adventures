@@ -1,0 +1,11 @@
+{
+  "id": "FA-C510-khosh-gozashtan",
+  "pathSegment": "FA-PATH-510-LEISURE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-510-LEISURE",
+      "order": 3
+    }
+  ]
+}

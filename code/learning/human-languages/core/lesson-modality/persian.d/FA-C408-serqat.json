@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C408-serqat",
+    "language": "persian",
+    "chapter": 408,
+    "sequence": 20870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e5b51f4d798ece6b"
+  },
+  "findings": []
+}

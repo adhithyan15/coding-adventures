@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:59ef3520ec805203",
+  "lessonIds": [
+    "FA-C519-avaz-khandan",
+    "FA-C519-zemzeme-kardan",
+    "FA-C519-tarane",
+    "FA-C519-ritm",
+    "FA-C519-not",
+    "FA-R519-review-512-519"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch519.txt",
+  "json": "persian/narration/ch519.json",
+  "textHash": "fnv1a64:f3af86310c8f0c1e",
+  "jsonHash": "fnv1a64:3f8689608a76d983",
+  "findings": []
+}

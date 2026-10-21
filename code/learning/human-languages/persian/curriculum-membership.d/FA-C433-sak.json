@@ -1,0 +1,11 @@
+{
+  "id": "FA-C433-sak",
+  "pathSegment": "FA-PATH-433-SAK",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-433-SAK",
+      "order": 0
+    }
+  ]
+}

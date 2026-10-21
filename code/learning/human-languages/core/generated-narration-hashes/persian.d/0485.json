@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:dc85cf82fa1a7391",
+  "lessonIds": [
+    "FA-C485-ezterab",
+    "FA-C485-esteres",
+    "FA-C485-delshure",
+    "FA-C485-kalafe",
+    "FA-C485-ah-keshidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch485.txt",
+  "json": "persian/narration/ch485.json",
+  "textHash": "fnv1a64:482073659c88dc29",
+  "jsonHash": "fnv1a64:e1cc4506fe3ccd6c",
+  "findings": []
+}

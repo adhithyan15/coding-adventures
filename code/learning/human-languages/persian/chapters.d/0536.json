@@ -1,0 +1,19 @@
+{
+  "chapter": 536,
+  "title": "Tidying Up",
+  "label": "ch:fa-tidying-up",
+  "canDo": "I can talk about tidying and cleaning.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C536-ashghal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can talk about tidying and cleaning.",
+    "assesses": [
+      "FA-LEX-C536-CHORES-03",
+      "FA-LEX-C536-CHORES-04",
+      "FA-LEX-C536-CHORES-05"
+    ]
+  }
+}

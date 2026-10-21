@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:e0ea163e7f6b3d8e",
+  "lessonIds": [
+    "FA-C361-movafeqat-kardan",
+    "FA-C361-mokhalefat-kardan",
+    "FA-C361-mokhalef",
+    "FA-C361-bavar-dashtan",
+    "FA-C361-shak-dashtan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch361.txt",
+  "json": "persian/narration/ch361.json",
+  "textHash": "fnv1a64:ea2289404c7a4aa9",
+  "jsonHash": "fnv1a64:092033e64337f696",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:2c2f2e491a258c9c",
+  "lessonIds": [
+    "FA-C351-sepah",
+    "FA-C351-nabard",
+    "FA-C351-piruzi",
+    "FA-C351-shekast-dadan",
+    "FA-C351-fath-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch351.txt",
+  "json": "persian/narration/ch351.json",
+  "textHash": "fnv1a64:78cb1da5d6f6065c",
+  "jsonHash": "fnv1a64:12f76878924a19a4",
+  "findings": []
+}

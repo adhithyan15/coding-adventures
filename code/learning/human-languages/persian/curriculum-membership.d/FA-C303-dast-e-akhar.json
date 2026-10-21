@@ -1,0 +1,11 @@
+{
+  "id": "FA-C303-dast-e-akhar",
+  "pathSegment": "FA-PATH-303-EBTEDA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-303-EBTEDA",
+      "order": 3
+    }
+  ]
+}

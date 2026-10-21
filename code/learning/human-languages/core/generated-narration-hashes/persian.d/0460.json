@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:fda66a2bb397f935",
+  "lessonIds": [
+    "FA-C460-vitrin",
+    "FA-C460-pasazh",
+    "FA-C460-porov-kardan",
+    "FA-C460-otaq-e-porov",
+    "FA-C460-pasandidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch460.txt",
+  "json": "persian/narration/ch460.json",
+  "textHash": "fnv1a64:05472c8bc69b1b90",
+  "jsonHash": "fnv1a64:6a019867cd80880d",
+  "findings": []
+}

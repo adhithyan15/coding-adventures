@@ -1,0 +1,11 @@
+{
+  "id": "FA-C385-mazhab",
+  "pathSegment": "FA-PATH-385-JAMEE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-385-JAMEE",
+      "order": 4
+    }
+  ]
+}

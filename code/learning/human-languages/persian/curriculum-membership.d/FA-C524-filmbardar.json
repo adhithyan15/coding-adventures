@@ -1,0 +1,11 @@
+{
+  "id": "FA-C524-filmbardar",
+  "pathSegment": "FA-PATH-524-FILM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-524-FILM",
+      "order": 2
+    }
+  ]
+}

@@ -1,7 +1,10 @@
 use der_asn1::Asn1Limits;
+use std::cell::Cell;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
-    validate_certificate_role_extensions, X509CertificateRole, X509CertificateRoleErrorKind,
+    validate_certificate_role_extensions, validate_certificate_role_policy,
+    X509CertificatePolicyErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
+    X509CertificateRolePolicyErrorKind,
 };
 use x509_key_usage::KeyUsageBit;
 
@@ -335,4 +338,95 @@ fn one_semantic_budget_is_shared_across_known_extensions() {
         X509CertificateRoleErrorKind::InvalidExtendedKeyUsage
     );
     assert_eq!(error.extension_index(), Some(2));
+}
+
+#[test]
+fn binds_critical_extension_and_role_checks_to_the_exact_certificate() {
+    let encoded = certificate(&[
+        basic_constraints(true, true),
+        key_usage(5, true),
+        extended_key_usage(false),
+    ]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let calls = Cell::new(0);
+
+    let evidence = validate_certificate_role_policy(
+        &certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| {
+            let call = calls.get();
+            calls.set(call + 1);
+            match call {
+                0 => oid.equals(&[2, 5, 29, 19]),
+                1 => oid.equals(&[2, 5, 29, 15]),
+                _ => false,
+            }
+        },
+    )
+    .unwrap();
+
+    assert_eq!(calls.get(), 2);
+    assert!(std::ptr::eq(evidence.certificate(), &certificate));
+    assert_eq!(
+        evidence.role_extensions().role(),
+        X509CertificateRole::IssuingCertificateAuthority
+    );
+    assert!(evidence
+        .role_extensions()
+        .key_usage()
+        .unwrap()
+        .contains(KeyUsageBit::KeyCertSign));
+}
+
+#[test]
+fn rejects_unknown_critical_extensions_before_role_acceptance() {
+    let extensions = [
+        extension(&[0x2a, 0x03], true, &der(0x05, &[])),
+        basic_constraints(true, true),
+    ];
+    let encoded = certificate(&extensions);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let calls = Cell::new(0);
+
+    let error = validate_certificate_role_policy(
+        &certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| {
+            calls.set(calls.get() + 1);
+            false
+        },
+    )
+    .unwrap_err();
+
+    assert_eq!(calls.get(), 1);
+    assert_eq!(
+        error.kind(),
+        X509CertificateRolePolicyErrorKind::CriticalExtension(
+            X509CertificatePolicyErrorKind::UnsupportedCriticalExtension
+        )
+    );
+    assert_eq!(error.extension_index(), Some(0));
+    assert!(!error.to_string().contains("1.2.3"));
+}
+
+#[test]
+fn reports_role_failure_after_all_critical_extensions_are_recognized() {
+    let encoded = certificate(&[basic_constraints(true, true)]);
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+
+    let error = validate_certificate_role_policy(
+        &certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509CertificateRolePolicyErrorKind::Role(X509CertificateRoleErrorKind::MissingKeyUsage)
+    );
+    assert_eq!(error.extension_index(), None);
 }

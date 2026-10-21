@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 396,
+  "title": "Changing plans",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9d3b9cc71d729ea9",
+  "lessons": [
+    {
+      "id": "FA-C396-monsaref-shodan",
+      "sequence": 20240,
+      "title": "منصرف شدن (monsaref shodan) — to change one's mind, to give up an idea",
+      "headword": "منصرف شدن",
+      "romanization": "monsaref shodan",
+      "gloss": "to change one's mind, to give up an idea",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0823e8701957a411",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for as soon as, then the Persian for as long as."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منصرف شدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منصرف شدن (monsaref shodan) — \"to change one's mind, to give up an idea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "او از سفر منصرف شد. u az safar monsaref shod. He decided not to go on the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes az: az chizi monsaref shodan. Stem shav-."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منصرف is usually traced to Arabic munṣarif \"turning away\"; with the Persian verb shodan \"to become\", you turn away from a plan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "monsaref shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *monsaref shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "monsaref shodan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *monsaref shodan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with monsaref shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *monsaref shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for as soon as, then the Persian for as long as, then say monsaref shodan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for as soon as, then the Persian for as long as, then say *monsaref shodan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منصرف شدن (monsaref shodan) mean? (\"To change one's mind, to give up an idea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C396-aqab-andakhtan",
+      "sequence": 20250,
+      "title": "عقب انداختن ('aqab andâkhtan) — to put off, to delay",
+      "headword": "عقب انداختن",
+      "romanization": "'aqab andâkhtan",
+      "gloss": "to put off, to delay",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b647ead08e6af10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for as long as, then the Persian for to change one's mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عقب انداختن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عقب انداختن ('aqab andâkhtan) — \"to put off, to delay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جلسه را یک هفته عقب انداختند. jalase râ yek hafte 'aqab andâkhtand. They put the meeting off by a week."
+            },
+            {
+              "kind": "speech",
+              "text": "'aqab \"back\" + andâkhtan \"to throw\" (present stem andâz-): to throw something back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عقب انداختن ('aqab andâkhtan) is literally \"to throw back\": 'aqab \"back\" is usually traced to Arabic 'aqab, and andâkhtan \"to throw\" is a native Persian verb listed in EtymDB."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'aqab andâkhtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'aqab andâkhtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "'aqab andâkhtan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *'aqab andâkhtan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with 'aqab andâkhtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *'aqab andâkhtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for as long as, then the Persian for to change one's mind, then say 'aqab andâkhtan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for as long as, then the Persian for to change one's mind, then say *'aqab andâkhtan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عقب انداختن ('aqab andâkhtan) mean? (\"To put off, to delay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C396-be-taviq-andakhtan",
+      "sequence": 20260,
+      "title": "به تعویق انداختن (be ta'viq andâkhtan) — to postpone",
+      "headword": "به تعویق انداختن",
+      "romanization": "be ta'viq andâkhtan",
+      "gloss": "to postpone",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86651cd5a7a3140e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to change one's mind, then the Persian for to put off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: به تعویق انداختن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "به تعویق انداختن (be ta'viq andâkhtan) — \"to postpone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دانشگاه امتحانها را به تعویق انداخت. dâneshgâh emtehânhâ râ be ta'viq andâkht. The university postponed the exams."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal. Without an object: be ta'viq oftâdan — to be postponed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "به تعویق انداختن (be ta'viq andâkhtan) is literally \"to throw into delay\": ta'viq is usually traced to Arabic ta'wīq \"delaying\", and andâkhtan \"to throw\" is native Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "be ta'viq andâkhtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *be ta'viq andâkhtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "be ta'viq andâkhtan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *be ta'viq andâkhtan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with be ta'viq andâkhtan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *be ta'viq andâkhtan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to change one's mind, then the Persian for to put off, then say be ta'viq andâkhtan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to change one's mind, then the Persian for to put off, then say *be ta'viq andâkhtan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does به تعویق انداختن (be ta'viq andâkhtan) mean? (\"To postpone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C396-hamahang-kardan",
+      "sequence": 20270,
+      "title": "هماهنگ کردن (hamâhang kardan) — to coordinate, to arrange",
+      "headword": "هماهنگ کردن",
+      "romanization": "hamâhang kardan",
+      "gloss": "to coordinate, to arrange",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c52b7e0e28323d15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to put off, then the Persian for to postpone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هماهنگ کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هماهنگ کردن (hamâhang kardan) — \"to coordinate, to arrange\"."
+            },
+            {
+              "kind": "speech",
+              "text": "من با همکارانم زمان جلسه را هماهنگ کردم. man bâ hamkârânam zamân-e jalase râ hamâhang kardam. I arranged the meeting time with my colleagues."
+            },
+            {
+              "kind": "speech",
+              "text": "Hamâhang \"in harmony\": ham \"same\" + âhang \"tune\". Bâ kasi hamâhang kardan — to arrange something with someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هماهنگ کردن (hamâhang kardan) is native Persian, built from ham \"same, together\" + âhang \"tune\", which EtymDB traces to Middle Persian āhang, + kardan. To coordinate is to put people in one tune."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamâhang kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamâhang kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamâhang kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamâhang kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with hamâhang kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *hamâhang kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to put off, then the Persian for to postpone, then say hamâhang kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to put off, then the Persian for to postpone, then say *hamâhang kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هماهنگ کردن (hamâhang kardan) mean? (\"To coordinate, to arrange\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C396-ejra-kardan",
+      "sequence": 20280,
+      "title": "اجرا کردن (ejrâ kardan) — to carry out, to perform",
+      "headword": "اجرا کردن",
+      "romanization": "ejrâ kardan",
+      "gloss": "to carry out, to perform",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:063258b5575ec617",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to postpone, then the Persian for to coordinate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اجرا کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجرا کردن (ejrâ kardan) — \"to carry out, to perform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شهرداری طرح تازه را اجرا کرد. shahrdâri tarh-e tâze râ ejrâ kard. The town council carried out the new plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Ejrâ \"carrying out\" + kardan. Also to perform music or a play."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجرا is usually traced to Arabic ijrā' \"making something run, putting it into effect\"; Persian drops the final hamza and adds kardan \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ejrâ kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ejrâ kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ejrâ kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ejrâ kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ejrâ kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ejrâ kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to postpone, then the Persian for to coordinate, then say ejrâ kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to postpone, then the Persian for to coordinate, then say *ejrâ kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اجرا کردن (ejrâ kardan) mean? (\"To carry out, to perform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

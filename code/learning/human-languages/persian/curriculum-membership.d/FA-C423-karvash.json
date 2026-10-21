@@ -1,0 +1,11 @@
+{
+  "id": "FA-C423-karvash",
+  "pathSegment": "FA-PATH-423-BENZIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-423-BENZIN",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C332-zayman",
+  "pathSegment": "FA-PATH-332-BARDAR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-332-BARDAR",
+      "order": 1
+    }
+  ]
+}

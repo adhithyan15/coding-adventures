@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-293-ADVICE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-293-ADVICE"
+  ],
+  "after": []
+}

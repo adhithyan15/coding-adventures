@@ -1,0 +1,11 @@
+{
+  "id": "FA-C363-eddea-kardan",
+  "pathSegment": "FA-PATH-363-EDDEA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-363-EDDEA",
+      "order": 1
+    }
+  ]
+}

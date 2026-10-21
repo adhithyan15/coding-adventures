@@ -249,7 +249,10 @@ describe("real curriculum", () => {
       // headwords, fifty of them verbs, beyond the A2 floor.
       // 286 -> 289: chapters 287-289, the three A1 writing stages Persian had
       // not proved (my own line, a three-minute timed form, four lines).
-    ).toEqual(Array.from({ length: 289 }, (_, i) => i + 1));
+      // 289 -> 299: chapters 290-299, the B1 core that realizes the five B1
+      // spine nodes, with letter lessons for ع غ ژ ث ذ ض ئ.
+      // 299 -> 539: chapters 300-539, the B1 vocabulary (1,200 headwords).
+    ).toEqual(Array.from({ length: 539 }, (_, i) => i + 1));
     expect(
       books.books
         .find((book) => book.language === "urdu")

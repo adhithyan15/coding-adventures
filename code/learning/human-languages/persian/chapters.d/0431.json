@@ -1,0 +1,19 @@
+{
+  "chapter": 431,
+  "title": "Flying",
+  "label": "ch:fa-flying",
+  "canDo": "I can talk about flying: a flight, to fly, to land, an airline and the boarding pass.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C431-kart-e-parvaz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can talk about flying: a flight, to fly, to land, an airline and the boarding pass.",
+    "assesses": [
+      "FA-LEX-C431-PARVAZ-03",
+      "FA-LEX-C431-PARVAZ-04",
+      "FA-LEX-C431-PARVAZ-05"
+    ]
+  }
+}

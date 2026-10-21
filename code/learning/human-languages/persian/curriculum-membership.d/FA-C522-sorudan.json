@@ -1,0 +1,11 @@
+{
+  "id": "FA-C522-sorudan",
+  "pathSegment": "FA-PATH-522-VERSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-522-VERSE",
+      "order": 1
+    }
+  ]
+}

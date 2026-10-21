@@ -1,0 +1,11 @@
+{
+  "id": "FA-C329-khakestar",
+  "pathSegment": "FA-PATH-329-ENFEJAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-329-ENFEJAR",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "glyph": "ئ",
+  "sound": "' (hamze)",
+  "role": "letter",
+  "forms": {
+    "isolated": "ئ",
+    "initial": "ئـ",
+    "medial": "ـئـ",
+    "final": "ـئ"
+  },
+  "components": [
+    "dotless ye-series seat",
+    "small hamza above"
+  ],
+  "strokeOrder": [],
+  "notes": "Hamze written on a dotless ye-shaped seat, a glottal catch inside Arabic-derived words such as مسئول. Its stroke order is deliberately left empty: no Persian-scoped source for it has been verified yet."
+}

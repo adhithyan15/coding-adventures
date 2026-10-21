@@ -2,6 +2,34 @@
 
 ## Unreleased
 
+- LANG84 phase 4b: `DEFAULT_RELEASE` is the inventory release `5.38.0`
+  (new `DEFAULT_RELEASE_ID`), whose pair is grounded in the `v5.38.0` tag.
+  `Release` is now a newtype over one checked inventory ID (`id()` returns
+  `&'static str`); `Release::Unversioned` and `Release::Inventory` are gone,
+  because the unversioned LANG81 pair no longer reaches the IIR path (C4.5).
+  Visible change: under the default, a 251-digit literal is now rejected
+  before lowering, as `toke.c` does, instead of lexing and being refused as
+  out of range.
+- Every produced module records its release in `IIRModule::release`
+  (`compile_ast_at` sets it; `compile_ast` records the default).
+- C8 CST contract: `cst::*`, `CST_RULES`, `CST_TOKEN_TYPES` and
+  `CST_TOKEN_SPELLINGS` name everything the compiler dispatches on, and the
+  compiler uses those constants. `tests::cst_contract` checks every checked
+  release's compiled grammar defines each rule and token type, lexes each
+  spelling as one token, and parses the corpus into exactly the shapes the
+  compiler destructures.
+- C5 hostile-input probes run in a child copy of the test binary
+  (`tests::hostile_probes`): deep nesting, deep unary minus, long flat
+  chains, decrement runs, unterminated constructs, statement floods,
+  foreign characters, the source and IIR budgets, the 250/251-digit
+  boundary and deep/wide caller-supplied trees, across three releases. The
+  parent reports a signal (stack overflow, abort) as an abort, kills a child
+  that runs past 600 s, drains both pipes on threads, and clears
+  `RUST_MIN_STACK` so the probes run on the default test stack.
+- Security-review follow-ups: `lex_errors_never_echo_control_or_bidi_characters`
+  pins that untrusted source reaches diagnostics only escaped, and
+  `resolve_release` is tested against near-miss spellings (`v5.38.0`,
+  `5.038.0`, padded, NUL-suffixed, `perl5.38.0`), all `UnknownRelease`.
 - `main` returns `i64` 0 (`const 0; ret`) instead of `ret_void`. Every backend
   reads the entry function's result as the process status. CoreCLR rejected a
   void `int32 MccarthyEntry()` (CI's macOS and Windows CLR column), and on BEAM

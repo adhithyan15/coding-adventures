@@ -1,0 +1,11 @@
+{
+  "id": "FA-C435-resandan",
+  "pathSegment": "FA-PATH-435-DARBAST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-435-DARBAST",
+      "order": 4
+    }
+  ]
+}

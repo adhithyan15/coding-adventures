@@ -1,0 +1,11 @@
+{
+  "id": "FA-C375-natije-dadan",
+  "pathSegment": "FA-PATH-375-MAZIYYAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-375-MAZIYYAT",
+      "order": 4
+    }
+  ]
+}

@@ -1063,15 +1063,17 @@ where
             edge.end_marker, &end_previous, &edge.to, marker_stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
-            let label_x = (edge.from.x + edge.to.x) / 2.0 - 52.0;
-            let label_y = (edge.from.y + edge.to.y) / 2.0 - 25.0;
+            let label_position = edge.label_position.as_ref()
+                .expect("laid-out Swimlane edge label must have a position");
+            let label_x = label_position.x - edge.label_width / 2.0;
+            let label_y = label_position.y - edge.label_height / 2.0;
             if let Some(background) = &diagram.theme.edge_label_background {
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
                     x: label_x,
                     y: label_y,
-                    width: 104.0,
-                    height: 22.0,
+                    width: edge.label_width,
+                    height: edge.label_height,
                     fill: Some(background.clone()),
                     stroke: None,
                     stroke_width: None,
@@ -1099,14 +1101,14 @@ where
             if label.markdown.is_some() {
                 rich_text_instructions.extend(markdown_label_instructions(
                     label,
-                    MarkdownLabelBox { x: label_x, y: label_y, width: 104.0, height: 22.0 },
+                    MarkdownLabelBox { x: label_x, y: label_y, width: edge.label_width, height: edge.label_height },
                     &label_font,
                     label_color,
                     options,
                 ));
             } else {
                 text_children.push(text_node(
-                    &label.text, label_x, label_y, 104.0, 22.0, label_font,
+                    &label.text, label_x, label_y, edge.label_width, edge.label_height, label_font,
                     css_to_color(label_color),
                 ));
             }
@@ -9707,7 +9709,8 @@ mod tests {
     fn swimlane_line_hops_accept_every_orthogonal_friendly_curve() {
         let edge = |curve| LayoutedSwimlaneEdge {
             id: None, from: Point { x: 10.0, y: 20.0 }, to: Point { x: 110.0, y: 120.0 },
-            label: None, kind: SwimlaneEdgeKind::Directed, start_marker: EdgeMarker::None,
+            label: None, label_position: None, label_width: 0.0, label_height: 0.0,
+            kind: SwimlaneEdgeKind::Directed, start_marker: EdgeMarker::None,
             end_marker: EdgeMarker::Point, min_length: 1, classes: Vec::new(),
             style: Default::default(), animate: false, animation: None, curve,
         };

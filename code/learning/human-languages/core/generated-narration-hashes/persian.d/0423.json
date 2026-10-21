@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:404b582339288797",
+  "lessonIds": [
+    "FA-C423-pomp-e-benzin",
+    "FA-C423-benzin-zadan",
+    "FA-C423-bak",
+    "FA-C423-tamam-shodan",
+    "FA-C423-karvash"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch423.txt",
+  "json": "persian/narration/ch423.json",
+  "textHash": "fnv1a64:5704be8b0569906d",
+  "jsonHash": "fnv1a64:3ab54d38263b8003",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:accabea5387fe07b",
+  "lessonIds": [
+    "FA-C362-estedlal",
+    "FA-C362-estedlal-kardan",
+    "FA-C362-manteq",
+    "FA-C362-manteqi",
+    "FA-C362-qane-kardan"
+  ],
+  "tex": "persian/book/chapters/ch362-making-an-argument.tex"
+}

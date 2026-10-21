@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Service and tips",
+  "label": "ch:fa-service-and-tips",
+  "canDo": "I can talk about service: the services, quality, being satisfied, a tip and thanking someone.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R443-review-436-443",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can talk about service: the services, quality, being satisfied, a tip and thanking someone.",
+    "assesses": [
+      "FA-LEX-C443-ANAM-03",
+      "FA-LEX-C443-ANAM-04",
+      "FA-LEX-C443-ANAM-05"
+    ]
+  }
+}

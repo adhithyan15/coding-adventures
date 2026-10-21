@@ -1,0 +1,11 @@
+{
+  "id": "FA-C528-motarjem",
+  "pathSegment": "FA-PATH-528-BOOKS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-528-BOOKS",
+      "order": 4
+    }
+  ]
+}

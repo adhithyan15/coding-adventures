@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "Crime and arrest",
+  "label": "ch:fa-crime-and-arrest",
+  "canDo": "I can talk about crimes and criminals, say that the police arrested someone, that someone is innocent and what they were sentenced to.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-R407-review-400-407",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about crimes and criminals, say that the police arrested someone, that someone is innocent and what they were sentenced to.",
+    "assesses": [
+      "FA-LEX-C407-JORM-03",
+      "FA-LEX-C407-JORM-04",
+      "FA-LEX-C407-JORM-05"
+    ]
+  }
+}

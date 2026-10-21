@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:765a16e5cdce5cbe",
+  "lessonIds": [
+    "FA-C441-darkhast-kardan",
+    "FA-C441-residegi-kardan",
+    "FA-C441-irad-gereftan",
+    "FA-C441-kutah-amadan",
+    "FA-C441-narazi"
+  ],
+  "tex": "persian/book/chapters/ch441-making-a-complaint.tex"
+}

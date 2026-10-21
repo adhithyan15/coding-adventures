@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Scores and Records",
+  "label": "ch:fa-scores-and-records",
+  "canDo": "I can talk about results and records.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C513-gol-zadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about results and records.",
+    "assesses": [
+      "FA-LEX-C513-SCORES-03",
+      "FA-LEX-C513-SCORES-04",
+      "FA-LEX-C513-SCORES-05"
+    ]
+  }
+}

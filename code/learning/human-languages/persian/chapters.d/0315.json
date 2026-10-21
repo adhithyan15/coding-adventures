@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Breaking news and the press",
+  "label": "ch:fa-breaking-news-and-the-press",
+  "canDo": "I can talk about breaking news, journalists, editorials, demonstrations and slogans.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-R315-review-308-315",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can talk about breaking news, journalists, editorials, demonstrations and slogans.",
+    "assesses": [
+      "FA-LEX-C315-KHABARFOWRI-03",
+      "FA-LEX-C315-KHABARFOWRI-04",
+      "FA-LEX-C315-KHABARFOWRI-05"
+    ]
+  }
+}

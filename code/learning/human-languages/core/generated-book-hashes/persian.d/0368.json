@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:2f84a284fb57bf42",
+  "lessonIds": [
+    "FA-C368-tahlil",
+    "FA-C368-tahlil-kardan",
+    "FA-C368-bardasht",
+    "FA-C368-natije-giri",
+    "FA-C368-eshare-kardan"
+  ],
+  "tex": "persian/book/chapters/ch368-looking-closely.tex"
+}

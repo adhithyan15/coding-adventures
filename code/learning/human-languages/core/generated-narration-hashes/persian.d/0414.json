@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:ae787eee000c09f6",
+  "lessonIds": [
+    "FA-C414-arz",
+    "FA-C414-etebar",
+    "FA-C414-seporde",
+    "FA-C414-bardasht-kardan",
+    "FA-C414-enteqal-dadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch414.txt",
+  "json": "persian/narration/ch414.json",
+  "textHash": "fnv1a64:4626dc87d9a4f346",
+  "jsonHash": "fnv1a64:de5ee33e9651de51",
+  "findings": []
+}

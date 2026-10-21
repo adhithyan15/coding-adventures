@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:a351dae0bc48ce05",
+  "lessonIds": [
+    "FA-C395-baste-be",
+    "FA-C395-vabaste",
+    "FA-C395-sharayet",
+    "FA-C395-be-mahz-e-inke",
+    "FA-C395-ta-zamani-ke"
+  ],
+  "tex": "persian/book/chapters/ch395-it-depends.tex"
+}

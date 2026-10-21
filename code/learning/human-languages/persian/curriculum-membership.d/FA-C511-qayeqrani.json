@@ -1,0 +1,11 @@
+{
+  "id": "FA-C511-qayeqrani",
+  "pathSegment": "FA-PATH-511-OUTDOORS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-511-OUTDOORS",
+      "order": 4
+    }
+  ]
+}

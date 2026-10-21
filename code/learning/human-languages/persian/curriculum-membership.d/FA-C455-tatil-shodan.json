@@ -1,0 +1,11 @@
+{
+  "id": "FA-C455-tatil-shodan",
+  "pathSegment": "FA-PATH-455-SHAHRBAZI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-455-SHAHRBAZI",
+      "order": 4
+    }
+  ]
+}

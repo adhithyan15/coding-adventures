@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "In the bazaar",
+  "label": "ch:fa-in-the-bazaar",
+  "canDo": "I can find my way round the bazaar: a row of shops, a bazaar shop, a small market, a covered hall and a caravanserai.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C457-karvansara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can find my way round the bazaar: a row of shops, a bazaar shop, a small market, a covered hall and a caravanserai.",
+    "assesses": [
+      "FA-LEX-C457-RASTE-03",
+      "FA-LEX-C457-RASTE-04",
+      "FA-LEX-C457-RASTE-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-493-DOCTOR",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-493-DOCTOR"
+  ],
+  "after": []
+}

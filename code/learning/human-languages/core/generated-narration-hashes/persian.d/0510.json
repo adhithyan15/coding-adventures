@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:f92b7bd3e74d74fd",
+  "lessonIds": [
+    "FA-C510-tafrih",
+    "FA-C510-vaqt-gozarandan",
+    "FA-C510-sargarm-shodan",
+    "FA-C510-khosh-gozashtan",
+    "FA-C510-ozv-shodan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch510.txt",
+  "json": "persian/narration/ch510.json",
+  "textHash": "fnv1a64:daf4c9d95e72cd0d",
+  "jsonHash": "fnv1a64:c09ce020c98d47eb",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C513-mosavi",
+  "pathSegment": "FA-PATH-513-SCORES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-513-SCORES",
+      "order": 1
+    }
+  ]
+}

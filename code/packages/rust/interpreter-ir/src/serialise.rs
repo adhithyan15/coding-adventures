@@ -394,6 +394,8 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
         language,
         exports,
         imports,
+        // The release ID is not on the wire (see `IIRModule::release`).
+        release: None,
     })
 }
 
@@ -544,6 +546,18 @@ mod tests {
         let mut module = IIRModule::new("test.bas", "basic");
         module.add_or_replace(fn_);
         module
+    }
+
+    #[test]
+    fn release_is_not_on_the_wire() {
+        // `IIRModule::release` is in-memory provenance only (LANG84 C4.1);
+        // the 1.1 format is unchanged, so a round trip yields `None`.
+        let mut m = make_module();
+        let without = serialise(&m);
+        m.release = Some("5.38.0".into());
+        let with = serialise(&m);
+        assert_eq!(with, without);
+        assert_eq!(deserialise(&with).unwrap().release, None);
     }
 
     #[test]

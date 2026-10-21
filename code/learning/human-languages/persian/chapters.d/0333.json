@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Growing up and growing old",
+  "label": "ch:fa-growing-up-and-growing-old",
+  "canDo": "I can talk about the stages of a life: the teenage years, graduating, military service, middle age and old age.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C333-piri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can talk about the stages of a life: the teenage years, graduating, military service, middle age and old age.",
+    "assesses": [
+      "FA-LEX-C333-NOWJAVANI-03",
+      "FA-LEX-C333-NOWJAVANI-04",
+      "FA-LEX-C333-NOWJAVANI-05"
+    ]
+  }
+}

@@ -101,6 +101,7 @@ fn run_reader(reader: IIRInstr) -> i64 {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
@@ -191,6 +192,7 @@ fn mov_of_a_literal_into_a_runtime_valued_variable_copies_a_real_handle() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
@@ -237,6 +239,7 @@ fn str_returned_from_a_single_block_callee_is_a_real_handle() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
@@ -273,6 +276,7 @@ fn literal_only_strings_still_fold_at_compile_time() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");
@@ -300,7 +304,7 @@ fn runtime_concat_preserves_aliased_operands() {
             IIRInstr::new("str_eq", Some("ok".into()), vec![Operand::Var("joined".into()), Operand::Var("expected".into())], "i64"),
             IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "i64"),
         ]);
-        let module = IIRModule { name: "concat_alias".into(), functions: vec![join, main], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![] };
+        let module = IIRModule { name: "concat_alias".into(), functions: vec![join, main], entry_point: Some("main".into()), language: "test".into(), exports: vec![], imports: vec![], release: None };
         let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).unwrap();
         let bytes = encode_module(&wasm).unwrap();
         let result = WasmRuntime::new().load_and_run(&bytes, "main", &[]).unwrap();
@@ -351,6 +355,7 @@ fn runtime_str_slice_preserves_aliased_operand() {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).unwrap();
         let bytes = encode_module(&wasm).unwrap();

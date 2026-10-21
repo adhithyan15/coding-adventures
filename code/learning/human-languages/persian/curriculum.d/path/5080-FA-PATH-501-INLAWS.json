@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-501-INLAWS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-501-INLAWS"
+  ],
+  "after": []
+}

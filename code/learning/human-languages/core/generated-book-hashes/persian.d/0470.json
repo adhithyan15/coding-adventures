@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:1fdaa3a649ba6ed9",
+  "lessonIds": [
+    "FA-C470-chador",
+    "FA-C470-kise-khab",
+    "FA-C470-hizom",
+    "FA-C470-gardesh-kardan",
+    "FA-C470-otraq-kardan"
+  ],
+  "tex": "persian/book/chapters/ch470-camping.tex"
+}

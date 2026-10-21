@@ -1,0 +1,11 @@
+{
+  "id": "FA-C515-partab-kardan",
+  "pathSegment": "FA-PATH-515-MOVES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-515-MOVES",
+      "order": 2
+    }
+  ]
+}

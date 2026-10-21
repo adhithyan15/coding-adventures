@@ -1,0 +1,11 @@
+{
+  "id": "FA-C436-arshe",
+  "pathSegment": "FA-PATH-436-ESKELE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-436-ESKELE",
+      "order": 2
+    }
+  ]
+}

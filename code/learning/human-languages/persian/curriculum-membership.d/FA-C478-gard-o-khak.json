@@ -1,0 +1,11 @@
+{
+  "id": "FA-C478-gard-o-khak",
+  "pathSegment": "FA-PATH-478-RIZGARD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-478-RIZGARD",
+      "order": 1
+    }
+  ]
+}

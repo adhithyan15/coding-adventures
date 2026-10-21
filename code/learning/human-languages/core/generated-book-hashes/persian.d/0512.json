@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:c9295466cd163984",
+  "lessonIds": [
+    "FA-C512-havadar",
+    "FA-C512-varzeshkar",
+    "FA-C512-harif",
+    "FA-C512-lig",
+    "FA-C512-emtiyaz"
+  ],
+  "tex": "persian/book/chapters/ch512-teams-and-fans.tex"
+}

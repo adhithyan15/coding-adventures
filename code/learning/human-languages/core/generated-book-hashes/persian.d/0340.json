@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:964b105d4718008f",
+  "lessonIds": [
+    "FA-C340-eydi",
+    "FA-C340-did-o-bazdid",
+    "FA-C340-ayin",
+    "FA-C340-rasm",
+    "FA-C340-espand"
+  ],
+  "tex": "persian/book/chapters/ch340-nowruz-visits.tex"
+}

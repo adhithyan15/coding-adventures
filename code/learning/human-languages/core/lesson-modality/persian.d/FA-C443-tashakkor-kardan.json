@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C443-tashakkor-kardan",
+    "language": "persian",
+    "chapter": 443,
+    "sequence": 22710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16a7b727e22d24bc"
+  },
+  "findings": []
+}

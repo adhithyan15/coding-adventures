@@ -1,0 +1,11 @@
+{
+  "id": "FA-C432-ezafe-bar",
+  "pathSegment": "FA-PATH-432-GIT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-432-GIT",
+      "order": 2
+    }
+  ]
+}

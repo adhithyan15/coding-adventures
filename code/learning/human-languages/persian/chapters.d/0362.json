@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Making an argument",
+  "label": "ch:fa-making-an-argument",
+  "canDo": "I can make an argument, reason a point through, say whether something is logical and convince someone.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C362-qane-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can make an argument, reason a point through, say whether something is logical and convince someone.",
+    "assesses": [
+      "FA-LEX-C362-ESTEDLAL-03",
+      "FA-LEX-C362-ESTEDLAL-04",
+      "FA-LEX-C362-ESTEDLAL-05"
+    ]
+  }
+}

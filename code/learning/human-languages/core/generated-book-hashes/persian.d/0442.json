@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:d7dcd8b74ac2e859",
+  "lessonIds": [
+    "FA-C442-ozrkhahi-kardan",
+    "FA-C442-jobran-kardan",
+    "FA-C442-taviz-kardan",
+    "FA-C442-pas-gereftan",
+    "FA-C442-bargardandan"
+  ],
+  "tex": "persian/book/chapters/ch442-putting-it-right.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C482-azorde",
+    "language": "persian",
+    "chapter": 482,
+    "sequence": 24720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b620ab3710b6025d"
+  },
+  "findings": []
+}

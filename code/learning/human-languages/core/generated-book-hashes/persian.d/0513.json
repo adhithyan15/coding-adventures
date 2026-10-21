@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:696860651fa26e87",
+  "lessonIds": [
+    "FA-C513-bazande",
+    "FA-C513-mosavi",
+    "FA-C513-rekord",
+    "FA-C513-rekord-zadan",
+    "FA-C513-gol-zadan"
+  ],
+  "tex": "persian/book/chapters/ch513-scores-and-records.tex"
+}

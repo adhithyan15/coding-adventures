@@ -1,0 +1,11 @@
+{
+  "id": "FA-C379-bazneshastegi",
+  "pathSegment": "FA-PATH-379-ESTEFA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-379-ESTEFA",
+      "order": 4
+    }
+  ]
+}

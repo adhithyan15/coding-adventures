@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-451-SHOLUGHI",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-451-SHOLUGHI"
+  ],
+  "after": []
+}

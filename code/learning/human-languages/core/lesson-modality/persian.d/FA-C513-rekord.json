@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C513-rekord",
+    "language": "persian",
+    "chapter": 513,
+    "sequence": 26310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3daea84a338f5c63"
+  },
+  "findings": []
+}

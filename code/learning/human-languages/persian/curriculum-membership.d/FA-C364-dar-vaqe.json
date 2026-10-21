@@ -1,0 +1,11 @@
+{
+  "id": "FA-C364-dar-vaqe",
+  "pathSegment": "FA-PATH-364-VAQEIYYAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-364-VAQEIYYAT",
+      "order": 2
+    }
+  ]
+}

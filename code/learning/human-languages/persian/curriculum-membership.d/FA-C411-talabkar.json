@@ -1,0 +1,11 @@
+{
+  "id": "FA-C411-talabkar",
+  "pathSegment": "FA-PATH-411-QARZ",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-411-QARZ",
+      "order": 4
+    }
+  ]
+}

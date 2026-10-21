@@ -1,0 +1,11 @@
+{
+  "id": "FA-C423-benzin-zadan",
+  "pathSegment": "FA-PATH-423-BENZIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-423-BENZIN",
+      "order": 1
+    }
+  ]
+}

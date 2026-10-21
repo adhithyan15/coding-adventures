@@ -1,0 +1,11 @@
+{
+  "id": "FA-C441-narazi",
+  "pathSegment": "FA-PATH-441-DARKHAST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-441-DARKHAST",
+      "order": 4
+    }
+  ]
+}

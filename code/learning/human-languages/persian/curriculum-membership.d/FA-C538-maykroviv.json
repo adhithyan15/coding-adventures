@@ -1,0 +1,11 @@
+{
+  "id": "FA-C538-maykroviv",
+  "pathSegment": "FA-PATH-538-APPLIANCES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-538-APPLIANCES",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:2b20ce2753b1cd76",
+  "lessonIds": [
+    "FA-C479-ranginkaman",
+    "FA-C479-nasim",
+    "FA-C479-derakhshidan",
+    "FA-C479-ghorub-kardan",
+    "FA-C479-tolu-kardan",
+    "FA-R479-review-476-479",
+    "FA-R479-review-final-479"
+  ],
+  "tex": "persian/book/chapters/ch479-after-the-rain.tex"
+}

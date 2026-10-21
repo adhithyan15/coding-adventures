@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Patience and Temper",
+  "label": "ch:fa-patience-and-temper",
+  "canDo": "I can describe patient and impatient people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C481-asabani-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can describe patient and impatient people.",
+    "assesses": [
+      "FA-LEX-C481-PATIENCE-03",
+      "FA-LEX-C481-PATIENCE-04",
+      "FA-LEX-C481-PATIENCE-05"
+    ]
+  }
+}

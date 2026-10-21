@@ -1,0 +1,11 @@
+{
+  "id": "FA-C526-memari",
+  "pathSegment": "FA-PATH-526-ART",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-526-ART",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Water in the land",
+  "label": "ch:fa-water-in-the-land",
+  "canDo": "I can talk about water in the landscape: a marsh, a wetland, a stream, a dam and flowing water.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C469-jari-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can talk about water in the landscape: a marsh, a wetland, a stream, a dam and flowing water.",
+    "assesses": [
+      "FA-LEX-C469-TALAB-03",
+      "FA-LEX-C469-TALAB-04",
+      "FA-LEX-C469-TALAB-05"
+    ]
+  }
+}

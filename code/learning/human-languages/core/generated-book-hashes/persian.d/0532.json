@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:78036a8e65efc962",
+  "lessonIds": [
+    "FA-C532-ekran",
+    "FA-C532-kontorol",
+    "FA-C532-safhe-ye-namayesh",
+    "FA-C532-padkast",
+    "FA-C532-hedfon"
+  ],
+  "tex": "persian/book/chapters/ch532-watching-and-listening.tex"
+}
