@@ -369,7 +369,8 @@ describe("what the key does not need to name", () => {
   // Not followed but refused outright: a dynamic edge is one this walk cannot
   // resolve, and the rest are the ways a module reads something that is not an
   // argument — the process (its environment, argv, cwd), the global object, the
-  // clock, chance, or code built from a string. Fail-closed on purpose: a comment
+  // clock, chance (Math.random, crypto), the module's own location (import.meta),
+  // reflection, or code built from a string (eval, Function). Fail-closed on purpose: a comment
   // that merely says "process" fails too, and is cheaper to reword than an unseen
   // input is to find.
   const BANNED: readonly [string, RegExp][] = [
@@ -380,8 +381,12 @@ describe("what the key does not need to name", () => {
     ["Date", /\bDate\b/],
     ["Math.random", /\bMath\.random\b/],
     ["performance", /\bperformance\b/],
-    ["eval()", /\beval\s*\(/],
-    ["new Function", /\bnew\s+Function\b/],
+    ["eval", /\beval\b/], //                   direct or indirect: (0, eval)(…)
+    ["Function", /\bFunction\s*\(/], //       with or without `new`
+    ["global", /\bglobal\b/],
+    ["crypto", /\bcrypto\b/], //               getRandomValues, randomUUID
+    ["import.meta", /\bimport\.meta\b/],
+    ["Reflect", /\bReflect\b/],
   ];
 
   function runtimeGraph(entry: string): Map<string, string> {
@@ -442,7 +447,14 @@ describe("what the key does not need to name", () => {
     expect(probe("const now = Date();")).toEqual(["Date"]);
     expect(probe("const t = Date.now();")).toEqual(["Date"]);
     expect(probe("const r = Math.random();")).toEqual(["Math.random"]);
-    expect(probe("const f = new Function('return 1');")).toEqual(["new Function"]);
+    expect(probe("const e = eval('1');")).toEqual(["eval"]);
+    expect(probe("const e = (0, eval)('1');")).toEqual(["eval"]);
+    expect(probe("const f = new Function('return 1');")).toEqual(["Function"]);
+    expect(probe("const f = Function('return 1');")).toEqual(["Function"]);
+    expect(probe("const g = global;")).toEqual(["global"]);
+    expect(probe("const id = crypto.randomUUID();")).toEqual(["crypto"]);
+    expect(probe("const here = import.meta.url;")).toEqual(["import.meta"]);
+    expect(probe("const v = Reflect.get(o, 'k');")).toEqual(["Reflect"]);
     expect(probe("const pure = (x: number) => x + 1;")).toEqual([]);
   });
 

@@ -45,6 +45,17 @@ raised.
     field by field instead of spreading the options. The options have one
     constructor, `corpusNarrationOptions`, and a new case pins its exact key
     set, so an added field fails until the key covers it.
+- **Second security-review pass** (all Low):
+  - `narrateCorpusByTrack` copies the two option fields into one fresh object
+    and hands that same object to the key AND to `narrationChapters`. A field
+    added to the caller's options can no longer reach the narrator without also
+    reaching the key.
+  - The narrator guard also refuses `eval` in any form (indirect
+    `(0, eval)(…)` too), `Function(…)` with or without `new`, `global`,
+    `crypto`, `import.meta` and `Reflect`, each with a probe case. The guard is
+    fail-closed and reads comments, so four comments in the narrator's graph
+    were reworded: "global pass/scan/replace" became "whole-text" wording, and
+    `import.meta.glob` became "Vite's glob import". No code changed there.
 - **Measured** on the same 4-core machine. Per-case seconds:
 
   | case | alone before → after | full suite before → after (cold / warm) |

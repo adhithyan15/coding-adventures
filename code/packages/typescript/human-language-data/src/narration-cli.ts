@@ -166,8 +166,10 @@ export interface CorpusNarrationOptions {
  *
  * Every field here reaches `narrationChapters`, so every field must also reach the
  * narration cache key — a field that changed the narration without changing the key
- * would be answered from a stale entry. The key is therefore built from these
- * fields by NAME (see `narrateCorpusByTrack`), never by spreading the object, and
+ * would be answered from a stale entry. `narrateCorpusByTrack` therefore copies
+ * these fields by NAME into one fresh object and hands that same object to both
+ * the key and the narrator — never the caller's object, which could carry more —
+ * and
  * `tests/narration-cache.test.ts` pins this object's exact key set: adding a field
  * here fails that test until the key learns about it too.
  */
@@ -243,15 +245,17 @@ function narrateCorpusByTrack(
       chapters.push(...narrationChapters(own, options));
       continue;
     }
-    const key = cache.key({
-      language,
+    // One object feeds both the key and the narrator, built field by field, so
+    // nothing can reach `narrationChapters` without also reaching the key — not
+    // even a field some later caller tacks onto `options`.
+    const keyed: CorpusNarrationOptions = {
       maxLinearisableTableColumns: options.maxLinearisableTableColumns,
       titles: options.titles,
-      lessonKey,
-    });
+    };
+    const key = cache.key({ language, ...keyed, lessonKey });
     let narrated = cache.read(language, key);
     if (narrated === undefined) {
-      narrated = narrationChapters(own, options);
+      narrated = narrationChapters(own, keyed);
       cache.write(language, key, narrated);
     }
     chapters.push(...narrated);
