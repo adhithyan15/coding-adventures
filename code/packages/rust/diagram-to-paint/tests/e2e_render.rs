@@ -4297,13 +4297,13 @@ line "Target" [35, 50, 68, 82]"##,
                 )).count() >= 6, "styled cross markers must lower to paired path instructions");
             }
             if fixture_name == "minimum-link-lengths" {
-                assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3]);
-                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3],
+                assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3, 5]);
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3, 5],
                     "minimum link lengths must survive layout lowering");
                 let gaps = layout.nodes.windows(2).map(|nodes|
                     nodes[1].x - (nodes[0].x + nodes[0].width)
                 ).collect::<Vec<_>>();
-                assert!(gaps[1] > gaps[0] && gaps[2] > gaps[1],
+                assert!(gaps.windows(2).all(|pair| pair[1] > pair[0]),
                     "minimum link lengths must reserve progressively wider rank gaps");
             }
             if fixture_name == "styled-inline-link-labels" {

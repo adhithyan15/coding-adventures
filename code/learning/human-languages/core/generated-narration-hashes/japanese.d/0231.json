@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:53ada13f2c94d3a3",
+  "lessonIds": [
+    "JA-C231-moshimoshi",
+    "JA-C231-bangou",
+    "JA-C231-renraku",
+    "JA-C231-henji",
+    "JA-C231-tsutaeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch231.txt",
+  "json": "japanese/narration/ch231.json",
+  "textHash": "fnv1a64:c8eadf991759430c",
+  "jsonHash": "fnv1a64:d69c370138cfc16a",
+  "findings": []
+}

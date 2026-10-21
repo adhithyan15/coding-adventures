@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "The New Year and the Weeks After Next",
+  "label": "ch:ja-the-new-year-and-the-weeks-after-next",
+  "canDo": "I can talk about holidays and plans further ahead.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C170-sugosu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can talk about holidays and plans further ahead.",
+    "assesses": [
+      "JA-LEX-C170-NEWYEAR170-03",
+      "JA-LEX-C170-NEWYEAR170-04",
+      "JA-LEX-C170-NEWYEAR170-05"
+    ]
+  }
+}

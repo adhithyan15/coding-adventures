@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:10b39303c3a92a16",
+  "lessonIds": [
+    "JA-C153-gaishutsu",
+    "JA-C153-kitaku",
+    "JA-C153-wasuremono",
+    "JA-C153-nakusu",
+    "JA-C153-maniau"
+  ],
+  "tex": "japanese/book/chapters/ch153-out-back-home-and-things-left-behind.tex"
+}

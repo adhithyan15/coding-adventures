@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:1041b0d9223d616d",
+  "lessonIds": [
+    "JA-C175-ryouri",
+    "JA-C175-yuderu",
+    "JA-C175-mazeru",
+    "JA-C175-chawan",
+    "JA-C175-abura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch175.txt",
+  "json": "japanese/narration/ch175.json",
+  "textHash": "fnv1a64:5a95223fcdd243a6",
+  "jsonHash": "fnv1a64:6b587e85d2111827",
+  "findings": []
+}

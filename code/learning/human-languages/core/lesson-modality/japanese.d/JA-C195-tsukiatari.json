@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C195-tsukiatari",
+    "language": "japanese",
+    "chapter": 195,
+    "sequence": 11590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ba47f880147041a"
+  },
+  "findings": []
+}

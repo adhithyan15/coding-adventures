@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C239-tejina",
+    "language": "japanese",
+    "chapter": 239,
+    "sequence": 14400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6d9b91b32f2c5d5"
+  },
+  "findings": []
+}

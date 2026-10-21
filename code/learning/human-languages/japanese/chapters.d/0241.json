@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Invitations and Plays",
+  "label": "ch:ja-invitations-and-plays",
+  "canDo": "I can say who invited me and what we did together.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-R241-review-236-241",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say who invited me and what we did together.",
+    "assesses": [
+      "JA-LEX-C241-OUTING241-03",
+      "JA-LEX-C241-OUTING241-04",
+      "JA-LEX-C241-OUTING241-05"
+    ]
+  }
+}

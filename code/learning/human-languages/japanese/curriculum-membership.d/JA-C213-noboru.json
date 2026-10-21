@@ -1,0 +1,11 @@
+{
+  "id": "JA-C213-noboru",
+  "pathSegment": "JA-PATH-213-SKY213",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-213-SKY213",
+      "order": 3
+    }
+  ]
+}

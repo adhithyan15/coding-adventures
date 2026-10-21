@@ -8933,14 +8933,14 @@ fn main_window_cs_with_layout_variants(
             concat!(
                 "        try\n",
                 "        {\n",
-                "            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);\n",
+                "            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);\n",
                 "        }\n",
             ),
             concat!(
                 "        if (this.layoutRoot is not { } component) return;\n",
                 "        try\n",
                 "        {\n",
-                "            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
+                "            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
                 "        }\n",
             ),
         );
@@ -9984,9 +9984,12 @@ public sealed partial class MainWindow : Window
         // An answer that raced a Close() arrives after the runtime is gone:
         // there are no props to apply, and nothing to report.
         if (!MosaicRuntimeHost.IsAvailable) return;
+        // Completion can clear a pending-effect persistence warning, or
+        // replace it with a real write failure. Show the host's current
+        // status together with the properties from that same refresh.
         try
         {{
-            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);
+            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);
         }}
         catch (System.Exception error)
         {{
@@ -21751,6 +21754,12 @@ mod tests {
             cs.contains("        this.DispatcherQueue.TryEnqueue(RefreshProps);\n"),
             "{cs}"
         );
+        let refresh = cs.split("private void RefreshProps()").nth(1).unwrap();
+        assert!(refresh.contains("if (!MosaicRuntimeHost.IsAvailable) return;"));
+        assert!(refresh.contains(
+            "this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);"
+        ), "deferred completion must refresh the host status, including remaining warnings: {refresh}");
+        assert!(refresh.contains("this.StatusText.Text = $\"Mosaic host failed:"));
         assert!(p
             .main_window_xaml
             .contains("AutomationProperties.AutomationId=\"mosaic-startup-loading\""));
@@ -22226,10 +22235,13 @@ mod tests {
                 "        // An answer that raced a Close() arrives after the runtime is gone:\n",
                 "        // there are no props to apply, and nothing to report.\n",
                 "        if (!MosaicRuntimeHost.IsAvailable) return;\n",
+                "        // Completion can clear a pending-effect persistence warning, or\n",
+                "        // replace it with a real write failure. Show the host's current\n",
+                "        // status together with the properties from that same refresh.\n",
                 "        if (this.layoutRoot is not { } component) return;\n",
                 "        try\n",
                 "        {\n",
-                "            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
+                "            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
             )),
             "{source}"
         );

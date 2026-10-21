@@ -1,0 +1,11 @@
+{
+  "id": "JA-C179-atatameru",
+  "pathSegment": "JA-PATH-179-DRINK179",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-179-DRINK179",
+      "order": 4
+    }
+  ]
+}

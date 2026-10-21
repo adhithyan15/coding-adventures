@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 175,
+  "title": "Cooking at Home",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1041b0d9223d616d",
+  "lessons": [
+    {
+      "id": "JA-C175-ryouri",
+      "sequence": 10550,
+      "title": "りょうり (ryōri) — cooking; a dish, cuisine",
+      "headword": "りょうり",
+      "romanization": "ryōri",
+      "gloss": "cooking; a dish, cuisine",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aca1b592f0f4dc1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for plate, then the Japanese for to dish up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: りょうり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りょうり — ryōri — \"cooking; a dish, cuisine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには りょうりが うまいです。 — ani wa ryōri ga umai desu — \"My older brother is good at cooking.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "りょうり (ryōri) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ryō, \"measure, materials\" (Middle Chinese lew) and ri, \"arrange, reason\" (liX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryōri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryōri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ryōri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ryōri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa ryōri ga umai desu — My older brother is good at cooking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa ryōri ga umai desu* — My older brother is good at cooking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for plate, then the Japanese for to dish up, then say ryōri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for plate, then the Japanese for to dish up, then say *ryōri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does りょうり (ryōri) mean? (\"Cooking; a dish, cuisine\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C175-ryouri-type",
+              "prompt": "Say the Japanese for 'cooking'.",
+              "assesses": [
+                "JA-LEX-C175-COOK175-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "りょうり",
+                "ryōri",
+                "ryouri",
+                "ryoori",
+                "ryori"
+              ],
+              "feedback": {
+                "correct": "Right: りょうり (ryōri) is 'cooking; a dish, cuisine'.",
+                "incorrect": "'Cooking' is りょうり (ryōri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C175-yuderu",
+      "sequence": 10560,
+      "title": "ゆでる (yuderu) — to boil food; to cook in hot water",
+      "headword": "ゆでる",
+      "romanization": "yuderu",
+      "gloss": "to boil food; to cook in hot water",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03f36d4ca0e6c867",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to dish up, then the Japanese for cooking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆでる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆでる — yuderu — \"to boil food; to cook in hot water\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あさ たまごを ゆでます。 — asa tamago o yudemasu — \"I boil eggs in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ゆでます, yudemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆでる (yuderu) is a native Japanese word (wago), inherited rather than borrowed; JMdict also lists a spelling with the kanji for yu, \"hot water\", which suggests a link to that word, though the sources here do not settle it (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuderu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuderu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuderu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuderu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa tamago o yudemasu — I boil eggs in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa tamago o yudemasu* — I boil eggs in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to dish up, then the Japanese for cooking, then say yuderu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to dish up, then the Japanese for cooking, then say *yuderu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆでる (yuderu) mean? (\"To boil food; to cook in hot water\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C175-yuderu-type",
+              "prompt": "Say the Japanese for 'to boil food'.",
+              "assesses": [
+                "JA-LEX-C175-COOK175-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆでる",
+                "yuderu"
+              ],
+              "feedback": {
+                "correct": "Right: ゆでる (yuderu) is 'to boil food; to cook in hot water'.",
+                "incorrect": "'To boil food' is ゆでる (yuderu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C175-mazeru",
+      "sequence": 10570,
+      "title": "まぜる (mazeru) — to mix; to stir, to blend",
+      "headword": "まぜる",
+      "romanization": "mazeru",
+      "gloss": "to mix; to stir, to blend",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54a1607ae3d6c8a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for cooking, then the Japanese for to boil food."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まぜる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まぜる — mazeru — \"to mix; to stir, to blend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さとうと しおを まぜます。 — satō to shio o mazemasu — \"I mix sugar and salt.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite まぜます, mazemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まぜる (mazeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satō to shio o mazemasu — I mix sugar and salt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satō to shio o mazemasu* — I mix sugar and salt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for cooking, then the Japanese for to boil food, then say mazeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for cooking, then the Japanese for to boil food, then say *mazeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まぜる (mazeru) mean? (\"To mix; to stir, to blend\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C175-mazeru-type",
+              "prompt": "Say the Japanese for 'to mix'.",
+              "assesses": [
+                "JA-LEX-C175-COOK175-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まぜる",
+                "mazeru"
+              ],
+              "feedback": {
+                "correct": "Right: まぜる (mazeru) is 'to mix; to stir, to blend'.",
+                "incorrect": "'To mix' is まぜる (mazeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C175-chawan",
+      "sequence": 10580,
+      "title": "ちゃわん (chawan) — rice bowl; teacup",
+      "headword": "ちゃわん",
+      "romanization": "chawan",
+      "gloss": "rice bowl; teacup",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eff5e8b86790471f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to boil food, then the Japanese for to mix."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちゃわん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゃわん — chawan — \"rice bowl; teacup\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちゃわんに ごはんを もります。 — chawan ni gohan o morimasu — \"I dish up rice into a bowl.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゃわん (chawan) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are cha, \"tea\" (Middle Chinese drae) and wan, \"bowl\" ('wanX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chawan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chawan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chawan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chawan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chawan ni gohan o morimasu — I dish up rice into a bowl.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chawan ni gohan o morimasu* — I dish up rice into a bowl.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to boil food, then the Japanese for to mix, then say chawan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to boil food, then the Japanese for to mix, then say *chawan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちゃわん (chawan) mean? (\"Rice bowl; teacup\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C175-chawan-type",
+              "prompt": "Say the Japanese for 'rice bowl'.",
+              "assesses": [
+                "JA-LEX-C175-COOK175-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちゃわん",
+                "chawan"
+              ],
+              "feedback": {
+                "correct": "Right: ちゃわん (chawan) is 'rice bowl; teacup'.",
+                "incorrect": "'Rice bowl' is ちゃわん (chawan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C175-abura",
+      "sequence": 10590,
+      "title": "あぶら (abura) — oil; fat",
+      "headword": "あぶら",
+      "romanization": "abura",
+      "gloss": "oil; fat",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14aa3de926e32f92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to mix, then the Japanese for rice bowl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あぶら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あぶら — abura — \"oil; fat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あぶらで にくを やきます。 — abura de niku o yakimasu — \"I cook the meat in oil.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あぶら (abura) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abura de niku o yakimasu — I cook the meat in oil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abura de niku o yakimasu* — I cook the meat in oil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to mix, then the Japanese for rice bowl, then say abura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to mix, then the Japanese for rice bowl, then say *abura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あぶら (abura) mean? (\"Oil; fat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C175-abura-type",
+              "prompt": "Say the Japanese for 'oil'.",
+              "assesses": [
+                "JA-LEX-C175-COOK175-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あぶら",
+                "abura"
+              ],
+              "feedback": {
+                "correct": "Right: あぶら (abura) is 'oil; fat'.",
+                "incorrect": "'Oil' is あぶら (abura)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

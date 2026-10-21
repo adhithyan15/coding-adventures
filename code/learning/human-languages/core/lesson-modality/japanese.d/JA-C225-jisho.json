@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C225-jisho",
+    "language": "japanese",
+    "chapter": 225,
+    "sequence": 13690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ece8ad62240f7f91"
+  },
+  "findings": []
+}

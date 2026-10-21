@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:4a1ed9f3967ea1ef",
+  "lessonIds": [
+    "JA-C220-kenkou",
+    "JA-C220-joubu",
+    "JA-C220-futoru",
+    "JA-C220-yaseru",
+    "JA-C220-shokuyoku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch220.txt",
+  "json": "japanese/narration/ch220.json",
+  "textHash": "fnv1a64:5ac20015c426cff9",
+  "jsonHash": "fnv1a64:0f6f2612ecda1b81",
+  "findings": []
+}

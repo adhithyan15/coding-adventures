@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C153-maniau",
+    "language": "japanese",
+    "chapter": 153,
+    "sequence": 9200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdea8145a26ad04c"
+  },
+  "findings": []
+}

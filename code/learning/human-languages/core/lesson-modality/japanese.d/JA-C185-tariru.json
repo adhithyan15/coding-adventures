@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C185-tariru",
+    "language": "japanese",
+    "chapter": 185,
+    "sequence": 11110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ceb8187060bb401"
+  },
+  "findings": []
+}

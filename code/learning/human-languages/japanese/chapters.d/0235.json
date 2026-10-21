@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Baseball and Judo",
+  "label": "ch:ja-baseball-and-judo",
+  "canDo": "I can talk about ball games and judo I played.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-R235-review-230-235",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can talk about ball games and judo I played.",
+    "assesses": [
+      "JA-LEX-C235-BALL235-03",
+      "JA-LEX-C235-BALL235-04",
+      "JA-LEX-C235-BALL235-05"
+    ]
+  }
+}

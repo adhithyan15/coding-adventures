@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:2ca9f06e44dfcf0c",
+  "lessonIds": [
+    "JA-C239-odoru",
+    "JA-C239-tsuru",
+    "JA-C239-sanpo",
+    "JA-C239-tejina",
+    "JA-C239-shougi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch239.txt",
+  "json": "japanese/narration/ch239.json",
+  "textHash": "fnv1a64:05548d8f2cc242cd",
+  "jsonHash": "fnv1a64:fbeecdc47400feb9",
+  "findings": []
+}

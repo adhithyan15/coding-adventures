@@ -1,0 +1,11 @@
+{
+  "id": "JA-C158-akeru",
+  "pathSegment": "JA-PATH-158-LIGHTS158",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-158-LIGHTS158",
+      "order": 3
+    }
+  ]
+}

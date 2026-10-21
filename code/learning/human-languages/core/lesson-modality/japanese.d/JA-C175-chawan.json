@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C175-chawan",
+    "language": "japanese",
+    "chapter": 175,
+    "sequence": 10580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eff5e8b86790471f"
+  },
+  "findings": []
+}

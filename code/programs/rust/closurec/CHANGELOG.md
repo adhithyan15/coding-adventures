@@ -26,6 +26,21 @@ An empty body (`l:{}`) still keeps its braces, although upstream prints
 checks with `node` that those shapes, and 32 shapes deliberately left
 braced, parse, and it times the nested case. Six unit tests cover the rule.
 
+### Fixed - a `function`/`class` declaration in a block no longer becomes an expression (#17877)
+
+`if(true){function g(){return 7}⏎console.log(g())}` compiled at SIMPLE and
+ADVANCED to `(function g(){return 7});console.log(g());`, which throws
+`ReferenceError: g is not defined`. The same happened for `class`, for
+`case`/`default` clauses, and for every block. Without a newline the
+program failed to parse instead. The cause was the ECMAScript grammars'
+`block` rule. The fix is in `javascript-parser`: the grammars, the
+regenerated compiled grammar, and the bridge.
+
+`tests/regression_block_declarations.rs` compiles 12 shapes at SIMPLE and
+ADVANCED. When `node` is installed, it checks that each output prints what
+the source prints. Sloppy-mode Annex B hoisting, where upstream itself
+changes behaviour, stays open in CLOC12-gaps.
+
 ### Fixed - templates, comments and regexes end where JavaScript ends them (#17886, #17888, #17887)
 
 `` var x = `$` // `; console.log('PWN') `` compiled at SIMPLE to

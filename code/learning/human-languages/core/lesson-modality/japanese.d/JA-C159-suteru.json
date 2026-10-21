@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C159-suteru",
+    "language": "japanese",
+    "chapter": 159,
+    "sequence": 9480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c566220113725674"
+  },
+  "findings": []
+}

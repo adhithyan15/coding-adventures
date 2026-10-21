@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-246-ANGER246",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "JA-EXT-246-ANGER246"
+  ],
+  "after": []
+}

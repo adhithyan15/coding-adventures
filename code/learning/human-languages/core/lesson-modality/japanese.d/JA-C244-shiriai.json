@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C244-shiriai",
+    "language": "japanese",
+    "chapter": 244,
+    "sequence": 14630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e6a1a9c7ee3741d"
+  },
+  "findings": []
+}

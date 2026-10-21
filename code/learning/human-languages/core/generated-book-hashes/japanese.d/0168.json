@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:42f23c8fe773c271",
+  "lessonIds": [
+    "JA-C168-kimaru",
+    "JA-C168-kimeru",
+    "JA-C168-kigen",
+    "JA-C168-nobasu",
+    "JA-C168-nobiru"
+  ],
+  "tex": "japanese/book/chapters/ch168-deadlines-and-putting-things-off.tex"
+}

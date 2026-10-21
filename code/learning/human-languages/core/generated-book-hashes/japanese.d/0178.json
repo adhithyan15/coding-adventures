@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:caa24256a451a5d5",
+  "lessonIds": [
+    "JA-C178-butaniku",
+    "JA-C178-gyuuniku",
+    "JA-C178-toriniku",
+    "JA-C178-gyuunyuu",
+    "JA-C178-hiyasu"
+  ],
+  "tex": "japanese/book/chapters/ch178-meat-and-milk.tex"
+}

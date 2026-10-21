@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:cda250abe3c49788",
+  "lessonIds": [
+    "JA-C224-gakusei",
+    "JA-C224-kyoushitsu",
+    "JA-C224-jugyou",
+    "JA-C224-oshieru",
+    "JA-C224-narau"
+  ],
+  "tex": "japanese/book/chapters/ch224-students-and-classrooms.tex"
+}

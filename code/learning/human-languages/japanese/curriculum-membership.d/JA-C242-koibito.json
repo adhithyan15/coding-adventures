@@ -1,0 +1,11 @@
+{
+  "id": "JA-C242-koibito",
+  "pathSegment": "JA-PATH-242-FRIENDS242",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-242-FRIENDS242",
+      "order": 2
+    }
+  ]
+}

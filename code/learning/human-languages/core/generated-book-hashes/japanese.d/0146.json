@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:3335abf8ae1e54fd",
+  "lessonIds": [
+    "JA-C146-nemuru",
+    "JA-C146-gussuri",
+    "JA-C146-sameru",
+    "JA-C146-okosu",
+    "JA-C146-suimin"
+  ],
+  "tex": "japanese/book/chapters/ch146-sleeping-soundly-and-waking-up.tex"
+}

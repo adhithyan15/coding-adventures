@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Sale, Discount and Sold Out",
+  "label": "ch:ja-sale-discount-and-sold-out",
+  "canDo": "I can read sale, discount and sold-out signs.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C185-tariru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can read sale, discount and sold-out signs.",
+    "assesses": [
+      "JA-LEX-C185-SALE185-03",
+      "JA-LEX-C185-SALE185-04",
+      "JA-LEX-C185-SALE185-05"
+    ]
+  }
+}

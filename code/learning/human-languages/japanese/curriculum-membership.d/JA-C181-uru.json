@@ -1,0 +1,11 @@
+{
+  "id": "JA-C181-uru",
+  "pathSegment": "JA-PATH-181-SHOP181",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-181-SHOP181",
+      "order": 3
+    }
+  ]
+}

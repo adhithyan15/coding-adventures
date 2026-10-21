@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:e8bf7f4ada3c6f56",
+  "lessonIds": [
+    "JA-C207-tenki",
+    "JA-C207-furu",
+    "JA-C207-yuki",
+    "JA-C207-hareru",
+    "JA-C207-kumoru"
+  ],
+  "tex": "japanese/book/chapters/ch207-tomorrow-s-rain-and-snow.tex"
+}

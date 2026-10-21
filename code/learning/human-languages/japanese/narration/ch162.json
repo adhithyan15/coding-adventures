@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 162,
+  "title": "Broken, Cracked and Repaired",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6a31f5bd4e2bbe0f",
+  "lessons": [
+    {
+      "id": "JA-C162-kowareru",
+      "sequence": 9620,
+      "title": "こわれる (kowareru) — to be broken; to break down",
+      "headword": "こわれる",
+      "romanization": "kowareru",
+      "gloss": "to be broken; to break down",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f9104f01becb829",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get dry, then the Japanese for to dry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こわれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こわれる — kowareru — \"to be broken; to break down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "やすい かさは よく こわれます。 — yasui kasa wa yoku kowaremasu — \"Cheap umbrellas often break.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こわれます, kowaremasu; an ichidan verb. Its transitive partner is こわす, kowasu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こわれる (kowareru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as kowasu, \"to break\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kowareru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kowareru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kowareru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kowareru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasui kasa wa yoku kowaremasu — Cheap umbrellas often break.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasui kasa wa yoku kowaremasu* — Cheap umbrellas often break.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get dry, then the Japanese for to dry, then say kowareru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get dry, then the Japanese for to dry, then say *kowareru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こわれる (kowareru) mean? (\"To be broken; to break down\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C162-kowareru-type",
+              "prompt": "Say the Japanese for 'to be broken'.",
+              "assesses": [
+                "JA-LEX-C162-REPAIR162-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こわれる",
+                "kowareru"
+              ],
+              "feedback": {
+                "correct": "Right: こわれる (kowareru) is 'to be broken; to break down'.",
+                "incorrect": "'To be broken' is こわれる (kowareru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C162-wareru",
+      "sequence": 9630,
+      "title": "われる (wareru) — to shatter; to split",
+      "headword": "われる",
+      "romanization": "wareru",
+      "gloss": "to shatter; to split",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf55d93f6ff864fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to dry, then the Japanese for to be broken."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: われる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "われる — wareru — \"to shatter; to split\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この いけの こおりは よく われます。 — kono ike no kōri wa yoku waremasu — \"The ice on this pond often cracks.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite われます, waremasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "われる (wareru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wareru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wareru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wareru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wareru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono ike no kōri wa yoku waremasu — The ice on this pond often cracks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono ike no kōri wa yoku waremasu* — The ice on this pond often cracks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to dry, then the Japanese for to be broken, then say wareru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to dry, then the Japanese for to be broken, then say *wareru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does われる (wareru) mean? (\"To shatter; to split\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C162-wareru-type",
+              "prompt": "Say the Japanese for 'to shatter'.",
+              "assesses": [
+                "JA-LEX-C162-REPAIR162-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "われる",
+                "wareru"
+              ],
+              "feedback": {
+                "correct": "Right: われる (wareru) is 'to shatter; to split'.",
+                "incorrect": "'To shatter' is われる (wareru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C162-toreru",
+      "sequence": 9640,
+      "title": "とれる (toreru) — to come off; to come loose",
+      "headword": "とれる",
+      "romanization": "toreru",
+      "gloss": "to come off; to come loose",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c56ab77c8481815",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be broken, then the Japanese for to shatter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とれる — toreru — \"to come off; to come loose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この はこの ふたは よく とれます。 — kono hako no futa wa yoku toremasu — \"The lid of this box often comes off.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とれます, toremasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とれる (toreru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as toru, \"to take\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toreru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toreru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toreru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toreru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono hako no futa wa yoku toremasu — The lid of this box often comes off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono hako no futa wa yoku toremasu* — The lid of this box often comes off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be broken, then the Japanese for to shatter, then say toreru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be broken, then the Japanese for to shatter, then say *toreru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とれる (toreru) mean? (\"To come off; to come loose\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C162-toreru-type",
+              "prompt": "Say the Japanese for 'to come off'.",
+              "assesses": [
+                "JA-LEX-C162-REPAIR162-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とれる",
+                "toreru"
+              ],
+              "feedback": {
+                "correct": "Right: とれる (toreru) is 'to come off; to come loose'.",
+                "incorrect": "'To come off' is とれる (toreru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C162-shuuri",
+      "sequence": 9650,
+      "title": "しゅうり (shūri) — repair; mending",
+      "headword": "しゅうり",
+      "romanization": "shūri",
+      "gloss": "repair; mending",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:327c0e9d5df36c87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to shatter, then the Japanese for to come off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅうり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅうり — shūri — \"repair; mending\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは いすの しゅうりが とくいです。 — chichi wa isu no shūri ga tokui desu — \"My father is good at mending chairs.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅうり (shūri) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shū, \"discipline, master\" (Middle Chinese sjuw) and ri, \"reason, arrangement\" (liX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shūri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shūri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa isu no shūri ga tokui desu — My father is good at mending chairs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa isu no shūri ga tokui desu* — My father is good at mending chairs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to shatter, then the Japanese for to come off, then say shūri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to shatter, then the Japanese for to come off, then say *shūri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅうり (shūri) mean? (\"Repair; mending\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C162-shuuri-type",
+              "prompt": "Say the Japanese for 'repair'.",
+              "assesses": [
+                "JA-LEX-C162-REPAIR162-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅうり",
+                "shūri",
+                "shuuri",
+                "shuri"
+              ],
+              "feedback": {
+                "correct": "Right: しゅうり (shūri) is 'repair; mending'.",
+                "incorrect": "'Repair' is しゅうり (shūri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C162-furui",
+      "sequence": 9660,
+      "title": "ふるい (furui) — old (of things)",
+      "headword": "ふるい",
+      "romanization": "furui",
+      "gloss": "old (of things)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b6fd1cf844532b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to come off, then the Japanese for repair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふるい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふるい — furui — \"old (of things)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この いすは ふるいです。 — kono isu wa furui desu — \"This chair is old.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふるい (furui) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "furui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *furui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono isu wa furui desu — This chair is old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono isu wa furui desu* — This chair is old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to come off, then the Japanese for repair, then say furui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to come off, then the Japanese for repair, then say *furui* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふるい (furui) mean? (\"Old (of things)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C162-furui-type",
+              "prompt": "Say the Japanese for 'old'.",
+              "assesses": [
+                "JA-LEX-C162-REPAIR162-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふるい",
+                "furui"
+              ],
+              "feedback": {
+                "correct": "Right: ふるい (furui) is 'old (of things)'.",
+                "incorrect": "'Old' is ふるい (furui)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

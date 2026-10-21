@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:ceabb6e6e963e580",
+  "lessonIds": [
+    "JA-C213-hikaru",
+    "JA-C213-tsuki",
+    "JA-C213-shizumu",
+    "JA-C213-noboru",
+    "JA-C213-atatamaru"
+  ],
+  "tex": "japanese/book/chapters/ch213-sun-moon-and-stars.tex"
+}

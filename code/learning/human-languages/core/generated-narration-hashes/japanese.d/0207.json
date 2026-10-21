@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:4f9a3e447eb30f31",
+  "lessonIds": [
+    "JA-C207-tenki",
+    "JA-C207-furu",
+    "JA-C207-yuki",
+    "JA-C207-hareru",
+    "JA-C207-kumoru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch207.txt",
+  "json": "japanese/narration/ch207.json",
+  "textHash": "fnv1a64:b365919b16e357ce",
+  "jsonHash": "fnv1a64:c99754bd04ec03af",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C198-chikatetsu",
+  "pathSegment": "JA-PATH-198-RIDE198",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-198-RIDE198",
+      "order": 3
+    }
+  ]
+}

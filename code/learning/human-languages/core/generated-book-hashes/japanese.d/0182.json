@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:8d6140ddd4994651",
+  "lessonIds": [
+    "JA-C182-harau",
+    "JA-C182-otsuri",
+    "JA-C182-genkin",
+    "JA-C182-satsu",
+    "JA-C182-kozeni"
+  ],
+  "tex": "japanese/book/chapters/ch182-paying-cash-and-coins.tex"
+}

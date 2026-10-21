@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:032ebe75b8b2e8ff",
+  "lessonIds": [
+    "JA-C160-souji",
+    "JA-C160-chiri",
+    "JA-C160-yogoreru",
+    "JA-C160-yogosu",
+    "JA-C160-kitanai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch160.txt",
+  "json": "japanese/narration/ch160.json",
+  "textHash": "fnv1a64:bf61aae76f75caf2",
+  "jsonHash": "fnv1a64:1b3fc4ee1d93a8b9",
+  "findings": []
+}

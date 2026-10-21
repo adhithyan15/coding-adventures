@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:75b6915c31d2d27a",
+  "lessonIds": [
+    "JA-C196-mukau",
+    "JA-C196-kinjo",
+    "JA-C196-juusho",
+    "JA-C196-chizu",
+    "JA-C196-mawaru"
+  ],
+  "tex": "japanese/book/chapters/ch196-addresses-maps-and-neighbours.tex"
+}

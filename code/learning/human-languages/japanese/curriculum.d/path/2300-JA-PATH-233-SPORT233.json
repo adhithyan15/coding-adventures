@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-233-SPORT233",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "JA-EXT-233-SPORT233"
+  ],
+  "after": []
+}
