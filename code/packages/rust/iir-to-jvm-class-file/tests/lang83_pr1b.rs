@@ -310,6 +310,7 @@ fn checked_ops_refuse_int_operands() {
         )],
         entry_point: Some("main".into()),
         language: "test".into(),
+        release: None,
         exports: vec![],
         imports: vec![],
     };
