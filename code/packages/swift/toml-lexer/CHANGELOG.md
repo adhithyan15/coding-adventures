@@ -1,5 +1,15 @@
 # Changelog -- TOMLLexer (Swift)
 
+## [Unreleased]
+
+### Fixed
+- Regenerated `_Grammar.swift` from the canonical grammar. #17722
+  (`feat(forme): load declarative TOML pipelines`) tightened
+  `code/grammars/toml/toml.tokens` (multi-line strings, CR handling, numeric
+  underscores, comment control characters) and regenerated the Ruby and
+  TypeScript copies, but not this one, so `regen-embedded-grammars.sh
+  --check` failed main's full build.
+
 ## [0.2.0] -- 2026-07-13
 
 ### Changed
