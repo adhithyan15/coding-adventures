@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:158582b1908e7aa6",
+  "lessonIds": [
+    "RU-C498-druzhit",
+    "RU-C498-druzhba",
+    "RU-C498-priyatel",
+    "RU-C498-rovesnik",
+    "RU-C498-odnoklassnik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch498.txt",
+  "json": "russian/narration/ch498.json",
+  "textHash": "fnv1a64:708e7cdc5a32040e",
+  "jsonHash": "fnv1a64:7383d6f02c38cf47",
+  "findings": []
+}

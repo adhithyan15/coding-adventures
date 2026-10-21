@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-491-INLAWS",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-491-INLAWS"
+  ],
+  "after": []
+}

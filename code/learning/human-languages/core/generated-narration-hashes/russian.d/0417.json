@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:7c7ca7d48b5e840c",
+  "lessonIds": [
+    "RU-C417-turniket",
+    "RU-C417-proyezdnoy",
+    "RU-C417-bezbiletnik",
+    "RU-C417-marshrut",
+    "RU-C417-marshrutka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch417.txt",
+  "json": "russian/narration/ch417.json",
+  "textHash": "fnv1a64:a55478e9417d6f4d",
+  "jsonHash": "fnv1a64:134873ddbc970de5",
+  "findings": []
+}

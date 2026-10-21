@@ -1,0 +1,11 @@
+{
+  "id": "RU-C384-progulivat",
+  "pathSegment": "RU-PATH-384-UCHYOBA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-384-UCHYOBA",
+      "order": 2
+    }
+  ]
+}

@@ -633,6 +633,20 @@ root.addEventListener("input", event => {
   if (target === null || !root.contains(target)) {
     return;
   }
+  // An IME composition (CJK, dead keys) fires input events for text that is
+  // not final. A host response re-renders the field, which would end the
+  // composition mid-word, so the change is sent once it completes instead.
+  if (event.isComposing) {
+    return;
+  }
+  void dispatchMosaicEvent(target.dataset.onChange, target);
+});
+
+root.addEventListener("compositionend", event => {
+  const target = closestEventTarget(event.target, "[data-on-change]");
+  if (target === null || !root.contains(target)) {
+    return;
+  }
   void dispatchMosaicEvent(target.dataset.onChange, target);
 });
 
@@ -650,7 +664,14 @@ root.addEventListener("keydown", event => {
   if (target === null || !root.contains(target)) {
     return;
   }
-  if (event.key === "Enter" && target.dataset.onCommit) {
+  // A field whose commit key is `mod+Enter` (a multi-line text area, where
+  // bare Enter is a line break) commits on Ctrl+Enter or Cmd+Enter only.
+  const commitChord = target.dataset.commitKey === "mod+Enter";
+  if (event.key === "Enter" && target.dataset.onCommit
+      && (!commitChord || event.ctrlKey || event.metaKey)) {
+    if (commitChord) {
+      event.preventDefault();
+    }
     void dispatchMosaicEvent(target.dataset.onCommit, target);
   }
   if (event.key === "Escape" && target.dataset.onCancel) {
@@ -1020,10 +1041,105 @@ function normalizeHostProps(response) {
 }
 
 function render() {
+  // render() rebuilds root.innerHTML wholesale, which destroys the element
+  // that has focus. A controlled field re-renders after every keystroke the
+  // host echoes back, so without this the field lost focus after the first
+  // character and typing stopped.
+  const focus = captureFocus();
   root.innerHTML = renderTemplate(template, props);
   applyHostNodes(root, props);
   normalizeHostAttributes(root);
   applyFontSizes(root, props);
+  restoreFocus(focus);
+}
+
+// The focused element is found again by what it IS, not where it was: its
+// tag, accessible name and event markers, plus which of the elements sharing
+// that signature it was. A child-index path would point at a different field
+// as soon as an If or For above it changed the tree.
+//
+// Two guards keep a guess from doing harm. Focus is restored only when the
+// number of matching controls is unchanged: if a row was added or removed,
+// "the third Delete button" may now belong to another record, and dropping
+// focus is safer than pressing the wrong one. (Rows reordered without a
+// change in number still restore by position. A row whose control carries
+// a per-row accessible name, as "Complete task: <name>" does, is already told
+// apart by its signature; identically labelled controls in a re-sorted list
+// are the one case left, until `For` rows carry a stable key.) And
+// capture/restore can only
+// skip restoring focus, never stop a render (an unusual tag name the HTML
+// parser accepts is not a valid selector, so elements are looked up by name,
+// not with querySelectorAll).
+const FOCUS_SIGNATURE_ATTRIBUTES = [
+  "aria-label",
+  "name",
+  "placeholder",
+  "data-on-change",
+  "data-on-commit",
+  "data-on-click",
+  "data-on-toggle",
+  "data-on-select",
+];
+
+function focusSignature(element) {
+  return [element.tagName, ...FOCUS_SIGNATURE_ATTRIBUTES.map(name => element.getAttribute(name) ?? "")].join("\u0000");
+}
+
+function focusTwins(name, signature) {
+  return [...root.getElementsByTagName(name)].filter(element => focusSignature(element) === signature);
+}
+
+function captureFocus() {
+  try {
+    const active = document.activeElement;
+    if (active === null || active === root || !root.contains(active)) {
+      return null;
+    }
+    const signature = focusSignature(active);
+    const twins = focusTwins(active.localName, signature);
+    const state = {
+      signature,
+      name: active.localName,
+      occurrence: twins.indexOf(active),
+      count: twins.length,
+      scrollTop: active.scrollTop,
+    };
+    if (typeof active.selectionStart === "number") {
+      state.selection = [active.selectionStart, active.selectionEnd, active.selectionDirection];
+    }
+    return state;
+  } catch {
+    return null;
+  }
+}
+
+function restoreFocus(state) {
+  if (state === null || state.occurrence < 0) {
+    return;
+  }
+  try {
+    restoreFocusUnguarded(state);
+  } catch {
+    // Restoring focus is a courtesy; it must never break a render.
+  }
+}
+
+function restoreFocusUnguarded(state) {
+  const twins = focusTwins(state.name, state.signature);
+  if (twins.length !== state.count) {
+    return;
+  }
+  const element = twins[state.occurrence];
+  element.focus({ preventScroll: true });
+  if (state.selection !== undefined && typeof element.setSelectionRange === "function") {
+    const length = String(element.value ?? "").length;
+    try {
+      element.setSelectionRange(Math.min(state.selection[0], length), Math.min(state.selection[1], length), state.selection[2]);
+    } catch {
+      // Some input types (number, email) refuse a selection; focus is enough.
+    }
+  }
+  element.scrollTop = state.scrollTop;
 }
 
 function applyFontSizes(scope, context) {
@@ -2101,10 +2217,18 @@ fn emit_host_input(
         attrs.push_str(" autofocus");
     }
     append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
-    // Enter is a line break in a text area, so a multiline field has no
-    // commit key and gets no commit marker for the host to bind (#15930).
-    if !multiline {
-        append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    // The commit marker names its key when it is not bare Enter. In a text
+    // area Enter is a line break, so UI25 §4's multi-line commit key is
+    // Ctrl+Enter (Windows, Linux) or Cmd+Enter (macOS), spelled `mod+Enter`
+    // for the hydrator:
+    //
+    //   field       | markers                                          | commits on
+    //   ------------+--------------------------------------------------+---------------
+    //   single-line | data-on-commit="onX"                             | Enter
+    //   multiline   | data-on-commit="onX" data-commit-key="mod+Enter" | Ctrl/Cmd+Enter
+    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
+    if multiline && matches!(find_prop(node, "onCommit"), Some(LayoutPropValue::EmitRef(_))) {
+        attrs.push_str(" data-commit-key=\"mod+Enter\"");
     }
     append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
     if node.tag == "Input" {
@@ -5461,10 +5585,12 @@ mod tests {
         assert!(textarea.contains(">{{frontTemplate}}</textarea>"), "{textarea}");
     }
 
-    /// #15930 — Enter is a line break in a text area, so a multiline field
-    /// carries no commit marker for the host to bind to Enter. Cancel stays.
+    /// UI25 §4 — Enter is a line break in a text area, so a multiline
+    /// field's commit marker names its key: `data-commit-key="mod+Enter"`
+    /// (Ctrl+Enter, or Cmd+Enter on macOS). A single-line field carries no
+    /// key marker, which means bare Enter. Cancel is unchanged.
     #[test]
-    fn a_multiline_field_has_no_commit_marker() {
+    fn a_multiline_commit_marker_names_its_ctrl_or_cmd_enter_key() {
         for tag in ["HostInput", "Input"] {
             let l = layout(
                 "Editor",
@@ -5480,9 +5606,72 @@ mod tests {
             let out = from_pipeline(&component("Editor", vec![]), &l, &empty_style("Editor"))
                 .unwrap()
                 .output;
-            assert!(!out.contains("data-on-commit"), "{tag}: {out}");
-            assert!(out.contains("data-on-cancel=\"onDiscard\""), "{tag}: {out}");
+            let textarea = out.lines().find(|line| line.contains("<textarea")).expect("a textarea");
+            assert!(textarea.contains("data-on-commit=\"onSave\""), "{tag}: {textarea}");
+            assert!(textarea.contains("data-commit-key=\"mod+Enter\""), "{tag}: {textarea}");
+            assert!(textarea.contains("data-on-cancel=\"onDiscard\""), "{tag}: {textarea}");
         }
+        let l = layout(
+            "Editor",
+            node_with_props("HostInput", vec![prop_emit("onCommit", "onSave")]),
+        );
+        let out = from_pipeline(&component("Editor", vec![]), &l, &empty_style("Editor"))
+            .unwrap()
+            .output;
+        assert!(out.contains("data-on-commit=\"onSave\""), "{out}");
+        assert!(!out.contains("data-commit-key"), "a single-line field commits on Enter: {out}");
+    }
+
+    /// The generated runtime binds the marker: bare Enter commits a field
+    /// with no `data-commit-key`, and a `mod+Enter` field commits only with
+    /// Ctrl or Cmd held, so a line break in a text area never commits.
+    #[test]
+    fn the_runtime_commits_a_text_area_only_on_ctrl_or_cmd_enter() {
+        let model = component_with_emits(
+            "Editor",
+            vec![],
+            vec![EmitDecl {
+                name: "onSave".into(),
+                params: vec![],
+            }],
+        );
+        let l = layout(
+            "Editor",
+            node_with_props(
+                "HostInput",
+                vec![prop_keyword("multiline", "true"), prop_emit("onCommit", "onSave")],
+            ),
+        );
+        let mut options = EmitOptions::default();
+        options.emit_project = true;
+        let main_js = from_pipeline_with_options(&model, &l, &empty_style("Editor"), &options)
+            .unwrap()
+            .project
+            .expect("project shell")
+            .main_js;
+        assert!(
+            main_js.contains("target.dataset.commitKey === \"mod+Enter\""),
+            "{main_js}"
+        );
+        assert!(main_js.contains("event.ctrlKey || event.metaKey"), "{main_js}");
+    }
+
+    /// The runtime's `render()` rebuilds `root.innerHTML`, which destroys the
+    /// focused element; a controlled field re-renders after every echoed
+    /// keystroke, so it must capture focus before the rebuild and restore it
+    /// after, and hold a composition's input until `compositionend`.
+    /// (Behaviour is checked against jsdom outside the unit suite: 7/7 vs 1/7.)
+    #[test]
+    fn the_runtime_keeps_focus_across_a_render_and_waits_out_composition() {
+        let main_js = HTML_RUNTIME_TEMPLATE;
+        let render = &main_js[main_js.find("function render() {").expect("render")..];
+        let render = &render[..render.find("\n}\n").unwrap()];
+        let capture = render.find("const focus = captureFocus();").expect("capture");
+        let rebuild = render.find("root.innerHTML = renderTemplate(template, props);").expect("rebuild");
+        let restore = render.find("restoreFocus(focus);").expect("restore");
+        assert!(capture < rebuild && rebuild < restore, "{render}");
+        assert!(main_js.contains("if (event.isComposing) {\n    return;\n  }"), "composition guard");
+        assert!(main_js.contains("root.addEventListener(\"compositionend\""), "composition end");
     }
 
     #[test]

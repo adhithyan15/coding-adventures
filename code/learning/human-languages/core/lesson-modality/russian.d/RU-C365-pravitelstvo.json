@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C365-pravitelstvo",
+    "language": "russian",
+    "chapter": 365,
+    "sequence": 21240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d575f2520869c680"
+  },
+  "findings": []
+}

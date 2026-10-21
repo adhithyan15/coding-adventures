@@ -5712,11 +5712,36 @@ model-card parameter, or a UI artifact is not a completion signal.
      non-nested subcircuit divider decks. The release manifest explicitly
      requires those three promised surfaces, and every parser runtime executes
      the shared corpus.
-   - Discovery: `.temp` cards are parsed and engine temperature helpers are
-     available, but generic parser and deck runners do not yet apply `.temp`
-     to ordinary analysis cards. Keep global temperature-deck execution as a
-     dedicated follow-up phase; it requires analysis-result and CLI-contract
-     design rather than a single-card corpus addition.
+   - **Global temperature deck execution** (completed in the cross-language
+     core and CLI-contract slice): `.temp` cards execute every runnable
+     analysis at each source-ordered Celsius value, with the parser applying
+     device temperature before simulation. Analysis, selected-output, and
+     measure artifacts expose `temperatureKelvin` (or `null` for a nominal
+     no-`.temp` deck); the JSON CLI contract is schema version 2. Temperature
+     values must be finite and above absolute zero, while an explicit `.noise`
+     temperature remains the noise-source override. The 41-case core corpus
+     and release manifest now require this surface.
+   - **Operating-point measurement routing** (completed in the cross-language
+     CLI/API slice): discovery from the
+     global-temperature CLI corpus: analysis-plan helpers can measure operating
+     points, but the deck resolver rejects `.measure op`, leaving the `.op`
+     runner unable to publish selected measurements. Extend Python, Rust, and
+     TypeScript together with the one-point contract `.measure op NAME FIND
+     PROBE AT=0` (also preserving existing bare `FIND` parsing), preserving one
+     measurement artifact for each `.temp` execution. Keep vendor-specific
+     expression and multi-point measurement
+     forms outside this focused closure.
+   - **Raw-output CLI artifacts** (completed in the cross-language CLI/API
+     slice): discovery from the engine artifact APIs: selected `.control`
+     `write <rawfile> [probes...]` and `wrdata <file> [probes...]` blocks built
+     deterministic in-memory ASCII artifacts, but every parser CLI rejected the
+     block before execution and discarded the output. Python, Rust, and
+     TypeScript now preserve those selected control blocks while parsing and
+     publish source-analysis and temperature-scoped `rawfiles` and `wrdata`
+     records from `run --json`. The schema-versioned shared corpus freezes
+     target, requested and unmatched probes, normalized options, and complete
+     ASCII content. Arbitrary control flow and filesystem-backed writes remain
+     deliberately outside this contract.
    - Expand deck-owned output compatibility beyond source-order analysis
      execution and stable artifact exports toward nested sweeps, raw-format
      interoperability, and remaining vendor-style output controls.

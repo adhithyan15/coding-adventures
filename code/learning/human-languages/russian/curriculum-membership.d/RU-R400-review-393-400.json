@@ -1,0 +1,11 @@
+{
+  "id": "RU-R400-review-393-400",
+  "pathSegment": "RU-PATH-400-BEZOPASNOST",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-400-BEZOPASNOST",
+      "order": 5
+    }
+  ]
+}

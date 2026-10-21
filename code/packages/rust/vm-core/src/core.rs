@@ -324,9 +324,14 @@ impl VMCore {
     /// When the interpreter encounters `call fn_name`, it calls this handler
     /// with the resolved argument values instead of pushing a new frame.
     /// Call `unregister_jit_handler` to revert to interpreted execution.
+    ///
+    /// The handler returns `Result`: `Err` (e.g. [`VMError::Trap`] or
+    /// [`VMError::DivisionByZero`]) stops the calling program exactly as the
+    /// same failure in interpreted code would — `execute` returns that error
+    /// and no later instruction of any caller runs.
     pub fn register_jit_handler<F>(&mut self, fn_name: impl Into<String>, handler: F)
     where
-        F: Fn(&[Value]) -> Value + Send + Sync + 'static,
+        F: Fn(&[Value]) -> Result<Value, VMError> + Send + Sync + 'static,
     {
         self.jit_handlers.insert(fn_name.into(), Box::new(handler));
     }
@@ -725,7 +730,7 @@ mod tests {
         let mut vm = VMCore::new();
         vm.register_jit_handler("double", |args| {
             let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
-            Value::Int(n * 2)
+            Ok(Value::Int(n * 2))
         });
 
         let double_fn = IIRFunction::new(
@@ -753,6 +758,50 @@ mod tests {
 
         let result = vm.execute(&mut module, "main", &[]).unwrap();
         assert_eq!(result, Some(Value::Int(42)));
+        assert_eq!(vm.metrics_jit_hits(), 1);
+    }
+
+    /// A JIT handler that fails must stop its interpreted caller (fail
+    /// closed): `execute` returns the handler's error, the call's
+    /// destination is never assigned, and the `mark` builtin after the call
+    /// never runs.  Regression test for the LANG83 PR1b security review —
+    /// handlers used to return a bare `Value`, so a trapping compiled callee
+    /// handed back `Null` and the caller kept going.
+    #[test]
+    fn failing_jit_handler_stops_interpreted_caller() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        use std::sync::Arc;
+
+        let marks = Arc::new(AtomicUsize::new(0));
+        let mut vm = VMCore::new();
+        let seen = Arc::clone(&marks);
+        vm.builtins_mut().register("mark", move |_| {
+            seen.fetch_add(1, Ordering::SeqCst);
+            Ok(Value::Null)
+        });
+        vm.register_jit_handler("boom", |_args| {
+            Err(VMError::Trap { kind: "Trap.Overflow".into() })
+        });
+
+        let main_fn = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("call", Some("r".into()),
+                    vec![Operand::Var("boom".into())], "i64"),
+                IIRInstr::new("call_builtin", None,
+                    vec![Operand::Var("mark".into())], "void"),
+                IIRInstr::new("ret", None, vec![Operand::Int(0)], "i64"),
+            ],
+        );
+        let mut module = IIRModule::new("test", "test");
+        module.add_or_replace(main_fn);
+
+        let err = vm.execute(&mut module, "main", &[]).unwrap_err();
+        assert!(
+            matches!(&err, VMError::Trap { kind } if kind == "Trap.Overflow"),
+            "expected Trap.Overflow, got {err:?}"
+        );
+        assert_eq!(marks.load(Ordering::SeqCst), 0, "caller ran past a failed JIT call");
         assert_eq!(vm.metrics_jit_hits(), 1);
     }
 
@@ -1457,5 +1506,130 @@ mod tests {
         vm.max_memory_entries = 10;
         let r = vm.execute(&mut m, "main", &[]);
         assert!(r.is_err(), "aggregate over-allocation must trap, got {r:?}");
+    }
+
+    // ── LANG83 PR1b: floor division, trap, legacy div edges ────────────────
+
+    fn run_i64_op(op: &str, a: i64, b: i64) -> Result<Value, crate::errors::VMError> {
+        let fn_ = IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(a)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(b)], "i64"),
+                IIRInstr::new(op, Some("r".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(fn_);
+        VMCore::new().execute(&mut m, "main", &[]).map(|o| o.unwrap())
+    }
+
+    fn lang83_trap_kind(r: Result<Value, crate::errors::VMError>) -> String {
+        match r {
+            Err(crate::errors::VMError::Trap { kind }) => kind,
+            other => panic!("expected a LANG83 trap, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn i64_div_and_mod_floor_follow_the_sign_table() {
+        // (a, b, floor quotient, floor remainder) — Python's // and %.
+        for (a, b, q, r) in [(7, 2, 3, 1), (-7, 2, -4, 1), (7, -2, -4, -1), (-7, -2, 3, -1), (6, 3, 2, 0), (-6, 3, -2, 0)] {
+            assert_eq!(run_i64_op("i64_div_floor", a, b).unwrap(), Value::Int(q), "{a} // {b}");
+            assert_eq!(run_i64_op("i64_mod_floor", a, b).unwrap(), Value::Int(r), "{a} % {b}");
+        }
+        assert_eq!(run_i64_op("i64_div_floor", i64::MIN, 1).unwrap(), Value::Int(i64::MIN));
+        assert_eq!(run_i64_op("i64_mod_floor", i64::MIN, 1).unwrap(), Value::Int(0));
+    }
+
+    #[test]
+    fn i64_floor_ops_trap_with_defined_kinds() {
+        assert_eq!(lang83_trap_kind(run_i64_op("i64_div_floor", 7, 0)), "Trap.DivZero");
+        assert_eq!(lang83_trap_kind(run_i64_op("i64_mod_floor", 7, 0)), "Trap.DivZero");
+        assert_eq!(lang83_trap_kind(run_i64_op("i64_div_floor", i64::MIN, -1)), "Trap.Overflow");
+        // MIN mod -1 is mathematically 0 — no trap.
+        assert_eq!(run_i64_op("i64_mod_floor", i64::MIN, -1).unwrap(), Value::Int(0));
+    }
+
+    #[test]
+    fn legacy_div_and_mod_no_longer_panic_on_min_by_minus_one() {
+        // Used to abort the host with "attempt to divide with overflow".
+        assert_eq!(run_i64_op("div", i64::MIN, -1).unwrap(), Value::Int(i64::MIN));
+        assert_eq!(run_i64_op("mod", i64::MIN, -1).unwrap(), Value::Int(0));
+        assert!(matches!(run_i64_op("div", 1, 0), Err(crate::errors::VMError::DivisionByZero)));
+    }
+
+    // ── LANG83 PR4: overflow-checked arithmetic ────────────────────────────
+
+    fn run_neg_ovf(a: i64) -> Result<Value, crate::errors::VMError> {
+        let mut m = IIRModule::new("test", "test");
+        m.add_or_replace(IIRFunction::new(
+            "main", vec![], "i64",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(a)], "i64"),
+                IIRInstr::new("i64_neg_ovf", Some("r".into()), vec![Operand::Var("a".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        ));
+        VMCore::new().execute(&mut m, "main", &[]).map(|o| o.unwrap())
+    }
+
+    #[test]
+    fn checked_ops_return_the_exact_result_at_the_range_edges() {
+        const MAX: i64 = i64::MAX;
+        const MIN: i64 = i64::MIN;
+        for (op, a, b, want) in [
+            ("i64_add_ovf", MAX, 0, MAX),
+            ("i64_add_ovf", MAX - 1, 1, MAX),
+            ("i64_add_ovf", MIN, MAX, -1),
+            ("i64_sub_ovf", MIN, 0, MIN),
+            ("i64_sub_ovf", MIN + 1, 1, MIN),
+            ("i64_sub_ovf", -1, MAX, MIN),
+            ("i64_mul_ovf", MIN, 1, MIN),
+            ("i64_mul_ovf", -(1 << 32), 1 << 31, MIN),
+            ("i64_mul_ovf", 3_037_000_499, 3_037_000_499, 9_223_372_030_926_249_001),
+        ] {
+            assert_eq!(run_i64_op(op, a, b).unwrap(), Value::Int(want), "{op}({a}, {b})");
+        }
+        assert_eq!(run_neg_ovf(MAX).unwrap(), Value::Int(-MAX));
+        assert_eq!(run_neg_ovf(0).unwrap(), Value::Int(0));
+    }
+
+    #[test]
+    fn checked_ops_trap_overflow_one_past_the_range() {
+        const MAX: i64 = i64::MAX;
+        const MIN: i64 = i64::MIN;
+        for (op, a, b) in [
+            ("i64_add_ovf", MAX, 1),
+            ("i64_add_ovf", MIN, -1),
+            ("i64_sub_ovf", MIN, 1),
+            ("i64_sub_ovf", MAX, -1),
+            ("i64_sub_ovf", 0, MIN),
+            ("i64_mul_ovf", MIN, -1),
+            ("i64_mul_ovf", -1, MIN),
+            ("i64_mul_ovf", 1 << 32, 1 << 31),
+            ("i64_mul_ovf", 3_037_000_500, 3_037_000_500),
+        ] {
+            assert_eq!(lang83_trap_kind(run_i64_op(op, a, b)), "Trap.Overflow", "{op}({a}, {b})");
+        }
+        assert_eq!(lang83_trap_kind(run_neg_ovf(MIN)), "Trap.Overflow");
+    }
+
+    #[test]
+    fn trap_reports_its_kind_and_rejects_unregistered_kinds() {
+        let build = |kind: &str| {
+            let mut m = IIRModule::new("test", "test");
+            m.add_or_replace(IIRFunction::new(
+                "main", vec![], "void",
+                vec![IIRInstr::new("trap", None, vec![Operand::Str(kind.into())], "void")],
+            ));
+            m
+        };
+        let r = VMCore::new().execute(&mut build("Trap.User"), "main", &[]);
+        assert_eq!(lang83_trap_kind(r.map(|o| o.unwrap_or(Value::Null))), "Trap.User");
+        let r = VMCore::new().execute(&mut build("Not.A.Kind"), "main", &[]);
+        assert!(matches!(r, Err(crate::errors::VMError::Custom(_))), "{r:?}");
     }
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Lamps and benches",
+  "label": "ch:ru-lamps-and-benches",
+  "canDo": "I can describe the street: street lamps, benches, litter bins, kiosks and flower beds.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C445-klumba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can describe the street: street lamps, benches, litter bins, kiosks and flower beds.",
+    "assesses": [
+      "RU-LEX-C445-FONAR-03",
+      "RU-LEX-C445-FONAR-04",
+      "RU-LEX-C445-FONAR-05"
+    ]
+  }
+}

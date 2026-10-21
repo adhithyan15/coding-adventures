@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C352-vina",
+    "language": "russian",
+    "chapter": 352,
+    "sequence": 20560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9960c97f6f5d9904"
+  },
+  "findings": []
+}

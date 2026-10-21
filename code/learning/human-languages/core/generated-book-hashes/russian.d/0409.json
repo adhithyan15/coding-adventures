@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:f5130c5743833c5f",
+  "lessonIds": [
+    "RU-C409-polomka",
+    "RU-C409-evakuator",
+    "RU-C409-buksirovat",
+    "RU-C409-domkrat",
+    "RU-C409-avtoservis"
+  ],
+  "tex": "russian/book/chapters/ch409-breaking-down.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-R368-review-361-368",
+  "pathSegment": "RU-PATH-368-POMOSHCH",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-368-POMOSHCH",
+      "order": 5
+    }
+  ]
+}

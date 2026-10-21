@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:43f5d18ac166a45c",
+  "lessonIds": [
+    "RU-C527-serial",
+    "RU-C527-epizod",
+    "RU-C527-subtitry",
+    "RU-C527-pereklyuchat",
+    "RU-C527-ekranizatsiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch527.txt",
+  "json": "russian/narration/ch527.json",
+  "textHash": "fnv1a64:dbbb2b8566634818",
+  "jsonHash": "fnv1a64:1ab7dec7f771fc52",
+  "findings": []
+}

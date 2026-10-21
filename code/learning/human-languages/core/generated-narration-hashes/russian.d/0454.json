@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:f433da5efa451dba",
+  "lessonIds": [
+    "RU-C454-rasprodazha",
+    "RU-C454-utsenka",
+    "RU-C454-aktsiya",
+    "RU-C454-torgovatsya",
+    "RU-C454-pereplachivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch454.txt",
+  "json": "russian/narration/ch454.json",
+  "textHash": "fnv1a64:46db7e19d167d945",
+  "jsonHash": "fnv1a64:f60a6e8bbb3a8196",
+  "findings": []
+}

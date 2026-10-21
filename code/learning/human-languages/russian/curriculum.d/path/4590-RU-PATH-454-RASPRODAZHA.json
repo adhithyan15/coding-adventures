@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-454-RASPRODAZHA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-454-RASPRODAZHA"
+  ],
+  "after": []
+}

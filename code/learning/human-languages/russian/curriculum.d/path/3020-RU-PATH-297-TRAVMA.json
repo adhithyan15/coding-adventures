@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-297-TRAVMA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-297-TRAVMA"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:8b71c3e1cdddbc07",
+  "lessonIds": [
+    "RU-C435-obsluzhivaniye",
+    "RU-C435-obsluzhivat",
+    "RU-C435-personal",
+    "RU-C435-chayevyye",
+    "RU-C435-khamit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch435.txt",
+  "json": "russian/narration/ch435.json",
+  "textHash": "fnv1a64:f7d23d7a653dca7d",
+  "jsonHash": "fnv1a64:002528079ca5cd04",
+  "findings": []
+}

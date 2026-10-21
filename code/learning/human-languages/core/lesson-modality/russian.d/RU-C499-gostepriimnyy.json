@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C499-gostepriimnyy",
+    "language": "russian",
+    "chapter": 499,
+    "sequence": 28140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9cd1824f3ca2730f"
+  },
+  "findings": []
+}

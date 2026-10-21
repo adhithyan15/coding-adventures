@@ -265,9 +265,11 @@ embedding-layer compatibility work. Participant `box` declarations now lower int
 semantic groups, lane-enclosing layout geometry, and backend-neutral Paint
 rectangles and labels, including the supported named and `rgb`/`rgba` color
 forms. Functional `hsl`/`hsla` colors normalize to backend-safe RGB while
-retaining their color semantics. The family remains partial until the
-pinned upstream corpus pass; unsupported forms must fail grammar validation
-rather than degrade silently.
+retaining their color semantics. All 71 valid fixtures in the pinned Mermaid
+11.16.1 Sequence corpus pass grammar validation, semantic lowering,
+deterministic Sequence layout, backend-neutral PaintScene lowering, and native
+Metal-to-PNG rendering; all five pinned invalid fixtures remain rejected.
+Sequence therefore reaches the manifest's defined `full` level.
 
 Sequence `accTitle`, single-line `accDescr`, and multiline `accDescr` blocks
 preserve accessibility semantics in PaintScene metadata.
@@ -1037,7 +1039,7 @@ the upstream fixed 400-by-100 layout and a backend-neutral glyph run reading
 `v11.16.1`. The pinned corpus covers both accepted forms and unsupported
 suffixes, and the native Metal-to-PNG path validates the complete family.
 
-### ZenUML Partial Compatibility
+### ZenUML Full Compatibility
 
 The native ZenUML frontend accepts the documented title, participant ordering,
 aliases, Actor, Boundary, Control, Entity, Database, Collections, Queue, and
@@ -1057,9 +1059,14 @@ participate in activation nesting, and statement semicolon terminators are
 accepted without leaking punctuation into semantic labels. Custom participant
 annotators lower to the backend-neutral participant fallback, while inline
 comments attached to messages lower to Sequence notes without treating URL
-slashes or quoted `//` text as comments. Custom annotator glyphs and the full
-external expression grammar remain unsupported, so ZenUML remains at the
-manifest's `partial` level.
+slashes or quoted `//` text as comments. The pinned syntax corpus contains all
+16 executable ZenUML examples from Mermaid 11.16.1's documentation, and every
+fixture passes grammar validation, semantic lowering, deterministic Sequence
+layout, backend-neutral PaintScene lowering, and native Metal-to-PNG rendering.
+This reaches the manifest's defined `full` level for the pinned Mermaid release.
+The broader moving `@zenuml/core` language remains outside that versioned claim;
+custom annotators use the documented backend-neutral participant fallback rather
+than inventing backend-specific glyphs.
 
 ### Structural Groups
 
@@ -1227,7 +1234,10 @@ attribute form and lower through shared rounded-container or circular semantic, 
 The internal `classBox`, `erBox`, and `requirementBox` ShapeIDs remain accepted in attribute form and
 lower through shared titled-container semantic, layout, and backend-neutral paint geometry.
 Normalized quoted Unicode lane
-and node labels, named and numeric label entities,
+and node labels, named and numeric label entities, and Flowchart-style Markdown strings on
+ownership lanes, nested groups, nodes, and edge labels preserve multiline text plus bold and italic
+spans through semantic and layout IR into backend-neutral glyph runs. Both authored line breaks and
+escaped `\\n` breaks remain semantic newlines,
 directed/undirected/dotted/thick chained links, including open dotted and thick
 forms, point/circle/cross endpoint
 markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
@@ -1318,6 +1328,6 @@ color, and typography fields through semantic and layout IR into backend-neutral
 Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
 `__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 
-This is intentionally partial. The complete Flowchart shape
-and link catalog beyond the documented marker forms, and exact upstream routing or typography remain
+This is intentionally partial. Flowchart icons and images, additional link forms beyond the documented
+marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

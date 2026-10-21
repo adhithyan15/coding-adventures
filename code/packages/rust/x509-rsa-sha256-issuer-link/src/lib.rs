@@ -16,6 +16,7 @@ use core::fmt;
 use der_asn1::Asn1Limits;
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate::X509Certificate;
+use x509_certificate_issuer_candidate_selection::SelectedX509IssuerCandidate;
 use x509_certificate_policy::{
     validate_certificate_issuer_link, validate_certificate_role_extensions,
     X509CertificateIssuerLinkErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
@@ -180,6 +181,64 @@ pub fn verify_x509_rsa_sha256_issuer_link<
         ))
     })?;
 
+    verify_x509_rsa_sha256_issuer_link_after_name(child, candidate_issuer, policy)
+}
+
+/// Authenticate the exact child and issuer already bound by unique selection.
+///
+/// This consuming entry point performs no second Name comparison. It derives
+/// both certificate references from `selected_candidate`, then applies the
+/// issuing-CA role, caller-owned RSA key policy, and exact child-signature
+/// checks to that same selected candidate. Selection evidence is not by itself
+/// authentication, and this result still does not establish a complete or
+/// trusted certification path.
+pub fn verify_selected_x509_rsa_sha256_issuer_link<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    selected_candidate: SelectedX509IssuerCandidate<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    policy: X509RsaSha256IssuerLinkPolicy<'_>,
+) -> Result<
+    VerifiedX509RsaSha256IssuerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha256IssuerLinkError,
+> {
+    verify_x509_rsa_sha256_issuer_link_after_name(
+        selected_candidate.child_certificate(),
+        selected_candidate.candidate_certificate(),
+        policy,
+    )
+}
+
+fn verify_x509_rsa_sha256_issuer_link_after_name<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    child: &'child_certificate X509Certificate<'child_encoded>,
+    candidate_issuer: &'issuer_certificate X509Certificate<'issuer_encoded>,
+    policy: X509RsaSha256IssuerLinkPolicy<'_>,
+) -> Result<
+    VerifiedX509RsaSha256IssuerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha256IssuerLinkError,
+> {
     validate_certificate_role_extensions(
         candidate_issuer,
         X509CertificateRole::IssuingCertificateAuthority,

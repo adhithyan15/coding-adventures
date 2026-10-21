@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C473-razocharovannyy",
+    "language": "russian",
+    "chapter": 473,
+    "sequence": 26810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3ec1e21634a0d4c"
+  },
+  "findings": []
+}

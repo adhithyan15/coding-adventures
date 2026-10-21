@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C441-rassprashivat",
+    "language": "russian",
+    "chapter": 441,
+    "sequence": 25150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed2798aabf18a490"
+  },
+  "findings": []
+}

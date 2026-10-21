@@ -1,14 +1,13 @@
 //! package_compiles — smoke test for the mosaic-pkg-toolkit package.
 //!
-//! Asserts that every exported component (`Button`, `Alert` in v0.1
-//! PR-1) compiles through the three IR compilers (mosmodel /
-//! moslayout / mosstyle) and that the manifest is internally
-//! consistent.
+//! Asserts that every exported component compiles through the three IR
+//! compilers (mosmodel / moslayout / mosstyle), that the manifest agrees
+//! with the sources on disk, and that the README describes every export.
 //!
 //! What this test verifies:
 //!
-//!   1. The manifest parses, names the package correctly, declares
-//!      every exported component in `[components].exports`, lists no
+//!   1. The manifest parses, names the package correctly, exports
+//!      exactly the interfaces in `src/*.mil`, lists no
 //!      runtime dependencies (the toolkit is kernel-only), and
 //!      targets kernel v1.
 //!   2. For each exported component:
@@ -18,6 +17,7 @@
 //!      c. `<Component>.light.msl` and `<Component>.dark.msl` each
 //!      compile via `mosstyle_compiler::compile`, validated
 //!      against the matching `.mll` part map.
+//!   3. README.md's export list names exactly the manifest's exports.
 //!
 //! Backend-specific lowering (does each component produce valid
 //! React/SwiftUI/Qt/XAML/etc.?) is NOT in scope here — that lives in
@@ -28,19 +28,47 @@
 use std::fs;
 use std::path::PathBuf;
 
-/// The list of exported components. Grows as each Tier-1 component
-/// lands. v0.1 PR-1: Button, Alert. PR-2: Badge, Spinner, Toast.
-/// PR-3: Checkbox, Input, Radio. PR-4 adds: ListGroup, Modal.
-///
-/// Alphabetical order matches the manifest's `[components].exports`
-/// list. Reorder both together if it ever changes.
-const COMPONENTS: &[&str] = &[
-    "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
-    "Checkbox", "DropdownMenu", "EmptyState", "Field", "Input", "InputGroup",
-    "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
-    "Radio", "RecordList", "SegmentedControl", "Select", "Spinner", "Tabs", "Toast",
-    "Tooltip",
-];
+/// The exported components, read from `mosaic-package.toml`'s
+/// `[components].exports`. The manifest is the one list: this test used to
+/// keep its own copy and assert the two agreed, which meant every new
+/// component had to be added in two places. Now the manifest is checked
+/// against the files on disk instead (`manifest_declares_expected_exports`)
+/// and against the README (`readme_describes_every_export`).
+fn exported_components() -> Vec<String> {
+    let manifest_src = fs::read_to_string(package_root().join("mosaic-package.toml"))
+        .expect("manifest mosaic-package.toml must exist at the package root");
+    let value: toml::Value =
+        toml::from_str(&manifest_src).expect("mosaic-package.toml must parse as valid TOML");
+    value
+        .get("components")
+        .and_then(|c| c.get("exports"))
+        .and_then(|e| e.as_array())
+        .expect("[components].exports must be an array")
+        .iter()
+        .map(|v| {
+            v.as_str()
+                .expect("[components].exports entries must be strings")
+                .to_string()
+        })
+        .collect()
+}
+
+/// The component interfaces that exist in `src/`, by file stem, sorted.
+fn source_components() -> Vec<String> {
+    let mut names: Vec<String> = fs::read_dir(package_root().join("src"))
+        .expect("src/ must be readable")
+        .map(|entry| entry.expect("src/ entry must be readable").path())
+        .filter(|path| path.extension().and_then(|e| e.to_str()) == Some("mil"))
+        .map(|path| {
+            path.file_stem()
+                .and_then(|s| s.to_str())
+                .expect("a .mil file name must be UTF-8")
+                .to_string()
+        })
+        .collect();
+    names.sort();
+    names
+}
 
 /// Themes shipped per component. Both must compile.
 const THEMES: &[&str] = &["light", "dark"];
@@ -88,16 +116,16 @@ fn manifest_declares_expected_exports() {
         "[package].version must be 0.16.0 for the RecordList release (J3a, #14416)"
     );
 
-    let exports = value
-        .get("components")
-        .and_then(|c| c.get("exports"))
-        .and_then(|e| e.as_array())
-        .expect("[components].exports must be an array");
-    let export_names: Vec<&str> = exports.iter().filter_map(|v| v.as_str()).collect();
+    // Every interface in src/ is exported, and every export has an
+    // interface: an unexported .mil is dead source, and an export with no
+    // .mil fails every consumer. Sorted, because the manifest's order is
+    // the author's, not part of the contract.
+    let mut export_names = exported_components();
+    export_names.sort();
     assert_eq!(
         export_names,
-        COMPONENTS,
-        "[components].exports must match the compile-loop's list"
+        source_components(),
+        "[components].exports must name exactly the src/*.mil interfaces"
     );
 
     let kernel_version = value
@@ -173,8 +201,8 @@ fn compile_component(name: &str) {
 
 #[test]
 fn every_exported_component_round_trips() {
-    for name in COMPONENTS {
-        compile_component(name);
+    for name in exported_components() {
+        compile_component(&name);
     }
 }
 
@@ -1421,4 +1449,35 @@ fn every_disabled_slot_binds_a_real_disabled_prop() {
              focus entirely. `HostInput.disabled` exists since UI58 (#14786)",
         );
     }
+}
+
+// ---------------------------------------------------------------------------
+// 4. The README describes the package as it is
+// ---------------------------------------------------------------------------
+
+/// The README's component list is prose a person reads, so it cannot be
+/// generated, but it can be checked. Its export section has one
+/// `- **`Name`** — …` entry per component; the set of names must equal the
+/// manifest's exports. This README once said "11 of 13 Tier-1 components
+/// shipped" while 26 were exported, five of them undescribed.
+#[test]
+fn readme_describes_every_export() {
+    let readme = fs::read_to_string(package_root().join("README.md"))
+        .expect("README.md must exist at the package root");
+    let section = readme
+        .split("\n## ")
+        .find(|s| s.starts_with("v0.1 — exports so far"))
+        .expect("README.md must have a `## v0.1 — exports so far` section");
+    let mut described: Vec<String> = section
+        .lines()
+        .filter_map(|line| line.strip_prefix("- **`"))
+        .filter_map(|rest| rest.split_once("`**").map(|(name, _)| name.to_string()))
+        .collect();
+    described.sort();
+    let mut exports = exported_components();
+    exports.sort();
+    assert_eq!(
+        described, exports,
+        "README.md's export list must describe exactly [components].exports"
+    );
 }

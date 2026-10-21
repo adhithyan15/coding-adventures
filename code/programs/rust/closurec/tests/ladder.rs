@@ -9,8 +9,8 @@
 //! it was chosen to find the edge.
 //!
 //! A deliberately ordered ladder does. The committed oracle fixtures now cover
-//! 57 rungs ramped from trivial to hard. The divergence ledger records agreement
-//! of 54/57 at `WHITESPACE_ONLY`, 34/57 at `SIMPLE`, and 24/57 at `ADVANCED`,
+//! 58 rungs ramped from trivial to hard. The divergence ledger records agreement
+//! of 56/58 at `WHITESPACE_ONLY`, 37/58 at `SIMPLE`, and 25/58 at `ADVANCED`,
 //! while the selected golden corpus reports 100%.
 //!
 //! # The ordering is the point
@@ -260,6 +260,10 @@ enum Verdict {
     Matches,
     /// Diverges exactly as the ledger records.
     KnownDivergence,
+    /// Upstream refused this input, and closurec refused it identically: the
+    /// same exit status, the same diagnostics byte for byte, and no output
+    /// (CCR-075, #15860). Counts as agreement.
+    DeclinedIdentically,
     /// Anything else. The string is the operator-facing explanation.
     Fail(String),
 }
@@ -337,20 +341,92 @@ fn verdict(
     }
 }
 
+/// What upstream did with a rung it REFUSED: its exit status and its stderr,
+/// both captured from the jar into `expected.exit` / `expected.stderr`.
+struct UpstreamRefusal {
+    exit: i32,
+    stderr: Vec<u8>,
+}
+
+/// The refusal a rung records, if any. A rung that has `expected.exit` must
+/// also have `expected.stderr`. Both must be regular files, for the same
+/// reason as the rung's other inputs (see `closurec_args`).
+fn upstream_refusal(dir: &Path) -> Option<UpstreamRefusal> {
+    let exit_path = dir.join("expected.exit");
+    std::fs::symlink_metadata(&exit_path).ok()?;
+    for path in [&exit_path, &dir.join("expected.stderr")] {
+        let meta = std::fs::symlink_metadata(path)
+            .unwrap_or_else(|e| panic!("{}: {e}", path.display()));
+        assert!(meta.is_file(), "{}: must be a regular file", path.display());
+    }
+    let exit = std::fs::read_to_string(&exit_path)
+        .expect("read expected.exit")
+        .trim()
+        .parse()
+        .expect("expected.exit is an integer");
+    let stderr = std::fs::read(dir.join("expected.stderr")).expect("read expected.stderr");
+    Some(UpstreamRefusal { exit, stderr })
+}
+
+/// The verdict for a rung upstream refused (CCR-075). Agreement means
+/// declining identically: the same exit status, empty stdout, and stderr equal
+/// to upstream's byte for byte. A ledger entry for such a rung is then stale.
+fn declined_verdict(
+    name: &str,
+    upstream: &UpstreamRefusal,
+    actual: &[u8],
+    code: i32,
+    stderr: &[u8],
+    known: Option<&Divergence>,
+) -> Verdict {
+    let identical = code == upstream.exit && actual.is_empty() && stderr == upstream.stderr.as_slice();
+    match known {
+        None if identical => Verdict::DeclinedIdentically,
+        None => Verdict::Fail(format!(
+            "{name}: upstream refused this input (exit {}), and closurec did not refuse it \
+             identically.\n    ours (exit {code}): stdout {:?}\n    stderr diff starts: {:?} vs {:?}",
+            upstream.exit,
+            String::from_utf8_lossy(actual),
+            String::from_utf8_lossy(stderr).lines().next().unwrap_or(""),
+            String::from_utf8_lossy(&upstream.stderr).lines().next().unwrap_or(""),
+        )),
+        Some(k) if identical => Verdict::Fail(format!(
+            "{name}: NOW DECLINES IDENTICALLY TO UPSTREAM — delete its entry from {LEDGER}.\n    \
+             This gap was tracked in {}.",
+            k.issue
+        )),
+        Some(k) if actual != k.closurec_stdout.as_bytes() || code != k.closurec_exit => {
+            Verdict::Fail(format!(
+                "{name}: our output changed but still does not decline like upstream.\n    \
+                 ledger expected ours (exit {}): {:?}\n    actual (exit {code}): {:?}",
+                k.closurec_exit,
+                k.closurec_stdout,
+                String::from_utf8_lossy(actual),
+            ))
+        }
+        Some(_) => Verdict::KnownDivergence,
+    }
+}
+
 /// The gate. Every rung either matches upstream, or is a recorded divergence
 /// whose recorded output still holds exactly.
 #[test]
 fn ladder_matches_upstream_or_a_recorded_divergence() {
     let ledger = load_ledger();
     let mut failures = Vec::new();
-    let (mut matched, mut diverged) = (0usize, 0usize);
+    let (mut matched, mut declined, mut diverged) = (0usize, 0usize, 0usize);
 
     for dir in ladder_fixtures() {
         let name = fixture_name(&dir);
         let expected = std::fs::read(dir.join("expected.stdout")).expect("read expected.stdout");
         let (code, actual, stderr) = run_closurec(&dir);
-        match verdict(&name, &expected, &actual, code, &stderr, ledger.get(&name)) {
+        let v = match upstream_refusal(&dir) {
+            Some(up) => declined_verdict(&name, &up, &actual, code, stderr.as_bytes(), ledger.get(&name)),
+            None => verdict(&name, &expected, &actual, code, &stderr, ledger.get(&name)),
+        };
+        match v {
             Verdict::Matches => matched += 1,
+            Verdict::DeclinedIdentically => declined += 1,
             Verdict::KnownDivergence => diverged += 1,
             Verdict::Fail(why) => failures.push(why),
         }
@@ -358,7 +434,8 @@ fn ladder_matches_upstream_or_a_recorded_divergence() {
 
     assert!(
         failures.is_empty(),
-        "{} ladder rung(s) failed ({matched} matched, {diverged} known divergences):\n\n{}",
+        "{} ladder rung(s) failed ({matched} matched, {declined} declined identically, \
+         {diverged} known divergences):\n\n{}",
         failures.len(),
         failures.join("\n\n")
     );
@@ -651,7 +728,7 @@ fn well_formedness_rejects_every_way_of_switching_a_rung_off() {
 fn reviewed_divergence_count_is_pinned() {
     assert_eq!(
         load_ledger().len(),
-        59,
+        56,
         "reviewed divergence ledger changed — see the note on this test"
     );
 }
@@ -681,16 +758,28 @@ const UPSTREAM_REFUSED: [&str; 3] = [
 
 #[test]
 fn reviewed_upstream_refusal_cohort_is_pinned() {
-    let refused: Vec<String> = load_ledger()
+    // Since CCR-075 a refused rung records upstream's refusal in its own
+    // fixture (`expected.exit` + `expected.stderr`) and is judged by
+    // `declined_verdict`. The SET of such rungs is pinned by name, for the
+    // reason the note on `UPSTREAM_REFUSED` gives.
+    let refused: Vec<String> = ladder_fixtures()
         .iter()
-        .filter(|(_, d)| d.upstream_exit != 0)
-        .map(|(fixture, _)| fixture.clone())
+        .filter(|dir| upstream_refusal(dir).is_some())
+        .map(|dir| fixture_name(dir))
         .collect();
     assert_eq!(
         refused, UPSTREAM_REFUSED,
-        "the SET of rungs exempt from staleness detection changed - see the note on \
-         `UPSTREAM_REFUSED`"
+        "the SET of rungs upstream refuses changed - see the note on `UPSTREAM_REFUSED`"
     );
+    // A ledger entry that says upstream refused must name one of them.
+    for (fixture, d) in load_ledger() {
+        if d.upstream_exit != 0 {
+            assert!(
+                UPSTREAM_REFUSED.contains(&fixture.as_str()),
+                "{fixture}: ledger says upstream refused, but the rung records no refusal"
+            );
+        }
+    }
 }
 
 /// The other half of the same lock: which rungs have an empty `expected.stdout`.
@@ -923,3 +1012,48 @@ fn gate_fires_when_a_recorded_failure_changes_stage() {
         "a failure that moved to another stage must fail the gate, got {moved:?}"
     );
 }
+
+// ---------------------------------------------------------------------------
+// CCR-075: the "declined identically" verdict.
+// ---------------------------------------------------------------------------
+
+fn refusal(exit: i32, stderr: &str) -> UpstreamRefusal {
+    UpstreamRefusal { exit, stderr: stderr.as_bytes().to_vec() }
+}
+
+#[test]
+fn declining_identically_is_agreement() {
+    let up = refusal(2, "a.js:1:10: ERROR - [K] m\n");
+    assert_eq!(
+        declined_verdict("r", &up, b"", 2, b"a.js:1:10: ERROR - [K] m\n", None),
+        Verdict::DeclinedIdentically
+    );
+}
+
+#[test]
+fn declining_differently_fails() {
+    let up = refusal(2, "a.js:1:10: ERROR - [K] m\n");
+    // Wrong exit status, any stdout, or different diagnostics all fail.
+    for (code, out, err) in [
+        (1, &b""[..], &b"a.js:1:10: ERROR - [K] m\n"[..]),
+        (2, &b"x"[..], &b"a.js:1:10: ERROR - [K] m\n"[..]),
+        (2, &b""[..], &b"a.js:1:11: ERROR - [K] m\n"[..]),
+        (0, &b"compiled;"[..], &b""[..]),
+    ] {
+        assert!(
+            matches!(declined_verdict("r", &up, out, code, err, None), Verdict::Fail(_)),
+            "{code} {out:?} {err:?}"
+        );
+    }
+}
+
+#[test]
+fn a_ledger_entry_for_an_identically_declined_rung_is_stale() {
+    let up = refusal(2, "e\n");
+    let d = fake_upstream_declined();
+    assert!(matches!(
+        declined_verdict("r", &up, b"", 2, b"e\n", Some(&d)),
+        Verdict::Fail(why) if why.contains("NOW DECLINES IDENTICALLY")
+    ));
+}
+

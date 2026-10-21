@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:256fe56fb0a3edc6",
+  "lessonIds": [
+    "RU-C339-ubezhdat",
+    "RU-C339-pereubezhdat",
+    "RU-C339-ubezhdenie",
+    "RU-C339-uverennost",
+    "RU-C339-somnevatsya"
+  ],
+  "tex": "russian/book/chapters/ch339-changing-minds.tex"
+}

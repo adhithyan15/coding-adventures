@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-268-COMPARE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can compare two things with -ее, больше, лучше and чем, and say how long and how long ago with уже ... года and ... назад.",
+  "prerequisites": []
+}

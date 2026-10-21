@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:c67435a1fb87662e",
+  "lessonIds": [
+    "RU-C372-veroyatno",
+    "RU-C372-veroyatnost",
+    "RU-C372-maloveroyatnyy",
+    "RU-C372-shans",
+    "RU-C372-risk"
+  ],
+  "tex": "russian/book/chapters/ch372-likely-or-unlikely.tex"
+}

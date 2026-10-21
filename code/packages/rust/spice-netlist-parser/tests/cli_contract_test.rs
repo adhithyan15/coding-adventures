@@ -62,6 +62,77 @@ fn run_netlist_json_preserves_both_nested_dc_axes() {
 }
 
 #[test]
+fn run_netlist_json_expands_global_temperature_cards() {
+    let corpus_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/spice/berkeley-v1-cli-corpus.json"
+    );
+    let corpus: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(corpus_path).unwrap()).unwrap();
+    let test_case = corpus["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|case| case["id"] == "global-temperature-op")
+        .unwrap();
+    let payload: serde_json::Value =
+        serde_json::from_str(&run_netlist_json(test_case["deck"].as_str().unwrap()).unwrap())
+            .unwrap();
+
+    let analyses = payload["analyses"].as_array().unwrap();
+    assert_eq!(
+        analyses
+            .iter()
+            .map(|analysis| analysis["index"].as_u64().unwrap())
+            .collect::<Vec<_>>(),
+        vec![1, 1]
+    );
+    assert_eq!(
+        analyses
+            .iter()
+            .map(|analysis| analysis["temperatureKelvin"].as_f64().unwrap())
+            .collect::<Vec<_>>(),
+        vec![300.15, 348.15]
+    );
+    assert_eq!(
+        payload["outputs"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|output| output["temperatureKelvin"].as_f64().unwrap())
+            .collect::<Vec<_>>(),
+        vec![300.15, 348.15]
+    );
+    assert_eq!(
+        payload["measures"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|measure| measure["temperatureKelvin"].as_f64().unwrap())
+            .collect::<Vec<_>>(),
+        vec![300.15, 348.15]
+    );
+    assert_eq!(
+        payload["measures"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|measure| measure["analysis"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        vec!["op", "op"]
+    );
+    assert_eq!(
+        payload["measures"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|measure| measure["name"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        vec!["temperature_output", "temperature_output"]
+    );
+}
+
+#[test]
 fn run_netlist_json_exposes_deck_output_artifacts() {
     let corpus_path = concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -81,6 +152,28 @@ fn run_netlist_json_exposes_deck_output_artifacts() {
 
     assert_eq!(payload["outputs"], test_case["expected"]["outputs"]);
     assert_eq!(payload["measures"], test_case["expected"]["measures"]);
+}
+
+#[test]
+fn run_netlist_json_exposes_raw_output_artifacts() {
+    let corpus_path = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/spice/berkeley-v1-cli-corpus.json"
+    );
+    let corpus: serde_json::Value =
+        serde_json::from_str(&fs::read_to_string(corpus_path).unwrap()).unwrap();
+    let test_case = corpus["cases"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|case| case["id"] == "raw-output-artifacts")
+        .unwrap();
+    let payload: serde_json::Value =
+        serde_json::from_str(&run_netlist_json(test_case["deck"].as_str().unwrap()).unwrap())
+            .unwrap();
+
+    assert_eq!(payload["rawfiles"], test_case["expected"]["rawfiles"]);
+    assert_eq!(payload["wrdata"], test_case["expected"]["wrdata"]);
 }
 
 #[test]

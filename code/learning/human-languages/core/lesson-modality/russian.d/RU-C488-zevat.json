@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C488-zevat",
+    "language": "russian",
+    "chapter": 488,
+    "sequence": 27590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5be419b9d67075d5"
+  },
+  "findings": []
+}

@@ -10,13 +10,16 @@ plain moslayout source files, the same shape as any user component.
 
 ## What this package exports
 
-Three components, listed in `mosaic-package.toml`'s `[components].exports`:
+One row per component in `mosaic-package.toml`'s `[components].exports`
+(`tests/package_compiles.rs` fails if a row is missing or names something the
+manifest does not export):
 
 | Component | Role | File trio |
 |---|---|---|
 | `Grid`   | the spreadsheet itself — header row + data rows | `Grid.mil` / `Grid.mll` / `Grid.{light,dark}.msl` |
 | `Cell`   | one editable cell (read display ↔ edit input) | `Cell.mil` / `Cell.mll` / `Cell.{light,dark}.msl` |
 | `Column` | declarative column metadata (no rendered output) | `Column.mil` / `Column.mll` |
+| `RowHeaderGrid` | Grid with a leading row-label column and a corner cell, windowed over `viewport-rows` | `RowHeaderGrid.mil` / `RowHeaderGrid.mll` / `RowHeaderGrid.{light,dark}.msl` |
 
 Column ships no `.msl`: it produces no visible tree, so there is nothing
 to style.
@@ -34,6 +37,7 @@ to style.
               │  Grid → HostTable + For + Cell             │
               │  Cell → Box + If + HostInput + Text        │
               │  Column → metadata-only Box marker         │
+              │  RowHeaderGrid → HostTable + For + Box     │
               └─────────────────────┬──────────────────────┘
                                     │ kernel primitives only
                                     ▼

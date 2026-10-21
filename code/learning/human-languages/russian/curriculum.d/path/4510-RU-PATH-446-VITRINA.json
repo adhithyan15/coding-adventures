@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-446-VITRINA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-446-VITRINA"
+  ],
+  "after": []
+}

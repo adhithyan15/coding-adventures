@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:539a6f80a34defbe",
+  "lessonIds": [
+    "RU-C338-argument",
+    "RU-C338-dovod",
+    "RU-C338-dokazyvat",
+    "RU-C338-dokazatelstvo",
+    "RU-C338-ubeditelnyy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch338.txt",
+  "json": "russian/narration/ch338.json",
+  "textHash": "fnv1a64:945e5fa3c4b3b6d2",
+  "jsonHash": "fnv1a64:5bdba0997614188b",
+  "findings": []
+}

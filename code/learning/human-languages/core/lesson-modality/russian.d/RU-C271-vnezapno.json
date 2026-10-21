@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C271-vnezapno",
+    "language": "russian",
+    "chapter": 271,
+    "sequence": 16400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ecbf22636ba8ba51"
+  },
+  "findings": []
+}

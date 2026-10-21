@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C466-gremet",
+    "language": "russian",
+    "chapter": 466,
+    "sequence": 26450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:237addf6bce609a4"
+  },
+  "findings": []
+}

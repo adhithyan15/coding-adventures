@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-414-PERRON",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find my train: the platform, the departures board, departure and arrival.",
+  "prerequisites": []
+}

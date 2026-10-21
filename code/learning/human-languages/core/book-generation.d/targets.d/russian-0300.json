@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 300,
+  "output": "russian/book/chapters/ch300-natural-disasters.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 305,
+  "title": "Bringing up a family",
+  "label": "ch:ru-bringing-up-a-family",
+  "canDo": "I can say that someone brought up or adopted a child or is getting old, and talk about a graduation party and a generation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C305-pokoleniye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 305: I can say that someone brought up or adopted a child or is getting old, and talk about a graduation party and a generation.",
+    "assesses": [
+      "RU-LEX-C305-VOSPITYVAT-03",
+      "RU-LEX-C305-VOSPITYVAT-04",
+      "RU-LEX-C305-VOSPITYVAT-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:bd0ed7056e8e821c",
+  "lessonIds": [
+    "RU-C273-proiskhodit",
+    "RU-C273-prodolzhatsya",
+    "RU-C273-dlitsya",
+    "RU-C273-prekrashchatsya",
+    "RU-C273-nastupat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch273.txt",
+  "json": "russian/narration/ch273.json",
+  "textHash": "fnv1a64:c1b611aa996a5b4f",
+  "jsonHash": "fnv1a64:cb30f152d284ea09",
+  "findings": []
+}

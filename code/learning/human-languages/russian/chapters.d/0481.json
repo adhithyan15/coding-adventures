@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "From Shoulder Blade to Heel",
+  "label": "ch:ru-from-shoulder-blade-to-heel",
+  "canDo": "I can name more parts of the back, the leg and the hand.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C481-ladon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can name more parts of the back, the leg and the hand.",
+    "assesses": [
+      "RU-LEX-C481-BACK-03",
+      "RU-LEX-C481-BACK-04",
+      "RU-LEX-C481-BACK-05"
+    ]
+  }
+}

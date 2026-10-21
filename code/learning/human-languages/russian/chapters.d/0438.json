@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Signs and landmarks",
+  "label": "ch:ru-signs-and-landmarks",
+  "canDo": "I can follow signs: a signpost, a sign on a door, an arrow, a landmark and a route map.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C438-skhema",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can follow signs: a signpost, a sign on a door, an arrow, a landmark and a route map.",
+    "assesses": [
+      "RU-LEX-C438-UKAZATEL-03",
+      "RU-LEX-C438-UKAZATEL-04",
+      "RU-LEX-C438-UKAZATEL-05"
+    ]
+  }
+}

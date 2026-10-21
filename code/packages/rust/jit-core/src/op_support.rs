@@ -21,9 +21,11 @@
 //! |-----------|---------------|----------|
 //! | `add sub mul div neg` (integer) | `ADD_I64` … `NEG_I64` | Lowered |
 //! | `cmp_*` (integer / bool) | `CMP_*_I64` | Lowered |
-//! | `print_i64`, `putchar` | `CALL_BUILTIN` to the embedder-registered handler | Lowered |
+//! | `print_i64`, `putchar`, `write_i64` | `CALL_BUILTIN` to the embedder-registered handler | Lowered |
+//! | `i64_div_floor`, `i64_mod_floor` | `DIV_FLOOR_I64`, `MOD_FLOOR_I64` (defined traps) | Lowered |
+//! | `trap` | `TRAP <kind id>` (error slot `trap: <kind>`) | Lowered |
+//! | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` | `ADD_OVF_I64` … `NEG_OVF_I64` (`checked_*`; `Trap.Overflow`) | Lowered |
 //! | `mod`, strings, `f64` math, conversions, `print_str` | — | Refused (interpreter tier only) |
-//! | PR1b ops | — | Refused (PR1b) |
 //!
 //! Like every backend's table, this one is name-granular: `add` is `Lowered`
 //! even though the JIT refuses `add` on `f64` operands (type-level refusals stay
@@ -31,7 +33,7 @@
 //! test checks every row against the real compiler: it builds a one-op function
 //! per registry entry, specialises it, and asks `GenericCirJit` to compile it.
 
-use interpreter_ir::op_registry::{support_from_table, OpSupport, NOT_YET_LOWERED_PR1B};
+use interpreter_ir::op_registry::{support_from_table, OpSupport};
 use OpSupport::{Lowered, Refused};
 
 /// The reason given for an operation that runs only on the interpreter tier.
@@ -44,7 +46,7 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("print_i64", Lowered),
     ("putchar", Lowered),
     ("print_str", Refused(INTERPRETER_TIER_ONLY)),
-    ("write_i64", Refused(NOT_YET_LOWERED_PR1B)),
+    ("write_i64", Lowered),
     // ── Strings (LANG-FULL E4) ──────────────────────────────────────────────
     ("str_const", Refused(INTERPRETER_TIER_ONLY)),
     ("str_len", Refused(INTERPRETER_TIER_ONLY)),
@@ -60,8 +62,12 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("div", Lowered),
     ("mod", Refused(INTERPRETER_TIER_ONLY)),
     ("neg", Lowered),
-    ("i64_div_floor", Refused(NOT_YET_LOWERED_PR1B)),
-    ("i64_mod_floor", Refused(NOT_YET_LOWERED_PR1B)),
+    ("i64_div_floor", Lowered),
+    ("i64_mod_floor", Lowered),
+    ("i64_add_ovf", Lowered),
+    ("i64_sub_ovf", Lowered),
+    ("i64_mul_ovf", Lowered),
+    ("i64_neg_ovf", Lowered),
     // ── Comparison ──────────────────────────────────────────────────────────
     ("cmp_eq", Lowered),
     ("cmp_ne", Lowered),
@@ -83,7 +89,7 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("real_to_int_trunc", Refused(INTERPRETER_TIER_ONLY)),
     ("real_to_int_floor", Refused(INTERPRETER_TIER_ONLY)),
     // ── Errors ──────────────────────────────────────────────────────────────
-    ("trap", Refused(NOT_YET_LOWERED_PR1B)),
+    ("trap", Lowered),
 ];
 
 /// What the generic JIT does with the standard operation `name` (LANG83).
@@ -174,11 +180,11 @@ mod tests {
     #[test]
     fn declared_support_matches_what_generic_jit_compiles() {
         let jit = GenericCirJit::new();
-        // The embedder registers the output builtins (the lang-aot matrix
-        // harness does); write_i64 is deliberately NOT registered, which is
-        // the honest PR1b state.
+        // The embedder registers the output builtins (the lang-aot matrix and
+        // conformance harnesses do), exactly as for print_i64 and putchar.
         jit.register_builtin("print_i64", |_args: &[Value]| Value::Null);
         jit.register_builtin("putchar", |_args: &[Value]| Value::Null);
+        jit.register_builtin("write_i64", |_args: &[Value]| Value::Null);
         for spec in STANDARD_OPS {
             let cir = specialise(&one_op_function(spec), 0);
             let compiles = jit.compile(&cir).is_some();

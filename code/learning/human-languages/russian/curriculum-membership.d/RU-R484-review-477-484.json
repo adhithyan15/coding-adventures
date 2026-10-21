@@ -1,0 +1,11 @@
+{
+  "id": "RU-R484-review-477-484",
+  "pathSegment": "RU-PATH-484-PLASTER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-484-PLASTER",
+      "order": 5
+    }
+  ]
+}

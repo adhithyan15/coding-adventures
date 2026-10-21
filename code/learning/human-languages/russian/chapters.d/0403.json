@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Behind the wheel",
+  "label": "ch:ru-behind-the-wheel",
+  "canDo": "I can talk about driving: the steering wheel, the brake, braking, speeding up and sounding the horn.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C403-signalit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can talk about driving: the steering wheel, the brake, braking, speeding up and sounding the horn.",
+    "assesses": [
+      "RU-LEX-C403-RUL-03",
+      "RU-LEX-C403-RUL-04",
+      "RU-LEX-C403-RUL-05"
+    ]
+  }
+}

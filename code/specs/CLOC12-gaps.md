@@ -235,6 +235,37 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - 10 inline tests pin every rule + edge case (function-expression doesn't get trailing `;`, if/while/for body slots preserved, dedup works, multi-stmt drops only last `;`, top-level `var` unchanged).
   - The pre-existing `tests/diff/whitespace-only/expected.stdout` was updated — its hand-written golden predicted `function add(a,b){return a+b;}` (closurec's old shape), but upstream Closure actually emits `function add(a,b){return a+b};`. Re-captured from upstream JAR to match the now-correct output.
 
+### CCR-084 (#15919) — a block-final `throw` keeps its `;` (exception to gap-030 rule A)
+
+- **Upstream rule.** At the audited commit `10ca677a`, `CodeGenerator` ends
+  `THROW` with `cc.endStatement(/* needSemiColon= */ true, …)`. The source
+  comment explains why: "Must have a ';' after a throw statement, otherwise
+  safari can't parse this". Every other terminator (`return`, `break`,
+  `continue`, expression statements, `var`) uses the plain `endStatement`,
+  which lets a following `}` absorb the `;`. The printer is shared by all
+  compilation levels.
+- **Slice 1, AST emitter (SIMPLE/ADVANCED): resolved.**
+  `ThrowStatement` is removed from `last_stmt_uses_terminator_semi`, so
+  neither `emit_block_statement` nor `emit_switch` pops a `throw`'s `;`.
+  `function f(){throw 1}` now emits `function f(){throw 1;}`.
+- **Slice 2, WHITESPACE_ONLY token path (`whitespace_only.rs`): open.** Rule
+  A still drops the `;`, and a `throw` that was ASI-terminated before `}`
+  gets none. Upstream WHITESPACE_ONLY bytes are in #15919, probed under Java
+  21.0.10.
+
+### CCR-083 (#15918) — a `do…while` in a body slot is braced
+
+- **Upstream rule.** At `10ca677a`, `CodeGenerator.addNonEmptyStatement`
+  unwraps a one-statement BLOCK body unless `isBlockDeclOrDo` is true. That
+  holds for `LET`, `CONST`, `FUNCTION`, `CLASS` and `DO`. Closure's AST always
+  gives `IF`, `WHILE`, `FOR`, `FOR_IN`, `FOR_OF`, `WITH` and `DO` a BLOCK
+  body. `LABEL` passes `allowNonBlockChild=true`, so it keeps a bare child.
+- **AST emitter (SIMPLE/ADVANCED): resolved.** `emit_body` braces a bare
+  `do…while` in every one of those slots. `else`/`do` drop the separating
+  space before a `{`-led body.
+- **WHITESPACE_ONLY token path: open.** It is queued behind #17840 (newline
+  ASI), since both rewrite the same statement boundaries.
+
 ### gap-031 — empty `{}` body collapses to `;`
 
 - **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.
@@ -1368,7 +1399,7 @@ no remaining uses. Placeholder: `removes_dead_const_after_inlining`.
   code before the terminator, bare `return` unchanged, empty-statement removal,
   dead-code cleanup inside a nested `if`-consequent block, and the
   hoisting-soundness decline (a dead tail carrying a `var` is kept verbatim).
-- **2 `#[ignore]` placeholders** — see gap-151, gap-152.
+- **1 `#[ignore]` placeholder** — see gap-151 (gap-152 resolved by CCR-082).
 
   (Numbering note: authored off `origin/main` in parallel with the emitter
   object-literal port CLOC12.147, so this takes CLOC12.148 to avoid collision
@@ -1383,6 +1414,12 @@ only truncates after a *direct* terminator statement; an `IfStatement` is not
 `drops_code_after_if_both_branches_return`.
 
 ### gap-152 — `break`/`continue` only terminate switch cases, not loop blocks
+
+**Resolved by CCR-082 (#15878).** `is_terminator` now includes `break` and
+`continue`, so a dead tail after either one is truncated, subject to the same
+`tail_is_safe_to_truncate` hoisting guard. The placeholder is now an active
+test. Still open: a dead tail that holds a `var`. Upstream hoists it into the
+`for` head (`for(var z,c=0;…)`), but closurec keeps the whole tail.
 
 Upstream treats `break`/`continue` as ending the enclosing loop body, so code
 after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
@@ -1439,6 +1476,42 @@ unwrapped statement.
   (`lbl:{a()}` → `a();` at SIMPLE) and unwraps the bare block. closurec
   keeps both (`lbl:{a()};`). That belongs to an AST pass, not to this
   token-level printer.
+
+### #17842 — the switch collapse retargeted a nested `break`
+
+**Resolved (soundness).** The gap-014 constant-switch collapse now declines
+when the matched case still holds a non-trailing unlabelled `break` aimed at
+the switch. Without the switch, that `break` would hit the enclosing loop.
+
+**Still open (size):** upstream instead rewrites the case: `if(x)break;g()`
+becomes `x||g()`.
+
+### #17841 — fold-control-flow's dead-after-`return` drop ignored hoisting
+
+**Resolved.** `closure-pass-fold-control-flow` truncated a block after
+`return` independently of DCE, and without DCE's hoisting guard. That
+deleted:
+
+- a hoisted `function h(){}`, causing a `ReferenceError`;
+- a hoisted `var x`, so the function's local leaked to the global;
+- a TDZ-shadowing `let x`.
+
+`is_droppable_dead_statement` now applies, per statement, the same whitelist as DCE's
+`tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
+such tails, which is the CCR-082 review fix.
+
+### #17879 — DCE dropped declarations a switch body shares
+
+**Resolved (soundness).** A switch body is one scope: a `var` in any case is
+hoisted to the function, and a `function`/`class` in any case is visible to
+every case. DCE's per-case dead-tail truncation now applies
+`tail_is_safe_to_truncate`. The constant-discriminant collapse, and the
+no-match collapse to `;`, decline unless every discarded case is safe to
+drop.
+
+**Still open (size):** upstream folds these further. For example,
+`switch(2){case 1: var x=1; break; case 2: return typeof x}` becomes
+`return"undefined"`. closurec keeps the switch.
 
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 

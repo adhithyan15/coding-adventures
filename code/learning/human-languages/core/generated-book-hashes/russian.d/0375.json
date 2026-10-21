@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:8dd59987cd3dbb0e",
+  "lessonIds": [
+    "RU-C375-garantirovat",
+    "RU-C375-obyazatelno",
+    "RU-C375-neobkhodimyy",
+    "RU-C375-neobkhodimost",
+    "RU-C375-dostatochno"
+  ],
+  "tex": "russian/book/chapters/ch375-without-fail.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C303-rozhat",
+  "pathSegment": "RU-PATH-303-ROZHDENIYE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-303-ROZHDENIYE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C478-kapriznichat",
+  "pathSegment": "RU-PATH-478-STUBBORN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-478-STUBBORN",
+      "order": 3
+    }
+  ]
+}

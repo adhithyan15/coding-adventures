@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C446-vyveska",
+    "language": "russian",
+    "chapter": 446,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8806fa80e5f377b4"
+  },
+  "findings": []
+}

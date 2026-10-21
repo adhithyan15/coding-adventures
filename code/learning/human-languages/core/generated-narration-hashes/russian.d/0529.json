@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:90e54adf85d15e51",
+  "lessonIds": [
+    "RU-C529-pyl",
+    "RU-C529-uborka",
+    "RU-C529-pylesosit",
+    "RU-C529-tryapka",
+    "RU-C529-vytirat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch529.txt",
+  "json": "russian/narration/ch529.json",
+  "textHash": "fnv1a64:2479fc9c2ab4cd56",
+  "jsonHash": "fnv1a64:eee9c4caad453c13",
+  "findings": []
+}

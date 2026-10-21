@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-501-SEWING",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about sewing and mending clothes.",
+  "prerequisites": []
+}

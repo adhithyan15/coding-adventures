@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:6e02038a0980f628",
+  "lessonIds": [
+    "RU-C522-skulptor",
+    "RU-C522-skulptura",
+    "RU-C522-mramor",
+    "RU-C522-statuya",
+    "RU-C522-vdokhnovlyat"
+  ],
+  "tex": "russian/book/chapters/ch522-marble-and-statues.tex"
+}

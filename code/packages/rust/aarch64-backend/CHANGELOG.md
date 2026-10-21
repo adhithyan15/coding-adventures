@@ -1,4 +1,46 @@
 # Changelog — `aarch64-backend`
+## [0.41.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4):
+  `adds` / `subs` / `negs`, whose V flag is set exactly on signed overflow,
+  then `b.vc` over `movz w0, #5; bl __twig_trap; udf` (`Trap.Overflow`), then
+  the store.
+- **`i64_mul_ovf`:** `mul` (low half) and `smulh` (high half); the product
+  fits exactly when `hi == lo ASR 63`, so `cmp x9, x2, asr #63; b.eq` skips the
+  trap.
+- Both are matched by full name ahead of the wrapping prefix arms; the result
+  is stored only after the check. `op_support`: all four `Lowered`.
+- Structural tests compare the emitted words with `aarch64-encoder`'s own
+  encodings; the full sequences were disassembled with `llvm-mc` to confirm
+  them. There is no local AArch64 execution; the macOS ARM64 CI leg runs it.
+
+## Unreleased — fail-closed real-to-integer narrowing
+
+`real_to_int_trunc` and `real_to_int_floor` now trap with `udf #0xDEAD`
+instead of storing a saturated integer. `fcvtzs` saturates NaN to 0 and
+out-of-range values to `i64::MIN`/`MAX`. The input is rounded in place
+(`frintm` for floor, the new `frintz` for trunc), converted, converted back
+with `scvtf` and compared with `fcmp`. The code also traps on a result of
+`i64::MAX`, because `fcvtzs` saturates `2^63` to that value, which converts
+back to `2^63` exactly.
+
+## [0.40.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): `SDIV` never
+  faults (it returns 0 for `x / 0` and `MIN` for `MIN / -1`), so both edges are
+  tested before it: `cbnz x1` → `Trap.DivZero`; `add x9, x1, #1; cbnz x9` +
+  `MIN` compare → `Trap.Overflow` (div) or a divide by 1 (mod). Then
+  `sdiv`/`msub` and the floor fix-up (`eor` sign test, `sub #1` / `add b`),
+  with X9–X11 as scratch.
+- **`trap "<kind>"`** → `movz x0, #kind_id; bl __twig_trap; udf #0x7EA9`.
+- **`write_i64`** joins `V1_BUILTINS` → `__twig_write_i64`.
+- `op_support`: the four PR1b ops are `Lowered`.
+- Tests are structural (no AArch64 execution on the x86-64 hosts): each
+  expected instruction word is produced by `aarch64-encoder` itself and located
+  in the output in the required order; trap relocations and `udf` placement are
+  checked. Real execution happens on the macOS ARM64 CI leg.
+
 ## [0.39.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 
 - **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and

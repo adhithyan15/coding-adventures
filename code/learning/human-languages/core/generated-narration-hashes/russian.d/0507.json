@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:487349c5bd87ed18",
+  "lessonIds": [
+    "RU-C507-rassada",
+    "RU-C507-tsvesti",
+    "RU-C507-vyanut",
+    "RU-C507-teplitsa",
+    "RU-C507-podrezat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch507.txt",
+  "json": "russian/narration/ch507.json",
+  "textHash": "fnv1a64:e9d37fdd743db395",
+  "jsonHash": "fnv1a64:3ceb6a8322ad9b33",
+  "findings": []
+}

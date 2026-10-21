@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C281-telekanal",
+    "language": "russian",
+    "chapter": 281,
+    "sequence": 16950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b59708dcbc5ece43"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C402-peresylat",
+  "pathSegment": "RU-PATH-402-SVYAZ",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-402-SVYAZ",
+      "order": 3
+    }
+  ]
+}

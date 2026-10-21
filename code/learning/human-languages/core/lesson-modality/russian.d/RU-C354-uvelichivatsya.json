@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C354-uvelichivatsya",
+    "language": "russian",
+    "chapter": 354,
+    "sequence": 20680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee84f47ec6eabbf5"
+  },
+  "findings": []
+}

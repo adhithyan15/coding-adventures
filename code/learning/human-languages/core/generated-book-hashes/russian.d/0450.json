@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:6c8bba5090e273bb",
+  "lessonIds": [
+    "RU-C450-spravka",
+    "RU-C450-blank",
+    "RU-C450-ochered",
+    "RU-C450-oformlyat",
+    "RU-C450-zaveryat",
+    "RU-R450-review-443-450"
+  ],
+  "tex": "russian/book/chapters/ch450-certificates-and-forms.tex"
+}

@@ -1,5 +1,49 @@
 # Changelog — iir-to-wasm
 
+## [0.51.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4).
+  WASM has no overflow flag and no `i64` high multiply, so overflow is
+  computed from the operands, with no scratch locals (the result is
+  recomputed when it is needed twice):
+  - add: `((a ^ r) & (b ^ r)) < 0`; sub: `((a ^ b) & (a ^ r)) < 0`;
+  - neg: `a == MIN`;
+  - mul: `a == -1 && b == MIN` (tested first, because the next check would
+    compute `MIN / -1`, which WASM traps on), then
+    `a != 0 && (a * b) / a != b`.
+
+  A failing test calls `env.__trap(5)` (`Trap.Overflow`), then
+  `unreachable`; the destination is written only after every test passed.
+  A module using any checked op imports `env.__trap`.
+- `op_support`: all four `Lowered`.
+- `tests/lang83_pr1b.rs` runs them on the in-process runtime: exact results at
+  the range edges, `Trap.Overflow` one step past them (11 edge cases,
+  including `MIN * -1`, `-1 * MIN`, `2^32 * 2^31` and `3_037_000_500²`),
+  output before the trap kept, and a destination that aliases an operand.
+
+## [0.50.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
+
+- **New host imports** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)), appended after every older
+  import so no existing function index moves: `env.__write_i64(i64)` (decimal,
+  no newline) and `env.__trap(i32 kind_id)`. Each `__trap` call is followed by
+  `unreachable`, so the program stops even if a host's `__trap` returns.
+- **`i64_div_floor` / `i64_mod_floor`**: `i64.eqz` + `if` → `Trap.DivZero`;
+  (div) `MIN`/`-1` test → `Trap.Overflow` before `i64.div_s` (whose own trap
+  carries no kind). Floor fix-up without scratch locals:
+  `adj = (a rem_s b != 0) & ((a rem_s b) ^ b < 0)`; div subtracts
+  `extend_u(adj)`, mod adds `select(b, 0, adj)`. WASM defines
+  `i64.rem_s MIN -1 = 0`, which is exactly LANG83's `MIN mod -1`.
+- **`trap "<kind>"`** → `i32.const id; call $env.__trap; unreachable`. The
+  validator rejects a `trap` whose operand is not a registered kind literal
+  (`InvalidTrap`).
+- `op_support`: the four PR1b ops are `Lowered`; `write_i64` joins
+  `CALL_BUILTIN_SUPPORTED_NAMES`.
+- Tests (`tests/lang83_pr1b.rs`, executed on `wasm-runtime`): sign tables,
+  `MIN / 1`, `MIN mod -1`, both trap kinds after earlier output, a host whose
+  `__trap` returns still cannot resume the program, validator, import order.
+  Adds `wasm-execution` as a dev-dependency for the test host.
+
 ## [0.49.0] — 2026-10-19 (LANG83 PR1a — standard operation support)
 
 - **LANG83 op support.** New `op_support` module exporting `OP_SUPPORT` and

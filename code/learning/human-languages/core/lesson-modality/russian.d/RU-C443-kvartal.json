@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C443-kvartal",
+    "language": "russian",
+    "chapter": 443,
+    "sequence": 25270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:115b32a5a2345df3"
+  },
+  "findings": []
+}

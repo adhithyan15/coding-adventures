@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-368-POMOSHCH",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-368-POMOSHCH"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C424-kayuta",
+    "language": "russian",
+    "chapter": 424,
+    "sequence": 24290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc642864c6537694"
+  },
+  "findings": []
+}

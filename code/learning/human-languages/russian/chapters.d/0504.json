@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Draughts, Dice and Cards",
+  "label": "ch:ru-draughts-dice-and-cards",
+  "canDo": "I can talk about board games and card games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C504-zhulnichat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about board games and card games.",
+    "assesses": [
+      "RU-LEX-C504-BOARDGAMES-03",
+      "RU-LEX-C504-BOARDGAMES-04",
+      "RU-LEX-C504-BOARDGAMES-05"
+    ]
+  }
+}

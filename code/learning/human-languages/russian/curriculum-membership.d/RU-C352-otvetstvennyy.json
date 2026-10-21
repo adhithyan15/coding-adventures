@@ -1,0 +1,11 @@
+{
+  "id": "RU-C352-otvetstvennyy",
+  "pathSegment": "RU-PATH-352-VINA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-352-VINA",
+      "order": 4
+    }
+  ]
+}

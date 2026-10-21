@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Mountains and valleys",
+  "label": "ch:ru-mountains-and-valleys",
+  "canDo": "I can describe the land: a plain, a valley, a slope, a summit and a gorge.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-R458-review-451-458",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can describe the land: a plain, a valley, a slope, a summit and a gorge.",
+    "assesses": [
+      "RU-LEX-C458-DOLINA-03",
+      "RU-LEX-C458-DOLINA-04",
+      "RU-LEX-C458-DOLINA-05"
+    ]
+  }
+}

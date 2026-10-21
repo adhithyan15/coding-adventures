@@ -1,0 +1,11 @@
+{
+  "id": "RU-C440-naberezhnaya",
+  "pathSegment": "RU-PATH-440-PEREKHOD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-440-PEREKHOD",
+      "order": 2
+    }
+  ]
+}

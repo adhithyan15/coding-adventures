@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-299-SIRENA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-299-SIRENA"
+  ],
+  "after": []
+}

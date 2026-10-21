@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:0e7f2bacba5ac826",
+  "lessonIds": [
+    "RU-C529-pyl",
+    "RU-C529-uborka",
+    "RU-C529-pylesosit",
+    "RU-C529-tryapka",
+    "RU-C529-vytirat"
+  ],
+  "tex": "russian/book/chapters/ch529-cleaning-day.tex"
+}

@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 434,
+  "title": "Making a complaint",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:d381b2b6a622041e",
+  "lessons": [
+    {
+      "id": "RU-C434-zhaloba",
+      "sequence": 24780,
+      "title": "жалоба (zháloba) — a complaint",
+      "headword": "жалоба",
+      "romanization": "zháloba",
+      "gloss": "a complaint",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:651b556e992cfadd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a safe, then the Russian for a fault."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: жалоба",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жалоба (zháloba) — \"a complaint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Туристы подали жалобу на шум. Turísty podáli zhálobu na shum. The tourists made a complaint about the noise."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. Takes на + accusative: жалоба (zháloba) на соседей."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жалоба (zháloba) goes with жалеть 'to pity' and жаль 'a pity': to complain is to call for pity. EtymDB lists жалоба (zháloba) with the sense 'complaint' but without a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zháloba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zháloba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zháloba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zháloba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zháloba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zháloba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a safe, then the Russian for a fault, then say zháloba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a safe, then the Russian for a fault, then say *zháloba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does жалоба (zháloba) mean? (\"A complaint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C434-zhalovatsya",
+      "sequence": 24790,
+      "title": "жаловаться (zhálovatsya) — to complain",
+      "headword": "жаловаться",
+      "romanization": "zhálovatsya",
+      "gloss": "to complain",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b05d6e088cc5aea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a fault, then the Russian for a complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: жаловаться",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жаловаться (zhálovatsya) — \"to complain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Дед всё время жалуется на погоду. Ded vsyo vrémya zháluyetsya na pogódu. Grandad complains about the weather all the time."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; the perfective is пожаловаться. Present жалуюсь, жалуешься. На + accusative for what, the dative for whom."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "жаловаться (zhálovatsya) goes with жалоба (zháloba) 'a complaint' and жалеть 'to pity'. EtymDB lists жалоба (zháloba) and жалеть without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhálovatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhálovatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhálovatsya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhálovatsya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with zhálovatsya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *zhálovatsya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a fault, then the Russian for a complaint, then say zhálovatsya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a fault, then the Russian for a complaint, then say *zhálovatsya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does жаловаться (zhálovatsya) mean? (\"To complain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C434-pretenziya",
+      "sequence": 24800,
+      "title": "претензия (preténziya) — a formal complaint, a claim",
+      "headword": "претензия",
+      "romanization": "preténziya",
+      "gloss": "a formal complaint, a claim",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70d9df349aa7b6d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a complaint, then the Russian for to complain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: претензия",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "претензия (preténziya) — \"a formal complaint, a claim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Мы отправили претензию в турфирму. My otprávili preténziyu v turfírmu. We sent a formal complaint to the travel agency."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine. У меня к вам претензия (preténziya) — I have a complaint to make to you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "претензия (preténziya) is usually traced, probably through German, to Medieval Latin praetēnsiō 'a claim', from praetendere 'to stretch out, to put forward' (Lewis & Short). EtymDB does not list it, so the route is hedged."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preténziya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preténziya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "preténziya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *preténziya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with preténziya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *preténziya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a complaint, then the Russian for to complain, then say preténziya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a complaint, then the Russian for to complain, then say *preténziya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does претензия (preténziya) mean? (\"A formal complaint, a claim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C434-nedovolnyy",
+      "sequence": 24810,
+      "title": "недовольный (nedovólnyy) — dissatisfied, displeased",
+      "headword": "недовольный",
+      "romanization": "nedovólnyy",
+      "gloss": "dissatisfied, displeased",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82b21c464a9ee24f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to complain, then the Russian for a formal complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: недовольный",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "недовольный (nedovólnyy) — \"dissatisfied, displeased\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Недовольный клиент долго спорил с кассиром. Nedovólnyy kliyént dólgo spóril s kassírom. The dissatisfied customer argued with the cashier for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "Takes the instrumental: недоволен номером — unhappy with the room."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "недовольный (nedovólnyy) is built from не- 'not' and довольный 'content, satisfied' (EtymDB lists both); довольный goes with довольно 'enough'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedovólnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedovólnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nedovólnyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nedovólnyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with nedovólnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *nedovólnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to complain, then the Russian for a formal complaint, then say nedovólnyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to complain, then the Russian for a formal complaint, then say *nedovólnyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does недовольный (nedovólnyy) mean? (\"Dissatisfied, displeased\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C434-neispravnyy",
+      "sequence": 24820,
+      "title": "неисправный (neisprávnyy) — out of order, faulty",
+      "headword": "неисправный",
+      "romanization": "neisprávnyy",
+      "gloss": "out of order, faulty",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ddf2fc44db2b31d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a formal complaint, then the Russian for dissatisfied."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: неисправный",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "неисправный (neisprávnyy) — \"out of order, faulty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "В номере был неисправный холодильник. V nómere byl neisprávnyy kholodílnik. There was a fridge in the room that was out of order."
+            },
+            {
+              "kind": "speech",
+              "text": "The opposite is исправный — in working order."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "неисправный (neisprávnyy) is built from не- 'not' and исправный 'in good order', from исправить 'to put right', on править 'to set right'. EtymDB lists неисправный (neisprávnyy) without a deeper source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neisprávnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neisprávnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neisprávnyy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neisprávnyy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with neisprávnyy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *neisprávnyy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a formal complaint, then the Russian for dissatisfied, then say neisprávnyy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a formal complaint, then the Russian for dissatisfied, then say *neisprávnyy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does неисправный (neisprávnyy) mean? (\"Out of order, faulty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R434-review-427-434",
+      "sequence": 24830,
+      "title": "Words from chapters 427–434 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 427-434",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fb841d4239950d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for a harbour and a lighthouse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a harbour, a lighthouse, a sailor, a captain, to sink",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a harbour, a lighthouse, a sailor, a captain, to sink]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hostel, a holiday camp, a bed for the night, to spend the night, a booking",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hostel, a holiday camp, a bed for the night, to spend the night, a booking]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a receptionist, to check into a hotel, to check out, a deposit, to extend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a receptionist, to check into a hotel, to check out, a deposit, to extend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bedding, a sheet, a pillowcase, a chambermaid, to make up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bedding, a sheet, a pillowcase, a chambermaid, to make up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an air conditioner, a heater, a draught, to air, to dry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an air conditioner, a heater, a draught, to air, to dry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to leak, to drip, to get blocked, to flow, a flood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to leak, to drip, to get blocked, to flow, a flood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noise, to disturb, a cockroach, a safe, a fault",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: noise, to disturb, a cockroach, a safe, a fault]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a complaint, to complain, a formal complaint, dissatisfied, out of order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a complaint, to complain, a formal complaint, dissatisfied, out of order]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A harbour? (гавань.) A lighthouse? (маяк.) A sailor? (матрос.) A captain? (капитан.) To sink? (тонуть.) A hostel? (хостел.) A holiday camp? (турбаза.) A bed for the night? (ночлег.) To spend the night? (ночевать.) A booking? (бронь.) A receptionist? (администратор.) To check into a hotel? (заселяться.) To check out? (выселяться.) A deposit? (залог.) To extend? (продлевать.) Bedding? (постель.) A sheet? (простыня.) A pillowcase? (наволочка.) A chambermaid? (горничная.) To make up? (стелить.) An air conditioner? (кондиционер.) A heater? (обогреватель.) A draught? (сквозняк.) To air? (проветривать.) To dry? (сушить.) To leak? (протекать.) To drip? (капать.) To get blocked? (засоряться.) To flow? (течь.) A flood? (потоп.) Noise? (шум.) To disturb? (мешать.) A cockroach? (таракан.) A safe? (сейф.) A fault? (неполадка.) A complaint? (жалоба (zháloba).) To complain? (жаловаться (zhálovatsya).) A formal complaint? (претензия (preténziya).) Dissatisfied? (недовольный (nedovólnyy).) Out of order? (неисправный (neisprávnyy).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

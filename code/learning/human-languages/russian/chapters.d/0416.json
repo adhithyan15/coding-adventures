@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "On board the train",
+  "label": "ch:ru-on-board-the-train",
+  "canDo": "I can manage on board a train: the attendant, the vestibule, the porter, the trolley and showing my ticket.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C416-predyavlyat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can manage on board a train: the attendant, the vestibule, the porter, the trolley and showing my ticket.",
+    "assesses": [
+      "RU-LEX-C416-PROVODNIK-03",
+      "RU-LEX-C416-PROVODNIK-04",
+      "RU-LEX-C416-PROVODNIK-05"
+    ]
+  }
+}

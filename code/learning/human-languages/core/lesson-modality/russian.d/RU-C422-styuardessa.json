@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C422-styuardessa",
+    "language": "russian",
+    "chapter": 422,
+    "sequence": 24210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f61639a00f242ab4"
+  },
+  "findings": []
+}

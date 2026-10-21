@@ -912,13 +912,13 @@ noted.
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
 | Python | GL (indentation mode) | GP | CST | 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned; no CSV | Compliant; selection hard-coded to `"3.12"` | Phase 7 |
-| Perl | GL | GP | CST | 117 partial versioned pairs; `releases.csv` 776 rows | Compliant; frontend uses the **unversioned** pair, no selection | Phase 4 |
+| Perl | GL | GP | CST | 117 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is still the **unversioned** pair; `Language::Perl` on all nine backends (4a) | Phases 4b, 4c |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
 | Derive, Wolfram | GL + `drop_bracketed_newlines` | GP | CST | unversioned | Compliant (C3 hook) | Optional E3 replacement; inventories |
 | MacroOct, MacroNib | GL + Oct/Nib GP | GP | CST | — | Base parse compliant; directive layer is a preprocessor | See [Preprocessor dialects](#preprocessor-dialects) |
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
-| Twig | GL | GP, then `ast_extract.rs` (1,401) + `ast_nodes.rs` (636) → `twig_parser::Program` | typed lift | unversioned | **Non-compliant (C2 typed lift)** | Phase 8 rewrite |
+| Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_division_only`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). Still non-compliant under C2: the runtime `REGEX` deletion in the lexer and `asi.rs`, which is longer than a small hook, remain until 6a/6b replace them | Phase 6c CST rewrite done; 6a, 6b, 6d, 6e remain |
 | Ruby | hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines; 15 eras share it, the era list stops at 3.3) | GP over `ruby.grammar` (919 lines) | CST | unversioned; stale 79-line `ruby.tokens` | **Non-compliant (C2 hand-written lexer)** | Phases 3 and 5 |
 
@@ -947,6 +947,45 @@ machine TOML, the action interpreter and `oracle.rs` are deleted, and
 `ruby-lexer` becomes the usual thin `GrammarLexer` wrapper.
 `ruby-lexer-state-machine.md` and the era list in
 `ruby-version-evolution.md` are then marked superseded by LANG84.
+
+**Status (3.2, R0, 2026-10-20).** Five rows have pairs and claim `partial`,
+stage `P`, subset `rb-int-puts`: the start of the inventory (`0.49`, `0.50`,
+each reviewed against its tag's `parse.y`) and the current line around
+`DEFAULT_RELEASE` (`3.3.5` reviewed; `3.3.6` and `3.3.7` mechanical copies
+with identical `parse.y`, `defs/keywords` and `prism/config.yml` blobs). Blob
+IDs live in `code/grammars/ruby/pair-evidence.csv`;
+`code/scripts/ruby_release_pairs.py` writes the headers and copies and
+refuses a copy whose blobs differ. The 3.3.6 token streams of a 22-program
+R0 corpus match `Ripper.lex` of ruby 3.3.6 exactly (kind, spelling, line,
+column, newlines). Against `ruby-lexer` 17 programs agree and 5 differ, each
+a `ruby-lexer` defect the oracle confirms (split `$~`, `?a`, `+4`; `a / b`
+read as an unterminated regexp that silently drops the rest of the input).
+`0.51` is next: its `yylex()` introduces UPLUS/UMINUS and EXPR_FNAME, so it
+needs a reviewed pair, not a copy.
+
+Decisions and deviations in this slice:
+
+- Lex states are F10 flat modes (`beg`, `arg`, `fname`, `default`); no
+  grammar-tools extension was needed. Known R0 divergences are listed in each
+  `.tokens` header and pinned by tests: `x!=y` without a space (no regex
+  lookahead), operator/variable symbols (`:@iv`), `1if`, the space-sensitive
+  `foo +1`, and F10 transitions not firing on the engine's built-in NEWLINE
+  token (a line starting with `?a`/`:sym` keeps the previous line's mode).
+- The `.grammar` files keep `ruby.grammar`'s rule names (C8) and accept
+  NEWLINE exactly where the release's lexer would be in EXPR_BEG. The 3.3
+  grammar over-accepts `puts (1, 2)` (needs E6 `@space_before`).
+- The deduplicating generator lives in the grammar-tools program behind an
+  explicit opt-in table (Ruby only); the release list comes from
+  `releases.csv`. Parser tables also embed the inventory so `UnknownRelease`
+  and `ReleaseNotAvailable` are told apart without reading the CSV at run time.
+- `ruby-parser` exposes `parse_ruby_at`/`tokenize_ruby_at` with
+  `FrontendBudgets` and `RubyFrontendError`; `DEFAULT_RELEASE` is `3.3.6`,
+  provisional until phase 5 gives that row an `iir_status` (C4.4).
+- `ruby-iir-compiler` stays on `ruby-lexer`: LANG80 accepts `puts -7 / 2`,
+  whose unary reading depends on the space before `-`, so moving it now would
+  regress LANG80. Phase 5 moves it together with E6.
+- The `corpus/rb-int-puts` directory named in `subsets.csv` arrives with
+  stage I in phase 5.
 
 ### JavaScript: rewrite to walk the CST
 
@@ -1006,6 +1045,26 @@ corpus.
   checker, SIR11, and others), but not on the IIR path.
 - The Twig type-check pre-pass (TW05-B) currently consumes the typed AST.
   See [Open questions](#open-questions).
+- **Twig done** in `twig-ir-compiler` 0.46.0, as one PR rather than the
+  planned 6–10. The compiler takes `parse_to_ast`'s `GrammarASTNode`
+  (`compile_ast`, `compile_ast_with_externs`,
+  `compile_ast_with_externs_and_globals`). It reads the tree through borrowed
+  one-level views: `ExprNode::kind`, plus lazy child cursors and no owned
+  tree. Sugar is expanded on the fly: `'x` ≡ `(quote x)`, and
+  `(define (f x) …)` ≡ `(define f (lambda (x) …))`. Free-variable capture
+  runs over the CST (C1.7). `check_cst` mirrors `ast_extract.rs` and raises
+  the same errors in the same order. The IIR-identity gate was a diff of the
+  `Debug` dumps of the old and new compilers' output. It covered 7,343 inputs
+  (every string literal in the twig crates and `lang-aot`, every `.tw` file,
+  and edge cases) through three entry points, and 42,704 mutated hand-built
+  trees. The only differences were 4 errors that moved from the harness's
+  parse step into `compile_ast`, with the same text. `twig-module-driver`
+  hands the compiler the CST.
+- **The TW05-B gate after the rewrite.** The compiler passes the CST to
+  `twig_type_checker::check_cst_with_globals` and consumes only `ok` and the
+  `(line, column)`-keyed diagnostics, which gate emission and never feed it.
+  The checker still lifts the tree to `Program` internally: open question 2,
+  option 2, now isolated inside `twig-type-checker`.
 - McCarthy Lisp's `extract_program` is replaced by borrowed views over the
   CST. **Done** in `mccarthy-lisp-iir-compiler` 0.9.0, as one PR: the
   compiler takes `parse_to_cst`'s `GrammarASTNode` (`compile_ast`), reads
@@ -1031,6 +1090,87 @@ corpus.
   `parse_python(source, "3.12")` API only, until the per-release pairs of
   their line exist, and are then deleted. They are never selectable through
   the release API.
+
+**Phase 4a result (2026-10-20).** Perl's default release is declared on all
+eight executable `lang_matrix` columns and passes the LANG83 check on all
+nine backends, and release selection is real in the frontend. CLR and BEAM
+execute in CI; the authoring host had no `dotnet` or `erl`.
+
+- `grammar-tools generate-rust-compiled-grammars perl` uses the generic
+  release-family path that Ruby R0 introduced (`RustReleaseFamilySpec`). It
+  reads the release list from `releases.csv` by header name, compiles every
+  non-pending pair, canonicalizes each (line numbers zeroed, source name
+  blanked), and emits one `g_<12 hex of SHA-256>` module per distinct
+  grammar. The 117 checked pairs collapse to 5 token and 2 parser tables.
+  Generated: `SUPPORTED_RELEASES` (the 117), `INVENTORY` in the parser table
+  (`(release, grammar_stage)` for all 776 rows), `token_grammar(release)` /
+  `parser_grammar(release)` returning `None` for pending and unknown IDs,
+  `grammar_class(release)`, and `unversioned_token_grammar()` /
+  `unversioned_parser_grammar()` for the LANG81 pair, which is never
+  reachable as release `""`. Perl's pre-schema inventory has no
+  `grammar_stage` column until phase 2b, so its family declares
+  `StageSource::DerivedFromStatus`: the stage is derived by the migration
+  rule above (`pending` → `none`, otherwise `P`). Every family's reader
+  refuses quoted rows, field-count mismatches, unsafe or duplicate IDs, and
+  unknown statuses or stages.
+- `perl_iir_compiler::compile_source_at(source, release, module_name,
+  &FrontendBudgets)` resolves `release` in `release.rs` (exact IDs only, no
+  version ordering), then lexes and parses with that release's tables. Typed
+  `FrontendError` variants: `UnknownRelease` (with up to five
+  longest-prefix suggestions, caller text truncated to 64 characters with
+  control characters escaped),
+  `ReleaseNotAvailable { stage: "pending" }`, `Budget`, `Lex` and `Parse`
+  (line and column), `Unsupported` (rule plus start and end span). All name
+  the release. `compile_source` delegates with `None`.
+- `print` lowers to `call_builtin write_i64`; the Perl-only `pl_print_int`
+  builtin is gone, so the module holds only LANG83 registry builtins and
+  ungated scalar ops (`const`, `neg`, `add`, `sub`, `mul`, `ret_void`).
+- `Language::Perl` (`--lang perl`/`pl`, `.pl`) compiles with
+  `compile_source_at(.., None, ..)`. Eleven `lang_matrix` rows declare all
+  eight executable columns. `perl_rows_agree_with_the_host_perl_oracle`
+  checks every expectation against the host `perl` (v5.38.2 locally), and
+  `perl_rows_pass_the_lang83_check_on_all_nine_backends` runs
+  `check_module_for` on all nine backends. The matrix WASM host and VM/JIT
+  runners gained `write_i64` on the shared ordered sink.
+- Per release: every one of the 117 checked releases lowers the frontend's
+  corpus to IIR identical to the default's and runs it on vm-core. Tests also
+  show the releases differ where their sources say they do: a CR is a lex
+  error under 5.003_26 and whitespace under 5.004_72, and a 251-digit literal
+  lexes under 1.000 but not under 5.004_72. The per-crate tests pin the
+  compiled tables against the inventory and against each pair parsed fresh,
+  which acts as the regeneration check for this family.
+
+Divergences from this spec, deferred deliberately:
+
+- `DEFAULT_RELEASE` is `Release::Unversioned`, not an inventory ID, so C4.1
+  and C4.4 are not yet met for a compile that names no release. A
+  `perl5.38.2` partial pair already exists whose token and parser grammars
+  equal the unversioned pair apart from comments. Phase 4b decides between
+  moving the default to `5.38.2` and building the `perl5.38.0` pair this
+  section asks for.
+- `IIRModule` has no `release` field yet, and lang-aot has no
+  `compile_source_to_iir_at`, `--lang perl@<release>` or `UnknownRelease` /
+  `ReleaseNotAvailable` variants. Adding a field to `IIRModule` touches every
+  crate that builds one, so it goes with the lang-aot selection API in 4b.
+- No `ReleaseProfile`: the integer `print` subset has no semantic difference
+  between releases. The first profile comes with the first construct that
+  needs one.
+- `/`, `%` and `int()` are not in the subset, so 4a emits no
+  `i64_div_floor`/`i64_mod_floor` and no matrix row traps. Perl's `/` is
+  float division and needs the LANG83 float family.
+- The CI `rust-grammar-regen-check` job does not list `perl`; the crate
+  tests above stand in for it. The 117 pairs are not yet swept across the
+  backends (4c), and `subsets.csv`/`iir_status` wait for phase 2b.
+
+Remaining phase 4 slices:
+
+- **4b.** Default release on an inventory ID (`5.38.2` or a new
+  `perl5.38.0` pair); `IIRModule.release`; `compile_source_to_iir_at`,
+  `--lang perl@<release>` and the two `LangAotError` variants; a
+  `cst_contract` test (C8); hostile-input probes in a child process (C5).
+- **4c.** Release sweep: B(pl-int-print) for every checked release on the
+  backends, bounded per [CI bounding](#ci-bounding), with the corpus under
+  `code/grammars/perl/corpus/` once 2b's `subsets.csv` exists.
 
 ### Wire every IIR frontend into lang-aot
 
@@ -1101,7 +1241,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 2b | `subsets.csv` scaffolding, Perl CSV schema migration (including the perl-parser tests that match `,partial` row endings), `--matrix` | ~600 lines |
 | | 2c | `release_evidence.py` (blob-ID capture per release) | ~400 lines |
 | 3 | 3.1 | E1 line/column guards (+ F-spec) | ~800 lines Rust + tests |
-| | 3.2 | Ruby R0: `ruby<earliest…>` partial pairs for `rb-int-puts`, mechanically materialized from evidence; differential tests | ~600 lines + pairs |
+| | 3.2 | Ruby R0: `ruby<earliest…>` partial pairs for `rb-int-puts`, mechanically materialized from evidence; differential tests. **Landed for 0.49, 0.50, 3.3.5–3.3.7** (see the Ruby status above) | ~600 lines + pairs |
 | | 3.3 | E2 pair-kind stack and depth-guarded push/pop; delete the JS template special case | ~1,200 lines |
 | | 3.4 | E3 conditional skip (optional Wolfram/Derive hook removal) | ~400 lines |
 | | 3.5 | E4 capture-then-literal-match | ~1,000 lines |
@@ -1110,11 +1250,11 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.8 | E6 adjacency predicates and ASI | ~800 lines |
 | | 3.9 | E7 goal-directed lexing and binding predicates (largest; may split into lattice and bindings) | ~2,500 lines over 2–3 PRs |
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
-| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b): compile versioned pairs; `compile_source_at`; `perl5.38.0` pair; `print` → `write_i64`; `Language::Perl`; matrix rows; release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
+| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b:** default on an inventory release (`perl5.38.0` pair, or the existing `5.38.2`); `IIRModule.release`; lang-aot release API. **4c:** release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
 | 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs: `rb_int_div` → `i64_div_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer` | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
 | 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family | ~2,000 lines over 3 PRs |
-| 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
+| 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 
 Phases 4 and 5 may start once 2b (and, for Ruby, 3.2) has landed. They do not
@@ -1129,7 +1269,13 @@ wait for the rest of phase 3.
 2. **The Twig type checker.** TW05-B's pre-pass consumes
    `twig_parser::Program`. Port it to the CST, or run it on the typed AST only
    as a *checker* whose results do not feed IIR emission? The second option
-   would keep a typed lift beside the IIR path.
+   would keep a typed lift beside the IIR path. *Current state
+   (`twig-ir-compiler` 0.46.0):* the second option, isolated. The IIR compiler
+   names no typed-AST item. It passes the CST to
+   `twig_type_checker::check_cst_with_globals`, which lifts the tree inside
+   the checker crate, and reads back only position-keyed diagnostics. Porting
+   TW05-B to the CST would remove the last lift. That change is confined to
+   `twig-type-checker`.
 3. **The preprocessor exception.** Is PREP01's hand-written directive layer
    acceptable under the conditions in
    [Preprocessor dialects](#preprocessor-dialects)?

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C461-opushka",
+  "pathSegment": "RU-PATH-461-POLYANA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-461-POLYANA",
+      "order": 1
+    }
+  ]
+}

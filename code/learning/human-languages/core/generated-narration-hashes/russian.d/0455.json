@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:6c1dc26677b0bf01",
+  "lessonIds": [
+    "RU-C455-rasplachivatsya",
+    "RU-C455-oplata",
+    "RU-C455-kartochka",
+    "RU-C455-razmenivat",
+    "RU-C455-obschityvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch455.txt",
+  "json": "russian/narration/ch455.json",
+  "textHash": "fnv1a64:13c048a70db1e2fe",
+  "jsonHash": "fnv1a64:6f496e75b05fca1d",
+  "findings": []
+}

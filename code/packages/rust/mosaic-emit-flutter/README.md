@@ -116,7 +116,9 @@ browser content surface; scalar props remain normalized by the existing typed
 helpers.
 
 `HostButton.disabled`, `HostInput.read-only`, and `HostInput.onCommit` lower to
-Flutter's native button and text-field contracts. Project shells expose a
+Flutter's native button and text-field contracts. A `multiline: true` field
+commits on Ctrl/Cmd+Enter instead of `onSubmitted`, through `CallbackShortcuts`
+and the generated `_mosaicCommitChords` helper (UI25 §4). Project shells expose a
 `MosaicApp(mosaicHost: ...)` injection seam so direct widget acceptance can
 drive those controls and verify host response hydration against the exact
 generated component. Hosts can also register a prop-change handler; native

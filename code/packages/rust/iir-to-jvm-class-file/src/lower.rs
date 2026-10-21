@@ -183,17 +183,12 @@ const LXOR: u8 = 0x83;  // long bitwise XOR
 // we first call `java/lang/Math.floor(D)D` (which rounds toward −∞, returning
 // a double) and *then* `d2l`/`d2i` to land in the integer model.
 //
-// ⚠️ Trap divergence (documented — diverges from
-// `lang-full-e8-numeric-conversions.md` §7's uniform-trap recommendation,
-// recorded in that spec's footnote ²): the VM / LLVM / WASM backends
-// *trap* on NaN / ±∞ / out-of-i64-range inputs to `real_to_int_*`.  The JVM's
-// `d2i`/`d2l` instead **saturate** (NaN→0, +∞→MAX, −∞→MIN) and never throw.
-// For every *finite, in-range* value — which is all the `entier`/coercion
-// use case ever produces — the two agree bit-for-bit, so the matrix cells
-// (which exercise only such values) match.  The divergence is confined to
-// pathological inputs the matrix never feeds; emitting a JVM range-check +
-// `athrow` would require from-scratch exception bytecode with no reusable
-// precedent in this backend, so we take the documented-divergence path.
+// Out-of-range narrowing fails closed, like the VM, LLVM, WASM and CLR
+// backends: `d2i`/`d2l` alone would *saturate* (NaN→0, +∞→MAX, −∞→MIN)
+// and hand the program a wrong integer. ALGOL proofs do admit runtime reals
+// that overflow (`entier(exp(exp(x)))`), so each narrowing is preceded by
+// [`emit_real_to_int_range_check`], which throws `ArithmeticException` for
+// NaN, ±∞ and values outside the destination's integer range.
 const I2D: u8 = 0x87;  // int → double (widen, exact)
 const L2D: u8 = 0x8A;  // long → double (widen)
 const D2I: u8 = 0x8E;  // double → int (truncate toward zero, saturating)
@@ -368,6 +363,18 @@ const L2I: u8 = 0x88;
 ///
 /// Used to box i32/bool captured values into the `long[]` closure array.
 const I2L: u8 = 0x85;
+
+/// `dup2` (0x5C) — duplicate the top two stack words (one `long`/`double`).
+const DUP2: u8 = 0x5C;
+
+/// `new` (0xBB) — allocate an uninitialised object of a constant-pool class.
+const NEW: u8 = 0xBB;
+
+/// `invokespecial` (0xB7) — call a constructor (`<init>`) on a new object.
+const INVOKESPECIAL: u8 = 0xB7;
+
+/// `athrow` (0xBF) — throw the exception reference on top of the stack.
+const ATHROW: u8 = 0xBF;
 
 /// `areturn` (0xB0) — return an object reference (e.g. a `LispyPair`).
 ///
@@ -577,6 +584,24 @@ fn decode_stack_effect(
         BASTORE | IASTORE | FASTORE | AASTORE => simple(1, 3, 0),
         LASTORE | DASTORE => simple(1, 4, 0),
         DUP => simple(1, 1, 2),
+        DUP2 => simple(1, 2, 4),
+        // `new`/`invokespecial`/`athrow` appear in two shapes: the
+        // fail-closed narrowing (`new ArithmeticException; dup;
+        // invokespecial <init>(); athrow`) and LANG83 PR1b `trap`
+        // (`new RuntimeException; dup; ldc_w kind; invokespecial
+        // <init>(String); athrow`).
+        NEW => simple(3, 0, 1),
+        INVOKESPECIAL => {
+            let index = u16_at(pc + 1)?;
+            let (args, ret) = member_descriptor(cp, index)
+                .and_then(method_descriptor_words)
+                .ok_or_else(|| format!("unresolvable method #{index} at pc {pc}"))?;
+            let pops = args
+                .checked_add(1)
+                .ok_or_else(|| format!("method #{index} at pc {pc} has too many argument words"))?;
+            simple(3, pops, ret)
+        }
+        ATHROW => terminal(1),
         SWAP => simple(1, 2, 2),
         IFEQ | IFNE | IFLT | IFGE | IFGT | IFLE | IFNULL => branch(1, true)?,
         IF_ICMPEQ | IF_ICMPNE | IF_ICMPLT | IF_ICMPGE | IF_ICMPGT | IF_ICMPLE => branch(2, true)?,
@@ -1182,6 +1207,62 @@ fn emit_aload(code: &mut Vec<u8>, idx: u16) {
 }
 
 /// Emit the appropriate typed load instruction for a slot and JVM type.
+/// Guard a `d2i`/`d2l` narrowing so it traps instead of saturating.
+///
+/// Expects the `double` about to be narrowed on the stack, already floored
+/// for `real_to_int_floor`, and leaves it there when it is in range. The test
+/// is written so one shape serves both truncation and floor, and so NaN lands
+/// on the throwing path through the choice of `dcmpl` (NaN → −1) and
+/// `dcmpg` (NaN → +1):
+///
+/// ```text
+///              lower bound (trap unless …)    upper bound (ok if …)
+///   i64 dest   v >= -2^63    dcmpl; iflt T   v < 2^63   dcmpg; iflt OK
+///   i32 dest   v > -2^31-1   dcmpl; ifle T   v < 2^31   dcmpg; iflt OK
+///
+///         dup2; ldc2_w lo; dcmpl; if<lo> T        ; 8 bytes
+///         dup2; ldc2_w hi; dcmpg; iflt OK         ; 8 bytes
+///   T:    new ArithmeticException; dup; ldc_w msg
+///         invokespecial <init>(String); athrow   ; 11 bytes
+///   OK:   (caller emits d2l / d2i)
+/// ```
+///
+/// i64's lower bound is inclusive because `-2^63 - 1` is not a `double`
+/// (it rounds to `-2^63`). For a truncating `v` in `(-2^63 - 1, -2^63)`,
+/// no such double exists either, since doubles that large are 2048 apart.
+fn emit_real_to_int_range_check(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, dest: JvmType) {
+    let (lo, lo_branch, hi) = match dest {
+        JvmType::Long => (-9_223_372_036_854_775_808.0, IFLT, 9_223_372_036_854_775_808.0),
+        _ => (-2_147_483_649.0, IFLE, 2_147_483_648.0),
+    };
+    let lo_idx = cp.add_double(lo);
+    let hi_idx = cp.add_double(hi);
+    let exception = cp.add_class("java/lang/ArithmeticException");
+    let init = cp.add_methodref("java/lang/ArithmeticException", "<init>", "(Ljava/lang/String;)V");
+    let message = cp.add_string("real_to_int: operand is not finite or is outside the integer range");
+
+    code.push(DUP2);
+    code.push(LDC2_W);
+    code.extend_from_slice(&lo_idx.to_be_bytes());
+    code.push(DCMPL);
+    code.push(lo_branch);
+    code.extend_from_slice(&11i16.to_be_bytes()); // over the upper check → T
+    code.push(DUP2);
+    code.push(LDC2_W);
+    code.extend_from_slice(&hi_idx.to_be_bytes());
+    code.push(DCMPG);
+    code.push(IFLT);
+    code.extend_from_slice(&14i16.to_be_bytes()); // over the 11-byte throw → OK
+    code.push(NEW);
+    code.extend_from_slice(&exception.to_be_bytes());
+    code.push(DUP);
+    code.push(LDC_W);
+    code.extend_from_slice(&message.to_be_bytes());
+    code.push(INVOKESPECIAL);
+    code.extend_from_slice(&init.to_be_bytes());
+    code.push(ATHROW);
+}
+
 fn emit_typed_load(code: &mut Vec<u8>, idx: u16, jvm_type: JvmType) {
     match jvm_type {
         JvmType::Int => emit_iload(code, idx),
@@ -2905,6 +2986,7 @@ fn lower_function(
                 emit_typed_load(&mut code, src.0, src.1);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_real_to_int_range_check(&mut code, cp, dest_jtype);
                     code.push(match dest_jtype {
                         JvmType::Long => D2L,
                         _ => D2I,
@@ -2929,6 +3011,7 @@ fn lower_function(
                 code.extend_from_slice(&mref.to_be_bytes());
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_real_to_int_range_check(&mut code, cp, dest_jtype);
                     code.push(match dest_jtype {
                         JvmType::Long => D2L,
                         _ => D2I,
@@ -3785,6 +3868,30 @@ fn lower_function(
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
                         emit_istore(&mut code, dest_slot);
+                    }
+                    "write_i64" => {
+                        // LANG83 PR1b — decimal, NO newline, straight to
+                        // `System.out.print(J)V` (no host class needed). Every
+                        // other output path also ends in `System.out`, so the
+                        // stream stays ordered.
+                        let val_name = match instr.srcs.get(1) {
+                            Some(Operand::Var(s)) => s.clone(),
+                            _ => return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: "call_builtin \"write_i64\" requires srcs[1] = Operand::Var(val:i64)".to_string(),
+                            }),
+                        };
+                        let (val_slot, val_type) = lookup_var(&val_name)?;
+                        let out_ref = cp.add_fieldref("java/lang/System", "out", "Ljava/io/PrintStream;");
+                        code.push(GETSTATIC);
+                        code.extend_from_slice(&out_ref.to_be_bytes());
+                        emit_typed_load(&mut code, val_slot, val_type);
+                        if val_type == JvmType::Int {
+                            code.push(I2L);
+                        }
+                        let print_ref = cp.add_methodref("java/io/PrintStream", "print", "(J)V");
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&print_ref.to_be_bytes());
                     }
                     "print_i64" => {
                         // print_i64 takes one i64 (`long` on the JVM) arg and
@@ -4807,6 +4914,217 @@ fn lower_function(
                 code.extend_from_slice(&println_ref.to_be_bytes());
             }
 
+            // ── LANG83 PR1b: floor division ──────────────────────────────────
+            //
+            // `Math.floorDiv(JJ)J` / `Math.floorMod(JJ)J` (Java 8+) give the
+            // floor quotient / remainder, but their edges are not LANG83's:
+            // a zero divisor throws `ArithmeticException` (not a kind-naming
+            // trap, and without flushing) and `floorDiv(MIN, -1)` silently
+            // returns `MIN`. So both edges are tested first:
+            //
+            //   lload b; lconst_0; lcmp; ifne +T; <trap Trap.DivZero>
+            //   div: lload b; iconst_m1; i2l; lcmp; ifne +X;
+            //        lload a; ldc2_w MIN; lcmp; ifne +T; <trap Trap.Overflow>
+            //   lload a; lload b; invokestatic java/lang/Math.floorDiv(JJ)J; lstore dest
+            //
+            // `floorMod(MIN, -1)` is 0 (`lrem` does not overflow), as LANG83 wants.
+            "i64_div_floor" | "i64_mod_floor" => {
+                use interpreter_ir::exception_kind::{TRAP_DIV_ZERO, TRAP_OVERFLOW};
+                let want_mod = instr.op == "i64_mod_floor";
+                let (a, b) = two_srcs(func, instr, &slots)?;
+                let dest = instr.dest.as_ref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let (dest_slot, dest_type) = lookup_var(dest)?;
+                if a.1 != JvmType::Long || b.1 != JvmType::Long || dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let zero_trap = lang83_trap_bytes(cp, TRAP_DIV_ZERO);
+                emit_lload(&mut code, b.0);
+                code.push(LCONST_0);
+                code.push(LCMP);
+                emit_skip_if_ne(&mut code, zero_trap.len());
+                code.extend_from_slice(&zero_trap);
+                if !want_mod {
+                    let ovf_trap = lang83_trap_bytes(cp, TRAP_OVERFLOW);
+                    let mut min_check: Vec<u8> = Vec::new();
+                    emit_lload(&mut min_check, a.0);
+                    min_check.push(LDC2_W);
+                    min_check.extend_from_slice(&cp.add_long(i64::MIN).to_be_bytes());
+                    min_check.push(LCMP);
+                    emit_skip_if_ne(&mut min_check, ovf_trap.len());
+                    min_check.extend_from_slice(&ovf_trap);
+                    emit_lload(&mut code, b.0);
+                    code.push(ICONST_M1);
+                    code.push(I2L);
+                    code.push(LCMP);
+                    emit_skip_if_ne(&mut code, min_check.len());
+                    code.extend_from_slice(&min_check);
+                }
+                emit_lload(&mut code, a.0);
+                emit_lload(&mut code, b.0);
+                let method = if want_mod { "floorMod" } else { "floorDiv" };
+                let mref = cp.add_methodref("java/lang/Math", method, "(JJ)J");
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                emit_lstore(&mut code, dest_slot);
+            }
+
+            // ── LANG83 PR4: overflow-checked arithmetic ─────────────────────
+            //
+            // `Math.addExact` & co. would detect the overflow, but they throw
+            // `ArithmeticException` — no LANG83 kind, and no `System.out`
+            // flush — and catching it needs an exception-table entry this
+            // class writer never emits. So, like PR1b's floor division, the
+            // condition is tested *before* the plain wrapping instruction and
+            // a failing test runs the 17-byte trap sequence
+            // (`Trap.Overflow`):
+            //
+            //   add: ((a ^ (a+b)) & (b ^ (a+b))) < 0  → trap
+            //   sub: ((a ^ b) & (a ^ (a-b))) < 0      → trap
+            //   neg: a == MIN                          → trap
+            //   mul: a == -1 && b == MIN               → trap
+            //        a != 0 && (a*b) / a != b          → trap
+            //   lload a; [lload b]; ladd|lsub|lmul|lneg; lstore dest
+            //
+            // The mul guard is exact (a wrapped product differs from a*b by a
+            // non-zero multiple of 2^64, which is larger than |a|), and needs
+            // no JDK 9+ `Math.multiplyHigh`. The destination is stored last,
+            // so a dest that aliases an operand is still correct.
+            "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => {
+                use interpreter_ir::exception_kind::TRAP_OVERFLOW;
+                let unary = instr.op == "i64_neg_ovf";
+                let (a, b) = if unary {
+                    let a = one_src(func, instr, &slots)?;
+                    (a, a)
+                } else {
+                    two_srcs(func, instr, &slots)?
+                };
+                let dest = instr.dest.as_ref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let (dest_slot, dest_type) = lookup_var(dest)?;
+                if a.1 != JvmType::Long || b.1 != JvmType::Long || dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let trap = lang83_trap_bytes(cp, TRAP_OVERFLOW);
+                let (a, b) = (a.0, b.0);
+                match instr.op.as_str() {
+                    "i64_add_ovf" | "i64_sub_ovf" => {
+                        let arith = if instr.op == "i64_add_ovf" { LADD } else { LSUB };
+                        if arith == LADD {
+                            // (a ^ r) & (b ^ r)
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LADD);
+                            code.push(LXOR);
+                            emit_lload(&mut code, b);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LADD);
+                            code.push(LXOR);
+                        } else {
+                            // (a ^ b) & (a ^ r)
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LXOR);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LSUB);
+                            code.push(LXOR);
+                        }
+                        code.push(LAND);
+                        code.push(LCONST_0);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFGE, trap.len());
+                        code.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        emit_lload(&mut code, b);
+                        code.push(arith);
+                    }
+                    "i64_neg_ovf" => {
+                        emit_lload(&mut code, a);
+                        code.push(LDC2_W);
+                        code.extend_from_slice(&cp.add_long(i64::MIN).to_be_bytes());
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFNE, trap.len());
+                        code.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(LNEG);
+                    }
+                    _ => {
+                        // Guard 1: a == -1 && b == MIN.
+                        let mut b_is_min: Vec<u8> = Vec::new();
+                        emit_lload(&mut b_is_min, b);
+                        b_is_min.push(LDC2_W);
+                        b_is_min.extend_from_slice(&cp.add_long(i64::MIN).to_be_bytes());
+                        b_is_min.push(LCMP);
+                        emit_skip_if(&mut b_is_min, IFNE, trap.len());
+                        b_is_min.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(ICONST_M1);
+                        code.push(I2L);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFNE, b_is_min.len());
+                        code.extend_from_slice(&b_is_min);
+                        // Guard 2: a != 0 && (a * b) / a != b.
+                        let mut quotient: Vec<u8> = Vec::new();
+                        emit_lload(&mut quotient, a);
+                        emit_lload(&mut quotient, b);
+                        quotient.push(LMUL);
+                        emit_lload(&mut quotient, a);
+                        quotient.push(LDIV);
+                        emit_lload(&mut quotient, b);
+                        quotient.push(LCMP);
+                        emit_skip_if(&mut quotient, IFEQ, trap.len());
+                        quotient.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(LCONST_0);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFEQ, quotient.len());
+                        code.extend_from_slice(&quotient);
+                        emit_lload(&mut code, a);
+                        emit_lload(&mut code, b);
+                        code.push(LMUL);
+                    }
+                }
+                emit_lstore(&mut code, dest_slot);
+            }
+
+            // ── LANG83 PR1b: `trap "<kind>"` ─────────────────────────────────
+            //
+            //   getstatic System.out; invokevirtual PrintStream.flush()V
+            //   new RuntimeException; dup; ldc_w "<kind>"
+            //   invokespecial RuntimeException.<init>(String)V; athrow
+            //
+            // Uncaught, the JVM prints `Exception in thread "main"
+            // java.lang.RuntimeException: Trap.User` on stderr and exits 1 —
+            // after the flush, so earlier `System.out` output is never lost.
+            // Class files are version 49, so the old type-inferring verifier
+            // accepts the dead code after `athrow` without a StackMapTable.
+            "trap" => {
+                let kind = match instr.srcs.as_slice() {
+                    [Operand::Str(k)] if interpreter_ir::exception_kind::is_registered_trap_kind(k) => k.clone(),
+                    other => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: format!("trap requires srcs = [Operand::Str(registered trap kind)], got {other:?}"),
+                        })
+                    }
+                };
+                code.extend_from_slice(&lang83_trap_bytes(cp, &kind));
+            }
+
             // ── Unknown op ───────────────────────────────────────────────────
             //
             // If we reach here, the validator missed something or an opcode was
@@ -4923,6 +5241,51 @@ fn one_src(
             detail: format!("{} expects a Var source", instr.op),
         }),
     }
+}
+
+// ── LANG83 PR1b helpers ──────────────────────────────────────────────────────
+
+// `NEW`, `INVOKESPECIAL` and `ATHROW` are declared with the other opcode
+// constants near the top of this file (shared with the fail-closed
+// real-to-integer narrowing).
+
+/// The self-contained trap sequence for `kind` (LANG83): flush `System.out`,
+/// then throw `new RuntimeException(kind)`. A fixed 17 bytes (`ldc_w`, never
+/// the 2-byte `ldc`), so callers can branch over it with a known offset.
+fn lang83_trap_bytes(cp: &mut ConstantPoolBuilder, kind: &str) -> Vec<u8> {
+    let out_ref = cp.add_fieldref("java/lang/System", "out", "Ljava/io/PrintStream;");
+    let flush_ref = cp.add_methodref("java/io/PrintStream", "flush", "()V");
+    let exc_class = cp.add_class("java/lang/RuntimeException");
+    let kind_str = cp.add_string(kind);
+    let init_ref = cp.add_methodref("java/lang/RuntimeException", "<init>", "(Ljava/lang/String;)V");
+    let mut b = Vec::with_capacity(17);
+    b.push(GETSTATIC);
+    b.extend_from_slice(&out_ref.to_be_bytes());
+    b.push(INVOKEVIRTUAL);
+    b.extend_from_slice(&flush_ref.to_be_bytes());
+    b.push(NEW);
+    b.extend_from_slice(&exc_class.to_be_bytes());
+    b.push(DUP);
+    b.push(LDC_W);
+    b.extend_from_slice(&kind_str.to_be_bytes());
+    b.push(INVOKESPECIAL);
+    b.extend_from_slice(&init_ref.to_be_bytes());
+    b.push(ATHROW);
+    debug_assert_eq!(b.len(), 17);
+    b
+}
+
+/// `ifne +(3 + skip)` — jump over the next `skip` bytes when TOS int != 0.
+fn emit_skip_if_ne(code: &mut Vec<u8>, skip: usize) {
+    emit_skip_if(code, IFNE, skip);
+}
+
+/// `<if_op> +(3 + skip)` — a one-operand `if<cond>` (`ifeq`, `ifne`, `ifge`, …)
+/// that jumps over the next `skip` bytes when its condition holds.
+fn emit_skip_if(code: &mut Vec<u8>, if_op: u8, skip: usize) {
+    let offset = i16::try_from(3 + skip).expect("LANG83 trap sequences are short");
+    code.push(if_op);
+    code.extend_from_slice(&offset.to_be_bytes());
 }
 
 /// Extract (slot, type) for both sources of a binary instruction (must both be Vars).

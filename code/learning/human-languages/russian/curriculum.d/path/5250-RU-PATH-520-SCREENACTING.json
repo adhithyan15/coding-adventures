@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-520-SCREENACTING",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-520-SCREENACTING"
+  ],
+  "after": []
+}

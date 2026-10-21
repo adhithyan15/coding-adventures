@@ -1,0 +1,11 @@
+{
+  "id": "RU-C381-ball",
+  "pathSegment": "RU-PATH-381-SESSIYA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-381-SESSIYA",
+      "order": 4
+    }
+  ]
+}

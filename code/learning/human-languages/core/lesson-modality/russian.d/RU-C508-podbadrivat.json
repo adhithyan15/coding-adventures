@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C508-podbadrivat",
+    "language": "russian",
+    "chapter": 508,
+    "sequence": 28620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c6bbc256c78ff45"
+  },
+  "findings": []
+}

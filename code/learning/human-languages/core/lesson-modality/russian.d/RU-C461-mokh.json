@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C461-mokh",
+    "language": "russian",
+    "chapter": 461,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c75c65127964eb3f"
+  },
+  "findings": []
+}

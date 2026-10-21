@@ -5,18 +5,22 @@
 //                         Text      [ draft-editor-title-label ]
 //                         HostInput [ draft-editor-title ]
 //     Text  [ draft-editor-body-label ]
-//     Input [ draft-editor-body ]   (multiline)
+//     HostInput [ draft-editor-body ]   (multiline; Ctrl/Cmd+Enter saves)
 //     Row   [ draft-editor-actions ]
 //       If (save-label)   HostButton [ draft-editor-save ]
 //       If (delete-label) HostButton [ draft-editor-delete ]
 //       If (cancel-label) HostButton [ draft-editor-cancel ]
 //
-// The body is the UI25 legacy `Input ( multiline : true )`. It is reachable
-// here because this package depends on nothing: inside the toolkit, a bare
-// `Input` is rewritten to the toolkit's single-line `Input` component (see
-// the spec). J3b-pre (#15931) made it a real, named text area on every
-// backend. The kernel `HostInput ( multiline : true )` now lowers to the
-// same text area (#15930), so the body can move to it when `Input` retires.
+// The body is the kernel's text area, `HostInput ( multiline : true )`
+// (#15930): Enter is a line break, and Ctrl+Enter (Cmd+Enter on macOS)
+// raises `onSave`, the same event as the Save button (UI25 §4, UI29 §2.1).
+// It used to be the UI25 legacy `Input`, which now lowers identically and is
+// on its way out (U29-X1).
+//
+// The chord raises `onSave` even when `save-label` is empty and no Save
+// button is drawn: a layout cannot bind a field's commit conditionally
+// without re-creating the field. A host that offers no Save ignores
+// `onSave`, as it already ignores every event it did not wire.
 //
 // The visible label and the accessible name come from the same slot, so a
 // screen reader announces exactly what a sighted user reads.
@@ -40,11 +44,12 @@ layout DraftEditor {
     Text [ draft-editor-body-label ] (
       content : slot: body-label
     )
-    Input [ draft-editor-body ] (
+    HostInput [ draft-editor-body ] (
       value : slot: body-value ,
       multiline : true ,
       a11y-label : slot: body-label ,
-      onChange : emit: onBodyChange
+      onChange : emit: onBodyChange ,
+      onCommit : emit: onSave
     )
     Row [ draft-editor-actions ] {
       If ( when: slot: save-label ) {

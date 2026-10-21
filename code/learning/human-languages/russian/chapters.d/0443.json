@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "A stroll round town",
+  "label": "ch:ru-a-stroll-round-town",
+  "canDo": "I can talk about strolling round a town: wandering, taking a stroll, a city block, a suburb and the roadway.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C443-mostovaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can talk about strolling round a town: wandering, taking a stroll, a city block, a suburb and the roadway.",
+    "assesses": [
+      "RU-LEX-C443-BRODIT-03",
+      "RU-LEX-C443-BRODIT-04",
+      "RU-LEX-C443-BRODIT-05"
+    ]
+  }
+}

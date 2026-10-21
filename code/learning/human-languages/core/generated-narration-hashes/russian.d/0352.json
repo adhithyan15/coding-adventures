@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:c377d5d52e50d900",
+  "lessonIds": [
+    "RU-C352-vina",
+    "RU-C352-vinovatyy",
+    "RU-C352-vinit",
+    "RU-C352-opravdanie",
+    "RU-C352-otvetstvennyy",
+    "RU-R352-review-345-352"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch352.txt",
+  "json": "russian/narration/ch352.json",
+  "textHash": "fnv1a64:1297686aa54488f3",
+  "jsonHash": "fnv1a64:a7703400e54ca4e7",
+  "findings": []
+}

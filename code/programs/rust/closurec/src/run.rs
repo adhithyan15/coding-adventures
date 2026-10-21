@@ -151,6 +151,10 @@ pub enum CompilerError {
     /// The compile fails closed rather than running on the caller's smaller
     /// stack, where an input inside `MAX_CHAIN_SPINE` could overflow it.
     CompilerThread { message: String },
+    /// The pinned reference compiler refuses this input, so closurec does too
+    /// (CCR-075). `stderr` is upstream's diagnostic text, byte for byte; no
+    /// output is produced. The exit status is the error count, capped at 127.
+    Refused { stderr: String, errors: usize },
 }
 
 fn compilation_level_name(level: CompilationLevel) -> &'static str {
@@ -186,6 +190,7 @@ impl std::fmt::Display for CompilerError {
             CompilerError::Define(e) => write!(f, "{e}"),
             CompilerError::Wrapper(e) => write!(f, "{e}"),
             CompilerError::PrintTree(e) => write!(f, "{e}"),
+            CompilerError::Refused { stderr, .. } => write!(f, "{stderr}"),
             CompilerError::CompilerThread { message } => write!(
                 f,
                 "could not start the compiler thread with a {} MiB stack: {message}",
@@ -222,6 +227,7 @@ impl CompilerError {
     pub(crate) fn exit_code(&self) -> u8 {
         match self {
             Self::TypedPipeline { .. } | Self::Provenance { .. } => 1,
+            Self::Refused { errors, .. } => crate::refusals::exit_status(*errors),
             _ => 2,
         }
     }
@@ -1222,6 +1228,34 @@ fn run_compiler_on_this_stack(config: &CompilerConfig) -> Result<CompilerOutput,
             stderr_text: String::new(),
             wrote_files: Vec::new(),
         });
+    }
+
+    // Step 1b (CCR-075): refuse what Closure refuses. Every input is scanned
+    // before any work starts, so a refused program writes nothing: no
+    // JavaScript, no output file, no sidecar. Errors come out in input order,
+    // then by position, as upstream reports them.
+    {
+        let es_version = map_language_in_to_es_version(config);
+        let mut files: Vec<(String, String)> = Vec::with_capacity(inputs.len());
+        let mut refused = Vec::new();
+        for path in &inputs {
+            let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
+                path: path.clone(),
+                kind: e.kind(),
+                message: e.to_string(),
+            })?;
+            let found = crate::refusals::scan(files.len(), &contents, es_version);
+            if !found.is_empty() {
+                refused.extend(found);
+            }
+            files.push((crate::refusals::display_path(&path.to_string_lossy()), contents));
+        }
+        if !refused.is_empty() {
+            return Err(CompilerError::Refused {
+                stderr: crate::refusals::render(&refused, &files),
+                errors: refused.len(),
+            });
+        }
     }
 
     // Step 2: read every resolved input, then transform per
@@ -6597,11 +6631,10 @@ mod tests {
 
     #[test]
     fn propagates_const_literal_but_only_advanced_removes_binding() {
-        // CLOC13.H: a top-level `const` bound to a literal is propagated to
-        // its use sites at BOTH levels (inline-variables), and constant-fold
-        // folds the now-concrete `RATE + 1` → `3`. Only ADVANCED (closed-
-        // world) then removes the now-unreferenced binding; SIMPLE keeps
-        // `const RATE = 2` — another script might read it.
+        // A top-level `const` bound to a literal is propagated, folded and
+        // removed only at ADVANCED (closed world). At SIMPLE (open world) the
+        // reference compiler keeps it at its ordinary uses (CCR-078, #15863),
+        // since another script might read it.
         let src = "const RATE = 2; total(base * RATE); margin(RATE + 1);";
         let mk = |level| {
             transform_source(
@@ -6618,8 +6651,8 @@ mod tests {
         };
         assert_eq!(
             mk(crate::config::CompilationLevel::Simple),
-            "const RATE=2;total(base*2);margin(3);",
-            "SIMPLE propagates the literal but KEEPS the binding (open-world)"
+            "const RATE=2;total(base*RATE);margin(RATE+1);",
+            "SIMPLE keeps the top-level const at its ordinary uses (open-world, CCR-078)"
         );
         assert_eq!(
             mk(crate::config::CompilationLevel::Advanced),

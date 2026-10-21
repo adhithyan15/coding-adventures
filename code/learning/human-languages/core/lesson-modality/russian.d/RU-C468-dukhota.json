@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C468-dukhota",
+    "language": "russian",
+    "chapter": 468,
+    "sequence": 26550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff67afe2b2fae251"
+  },
+  "findings": []
+}

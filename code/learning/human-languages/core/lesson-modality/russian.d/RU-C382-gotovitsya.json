@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C382-gotovitsya",
+    "language": "russian",
+    "chapter": 382,
+    "sequence": 22140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:313ec58aa46b7c36"
+  },
+  "findings": []
+}

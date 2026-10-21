@@ -1,0 +1,11 @@
+{
+  "id": "RU-C462-spalnik",
+  "pathSegment": "RU-PATH-462-KOSTYOR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-462-KOSTYOR",
+      "order": 1
+    }
+  ]
+}

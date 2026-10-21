@@ -1,0 +1,11 @@
+{
+  "id": "RU-C454-torgovatsya",
+  "pathSegment": "RU-PATH-454-RASPRODAZHA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-454-RASPRODAZHA",
+      "order": 3
+    }
+  ]
+}

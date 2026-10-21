@@ -1,0 +1,11 @@
+{
+  "id": "RU-C365-vlast",
+  "pathSegment": "RU-PATH-365-VLAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-365-VLAST",
+      "order": 2
+    }
+  ]
+}

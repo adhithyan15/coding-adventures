@@ -1,0 +1,11 @@
+{
+  "id": "RU-C444-kolokolnya",
+  "pathSegment": "RU-PATH-444-RATUSHA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-444-RATUSHA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:80896df87da19ddf",
+  "lessonIds": [
+    "RU-C416-provodnik",
+    "RU-C416-tambur",
+    "RU-C416-nosilshchik",
+    "RU-C416-telezhka",
+    "RU-C416-predyavlyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch416.txt",
+  "json": "russian/narration/ch416.json",
+  "textHash": "fnv1a64:1316349df68b0718",
+  "jsonHash": "fnv1a64:253e1f5a25c057b7",
+  "findings": []
+}

@@ -24,6 +24,10 @@ Adjacent `--` is Perl's decrement token and is rejected; spaced binary minus
 followed by unary minus remains accepted.
 Each `print` has exactly one argument. It writes the argument's decimal form
 without adding a newline. Statement order determines output order.
+Since LANG84 phase 4a, `print` lowers to the LANG83 standard builtin
+`write_i64` (decimal, no newline), so every lang-aot backend runs the pilot
+through `Language::Perl`; the earlier Perl-only `pl_print_int` builtin is
+retired.
 
 The expression is in Perl scalar context. To avoid claiming Perl's full
 numeric scalar model, accept a program only when each literal and intermediate

@@ -26,13 +26,16 @@ spreadsheet logic:
    - `<mos-formula-bar>` — a shadow-DOM input that fires `mosaic:commit` /
      `mosaic:formulaChange` / `mosaic:cancel` CustomEvents.
 
-   Both are committed under `vendor/` (regenerate with `bash scripts/build.sh`,
-   which writes `build/`, then copy into `vendor/`).
+   Both are committed under `vendor/` so the page opens from `file://`.
+   `bash scripts/build.sh` regenerates them in place, and
+   `bash scripts/build.sh --check` (run by CI) fails when they no longer
+   match what the emitter produces.
 
 2. **The engine** — the Rust `spreadsheet-core` engine compiled to `wasm32`,
-   loaded by `vendor/spreadsheet-engine-wasm.js` (the `.wasm` embedded as
-   base64, so the page opens from `file://`). Regenerate with
-   `bash scripts/bundle-wasm-engine.sh`.
+   loaded from the HTML demo's `../visicalc-html/vendor/spreadsheet-engine-wasm.js`
+   (the `.wasm` embedded as base64, so the page opens from `file://`). This
+   demo used to carry its own copy of the bundle and of the loader; both had
+   gone stale, so it now shares the one the HTML demo regenerates and checks.
 
 The inline glue awaits the WASM module, seeds a workbook, pushes the workbook's
 *computed* values into the `<mos-grid>` attributes, and feeds user edits
@@ -43,7 +46,7 @@ source of truth.
 
 ```
 index.html
-  ├─ <script src="vendor/spreadsheet-engine-wasm.js">  ← Rust engine, as WASM
+  ├─ <script src="../visicalc-html/vendor/spreadsheet-engine-wasm.js">  ← Rust engine, as WASM
   ├─ import vendor/{Grid,FormulaBar}.js                ← mosaic-compiled elements
   └─ <script type="module"> (inline)                  ← thin glue: model → attrs → edit
 ```
