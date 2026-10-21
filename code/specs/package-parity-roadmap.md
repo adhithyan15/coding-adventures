@@ -17578,3 +17578,30 @@ for this neutral-only change. Both independent security reviews pass the
 exact source head. The Git-visible inventory equals the immutable main
 report. These observations qualify the neutral foundation only; nine existing
 IR lane adopters and six missing-lane ports remain pending.
+
+
+### Post-PR #17738 refresh and Go BF03 adoption selection
+
+PR #17738 externally merged as `69b5174dcb2900a1be108f3a82457f944807a47d`;
+final `0fba` head has31successful/8skipped checks and both required gates pass.
+The neutral BF03 foundation qualifies zero native adopters. Fresh main
+`22755d9313ce8fed25a7e9a14aa96cb6865b9e4c` inventory:15established lanes,
+1521identities,4803slots,5211accepted roots,58429tracked package paths,
+zero collisions/unknown buckets. OCaml five emerging roots remain excluded.
+
+[Postmerge audit](package-parity-audits/20261021-bf03-postmerge.json) preserves
+28new pending owners (27saved plus the new13-root RSA/X509 applicability
+classifier), all25saved note updates, fixture plans and reviewed corrections.
+The graph is1517owners/2576edges with no collision/missing prerequisite/cycle.
+Native graph/CommonMark/heap wrappers stay blocked; historical pins and planned
+commands are not fresh native results. Wasm artifact isolation in #17830 does
+not close its separately registered coverage-enforcement gap.
+
+Selected exactly `compiler-ir-bf03-go-core-profile-adoption`, sole prerequisite
+BF03 merged, in fresh `codex/parity-bf03-go-20261021`.
+[Specification and validation plan](BF03-go-core-adoption.md) precedes tests
+and implementation: preserve legacy Parse/Print and Nib colon comments, add
+strict production APIs, all50neutral cases/25operation roles, bounded reader,
+95%+ production statement coverage,18real consumers and exact fixture CI routing.
+Source-map foundation, duplicate-discovery native selector and .NET dependency
+hashing remain ready alternatives; no second implementation is selected.
