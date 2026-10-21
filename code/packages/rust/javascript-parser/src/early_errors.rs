@@ -31,8 +31,8 @@
 //! compile) programs every engine rejects. Upstream Closure refuses them too.
 //!
 //! The walk is over the CST from [`crate::parse_javascript_typed`], with an
-//! explicit stack (no recursion), so it is linear in the tree and can't
-//! overflow on deep nesting. Only block and switch scopes are checked; the
+//! explicit stack (no recursion) in a single pass, so it is linear in the
+//! tree however blocks nest, and can't overflow on deep nesting. Only block and switch scopes are checked; the
 //! same rules at function-body and program level are a follow-up.
 
 use std::collections::HashMap;
@@ -41,26 +41,105 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 /// Check every block and switch case block under `root`. Returns the first
 /// violation as a located message.
+///
+/// One pass over the tree, linear however blocks nest (security review):
+///
+/// - On entering a block or case block, its own lexical names are checked
+///   for duplicates (rule 1) and added to `active`, a count of the names
+///   lexically declared by every block scope open since the nearest function
+///   boundary. They're removed again when the walk leaves that scope.
+/// - Each `var` binding found (a `var` statement or `for (var …)` head) is
+///   looked up in `active` (rule 2). A `var` hoists through every block up to
+///   its function, so it clashes with a lexical name of any enclosing block on
+///   the way.
+/// - A `function_body` or `class_body` starts a new var scope: `active` is set
+///   aside and restored on exit. Matching on these two rules, not on the many
+///   function-ish rules above them, also covers grammars that spell methods
+///   differently (ES2015 inlines them in `property_definition`).
 pub fn check(root: &GrammarASTNode) -> Result<(), String> {
-    // (node, strict). Strictness only matters for the Annex B exception.
-    let root_strict = has_use_strict_directive(root);
-    let mut stack: Vec<(&GrammarASTNode, bool)> = vec![(root, root_strict)];
-    while let Some((node, strict)) = stack.pop() {
+    enum Step<'a> {
+        Enter(&'a GrammarASTNode, bool),
+        /// Leave a block scope: forget its lexical names.
+        LeaveScope(Vec<&'a str>),
+        /// Leave a function or class body: restore the outer scopes.
+        LeaveBoundary,
+    }
+    let mut active: HashMap<&str, usize> = HashMap::new();
+    let mut saved: Vec<HashMap<&str, usize>> = Vec::new();
+    let mut stack: Vec<Step> = vec![Step::Enter(root, has_use_strict_directive(root))];
+    while let Some(step) = stack.pop() {
+        let (node, strict) = match step {
+            Step::Enter(node, strict) => (node, strict),
+            Step::LeaveScope(names) => {
+                for name in names {
+                    if let Some(count) = active.get_mut(name) {
+                        *count -= 1;
+                        if *count == 0 {
+                            active.remove(name);
+                        }
+                    }
+                }
+                continue;
+            }
+            Step::LeaveBoundary => {
+                active = saved.pop().unwrap_or_default();
+                continue;
+            }
+        };
         match node.rule_name.as_str() {
-            "block" => check_scope(&block_items(node), strict)?,
-            "switch_statement" => check_scope(&case_block_items(node), strict)?,
+            rule @ ("block" | "switch_statement") => {
+                let items =
+                    if rule == "block" { block_items(node) } else { case_block_items(node) };
+                let names = check_duplicates(&items, strict)?;
+                for &name in &names {
+                    *active.entry(name).or_insert(0) += 1;
+                }
+                stack.push(Step::LeaveScope(names));
+            }
+            "function_body" | "class_body" => {
+                saved.push(std::mem::take(&mut active));
+                stack.push(Step::LeaveBoundary);
+            }
+            "variable_statement" => check_vars(node, &active)?,
+            "for_statement" | "for_in_statement" | "for_of_statement" | "for_await_of_statement"
+                if has_token(node, "var") =>
+            {
+                for decl in children(node).take_while(|n| {
+                    matches!(n.rule_name.as_str(), "variable_declaration_list" | "variable_declaration")
+                }) {
+                    check_vars(decl, &active)?;
+                }
+            }
             _ => {}
         }
-        for child in nodes(node) {
-            let child_strict = strict
-                || match child.rule_name.as_str() {
+        // Children in reverse, so they are entered in source order.
+        let class = matches!(node.rule_name.as_str(), "class_declaration" | "class_expression");
+        for child in node.children.iter().rev() {
+            if let ASTNodeOrToken::Node(child) = child {
+                let child_strict = strict
+                    // All parts of a class, its heritage included, are strict.
+                    || class
+                    || child.rule_name == "class_body"
                     // A function body's own directive prologue.
-                    "function_body" => has_use_strict_directive(child),
-                    // All parts of a class are strict.
-                    "class_body" => true,
-                    _ => false,
-                };
-            stack.push((child, child_strict));
+                    || (child.rule_name == "function_body" && has_use_strict_directive(child));
+                stack.push(Step::Enter(child, child_strict));
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Rule 2 for one `var` binding list: none of its names may be lexically
+/// declared by an enclosing block scope since the nearest function boundary.
+fn check_vars(decl: &GrammarASTNode, active: &HashMap<&str, usize>) -> Result<(), String> {
+    let mut names = Vec::new();
+    bound_names(decl, &mut names);
+    for (name, line, column) in names {
+        if active.contains_key(name) {
+            return Err(format!(
+                "early error at {line}:{column}: `{name}` is declared with both var and \
+                 let/const/class/function (redeclaration, ECMA-262 §14.2.1)"
+            ));
         }
     }
     Ok(())
@@ -75,43 +154,27 @@ struct Lexical<'a> {
     column: usize,
 }
 
-fn check_scope(items: &[&GrammarASTNode], strict: bool) -> Result<(), String> {
+/// Rule 1 for one scope's items. Returns the scope's lexical names.
+fn check_duplicates<'a>(items: &[&'a GrammarASTNode], strict: bool) -> Result<Vec<&'a str>, String> {
     let mut lexical: Vec<Lexical> = Vec::new();
     for item in items {
         lexically_declared(item, &mut lexical);
     }
-    if lexical.is_empty() {
-        return Ok(());
-    }
-    // Rule 1: duplicates.
     let mut seen: HashMap<&str, bool> = HashMap::new();
     for l in &lexical {
         if let Some(&prev_plain) = seen.get(l.name) {
             let annex_b = !strict && prev_plain && l.plain_function;
             if !annex_b {
-                return Err(redeclared(l, "is declared twice in one block"));
+                return Err(format!(
+                    "early error at {}:{}: `{}` is declared twice in one block \
+                     (redeclaration, ECMA-262 §14.2.1)",
+                    l.line, l.column, l.name
+                ));
             }
         }
         seen.insert(l.name, l.plain_function);
     }
-    // Rule 2: a lexical name also declared with `var`.
-    let mut var_names: Vec<&str> = Vec::new();
-    for item in items {
-        var_declared(item, &mut var_names);
-    }
-    for l in &lexical {
-        if var_names.contains(&l.name) {
-            return Err(redeclared(l, "is declared with both var and let/const/class/function"));
-        }
-    }
-    Ok(())
-}
-
-fn redeclared(l: &Lexical, what: &str) -> String {
-    format!(
-        "early error at {}:{}: `{}` {what} (redeclaration, ECMA-262 §14.2.1)",
-        l.line, l.column, l.name
-    )
+    Ok(seen.into_keys().collect())
 }
 
 /// The statement-list items of a `block`: its node children. A declaration
@@ -187,44 +250,6 @@ fn push_decl_name<'a>(decl: &'a GrammarASTNode, plain_function: bool, out: &mut 
         });
     if let Some(t) = name {
         out.push(Lexical { name: &t.value, plain_function, line: t.line, column: t.column });
-    }
-}
-
-/// VarDeclaredNames of `item`: names bound by `var` anywhere inside it,
-/// crossing blocks and statement bodies but not function or class
-/// boundaries.
-fn var_declared<'a>(item: &'a GrammarASTNode, out: &mut Vec<&'a str>) {
-    let mut stack = vec![item];
-    while let Some(node) = stack.pop() {
-        match node.rule_name.as_str() {
-            // New var scopes (or no statements at all).
-            "function_declaration" | "generator_declaration" | "async_function_declaration"
-            | "async_generator_declaration" | "function_expression" | "generator_expression"
-            | "async_function_expression" | "async_generator_expression" | "arrow_function"
-            | "async_arrow_function" | "method_definition" | "async_method"
-            | "private_method_definition" | "class_declaration" | "class_expression"
-            | "decorated_class_declaration" | "static_block" => continue,
-            "variable_statement" => {
-                let mut names = Vec::new();
-                bound_names(node, &mut names);
-                out.extend(names.into_iter().map(|(n, _, _)| n));
-                continue;
-            }
-            // `for (var …)` heads: the `var` token followed by the declaration(s).
-            "for_statement" | "for_in_statement" | "for_of_statement" | "for_await_of_statement"
-                if has_token(node, "var") =>
-            {
-                for decl in nodes(node).into_iter().take_while(|n| {
-                    matches!(n.rule_name.as_str(), "variable_declaration_list" | "variable_declaration")
-                }) {
-                    let mut names = Vec::new();
-                    bound_names(decl, &mut names);
-                    out.extend(names.into_iter().map(|(n, _, _)| n));
-                }
-            }
-            _ => {}
-        }
-        stack.extend(nodes(node));
     }
 }
 
@@ -325,6 +350,14 @@ fn collect_tokens<'a>(node: &'a GrammarASTNode, out: &mut Vec<&'a lexer::token::
     }
 }
 
+/// `node`'s node children, without allocating.
+fn children(node: &GrammarASTNode) -> impl Iterator<Item = &GrammarASTNode> {
+    node.children.iter().filter_map(|c| match c {
+        ASTNodeOrToken::Node(n) => Some(n),
+        ASTNodeOrToken::Token(_) => None,
+    })
+}
+
 fn nodes(node: &GrammarASTNode) -> Vec<&GrammarASTNode> {
     node.children
         .iter()
@@ -405,5 +438,46 @@ mod tests {
         assert!(ok("{ let [a = f] = o; var f; }"));
         assert!(ok("{ function f(){} } { function f(){} }"));
         assert!(ok("var f; function f(){}"));
+        // A var in a sibling or already-closed scope doesn't clash.
+        assert!(ok("{ { let f; } var f; }"));
+        assert!(ok("{ var f; { let f; } }"));
+        // A class field's or static block's var scope is its own.
+        assert!(ok("{ let f; class C { static { var f; } m(){ var f; } } }"));
+    }
+
+    #[test]
+    fn object_methods_are_var_boundaries_in_every_grammar() {
+        // ES2015 spells object methods inline in `property_definition`
+        // (security review): `function_body` is the boundary that holds.
+        for v in [EsVersion::Es2015, EsVersion::Es2025] {
+            for src in ["{ let f; x = { m(){ var f; } }; }", "{ let f; x = { get y(){ var f; } }; }"] {
+                if let Err(e) = parse_javascript_typed(src, v) {
+                    assert!(!e.contains("early error"), "{v:?} {src:?}: {e}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn class_heritage_is_strict() {
+        assert!(!ok("class C extends (function(){ { function f(){} function f(){} } }) {}"));
+    }
+
+    #[test]
+    fn the_check_is_linear() {
+        // Many lets and vars in one block: a Vec lookup made this O(L x V).
+        let n = 5_000;
+        let lets: String = (0..n).map(|i| format!("let l{i};")).collect();
+        let vars: String = (0..n).map(|i| format!("var v{i};")).collect();
+        let src = format!("{{{lets}{vars}}}");
+        let ast = crate::parse_javascript_typed(&src, EsVersion::Es2025);
+        assert!(ast.is_ok());
+        // Deeply nested blocks over a large body: each block used to re-walk
+        // its whole subtree.
+        let src = format!("{}{}{}", "{let a;".repeat(40), "x=1;".repeat(10_000), "}".repeat(40));
+        let root = crate::parse_javascript(&src, "es2025").expect("parses");
+        let start = std::time::Instant::now();
+        assert!(super::check(&root).is_ok());
+        assert!(start.elapsed() < std::time::Duration::from_secs(5), "{:?}", start.elapsed());
     }
 }
