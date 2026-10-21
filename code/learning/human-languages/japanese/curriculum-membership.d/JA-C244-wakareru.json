@@ -1,0 +1,11 @@
+{
+  "id": "JA-C244-wakareru",
+  "pathSegment": "JA-PATH-244-MEET244",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-244-MEET244",
+      "order": 2
+    }
+  ]
+}

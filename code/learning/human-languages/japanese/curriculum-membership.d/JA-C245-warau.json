@@ -1,0 +1,11 @@
+{
+  "id": "JA-C245-warau",
+  "pathSegment": "JA-PATH-245-JOY245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-245-JOY245",
+      "order": 3
+    }
+  ]
+}

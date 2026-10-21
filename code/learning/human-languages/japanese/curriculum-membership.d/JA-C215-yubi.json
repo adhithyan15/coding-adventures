@@ -1,0 +1,11 @@
+{
+  "id": "JA-C215-yubi",
+  "pathSegment": "JA-PATH-215-BODY215",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-215-BODY215",
+      "order": 1
+    }
+  ]
+}

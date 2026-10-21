@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C152-wasureru",
+    "language": "japanese",
+    "chapter": 152,
+    "sequence": 9140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a890c8772f8207c5"
+  },
+  "findings": []
+}

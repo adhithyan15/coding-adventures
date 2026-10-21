@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 146,
+  "title": "Sleeping Soundly and Waking Up",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b6a8ad2089f89b1b",
+  "lessons": [
+    {
+      "id": "JA-C146-nemuru",
+      "sequence": 8800,
+      "title": "ねむる (nemuru) — to fall asleep; to sleep",
+      "headword": "ねむる",
+      "romanization": "nemuru",
+      "gloss": "to fall asleep; to sleep",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f06a086040683c0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for open for business, then the Japanese for not yet open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ねむる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねむる — nemuru — \"to fall asleep; to sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもは よく ねむります。 — kodomo wa yoku nemurimasu — \"The child sleeps well.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ねむります, nemurimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ねむる (nemuru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nemuru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nemuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nemuru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nemuru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo wa yoku nemurimasu — The child sleeps well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo wa yoku nemurimasu* — The child sleeps well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for open for business, then the Japanese for not yet open, then say nemuru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for open for business, then the Japanese for not yet open, then say *nemuru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ねむる (nemuru) mean? (\"To fall asleep; to sleep\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C146-nemuru-type",
+              "prompt": "Say the Japanese for 'to fall asleep'.",
+              "assesses": [
+                "JA-LEX-C146-SLEEP146-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ねむる",
+                "nemuru"
+              ],
+              "feedback": {
+                "correct": "Right: ねむる (nemuru) is 'to fall asleep; to sleep'.",
+                "incorrect": "'To fall asleep' is ねむる (nemuru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C146-gussuri",
+      "sequence": 8810,
+      "title": "ぐっすり (gussuri) — soundly (asleep)",
+      "headword": "ぐっすり",
+      "romanization": "gussuri",
+      "gloss": "soundly (asleep)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b40807d5f203558e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for not yet open, then the Japanese for to fall asleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぐっすり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぐっすり — gussuri — \"soundly (asleep)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいにち ぐっすり ねむります。 — mainichi gussuri nemurimasu — \"I sleep soundly every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぐっすり (gussuri) is a native Japanese mimetic word, inherited rather than borrowed from Chinese, and its older origin is not settled (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gussuri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gussuri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gussuri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gussuri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainichi gussuri nemurimasu — I sleep soundly every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainichi gussuri nemurimasu* — I sleep soundly every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for not yet open, then the Japanese for to fall asleep, then say gussuri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for not yet open, then the Japanese for to fall asleep, then say *gussuri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぐっすり (gussuri) mean? (\"Soundly (asleep)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C146-gussuri-type",
+              "prompt": "Say the Japanese for 'soundly'.",
+              "assesses": [
+                "JA-LEX-C146-SLEEP146-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぐっすり",
+                "gussuri"
+              ],
+              "feedback": {
+                "correct": "Right: ぐっすり (gussuri) is 'soundly (asleep)'.",
+                "incorrect": "'Soundly' is ぐっすり (gussuri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C146-sameru",
+      "sequence": 8820,
+      "title": "さめる (sameru) — to wake up; to come round",
+      "headword": "さめる",
+      "romanization": "sameru",
+      "gloss": "to wake up; to come round",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a3c0d2fc36647bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to fall asleep, then the Japanese for soundly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さめる — sameru — \"to wake up; to come round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あさ めが さめます。 — asa me ga samemasu — \"I wake up in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さめます, samemasu; an ichidan verb. With め, me, it means one's eyes open from sleep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さめる (sameru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sameru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sameru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sameru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sameru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa me ga samemasu — I wake up in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa me ga samemasu* — I wake up in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to fall asleep, then the Japanese for soundly, then say sameru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to fall asleep, then the Japanese for soundly, then say *sameru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さめる (sameru) mean? (\"To wake up; to come round\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C146-sameru-type",
+              "prompt": "Say the Japanese for 'to wake up'.",
+              "assesses": [
+                "JA-LEX-C146-SLEEP146-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さめる",
+                "sameru"
+              ],
+              "feedback": {
+                "correct": "Right: さめる (sameru) is 'to wake up; to come round'.",
+                "incorrect": "'To wake up' is さめる (sameru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C146-okosu",
+      "sequence": 8830,
+      "title": "おこす (okosu) — to wake someone; to raise",
+      "headword": "おこす",
+      "romanization": "okosu",
+      "gloss": "to wake someone; to raise",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abcae4d2ea0a8153",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for soundly, then the Japanese for to wake up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おこす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おこす — okosu — \"to wake someone; to raise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははは まいあさ こどもを おこします。 — haha wa maiasa kodomo o okoshimasu — \"My mother wakes the children every morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おこします, okoshimasu; a godan verb. Its intransitive partner is おきます, okimasu."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おこす (okosu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as okiru, \"to get up\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha wa maiasa kodomo o okoshimasu — My mother wakes the children every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha wa maiasa kodomo o okoshimasu* — My mother wakes the children every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for soundly, then the Japanese for to wake up, then say okosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for soundly, then the Japanese for to wake up, then say *okosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おこす (okosu) mean? (\"To wake someone; to raise\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C146-okosu-type",
+              "prompt": "Say the Japanese for 'to wake someone'.",
+              "assesses": [
+                "JA-LEX-C146-SLEEP146-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おこす",
+                "okosu"
+              ],
+              "feedback": {
+                "correct": "Right: おこす (okosu) is 'to wake someone; to raise'.",
+                "incorrect": "'To wake someone' is おこす (okosu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C146-suimin",
+      "sequence": 8840,
+      "title": "すいみん (suimin) — sleep",
+      "headword": "すいみん",
+      "romanization": "suimin",
+      "gloss": "sleep",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59ecf4245d8bd391",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wake up, then the Japanese for to wake someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すいみん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいみん — suimin — \"sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "すいみんは たいせつです。 — suimin wa taisetsu desu — \"Sleep is important.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいみん (suimin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sui, \"drowsy, sleep\" (Middle Chinese dzyweH) and min, \"sleep\" (men) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suimin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suimin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suimin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suimin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suimin wa taisetsu desu — Sleep is important.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suimin wa taisetsu desu* — Sleep is important.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wake up, then the Japanese for to wake someone, then say suimin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wake up, then the Japanese for to wake someone, then say *suimin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すいみん (suimin) mean? (\"Sleep\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C146-suimin-type",
+              "prompt": "Say the Japanese for 'sleep'.",
+              "assesses": [
+                "JA-LEX-C146-SLEEP146-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すいみん",
+                "suimin"
+              ],
+              "feedback": {
+                "correct": "Right: すいみん (suimin) is 'sleep'.",
+                "incorrect": "'Sleep' is すいみん (suimin)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

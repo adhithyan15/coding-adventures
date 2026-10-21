@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Talking Things Over",
+  "label": "ch:ja-talking-things-over",
+  "canDo": "I can talk about discussing, sharing out work and saying no.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C232-shiraseru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can talk about discussing, sharing out work and saying no.",
+    "assesses": [
+      "JA-LEX-C232-TALK232-03",
+      "JA-LEX-C232-TALK232-04",
+      "JA-LEX-C232-TALK232-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-189-PARCEL189",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can weigh, deliver and hand over parcels.",
+  "prerequisites": []
+}

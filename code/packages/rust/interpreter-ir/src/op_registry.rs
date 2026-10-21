@@ -76,7 +76,10 @@
 //! backends — output, strings, integer arithmetic and comparison, `f64` math and
 //! the integer↔real conversions — plus the four PR1b operations (`write_i64`,
 //! `i64_div_floor`, `i64_mod_floor`, `trap`), which every backend declares
-//! `Refused` until PR1b lowers them. Instructions that are not registry entries
+//! `Refused` until PR1b lowers them. Later slices add families that every
+//! backend lowers in the same PR: PR4's overflow-checked `i64_*_ovf` ops and
+//! PR6a's float writers `write_f64_py` / `write_f64_js` (shortest round-trip
+//! digits in Python's and JavaScript's layouts). Instructions that are not registry entries
 //! (control flow, calls, memory, heap, bitwise, the `dyn_*` lisp builtins, …)
 //! are simply not gated by the registry; their existing validators still apply.
 //! See `code/specs/LANG83-iir-standard-operation-registry.md` for the full
@@ -161,6 +164,12 @@ pub const LANG83_PR1B: &str = "LANG83 PR1b";
 /// PR1b's, these were registered and lowered on every backend in one slice.
 pub const LANG83_PR4: &str = "LANG83 PR4";
 
+/// The `introduced_by` tag of the shortest round-trip float-output builtins
+/// (LANG83 PR6a): `write_f64_py` (Python `repr(float)`) and `write_f64_js`
+/// (JavaScript `Number.prototype.toString`). Like PR4's, registered and
+/// lowered on every backend in one slice.
+pub const LANG83_PR6A: &str = "LANG83 PR6a";
+
 /// One registered operation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OpSpec {
@@ -198,6 +207,11 @@ impl OpSpec {
     /// `true` if this entry is one of the LANG83 PR4 overflow-checked ops.
     pub fn is_pr4(&self) -> bool {
         self.introduced_by == LANG83_PR4
+    }
+
+    /// `true` if this entry is one of the LANG83 PR6a float-output builtins.
+    pub fn is_pr6a(&self) -> bool {
+        self.introduced_by == LANG83_PR6A
     }
 }
 
@@ -251,6 +265,13 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     spec("putchar", Builtin, Output, 1, false, &["int"], NO_TRAP, "BF07"),
     spec("print_str", Op, Output, 1, false, &["str"], NO_TRAP, "LANG-FULL E4"),
     spec("write_i64", Builtin, Output, 1, false, &["int"], NO_TRAP, LANG83_PR1B),
+    // LANG83 PR6a: an `f64` as the SHORTEST decimal that reads back as exactly
+    // that value (ties to even), no newline — one builtin per *layout*, not a
+    // flags operand. `_py` is Python `repr` (`1e+16`, `1.0`, `-0.0`, `inf`,
+    // `nan`); `_js` is JavaScript `Number#toString` (`10000000000000000`, `1`,
+    // `0`, `Infinity`, `NaN`). The spec's "PR6a" section has both tables.
+    spec("write_f64_py", Builtin, Output, 1, false, UN_F64, NO_TRAP, LANG83_PR6A),
+    spec("write_f64_js", Builtin, Output, 1, false, UN_F64, NO_TRAP, LANG83_PR6A),
     // ── Strings (LANG-FULL E4): immutable byte strings ──────────────────────
     spec("str_const", Op, Str, 1, true, &["literal"], NO_TRAP, "LANG-FULL E4"),
     spec("str_len", Op, Str, 1, true, &["str"], NO_TRAP, "LANG-FULL E4"),
@@ -563,6 +584,24 @@ mod tests {
             assert!(spec.operand_types.iter().all(|t| *t == "i64"), "{name} is defined on i64");
         }
         assert_eq!(lookup("i64_neg_ovf").unwrap().arity, 1);
+    }
+
+    #[test]
+    fn pr6a_set_is_exactly_the_two_float_writers() {
+        let mut pr6a: Vec<&str> =
+            STANDARD_OPS.iter().filter(|s| s.is_pr6a()).map(|s| s.name).collect();
+        pr6a.sort_unstable();
+        assert_eq!(pr6a, ["write_f64_js", "write_f64_py"]);
+        for name in pr6a {
+            let spec = lookup(name).unwrap();
+            // Output builtins, like write_i64: one f64 operand, no result, and
+            // formatting a float can never trap (inf and nan have spellings).
+            assert_eq!(spec.kind, OpKind::Builtin);
+            assert_eq!(spec.family, OpFamily::Output);
+            assert!(!spec.dest, "{name} only writes");
+            assert_eq!(spec.operand_types, ["f64"]);
+            assert!(spec.may_trap.is_empty(), "{name} never traps");
+        }
     }
 
     /// Every LANG83 operation that may trap must be kept by dead-code

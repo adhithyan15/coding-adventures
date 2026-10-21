@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "North, Opposite and Past",
+  "label": "ch:ja-north-opposite-and-past",
+  "canDo": "I can say where a place is from a landmark.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R195-review-190-195",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say where a place is from a landmark.",
+    "assesses": [
+      "JA-LEX-C195-CORNER195-03",
+      "JA-LEX-C195-CORNER195-04",
+      "JA-LEX-C195-CORNER195-05"
+    ]
+  }
+}

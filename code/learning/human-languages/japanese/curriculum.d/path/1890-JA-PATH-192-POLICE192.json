@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-192-POLICE192",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-192-POLICE192"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C168-kimeru",
+  "pathSegment": "JA-PATH-168-DELAY168",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-168-DELAY168",
+      "order": 1
+    }
+  ]
+}

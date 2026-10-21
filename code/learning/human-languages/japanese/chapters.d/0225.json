@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Practice and Revision",
+  "label": "ch:ja-practice-and-revision",
+  "canDo": "I can say how I study and practise.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C225-jisho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say how I study and practise.",
+    "assesses": [
+      "JA-LEX-C225-STUDY225-03",
+      "JA-LEX-C225-STUDY225-04",
+      "JA-LEX-C225-STUDY225-05"
+    ]
+  }
+}

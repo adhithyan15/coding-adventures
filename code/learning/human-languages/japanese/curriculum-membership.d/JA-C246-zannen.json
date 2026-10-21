@@ -1,0 +1,11 @@
+{
+  "id": "JA-C246-zannen",
+  "pathSegment": "JA-PATH-246-ANGER246",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-246-ANGER246",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Mornings, Noons and Nights Ahead",
+  "label": "ch:ja-mornings-noons-and-nights-ahead",
+  "canDo": "I can say what time of day I will do things.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C166-maiban",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 166: I can say what time of day I will do things.",
+    "assesses": [
+      "JA-LEX-C166-TIMEOFDAY166-03",
+      "JA-LEX-C166-TIMEOFDAY166-04",
+      "JA-LEX-C166-TIMEOFDAY166-05"
+    ]
+  }
+}

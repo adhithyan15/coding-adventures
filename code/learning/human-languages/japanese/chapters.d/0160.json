@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Cleaning Up Dust and Dirt",
+  "label": "ch:ja-cleaning-up-dust-and-dirt",
+  "canDo": "I can say what gets dirty and how I clean it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C160-kitanai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can say what gets dirty and how I clean it.",
+    "assesses": [
+      "JA-LEX-C160-DIRT160-03",
+      "JA-LEX-C160-DIRT160-04",
+      "JA-LEX-C160-DIRT160-05"
+    ]
+  }
+}

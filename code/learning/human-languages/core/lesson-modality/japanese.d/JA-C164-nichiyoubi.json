@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C164-nichiyoubi",
+    "language": "japanese",
+    "chapter": 164,
+    "sequence": 9770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38c28614f64f8f19"
+  },
+  "findings": []
+}

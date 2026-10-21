@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C238-manga",
+    "language": "japanese",
+    "chapter": 238,
+    "sequence": 14320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc7b7a4bfbe15f12"
+  },
+  "findings": []
+}

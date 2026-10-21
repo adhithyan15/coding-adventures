@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C152-isogu",
+    "language": "japanese",
+    "chapter": 152,
+    "sequence": 9120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc8d4c6ef5ad9e34"
+  },
+  "findings": []
+}

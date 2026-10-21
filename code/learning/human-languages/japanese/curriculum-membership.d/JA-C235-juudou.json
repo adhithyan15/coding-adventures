@@ -1,0 +1,11 @@
+{
+  "id": "JA-C235-juudou",
+  "pathSegment": "JA-PATH-235-BALL235",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-235-BALL235",
+      "order": 3
+    }
+  ]
+}

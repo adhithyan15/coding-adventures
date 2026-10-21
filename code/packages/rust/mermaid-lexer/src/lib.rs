@@ -1224,6 +1224,18 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_swimlane_arbitrary_minimum_link_lengths() {
+        let tokens = try_tokenize_mermaid_swimlane(
+            "swimlane-beta LR\na -----> b\nb ------ c\nc =====> d\nd ====== e\ne -....-> f\nf -....- g\n  ------> h\n",
+        ).expect("arbitrary minimum-length links should tokenize");
+
+        let names = tokens.iter().filter_map(custom_name).collect::<Vec<_>>();
+        assert_eq!(names.iter().filter(|name| **name == "EDGE_LINE").count(), 4);
+        assert_eq!(names.iter().filter(|name| **name == "DOTTED_LABEL_EDGE_LINE").count(), 2);
+        assert_eq!(names.iter().filter(|name| **name == "CONTINUATION_LINE").count(), 1);
+    }
+
+    #[test]
     fn tokenizes_swimlane_positional_link_styles() {
         let tokens = try_tokenize_mermaid_swimlane(
             "swimlane-beta LR\na --> b\nlinkStyle default stroke:#64748b\nlinkStyle 0, 2 stroke:#dc2626;\n",

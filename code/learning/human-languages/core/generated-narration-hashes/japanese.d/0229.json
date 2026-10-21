@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:d807bc7b7e324158",
+  "lessonIds": [
+    "JA-C229-kaisha",
+    "JA-C229-kaigi",
+    "JA-C229-jimusho",
+    "JA-C229-tsutomeru",
+    "JA-C229-douryou",
+    "JA-R229-review-224-229"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch229.txt",
+  "json": "japanese/narration/ch229.json",
+  "textHash": "fnv1a64:79716898f6b2146c",
+  "jsonHash": "fnv1a64:754916e120473097",
+  "findings": []
+}

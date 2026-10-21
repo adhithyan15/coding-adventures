@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-162-REPAIR162",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when things break and get repaired.",
+  "prerequisites": []
+}

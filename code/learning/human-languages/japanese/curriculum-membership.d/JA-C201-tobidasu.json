@@ -1,0 +1,11 @@
+{
+  "id": "JA-C201-tobidasu",
+  "pathSegment": "JA-PATH-201-ROAD201",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-201-ROAD201",
+      "order": 3
+    }
+  ]
+}

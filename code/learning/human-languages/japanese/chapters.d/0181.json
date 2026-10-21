@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Prices and Selling",
+  "label": "ch:ja-prices-and-selling",
+  "canDo": "I can ask prices and say what a shop sells.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C181-ureru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can ask prices and say what a shop sells.",
+    "assesses": [
+      "JA-LEX-C181-SHOP181-03",
+      "JA-LEX-C181-SHOP181-04",
+      "JA-LEX-C181-SHOP181-05"
+    ]
+  }
+}

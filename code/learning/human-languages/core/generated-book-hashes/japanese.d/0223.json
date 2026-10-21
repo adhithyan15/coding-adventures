@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:8758e20a67d26e66",
+  "lessonIds": [
+    "JA-C223-abunai",
+    "JA-C223-kiken",
+    "JA-C223-ikiru",
+    "JA-C223-tasukeru",
+    "JA-C223-kurushimu",
+    "JA-R223-review-222-223",
+    "JA-R223-review-final-223"
+  ],
+  "tex": "japanese/book/chapters/ch223-danger-and-staying-alive.tex"
+}

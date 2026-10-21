@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-177-TASTE177",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "JA-EXT-177-TASTE177"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:f217df386dc874db",
+  "lessonIds": [
+    "JA-C168-kimaru",
+    "JA-C168-kimeru",
+    "JA-C168-kigen",
+    "JA-C168-nobasu",
+    "JA-C168-nobiru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch168.txt",
+  "json": "japanese/narration/ch168.json",
+  "textHash": "fnv1a64:3721f00b4ffe1d3b",
+  "jsonHash": "fnv1a64:76b987382fe8bf19",
+  "findings": []
+}

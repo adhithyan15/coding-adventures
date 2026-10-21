@@ -1,0 +1,11 @@
+{
+  "id": "JA-C243-sobo",
+  "pathSegment": "JA-PATH-243-KIN243",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-243-KIN243",
+      "order": 2
+    }
+  ]
+}

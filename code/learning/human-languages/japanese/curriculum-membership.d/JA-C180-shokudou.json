@@ -1,0 +1,11 @@
+{
+  "id": "JA-C180-shokudou",
+  "pathSegment": "JA-PATH-180-EATOUT180",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-180-EATOUT180",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:ef4510ad26f5b275",
+  "lessonIds": [
+    "JA-C184-shinamono",
+    "JA-C184-retsu",
+    "JA-C184-torikaeru",
+    "JA-C184-zenbu",
+    "JA-C184-choudo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch184.txt",
+  "json": "japanese/narration/ch184.json",
+  "textHash": "fnv1a64:a616c1011552a552",
+  "jsonHash": "fnv1a64:2daad57ac52928c6",
+  "findings": []
+}

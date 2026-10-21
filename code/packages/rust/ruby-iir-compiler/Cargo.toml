@@ -2,7 +2,7 @@
 name = "ruby-iir-compiler"
 version = "0.1.0"
 edition = "2021"
-description = "Bounded Ruby grammar-tree to InterpreterIR compiler and native VM runner"
+description = "Ruby rb-int-puts subset: the release's grammar-driven parse tree lowered to LANG83 InterpreterIR (LANG84 phase 5)"
 license = "MIT"
 
 [dependencies]
@@ -11,3 +11,10 @@ lexer = { path = "../lexer" }
 parser = { path = "../parser" }
 interpreter-ir = { path = "../interpreter-ir" }
 vm-core = { path = "../vm-core" }
+
+[dev-dependencies]
+# The cst_contract test (LANG84 C8) reads each release's compiled token
+# table, which lives in this crate's `releases` module. Only the generated
+# tables are used; the hand-written lexer is not on any path here.
+coding-adventures-ruby-lexer = { path = "../ruby-lexer" }
+grammar-tools = { path = "../grammar-tools" }

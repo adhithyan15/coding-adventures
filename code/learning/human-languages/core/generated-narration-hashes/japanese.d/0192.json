@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:8914dad9e8446f84",
+  "lessonIds": [
+    "JA-C192-kouban",
+    "JA-C192-omawarisan",
+    "JA-C192-keisatsu",
+    "JA-C192-tazuneru",
+    "JA-C192-annai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch192.txt",
+  "json": "japanese/narration/ch192.json",
+  "textHash": "fnv1a64:a8b05326fed9d959",
+  "jsonHash": "fnv1a64:6233e827ecaddcd4",
+  "findings": []
+}

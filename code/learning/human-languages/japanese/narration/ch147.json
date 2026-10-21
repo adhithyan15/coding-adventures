@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 147,
+  "title": "Washing Up with Soap and Hot Water",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:48758954e4ae22f0",
+  "lessons": [
+    {
+      "id": "JA-C147-arau",
+      "sequence": 8850,
+      "title": "あらう (arau) — to wash",
+      "headword": "あらう",
+      "romanization": "arau",
+      "gloss": "to wash",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c629fbe112a6964b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wake someone, then the Japanese for sleep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あらう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あらう — arau — \"to wash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいあさ かおを あらいます。 — maiasa kao o araimasu — \"I wash my face every morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あらいます, araimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あらう (arau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiasa kao o araimasu — I wash my face every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiasa kao o araimasu* — I wash my face every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wake someone, then the Japanese for sleep, then say arau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wake someone, then the Japanese for sleep, then say *arau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あらう (arau) mean? (\"To wash\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C147-arau-type",
+              "prompt": "Say the Japanese for 'to wash'.",
+              "assesses": [
+                "JA-LEX-C147-WASH147-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あらう",
+                "arau"
+              ],
+              "feedback": {
+                "correct": "Right: あらう (arau) is 'to wash'.",
+                "incorrect": "'To wash' is あらう (arau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C147-migaku",
+      "sequence": 8860,
+      "title": "みがく (migaku) — to polish; to brush (teeth)",
+      "headword": "みがく",
+      "romanization": "migaku",
+      "gloss": "to polish; to brush (teeth)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:611b8f5136599574",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sleep, then the Japanese for to wash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: みがく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みがく — migaku — \"to polish; to brush (teeth)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいにち はを みがきます。 — mainichi ha o migakimasu — \"I brush my teeth every day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite みがきます, migakimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "みがく (migaku) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *migaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *migaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainichi ha o migakimasu — I brush my teeth every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainichi ha o migakimasu* — I brush my teeth every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sleep, then the Japanese for to wash, then say migaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sleep, then the Japanese for to wash, then say *migaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does みがく (migaku) mean? (\"To polish; to brush (teeth)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C147-migaku-type",
+              "prompt": "Say the Japanese for 'to polish'.",
+              "assesses": [
+                "JA-LEX-C147-WASH147-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "みがく",
+                "migaku"
+              ],
+              "feedback": {
+                "correct": "Right: みがく (migaku) is 'to polish; to brush (teeth)'.",
+                "incorrect": "'To polish' is みがく (migaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C147-abiru",
+      "sequence": 8870,
+      "title": "あびる (abiru) — to pour over oneself; to take (a shower)",
+      "headword": "あびる",
+      "romanization": "abiru",
+      "gloss": "to pour over oneself; to take (a shower)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c255601fd039e9ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wash, then the Japanese for to polish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あびる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あびる — abiru — \"to pour over oneself; to take (a shower)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいあさ みずを あびます。 — maiasa mizu o abimasu — \"Every morning I pour cold water over myself.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あびます, abimasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あびる (abiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiasa mizu o abimasu — Every morning I pour cold water over myself.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiasa mizu o abimasu* — Every morning I pour cold water over myself.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wash, then the Japanese for to polish, then say abiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wash, then the Japanese for to polish, then say *abiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あびる (abiru) mean? (\"To pour over oneself; to take (a shower)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C147-abiru-type",
+              "prompt": "Say the Japanese for 'to pour over oneself'.",
+              "assesses": [
+                "JA-LEX-C147-WASH147-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あびる",
+                "abiru"
+              ],
+              "feedback": {
+                "correct": "Right: あびる (abiru) is 'to pour over oneself; to take (a shower)'.",
+                "incorrect": "'To pour over oneself' is あびる (abiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C147-yu",
+      "sequence": 8880,
+      "title": "ゆ (yu) — hot water; a hot bath",
+      "headword": "ゆ",
+      "romanization": "yu",
+      "gloss": "hot water; a hot bath",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56433300219d6825",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to polish, then the Japanese for to pour over oneself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆ — yu — \"hot water; a hot bath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おふろの ゆは あついです。 — ofuro no yu wa atsui desu — \"The bath water is hot.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆ (yu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ofuro no yu wa atsui desu — The bath water is hot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ofuro no yu wa atsui desu* — The bath water is hot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to polish, then the Japanese for to pour over oneself, then say yu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to polish, then the Japanese for to pour over oneself, then say *yu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆ (yu) mean? (\"Hot water; a hot bath\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C147-yu-type",
+              "prompt": "Say the Japanese for 'hot water'.",
+              "assesses": [
+                "JA-LEX-C147-WASH147-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆ",
+                "yu"
+              ],
+              "feedback": {
+                "correct": "Right: ゆ (yu) is 'hot water; a hot bath'.",
+                "incorrect": "'Hot water' is ゆ (yu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C147-sekken",
+      "sequence": 8890,
+      "title": "せっけん (sekken) — soap",
+      "headword": "せっけん",
+      "romanization": "sekken",
+      "gloss": "soap",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43bf3efec1fbbd17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pour over oneself, then the Japanese for hot water."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せっけん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せっけん — sekken — \"soap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せっけんで てを あらいます。 — sekken de te o araimasu — \"I wash my hands with soap.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せっけん (sekken) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are seki, \"stone\" (Middle Chinese dzyek) and ken, \"alkaline salt\" (keamX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sekken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sekken*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sekken, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sekken*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sekken de te o araimasu — I wash my hands with soap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sekken de te o araimasu* — I wash my hands with soap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pour over oneself, then the Japanese for hot water, then say sekken again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pour over oneself, then the Japanese for hot water, then say *sekken* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せっけん (sekken) mean? (\"Soap\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C147-sekken-type",
+              "prompt": "Say the Japanese for 'soap'.",
+              "assesses": [
+                "JA-LEX-C147-WASH147-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せっけん",
+                "sekken"
+              ],
+              "feedback": {
+                "correct": "Right: せっけん (sekken) is 'soap'.",
+                "incorrect": "'Soap' is せっけん (sekken)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

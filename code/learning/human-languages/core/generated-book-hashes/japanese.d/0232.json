@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:c5047c0dd252e6aa",
+  "lessonIds": [
+    "JA-C232-hanashiau",
+    "JA-C232-matomeru",
+    "JA-C232-makaseru",
+    "JA-C232-kotowaru",
+    "JA-C232-shiraseru"
+  ],
+  "tex": "japanese/book/chapters/ch232-talking-things-over.tex"
+}

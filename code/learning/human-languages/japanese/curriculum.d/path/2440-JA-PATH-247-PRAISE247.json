@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-247-PRAISE247",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "JA-EXT-247-PRAISE247"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:392147fafcffcecb",
+  "lessonIds": [
+    "JA-C228-manabu",
+    "JA-C228-yakusu",
+    "JA-C228-namakeru",
+    "JA-C228-yameru",
+    "JA-C228-sotsugyou"
+  ],
+  "tex": "japanese/book/chapters/ch228-learning-slacking-and-graduating.tex"
+}

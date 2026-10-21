@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:708b66641afb34ec",
+  "lessonIds": [
+    "JA-C161-sentaku",
+    "JA-C161-nureru",
+    "JA-C161-hirogeru",
+    "JA-C161-kawaku",
+    "JA-C161-kawakasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch161.txt",
+  "json": "japanese/narration/ch161.json",
+  "textHash": "fnv1a64:b80d5d6a4ae2a6e1",
+  "jsonHash": "fnv1a64:5743de3a0b93bbf6",
+  "findings": []
+}

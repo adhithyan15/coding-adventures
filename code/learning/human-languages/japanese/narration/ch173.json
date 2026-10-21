@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 173,
+  "title": "Food, Drinks and Leftovers",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0953f80c62638c44",
+  "lessons": [
+    {
+      "id": "JA-C173-tabemono",
+      "sequence": 10450,
+      "title": "たべもの (tabemono) — food",
+      "headword": "たべもの",
+      "romanization": "tabemono",
+      "gloss": "food",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d5dcc20b1294d81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for dinner, then the Japanese for to grill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たべもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たべもの — tabemono — \"food\"."
+            },
+            {
+              "kind": "speech",
+              "text": "にほんの たべものは おいしいです。 — nihon no tabemono wa oishii desu — \"Japanese food is tasty.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たべもの (tabemono) is native Japanese, built from tabe, the stem of taberu, \"to eat\", and mono, \"thing\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabemono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabemono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tabemono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tabemono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nihon no tabemono wa oishii desu — Japanese food is tasty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nihon no tabemono wa oishii desu* — Japanese food is tasty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for dinner, then the Japanese for to grill, then say tabemono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for dinner, then the Japanese for to grill, then say *tabemono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たべもの (tabemono) mean? (\"Food\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C173-tabemono-type",
+              "prompt": "Say the Japanese for 'food'.",
+              "assesses": [
+                "JA-LEX-C173-FOOD173-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たべもの",
+                "tabemono"
+              ],
+              "feedback": {
+                "correct": "Right: たべもの (tabemono) is 'food'.",
+                "incorrect": "'Food' is たべもの (tabemono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C173-nomimono",
+      "sequence": 10460,
+      "title": "のみもの (nomimono) — beverage; something to drink",
+      "headword": "のみもの",
+      "romanization": "nomimono",
+      "gloss": "beverage; something to drink",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:21b7824d5e1fc65c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to grill, then the Japanese for food."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のみもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のみもの — nomimono — \"beverage; something to drink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "のみものは おちゃを たのみます。 — nomimono wa ocha o tanomimasu — \"For a drink, I order tea.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のみもの (nomimono) is native Japanese, built from nomi, the stem of nomu, \"to drink\", and mono, \"thing\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nomimono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nomimono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nomimono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nomimono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nomimono wa ocha o tanomimasu — For a drink, I order tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nomimono wa ocha o tanomimasu* — For a drink, I order tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to grill, then the Japanese for food, then say nomimono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to grill, then the Japanese for food, then say *nomimono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のみもの (nomimono) mean? (\"Beverage; something to drink\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C173-nomimono-type",
+              "prompt": "Say the Japanese for 'beverage'.",
+              "assesses": [
+                "JA-LEX-C173-FOOD173-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のみもの",
+                "nomimono"
+              ],
+              "feedback": {
+                "correct": "Right: のみもの (nomimono) is 'beverage; something to drink'.",
+                "incorrect": "'Beverage' is のみもの (nomimono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C173-obentou",
+      "sequence": 10470,
+      "title": "おべんとう (obentō) — boxed lunch; bento",
+      "headword": "おべんとう",
+      "romanization": "obentō",
+      "gloss": "boxed lunch; bento",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:988cabbe250e9a1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for food, then the Japanese for beverage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おべんとう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おべんとう — obentō — \"boxed lunch; bento\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうえんで おべんとうを たべます。 — kōen de obentō o tabemasu — \"I eat a boxed lunch in the park.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おべんとう (obentō) is built from polite o- and Sino-Japanese bentō, two characters read with their on'yomi, ben and tō, readings borrowed from Chinese; the older history of the compound is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obentō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obentō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "obentō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *obentō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōen de obentō o tabemasu — I eat a boxed lunch in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōen de obentō o tabemasu* — I eat a boxed lunch in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for food, then the Japanese for beverage, then say obentō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for food, then the Japanese for beverage, then say *obentō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おべんとう (obentō) mean? (\"Boxed lunch; bento\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C173-obentou-type",
+              "prompt": "Say the Japanese for 'boxed lunch'.",
+              "assesses": [
+                "JA-LEX-C173-FOOD173-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おべんとう",
+                "obentō",
+                "obentou",
+                "obentoo",
+                "obento"
+              ],
+              "feedback": {
+                "correct": "Right: おべんとう (obentō) is 'boxed lunch; bento'.",
+                "incorrect": "'Boxed lunch' is おべんとう (obentō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C173-nokoru",
+      "sequence": 10480,
+      "title": "のこる (nokoru) — to be left over; to remain",
+      "headword": "のこる",
+      "romanization": "nokoru",
+      "gloss": "to be left over; to remain",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ae3084e1d41dfb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for beverage, then the Japanese for boxed lunch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のこる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のこる — nokoru — \"to be left over; to remain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ごはんが すこし のこります。 — gohan ga sukoshi nokorimasu — \"A little rice is left over.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite のこります, nokorimasu; a godan verb. Its transitive partner のこす is taught already."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のこる (nokoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and it shares its stem with nokosu, \"to leave behind\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nokoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nokoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nokoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nokoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gohan ga sukoshi nokorimasu — A little rice is left over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gohan ga sukoshi nokorimasu* — A little rice is left over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for beverage, then the Japanese for boxed lunch, then say nokoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for beverage, then the Japanese for boxed lunch, then say *nokoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のこる (nokoru) mean? (\"To be left over; to remain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C173-nokoru-type",
+              "prompt": "Say the Japanese for 'to be left over'.",
+              "assesses": [
+                "JA-LEX-C173-FOOD173-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のこる",
+                "nokoru"
+              ],
+              "feedback": {
+                "correct": "Right: のこる (nokoru) is 'to be left over; to remain'.",
+                "incorrect": "'To be left over' is のこる (nokoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C173-ajiwau",
+      "sequence": 10490,
+      "title": "あじわう (ajiwau) — to savour; to taste, to relish",
+      "headword": "あじわう",
+      "romanization": "ajiwau",
+      "gloss": "to savour; to taste, to relish",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:604c24e671fb24eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for boxed lunch, then the Japanese for to be left over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あじわう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あじわう — ajiwau — \"to savour; to taste, to relish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆっくり おちゃを あじわいます。 — yukkuri ocha o ajiwaimasu — \"I slowly savour my tea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あじわいます, ajiwaimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あじわう (ajiwau) is a native Japanese verb, inherited, built on aji, \"taste\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajiwau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajiwau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajiwau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajiwau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukkuri ocha o ajiwaimasu — I slowly savour my tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukkuri ocha o ajiwaimasu* — I slowly savour my tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for boxed lunch, then the Japanese for to be left over, then say ajiwau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for boxed lunch, then the Japanese for to be left over, then say *ajiwau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あじわう (ajiwau) mean? (\"To savour; to taste, to relish\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C173-ajiwau-type",
+              "prompt": "Say the Japanese for 'to savour'.",
+              "assesses": [
+                "JA-LEX-C173-FOOD173-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あじわう",
+                "ajiwau"
+              ],
+              "feedback": {
+                "correct": "Right: あじわう (ajiwau) is 'to savour; to taste, to relish'.",
+                "incorrect": "'To savour' is あじわう (ajiwau)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

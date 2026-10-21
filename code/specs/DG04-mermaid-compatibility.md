@@ -1238,12 +1238,13 @@ and node labels, named and numeric label entities, and Flowchart-style Markdown 
 ownership lanes, nested groups, nodes, and edge labels preserve multiline text plus bold and italic
 spans through semantic and layout IR into backend-neutral glyph runs. Both authored line breaks and
 escaped `\\n` breaks remain semantic newlines. Edge-label bounds and positions survive layout IR,
-reserve rank clearance in either diagram orientation, and lower without renderer-specific sizing,
+reserve rank clearance in either diagram orientation, and lower without renderer-specific sizing.
+Edge font size, weight, italic style, and Markdown emphasis participate in deterministic label measurement,
 directed/undirected/dotted/thick chained links, including open dotted and thick
 forms, point/circle/cross endpoint
 markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
 invisible layout links,
-minimum link lengths with deterministic rank spacing,
+arbitrary minimum link lengths with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
 thick, and dotted links, including labeled links with independently selected point, circle, cross,

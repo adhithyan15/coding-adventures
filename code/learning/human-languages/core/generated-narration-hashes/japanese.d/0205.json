@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:c66547172e779476",
+  "lessonIds": [
+    "JA-C205-madoguchi",
+    "JA-C205-ekiin",
+    "JA-C205-kaisatsuguchi",
+    "JA-C205-katamichi",
+    "JA-C205-oufuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch205.txt",
+  "json": "japanese/narration/ch205.json",
+  "textHash": "fnv1a64:4476d749ce6c2bf7",
+  "jsonHash": "fnv1a64:850427a683c67215",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Heart and Character",
+  "label": "ch:ja-heart-and-character",
+  "canDo": "I can ask about feelings and character.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-R249-review-final-249",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can ask about feelings and character.",
+    "assesses": [
+      "JA-LEX-C249-HEART249-03",
+      "JA-LEX-C249-HEART249-04",
+      "JA-LEX-C249-HEART249-05"
+    ]
+  }
+}

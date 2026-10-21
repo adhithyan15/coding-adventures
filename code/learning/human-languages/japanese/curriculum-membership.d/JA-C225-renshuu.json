@@ -1,0 +1,11 @@
+{
+  "id": "JA-C225-renshuu",
+  "pathSegment": "JA-PATH-225-STUDY225",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-225-STUDY225",
+      "order": 1
+    }
+  ]
+}

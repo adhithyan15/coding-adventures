@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-206-TRAFFIC206",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-206-TRAFFIC206"
+  ],
+  "after": []
+}

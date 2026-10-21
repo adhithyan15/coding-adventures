@@ -1,0 +1,4 @@
+oracle: host ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+command: ruby reject_octal.rb
+ruby: exit 0, stdout '8\n' (Ruby accepts it)
+rb-int-puts: rejected with Parse: a leading 0 is an octal literal (OCTAL_INTEGER), outside the decimal subset

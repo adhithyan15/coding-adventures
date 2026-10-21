@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "A Stay in Hospital",
+  "label": "ch:ja-a-stay-in-hospital",
+  "canDo": "I can ask about a hospital stay and an operation.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C218-inochi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can ask about a hospital stay and an operation.",
+    "assesses": [
+      "JA-LEX-C218-HOSPITAL218-03",
+      "JA-LEX-C218-HOSPITAL218-04",
+      "JA-LEX-C218-HOSPITAL218-05"
+    ]
+  }
+}

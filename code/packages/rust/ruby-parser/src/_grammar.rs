@@ -1215,8 +1215,8 @@ pub const INVENTORY: &[(&str, &str)] = &[
 /// nearest-release fallback (LANG84 C4).
 pub fn parser_grammar(release: &str) -> Option<ParserGrammar> {
     match release {
-        "0.49" | "0.50" => Some(g_e0df402e6326::parser_grammar()),
-        "3.3.5" | "3.3.6" | "3.3.7" => Some(g_ac9d7da1ffa2::parser_grammar()),
+        "0.49" | "0.50" => Some(g_a553514a03dd::parser_grammar()),
+        "3.3.5" | "3.3.6" | "3.3.7" => Some(g_61144adc1177::parser_grammar()),
         _ => None,
     }
 }
@@ -1224,8 +1224,8 @@ pub fn parser_grammar(release: &str) -> Option<ParserGrammar> {
 /// The class (module name) of each release, for tests and tooling.
 pub fn grammar_class(release: &str) -> Option<&'static str> {
     match release {
-        "0.49" | "0.50" => Some("g_e0df402e6326"),
-        "3.3.5" | "3.3.6" | "3.3.7" => Some("g_ac9d7da1ffa2"),
+        "0.49" | "0.50" => Some("g_a553514a03dd"),
+        "3.3.5" | "3.3.6" | "3.3.7" => Some("g_61144adc1177"),
         _ => None,
     }
 }
@@ -2393,7 +2393,7 @@ mod legacy {
     }
 }
 
-mod g_e0df402e6326 {
+mod g_a553514a03dd {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: ruby0.49.grammar
     // Regenerate with: grammar-tools compile-grammar ruby0.49.grammar
@@ -2417,7 +2417,7 @@ mod g_e0df402e6326 {
                         ] }) },
                     GrammarElement::Optional { element: Box::new(GrammarElement::RuleReference { name: r#"terms"#.to_string() }) },
                 ] },
-                line_number: 28,
+                line_number: 31,
             },
             GrammarRule {
                 name: r#"terms"#.to_string(),
@@ -2428,12 +2428,12 @@ mod g_e0df402e6326 {
                         ] }) },
                     GrammarElement::Repetition { element: Box::new(GrammarElement::TokenReference { name: r#"NEWLINE"#.to_string() }) },
                 ] },
-                line_number: 29,
+                line_number: 32,
             },
             GrammarRule {
                 name: r#"statement"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"method_call"#.to_string() },
-                line_number: 30,
+                line_number: 33,
             },
             GrammarRule {
                 name: r#"method_call"#.to_string(),
@@ -2451,52 +2451,52 @@ mod g_e0df402e6326 {
                         ] }) },
                     GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 ] },
-                line_number: 31,
+                line_number: 34,
             },
             GrammarRule {
                 name: r#"call_arg"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"expression"#.to_string() },
-                line_number: 32,
+                line_number: 35,
             },
             GrammarRule {
                 name: r#"expression"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"ternary"#.to_string() },
-                line_number: 34,
+                line_number: 37,
             },
             GrammarRule {
                 name: r#"ternary"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"range"#.to_string() },
-                line_number: 35,
+                line_number: 38,
             },
             GrammarRule {
                 name: r#"range"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"logical_or"#.to_string() },
-                line_number: 36,
+                line_number: 39,
             },
             GrammarRule {
                 name: r#"logical_or"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"logical_and"#.to_string() },
-                line_number: 37,
+                line_number: 40,
             },
             GrammarRule {
                 name: r#"logical_and"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"logical_not"#.to_string() },
-                line_number: 38,
+                line_number: 41,
             },
             GrammarRule {
                 name: r#"logical_not"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"comparison"#.to_string() },
-                line_number: 39,
+                line_number: 42,
             },
             GrammarRule {
                 name: r#"comparison"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"shift"#.to_string() },
-                line_number: 40,
+                line_number: 43,
             },
             GrammarRule {
                 name: r#"shift"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"sum"#.to_string() },
-                line_number: 41,
+                line_number: 44,
             },
             GrammarRule {
                 name: r#"sum"#.to_string(),
@@ -2511,7 +2511,7 @@ mod g_e0df402e6326 {
                             GrammarElement::RuleReference { name: r#"term"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 42,
+                line_number: 45,
             },
             GrammarRule {
                 name: r#"term"#.to_string(),
@@ -2521,12 +2521,13 @@ mod g_e0df402e6326 {
                             GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
                                     GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
                                     GrammarElement::TokenReference { name: r#"SLASH"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"PERCENT"#.to_string() },
                                 ] }) },
                             GrammarElement::Repetition { element: Box::new(GrammarElement::TokenReference { name: r#"NEWLINE"#.to_string() }) },
                             GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 43,
+                line_number: 46,
             },
             GrammarRule {
                 name: r#"factor"#.to_string(),
@@ -2540,7 +2541,7 @@ mod g_e0df402e6326 {
                     ] },
                     GrammarElement::RuleReference { name: r#"unary_minus"#.to_string() },
                 ] },
-                line_number: 44,
+                line_number: 47,
             },
             GrammarRule {
                 name: r#"unary_minus"#.to_string(),
@@ -2549,7 +2550,7 @@ mod g_e0df402e6326 {
                     GrammarElement::Repetition { element: Box::new(GrammarElement::TokenReference { name: r#"NEWLINE"#.to_string() }) },
                     GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                 ] },
-                line_number: 45,
+                line_number: 48,
             },
         ],
             version: 1,
@@ -2557,7 +2558,7 @@ mod g_e0df402e6326 {
     }
 }
 
-mod g_ac9d7da1ffa2 {
+mod g_61144adc1177 {
     // AUTO-GENERATED FILE — DO NOT EDIT
     // Source: ruby3.3.5.grammar
     // Regenerate with: grammar-tools compile-grammar ruby3.3.5.grammar
@@ -2589,7 +2590,7 @@ mod g_ac9d7da1ffa2 {
                                 ] }) },
                         ] }) },
                 ] },
-                line_number: 36,
+                line_number: 39,
             },
             GrammarRule {
                 name: r#"terms"#.to_string(),
@@ -2603,7 +2604,7 @@ mod g_ac9d7da1ffa2 {
                             GrammarElement::TokenReference { name: r#"SEMICOLON"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 37,
+                line_number: 40,
             },
             GrammarRule {
                 name: r#"statement"#.to_string(),
@@ -2611,7 +2612,7 @@ mod g_ac9d7da1ffa2 {
                     GrammarElement::RuleReference { name: r#"method_call"#.to_string() },
                     GrammarElement::RuleReference { name: r#"method_call_no_paren"#.to_string() },
                 ] },
-                line_number: 38,
+                line_number: 41,
             },
             GrammarRule {
                 name: r#"method_call"#.to_string(),
@@ -2630,7 +2631,7 @@ mod g_ac9d7da1ffa2 {
                         ] }) },
                     GrammarElement::TokenReference { name: r#"RPAREN"#.to_string() },
                 ] },
-                line_number: 39,
+                line_number: 42,
             },
             GrammarRule {
                 name: r#"method_call_no_paren"#.to_string(),
@@ -2644,52 +2645,52 @@ mod g_ac9d7da1ffa2 {
                             GrammarElement::RuleReference { name: r#"expression"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 40,
+                line_number: 43,
             },
             GrammarRule {
                 name: r#"call_arg"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"expression"#.to_string() },
-                line_number: 41,
+                line_number: 44,
             },
             GrammarRule {
                 name: r#"expression"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"ternary"#.to_string() },
-                line_number: 43,
+                line_number: 46,
             },
             GrammarRule {
                 name: r#"ternary"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"range"#.to_string() },
-                line_number: 44,
+                line_number: 47,
             },
             GrammarRule {
                 name: r#"range"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"logical_or"#.to_string() },
-                line_number: 45,
+                line_number: 48,
             },
             GrammarRule {
                 name: r#"logical_or"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"logical_and"#.to_string() },
-                line_number: 46,
+                line_number: 49,
             },
             GrammarRule {
                 name: r#"logical_and"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"logical_not"#.to_string() },
-                line_number: 47,
+                line_number: 50,
             },
             GrammarRule {
                 name: r#"logical_not"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"comparison"#.to_string() },
-                line_number: 48,
+                line_number: 51,
             },
             GrammarRule {
                 name: r#"comparison"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"shift"#.to_string() },
-                line_number: 49,
+                line_number: 52,
             },
             GrammarRule {
                 name: r#"shift"#.to_string(),
                 body: GrammarElement::RuleReference { name: r#"sum"#.to_string() },
-                line_number: 50,
+                line_number: 53,
             },
             GrammarRule {
                 name: r#"sum"#.to_string(),
@@ -2704,7 +2705,7 @@ mod g_ac9d7da1ffa2 {
                             GrammarElement::RuleReference { name: r#"term"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 51,
+                line_number: 54,
             },
             GrammarRule {
                 name: r#"term"#.to_string(),
@@ -2714,12 +2715,13 @@ mod g_ac9d7da1ffa2 {
                             GrammarElement::Group { element: Box::new(GrammarElement::Alternation { choices: vec![
                                     GrammarElement::TokenReference { name: r#"STAR"#.to_string() },
                                     GrammarElement::TokenReference { name: r#"SLASH"#.to_string() },
+                                    GrammarElement::TokenReference { name: r#"PERCENT"#.to_string() },
                                 ] }) },
                             GrammarElement::Repetition { element: Box::new(GrammarElement::TokenReference { name: r#"NEWLINE"#.to_string() }) },
                             GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                         ] }) },
                 ] },
-                line_number: 52,
+                line_number: 55,
             },
             GrammarRule {
                 name: r#"factor"#.to_string(),
@@ -2734,7 +2736,7 @@ mod g_ac9d7da1ffa2 {
                     ] },
                     GrammarElement::RuleReference { name: r#"unary_minus"#.to_string() },
                 ] },
-                line_number: 53,
+                line_number: 56,
             },
             GrammarRule {
                 name: r#"unary_minus"#.to_string(),
@@ -2743,7 +2745,7 @@ mod g_ac9d7da1ffa2 {
                     GrammarElement::Repetition { element: Box::new(GrammarElement::TokenReference { name: r#"NEWLINE"#.to_string() }) },
                     GrammarElement::RuleReference { name: r#"factor"#.to_string() },
                 ] },
-                line_number: 54,
+                line_number: 57,
             },
         ],
             version: 1,

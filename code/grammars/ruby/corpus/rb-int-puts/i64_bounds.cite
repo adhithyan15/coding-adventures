@@ -1,0 +1,4 @@
+oracle: host ruby 3.3.6 (2024-11-05 revision 75015d4c1f) [x86_64-linux]
+command: ruby i64_bounds.rb
+result: exit 0; stdout is exactly <name>.expect
+releases: 3.3.6 directly; 3.3.5 and 3.3.7 through IIR identity (same token, grammar and profile class)

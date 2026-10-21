@@ -33,9 +33,9 @@ factors may also scale the sign-rooted integer transform through magnitude
 integer division, denominator roots, repeated roots, and oversized products
 stay conservative. A non-unit static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
-whole-number factors may precede the sign-rooted numerator when multiplication
-alone connects them to that root; a division before the root stays
-conservative. Unary
+whole-number factors may precede the sign-rooted numerator, including exact
+divisions among those factors, when multiplication connects the resulting
+prefix to that root; division by the root stays conservative. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
@@ -659,6 +659,39 @@ host — via the same `x86_64-backend` and `elf_object` / `pe_object` /
 No backend changes needed — every frontend gets x86-64 Linux, x86-64
 Windows, and ARM64 macOS for free.
 
+## Ruby (LANG84 phase 5a)
+
+`--lang ruby` (or `rb`, or a `.rb` file) compiles Ruby's `rb-int-puts`
+subset — `puts` of `+ - * / %` integer arithmetic — with `ruby-iir-compiler`
+on its default release, `3.3.6`. That frontend walks the parse tree the
+generic `GrammarLexer`/`GrammarParser` build from `ruby3.3.6.tokens` and
+`.grammar` (no hand-written lexer) and emits only LANG83 registry operations:
+`/` is `i64_div_floor`, `%` is `i64_mod_floor`, `puts` is `print_i64`, and
+`puts()` is `putchar 10`. So no backend has Ruby-specific code, and a zero
+divisor stops the program the LANG83 way: the output so far, then
+`Trap.DivZero`.
+
+Thirteen `lang_matrix` rows (each a case of
+`code/grammars/ruby/corpus/rb-int-puts/`) declare all eight executable
+columns. Four of them are the matrix's first `Expect::StdoutThenTrap` rows,
+which check the output written before the trap *and* the kind each column
+reports (stderr on native/LLVM/JVM/CLR, `env.__trap` on WASM,
+`VMError::Trap` on the VM and JIT, a caught `erlang:error` on BEAM):
+
+```sh
+cargo test -p lang-aot --test lang_matrix ruby_rows_ -- --nocapture
+```
+
+`ruby_rows_agree_with_the_host_ruby_oracle` re-checks every expectation
+against a host ruby 3.3 (the compiled programs never run on it),
+`ruby_rows_are_rb_int_puts_corpus_cases` ties the rows to the corpus, and
+`ruby_rows_pass_the_lang83_check_on_all_nine_backends` runs
+`check_module_for` on all nine backends. Selecting another release through
+lang-aot (`--lang ruby@<release>`) is phase 5b: the shared lang-aot release
+API landed with Perl's phase 4b, and the frontend already selects releases
+(`ruby_iir_compiler::compile_source_at`). Until then `ruby@<release>` is
+refused as `UnknownRelease` rather than compiled on the default release.
+
 ## Standard operations and compile-time refusal (LANG83)
 
 A frontend that needs a new operation (floor division, output without a
@@ -742,6 +775,19 @@ and Ruby's integer subsets use to promote to a bignum). The conformance suite
 runs them at the i64 bounds and one step past them on every executable column.
 The JVM wide-model evidence for ops is now derived from the registry: every Op
 with an `i64` operand type keeps its module on `long`.
+
+Since LANG83 PR6a every backend lowers `write_f64_py` and `write_f64_js`. They
+print an `f64` the way Python's `repr` or JavaScript's `String(x)` does, as the
+shortest round-trip digits with no newline (`1e+16` vs `10000000000000000`,
+`-0.0` vs `0`, `inf` vs `Infinity`). Each backend derives the digits its own
+way:
+
+- the native runtime, LLVM and WASM carry a Burger–Dybvig core;
+- the JVM, CLR and BEAM re-lay out their host's shortest formatter;
+- the VM and JIT use Rust's formatting, with ties corrected to even.
+
+There is no shared helper library. The conformance suite checks a 90-value
+table on every executable column against host `python3` and `node`.
 
 ## Limitations
 

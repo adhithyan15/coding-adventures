@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C240-suki",
+    "language": "japanese",
+    "chapter": 240,
+    "sequence": 14440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c35327ed21c07952"
+  },
+  "findings": []
+}
