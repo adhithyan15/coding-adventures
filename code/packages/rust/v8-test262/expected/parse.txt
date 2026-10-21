@@ -465,8 +465,15 @@ annexB/built-ins/unescape/two-ignore-non-hex.js#sloppy
 annexB/built-ins/unescape/two-ignore-non-hex.js#strict
 annexB/built-ins/unescape/two.js#sloppy
 annexB/built-ins/unescape/two.js#strict
+annexB/language/comments/multi-line-html-close.js#sloppy
+annexB/language/comments/multi-line-html-close.js#strict
 annexB/language/comments/single-line-html-close-asi.js#sloppy
 annexB/language/comments/single-line-html-close-asi.js#strict
+annexB/language/comments/single-line-html-close-first-line-1.js
+annexB/language/comments/single-line-html-close-first-line-2.js
+annexB/language/comments/single-line-html-close-first-line-3.js
+annexB/language/comments/single-line-html-close.js#sloppy
+annexB/language/comments/single-line-html-close.js#strict
 annexB/language/eval-code/direct/block-decl-nostrict.js#sloppy
 annexB/language/eval-code/direct/func-block-decl-eval-func-no-skip-param.js#sloppy
 annexB/language/eval-code/direct/func-block-decl-eval-func-update.js#sloppy
