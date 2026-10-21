@@ -32,7 +32,10 @@ factors may also scale the sign-rooted integer transform through magnitude
 `2^53`, including exact additive composition; fractional factors, non-unit
 integer division, denominator roots, repeated roots, and oversized products
 stay conservative. A non-unit static divisor is accepted only when it divides
-every possible exact integer value of the sign-rooted transform. Unary
+every possible exact integer value of the sign-rooted transform. Static
+whole-number factors may precede the sign-rooted numerator when multiplication
+alone connects them to that root; a division before the root stays
+conservative. Unary
 signs, arithmetic composition with finite static operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
