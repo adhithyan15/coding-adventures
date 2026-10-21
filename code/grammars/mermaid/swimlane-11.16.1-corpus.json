@@ -264,7 +264,7 @@
     },
     {
       "name": "minimum-link-lengths",
-      "source": "swimlane-beta LR\nsubgraph Review\n  first[One rank]\n  second[Two ranks]\n  third[Three ranks]\n  fourth[Complete]\nend\nfirst --> second\nsecond ===> third\nthird -...-> fourth"
+      "source": "swimlane-beta LR\nsubgraph Review\n  first[One rank]\n  second[Two ranks]\n  third[Three ranks]\n  fourth[Five ranks]\n  fifth[Complete]\nend\nfirst --> second\nsecond ===> third\nthird -...-> fourth\nfourth ------> fifth"
     },
     {
       "name": "styled-inline-link-labels",
