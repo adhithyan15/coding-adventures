@@ -12,7 +12,10 @@
 #   compexpr : exprs opt_term ;  exprs : /*none*/ | expr | exprs term expr
 #   primary  : IDENTIFIER '(' call_args rparen | '(' compexpr rparen | literal
 #   expr2    : expr2 '+' expr2 | expr2 '-' expr2 | expr2 '*' expr2
-#            | expr2 '/' expr2 | '-' expr2 %prec UMINUS | primary
+#            | expr2 '/' expr2 | expr2 '%' expr2
+#            | '-' expr2 %prec UMINUS | primary
+#   (`%left '*' '/' '%'` at parse.y line 168 and `expr2 '%' expr2` at line
+#   699: `%` binds like `*` and `/`. LANG84 phase 5 added it to rb-int-puts.)
 #
 # There is no paren-less command call in this release: `puts 1 + 2` is a
 # syntax error, and so is `puts(1\n)` (rparen is a bare ')'). The lexer drops
@@ -40,6 +43,6 @@ logical_not = comparison ;
 comparison  = shift ;
 shift       = sum ;
 sum         = term { ( PLUS | MINUS ) { NEWLINE } term } ;
-term        = factor { ( STAR | SLASH ) { NEWLINE } factor } ;
+term        = factor { ( STAR | SLASH | PERCENT ) { NEWLINE } factor } ;
 factor      = NUMBER | LPAREN { NEWLINE } expression RPAREN | unary_minus ;
 unary_minus = MINUS { NEWLINE } factor ;

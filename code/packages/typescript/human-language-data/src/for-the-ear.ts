@@ -78,7 +78,7 @@ import { headingStepIndex } from "./drivable-instructions.js";
 //      pinyin" is not "In pinyin,".
 //
 // Every pattern is a fixed literal with optional fixed literals around it, applied
-// once as a global replace, so the rewrite is linear in the prompt.
+// once as a whole-string (/g) replace, so the rewrite is linear in the prompt.
 
 /**
  * "type" where a step starts — the step links of `TYPING_STEP` in

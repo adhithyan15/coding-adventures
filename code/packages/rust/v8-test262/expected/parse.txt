@@ -41473,6 +41473,8 @@ language/comments/S7.4_A1_T1.js#sloppy
 language/comments/S7.4_A1_T1.js#strict
 language/comments/S7.4_A1_T2.js#sloppy
 language/comments/S7.4_A1_T2.js#strict
+language/comments/S7.4_A2_T1.js#sloppy
+language/comments/S7.4_A2_T1.js#strict
 language/comments/S7.4_A3.js#sloppy
 language/comments/S7.4_A3.js#strict
 language/comments/S7.4_A4_T1.js#sloppy
@@ -41508,6 +41510,7 @@ language/comments/hashbang/eval.js#sloppy
 language/comments/hashbang/eval.js#strict
 language/comments/hashbang/function-body.js#sloppy
 language/comments/hashbang/function-body.js#strict
+language/comments/hashbang/line-terminator-carriage-return.js
 language/comments/hashbang/multi-line-comment.js
 language/comments/hashbang/no-line-separator.js#sloppy
 language/comments/hashbang/no-line-separator.js#strict
@@ -54067,6 +54070,8 @@ language/expressions/template-literal/tv-no-substitution.js#sloppy
 language/expressions/template-literal/tv-no-substitution.js#strict
 language/expressions/template-literal/tv-null-character-escape-sequence.js#sloppy
 language/expressions/template-literal/tv-null-character-escape-sequence.js#strict
+language/expressions/template-literal/tv-template-character.js#sloppy
+language/expressions/template-literal/tv-template-character.js#strict
 language/expressions/template-literal/tv-template-characters.js#sloppy
 language/expressions/template-literal/tv-template-characters.js#strict
 language/expressions/template-literal/tv-utf16-escape-sequence.js#sloppy
@@ -55116,8 +55121,12 @@ language/line-terminators/comment-single-ls.js#sloppy
 language/line-terminators/comment-single-ls.js#strict
 language/line-terminators/comment-single-ps.js#sloppy
 language/line-terminators/comment-single-ps.js#strict
+language/line-terminators/invalid-comment-single-cr.js#sloppy
+language/line-terminators/invalid-comment-single-cr.js#strict
 language/line-terminators/invalid-comment-single-lf.js#sloppy
 language/line-terminators/invalid-comment-single-lf.js#strict
+language/line-terminators/invalid-regexp-cr.js#sloppy
+language/line-terminators/invalid-regexp-cr.js#strict
 language/line-terminators/invalid-regexp-lf.js#sloppy
 language/line-terminators/invalid-regexp-lf.js#strict
 language/literals/bigint/binary-invalid-digit.js#sloppy
@@ -67826,6 +67835,7 @@ staging/sm/Function/return-finally.js#sloppy
 staging/sm/Function/return-finally.js#strict
 staging/sm/Function/spread-iterator-primitive.js#sloppy
 staging/sm/Function/spread-iterator-primitive.js#strict
+staging/sm/Function/strict-arguments.js#sloppy
 staging/sm/Function/throw-type-error.js#sloppy
 staging/sm/Function/throw-type-error.js#strict
 staging/sm/Iterator/constructor-subclassable.js#sloppy
@@ -68142,6 +68152,10 @@ staging/sm/Math/expm1-exact.js#sloppy
 staging/sm/Math/expm1-exact.js#strict
 staging/sm/Math/expm1-monotonicity.js#sloppy
 staging/sm/Math/expm1-monotonicity.js#strict
+staging/sm/Math/f16round.js#sloppy
+staging/sm/Math/f16round.js#strict
+staging/sm/Math/fround.js#sloppy
+staging/sm/Math/fround.js#strict
 staging/sm/Math/log10-exact.js#sloppy
 staging/sm/Math/log10-exact.js#strict
 staging/sm/Math/log2-exact.js#sloppy
@@ -68690,6 +68704,8 @@ staging/sm/extensions/destructuring-for-inof-__proto__.js#sloppy
 staging/sm/extensions/destructuring-for-inof-__proto__.js#strict
 staging/sm/extensions/error-tostring-function.js#sloppy
 staging/sm/extensions/error-tostring-function.js#strict
+staging/sm/extensions/es5ish-defineGetter-defineSetter.js#sloppy
+staging/sm/extensions/es5ish-defineGetter-defineSetter.js#strict
 staging/sm/extensions/eval-native-callback-is-indirect.js#sloppy
 staging/sm/extensions/expression-closure-syntax.js#sloppy
 staging/sm/extensions/expression-closure-syntax.js#strict
@@ -68958,6 +68974,8 @@ staging/sm/regress/regress-410852.js#strict
 staging/sm/regress/regress-428366.js#sloppy
 staging/sm/regress/regress-441477-01.js#sloppy
 staging/sm/regress/regress-441477-01.js#strict
+staging/sm/regress/regress-449627.js#sloppy
+staging/sm/regress/regress-449627.js#strict
 staging/sm/regress/regress-449666.js#sloppy
 staging/sm/regress/regress-452189.js#sloppy
 staging/sm/regress/regress-452189.js#strict

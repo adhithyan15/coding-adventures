@@ -10,6 +10,12 @@
   declarations would have regressed. `annexB/language/comments/single-line-html-close-asi.js`
   is removed here too, as in #17898 (#17884).
 
+- **56 more tests parse; the token-pattern fixes (#17886, #17888) add 18 of
+  them to #17840's 38.** `annexB/language/comments/single-line-html-close-asi.js`
+  (sloppy and strict) is removed here as well as in #17898, so this PR's
+  gate doesn't depend on merge order. It only ever "passed" by reading an
+  Annex B HTML close comment as code (#17884).
+
 - **38 more tests parse after javascript-parser's ASI work (#17840), and
   two leave the list.** #17875's insertion points and postfix `++`/`--`
   restricted production let 38 more programs parse, so `--update` added

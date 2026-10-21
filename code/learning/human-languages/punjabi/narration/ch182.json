@@ -1,0 +1,1190 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 182,
+  "title": "A Week on the Noticeboard",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:f895f5c6ded7a96d",
+  "lessons": [
+    {
+      "id": "PA-C182-somvar",
+      "sequence": 9550,
+      "title": "ਸੋਮਵਾਰ (somvaar) — Monday",
+      "headword": "ਸੋਮਵਾਰ",
+      "romanization": "somvaar",
+      "gloss": "Monday",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb1fe60c0094aae4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "somvaar; YOU SAY: ਸੋਮਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *somvaar*; YOU SAY: **ਸੋਮਵਾਰ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Start with the sound. It means Monday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one weekday",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੋਮਵਾਰ (somvaar) — somvār — Monday."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep it as one calendar label. A full week comes slowly, one day at a time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Somvār joins Sanskrit soma, \"moon\", with vāra, \"day of the week\" (CDIAL 11547): the moon day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "somvaar; YOU SAY: ਸੋਮਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *somvaar*; YOU SAY: **ਸੋਮਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸੋਮਵਾਰ (somvaar)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸੋਮਵਾਰ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Monday. (ਸੋਮਵਾਰ (somvaar).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Punjabi University, Punjabi-English Dictionary, for the weekday; Turner, CDIAL 11547, for vāra."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-mangalvar",
+      "sequence": 9560,
+      "title": "ਮੰਗਲਵਾਰ (mangalvaar) — Tuesday",
+      "headword": "ਮੰਗਲਵਾਰ",
+      "romanization": "mangalvaar",
+      "gloss": "Tuesday",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02cfb32e45b030d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve Monday: ਸੋਮਵਾਰ (somvaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one weekday by ear",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "mangalvaar; YOU SAY: ਮੰਗਲਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *mangalvaar*; YOU SAY: **ਮੰਗਲਵਾਰ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੰਗਲਵਾਰ (mangalvaar) — maṅgalvār — Tuesday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Maṅgalvār joins Sanskrit maṅgala, the name of Mars, with vāra, \"day of the week\" (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "mangalvaar; YOU SAY: ਮੰਗਲਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *mangalvaar*; YOU SAY: **ਮੰਗਲਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਮੰਗਲਵਾਰ (mangalvaar)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਮੰਗਲਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਸੋਮਵਾਰ (somvaar), then ਮੰਗਲਵਾਰ (mangalvaar)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਸੋਮਵਾਰ**, then **ਮੰਗਲਵਾਰ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Monday, then Tuesday."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Punjabi University, Punjabi-English Dictionary, for the weekday; Turner, CDIAL 11547, for vāra."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-budhvar",
+      "sequence": 9570,
+      "title": "ਬੁੱਧਵਾਰ (budhvaar) — Wednesday",
+      "headword": "ਬੁੱਧਵਾਰ",
+      "romanization": "budhvaar",
+      "gloss": "Wednesday",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ec0174118df024d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸੋਮਵਾਰ (somvaar), then ਮੰਗਲਵਾਰ (mangalvaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one weekday by ear",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "budhvaar; YOU SAY: ਬੁੱਧਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *budhvaar*; YOU SAY: **ਬੁੱਧਵਾਰ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੁੱਧਵਾਰ (budhvaar) — budhvār — Wednesday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Budhvār joins Sanskrit budha, the name of Mercury, with vāra, \"day of the week\" (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "budhvaar; YOU SAY: ਬੁੱਧਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *budhvaar*; YOU SAY: **ਬੁੱਧਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਬੁੱਧਵਾਰ (budhvaar)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਬੁੱਧਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਸੋਮਵਾਰ (somvaar), ਮੰਗਲਵਾਰ (mangalvaar), ਬੁੱਧਵਾਰ (budhvaar)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਸੋਮਵਾਰ**, **ਮੰਗਲਵਾਰ**, **ਬੁੱਧਵਾਰ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Wednesday. (ਬੁੱਧਵਾਰ (budhvaar).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Punjabi University, Punjabi-English Dictionary, for the weekday; Turner, CDIAL 11547, for vāra."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-veervar",
+      "sequence": 9580,
+      "title": "ਵੀਰਵਾਰ (veervaar) — Thursday",
+      "headword": "ਵੀਰਵਾਰ",
+      "romanization": "veervaar",
+      "gloss": "Thursday",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9e987ac143a8913",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first three labels: ਸੋਮਵਾਰ (somvaar), ਮੰਗਲਵਾਰ (mangalvaar), ਬੁੱਧਵਾਰ (budhvaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one weekday by ear",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "veervaar; YOU SAY: ਵੀਰਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *veervaar*; YOU SAY: **ਵੀਰਵਾਰ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਵੀਰਵਾਰ (veervaar) — vīrvār — Thursday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Vīrvār is a learned borrowing of Sanskrit vīravāra. On the surface it contains vīra, \"hero\", and vāra, \"day\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "veervaar; YOU SAY: ਵੀਰਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *veervaar*; YOU SAY: **ਵੀਰਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਵੀਰਵਾਰ (veervaar)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਵੀਰਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਬੁੱਧਵਾਰ (budhvaar), then ਵੀਰਵਾਰ (veervaar)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਬੁੱਧਵਾਰ**, then **ਵੀਰਵਾਰ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Thursday. (ਵੀਰਵਾਰ (veervaar).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Punjabi University, Punjabi-English Dictionary, for the weekday; Wiktionary, for the learned Sanskrit history."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-shukkarvar",
+      "sequence": 9590,
+      "title": "ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar) — Friday",
+      "headword": "ਸ਼ੁੱਕਰਵਾਰ",
+      "romanization": "shukkarvaar",
+      "gloss": "Friday",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:334f62279bfb89ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਬੁੱਧਵਾਰ (budhvaar), then ਵੀਰਵਾਰ (veervaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one weekday by ear",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "shukkarvaar; YOU SAY: ਸ਼ੁੱਕਰਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *shukkarvaar*; YOU SAY: **ਸ਼ੁੱਕਰਵਾਰ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar) — śukkarvār — Friday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śukkarvār joins Sanskrit śukra, the name of Venus, with vāra, \"day of the week\" (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "shukkarvaar; YOU SAY: ਸ਼ੁੱਕਰਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *shukkarvaar*; YOU SAY: **ਸ਼ੁੱਕਰਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸ਼ੁੱਕਰਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਵੀਰਵਾਰ (veervaar), then ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਵੀਰਵਾਰ**, then **ਸ਼ੁੱਕਰਵਾਰ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Friday. (ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Punjabi University, Punjabi-English Dictionary, for the weekday; Turner, CDIAL 11547, for vāra."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-shanivar",
+      "sequence": 9600,
+      "title": "ਸ਼ਨੀਵਾਰ (shanivaar) — Saturday",
+      "headword": "ਸ਼ਨੀਵਾਰ",
+      "romanization": "shanivaar",
+      "gloss": "Saturday",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a4d578d7d0d973e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਵੀਰਵਾਰ (veervaar), then ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one weekday by ear",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "shanivaar; YOU SAY: ਸ਼ਨੀਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *shanivaar*; YOU SAY: **ਸ਼ਨੀਵਾਰ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਸ਼ਨੀਵਾਰ (shanivaar) — śanīvār — Saturday."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the shorter weekday form used in the draft; other Punjabi materials may use a longer Saturday form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Śanīvār joins Sanskrit śani, the name of Saturn, with vāra, \"day of the week\" (CDIAL 11547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "shanivaar; YOU SAY: ਸ਼ਨੀਵਾਰ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *shanivaar*; YOU SAY: **ਸ਼ਨੀਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸ਼ਨੀਵਾਰ (shanivaar)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸ਼ਨੀਵਾਰ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar), then ਸ਼ਨੀਵਾਰ (shanivaar)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਸ਼ੁੱਕਰਵਾਰ**, then **ਸ਼ਨੀਵਾਰ**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Saturday. (ਸ਼ਨੀਵਾਰ (shanivaar).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Punjabi University, Punjabi-English Dictionary, for the weekday; IBM, Punjabi locale calendar data, for the standard weekday set."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-aitvar",
+      "sequence": 9610,
+      "title": "Aitvaar — Sunday by ear",
+      "headword": "ਐਤਵਾਰ",
+      "romanization": "aitvaar",
+      "gloss": "Sunday",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:834577ff9b15ac21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar), then ਸ਼ਨੀਵਾਰ (shanivaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one weekday by ear",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "aitvaar; YOU SAY: aitvaar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *aitvaar*; YOU SAY: *aitvaar*]"
+            },
+            {
+              "kind": "speech",
+              "text": "aitvār — Sunday."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep this word oral for now. Its first printed letter comes next."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Aitvār is inherited from Sanskrit ādityavāra, \"Sunday\". Its history is older than the transparent weekday compounds beside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "aitvaar; YOU SAY: aitvaar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *aitvaar*; YOU SAY: *aitvaar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਸ਼ਨੀਵਾਰ (shanivaar), then aitvaar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਸ਼ਨੀਵਾਰ**, then *aitvaar*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say Sunday. (Aitvaar.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Punjabi University, Punjabi-English Dictionary, for the weekday; Wiktionary, for its inheritance from Sanskrit. Links are deferred until after the printed form is introduced."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-airhaa-ai",
+      "sequence": 9620,
+      "title": "ਐ (ai) — one new independent vowel from the Sunday word you can say",
+      "headword": "ਐ",
+      "romanization": "ai",
+      "gloss": "one independent Gurmukhi vowel, taken from the known spoken Sunday word",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:413472ca289bfeec",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ਐ",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ਐ, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say aitvaar, then ਸ਼ਨੀਵਾਰ (shanivaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ਐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਐ (ai)."
+            },
+            {
+              "kind": "speech",
+              "text": "aiṛā with dulāvā̃ — ai. Keep the independent vowel in view. It opens the Sunday word aitvaar that you already know by ear."
+            },
+            {
+              "kind": "speech",
+              "text": "No stroke order is taught here: the track does not yet have a verified source for one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: copy what you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਐ in front of you. Trace its printed shape once with a finger, then copy it once with a pencil while the model stays visible. Say ai when you finish."
+            },
+            {
+              "kind": "speech",
+              "text": "This is observe-and-copy with the model visible, not writing from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ਐ; YOU SAY: ai",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ਐ**; YOU SAY: *ai*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look away. Then look back and point to ਐ (ai)."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aitvaar, then point to its opening vowel ਐ and say ai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aitvaar*, then point to its opening vowel **ਐ** and say *ai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਸ਼ਨੀਵਾਰ (shanivaar), then aitvaar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਸ਼ਨੀਵਾਰ**, then *aitvaar*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ਐ, say ai, then say aitvaar."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gurmukhi chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-weekday-review",
+      "sequence": 9630,
+      "title": "Monday through Sunday — one guided review",
+      "headword": "ਸੋਮਵਾਰ ਤੋਂ ਐਤਵਾਰ",
+      "romanization": "somvaar ton aitvaar",
+      "gloss": "Monday through Sunday",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:f78064431b3fed67",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice: rebuild the week"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice: rebuild the week."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the two ends: ਸੋਮਵਾਰ (somvaar), then ਐਤਵਾਰ (aitvaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: rebuild the week",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੋਮਵਾਰ (somvaar), ਮੰਗਲਵਾਰ (mangalvaar), ਬੁੱਧਵਾਰ (budhvaar), ਵੀਰਵਾਰ (veervaar), ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar), ਸ਼ਨੀਵਾਰ (shanivaar), ਐਤਵਾਰ (aitvaar)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the line once. Cover it. Rebuild it in two gentle groups: the first four, then the last three."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the seven weekday labels in order; YOU SAY: the same ordered week",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: the seven weekday labels in order; YOU SAY: the same ordered week]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸੋਮਵਾਰ ਤੋਂ ਐਤਵਾਰ (somvaar ton aitvaar)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸੋਮਵਾਰ ਤੋਂ ਐਤਵਾਰ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the week once without looking. Stop and return to the model if one label drops out."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: IBM, Punjabi locale calendar data, for the ordered weekday set."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C182-payoff",
+      "sequence": 9640,
+      "title": "A two-line opening-days notice",
+      "headword": "ਸੋਮਵਾਰ ਤੋਂ ਸ਼ੁੱਕਰਵਾਰ ਤੱਕ ਖੁੱਲ੍ਹਾ। ਸ਼ਨੀਵਾਰ ਅਤੇ ਐਤਵਾਰ ਬੰਦ।",
+      "romanization": "somvaar ton shukkarvaar takk khullha; shanivaar ate aitvaar band",
+      "gloss": "open Monday through Friday; closed Saturday and Sunday",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c983c81da21e65d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸੋਮਵਾਰ (somvaar), ਸ਼ੁੱਕਰਵਾਰ (shukkarvaar), ਸ਼ਨੀਵਾਰ (shanivaar), ਐਤਵਾਰ (aitvaar)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four-skill payoff",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First retrieve the whole week once. Then use this small notice:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਸੋਮਵਾਰ ਤੋਂ ਸ਼ੁੱਕਰਵਾਰ ਤੱਕ ਖੁੱਲ੍ਹਾ। ਸ਼ਨੀਵਾਰ ਅਤੇ ਐਤਵਾਰ ਬੰਦ। (somvaar ton shukkarvaar takk khullha; shanivaar ate aitvaar band)."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the two-line opening-days notice; YOU SAY: ਸੋਮਵਾਰ ਤੋਂ ਸ਼ੁੱਕਰਵਾਰ ਤੱਕ ਖੁੱਲ੍ਹਾ। ਸ਼ਨੀਵਾਰ ਅਤੇ ਐਤਵਾਰ ਬੰਦ। (somvaar ton shukkarvaar takk khullha; shanivaar ate aitvaar band)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: the two-line opening-days notice; YOU SAY: **ਸੋਮਵਾਰ ਤੋਂ ਸ਼ੁੱਕਰਵਾਰ ਤੱਕ ਖੁੱਲ੍ਹਾ। ਸ਼ਨੀਵਾਰ ਅਤੇ ਐਤਵਾਰ ਬੰਦ।**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸੋਮਵਾਰ ਤੋਂ ਸ਼ੁੱਕਰਵਾਰ ਤੱਕ ਖੁੱਲ੍ਹਾ। ਸ਼ਨੀਵਾਰ ਅਤੇ ਐਤਵਾਰ ਬੰਦ। (somvaar ton shukkarvaar takk khullha; shanivaar ate aitvaar band)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸੋਮਵਾਰ ਤੋਂ ਸ਼ੁੱਕਰਵਾਰ ਤੱਕ ਖੁੱਲ੍ਹਾ। ਸ਼ਨੀਵਾਰ ਅਤੇ ਐਤਵਾਰ ਬੰਦ।**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same two-line notice after covering the model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same two-line notice after covering the model]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rebuild the week, then the notice, without looking."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the fifth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: IBM, Punjabi locale calendar data, for the weekday set; the already taught Punjabi schedule forms from chapters 178 and 179."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

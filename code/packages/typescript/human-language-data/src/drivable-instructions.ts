@@ -994,7 +994,7 @@ export function readingSpokenCues(markdown: string): string[] {
 // position does a bounded amount of work. `GESTURE_MANNER` is a choice of
 // fixed phrases. `NESTED_CUE` is a fixed literal and one run of capitals,
 // which no other part of the pattern can also match. Each regex is applied
-// once per cue (the nested one as one global pass), so a text of N characters
+// once per cue (the nested one as one whole-text pass), so a text of N characters
 // costs O(N).
 
 /** Where a step starts in a spoken cue: the reading check's links, plus a participle's "while", "as you" and "by". */
@@ -1967,7 +1967,7 @@ function nextSentenceStops(text: string): Int32Array {
  *   "Does it point to my or your?"                         []   (a third-person question)
  *   "… a letter-for-letter copy of tenuī …"                []   (a noun)
  *
- * Linear: one global scan for the verbs (fixed alternatives behind a one-
+ * Linear: one whole-text scan for the verbs (fixed alternatives behind a one-
  * character lookbehind), and each excuse reads a fixed-size window either side.
  */
 export function handVerbsInPrompt(prompt: string): string[] {
