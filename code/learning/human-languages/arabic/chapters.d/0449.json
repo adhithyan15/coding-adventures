@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Making a complaint",
+  "label": "ch:ar-making-a-complaint",
+  "canDo": "I can say a complaint, compensation, to compensate, to grumble and to swap.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C449-istabdala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can say a complaint, compensation, to compensate, to grumble and to swap.",
+    "assesses": [
+      "AR-LEX-C449-SHAKWA449-03",
+      "AR-LEX-C449-SHAKWA449-04",
+      "AR-LEX-C449-SHAKWA449-05"
+    ]
+  }
+}

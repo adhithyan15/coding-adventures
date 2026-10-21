@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 301,
+  "title": "An accident on the road",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1cad2d18a86f8336",
+  "lessons": [
+    {
+      "id": "AR-C301-istadama",
+      "sequence": 17410,
+      "title": "اصطدم (iṣṭadama) — to collide, to crash into",
+      "headword": "اصطدم",
+      "romanization": "iṣṭadama",
+      "gloss": "to collide, to crash into",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d68dd4e79989369",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to steal, then the Arabic for to arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اصطدم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اصطدم — iṣṭadama — \"to collide, to crash into\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اصطدمت السيارة بشجرة كبيرة. iṣṭadamat as-sayyāra bi-shajara kabīra. The car crashed into a big tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يصطدم, yaṣṭadim."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ for what is hit: اصطدم (iṣṭadama) بالجدار."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اصطدم (iṣṭadama) is built on the native Arabic root ṣ-d-m (Lane), \"to strike, to knock against\". It is Form VIII, where the t turns to ṭ after ṣ: \"to strike against each other\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṣṭadama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṣṭadama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṣṭadama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṣṭadama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṣṭadamat as-sayyāra bi-shajara kabīra. — The car crashed into a big tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṣṭadamat as-sayyāra bi-shajara kabīra.* — The car crashed into a big tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to steal, then the Arabic for to arrest, then say iṣṭadama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to steal, then the Arabic for to arrest, then say *iṣṭadama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اصطدم (iṣṭadama) mean? (\"To collide, to crash into\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C301-inqalaba",
+      "sequence": 17420,
+      "title": "انقلب (inqalaba) — to overturn, to turn over",
+      "headword": "انقلب",
+      "romanization": "inqalaba",
+      "gloss": "to overturn, to turn over",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0119a63b1a1eb89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to arrest, then the Arabic for to collide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انقلب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انقلب — inqalaba — \"to overturn, to turn over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انقلبت الشاحنة على جانب الطريق. inqalabat ash-shāḥina ʿalā jānib aṭ-ṭarīq. The lorry overturned at the side of the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينقلب, yanqalib."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انقلب (inqalaba) is built on the native Arabic root q-l-b (Lane), \"to turn a thing over\", the root of qalb, the heart, which turns. It is Form VII, \"to be turned over\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqalaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqalaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqalaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqalaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqalabat ash-shāḥina ʿalā jānib aṭ-ṭarīq. — The lorry overturned at the side of the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqalabat ash-shāḥina ʿalā jānib aṭ-ṭarīq.* — The lorry overturned at the side of the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to arrest, then the Arabic for to collide, then say inqalaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to arrest, then the Arabic for to collide, then say *inqalaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انقلب (inqalaba) mean? (\"To overturn, to turn over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C301-dahiyya",
+      "sequence": 17430,
+      "title": "ضحية (ḍaḥiyya) — a victim",
+      "headword": "ضحية",
+      "romanization": "ḍaḥiyya",
+      "gloss": "a victim",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57a0551132cde8aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to collide, then the Arabic for to overturn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضحية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضحية — ḍaḥiyya — \"a victim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان الولد ضحية (ḍaḥiyya) الحادث. kāna al-walad ḍaḥiyyat al-ḥādith. The boy was the victim of the accident."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ضحايا, ḍaḥāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضحية (ḍaḥiyya) is built on the native Arabic root ḍ-ḥ-w (Lane), the root of the taught ḍuḥā, the bright late morning. Lane gives ḍaḥiyya first as an animal offered at that hour; today it is anyone who suffers harm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍaḥiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍaḥiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍaḥiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍaḥiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna al-walad ḍaḥiyyat al-ḥādith. — The boy was the victim of the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna al-walad ḍaḥiyyat al-ḥādith.* — The boy was the victim of the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to collide, then the Arabic for to overturn, then say ḍaḥiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to collide, then the Arabic for to overturn, then say *ḍaḥiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضحية (ḍaḥiyya) mean? (\"A victim\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C301-jarih",
+      "sequence": 17440,
+      "title": "جريح (jarīḥ) — a wounded person; wounded",
+      "headword": "جريح",
+      "romanization": "jarīḥ",
+      "gloss": "a wounded person; wounded",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09cbec4b35fd295b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to overturn, then the Arabic for a victim."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جريح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جريح — jarīḥ — \"a wounded person; wounded\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نقلت سيارة الإسعاف الجريح إلى المستشفى. naqalat sayyārat al-isʿāf al-jarīḥ ilā al-mustashfā. The ambulance took the wounded man to hospital."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: جرحى, jarḥā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جريح (jarīḥ) is built on the native Arabic root j-r-ḥ (Lane), \"to wound\", the root of the taught jurḥ, a wound. The faʿīl pattern gives the one who bears it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarīḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarīḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarīḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarīḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naqalat sayyārat al-isʿāf al-jarīḥ ilā al-mustashfā. — The ambulance took the wounded man to hospital.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naqalat sayyārat al-isʿāf al-jarīḥ ilā al-mustashfā.* — The ambulance took the wounded man to hospital.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to overturn, then the Arabic for a victim, then say jarīḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to overturn, then the Arabic for a victim, then say *jarīḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جريح (jarīḥ) mean? (\"A wounded person; wounded\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C301-asafa-aid",
+      "sequence": 17450,
+      "title": "أسعف (asʿafa) — to give first aid",
+      "headword": "أسعف",
+      "romanization": "asʿafa",
+      "gloss": "to give first aid",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d6fe72cf757aeab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a victim, then the Arabic for a wounded person."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أسعف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أسعف — asʿafa — \"to give first aid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أسعف الطبيب الولد في الشارع. asʿafa aṭ-ṭabīb al-walad fī ash-shāriʿ. The doctor gave the boy first aid in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسعف, yusʿif."
+            },
+            {
+              "kind": "speech",
+              "text": "The taught إسعاف, first aid, is its verbal noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أسعف (asʿafa) is built on the native Arabic root s-ʿ-f (Lane), \"to help, to give someone what he needs\". It is Form IV; isʿāf is its verbal noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asʿafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asʿafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asʿafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asʿafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asʿafa aṭ-ṭabīb al-walad fī ash-shāriʿ. — The doctor gave the boy first aid in the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asʿafa aṭ-ṭabīb al-walad fī ash-shāriʿ.* — The doctor gave the boy first aid in the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a victim, then the Arabic for a wounded person, then say asʿafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a victim, then the Arabic for a wounded person, then say *asʿafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أسعف (asʿafa) mean? (\"To give first aid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

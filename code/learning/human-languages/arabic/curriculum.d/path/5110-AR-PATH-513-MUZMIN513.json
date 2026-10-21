@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-513-MUZMIN513",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-513-MUZMIN513"
+  ],
+  "after": []
+}

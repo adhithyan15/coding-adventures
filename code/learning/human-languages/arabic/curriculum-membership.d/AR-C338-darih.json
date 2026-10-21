@@ -1,0 +1,11 @@
+{
+  "id": "AR-C338-darih",
+  "pathSegment": "AR-PATH-338-MAWTA338",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-338-MAWTA338",
+      "order": 1
+    }
+  ]
+}

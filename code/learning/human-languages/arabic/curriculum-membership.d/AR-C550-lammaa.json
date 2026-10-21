@@ -1,0 +1,11 @@
+{
+  "id": "AR-C550-lammaa",
+  "pathSegment": "AR-PATH-550-SIYANA550",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-550-SIYANA550",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Bed and view",
+  "label": "ch:ar-bed-and-view",
+  "canDo": "I can say a doorman, a bed sheet, cleanliness, to overlook and a strongbox.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C443-khazna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can say a doorman, a bed sheet, cleanliness, to overlook and a strongbox.",
+    "assesses": [
+      "AR-LEX-C443-MULAA443-03",
+      "AR-LEX-C443-MULAA443-04",
+      "AR-LEX-C443-MULAA443-05"
+    ]
+  }
+}

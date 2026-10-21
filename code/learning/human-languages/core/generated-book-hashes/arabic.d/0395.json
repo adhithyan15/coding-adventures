@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:b42cf186753eadb8",
+  "lessonIds": [
+    "AR-C395-marji",
+    "AR-C395-istashhada",
+    "AR-C395-iqtabasa",
+    "AR-C395-talaa",
+    "AR-C395-taammala"
+  ],
+  "tex": "arabic/book/chapters/ch395-reading-and-quoting.tex"
+}

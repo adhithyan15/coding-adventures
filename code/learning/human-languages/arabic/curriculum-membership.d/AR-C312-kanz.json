@@ -1,0 +1,11 @@
+{
+  "id": "AR-C312-kanz",
+  "pathSegment": "AR-PATH-312-KASHF312",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-312-KASHF312",
+      "order": 4
+    }
+  ]
+}

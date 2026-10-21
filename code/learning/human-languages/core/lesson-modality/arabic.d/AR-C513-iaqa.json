@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C513-iaqa",
+    "language": "arabic",
+    "chapter": 513,
+    "sequence": 28500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f87996a6a36fe9b8"
+  },
+  "findings": []
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 329,
+  "title": "Revolts and independence",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5f9626495e36aa81",
+  "lessons": [
+    {
+      "id": "AR-C329-thawra",
+      "sequence": 18840,
+      "title": "ثورة (thawra) — a revolution, a revolt",
+      "headword": "ثورة",
+      "romanization": "thawra",
+      "gloss": "a revolution, a revolt",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1990d9a33db45021",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a banquet, then the Arabic for an invited guest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ثورة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثورة — thawra — \"a revolution, a revolt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غيرت الثورة حياة الناس. ghayyarat ath-thawra ḥayāt an-nās. The revolution changed people’s lives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثورة (thawra) is built on the native Arabic root th-w-r (Lane), \"to rise up, to be stirred\", said of dust; the taught thawr, a bull, is the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thawra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thawra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thawra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thawra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghayyarat ath-thawra ḥayāt an-nās. — The revolution changed people’s lives.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghayyarat ath-thawra ḥayāt an-nās.* — The revolution changed people’s lives.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a banquet, then the Arabic for an invited guest, then say thawra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a banquet, then the Arabic for an invited guest, then say *thawra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ثورة (thawra) mean? (\"A revolution, a revolt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C329-thara",
+      "sequence": 18850,
+      "title": "ثار (thāra) — to revolt; to flare up",
+      "headword": "ثار",
+      "romanization": "thāra",
+      "gloss": "to revolt; to flare up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b52089f9cc540977",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an invited guest, then the Arabic for a revolution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ثار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثار — thāra — \"to revolt; to flare up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ثار الفلاحون على الحاكم الظالم. thāra al-fallāḥūn ʿalā al-ḥākim aẓ-ẓālim. The farmers rose up against the unjust ruler."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يثور, yathūr."
+            },
+            {
+              "kind": "speech",
+              "text": "ثار (thāra) غضبه: his anger flared up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثار (thāra) is built on the native Arabic root th-w-r (Lane), \"to rise up\", said of dust and of anger, and then of a people."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thāra al-fallāḥūn ʿalā al-ḥākim aẓ-ẓālim. — The farmers rose up against the unjust ruler.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thāra al-fallāḥūn ʿalā al-ḥākim aẓ-ẓālim.* — The farmers rose up against the unjust ruler.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an invited guest, then the Arabic for a revolution, then say thāra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an invited guest, then the Arabic for a revolution, then say *thāra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ثار (thāra) mean? (\"To revolt; to flare up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C329-istaqalla",
+      "sequence": 18860,
+      "title": "استقل (istaqalla) — to become independent; to board",
+      "headword": "استقل",
+      "romanization": "istaqalla",
+      "gloss": "to become independent; to board",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:139fd40ccb1e5130",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a revolution, then the Arabic for to revolt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استقل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقل — istaqalla — \"to become independent; to board\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استقل البلد بعد حرب طويلة. istaqalla al-balad baʿda ḥarb ṭawīla. The country became independent after a long war."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستقل, yastaqill."
+            },
+            {
+              "kind": "speech",
+              "text": "It also takes a vehicle: استقل (istaqalla) القطار, he took the train."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقل (istaqalla) is built on the native Arabic root q-l-l (Lane), \"to be little; to lift\", the root of qalīl, little, and of the taught aqall, less. Form X istaqalla is \"to bear oneself up\", alone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqalla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqalla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqalla al-balad baʿda ḥarb ṭawīla. — The country became independent after a long war.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqalla al-balad baʿda ḥarb ṭawīla.* — The country became independent after a long war.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a revolution, then the Arabic for to revolt, then say istaqalla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a revolution, then the Arabic for to revolt, then say *istaqalla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استقل (istaqalla) mean? (\"To become independent; to board\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C329-istiqlal",
+      "sequence": 18870,
+      "title": "استقلال (istiqlāl) — independence",
+      "headword": "استقلال",
+      "romanization": "istiqlāl",
+      "gloss": "independence",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24fa7096b16c18dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to revolt, then the Arabic for to become independent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استقلال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقلال — istiqlāl — \"independence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يحتفل البلد بعيد الاستقلال كل سنة. yaḥtafilu al-balad bi-ʿīd al-istiqlāl kull sana. The country celebrates Independence Day every year."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقلال (istiqlāl) is built on the native Arabic root q-l-l (Lane), \"to lift\". Istiqlāl is the verbal noun of Form X istaqalla, \"to stand on one's own\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istiqlāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istiqlāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istiqlāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istiqlāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaḥtafilu al-balad bi-ʿīd al-istiqlāl kull sana. — The country celebrates Independence Day every year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaḥtafilu al-balad bi-ʿīd al-istiqlāl kull sana.* — The country celebrates Independence Day every year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to revolt, then the Arabic for to become independent, then say istiqlāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to revolt, then the Arabic for to become independent, then say *istiqlāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استقلال (istiqlāl) mean? (\"Independence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C329-shab",
+      "sequence": 18880,
+      "title": "شعب (shaʿb) — a country’s people; a nation",
+      "headword": "شعب",
+      "romanization": "shaʿb",
+      "gloss": "a country’s people; a nation",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19f761d3b2a8b900",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to become independent, then the Arabic for independence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شعب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شعب — shaʿb — \"a country’s people; a nation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شعب هذا البلد كريم جدا. shaʿb hādhā al-balad karīm jiddan. The people of this country are very generous."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: شعوب, shuʿūb."
+            },
+            {
+              "kind": "speech",
+              "text": "The adjective شعبي is popular, folk: أكلة شعبية."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شعب (shaʿb) is built on the native Arabic root sh-ʿ-b (Lane), which means both \"to branch apart\" and \"to gather\"; Lane gives shaʿb as a great tribe from which smaller ones branch."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shaʿb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shaʿb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shaʿb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shaʿb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shaʿb hādhā al-balad karīm jiddan. — The people of this country are very generous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shaʿb hādhā al-balad karīm jiddan.* — The people of this country are very generous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to become independent, then the Arabic for independence, then say shaʿb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to become independent, then the Arabic for independence, then say *shaʿb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شعب (shaʿb) mean? (\"A country’s people; a nation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

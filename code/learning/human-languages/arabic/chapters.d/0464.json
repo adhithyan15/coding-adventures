@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Pollution",
+  "label": "ch:ar-pollution",
+  "canDo": "I can say pollution, polluted, waste, to pollute and to sort.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C464-faraza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can say pollution, polluted, waste, to pollute and to sort.",
+    "assesses": [
+      "AR-LEX-C464-TALAWWUTH464-03",
+      "AR-LEX-C464-TALAWWUTH464-04",
+      "AR-LEX-C464-TALAWWUTH464-05"
+    ]
+  }
+}

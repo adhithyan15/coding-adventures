@@ -1,0 +1,11 @@
+{
+  "id": "AR-C529-kanna",
+  "pathSegment": "AR-PATH-529-AHL529",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-529-AHL529",
+      "order": 1
+    }
+  ]
+}

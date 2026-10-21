@@ -69,7 +69,9 @@ it("pins Arabic lesson-content budgets", () =>
     // and ئ, a six-line writing task and ten reviews. RE-MEASURED against the
     // tree. None introduces an idiom, a sense or a culture claim, so those stay
     // at 2 / 3 / 14.
-    lessons: 1428,
+    // 1428 -> 2768: chapters 293-552, the B1 vocabulary: 1,300 headwords (507
+    // verbs) and 40 reviews; Arabic attains B1. No idiom, sense or culture claim.
+    lessons: 2768,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

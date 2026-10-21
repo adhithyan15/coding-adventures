@@ -1,0 +1,19 @@
+{
+  "chapter": 519,
+  "title": "Trainees and volunteers",
+  "label": "ch:ar-trainees-and-volunteers",
+  "canDo": "I can talk about a CV, a trainee and practice, and say that someone volunteered or donated.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R519-review-512-519",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 519: I can talk about a CV, a trainee and practice, and say that someone volunteered or donated.",
+    "assesses": [
+      "AR-LEX-C519-WAZIFA519-03",
+      "AR-LEX-C519-WAZIFA519-04",
+      "AR-LEX-C519-WAZIFA519-05"
+    ]
+  }
+}

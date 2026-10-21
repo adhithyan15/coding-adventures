@@ -1,0 +1,11 @@
+{
+  "id": "AR-C512-taallama-pain",
+  "pathSegment": "AR-PATH-512-SHIFA512",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-512-SHIFA512",
+      "order": 4
+    }
+  ]
+}

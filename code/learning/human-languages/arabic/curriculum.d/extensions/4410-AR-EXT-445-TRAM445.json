@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-445-TRAM445",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tram, a lorry, a steering wheel, to slow down and to hamper.",
+  "prerequisites": []
+}

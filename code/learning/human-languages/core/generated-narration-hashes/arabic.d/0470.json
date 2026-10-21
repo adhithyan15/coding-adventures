@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:8f7ba1913b0e8204",
+  "lessonIds": [
+    "AR-C470-yanbu",
+    "AR-C470-manba",
+    "AR-C470-masabb",
+    "AR-C470-diffa",
+    "AR-C470-adhb",
+    "AR-R470-review-463-470"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch470.txt",
+  "json": "arabic/narration/ch470.json",
+  "textHash": "fnv1a64:2876f2fe06c6156a",
+  "jsonHash": "fnv1a64:4e17b5c961d1afbc",
+  "findings": []
+}

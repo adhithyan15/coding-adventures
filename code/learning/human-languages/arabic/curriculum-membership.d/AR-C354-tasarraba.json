@@ -1,0 +1,11 @@
+{
+  "id": "AR-C354-tasarraba",
+  "pathSegment": "AR-PATH-354-HUTAM354",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-354-HUTAM354",
+      "order": 4
+    }
+  ]
+}

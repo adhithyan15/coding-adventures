@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:4be642f9a90ea0d4",
+  "lessonIds": [
+    "AR-C388-fasad",
+    "AR-C388-rashwa",
+    "AR-C388-islah",
+    "AR-C388-intahaka",
+    "AR-C388-istaghalla"
+  ],
+  "tex": "arabic/book/chapters/ch388-corruption-and-reform.tex"
+}

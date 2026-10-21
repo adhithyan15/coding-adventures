@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-551-GHURFA551",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-551-GHURFA551"
+  ],
+  "after": []
+}

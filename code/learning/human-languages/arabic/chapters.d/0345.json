@@ -1,0 +1,19 @@
+{
+  "chapter": 345,
+  "title": "Facing danger",
+  "label": "ch:ar-facing-danger",
+  "canDo": "I can say to challenge, to face, to overcome, to approach and to move away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C345-ibtaada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 345: I can say to challenge, to face, to overcome, to approach and to move away.",
+    "assesses": [
+      "AR-LEX-C345-MUWAJAHA345-03",
+      "AR-LEX-C345-MUWAJAHA345-04",
+      "AR-LEX-C345-MUWAJAHA345-05"
+    ]
+  }
+}

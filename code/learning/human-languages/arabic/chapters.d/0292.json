@@ -7,10 +7,13 @@
     "SPINE-EXPRESS-CONDITION"
   ],
   "payoff": {
-    "lesson": "AR-W292-sitta-sutur",
-    "kind": "task",
-    "summary": "Complete AR-W292-sitta-sutur: six connected lines to one reader about a trip, with a scene, events in order, a reason and a condition.",
+    "lesson": "AR-R292-would-and-depends",
+    "kind": "production",
+    "summary": "Complete AR-R292-would-and-depends: an unreal condition with law, a wish with layta, and a plan that depends on something, with ʿalā ḥasab and the condition word.",
     "assesses": [
+      "AR-LEX-C292-SHART292-01",
+      "AR-GRAMMAR-C292-DEPENDS-01",
+      "AR-GRAMMAR-C292-HASABA-01",
       "AR-GRAMMAR-C292-LAW-01",
       "AR-GRAMMAR-C292-LAYTA-01"
     ]

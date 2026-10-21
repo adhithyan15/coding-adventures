@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 412,
+  "title": "Going up and down",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:401c500d87dc5e1a",
+  "lessons": [
+    {
+      "id": "AR-C412-izdada",
+      "sequence": 23160,
+      "title": "ازداد (izdāda) — to become greater; to increase",
+      "headword": "ازداد",
+      "romanization": "izdāda",
+      "gloss": "to become greater; to increase",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ec890f804247c7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to struggle against, then the Arabic for to approve formally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ازداد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ازداد — izdāda — \"to become greater; to increase\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ازداد عدد السكان. izdāda ʿadad as-sukkān. The number of inhabitants grew."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يزداد, yazdād."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ازداد (izdāda) is built on the native Arabic root z-y-d, \"to increase, to grow more\" (Lane). It is Form VIII of zāda, to increase: to become greater."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izdāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izdāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izdāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izdāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "izdāda ʿadad as-sukkān. — The number of inhabitants grew.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *izdāda ʿadad as-sukkān.* — The number of inhabitants grew.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to struggle against, then the Arabic for to approve formally, then say izdāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to struggle against, then the Arabic for to approve formally, then say *izdāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ازداد (izdāda) mean? (\"To become greater; to increase\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C412-taqallasa",
+      "sequence": 23170,
+      "title": "تقلص (taqallaṣa) — to shrink",
+      "headword": "تقلص",
+      "romanization": "taqallaṣa",
+      "gloss": "to shrink",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a71ea3ee853add9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to approve formally, then the Arabic for to become greater."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تقلص",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تقلص — taqallaṣa — \"to shrink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تقلص عدد الطلاب. taqallaṣa ʿadad aṭ-ṭullāb. The number of students shrank."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتقلص, yataqallaṣ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تقلص (taqallaṣa) is built on the native Arabic root q-l-ṣ, \"to contract, to shrink\" (Lane). It is Form V, to draw itself in: to shrink."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqallaṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqallaṣa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqallaṣa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqallaṣa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqallaṣa ʿadad aṭ-ṭullāb. — The number of students shrank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqallaṣa ʿadad aṭ-ṭullāb.* — The number of students shrank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to approve formally, then the Arabic for to become greater, then say taqallaṣa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to approve formally, then the Arabic for to become greater, then say *taqallaṣa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تقلص (taqallaṣa) mean? (\"To shrink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C412-tadaafa",
+      "sequence": 23180,
+      "title": "تضاعف (taḍāʿafa) — to double",
+      "headword": "تضاعف",
+      "romanization": "taḍāʿafa",
+      "gloss": "to double",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0b6a47c26542c51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to become greater, then the Arabic for to shrink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تضاعف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تضاعف — taḍāʿafa — \"to double\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تضاعف عدد الزوار في الصيف. taḍāʿafa ʿadad az-zuwwār fī aṣ-ṣayf. The number of visitors doubled in summer."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتضاعف, yataḍāʿaf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تضاعف (taḍāʿafa) is built on the native Arabic root ḍ-ʿ-f, \"the like of a thing; to double\" (Lane). It is Form VI, to be multiplied by itself: to double."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍāʿafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍāʿafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍāʿafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍāʿafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍāʿafa ʿadad az-zuwwār fī aṣ-ṣayf. — The number of visitors doubled in summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍāʿafa ʿadad az-zuwwār fī aṣ-ṣayf.* — The number of visitors doubled in summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to become greater, then the Arabic for to shrink, then say taḍāʿafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to become greater, then the Arabic for to shrink, then say *taḍāʿafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تضاعف (taḍāʿafa) mean? (\"To double\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C412-qallala",
+      "sequence": 23190,
+      "title": "قلل (qallala) — to reduce",
+      "headword": "قلل",
+      "romanization": "qallala",
+      "gloss": "to reduce",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d0b958a9b5cc034",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to shrink, then the Arabic for to double."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قلل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قلل — qallala — \"to reduce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قلل الطبيب كمية السكر. qallala aṭ-ṭabīb kammiyyat as-sukkar. The doctor reduced the amount of sugar."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقلل, yuqallil."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قلل (qallala) is built on the native Arabic root q-l-l, \"to be few, little\" (Lane). It is Form II, to make little: to reduce. قليل and أقل are from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qallala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qallala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qallala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qallala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qallala aṭ-ṭabīb kammiyyat as-sukkar. — The doctor reduced the amount of sugar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qallala aṭ-ṭabīb kammiyyat as-sukkar.* — The doctor reduced the amount of sugar.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to shrink, then the Arabic for to double, then say qallala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to shrink, then the Arabic for to double, then say *qallala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قلل (qallala) mean? (\"To reduce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C412-nisba",
+      "sequence": 23200,
+      "title": "نسبة (nisba) — a proportion",
+      "headword": "نسبة",
+      "romanization": "nisba",
+      "gloss": "a proportion",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdb7dac3540fd8d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to double, then the Arabic for to reduce."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نسبة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نسبة — nisba — \"a proportion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نسبة (nisba) النجاح عالية هذه السنة. nisbat an-najāḥ ʿāliya hādhihi as-sana. The proportion of passes is high this year."
+            },
+            {
+              "kind": "speech",
+              "text": "بالنسبة إلى, bi-n-nisba ilā, regarding, as for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نسبة (nisba) is built on the native Arabic root n-s-b, \"to trace lineage, to relate\" (Lane). A nisba is a relation, and so a ratio: a proportion, a percentage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nisbat an-najāḥ ʿāliya hādhihi as-sana. — The proportion of passes is high this year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nisbat an-najāḥ ʿāliya hādhihi as-sana.* — The proportion of passes is high this year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to double, then the Arabic for to reduce, then say nisba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to double, then the Arabic for to reduce, then say *nisba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نسبة (nisba) mean? (\"A proportion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

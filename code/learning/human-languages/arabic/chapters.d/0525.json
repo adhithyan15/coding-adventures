@@ -1,0 +1,19 @@
+{
+  "chapter": 525,
+  "title": "Design and code",
+  "label": "ch:ar-design-and-code",
+  "canDo": "I can say that someone produced, designed or programmed something, and name a designer and a programmer.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C525-mubarmij",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can say that someone produced, designed or programmed something, and name a designer and a programmer.",
+    "assesses": [
+      "AR-LEX-C525-TASMIM525-03",
+      "AR-LEX-C525-TASMIM525-04",
+      "AR-LEX-C525-TASMIM525-05"
+    ]
+  }
+}

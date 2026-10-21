@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Excited and relieved",
+  "label": "ch:ar-excited-and-relieved",
+  "canDo": "I can say that someone is excited or at ease, talk about relief, and say that someone got excited or felt relieved.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C496-irtaha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can say that someone is excited or at ease, talk about relief, and say that someone got excited or felt relieved.",
+    "assesses": [
+      "AR-LEX-C496-HAMAS496-03",
+      "AR-LEX-C496-HAMAS496-04",
+      "AR-LEX-C496-HAMAS496-05"
+    ]
+  }
+}

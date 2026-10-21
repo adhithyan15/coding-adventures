@@ -1,0 +1,11 @@
+{
+  "id": "AR-C482-asafa",
+  "pathSegment": "AR-PATH-482-RIH482",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-482-RIH482",
+      "order": 2
+    }
+  ]
+}

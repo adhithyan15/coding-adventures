@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:94ea905461e050dd",
+  "lessonIds": [
+    "AR-C368-ahammiyya",
+    "AR-C368-qima",
+    "AR-C368-rakkaza",
+    "AR-C368-ahmala",
+    "AR-C368-ihtamma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch368.txt",
+  "json": "arabic/narration/ch368.json",
+  "textHash": "fnv1a64:3a7639cb207b2467",
+  "jsonHash": "fnv1a64:3a3073a074158011",
+  "findings": []
+}

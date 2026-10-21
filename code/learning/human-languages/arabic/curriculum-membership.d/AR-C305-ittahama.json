@@ -1,0 +1,11 @@
+{
+  "id": "AR-C305-ittahama",
+  "pathSegment": "AR-PATH-305-MAHKAMA305",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-305-MAHKAMA305",
+      "order": 2
+    }
+  ]
+}

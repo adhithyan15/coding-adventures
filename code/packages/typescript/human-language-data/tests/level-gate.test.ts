@@ -354,6 +354,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // subjunctive and the unreal condition, realizing all five B1 nodes, plus
     // letter lessons for ع غ ژ ث ذ ض ئ) and chapters 300-539 (1,200 headwords,
     // 358 verbs).
+    // Arabic followed as the ninth, with chapters 283-292 (the B1 core: the past
+    // and present for every person, kāna + imperfect, the subjunctive after an,
+    // the future, comparison, idhā and law, realizing all five B1 nodes, plus
+    // letter lessons for ؤ and ئ) and chapters 293-552 (1,300 headwords, 507
+    // verbs).
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

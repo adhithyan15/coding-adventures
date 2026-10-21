@@ -1,0 +1,49 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R487-review-final-487
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 27140
+chapter: 487
+type: review
+headword: (dialogue)
+gloss: one more pass over chapter 487
+concept_tag: REVIEW
+prerequisites: [AR-C487-ghamara, AR-C487-jarafa, AR-C487-ihtama, AR-C487-lajaa, AR-C487-malja]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C487-MALJA487-01, AR-LEX-C487-MALJA487-02, AR-LEX-C487-MALJA487-03, AR-LEX-C487-MALJA487-04, AR-LEX-C487-MALJA487-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C487-MALJA487-01, AR-LEX-C487-MALJA487-02, AR-LEX-C487-MALJA487-03, AR-LEX-C487-MALJA487-04, AR-LEX-C487-MALJA487-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C487-ghamara, AR-C487-jarafa, AR-C487-ihtama, AR-C487-lajaa, AR-C487-malja]
+---
+
+# Floods and shelter — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C487-MALJA487-01, AR-LEX-C487-MALJA487-02] -->
+
+[PAUSE 3s] Say the Arabic for to submerge and to sweep away.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C487-MALJA487-01, AR-LEX-C487-MALJA487-02, AR-LEX-C487-MALJA487-03, AR-LEX-C487-MALJA487-04, AR-LEX-C487-MALJA487-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to submerge, to sweep away, to take shelter, to seek refuge, a shelter]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C487-MALJA487-01, AR-LEX-C487-MALJA487-02, AR-LEX-C487-MALJA487-03, AR-LEX-C487-MALJA487-04, AR-LEX-C487-MALJA487-05] -->
+
+[PAUSE 3s] To submerge? (**غمر**, *ghamara*.) To sweep away? (**جرف**, *jarafa*.) To take shelter? (**احتمى**, *iḥtamā*.) To seek refuge? (**لجأ**, *lajaʾa*.) A shelter? (**ملجأ**, *maljaʾ*.)

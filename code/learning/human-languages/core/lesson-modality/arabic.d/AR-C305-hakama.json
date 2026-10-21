@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C305-hakama",
+    "language": "arabic",
+    "chapter": 305,
+    "sequence": 17650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01e162a9b3776d49"
+  },
+  "findings": []
+}

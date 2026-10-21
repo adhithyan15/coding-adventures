@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-400-KULLAMA400",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "AR-EXT-400-KULLAMA400"
+  ],
+  "after": []
+}

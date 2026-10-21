@@ -1,0 +1,11 @@
+{
+  "id": "AR-C316-fada",
+  "pathSegment": "AR-PATH-316-KARITHA316",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-316-KARITHA316",
+      "order": 1
+    }
+  ]
+}

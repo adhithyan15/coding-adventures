@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 344,
+  "title": "In the fairy tale",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fc2aa7c8dce48a93",
+  "lessons": [
+    {
+      "id": "AR-C344-hattab",
+      "sequence": 19610,
+      "title": "حطاب (ḥaṭṭāb) — a woodcutter",
+      "headword": "حطاب",
+      "romanization": "ḥaṭṭāb",
+      "gloss": "a woodcutter",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af946f46d47d00f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a coincidence, then the Arabic for to take a risk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حطاب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حطاب — ḥaṭṭāb — \"a woodcutter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان في الغابة حطاب فقير. kāna fī al-ghāba ḥaṭṭāb faqīr. There was a poor woodcutter in the forest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حطاب (ḥaṭṭāb) is built on the native Arabic root ḥ-ṭ-b (Lane), where ḥaṭab is firewood. The faʿʿāl pattern names the trade: \"the firewood man\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaṭṭāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaṭṭāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaṭṭāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaṭṭāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna fī al-ghāba ḥaṭṭāb faqīr. — There was a poor woodcutter in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna fī al-ghāba ḥaṭṭāb faqīr.* — There was a poor woodcutter in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a coincidence, then the Arabic for to take a risk, then say ḥaṭṭāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a coincidence, then the Arabic for to take a risk, then say *ḥaṭṭāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حطاب (ḥaṭṭāb) mean? (\"A woodcutter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C344-sahara",
+      "sequence": 19620,
+      "title": "سحر (saḥara) — to enchant, to bewitch",
+      "headword": "سحر",
+      "romanization": "saḥara",
+      "gloss": "to enchant, to bewitch",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c1f465817bc3219",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to take a risk, then the Arabic for a woodcutter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سحر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سحر — saḥara — \"to enchant, to bewitch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سحرت الموسيقى الجمهور. saḥarat al-mūsīqā al-jumhūr. The music enchanted the audience."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسحر, yasḥar."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun سحر (saḥara), siḥr, magic, is spelled the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سحر (saḥara) is built on the native Arabic root s-ḥ-r (Lane), \"to enchant\"; siḥr is magic, and saḥar, the time before dawn, is spelled the same."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saḥarat al-mūsīqā al-jumhūr. — The music enchanted the audience.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saḥarat al-mūsīqā al-jumhūr.* — The music enchanted the audience.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to take a risk, then the Arabic for a woodcutter, then say saḥara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to take a risk, then the Arabic for a woodcutter, then say *saḥara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سحر (saḥara) mean? (\"To enchant, to bewitch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C344-tahawwala",
+      "sequence": 19630,
+      "title": "تحول (taḥawwala) — to turn into, to change",
+      "headword": "تحول",
+      "romanization": "taḥawwala",
+      "gloss": "to turn into, to change",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f0d8df78416fdfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a woodcutter, then the Arabic for to enchant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تحول",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحول — taḥawwala — \"to turn into, to change\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تحول الضفدع إلى أمير. taḥawwala aḍ-ḍifdaʿ ilā amīr. The frog turned into a prince."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتحول, yataḥawwal."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes إلى: تحول (taḥawwala) إلى."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحول (taḥawwala) is built on the native Arabic root ḥ-w-l (Lane), \"to change, to shift\", the root of ḥāl, a state. It is Form V, \"to change oneself\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥawwala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥawwala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥawwala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥawwala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥawwala aḍ-ḍifdaʿ ilā amīr. — The frog turned into a prince.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥawwala aḍ-ḍifdaʿ ilā amīr.* — The frog turned into a prince.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a woodcutter, then the Arabic for to enchant, then say taḥawwala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a woodcutter, then the Arabic for to enchant, then say *taḥawwala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تحول (taḥawwala) mean? (\"To turn into, to change\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C344-tahaqqaqa",
+      "sequence": 19640,
+      "title": "تحقق (taḥaqqaqa) — to come true; to make sure",
+      "headword": "تحقق",
+      "romanization": "taḥaqqaqa",
+      "gloss": "to come true; to make sure",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75b2d1fee8a4358f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to enchant, then the Arabic for to turn into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تحقق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحقق — taḥaqqaqa — \"to come true; to make sure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تحققت أمنية البنت الصغيرة. taḥaqqaqat umniyyat al-bint aṣ-ṣaghīra. The little girl’s wish came true."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتحقق, yataḥaqqaq."
+            },
+            {
+              "kind": "speech",
+              "text": "تحقق (taḥaqqaqa) من: to check: تحقق (taḥaqqaqa) من الموعد."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحقق (taḥaqqaqa) is built on the native Arabic root ḥ-q-q (Lane), the root of ḥaqq, truth. It is Form V, \"to become true\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥaqqaqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥaqqaqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥaqqaqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥaqqaqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥaqqaqat umniyyat al-bint aṣ-ṣaghīra. — The little girl’s wish came true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥaqqaqat umniyyat al-bint aṣ-ṣaghīra.* — The little girl’s wish came true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to enchant, then the Arabic for to turn into, then say taḥaqqaqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to enchant, then the Arabic for to turn into, then say *taḥaqqaqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تحقق (taḥaqqaqa) mean? (\"To come true; to make sure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C344-intaqama",
+      "sequence": 19650,
+      "title": "انتقم (intaqama) — to take revenge",
+      "headword": "انتقم",
+      "romanization": "intaqama",
+      "gloss": "to take revenge",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:025bb9765ec85bd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to turn into, then the Arabic for to come true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انتقم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انتقم — intaqama — \"to take revenge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انتقم البطل من الساحر الشرير. intaqama al-baṭal min as-sāḥir ash-shirrīr. The hero took revenge on the wicked magician."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينتقم, yantaqim."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من: انتقم (intaqama) من."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انتقم (intaqama) is built on the native Arabic root n-q-m (Lane), \"to take vengeance, to punish\". It is Form VIII, \"to punish for oneself\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intaqama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intaqama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intaqama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intaqama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intaqama al-baṭal min as-sāḥir ash-shirrīr. — The hero took revenge on the wicked magician.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intaqama al-baṭal min as-sāḥir ash-shirrīr.* — The hero took revenge on the wicked magician.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to turn into, then the Arabic for to come true, then say intaqama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to turn into, then the Arabic for to come true, then say *intaqama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انتقم (intaqama) mean? (\"To take revenge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

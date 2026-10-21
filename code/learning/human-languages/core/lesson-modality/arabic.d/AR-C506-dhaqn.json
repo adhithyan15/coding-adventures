@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C506-dhaqn",
+    "language": "arabic",
+    "chapter": 506,
+    "sequence": 28150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf8e4184ce5cc3de"
+  },
+  "findings": []
+}

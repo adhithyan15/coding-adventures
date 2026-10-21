@@ -1,0 +1,11 @@
+{
+  "id": "AR-C452-hawala",
+  "pathSegment": "AR-PATH-452-FAR452",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-452-FAR452",
+      "order": 2
+    }
+  ]
+}

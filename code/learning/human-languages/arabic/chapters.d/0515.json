@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Lying down and getting up",
+  "label": "ch:ar-lying-down-and-getting-up",
+  "canDo": "I can say that someone snored, relaxed, lay down or got up, and talk about fainting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C515-ighma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can say that someone snored, relaxed, lay down or got up, and talk about fainting.",
+    "assesses": [
+      "AR-LEX-C515-NAWM515-03",
+      "AR-LEX-C515-NAWM515-04",
+      "AR-LEX-C515-NAWM515-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C298-ihtaraqa",
+  "pathSegment": "AR-PATH-298-HARIQ298",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-298-HARIQ298",
+      "order": 3
+    }
+  ]
+}

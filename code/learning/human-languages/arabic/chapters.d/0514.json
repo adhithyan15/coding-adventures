@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Worn out",
+  "label": "ch:ar-worn-out",
+  "canDo": "I can talk about insomnia and exhaustion, and say that work wore me out, that someone yawned or dozed off.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C514-ghafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about insomnia and exhaustion, and say that work wore me out, that someone yawned or dozed off.",
+    "assesses": [
+      "AR-LEX-C514-TAAB514-03",
+      "AR-LEX-C514-TAAB514-04",
+      "AR-LEX-C514-TAAB514-05"
+    ]
+  }
+}

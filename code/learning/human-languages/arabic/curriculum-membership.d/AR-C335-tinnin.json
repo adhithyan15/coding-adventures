@@ -1,0 +1,11 @@
+{
+  "id": "AR-C335-tinnin",
+  "pathSegment": "AR-PATH-335-SIHR335",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-335-SIHR335",
+      "order": 2
+    }
+  ]
+}

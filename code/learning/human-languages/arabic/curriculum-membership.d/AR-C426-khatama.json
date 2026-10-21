@@ -1,0 +1,11 @@
+{
+  "id": "AR-C426-khatama",
+  "pathSegment": "AR-PATH-426-JAMARIK426",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-426-JAMARIK426",
+      "order": 2
+    }
+  ]
+}

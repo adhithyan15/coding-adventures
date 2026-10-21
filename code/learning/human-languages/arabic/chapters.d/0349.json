@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "For the first time",
+  "label": "ch:ar-for-the-first-time",
+  "canDo": "I can say for the first time, by mistake, the day before yesterday, someday and right after.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C349-aqiba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say for the first time, by mistake, the day before yesterday, someday and right after.",
+    "assesses": [
+      "AR-LEX-C349-MARRA349-03",
+      "AR-LEX-C349-MARRA349-04",
+      "AR-LEX-C349-MARRA349-05"
+    ]
+  }
+}

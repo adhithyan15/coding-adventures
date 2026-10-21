@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:359d0faa09ce7aae",
+  "lessonIds": [
+    "AR-C299-fi-hadhihi-al-athna",
+    "AR-C299-fima-bad",
+    "AR-C299-fi-al-yawm-at-tali",
+    "AR-C299-dhakara-mention",
+    "AR-C299-naqala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch299.txt",
+  "json": "arabic/narration/ch299.json",
+  "textHash": "fnv1a64:94e4eab2b46e0ac8",
+  "jsonHash": "fnv1a64:7e478e81e3233bd6",
+  "findings": []
+}

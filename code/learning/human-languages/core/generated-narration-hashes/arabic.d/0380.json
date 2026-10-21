@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:55fcaca61541d4f6",
+  "lessonIds": [
+    "AR-C380-adala",
+    "AR-C380-musawah",
+    "AR-C380-zalim",
+    "AR-C380-adil",
+    "AR-C380-istahaqqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch380.txt",
+  "json": "arabic/narration/ch380.json",
+  "textHash": "fnv1a64:6907ec7bdf7881a1",
+  "jsonHash": "fnv1a64:3994218c1f5354c4",
+  "findings": []
+}

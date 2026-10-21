@@ -1,0 +1,11 @@
+{
+  "id": "AR-C342-laqab",
+  "pathSegment": "AR-PATH-342-TURATH342",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-342-TURATH342",
+      "order": 3
+    }
+  ]
+}

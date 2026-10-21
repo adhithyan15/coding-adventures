@@ -1,0 +1,11 @@
+{
+  "id": "AR-C488-hazina",
+  "pathSegment": "AR-PATH-488-MAZAJ488",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-488-MAZAJ488",
+      "order": 3
+    }
+  ]
+}

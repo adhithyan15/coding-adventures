@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:e92969633a0909d7",
+  "lessonIds": [
+    "AR-C350-nashir",
+    "AR-C350-taba",
+    "AR-C350-nuskha",
+    "AR-C350-manshur",
+    "AR-C350-mulhaq"
+  ],
+  "tex": "arabic/book/chapters/ch350-publishing.tex"
+}

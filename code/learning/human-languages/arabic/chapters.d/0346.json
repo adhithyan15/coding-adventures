@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Spies and suspects",
+  "label": "ch:ar-spies-and-suspects",
+  "canDo": "I can say to spy, to disguise oneself, to suspect, to sneak in and to chase.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C346-tarada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can say to spy, to disguise oneself, to suspect, to sneak in and to chase.",
+    "assesses": [
+      "AR-LEX-C346-JASUS346-03",
+      "AR-LEX-C346-JASUS346-04",
+      "AR-LEX-C346-JASUS346-05"
+    ]
+  }
+}

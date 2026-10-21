@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C431-murur",
+    "language": "arabic",
+    "chapter": 431,
+    "sequence": 24230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:06634cc9083e9517"
+  },
+  "findings": []
+}

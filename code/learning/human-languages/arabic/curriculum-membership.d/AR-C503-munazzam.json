@@ -1,0 +1,11 @@
+{
+  "id": "AR-C503-munazzam",
+  "pathSegment": "AR-PATH-503-TABA503",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-503-TABA503",
+      "order": 3
+    }
+  ]
+}

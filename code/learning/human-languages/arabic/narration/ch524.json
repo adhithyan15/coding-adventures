@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 524,
+  "title": "Talks, turns and headquarters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ba99828a439bde55",
+  "lessons": [
+    {
+      "id": "AR-C524-fawada",
+      "sequence": 29040,
+      "title": "فاوض (fāwaḍa) — to hold talks (with); to negotiate",
+      "headword": "فاوض",
+      "romanization": "fāwaḍa",
+      "gloss": "to hold talks (with); to negotiate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6704dfab8e5cd1ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an evaluation, then the Arabic for production."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فاوض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فاوض — fāwaḍa — \"to hold talks (with); to negotiate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "فاوض العمال المدير على الأجر. fāwaḍa al-ʿummāl al-mudīr ʿalā al-ajr. The workers negotiated their pay with the manager."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفاوض, yufāwiḍ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على for the matter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فاوض (fāwaḍa) is built on the native Arabic root f-w-ḍ, \"to entrust, to share in\" (Lane). Form III fāwaḍa is to talk a matter through with someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāwaḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāwaḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāwaḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāwaḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāwaḍa al-ʿummāl al-mudīr ʿalā al-ajr. — The workers negotiated their pay with the manager.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāwaḍa al-ʿummāl al-mudīr ʿalā al-ajr.* — The workers negotiated their pay with the manager.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an evaluation, then the Arabic for production, then say fāwaḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an evaluation, then the Arabic for production, then say *fāwaḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فاوض (fāwaḍa) mean? (\"To hold talks (with); to negotiate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C524-ijtahada",
+      "sequence": 29050,
+      "title": "اجتهد (ijtahada) — to work hard, to strive",
+      "headword": "اجتهد",
+      "romanization": "ijtahada",
+      "gloss": "to work hard, to strive",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53b5d1a87304ed72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for production, then the Arabic for to hold talks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اجتهد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجتهد — ijtahada — \"to work hard, to strive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اجتهد الطالب ونجح في الامتحان. ijtahada aṭ-ṭālib wa-najaḥa fī al-imtiḥān. The student worked hard and passed the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يجتهد, yajtahid."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اجتهد (ijtahada) is built on the native Arabic root j-h-d, \"to strive, to exert oneself\" (Lane). Mujtahid, hard-working, which you know, is its participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijtahada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijtahada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijtahada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijtahada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijtahada aṭ-ṭālib wa-najaḥa fī al-imtiḥān. — The student worked hard and passed the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijtahada aṭ-ṭālib wa-najaḥa fī al-imtiḥān.* — The student worked hard and passed the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for production, then the Arabic for to hold talks, then say ijtahada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for production, then the Arabic for to hold talks, then say *ijtahada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اجتهد (ijtahada) mean? (\"To work hard, to strive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C524-nawaba",
+      "sequence": 29060,
+      "title": "ناوب (nāwaba) — to be on duty; to take turns",
+      "headword": "ناوب",
+      "romanization": "nāwaba",
+      "gloss": "to be on duty; to take turns",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c27fddd04daa56e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to hold talks, then the Arabic for to work hard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ناوب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناوب — nāwaba — \"to be on duty; to take turns\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يناوب الطبيب في المستشفى مرة كل أسبوع. yunāwibu aṭ-ṭabīb fī al-mustashfā marra kull usbūʿ. The doctor is on duty at the hospital once a week."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يناوب, yunāwib."
+            },
+            {
+              "kind": "speech",
+              "text": "Munāwaba, a shift, is its verbal noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ناوب (nāwaba) is built on the native Arabic root n-w-b, \"to come in turn\" (Lane). Form III nāwaba is to take one's turn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāwaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāwaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāwaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāwaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yunāwibu aṭ-ṭabīb fī al-mustashfā marra kull usbūʿ. — The doctor is on duty at the hospital once a week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yunāwibu aṭ-ṭabīb fī al-mustashfā marra kull usbūʿ.* — The doctor is on duty at the hospital once a week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to hold talks, then the Arabic for to work hard, then say nāwaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to hold talks, then the Arabic for to work hard, then say *nāwaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ناوب (nāwaba) mean? (\"To be on duty; to take turns\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C524-taraqqa",
+      "sequence": 29070,
+      "title": "ترقى (taraqqā) — to be promoted",
+      "headword": "ترقى",
+      "romanization": "taraqqā",
+      "gloss": "to be promoted",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb3402fda399e475",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to work hard, then the Arabic for to be on duty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ترقى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترقى — taraqqā — \"to be promoted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ترقى خالي في الشركة بسرعة. taraqqā khālī fī ash-sharika bi-surʿa. My uncle was promoted quickly in the company."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يترقى, yataraqqā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترقى (taraqqā) is built on the native Arabic root r-q-y, \"to go up, to climb\" (Lane). Form V taraqqā is to rise step by step."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraqqā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraqqā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraqqā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraqqā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraqqā khālī fī ash-sharika bi-surʿa. — My uncle was promoted quickly in the company.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraqqā khālī fī ash-sharika bi-surʿa.* — My uncle was promoted quickly in the company.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to work hard, then the Arabic for to be on duty, then say taraqqā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to work hard, then the Arabic for to be on duty, then say *taraqqā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ترقى (taraqqā) mean? (\"To be promoted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C524-maqarr",
+      "sequence": 29080,
+      "title": "مقر (maqarr) — headquarters, a base",
+      "headword": "مقر",
+      "romanization": "maqarr",
+      "gloss": "headquarters, a base",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66e65d671cab7541",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be on duty, then the Arabic for to be promoted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مقر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقر — maqarr — \"headquarters, a base\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مقر الشركة في وسط المدينة. maqarr ash-sharika fī wasaṭ al-madīna. The company's headquarters is in the city centre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقر (maqarr) is built on the native Arabic root q-r-r, \"to settle, to stay firm\" (Lane). A maqarr is a place where a thing settles."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqarr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqarr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqarr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqarr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maqarr ash-sharika fī wasaṭ al-madīna. — The company's headquarters is in the city centre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maqarr ash-sharika fī wasaṭ al-madīna.* — The company's headquarters is in the city centre.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be on duty, then the Arabic for to be promoted, then say maqarr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be on duty, then the Arabic for to be promoted, then say *maqarr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مقر (maqarr) mean? (\"Headquarters, a base\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

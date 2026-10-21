@@ -1,0 +1,11 @@
+{
+  "id": "AR-C534-ihtiram",
+  "pathSegment": "AR-PATH-534-NASIHA534",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-534-NASIHA534",
+      "order": 3
+    }
+  ]
+}

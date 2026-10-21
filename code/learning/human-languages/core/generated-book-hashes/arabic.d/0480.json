@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:1dc4fbfeb3bd770a",
+  "lessonIds": [
+    "AR-C480-nashra-jawwiyya",
+    "AR-C480-daraja",
+    "AR-C480-irtafaa",
+    "AR-C480-inkhafada",
+    "AR-C480-mutadil"
+  ],
+  "tex": "arabic/book/chapters/ch480-the-forecast.tex"
+}

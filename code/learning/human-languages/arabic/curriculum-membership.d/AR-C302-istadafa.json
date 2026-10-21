@@ -1,0 +1,11 @@
+{
+  "id": "AR-C302-istadafa",
+  "pathSegment": "AR-PATH-302-HIWAR302",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-302-HIWAR302",
+      "order": 3
+    }
+  ]
+}

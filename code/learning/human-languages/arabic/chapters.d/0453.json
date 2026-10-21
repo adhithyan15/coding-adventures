@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Paying up",
+  "label": "ch:ar-paying-up",
+  "canDo": "I can say an instalment, in cash, a cash machine, to get back and a meter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C453-addad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can say an instalment, in cash, a cash machine, to get back and a meter.",
+    "assesses": [
+      "AR-LEX-C453-QIST453-03",
+      "AR-LEX-C453-QIST453-04",
+      "AR-LEX-C453-QIST453-05"
+    ]
+  }
+}

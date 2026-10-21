@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:7fb08dbd1ffe7811",
+  "lessonIds": [
+    "AR-C424-aqlaa",
+    "AR-C424-habata",
+    "AR-C424-iqla",
+    "AR-C424-hizam-aman",
+    "AR-C424-taqam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch424.txt",
+  "json": "arabic/narration/ch424.json",
+  "textHash": "fnv1a64:f9c5fc04f3e4a8f6",
+  "jsonHash": "fnv1a64:3510086f04ff1f7b",
+  "findings": []
+}

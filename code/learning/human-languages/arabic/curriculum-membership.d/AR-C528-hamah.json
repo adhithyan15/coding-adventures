@@ -1,0 +1,11 @@
+{
+  "id": "AR-C528-hamah",
+  "pathSegment": "AR-PATH-528-ZAWAJ528",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-528-ZAWAJ528",
+      "order": 2
+    }
+  ]
+}

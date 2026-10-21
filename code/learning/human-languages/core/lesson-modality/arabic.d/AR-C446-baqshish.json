@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C446-baqshish",
+    "language": "arabic",
+    "chapter": 446,
+    "sequence": 24970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2922e28635a57ee2"
+  },
+  "findings": []
+}

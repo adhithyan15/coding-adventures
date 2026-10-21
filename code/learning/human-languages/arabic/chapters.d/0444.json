@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Power and light",
+  "label": "ch:ar-power-and-light",
+  "canDo": "I can say electricity, to heat up, to be cut off, an adapter and to light up.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C444-anara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can say electricity, to heat up, to be cut off, an adapter and to light up.",
+    "assesses": [
+      "AR-LEX-C444-KAHRABA444-03",
+      "AR-LEX-C444-KAHRABA444-04",
+      "AR-LEX-C444-KAHRABA444-05"
+    ]
+  }
+}

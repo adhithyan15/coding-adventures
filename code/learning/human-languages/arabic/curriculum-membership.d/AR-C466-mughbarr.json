@@ -1,0 +1,11 @@
+{
+  "id": "AR-C466-mughbarr",
+  "pathSegment": "AR-PATH-466-GHUBAR466",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-466-GHUBAR466",
+      "order": 1
+    }
+  ]
+}

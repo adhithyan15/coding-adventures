@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Meanwhile",
+  "label": "ch:ar-meanwhile",
+  "canDo": "I can say meanwhile, later on, the next day, to mention and to pass on.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C299-naqala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say meanwhile, later on, the next day, to mention and to pass on.",
+    "assesses": [
+      "AR-LEX-C299-ATHNA299-03",
+      "AR-LEX-C299-ATHNA299-04",
+      "AR-LEX-C299-ATHNA299-05"
+    ]
+  }
+}

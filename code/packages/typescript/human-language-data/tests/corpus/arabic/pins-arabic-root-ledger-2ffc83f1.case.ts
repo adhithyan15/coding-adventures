@@ -36,10 +36,28 @@ it("pins Arabic's root ledger", () => {
     // grammar lessons reuse roots the track already had (k-w-n, r-a-y, s-a-l
     // twice, w-ṣ-l, dh-h-b, ṭ-y-r, j-r-b, w-j-b, s-b-b), which is where the new
     // payoffs come from. RE-MEASURED against the tree, not derived.
-    roots: 944,
-    underspent: 915,
-    neverSpent: 694,
-    payoffDistribution: { "0": 694, "1": 166, "2": 55, "3": 19, "4": 8, "6": 1, "8": 1 },
-    underspentPercent: 97,
+    //
+    // The B1 vocabulary (chapters 293-552, 1,300 headwords) adds 448 roots and
+    // donor slugs, 944 -> 1392. It reuses the track's existing slug wherever a
+    // root already had one (jamaa-gather, zahara-appear, ithnayn, ayn-f-w,
+    // sawad-black, h-w-l ...), so B1 words on old roots turn once-spent roots
+    // into payoffs: never-spent rises only 694 -> 804, while the share of
+    // underspent roots falls 97% -> 89%. RE-MEASURED against the tree.
+    roots: 1392,
+    underspent: 1240,
+    neverSpent: 804,
+    payoffDistribution: {
+      "0": 804,
+      "1": 299,
+      "2": 137,
+      "3": 79,
+      "4": 36,
+      "5": 18,
+      "6": 10,
+      "7": 4,
+      "8": 2,
+      "9": 3,
+    },
+    underspentPercent: 89,
   });
 });

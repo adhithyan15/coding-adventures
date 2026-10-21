@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C496-tahammasa",
+    "language": "arabic",
+    "chapter": 496,
+    "sequence": 27620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6c75f7a6e6c63ba"
+  },
+  "findings": []
+}

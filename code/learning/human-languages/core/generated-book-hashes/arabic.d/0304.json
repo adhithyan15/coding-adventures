@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:3fe8b7bf79dfdb7d",
+  "lessonIds": [
+    "AR-C304-zaman",
+    "AR-C304-mundhu-zaman-tawil",
+    "AR-C304-hiqba",
+    "AR-C304-anadhak",
+    "AR-C304-ahd"
+  ],
+  "tex": "arabic/book/chapters/ch304-long-ago.tex"
+}

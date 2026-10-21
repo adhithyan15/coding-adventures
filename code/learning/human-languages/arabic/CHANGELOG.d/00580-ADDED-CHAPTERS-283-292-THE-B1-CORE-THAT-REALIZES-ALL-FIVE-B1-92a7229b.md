@@ -45,3 +45,4 @@
   1383 -> 1428; the root ledger 941 -> 944 roots; Arabic leaves the A2 reach
   list and joins the tracks whose reach is above A2 (attained stays A2 until
   the B1 vocabulary lands).
+- Chapter 292's payoff is its review, AR-R292-would-and-depends, which assesses all five of the chapter's atoms (the condition word, *yaʿtamidu ʿalā*, *ʿalā ḥasab*, *law* and *layta*). The six-line writing task, AR-W292-sitta-sutur, closes the chapter after it.

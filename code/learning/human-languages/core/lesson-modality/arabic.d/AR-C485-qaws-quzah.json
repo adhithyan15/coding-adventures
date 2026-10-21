@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C485-qaws-quzah",
+    "language": "arabic",
+    "chapter": 485,
+    "sequence": 26980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21d1cff1f7dbe7cb"
+  },
+  "findings": []
+}

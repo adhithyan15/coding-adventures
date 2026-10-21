@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:5394584315b1d459",
+  "lessonIds": [
+    "AR-C363-nazariyya",
+    "AR-C363-fardiyya",
+    "AR-C363-mafhum",
+    "AR-C363-zahira",
+    "AR-C363-fassara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch363.txt",
+  "json": "arabic/narration/ch363.json",
+  "textHash": "fnv1a64:f42b1f137c4770de",
+  "jsonHash": "fnv1a64:6d7e5eadb485fbd9",
+  "findings": []
+}

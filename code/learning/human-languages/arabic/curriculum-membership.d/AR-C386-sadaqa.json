@@ -1,0 +1,11 @@
+{
+  "id": "AR-C386-sadaqa",
+  "pathSegment": "AR-PATH-386-TAAWUN386",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-386-TAAWUN386",
+      "order": 2
+    }
+  ]
+}

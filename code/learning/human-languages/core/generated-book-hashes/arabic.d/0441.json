@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:38cf408112df5180",
+  "lessonIds": [
+    "AR-C441-istiqbal",
+    "AR-C441-nazil",
+    "AR-C441-iqama",
+    "AR-C441-ghadara",
+    "AR-C441-akhla"
+  ],
+  "tex": "arabic/book/chapters/ch441-at-reception.tex"
+}

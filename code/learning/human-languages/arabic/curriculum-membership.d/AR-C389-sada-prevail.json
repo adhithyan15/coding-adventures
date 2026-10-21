@@ -1,0 +1,11 @@
+{
+  "id": "AR-C389-sada-prevail",
+  "pathSegment": "AR-PATH-389-NUFUDH389",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-389-NUFUDH389",
+      "order": 1
+    }
+  ]
+}

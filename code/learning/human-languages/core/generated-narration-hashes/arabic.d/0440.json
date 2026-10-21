@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:2e477fc476f5480f",
+  "lessonIds": [
+    "AR-C440-nafura",
+    "AR-C440-tidhkar",
+    "AR-C440-istiraha",
+    "AR-C440-rafaqa",
+    "AR-C440-awsala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch440.txt",
+  "json": "arabic/narration/ch440.json",
+  "textHash": "fnv1a64:29c12a741dbb9212",
+  "jsonHash": "fnv1a64:cc942b67caf73084",
+  "findings": []
+}

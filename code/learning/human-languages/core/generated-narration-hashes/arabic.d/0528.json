@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:34b3547b2a22da1b",
+  "lessonIds": [
+    "AR-C528-khatib",
+    "AR-C528-zawaj",
+    "AR-C528-hamah",
+    "AR-C528-azab",
+    "AR-C528-ashiqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch528.txt",
+  "json": "arabic/narration/ch528.json",
+  "textHash": "fnv1a64:c5ebe10fba63438c",
+  "jsonHash": "fnv1a64:7e3deb8df4438560",
+  "findings": []
+}

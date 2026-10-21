@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:c03416f8b5f27d97",
+  "lessonIds": [
+    "AR-C458-daman",
+    "AR-C458-sir",
+    "AR-C458-silaa",
+    "AR-C458-arjaa",
+    "AR-C458-qayada"
+  ],
+  "tex": "arabic/book/chapters/ch458-guarantees-and-swaps.tex"
+}
