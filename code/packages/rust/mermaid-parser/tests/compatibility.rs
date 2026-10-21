@@ -2671,6 +2671,27 @@ fn swimlane_styled_endpoint_markers_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_long_endpoint_markers_preserve_minimum_lengths() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o----> b\nb x-----o c\nc <====> d\nd o=====x e\ne <-...-> f\nf x-....-o g",
+    ).expect("long endpoint-marked links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(),
+        vec![3, 4, 3, 4, 3, 4]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Undirected,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    assert_eq!((diagram.edges[0].start_marker, diagram.edges[0].end_marker),
+        (EdgeMarker::Circle, EdgeMarker::Point));
+    assert_eq!((diagram.edges[5].start_marker, diagram.edges[5].end_marker),
+        (EdgeMarker::Cross, EdgeMarker::Circle));
+}
+
+#[test]
 fn swimlane_minimum_link_lengths_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g\na -----> b ------ c =====> d ====== e -....-> f -....- g",

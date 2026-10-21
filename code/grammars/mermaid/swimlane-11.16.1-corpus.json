@@ -263,6 +263,10 @@
       "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\n  archive[Archive]\nend\ndraft o-.-o review\nreview x-.-> approve\napprove o==x publish\npublish x==> archive"
     },
     {
+      "name": "long-endpoint-markers",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft o----> review\nreview x=====o approve\napprove <-....-> publish"
+    },
+    {
       "name": "minimum-link-lengths",
       "source": "swimlane-beta LR\nsubgraph Review\n  first[One rank]\n  second[Two ranks]\n  third[Three ranks]\n  fourth[Five ranks]\n  fifth[Complete]\nend\nfirst --> second\nsecond ===> third\nthird -...-> fourth\nfourth ------> fifth"
     },
