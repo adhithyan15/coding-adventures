@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadEverything } from "../src/loader.js";
+import { loadLessons, loadTaxonomy } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import { coreVerbConcepts, verbCoverage } from "../src/verbs.js";
 import type { Taxonomy } from "../src/types.js";
@@ -10,6 +10,24 @@ function lesson(id: string, concept: string, language = "spanish") {
       `headword: x\ngloss: x\nconcept_tag: ${concept}\n---\n\n# ${id}\n\n## Warm-up\n\nSay it.\n`,
     language,
   );
+}
+
+/**
+ * The real corpus's verb report, derived at most once per file.
+ *
+ * Both corpus cases below used to call `loadEverything()` and derive the same
+ * report from it. `loadEverything` also reads every curriculum membership owner,
+ * the book corpus and the script tables, none of which `verbCoverage` looks at, so
+ * each case paid about 4 s on a quiet 4-core machine (and timed out at 30 s on a
+ * loaded macOS runner) mostly for inputs it threw away. The report is a pure
+ * function of the lessons and the taxonomy, so this loads exactly those two —
+ * through the same loaders `loadEverything` calls — and derives it once. Both
+ * cases only read it.
+ */
+let realReportOnce: ReturnType<typeof verbCoverage> | undefined;
+function realReport(): ReturnType<typeof verbCoverage> {
+  realReportOnce ??= verbCoverage(loadLessons(), loadTaxonomy());
+  return realReportOnce;
 }
 
 const TAXONOMY = {
@@ -90,8 +108,7 @@ describe("corpus snapshot", () => {
   // were right in isolation and wrong together; the numbers here are re-measured against
   // the merged corpus.
   it("pins the core verb baseline: eighteen tracks, and Spanish has joined", () => {
-    const { lessons, taxonomy } = loadEverything();
-    const report = verbCoverage(lessons, taxonomy);
+    const report = realReport();
 
     expect(report.summary.coreVerbCount).toBe(40);
 
@@ -335,8 +352,7 @@ describe("corpus snapshot", () => {
   });
 
   it("gives every track an explicit authoring list", () => {
-    const { lessons, taxonomy } = loadEverything();
-    const report = verbCoverage(lessons, taxonomy);
+    const report = realReport();
     for (const track of report.tracks) {
       expect(track.covered.length + track.missing.length).toBe(40);
     }

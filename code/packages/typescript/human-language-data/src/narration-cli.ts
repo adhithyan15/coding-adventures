@@ -162,6 +162,23 @@ export interface CorpusNarrationOptions {
 }
 
 /**
+ * The one constructor of `CorpusNarrationOptions`, field by field.
+ *
+ * Every field here reaches `narrationChapters`, so every field must also reach the
+ * narration cache key — a field that changed the narration without changing the key
+ * would be answered from a stale entry. The key is therefore built from these
+ * fields by NAME (see `narrateCorpusByTrack`), never by spreading the object, and
+ * `tests/narration-cache.test.ts` pins this object's exact key set: adding a field
+ * here fails that test until the key learns about it too.
+ */
+export function corpusNarrationOptions(
+  maxLinearisableTableColumns: number,
+  titles: ReadonlyMap<string, string>,
+): CorpusNarrationOptions {
+  return { maxLinearisableTableColumns, titles };
+}
+
+/**
  * `narrationChapters(lessons, options)`, answered track by track from `cache`.
  *
  * Without a cache — every CLI process, every fixture root — `corpusNarration`
@@ -226,7 +243,12 @@ function narrateCorpusByTrack(
       chapters.push(...narrationChapters(own, options));
       continue;
     }
-    const key = cache.key({ language, ...options, lessonKey });
+    const key = cache.key({
+      language,
+      maxLinearisableTableColumns: options.maxLinearisableTableColumns,
+      titles: options.titles,
+      lessonKey,
+    });
     let narrated = cache.read(language, key);
     if (narrated === undefined) {
       narrated = narrationChapters(own, options);
@@ -256,7 +278,7 @@ export function corpusNarration(root = defaultCurriculumRoot()): ChapterNarratio
     cache === undefined ? undefined : (language, key) => lessonKeys.set(language, key),
   );
   const titles = chapterTitles(root);
-  const options = { maxLinearisableTableColumns, titles };
+  const options = corpusNarrationOptions(maxLinearisableTableColumns, titles);
   return cache === undefined
     ? narrationChapters(lessons, options)
     : narrateCorpusByTrack(lessons, options, cache, lessonKeys);

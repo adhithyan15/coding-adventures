@@ -53,7 +53,12 @@ import {
   suiteNarrationCacheOptions,
   type NarrationCacheKeyInput,
 } from "../src/narration-cache.js";
-import { chapterTitles, corpusNarration, policyTableWidth } from "../src/narration-cli.js";
+import {
+  chapterTitles,
+  corpusNarration,
+  corpusNarrationOptions,
+  policyTableWidth,
+} from "../src/narration-cli.js";
 import { narrationChapters } from "../src/narration.js";
 
 const POSIX = typeof process.getuid === "function";
@@ -352,21 +357,56 @@ describe("what the key does not need to name", () => {
   // runtime import graph is walked here and every module in it is checked.
   const srcDir = join(dirname(fileURLToPath(import.meta.url)), "..", "src");
 
+  // Every way a module can pull in another at load time. `import type` and
+  // `export type` are erased, so they are not runtime edges; everything else is
+  // followed, quoted either way.
+  const STATIC_EDGES = [
+    /^import\s+(?!type\b)[^;]*?\bfrom\s+["']([^"']+)["']/gms, // import x from "…"
+    /^export\s+(?!type\b)[^;]*?\bfrom\s+["']([^"']+)["']/gms, // export { x } from "…"
+    /^import\s+["']([^"']+)["']/gm, //                            import "…" (side effect)
+  ];
+
+  // Not followed but refused outright: a dynamic edge is one this walk cannot
+  // resolve, and the rest are the ways a module reads something that is not an
+  // argument — the process (its environment, argv, cwd), the global object, the
+  // clock, chance, or code built from a string. Fail-closed on purpose: a comment
+  // that merely says "process" fails too, and is cheaper to reword than an unseen
+  // input is to find.
+  const BANNED: readonly [string, RegExp][] = [
+    ["dynamic import()", /\bimport\s*\(/],
+    ["require()", /\brequire\s*\(/],
+    ["process", /\bprocess\b/],
+    ["globalThis", /\bglobalThis\b/],
+    ["Date", /\bDate\b/],
+    ["Math.random", /\bMath\.random\b/],
+    ["performance", /\bperformance\b/],
+    ["eval()", /\beval\s*\(/],
+    ["new Function", /\bnew\s+Function\b/],
+  ];
+
   function runtimeGraph(entry: string): Map<string, string> {
     const seen = new Map<string, string>();
     const visit = (file: string): void => {
       if (seen.has(file)) return;
       const source = readFileSync(join(srcDir, file), "utf8");
       seen.set(file, source);
-      // `import type` is erased, so it is not a runtime edge.
-      for (const match of source.matchAll(/^import\s+(?!type\b)[^;]*?from\s+"([^"]+)"/gms)) {
-        const specifier = match[1]!;
-        if (specifier.startsWith("./")) visit(specifier.slice(2).replace(/\.js$/, ".ts"));
-        else seen.set(`<external ${specifier}>`, "");
+      for (const pattern of STATIC_EDGES) {
+        for (const match of source.matchAll(pattern)) {
+          const specifier = match[1]!;
+          if (specifier.startsWith("./")) visit(specifier.slice(2).replace(/\.js$/, ".ts"));
+          else seen.set(`<external ${specifier}>`, "");
+        }
       }
     };
     visit(entry);
     return seen;
+  }
+
+  /** Every banned construct in `graph`, as `"<module>: <what>"`. */
+  function bannedIn(graph: ReadonlyMap<string, string>): string[] {
+    return [...graph].flatMap(([name, source]) =>
+      BANNED.filter(([, pattern]) => pattern.test(source)).map(([what]) => `${name}: ${what}`),
+    );
   }
 
   it("is a narrator that reads no file, environment variable or clock", () => {
@@ -374,10 +414,56 @@ describe("what the key does not need to name", () => {
     expect(graph.size).toBeGreaterThan(5); // The walk found the real graph.
     const external = [...graph.keys()].filter((name) => name.startsWith("<external"));
     expect(external).toEqual([]);
-    const impure = [...graph]
-      .filter(([, source]) => /\bprocess\.env\b|\bDate\.now\(|\bnew Date\(|\bMath\.random\(/.test(source))
-      .map(([name]) => name);
-    expect(impure).toEqual([]);
+    expect(bannedIn(graph)).toEqual([]);
+  });
+
+  it("would see every kind of edge and every banned read (the walk itself, tested)", () => {
+    const probe = (source: string): string[] =>
+      bannedIn(new Map([["probe.ts", source]])).map((line) => line.slice("probe.ts: ".length));
+    const edges = (source: string): string[] =>
+      STATIC_EDGES.flatMap((pattern) => [...source.matchAll(pattern)].map((match) => match[1]!));
+    expect(
+      edges(
+        [
+          'import { a } from "./a.js";',
+          "import b, {\n  c,\n} from './b.js';",
+          'import type { T } from "./type-only.js";',
+          'export { d } from "./d.js";',
+          'export * from "node:fs";',
+          'export type { U } from "./type-only-too.js";',
+          'import "./side-effect.js";',
+        ].join("\n"),
+      ),
+    ).toEqual(["./a.js", "./b.js", "./d.js", "node:fs", "./side-effect.js"]);
+    expect(probe('const m = await import("./x.js");')).toEqual(["dynamic import()"]);
+    expect(probe('const fs = require("node:fs");')).toEqual(["require()"]);
+    expect(probe("const home = process.env.HOME;")).toEqual(["process"]);
+    expect(probe("const g = globalThis;")).toEqual(["globalThis"]);
+    expect(probe("const now = Date();")).toEqual(["Date"]);
+    expect(probe("const t = Date.now();")).toEqual(["Date"]);
+    expect(probe("const r = Math.random();")).toEqual(["Math.random"]);
+    expect(probe("const f = new Function('return 1');")).toEqual(["new Function"]);
+    expect(probe("const pure = (x: number) => x + 1;")).toEqual([]);
+  });
+
+  it("names every narration option in the key", () => {
+    // `corpusNarrationOptions` is the only constructor of the options that reach
+    // `narrationChapters`, and `narrateCorpusByTrack` copies them into the key by
+    // name. If a field is ever added there, this fails until the key — and this
+    // list — learn about it.
+    expect(Object.keys(corpusNarrationOptions(3, new Map())).sort()).toEqual([
+      "maxLinearisableTableColumns",
+      "titles",
+    ]);
+    const keyed: (keyof NarrationCacheKeyInput)[] = [
+      "language",
+      "lessonKey",
+      "maxLinearisableTableColumns",
+      "titles",
+    ];
+    for (const option of Object.keys(corpusNarrationOptions(3, new Map()))) {
+      expect(keyed).toContain(option);
+    }
   });
 });
 
