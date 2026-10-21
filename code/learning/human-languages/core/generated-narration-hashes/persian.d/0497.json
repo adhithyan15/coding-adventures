@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:57be867edfe2e4ab",
+  "lessonIds": [
+    "FA-C497-ketf",
+    "FA-C497-mafsal",
+    "FA-C497-naf",
+    "FA-C497-sotun-e-faqarat",
+    "FA-C497-jomjome"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch497.txt",
+  "json": "persian/narration/ch497.json",
+  "textHash": "fnv1a64:e6d5c8379b2ab88a",
+  "jsonHash": "fnv1a64:90c0a424d65687c9",
+  "findings": []
+}

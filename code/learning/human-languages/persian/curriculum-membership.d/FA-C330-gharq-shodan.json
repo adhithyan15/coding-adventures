@@ -1,0 +1,11 @@
+{
+  "id": "FA-C330-gharq-shodan",
+  "pathSegment": "FA-PATH-330-TUFAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-330-TUFAN",
+      "order": 1
+    }
+  ]
+}

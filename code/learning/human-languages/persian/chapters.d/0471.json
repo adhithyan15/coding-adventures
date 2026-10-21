@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Fishing and blossom",
+  "label": "ch:fa-fishing-and-blossom",
+  "canDo": "I can talk about hunting, fishing and spring: hunting, fishing, catching fish, blossom and flowers opening.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C471-shekoftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about hunting, fishing and spring: hunting, fishing, catching fish, blossom and flowers opening.",
+    "assesses": [
+      "FA-LEX-C471-SHEKAR-03",
+      "FA-LEX-C471-SHEKAR-04",
+      "FA-LEX-C471-SHEKAR-05"
+    ]
+  }
+}

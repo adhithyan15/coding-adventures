@@ -763,6 +763,16 @@ cross-certificate mixing gap between selection and authentication for the one
 implemented algorithm, but does not add algorithm routing, construct or
 validate a complete path, recognize trust, process constraints or revocation,
 or provide TLS, HTTP, OAuth transport, or network authority.
+Certificate-wide role policy can now bind caller-owned critical-extension
+recognition and algorithm-independent role semantics to the same exact decoded
+certificate. The non-copyable result prevents checking critical extensions on
+one certificate while embedding role evidence from another, and unknown
+critical extensions fail before role acceptance. Binding-sensitive downstream
+APIs must consume that outer result rather than detached lower-level role
+evidence. Recognition still is not semantic validation of other critical
+extensions, and this composition adds no algorithm routing, signature,
+complete path, trust, time, identity, revocation, TLS, HTTP, OAuth transport,
+or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

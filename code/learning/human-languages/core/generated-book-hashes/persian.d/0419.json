@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:8546136d8af3170d",
+  "lessonIds": [
+    "FA-C419-harim-e-khosusi",
+    "FA-C419-hak-kardan",
+    "FA-C419-virus",
+    "FA-C419-be-eshterak-gozashtan",
+    "FA-C419-hush-e-masnui",
+    "FA-R419-review-416-419",
+    "FA-R419-review-final-419"
+  ],
+  "tex": "persian/book/chapters/ch419-staying-safe-online.tex"
+}

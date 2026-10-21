@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C337-qabr",
+    "language": "persian",
+    "chapter": 337,
+    "sequence": 17230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7da7d05da84a8e17"
+  },
+  "findings": []
+}

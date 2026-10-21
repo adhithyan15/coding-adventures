@@ -1,0 +1,11 @@
+{
+  "id": "FA-C433-bar-bastan",
+  "pathSegment": "FA-PATH-433-SAK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-433-SAK",
+      "order": 1
+    }
+  ]
+}

@@ -152,6 +152,7 @@ mod tests {
             language: "mccarthy-lisp".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 

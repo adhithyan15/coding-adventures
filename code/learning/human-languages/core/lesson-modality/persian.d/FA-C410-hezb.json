@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C410-hezb",
+    "language": "persian",
+    "chapter": 410,
+    "sequence": 20960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55d2857058bc4324"
+  },
+  "findings": []
+}

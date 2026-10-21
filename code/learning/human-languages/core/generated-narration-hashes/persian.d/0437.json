@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:8e4fe323cf3dd9ac",
+  "lessonIds": [
+    "FA-C437-mosaferkhane",
+    "FA-C437-eqamatgah",
+    "FA-C437-pansiyon",
+    "FA-C437-suit",
+    "FA-C437-eqamat-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch437.txt",
+  "json": "persian/narration/ch437.json",
+  "textHash": "fnv1a64:be2e76fa26ceed8c",
+  "jsonHash": "fnv1a64:053bfd3f7621a833",
+  "findings": []
+}

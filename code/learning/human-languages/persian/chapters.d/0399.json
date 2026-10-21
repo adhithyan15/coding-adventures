@@ -1,0 +1,19 @@
+{
+  "chapter": 399,
+  "title": "Entrance exams",
+  "label": "ch:fa-entrance-exams",
+  "canDo": "I can talk about the entrance exam and other tests, say that someone passed or failed, and give a grade average.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-R399-review-392-399",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can talk about the entrance exam and other tests, say that someone passed or failed, and give a grade average.",
+    "assesses": [
+      "FA-LEX-C399-KONKUR-03",
+      "FA-LEX-C399-KONKUR-04",
+      "FA-LEX-C399-KONKUR-05"
+    ]
+  }
+}

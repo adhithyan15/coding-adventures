@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:43f089772c3716f6",
+  "lessonIds": [
+    "FA-C508-khoshnevisi",
+    "FA-C508-golduzi",
+    "FA-C508-qollab-bafi",
+    "FA-C508-kardasti",
+    "FA-C508-sofal"
+  ],
+  "tex": "persian/book/chapters/ch508-crafts.tex"
+}

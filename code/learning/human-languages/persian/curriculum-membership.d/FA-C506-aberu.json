@@ -1,0 +1,11 @@
+{
+  "id": "FA-C506-aberu",
+  "pathSegment": "FA-PATH-506-TIES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-506-TIES",
+      "order": 4
+    }
+  ]
+}

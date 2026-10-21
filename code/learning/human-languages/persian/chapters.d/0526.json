@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Art and Design",
+  "label": "ch:fa-art-and-design",
+  "canDo": "I can talk about art, architecture and design.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C526-khalq-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can talk about art, architecture and design.",
+    "assesses": [
+      "FA-LEX-C526-ART-03",
+      "FA-LEX-C526-ART-04",
+      "FA-LEX-C526-ART-05"
+    ]
+  }
+}

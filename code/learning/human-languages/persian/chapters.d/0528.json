@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "Books",
+  "label": "ch:fa-books",
+  "canDo": "I can talk about books and the people who make them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C528-motarjem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can talk about books and the people who make them.",
+    "assesses": [
+      "FA-LEX-C528-BOOKS-03",
+      "FA-LEX-C528-BOOKS-04",
+      "FA-LEX-C528-BOOKS-05"
+    ]
+  }
+}

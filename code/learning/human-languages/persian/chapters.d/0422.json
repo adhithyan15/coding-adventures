@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Under the bonnet",
+  "label": "ch:fa-under-the-bonnet",
+  "canDo": "I can talk about what is under the bonnet: the engine, the oil, starting the car and a car that stalls.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C422-khamush-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can talk about what is under the bonnet: the engine, the oil, starting the car and a car that stalls.",
+    "assesses": [
+      "FA-LEX-C422-KAPUT-03",
+      "FA-LEX-C422-KAPUT-04",
+      "FA-LEX-C422-KAPUT-05"
+    ]
+  }
+}

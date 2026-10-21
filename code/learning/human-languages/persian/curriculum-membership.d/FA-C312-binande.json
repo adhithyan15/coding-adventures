@@ -1,0 +1,11 @@
+{
+  "id": "FA-C312-binande",
+  "pathSegment": "FA-PATH-312-MONTASHER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-312-MONTASHER",
+      "order": 3
+    }
+  ]
+}

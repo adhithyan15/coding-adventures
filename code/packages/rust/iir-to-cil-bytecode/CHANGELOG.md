@@ -1,5 +1,10 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
 ## Unreleased — a void entry's `ret_void` returns an `int32` (LANG84 4a)
 
 - **Fix: `ret_void` in the entry method.** `emit_il` always gives the entry

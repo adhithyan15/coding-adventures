@@ -1,0 +1,11 @@
+{
+  "id": "FA-C436-langar-andakhtan",
+  "pathSegment": "FA-PATH-436-ESKELE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-436-ESKELE",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C473-daraje",
+  "pathSegment": "FA-PATH-473-HAVASHENASI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-473-HAVASHENASI",
+      "order": 2
+    }
+  ]
+}

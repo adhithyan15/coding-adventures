@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-525-PAINTING",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about painting.",
+  "prerequisites": []
+}

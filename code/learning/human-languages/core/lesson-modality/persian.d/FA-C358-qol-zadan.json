@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C358-qol-zadan",
+    "language": "persian",
+    "chapter": 358,
+    "sequence": 18290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68017369387dfd4c"
+  },
+  "findings": []
+}

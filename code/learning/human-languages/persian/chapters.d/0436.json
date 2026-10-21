@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "By boat",
+  "label": "ch:fa-by-boat",
+  "canDo": "I can talk about travelling by sea: the pier, the captain, the deck, a dhow and dropping anchor.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C436-langar-andakhtan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about travelling by sea: the pier, the captain, the deck, a dhow and dropping anchor.",
+    "assesses": [
+      "FA-LEX-C436-ESKELE-03",
+      "FA-LEX-C436-ESKELE-04",
+      "FA-LEX-C436-ESKELE-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:8537bb3a727c5208",
+  "lessonIds": [
+    "FA-C405-qanuni",
+    "FA-C405-gheyr-e-qanuni",
+    "FA-C405-takhallof",
+    "FA-C405-mojazat",
+    "FA-C405-mojavvez"
+  ],
+  "tex": "persian/book/chapters/ch405-legal-or-not.tex"
+}

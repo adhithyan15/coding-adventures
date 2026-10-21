@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-349-KHIYANAT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-349-KHIYANAT"
+  ],
+  "after": []
+}

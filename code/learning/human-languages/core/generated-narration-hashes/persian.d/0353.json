@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:0485f7f455d05b4a",
+  "lessonIds": [
+    "FA-C353-dowran",
+    "FA-C353-sade",
+    "FA-C353-movarrekh",
+    "FA-C353-niyakan",
+    "FA-C353-miras"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch353.txt",
+  "json": "persian/narration/ch353.json",
+  "textHash": "fnv1a64:5f64b777f47e9319",
+  "jsonHash": "fnv1a64:51c2a98a53624e70",
+  "findings": []
+}

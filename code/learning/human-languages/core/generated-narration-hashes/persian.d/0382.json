@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:33eda5c2e1b7e3d5",
+  "lessonIds": [
+    "FA-C382-prozhe",
+    "FA-C382-modiriyyat-kardan",
+    "FA-C382-barname-rizi-kardan",
+    "FA-C382-sazman",
+    "FA-C382-herfei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch382.txt",
+  "json": "persian/narration/ch382.json",
+  "textHash": "fnv1a64:685cd65f45fb24f8",
+  "jsonHash": "fnv1a64:cc114f98675571a0",
+  "findings": []
+}

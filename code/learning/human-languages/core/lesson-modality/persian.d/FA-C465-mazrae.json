@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C465-mazrae",
+    "language": "persian",
+    "chapter": 465,
+    "sequence": 23800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af1a2bdd46772ce8"
+  },
+  "findings": []
+}

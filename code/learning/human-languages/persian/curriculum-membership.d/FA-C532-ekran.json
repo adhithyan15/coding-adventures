@@ -1,0 +1,11 @@
+{
+  "id": "FA-C532-ekran",
+  "pathSegment": "FA-PATH-532-WATCHING",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-532-WATCHING",
+      "order": 0
+    }
+  ]
+}

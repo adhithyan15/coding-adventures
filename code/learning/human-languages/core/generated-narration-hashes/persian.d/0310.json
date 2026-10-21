@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:86734e01d3578c47",
+  "lessonIds": [
+    "FA-C310-takzib-kardan",
+    "FA-C310-tayid-kardan",
+    "FA-C310-peygiri-kardan",
+    "FA-C310-khabar-dadan",
+    "FA-C310-ettela-dadan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch310.txt",
+  "json": "persian/narration/ch310.json",
+  "textHash": "fnv1a64:e74adac1c1a4a376",
+  "jsonHash": "fnv1a64:9f2459ab45ca35f5",
+  "findings": []
+}

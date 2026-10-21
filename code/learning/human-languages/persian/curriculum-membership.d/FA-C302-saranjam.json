@@ -1,0 +1,11 @@
+{
+  "id": "FA-C302-saranjam",
+  "pathSegment": "FA-PATH-302-AGHAZ",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-302-AGHAZ",
+      "order": 4
+    }
+  ]
+}

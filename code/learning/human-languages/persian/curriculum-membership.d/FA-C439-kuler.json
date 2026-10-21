@@ -1,0 +1,11 @@
+{
+  "id": "FA-C439-kuler",
+  "pathSegment": "FA-PATH-439-MALAFE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-439-MALAFE",
+      "order": 2
+    }
+  ]
+}

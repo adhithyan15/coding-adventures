@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Paying",
+  "label": "ch:fa-paying",
+  "canDo": "I can pay in different ways: the card machine, a card-to-card transfer, credit, small change and the exchange office.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C461-sarrafi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can pay in different ways: the card machine, a card-to-card transfer, credit, small change and the exchange office.",
+    "assesses": [
+      "FA-LEX-C461-KARTKHAN-03",
+      "FA-LEX-C461-KARTKHAN-04",
+      "FA-LEX-C461-KARTKHAN-05"
+    ]
+  }
+}

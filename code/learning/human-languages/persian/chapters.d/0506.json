@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Family Ties",
+  "label": "ch:fa-family-ties",
+  "canDo": "I can talk about family likeness and keeping in touch.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C506-aberu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about family likeness and keeping in touch.",
+    "assesses": [
+      "FA-LEX-C506-TIES-03",
+      "FA-LEX-C506-TIES-04",
+      "FA-LEX-C506-TIES-05"
+    ]
+  }
+}

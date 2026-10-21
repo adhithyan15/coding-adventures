@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:d0ac2eb64cde21ee",
+  "lessonIds": [
+    "FA-C456-peyk",
+    "FA-C456-sanduq-e-post",
+    "FA-C456-simkart",
+    "FA-C456-bongah",
+    "FA-C456-tamas-gereftan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch456.txt",
+  "json": "persian/narration/ch456.json",
+  "textHash": "fnv1a64:e6a381e1fd0e6ff3",
+  "jsonHash": "fnv1a64:79bd8ce5eda18094",
+  "findings": []
+}

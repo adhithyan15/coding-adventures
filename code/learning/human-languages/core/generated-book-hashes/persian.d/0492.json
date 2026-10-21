@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:399b29981051b086",
+  "lessonIds": [
+    "FA-C492-halat-e-tahavvo",
+    "FA-C492-estefragh-kardan",
+    "FA-C492-ghash-kardan",
+    "FA-C492-zaf-kardan",
+    "FA-C492-araq-kardan"
+  ],
+  "tex": "persian/book/chapters/ch492-feeling-unwell.tex"
+}

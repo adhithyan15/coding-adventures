@@ -1,0 +1,11 @@
+{
+  "id": "FA-C320-sarnakh",
+  "pathSegment": "FA-PATH-320-KARAGAH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-320-KARAGAH",
+      "order": 1
+    }
+  ]
+}

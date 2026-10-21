@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:a606cbfbb53dbe17",
+  "lessonIds": [
+    "FA-C532-ekran",
+    "FA-C532-kontorol",
+    "FA-C532-safhe-ye-namayesh",
+    "FA-C532-padkast",
+    "FA-C532-hedfon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch532.txt",
+  "json": "persian/narration/ch532.json",
+  "textHash": "fnv1a64:60bca5e5a45d953a",
+  "jsonHash": "fnv1a64:54077ccbcababdd7",
+  "findings": []
+}

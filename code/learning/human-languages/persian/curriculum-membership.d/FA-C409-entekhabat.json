@@ -1,0 +1,11 @@
+{
+  "id": "FA-C409-entekhabat",
+  "pathSegment": "FA-PATH-409-HOKUMAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-409-HOKUMAT",
+      "order": 2
+    }
+  ]
+}

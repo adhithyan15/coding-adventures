@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:d2229876ebcc8479",
+  "lessonIds": [
+    "FA-C409-hokumat",
+    "FA-C409-siyasat",
+    "FA-C409-entekhabat",
+    "FA-C409-ray-dadan",
+    "FA-C409-majles"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch409.txt",
+  "json": "persian/narration/ch409.json",
+  "textHash": "fnv1a64:ef4a5a7a1eeef038",
+  "jsonHash": "fnv1a64:3ea2c7b407019224",
+  "findings": []
+}

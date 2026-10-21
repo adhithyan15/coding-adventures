@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-538-APPLIANCES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about renting and household appliances.",
+  "prerequisites": []
+}

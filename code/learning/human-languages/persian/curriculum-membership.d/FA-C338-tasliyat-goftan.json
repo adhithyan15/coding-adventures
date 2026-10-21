@@ -1,0 +1,11 @@
+{
+  "id": "FA-C338-tasliyat-goftan",
+  "pathSegment": "FA-PATH-338-KHATM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-338-KHATM",
+      "order": 2
+    }
+  ]
+}

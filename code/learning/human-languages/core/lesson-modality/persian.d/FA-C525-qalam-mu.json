@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C525-qalam-mu",
+    "language": "persian",
+    "chapter": 525,
+    "sequence": 26920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d812c56985d386f4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C460-otaq-e-porov",
+  "pathSegment": "FA-PATH-460-VITRIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-460-VITRIN",
+      "order": 3
+    }
+  ]
+}

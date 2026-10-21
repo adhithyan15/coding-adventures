@@ -1801,8 +1801,10 @@ function truncateShortTitle(title: string, budget: number = SHORT_TITLE_MAX_COLU
 }
 
 /**
- * The contents line for one lesson: the headword in its own script, with its
- * romanization beside it -- `கண் (kaṇ)`.
+ * The contents line for one lesson: normally the headword in its own script,
+ * with its romanization beside it -- `கண் (kaṇ)`. A listening-speaking lesson
+ * uses only the romanization because its spelling is intentionally still
+ * hidden from the learner.
  *
  * A contents page is where a reader first meets a book's words, and a line
  * that shows only the romanization hides the script the book teaches; one
@@ -1828,11 +1830,6 @@ function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptionsIn
   }
   const headword = clean(lesson.realization.headword);
   const romanization = clean(stringValue(lesson.frontmatter.romanization));
-  const paired =
-    options !== undefined &&
-    romanization !== "" &&
-    romanization !== headword &&
-    !headword.startsWith("(");
   // The short title is also the PDF bookmark. A bookmark cannot hold a font
   // command such as `\ta{...}`, and not every preamble maps its script
   // commands away inside PDF strings (Persian, Russian and Urdu warned once per
@@ -1843,6 +1840,18 @@ function sectionShortTitle(lesson: ParsedLesson, options?: InlineRenderOptionsIn
     const plain = renderInlineMarkdown(title);
     return page === plain ? page : `\\texorpdfstring{${page}}{${plain}}`;
   };
+  // An oral-only lesson deliberately teaches the sound before the spelling.
+  // Its canonical script headword still belongs in corpus metadata, but
+  // printing it in the contents or running head would silently break that
+  // assessment boundary before the learner reaches the lesson body.
+  if (lesson.realization.type === "listening-speaking" && romanization !== "") {
+    return bookmarked(truncateShortTitle(romanization));
+  }
+  const paired =
+    options !== undefined &&
+    romanization !== "" &&
+    romanization !== headword &&
+    !headword.startsWith("(");
   if (!paired) return bookmarked(truncateShortTitle(headword));
   // ` (` and `)` cost three columns between them.
   const whole = `${headword} (${romanization})`;

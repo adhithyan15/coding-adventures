@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-324-HADESE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe an accident: an incident, a crash, two vehicles colliding and a vehicle overturning.",
+  "prerequisites": []
+}

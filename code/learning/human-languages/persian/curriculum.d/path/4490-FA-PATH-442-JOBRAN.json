@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-442-JOBRAN",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-442-JOBRAN"
+  ],
+  "after": []
+}

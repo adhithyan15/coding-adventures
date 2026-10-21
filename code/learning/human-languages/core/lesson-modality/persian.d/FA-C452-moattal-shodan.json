@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C452-moattal-shodan",
+    "language": "persian",
+    "chapter": 452,
+    "sequence": 23160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dcd26e834d7ffda"
+  },
+  "findings": []
+}

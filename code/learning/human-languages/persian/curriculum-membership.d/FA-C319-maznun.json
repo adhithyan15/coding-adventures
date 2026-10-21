@@ -1,0 +1,11 @@
+{
+  "id": "FA-C319-maznun",
+  "pathSegment": "FA-PATH-319-MAMUR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-319-MAMUR",
+      "order": 2
+    }
+  ]
+}

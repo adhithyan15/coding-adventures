@@ -1,0 +1,11 @@
+{
+  "id": "FA-C421-ayene-baghal",
+  "pathSegment": "FA-PATH-421-BUGH",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-421-BUGH",
+      "order": 4
+    }
+  ]
+}

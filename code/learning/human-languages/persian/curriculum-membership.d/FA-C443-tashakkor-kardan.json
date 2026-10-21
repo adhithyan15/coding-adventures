@@ -1,0 +1,11 @@
+{
+  "id": "FA-C443-tashakkor-kardan",
+  "pathSegment": "FA-PATH-443-ANAM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-443-ANAM",
+      "order": 4
+    }
+  ]
+}

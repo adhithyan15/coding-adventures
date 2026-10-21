@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C413-nerkh",
+    "language": "persian",
+    "chapter": 413,
+    "sequence": 21150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2de244e198b4f0c5"
+  },
+  "findings": []
+}

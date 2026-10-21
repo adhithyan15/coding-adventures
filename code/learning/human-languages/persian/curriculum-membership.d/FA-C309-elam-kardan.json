@@ -1,0 +1,11 @@
+{
+  "id": "FA-C309-elam-kardan",
+  "pathSegment": "FA-PATH-309-SOKHANGU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-309-SOKHANGU",
+      "order": 3
+    }
+  ]
+}

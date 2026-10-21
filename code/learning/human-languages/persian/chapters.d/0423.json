@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Filling up",
+  "label": "ch:fa-filling-up",
+  "canDo": "I can fill up the car: the petrol station, filling up, the tank, running out and the car wash.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C423-karvash",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can fill up the car: the petrol station, filling up, the tank, running out and the car wash.",
+    "assesses": [
+      "FA-LEX-C423-BENZIN-03",
+      "FA-LEX-C423-BENZIN-04",
+      "FA-LEX-C423-BENZIN-05"
+    ]
+  }
+}

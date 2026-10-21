@@ -574,6 +574,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 

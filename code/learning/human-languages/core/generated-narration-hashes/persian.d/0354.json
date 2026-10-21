@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:d86cf786c2389f9d",
+  "lessonIds": [
+    "FA-C354-kashf-kardan",
+    "FA-C354-ekhtera-kardan",
+    "FA-C354-tasis-kardan",
+    "FA-C354-katibe",
+    "FA-C354-virane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch354.txt",
+  "json": "persian/narration/ch354.json",
+  "textHash": "fnv1a64:04d636b28f53fe83",
+  "jsonHash": "fnv1a64:60e1e16b0cda1596",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C450-borj",
+  "pathSegment": "FA-PATH-450-MARKAZ",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-450-MARKAZ",
+      "order": 2
+    }
+  ]
+}

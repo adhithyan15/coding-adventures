@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C418-sakht-afzar",
+    "language": "persian",
+    "chapter": 418,
+    "sequence": 21380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89ad9298d31c9ec4"
+  },
+  "findings": []
+}

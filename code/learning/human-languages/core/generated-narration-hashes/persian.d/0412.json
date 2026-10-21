@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:538205eecd3bdd16",
+  "lessonIds": [
+    "FA-C412-sarmaye",
+    "FA-C412-sarmaye-gozari-kardan",
+    "FA-C412-saham",
+    "FA-C412-burs",
+    "FA-C412-varshekaste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch412.txt",
+  "json": "persian/narration/ch412.json",
+  "textHash": "fnv1a64:55b39fcae8c84bad",
+  "jsonHash": "fnv1a64:a9186bf9bf42fa8c",
+  "findings": []
+}

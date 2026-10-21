@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:f9ec692036725e80",
+  "lessonIds": [
+    "FA-C525-naqqash",
+    "FA-C525-bum",
+    "FA-C525-qalam-mu",
+    "FA-C525-abrang",
+    "FA-C525-galeri"
+  ],
+  "tex": "persian/book/chapters/ch525-painting.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-319-MAMUR",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "FA-EXT-319-MAMUR"
+  ],
+  "after": []
+}

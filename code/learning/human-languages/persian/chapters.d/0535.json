@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "A Cosy Home",
+  "label": "ch:fa-a-cosy-home",
+  "canDo": "I can describe a cosy home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-R535-review-528-535",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can describe a cosy home.",
+    "assesses": [
+      "FA-LEX-C535-COSY-03",
+      "FA-LEX-C535-COSY-04",
+      "FA-LEX-C535-COSY-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:30a3ae683ff3b426",
+  "lessonIds": [
+    "FA-C369-ellat",
+    "FA-C369-amel",
+    "FA-C369-baes-shodan",
+    "FA-C369-sabab-shodan",
+    "FA-C369-be-ellat-e"
+  ],
+  "tex": "persian/book/chapters/ch369-causes.tex"
+}

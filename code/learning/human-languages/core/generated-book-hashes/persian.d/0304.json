@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:1e7bfe37a0ed9359",
+  "lessonIds": [
+    "FA-C304-dar-an-zaman",
+    "FA-C304-qadim",
+    "FA-C304-badha",
+    "FA-C304-az-an-pas",
+    "FA-C304-akhiran"
+  ],
+  "tex": "persian/book/chapters/ch304-back-then-and-since.tex"
+}

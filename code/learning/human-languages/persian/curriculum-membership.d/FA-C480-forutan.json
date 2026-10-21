@@ -1,0 +1,11 @@
+{
+  "id": "FA-C480-forutan",
+  "pathSegment": "FA-PATH-480-PRIDE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-480-PRIDE",
+      "order": 2
+    }
+  ]
+}

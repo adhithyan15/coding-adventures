@@ -1,0 +1,11 @@
+{
+  "id": "FA-C361-movafeqat-kardan",
+  "pathSegment": "FA-PATH-361-MOVAFEQAT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-361-MOVAFEQAT",
+      "order": 0
+    }
+  ]
+}

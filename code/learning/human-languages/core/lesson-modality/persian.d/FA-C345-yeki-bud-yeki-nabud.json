@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C345-yeki-bud-yeki-nabud",
+    "language": "persian",
+    "chapter": 345,
+    "sequence": 17620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73a4c168c01f81ab"
+  },
+  "findings": []
+}

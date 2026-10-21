@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Sellers",
+  "label": "ch:fa-sellers",
+  "canDo": "I can talk about who sells what: a street vendor, a herb shop, a draper, a wholesaler and a retailer.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C458-khordeforush",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can talk about who sells what: a street vendor, a herb shop, a draper, a wholesaler and a retailer.",
+    "assesses": [
+      "FA-LEX-C458-DASTFORUSH-03",
+      "FA-LEX-C458-DASTFORUSH-04",
+      "FA-LEX-C458-DASTFORUSH-05"
+    ]
+  }
+}

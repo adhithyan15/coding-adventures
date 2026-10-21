@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Owning up",
+  "label": "ch:fa-owning-up",
+  "canDo": "I can say that someone swore, testified, admitted something, gave someone away or was guilty.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C321-gonahkar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can say that someone swore, testified, admitted something, gave someone away or was guilty.",
+    "assesses": [
+      "FA-LEX-C321-QASAM-03",
+      "FA-LEX-C321-QASAM-04",
+      "FA-LEX-C321-QASAM-05"
+    ]
+  }
+}

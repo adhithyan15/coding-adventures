@@ -1,0 +1,11 @@
+{
+  "id": "FA-C399-mardud-shodan",
+  "pathSegment": "FA-PATH-399-KONKUR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-399-KONKUR",
+      "order": 3
+    }
+  ]
+}

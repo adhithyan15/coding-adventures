@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:33ef66f21836e7c6",
+  "lessonIds": [
+    "FA-C380-rezume",
+    "FA-C380-qarardad",
+    "FA-C380-tarfi",
+    "FA-C380-karamuz",
+    "FA-C380-karamuzi"
+  ],
+  "tex": "persian/book/chapters/ch380-applying-for-work.tex"
+}

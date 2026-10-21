@@ -1,0 +1,11 @@
+{
+  "id": "FA-R297-comparing-and-time",
+  "pathSegment": "FA-PATH-297-COMPARE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-297-COMPARE",
+      "order": 4
+    }
+  ]
+}

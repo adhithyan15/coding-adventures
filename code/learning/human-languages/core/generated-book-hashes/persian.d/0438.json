@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:b2eaa4772b8e4a95",
+  "lessonIds": [
+    "FA-C438-tahvil-gereftan",
+    "FA-C438-tasviye-hesab-kardan",
+    "FA-C438-kart-e-shenasayi",
+    "FA-C438-pishpardakht",
+    "FA-C438-gavsanduq"
+  ],
+  "tex": "persian/book/chapters/ch438-checking-in-and-out.tex"
+}

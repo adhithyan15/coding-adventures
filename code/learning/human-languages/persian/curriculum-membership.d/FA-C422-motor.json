@@ -1,0 +1,11 @@
+{
+  "id": "FA-C422-motor",
+  "pathSegment": "FA-PATH-422-KAPUT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-422-KAPUT",
+      "order": 1
+    }
+  ]
+}

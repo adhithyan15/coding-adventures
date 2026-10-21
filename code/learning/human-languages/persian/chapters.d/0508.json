@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Crafts",
+  "label": "ch:fa-crafts",
+  "canDo": "I can talk about crafts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C508-sofal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about crafts.",
+    "assesses": [
+      "FA-LEX-C508-CRAFTS-03",
+      "FA-LEX-C508-CRAFTS-04",
+      "FA-LEX-C508-CRAFTS-05"
+    ]
+  }
+}

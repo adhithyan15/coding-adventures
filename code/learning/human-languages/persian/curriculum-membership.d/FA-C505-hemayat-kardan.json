@@ -1,0 +1,11 @@
+{
+  "id": "FA-C505-hemayat-kardan",
+  "pathSegment": "FA-PATH-505-SUPPORT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-505-SUPPORT",
+      "order": 0
+    }
+  ]
+}

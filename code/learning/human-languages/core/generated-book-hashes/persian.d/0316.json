@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:f3cb1f39d706253c",
+  "lessonIds": [
+    "FA-C316-dozd",
+    "FA-C316-dozdi",
+    "FA-C316-sareq",
+    "FA-C316-jib-bor",
+    "FA-C316-kif-qap"
+  ],
+  "tex": "persian/book/chapters/ch316-thieves.tex"
+}

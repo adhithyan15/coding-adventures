@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Business and competition",
+  "label": "ch:fa-business-and-competition",
+  "canDo": "I can say what a factory produces, talk about its products, its rivals and the competition between them, and mention advertising.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-R383-review-376-383",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can say what a factory produces, talk about its products, its rivals and the competition between them, and mention advertising.",
+    "assesses": [
+      "FA-LEX-C383-TOWLID-03",
+      "FA-LEX-C383-TOWLID-04",
+      "FA-LEX-C383-TOWLID-05"
+    ]
+  }
+}
