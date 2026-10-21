@@ -6365,6 +6365,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((sign(left) * 6) + 6) else ((sign(right) * 9) + 6)) / 3); output(result) end",
         expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - static numerator factors may commute to the left of each
     // sign root while the common-divisor proof still covers the final /3.
@@ -6374,6 +6376,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((6 * sign(left)) + 6) else ((9 * sign(right)) + 6)) / 3); output(result) end",
         expect: Expect::Stdout("5"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
