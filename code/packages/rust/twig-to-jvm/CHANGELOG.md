@@ -2,6 +2,12 @@
 
 All notable changes to this crate are documented here.
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
 ## [0.1.0] — 2026-05-11
 
 ### Added

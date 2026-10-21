@@ -169,6 +169,16 @@
 // is written, the older entries for the same track are deleted, so an edited
 // track replaces its entry rather than accumulating them. `npm ci` deletes
 // `node_modules`, and the cache with it.
+//
+// One store, two caches
+// ---------------------
+// Everything below the key — the private directory, the entry format, the
+// guarded read, the atomic write, the sweep — is `openEntryStore`, and it is
+// not specific to lessons. `src/narration-cache.ts` opens the same store on a
+// sibling directory (`.../human-language-data/narration`) to keep each track's
+// narrated chapters, keyed by THIS cache's key for the track's lessons. So
+// every rule above protects both, and neither has a file-handling path of its
+// own that could drift from the other's.
 
 import { createHash, randomBytes } from "node:crypto";
 import {
@@ -241,6 +251,29 @@ export interface LessonCacheKeyInput {
   language: string;
   script: string | undefined;
   files: readonly LessonSourceFile[];
+}
+
+/**
+ * A validated, private directory of entries, each one an array of `T`.
+ *
+ * This is everything below the key: the directory checks, the entry format,
+ * the guarded read and the atomic write. `LessonCache` is this plus a key over
+ * lesson files; `src/narration-cache.ts` is this plus a key over a track's
+ * lesson key, width and titles. Neither can open a file any other way, so
+ * every rule in the header above holds for both by construction rather than
+ * by two copies agreeing.
+ * Obtain one from `openEntryStore`; there is no way to build it around an
+ * unchecked path.
+ */
+export interface EntryStore<T> {
+  /** The resolved directory every entry lives in. */
+  readonly directory: string;
+  /** The package source digest, computed once when the store was opened. */
+  readonly sourceDigest: string;
+  /** The values stored under `key` for `track`, or `undefined` for any miss. */
+  read(track: string, key: string): T[] | undefined;
+  /** Store `values` under `key`. Never throws; a failed write is just a miss later. */
+  write(track: string, key: string, values: readonly T[]): LessonCacheWrite;
 }
 
 /**
@@ -400,8 +433,17 @@ export type CachePlatform =
   | ({ kind: "posix"; uid: number } & CachePlatformOps)
   | ({ kind: "win32"; defaultDirectory: string } & CachePlatformOps);
 
-/** The platform this process runs on, or `undefined` where neither rule set applies. */
-export function hostCachePlatform(): CachePlatform | undefined {
+/**
+ * The platform this process runs on, or `undefined` where neither rule set applies.
+ *
+ * `defaultDirectory` is the ONE directory Windows will accept. It is a
+ * parameter only so that the narration cache can name its own fixed sibling
+ * (`defaultNarrationCacheDirectory()`); both defaults are computed from this
+ * package's location, and nothing passes anything else outside the tests.
+ */
+export function hostCachePlatform(
+  defaultDirectory: string = defaultLessonCacheDirectory(),
+): CachePlatform | undefined {
   // `?? 0`: Node exposes no O_NOFOLLOW on Windows, and OR-ing `undefined` into
   // a flag word would silently become 0 anyway — this just says so.
   const ops: CachePlatformOps = {
@@ -414,7 +456,7 @@ export function hostCachePlatform(): CachePlatform | undefined {
     return { kind: "posix", uid: process.getuid(), ...ops };
   }
   if (process.platform === "win32") {
-    return { kind: "win32", defaultDirectory: defaultLessonCacheDirectory(), ...ops };
+    return { kind: "win32", defaultDirectory, ...ops };
   }
   return undefined;
 }
@@ -474,6 +516,32 @@ export function openLessonCache(
   directory: string,
   platform: CachePlatform | undefined = hostCachePlatform(),
 ): LessonCache | undefined {
+  const store = openEntryStore<ParsedLesson>(directory, platform);
+  if (store === undefined) return undefined;
+  return {
+    directory: store.directory,
+    key: (input) => lessonCacheKey(input, store.sourceDigest),
+    read: store.read,
+    write: store.write,
+  };
+}
+
+/**
+ * `openLessonCache` without the key: validate `directory` and return a store
+ * whose entries hold arrays of `T`. Every check described above runs here and
+ * only here.
+ *
+ * The type parameter is a promise about what the CALLER wrote, not something
+ * this function can verify: `decodeEntry` checks that a payload is an array
+ * and nothing more. That is sound because an entry is only ever found under a
+ * key its own caller computed: each cache has its own fixed directory, and each
+ * key starts with a format string no other cache uses (`LESSON_CACHE_FORMAT`,
+ * `NARRATION_CACHE_FORMAT`), so even a shared directory could not confuse them.
+ */
+export function openEntryStore<T>(
+  directory: string,
+  platform: CachePlatform | undefined,
+): EntryStore<T> | undefined {
   if (platform === undefined) return undefined;
   // Windows can make no ownership check, so it may use one directory only:
   // the fixed default inside this package's `node_modules`.
@@ -510,9 +578,9 @@ export function openLessonCache(
   }
   return {
     directory: resolved,
-    key: (input) => lessonCacheKey(input, sourceDigest),
-    read: (language, key) => readEntry(resolved, platform, language, key),
-    write: (language, key, lessons) => writeEntry(resolved, platform, language, key, lessons),
+    sourceDigest,
+    read: (track, key) => readEntry<T>(resolved, platform, track, key),
+    write: (track, key, values) => writeEntry(resolved, platform, track, key, values),
   };
 }
 
@@ -561,12 +629,12 @@ function entryName(language: string, key: string): string | undefined {
  * is left exactly where it is: deleting it is not this module's business, and
  * it can never be read anyway.
  */
-function readEntry(
+function readEntry<T>(
   directory: string,
   platform: CachePlatform,
   language: string,
   key: string,
-): ParsedLesson[] | undefined {
+): T[] | undefined {
   const name = entryName(language, key);
   if (name === undefined) return undefined;
   const path = join(directory, name);
@@ -599,13 +667,13 @@ function readEntry(
   } finally {
     closeSync(fd);
   }
-  const lessons = decodeEntry(bytes);
-  if (lessons === undefined) discardOwnFile(directory, name, platform);
-  return lessons;
+  const values = decodeEntry<T>(bytes);
+  if (values === undefined) discardOwnFile(directory, name, platform);
+  return values;
 }
 
 /** Verify the header and digest, then deserialize. `undefined` on any doubt. */
-export function decodeEntry(bytes: Buffer): ParsedLesson[] | undefined {
+export function decodeEntry<T = ParsedLesson>(bytes: Buffer): T[] | undefined {
   if (bytes.length < HEADER_BYTES) return undefined;
   if (!bytes.subarray(0, MAGIC.length).equals(MAGIC)) return undefined;
   const expected = bytes.subarray(MAGIC.length, HEADER_BYTES);
@@ -614,15 +682,15 @@ export function decodeEntry(bytes: Buffer): ParsedLesson[] | undefined {
   if (!actual.equals(expected)) return undefined;
   try {
     const value: unknown = deserialize(payload);
-    return Array.isArray(value) ? (value as ParsedLesson[]) : undefined;
+    return Array.isArray(value) ? (value as T[]) : undefined;
   } catch {
     return undefined;
   }
 }
 
 /** Header + payload for `lessons`. Exported so tests can build exact bytes. */
-export function encodeEntry(lessons: readonly ParsedLesson[]): Buffer {
-  const payload = serialize(lessons);
+export function encodeEntry(values: readonly unknown[]): Buffer {
+  const payload = serialize(values);
   const digest = createHash("sha256").update(payload).digest();
   return Buffer.concat([MAGIC, digest, payload]);
 }
@@ -664,7 +732,7 @@ const RENAME_COLLISION = new Set(["EPERM", "EACCES", "EBUSY"]);
 // ---------------------------------------------------------------------------
 
 /**
- * Write `lessons` under `key`, atomically, then retire the track's older entries.
+ * Write `values` under `key`, atomically, then retire the track's older entries.
  *
  *     1. create  <entry>.<pid>.<random>.tmp   O_CREAT | O_EXCL | O_NOFOLLOW, 0600
  *     2. write   header + payload             (every byte, or abandon)
@@ -681,7 +749,7 @@ function writeEntry(
   platform: CachePlatform,
   language: string,
   key: string,
-  lessons: readonly ParsedLesson[],
+  values: readonly unknown[],
 ): LessonCacheWrite {
   const name = entryName(language, key);
   if (name === undefined) return "not-written";
@@ -694,7 +762,7 @@ function writeEntry(
   // collision — both leave `fd` undefined — and be reported as written.
   let renaming = false;
   try {
-    const bytes = encodeEntry(lessons);
+    const bytes = encodeEntry(values);
     // O_EXCL is the guard that matters on every platform: it maps to
     // CREATE_NEW on Windows, which fails if ANYTHING — file, link, junction —
     // already has the name, so a pre-planted temp name is never opened.

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 25,
-  "sourceHash": "fnv1a64:1a7bc3b29ba8570e",
+  "sourceHash": "fnv1a64:a9de088620cd4e26",
   "lessonIds": [
     "MR-A1F04-first-three-select",
     "MR-A1F05-last-three-select",
@@ -12,7 +12,9 @@
     "MR-A1F10-first-three-delayed",
     "MR-A1F11-last-three-delayed",
     "MR-A1F12-six-field-supported",
-    "MR-A1F13-six-field-independent"
+    "MR-A1F13-six-field-independent",
+    "MR-A1F14-partial-timer",
+    "MR-A1F15-timed-form"
   ],
   "tex": "marathi/book/chapters/ch25-a1-practical-form.tex"
 }

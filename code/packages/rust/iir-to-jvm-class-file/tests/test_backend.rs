@@ -40,6 +40,7 @@ fn module_with(func: IIRFunction) -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
@@ -91,6 +92,7 @@ fn validate_rejects_empty_module() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let errors = validate_for_jvm(&module);
     assert!(!errors.is_empty(), "empty module should produce errors");
@@ -181,6 +183,7 @@ fn validate_accepts_str_on_call_and_ret() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let errors = validate_for_jvm(&module);
     assert!(errors.is_empty(), "str on call/ret must validate; got: {errors:?}");
@@ -249,6 +252,7 @@ fn validate_accepts_f32_type() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let errors = validate_for_jvm(&module);
     assert!(
@@ -387,6 +391,7 @@ fn lower_empty_module_returns_error() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let result = lower_iir_to_jvm(&module, &IIRJvmConfig::default());
     assert!(matches!(result, Err(IIRJvmError::ValidationFailed(_))));
@@ -616,6 +621,7 @@ fn lower_two_functions_two_methods() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let class = lower(&module);
     assert_eq!(class.methods.len(), 2);
@@ -631,6 +637,7 @@ fn lower_two_functions_method_names() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let class = lower(&module);
     assert_eq!(class.methods[0].name, "alpha");
@@ -647,6 +654,7 @@ fn lower_three_functions_three_methods() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let class = lower(&module);
     assert_eq!(class.methods.len(), 3);
@@ -662,6 +670,7 @@ fn lower_multi_fn_all_methods_have_code() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let class = lower(&module);
     for method in &class.methods {
@@ -990,6 +999,7 @@ fn lower_call_same_module_ok() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let result = lower_iir_to_jvm(&module, &IIRJvmConfig::new("CallTest"));
     assert!(result.is_ok(), "call should succeed: {:?}", result.err());
@@ -1015,6 +1025,7 @@ fn bytecode_call_non_empty() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let class = lower_iir_to_jvm(&module, &IIRJvmConfig::new("CallTest")).unwrap();
     // Find the "main" method (index 1)
@@ -1052,6 +1063,7 @@ fn codegen_validate_errors_on_empty_module() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert!(!gen.validate(&empty).is_empty());
 }
@@ -1076,6 +1088,7 @@ fn codegen_generate_method_count() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     let class = gen.generate(&module);
     assert_eq!(class.methods.len(), 3);
@@ -1766,6 +1779,7 @@ fn make_closure_module() -> IIRModule {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     }
 }
 
