@@ -170,7 +170,7 @@ Ranking:
 | 9 | #17854 | Any template literal with a substitution fails the typed parse at SIMPLE/ADVANCED. | Ready |
 | 10 | #17941 | Object method shorthand and async function expressions fail to parse. | Ready |
 | 11 | #17852 | Adjacent class members and reserved-word property names fail to parse. | Ready |
-| 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Ready after #1 (the owner may still overrule F12's decisions) |
+| 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Decision — phase 1 waits for the owner to confirm F12's *Decisions* section |
 | 13 | #17884 | Support Annex B HTML-like comments (`<!--` and line-leading `-->`) instead of refusing them. Coordinate with #17914, another session's fix for the `-->` test262 regression. | Ready after #17914 merges |
 | 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (private class elements) merged as #17876; find and ship the remaining upstream refusals. | Ready |
 
@@ -231,11 +231,10 @@ migration trial). Each one starts with a survey PR that splits it into issues.
 
 ### Decisions needed from the owner
 
-None blocking. On 2026-10-22, while restarting the loop, Claude settled F12's
+F12 phases 1–4 (row 12). On 2026-10-22, while restarting the loop, Claude settled F12's
 four open questions using the spec's own recommendations. The owner had not
-answered them; the spec's *Decisions* section records this. The owner can
-overrule any of them before F12 phase 1 starts. Phase 0 does not depend on
-them.
+answered them; the spec's *Decisions* section records this. Phase 1 waits until the
+owner confirms them. Phase 0 does not depend on them.
 
 ### Filler (only while waiting on CI)
 

@@ -224,7 +224,7 @@ These were open questions when the spec was proposed. On 2026-10-22, Claude
 settled them provisionally while restarting the Closure loop, using the
 spec's own recommendations. The owner has not reviewed them. They follow the
 owner's standing direction to match Closure's observable behavior (CCR-075).
-The owner can overrule any of them before phase 1 starts.
+Phase 1 does not start until the owner confirms or changes them.
 
 1. **Keep the F10 guess as the first guess.** The parser corrects it by
    re-lexing. Always scanning `/` as division, as Closure does, is simpler,
