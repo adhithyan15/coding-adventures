@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:56ab362357b5879a",
+  "lessonIds": [
+    "GU-C198-patiyu",
+    "GU-C198-sucna",
+    "GU-C198-jaherat",
+    "GU-C198-manai",
+    "GU-C198-jokham"
+  ],
+  "tex": "gujarati/book/chapters/ch198-signs-in-the-street.tex"
+}

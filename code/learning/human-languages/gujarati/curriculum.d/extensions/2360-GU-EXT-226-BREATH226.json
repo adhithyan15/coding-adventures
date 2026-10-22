@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-226-BREATH226",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I am shivering or out of breath and ask about swallowing.",
+  "prerequisites": []
+}

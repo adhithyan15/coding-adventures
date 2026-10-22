@@ -1,0 +1,11 @@
+{
+  "id": "GU-C250-sacavvu",
+  "pathSegment": "GU-PATH-250-COMPUTER250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-250-COMPUTER250",
+      "order": 3
+    }
+  ]
+}

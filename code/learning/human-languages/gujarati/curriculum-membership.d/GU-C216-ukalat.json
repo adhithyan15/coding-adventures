@@ -1,0 +1,11 @@
+{
+  "id": "GU-C216-ukalat",
+  "pathSegment": "GU-PATH-216-HEAT216",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-216-HEAT216",
+      "order": 1
+    }
+  ]
+}

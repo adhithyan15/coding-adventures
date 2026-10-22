@@ -294,3 +294,14 @@ acceptance.
 Native table cell automation names use the authored row-header label, including
 reactive list/index labels for virtual windows. GridItem row indices remain local
 to the realized table. Tables without row headers use one-based local names.
+
+### Projection work diagnostics
+
+With `MOSAIC_PROFILE_PATH` set before startup, generated components with row
+projections expose `MosaicProjectionCounts` as `(Reads, Created, Reused, Removed)`.
+Read the cumulative tuple on the UI thread before and after an interaction.
+Nested projections count against the owning component. Replacement counts both
+one creation and one removal; a null source counts every cleared row as removed.
+Disabled counters stay zero. This API performs no I/O and does not depend on the
+Rust host. Counts describe projected view models, not native realized elements;
+they do not by themselves establish performance or accessibility acceptance.

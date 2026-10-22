@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C245-uccarvu",
+    "language": "gujarati",
+    "chapter": 245,
+    "sequence": 13340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f18f6c7d6a76d3c2"
+  },
+  "findings": []
+}

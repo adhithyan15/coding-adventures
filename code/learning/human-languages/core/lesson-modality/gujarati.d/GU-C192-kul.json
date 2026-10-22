@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C192-kul",
+    "language": "gujarati",
+    "chapter": 192,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58e90af1c1912585"
+  },
+  "findings": []
+}

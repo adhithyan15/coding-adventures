@@ -1,0 +1,11 @@
+{
+  "id": "GU-C270-ghamandi",
+  "pathSegment": "GU-PATH-270-NATURE270",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-270-NATURE270",
+      "order": 4
+    }
+  ]
+}

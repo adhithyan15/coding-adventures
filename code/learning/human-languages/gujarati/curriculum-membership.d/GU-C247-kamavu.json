@@ -1,0 +1,11 @@
+{
+  "id": "GU-C247-kamavu",
+  "pathSegment": "GU-PATH-247-LIVING247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-247-LIVING247",
+      "order": 3
+    }
+  ]
+}

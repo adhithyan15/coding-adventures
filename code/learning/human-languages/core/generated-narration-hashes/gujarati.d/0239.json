@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:26306491ac34d2a6",
+  "lessonIds": [
+    "GU-C239-dedko",
+    "GU-C239-kadav",
+    "GU-C239-dubvu",
+    "GU-C239-dankhvu",
+    "GU-C239-chatakvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch239.txt",
+  "json": "gujarati/narration/ch239.json",
+  "textHash": "fnv1a64:9a6538ae8f0c11e4",
+  "jsonHash": "fnv1a64:9e3bf8c4748ea902",
+  "findings": []
+}

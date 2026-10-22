@@ -1,0 +1,11 @@
+{
+  "id": "GU-C148-karyun",
+  "pathSegment": "GU-PATH-148-PAST148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-148-PAST148",
+      "order": 2
+    }
+  ]
+}

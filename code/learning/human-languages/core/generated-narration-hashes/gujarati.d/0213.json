@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:4aaa29adf77226f2",
+  "lessonIds": [
+    "GU-C213-havaman",
+    "GU-C213-tadko",
+    "GU-C213-thandu",
+    "GU-C213-vadalchayu",
+    "GU-C213-varasvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch213.txt",
+  "json": "gujarati/narration/ch213.json",
+  "textHash": "fnv1a64:afc9c315222d6576",
+  "jsonHash": "fnv1a64:d8b3909865823e7b",
+  "findings": []
+}

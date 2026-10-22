@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:0ed952fc78c342f3",
+  "lessonIds": [
+    "GU-C165-umervu",
+    "GU-C165-redvu",
+    "GU-C165-halavvu",
+    "GU-C165-bhelavvu",
+    "GU-C165-ukalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch165.txt",
+  "json": "gujarati/narration/ch165.json",
+  "textHash": "fnv1a64:2861ef8d43cf8cd1",
+  "jsonHash": "fnv1a64:6214126571e8462a",
+  "findings": []
+}

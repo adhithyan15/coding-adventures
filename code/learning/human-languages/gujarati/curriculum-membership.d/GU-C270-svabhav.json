@@ -1,0 +1,11 @@
+{
+  "id": "GU-C270-svabhav",
+  "pathSegment": "GU-PATH-270-NATURE270",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-270-NATURE270",
+      "order": 0
+    }
+  ]
+}

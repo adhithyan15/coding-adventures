@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:59f26dbffaf67f9d",
+  "lessonIds": [
+    "GU-C180-mulakat",
+    "GU-C180-amantran",
+    "GU-C180-rah-jovi",
+    "GU-C180-rokavu",
+    "GU-C180-vitavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch180.txt",
+  "json": "gujarati/narration/ch180.json",
+  "textHash": "fnv1a64:7680d2963d474c56",
+  "jsonHash": "fnv1a64:affcd6f9f6dccd01",
+  "findings": []
+}

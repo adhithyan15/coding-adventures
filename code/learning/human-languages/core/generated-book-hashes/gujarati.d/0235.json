@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:8fc6380cb6707ad2",
+  "lessonIds": [
+    "GU-C235-bhasvu",
+    "GU-C235-karadvu",
+    "GU-C235-palvu",
+    "GU-C235-catvu",
+    "GU-C235-puchdi"
+  ],
+  "tex": "gujarati/book/chapters/ch235-the-dog-that-barked.tex"
+}

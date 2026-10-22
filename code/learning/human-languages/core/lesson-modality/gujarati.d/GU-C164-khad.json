@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C164-khad",
+    "language": "gujarati",
+    "chapter": 164,
+    "sequence": 8970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d0fbb55b50c101c"
+  },
+  "findings": []
+}

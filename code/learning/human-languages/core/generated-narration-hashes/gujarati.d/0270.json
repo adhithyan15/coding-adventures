@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:55fef66a12f42dd5",
+  "lessonIds": [
+    "GU-C270-svabhav",
+    "GU-C270-dayalu",
+    "GU-C270-pramanik",
+    "GU-C270-ramuji",
+    "GU-C270-ghamandi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch270.txt",
+  "json": "gujarati/narration/ch270.json",
+  "textHash": "fnv1a64:5073c795b1b16e98",
+  "jsonHash": "fnv1a64:86e7255f6e927cf2",
+  "findings": []
+}

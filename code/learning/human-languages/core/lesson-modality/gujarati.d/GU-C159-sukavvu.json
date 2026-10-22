@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C159-sukavvu",
+    "language": "gujarati",
+    "chapter": 159,
+    "sequence": 8720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6df25e2bbafce9ca"
+  },
+  "findings": []
+}

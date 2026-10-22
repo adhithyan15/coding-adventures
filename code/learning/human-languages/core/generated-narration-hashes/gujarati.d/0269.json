@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 269,
+  "sourceHash": "fnv1a64:4e10e8eae67190fa",
+  "lessonIds": [
+    "GU-C269-sambhalvu",
+    "GU-C269-uchervu",
+    "GU-C269-vakhanvu",
+    "GU-C269-yad-avvi",
+    "GU-C269-adar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch269.txt",
+  "json": "gujarati/narration/ch269.json",
+  "textHash": "fnv1a64:873f67f19e72cec5",
+  "jsonHash": "fnv1a64:04d95238969ba23a",
+  "findings": []
+}

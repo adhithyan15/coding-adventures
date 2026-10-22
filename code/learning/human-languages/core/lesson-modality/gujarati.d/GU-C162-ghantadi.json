@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C162-ghantadi",
+    "language": "gujarati",
+    "chapter": 162,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad06314613f81354"
+  },
+  "findings": []
+}

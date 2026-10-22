@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "A seat on the railway",
+  "label": "ch:gu-a-seat-on-the-railway",
+  "canDo": "I can say where I sat, who travelled with me and where we got off.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C205-uutarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can say where I sat, who travelled with me and where we got off.",
+    "assesses": [
+      "GU-LEX-C205-RAIL205-03",
+      "GU-LEX-C205-RAIL205-04",
+      "GU-LEX-C205-RAIL205-05"
+    ]
+  }
+}

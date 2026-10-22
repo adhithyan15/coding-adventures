@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Promises, hope and courage",
+  "label": "ch:gu-promises-hope-and-courage",
+  "canDo": "I can talk about promises, invitations and hope, and say what I dare not do.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-R272-review-final-272",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can talk about promises, invitations and hope, and say what I dare not do.",
+    "assesses": [
+      "GU-LEX-C272-PROMISE272-03",
+      "GU-LEX-C272-PROMISE272-04",
+      "GU-LEX-C272-PROMISE272-05"
+    ]
+  }
+}

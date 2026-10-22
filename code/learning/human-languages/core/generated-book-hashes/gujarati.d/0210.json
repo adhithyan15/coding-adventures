@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:9801a0d6d2283b9c",
+  "lessonIds": [
+    "GU-C210-erport",
+    "GU-C210-pasport",
+    "GU-C210-parvano",
+    "GU-C210-ladvu",
+    "GU-C210-uncakvu"
+  ],
+  "tex": "gujarati/book/chapters/ch210-papers-and-baggage.tex"
+}

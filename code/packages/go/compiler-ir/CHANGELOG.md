@@ -3,6 +3,31 @@
 All notable changes to the `compiler-ir` package will be documented in
 this file.
 
+## [Unreleased] — 2026-10-21
+
+### Added
+
+- Add strict BF03 `ValidateCoreProfile`, `ParseCoreProfile`, `PrintCoreProfile`
+  and `CoreIDSequence`, plus distinct inert `IrText` COMMENT operands.
+- Enforce closed25operation roles, canonical ASCII/LF text, numeric/name/tag
+  and allocation bounds, metadata/ordinary ID policy and atomic exhaustion.
+- Consume all50neutral corpus cases with bounded duplicate/Unicode/number/tree
+  admission, independent literal/digest anchors and adversarial mutations.
+- Test nil/pointer/malformed COMMENT errors, owned results, legacy Nib comments,
+  all operand roles, boundary budgets and generated pure outcome behavior.
+
+### Compatibility
+
+- Preserve existing broad Parse/Print, opcodes, mutable Add methods and legacy
+  IDGenerator behavior. Strict rejection does not normalize legacy debug data.
+- No source-map, optimizer, backend/runtime or whole-language qualification.
+
+### Fixed
+
+- Check fixture integers against native bounds before narrowing, and route
+  sequence counts through the same checked conversion. Exercise both native
+  boundaries and rejection of values outside a 32-bit integer domain.
+
 ## [0.1.0] — 2026-04-12
 
 ### Added

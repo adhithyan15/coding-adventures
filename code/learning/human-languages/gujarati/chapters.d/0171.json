@@ -1,0 +1,19 @@
+{
+  "chapter": 171,
+  "title": "Bitter, salty and sweet",
+  "label": "ch:gu-bitter-salty-and-sweet",
+  "canDo": "I can say how food tastes.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C171-galyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 171: I can say how food tastes.",
+    "assesses": [
+      "GU-LEX-C171-TASTE171-03",
+      "GU-LEX-C171-TASTE171-04",
+      "GU-LEX-C171-TASTE171-05"
+    ]
+  }
+}

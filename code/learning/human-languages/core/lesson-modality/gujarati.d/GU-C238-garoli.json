@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C238-garoli",
+    "language": "gujarati",
+    "chapter": 238,
+    "sequence": 12900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ba1243a564ad595"
+  },
+  "findings": []
+}

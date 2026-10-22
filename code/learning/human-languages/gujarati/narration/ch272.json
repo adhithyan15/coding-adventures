@@ -1,0 +1,898 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 272,
+  "title": "Promises, hope and courage",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:4d9f98f964316e07",
+  "lessons": [
+    {
+      "id": "GU-C272-himmat",
+      "sequence": 14690,
+      "title": "હિંમત (himmat) — courage",
+      "headword": "હિંમત",
+      "romanization": "himmat",
+      "gloss": "courage",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce053a5393c3de56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for foolish, then the Gujarati for stubborn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હિંમત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હિંમત — himmat — \"courage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારામાં બોલવાની હિંમત નથી. — mārāmā̃ bolvānī himmat nathī — \"I do not have the courage to speak.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હિંમત (himmat) is a loan from Arabic himma, \"resolve, aspiration\", which reached Gujarati through Persian. Its Arabic root is h-m-m, \"to intend\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himmat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himmat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "himmat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *himmat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārāmā̃ bolvānī himmat nathī — I do not have the courage to speak.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārāmā̃ bolvānī himmat nathī* — I do not have the courage to speak.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for foolish, then the Gujarati for stubborn, then say himmat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for foolish, then the Gujarati for stubborn, then say *himmat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હિંમત (himmat) mean? (\"Courage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C272-vacan",
+      "sequence": 14700,
+      "title": "વચન (vacan) — promise, word",
+      "headword": "વચન",
+      "romanization": "vacan",
+      "gloss": "promise, word",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77fad27744324d74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for stubborn, then the Gujarati for courage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વચન",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વચન — vacan — \"promise, word\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમે વચન આપો છો? — śũ tame vacan āpo cho? — \"Do you promise?\""
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વચન (vacan) is Sanskrit vacaná, \"speaking, statement\", taken over as a tatsama. CDIAL also lists the inherited Gujarati veṇ, \"word, promise\", from the same word (CDIAL 11199)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vacan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vacan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vacan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vacan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tame vacan āpo cho? — Do you promise?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tame vacan āpo cho?* — Do you promise?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for stubborn, then the Gujarati for courage, then say vacan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for stubborn, then the Gujarati for courage, then say *vacan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વચન (vacan) mean? (\"Promise, word\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C272-notarvu",
+      "sequence": 14710,
+      "title": "નોતરવું (notarvũ) — to invite",
+      "headword": "નોતરવું",
+      "romanization": "notarvũ",
+      "gloss": "to invite",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3a72f93421edcf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for courage, then the Gujarati for promise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નોતરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નોતરવું — notarvũ — \"to invite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમે પડોશીને લગ્નમાં નોતર્યા? — śũ tame paḍośīne lagnamā̃ notaryā? — \"Did you invite the neighbours to the wedding?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નોતરવું (notarvũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from nimantrayatē, \"invites\" (CDIAL 7235)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "notarvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *notarvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "notarvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *notarvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tame paḍośīne lagnamā̃ notaryā? — Did you invite the neighbours to the wedding?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tame paḍośīne lagnamā̃ notaryā?* — Did you invite the neighbours to the wedding?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for courage, then the Gujarati for promise, then say notarvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for courage, then the Gujarati for promise, then say *notarvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નોતરવું (notarvũ) mean? (\"To invite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C272-satavvu",
+      "sequence": 14720,
+      "title": "સતાવવું (satāvvũ) — to pester, to bother",
+      "headword": "સતાવવું",
+      "romanization": "satāvvũ",
+      "gloss": "to pester, to bother",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e386c96061786aab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for promise, then the Gujarati for to invite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સતાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સતાવવું — satāvvũ — \"to pester, to bother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારો ભાઈ મને નથી સતાવતો. — māro bhāī mane nathī satāvto — \"My brother does not bother me.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સતાવવું (satāvvũ) is a tadbhava. It comes from Sanskrit saṁtāpayati, \"causes to be heated; torments\"; CDIAL glosses the Gujarati verb \"to tease, vex\" (CDIAL 12886)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māro bhāī mane nathī satāvto — My brother does not bother me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māro bhāī mane nathī satāvto* — My brother does not bother me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for promise, then the Gujarati for to invite, then say satāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for promise, then the Gujarati for to invite, then say *satāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સતાવવું (satāvvũ) mean? (\"To pester, to bother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C272-asha-rakhvi",
+      "sequence": 14730,
+      "title": "આશા રાખવી (āśā rākhvī) — to hope",
+      "headword": "આશા રાખવી",
+      "romanization": "āśā rākhvī",
+      "gloss": "to hope",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4020247c4afb1454",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to invite, then the Gujarati for to pester."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: આશા રાખવી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આશા રાખવી — āśā rākhvī — \"to hope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું આશા રાખું છું કે તમે આવશો. — hũ āśā rākhũ chũ ke tame āvśo — \"I hope that you will come.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આશા રાખવી (āśā rākhvī), to keep a hope, is built from āśā, Sanskrit āśā́, \"hope\", taken over as a tatsama (EtymDB; CDIAL 7278 cites it), and the taught verb rākhvũ, \"to keep\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśā rākhvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśā rākhvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśā rākhvī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśā rākhvī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ āśā rākhũ chũ ke tame āvśo — I hope that you will come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ āśā rākhũ chũ ke tame āvśo* — I hope that you will come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to invite, then the Gujarati for to pester, then say āśā rākhvī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to invite, then the Gujarati for to pester, then say *āśā rākhvī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does આશા રાખવી (āśā rākhvī) mean? (\"To hope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R272-review-267-272",
+      "sequence": 14740,
+      "title": "People and feelings",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 267-272",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:018b76a600ea897c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for displeased and disappointed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "displeased, disappointed, to feel restless, to get irritated, to sulk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: displeased, disappointed, to feel restless, to get irritated, to sulk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to quarrel, to scold, to deceive, to persuade, advice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to quarrel, to scold, to deceive, to persuade, advice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to look after, to bring up, to praise, to remember fondly, respect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to look after, to bring up, to praise, to remember fondly, respect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "temperament, kind, honest, funny, arrogant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: temperament, kind, honest, funny, arrogant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polite, generous, selfish, foolish, stubborn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: polite, generous, selfish, foolish, stubborn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "courage, promise, to invite, to pester, to hope",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: courage, promise, to invite, to pester, to hope]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Displeased? (નારાજ.) Disappointed? (નિરાશ.) To feel restless? (અકળાવું.) To get irritated? (ચિડાવું.) To sulk? (રિસાવું.) To quarrel? (લડવું.) To scold? (વઢવું.) To deceive? (છેતરવું.) To persuade? (મનાવવું.) Advice? (સલાહ.) To look after? (સંભાળવું.) To bring up? (ઉછેરવું.) To praise? (વખાણવું.) To remember fondly? (યાદ આવવી.) Respect? (આદર.) Temperament? (સ્વભાવ.) Kind? (દયાળુ.) Honest? (પ્રામાણિક.) Funny? (રમૂજી.) Arrogant? (ઘમંડી.) Polite? (નમ્ર.) Generous? (ઉદાર.) Selfish? (સ્વાર્થી.) Foolish? (મૂર્ખ.) Stubborn? (જિદ્દી.) Courage? (હિંમત (himmat).) Promise? (વચન (vacan).) To invite? (નોતરવું (notarvũ).) To pester? (સતાવવું (satāvvũ).) To hope? (આશા રાખવી (āśā rākhvī).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R272-review-final-272",
+      "sequence": 14750,
+      "title": "Promises, hope and courage — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 272",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:458c2733588379a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for courage and promise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "courage, promise, to invite, to pester, to hope",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: courage, promise, to invite, to pester, to hope]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Courage? (હિંમત (himmat).) Promise? (વચન (vacan).) To invite? (નોતરવું (notarvũ).) To pester? (સતાવવું (satāvvũ).) To hope? (આશા રાખવી (āśā rākhvī).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

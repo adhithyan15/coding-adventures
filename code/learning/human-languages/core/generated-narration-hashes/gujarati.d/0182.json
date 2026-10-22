@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:71e9ccbb0ceab07c",
+  "lessonIds": [
+    "GU-C182-ajkal",
+    "GU-C182-kayam",
+    "GU-C182-acanak",
+    "GU-C182-yad-rakhvu",
+    "GU-C182-gumavvu",
+    "GU-R182-review-177-182",
+    "GU-R182-review-final-182"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch182.txt",
+  "json": "gujarati/narration/ch182.json",
+  "textHash": "fnv1a64:a9aca3d116776ea6",
+  "jsonHash": "fnv1a64:b8f637e0c44e73b3",
+  "findings": []
+}

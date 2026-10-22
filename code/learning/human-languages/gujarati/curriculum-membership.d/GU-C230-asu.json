@@ -1,0 +1,11 @@
+{
+  "id": "GU-C230-asu",
+  "pathSegment": "GU-PATH-230-TOOTH230",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-230-TOOTH230",
+      "order": 2
+    }
+  ]
+}

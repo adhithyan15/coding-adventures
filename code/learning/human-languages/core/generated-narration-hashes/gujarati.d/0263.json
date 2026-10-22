@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 263,
+  "sourceHash": "fnv1a64:8207fc0d8d5f98ca",
+  "lessonIds": [
+    "GU-C263-bhabhi",
+    "GU-C263-masi",
+    "GU-C263-phoi",
+    "GU-C263-sasu",
+    "GU-C263-bhatrijo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch263.txt",
+  "json": "gujarati/narration/ch263.json",
+  "textHash": "fnv1a64:cf4d5fb89981f397",
+  "jsonHash": "fnv1a64:03633f4bf9136540",
+  "findings": []
+}

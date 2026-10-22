@@ -1,0 +1,11 @@
+{
+  "id": "GU-C205-uutarvu",
+  "pathSegment": "GU-PATH-205-RAIL205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-205-RAIL205",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Reading the timetable",
+  "label": "ch:gu-reading-the-timetable",
+  "canDo": "I can read the timetable and say when the train left.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C204-chutvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can read the timetable and say when the train left.",
+    "assesses": [
+      "GU-LEX-C204-TIMES204-03",
+      "GU-LEX-C204-TIMES204-04",
+      "GU-LEX-C204-TIMES204-05"
+    ]
+  }
+}

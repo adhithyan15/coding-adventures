@@ -1,0 +1,19 @@
+{
+  "chapter": 271,
+  "title": "Polite or selfish",
+  "label": "ch:gu-polite-or-selfish",
+  "canDo": "I can describe people as polite, generous or stubborn and ask whether they are.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C271-jiddi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 271: I can describe people as polite, generous or stubborn and ask whether they are.",
+    "assesses": [
+      "GU-LEX-C271-MANNERS271-03",
+      "GU-LEX-C271-MANNERS271-04",
+      "GU-LEX-C271-MANNERS271-05"
+    ]
+  }
+}

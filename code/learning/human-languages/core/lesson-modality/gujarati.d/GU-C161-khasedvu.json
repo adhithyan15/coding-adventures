@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C161-khasedvu",
+    "language": "gujarati",
+    "chapter": 161,
+    "sequence": 8810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:450a61e7d2d838f9"
+  },
+  "findings": []
+}

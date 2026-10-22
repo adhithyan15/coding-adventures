@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Scouring, drying and spills",
+  "label": "ch:gu-scouring-drying-and-spills",
+  "canDo": "I can talk about washing up, drying clothes and spills.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C159-bhoy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: I can talk about washing up, drying clothes and spills.",
+    "assesses": [
+      "GU-LEX-C159-WASH159-03",
+      "GU-LEX-C159-WASH159-04",
+      "GU-LEX-C159-WASH159-05"
+    ]
+  }
+}

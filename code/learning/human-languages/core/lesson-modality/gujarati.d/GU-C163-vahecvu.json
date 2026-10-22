@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C163-vahecvu",
+    "language": "gujarati",
+    "chapter": 163,
+    "sequence": 8950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49231470dd2f2494"
+  },
+  "findings": []
+}

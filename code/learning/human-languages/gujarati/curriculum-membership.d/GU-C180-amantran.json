@@ -1,0 +1,11 @@
+{
+  "id": "GU-C180-amantran",
+  "pathSegment": "GU-PATH-180-VISIT180",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-180-VISIT180",
+      "order": 1
+    }
+  ]
+}

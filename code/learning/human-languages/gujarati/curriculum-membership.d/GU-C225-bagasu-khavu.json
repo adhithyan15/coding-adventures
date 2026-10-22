@@ -1,0 +1,11 @@
+{
+  "id": "GU-C225-bagasu-khavu",
+  "pathSegment": "GU-PATH-225-UNWELL225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-225-UNWELL225",
+      "order": 3
+    }
+  ]
+}

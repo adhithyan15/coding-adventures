@@ -1,0 +1,11 @@
+{
+  "id": "GU-C236-cac",
+  "pathSegment": "GU-PATH-236-NEEM236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-236-NEEM236",
+      "order": 3
+    }
+  ]
+}

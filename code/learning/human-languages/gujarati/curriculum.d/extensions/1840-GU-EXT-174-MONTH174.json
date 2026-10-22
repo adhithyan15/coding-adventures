@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-174-MONTH174",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say in which month something will happen.",
+  "prerequisites": []
+}

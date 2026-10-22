@@ -1,0 +1,11 @@
+{
+  "id": "GU-C160-batti",
+  "pathSegment": "GU-PATH-160-BED160",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-160-BED160",
+      "order": 3
+    }
+  ]
+}

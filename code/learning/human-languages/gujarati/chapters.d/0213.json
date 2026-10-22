@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Tomorrow's weather",
+  "label": "ch:gu-tomorrow-s-weather",
+  "canDo": "I can say what the weather will be like tomorrow.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C213-varasvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 213: I can say what the weather will be like tomorrow.",
+    "assesses": [
+      "GU-LEX-C213-WEATHER213-03",
+      "GU-LEX-C213-WEATHER213-04",
+      "GU-LEX-C213-WEATHER213-05"
+    ]
+  }
+}

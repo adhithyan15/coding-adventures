@@ -39,7 +39,10 @@ prefix to that root; division by the root stays conservative. Positive
 variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
-stay conservative. Unary signs, arithmetic composition with finite static
+stay conservative. Integer `mod` by a variable-free nonzero whole number may
+reduce the exact transform, including composition through later exact powers
+and divisions; zero and dynamic divisors remain outside this composed
+provenance proof. Unary signs, arithmetic composition with finite static
 operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
@@ -690,11 +693,22 @@ cargo test -p lang-aot --test lang_matrix ruby_rows_ -- --nocapture
 against a host ruby 3.3 (the compiled programs never run on it),
 `ruby_rows_are_rb_int_puts_corpus_cases` ties the rows to the corpus, and
 `ruby_rows_pass_the_lang83_check_on_all_nine_backends` runs
-`check_module_for` on all nine backends. Selecting another release through
-lang-aot (`--lang ruby@<release>`) is phase 5b: the shared lang-aot release
-API landed with Perl's phase 4b, and the frontend already selects releases
-(`ruby_iir_compiler::compile_source_at`). Until then `ruby@<release>` is
-refused as `UnknownRelease` rather than compiled on the default release.
+`check_module_for` on all nine backends.
+
+Since phase 5b, `--lang ruby@<release>` selects any profiled release of
+`code/grammars/ruby/releases.csv` exactly, through the same release API as
+Perl, and the module records it in `IIRModule::release`:
+
+```sh
+lang-aot prog.rb --lang ruby@3.3.7 --emit=llvm-ir
+```
+
+| Request | Result |
+|---|---|
+| `ruby`, `ruby@3.3.5`, `ruby@3.3.6`, `ruby@3.3.7` | compiled on that release (`ruby` is `3.3.6`) |
+| `ruby@3.3` | `UnknownRelease`, nearest inventory IDs suggested |
+| `ruby@3.3.4` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |
+| `ruby@0.49`, `ruby@0.50` | `ReleaseNotAvailable` (a grammar pair, but no IIR profile) |
 
 ## Standard operations and compile-time refusal (LANG83)
 
@@ -1309,3 +1323,17 @@ executable columns. Nine of them are `StdoutThenTrap` rows, which check the
 output written before the trap *and* the kind each column reports. LANG79's
 float pilot (`python_iir_compiler::compile_source`) is a separate API and is
 not reachable from `lang-aot`.
+
+Since phase 7b, `--lang python@<release>` selects any profiled release of
+`code/grammars/python/releases.csv` exactly, through the same release API as
+Perl and Ruby, and the module records it in `IIRModule::release`:
+
+```sh
+lang-aot prog.py --lang python@3.0a1 --emit=llvm-ir
+```
+
+| Request | Result |
+|---|---|
+| `python`, `python@3.0a1`, `python@3.11.17`, `python@3.12.3`, `python@3.13.16`, `python@3.16.0a1` | compiled on that release (`python` is `3.13.16`) |
+| `python@3.13` | `UnknownRelease`, nearest inventory IDs suggested |
+| `python@3.12.2` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |

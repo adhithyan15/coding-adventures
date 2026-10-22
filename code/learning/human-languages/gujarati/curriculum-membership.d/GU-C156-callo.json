@@ -1,0 +1,11 @@
+{
+  "id": "GU-C156-callo",
+  "pathSegment": "GU-PATH-156-ADORN156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-156-ADORN156",
+      "order": 1
+    }
+  ]
+}

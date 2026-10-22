@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "Adding, pouring and stirring",
+  "label": "ch:gu-adding-pouring-and-stirring",
+  "canDo": "I can describe adding, pouring, stirring and boiling.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C165-ukalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: I can describe adding, pouring, stirring and boiling.",
+    "assesses": [
+      "GU-LEX-C165-STIR165-03",
+      "GU-LEX-C165-STIR165-04",
+      "GU-LEX-C165-STIR165-05"
+    ]
+  }
+}

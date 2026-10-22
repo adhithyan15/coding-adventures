@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-205-RAIL205",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "GU-EXT-205-RAIL205"
+  ],
+  "after": []
+}

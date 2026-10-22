@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Not so well today",
+  "label": "ch:gu-not-so-well-today",
+  "canDo": "I can say that I feel dizzy or sick and that food does not agree with me.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C225-parsevo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say that I feel dizzy or sick and that food does not agree with me.",
+    "assesses": [
+      "GU-LEX-C225-UNWELL225-03",
+      "GU-LEX-C225-UNWELL225-04",
+      "GU-LEX-C225-UNWELL225-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C267-risavu",
+  "pathSegment": "GU-PATH-267-UPSET267",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-267-UPSET267",
+      "order": 4
+    }
+  ]
+}

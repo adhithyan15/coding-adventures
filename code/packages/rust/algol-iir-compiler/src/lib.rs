@@ -4819,15 +4819,14 @@ impl Compiler {
                                     Piece::Op(op) => Some(op.as_str()),
                                     Piece::Node(_) => None,
                                 });
-                            static_terms.push((operator, units));
+                            static_terms.push((index, operator, units));
                         }
                     } else {
                         let Piece::Op(op) = piece else {
                             return None;
                         };
                         match op.as_str() {
-                            "*" => {}
-                            "/" => {}
+                            "*" | "/" | "mod" => {}
                             _ => return None,
                         }
                     }
@@ -4839,8 +4838,14 @@ impl Compiler {
                 {
                     return None;
                 }
-                for (operator, units) in static_terms {
-                    if operator == Some("/") {
+                for (index, operator, units) in static_terms {
+                    if operator == Some("mod") {
+                        if index < rooted_index || units == 0 {
+                            return None;
+                        }
+                        proof.magnitude = proof.magnitude.min(units - 1);
+                        proof.value_gcd = integer_gcd(proof.value_gcd, units);
+                    } else if operator == Some("/") {
                         if units == 0 || proof.value_gcd % units != 0 {
                             return None;
                         }
@@ -15414,6 +15419,40 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a non-unit, variable, or exponent-position sign exceeds the bounded proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_exact_modulo_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier((sign(pick()) + 2) mod 2); output(x) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((2 * sign(pick()) + 2) mod 3) ^ 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((((6 * sign(pick())) + 6) mod 4) / 2); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a static nonzero modulo divisor preserves an exact sign-rooted integer for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_exact_modulo_entier_sign_widening_rejects_unproven_divisors() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) mod 0); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 2; result := entier(sign(pick()) mod divisor); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a zero or dynamic modulo divisor must remain outside the composed proof",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

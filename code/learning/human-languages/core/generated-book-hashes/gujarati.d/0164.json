@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:416f1488c020c550",
+  "lessonIds": [
+    "GU-C164-dabbo",
+    "GU-C164-khad",
+    "GU-C164-mari",
+    "GU-C164-rai",
+    "GU-C164-elci",
+    "GU-R164-review-159-164"
+  ],
+  "tex": "gujarati/book/chapters/ch164-the-spice-tin.tex"
+}

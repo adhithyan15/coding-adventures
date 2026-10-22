@@ -1,0 +1,11 @@
+{
+  "id": "GU-C247-mahenatu",
+  "pathSegment": "GU-PATH-247-LIVING247",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-247-LIVING247",
+      "order": 4
+    }
+  ]
+}

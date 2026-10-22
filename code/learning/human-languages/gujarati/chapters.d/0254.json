@@ -1,0 +1,19 @@
+{
+  "chapter": 254,
+  "title": "Music and song",
+  "label": "ch:gu-music-and-song",
+  "canDo": "I can say what music I played and which songs I sang.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-R254-review-249-254",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 254: I can say what music I played and which songs I sang.",
+    "assesses": [
+      "GU-LEX-C254-MUSIC254-03",
+      "GU-LEX-C254-MUSIC254-04",
+      "GU-LEX-C254-MUSIC254-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C222-bharti",
+    "language": "gujarati",
+    "chapter": 222,
+    "sequence": 12090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb13d6c20d6d5579"
+  },
+  "findings": []
+}

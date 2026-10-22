@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:6c0421b02855fda2",
+  "lessonIds": [
+    "GU-C146-shun-polar",
+    "GU-C146-ke-nahi",
+    "GU-C146-mane",
+    "GU-C146-maaro",
+    "GU-C146-tamaro",
+    "GU-C146-ask-practice"
+  ],
+  "tex": "gujarati/book/chapters/ch146-asking-yes-or-no.tex"
+}
