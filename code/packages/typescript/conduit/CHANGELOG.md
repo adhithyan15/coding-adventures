@@ -3,6 +3,19 @@
 All notable changes to this package will be documented in this file.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- Added the `BUILD_windows` skip stub that `ext/conduit_native_node/build.rs`
+  already documented but the package never shipped. Without it, any change
+  that put conduit in a Windows build plan (for example a `package-lock.json`
+  bump) failed to link the N-API cdylib with
+  `rust-lld: error: undefined symbol: napi_wrap`, because the Windows linker
+  needs `node.lib` to resolve N-API imports at link time and CI does not
+  provide one. Matches `typescript/irc-server-native`; Linux and macOS still
+  build and test the addon.
+
 ## [0.1.0] — 2026-04-25
 
 ### Added
