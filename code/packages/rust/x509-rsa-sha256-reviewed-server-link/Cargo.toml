@@ -1,8 +1,8 @@
 [package]
 name = "x509-rsa-sha256-reviewed-server-link"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Exact evidence binding for server policy and one reviewed-root RSA SHA-256 link"
+description = "Reviewed-root RSA SHA-256 server-link binding and fail-closed anchor policy"
 
 [dependencies]
 x509-rsa-sha256-reviewed-anchor-link = { path = "../x509-rsa-sha256-reviewed-anchor-link" }

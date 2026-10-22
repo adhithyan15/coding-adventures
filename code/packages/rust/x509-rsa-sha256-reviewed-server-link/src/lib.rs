@@ -2,8 +2,10 @@
 //!
 //! This crate closes one evidence-mixing gap between target-server policy and
 //! one authenticated RSA SHA-256 issuer link terminating at a reviewed root.
-//! It performs no new parsing, policy validation, signature work, root lookup,
-//! path construction, revocation processing, or network effects.
+//! It also applies a narrow fail-closed policy that accepts only selected
+//! snapshot entries without out-of-band name constraints. It performs no new
+//! parsing, signature work, root lookup, path construction, revocation
+//! processing, or network effects.
 
 #![deny(unsafe_code)]
 
@@ -16,6 +18,9 @@ use x509_server_certificate_policy::ValidatedX509ServerCertificatePolicy;
 pub enum X509RsaSha256ReviewedServerLinkErrorKind {
     /// The inputs retain different decoded child certificate objects.
     EvidenceMismatch,
+    /// The selected reviewed anchor carries name constraints this crate cannot
+    /// yet parse and apply.
+    UnsupportedAnchorNameConstraints,
 }
 
 /// A redacted reviewed server-link binding failure.
@@ -28,6 +33,12 @@ impl X509RsaSha256ReviewedServerLinkError {
     const fn evidence_mismatch() -> Self {
         Self {
             kind: X509RsaSha256ReviewedServerLinkErrorKind::EvidenceMismatch,
+        }
+    }
+
+    const fn unsupported_anchor_name_constraints() -> Self {
+        Self {
+            kind: X509RsaSha256ReviewedServerLinkErrorKind::UnsupportedAnchorNameConstraints,
         }
     }
 
@@ -107,8 +118,61 @@ impl fmt::Debug for BoundX509RsaSha256ReviewedServerLink<'_, '_, '_, '_> {
     }
 }
 
+/// Non-copyable direct reviewed-server-link evidence after fail-closed anchor
+/// name-constraint policy.
+///
+/// Success proves that the selected reviewed snapshot entry carries no
+/// out-of-band name constraints, so there are no such bytes for a direct path
+/// consumer to ignore. This is deliberately not evidence that arbitrary name
+/// constraints were parsed or applied, and it grants no multi-hop path,
+/// revocation, TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509RsaSha256ReviewedServerAnchorPolicy<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    reviewed_server_link: BoundX509RsaSha256ReviewedServerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+}
+
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    ValidatedX509RsaSha256ReviewedServerAnchorPolicy<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    /// Return the consumed direct reviewed-server-link evidence.
+    pub const fn reviewed_server_link(
+        &self,
+    ) -> &BoundX509RsaSha256ReviewedServerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.reviewed_server_link
+    }
+}
+
+impl fmt::Debug for ValidatedX509RsaSha256ReviewedServerAnchorPolicy<'_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509RsaSha256ReviewedServerAnchorPolicy")
+    }
+}
+
 fn same_exact_object<T>(left: &T, right: &T) -> bool {
     std::ptr::eq(left, right)
+}
+
+fn selected_anchor_has_no_name_constraints(name_constraints: Option<&[u8]>) -> bool {
+    name_constraints.is_none()
 }
 
 /// Bind target-server policy to one reviewed-root issuer link for the same
@@ -151,6 +215,48 @@ pub fn bind_x509_rsa_sha256_reviewed_server_link<
     Ok(BoundX509RsaSha256ReviewedServerLink {
         server_policy,
         reviewed_anchor_link,
+    })
+}
+
+/// Apply the currently supported fail-closed policy to the selected reviewed
+/// trust anchor for one complete direct server link.
+///
+/// The reviewed snapshot is data-driven: entries without name constraints are
+/// accepted, while every entry carrying constraint bytes is rejected until a
+/// repository-owned parser and subtree evaluator can apply them. Constraint
+/// presence is checked through the anchor evidence retained inside the
+/// consumed link, so callers cannot substitute a different snapshot entry.
+pub fn validate_x509_rsa_sha256_reviewed_server_anchor_policy<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    reviewed_server_link: BoundX509RsaSha256ReviewedServerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+) -> Result<
+    ValidatedX509RsaSha256ReviewedServerAnchorPolicy<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha256ReviewedServerLinkError,
+> {
+    let name_constraints = reviewed_server_link
+        .reviewed_anchor_link()
+        .reviewed_anchor()
+        .name_constraints();
+    if !selected_anchor_has_no_name_constraints(name_constraints) {
+        return Err(X509RsaSha256ReviewedServerLinkError::unsupported_anchor_name_constraints());
+    }
+
+    Ok(ValidatedX509RsaSha256ReviewedServerAnchorPolicy {
+        reviewed_server_link,
     })
 }
 

@@ -17,12 +17,21 @@ child certificate object. Equal bytes decoded independently are insufficient.
 The distinct non-copyable result retains both complete inputs for later path
 policy.
 
+`validate_x509_rsa_sha256_reviewed_server_anchor_policy` then consumes that
+complete direct-link evidence and checks the selected snapshot entry itself.
+Entries without out-of-band name constraints produce a stronger non-copyable
+anchor-policy result. Any entry carrying name-constraint bytes fails closed
+with a payload-free `UnsupportedAnchorNameConstraints` category; unsupported
+bytes never become implicitly accepted constraints.
+
 ## Boundary
 
-This is exact-object evidence composition, not complete certificate-path or TLS
-validation. It does not apply reviewed-root name constraints, path-length or
-other anchor constraints, construct a multi-hop path, check revocation, perform
-TLS or HTTP, authorize OAuth transport, or open a network connection.
+This is exact-object evidence composition plus a deliberately narrow
+unconstrained-anchor policy, not complete certificate-path or TLS validation.
+It does not parse or apply non-empty reviewed-root name constraints,
+path-length or other anchor constraints, construct a multi-hop path, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
 `webpki-roots` remains reviewed public data only; no external executable TLS,
 X.509, or cryptographic implementation is linked here.
 
