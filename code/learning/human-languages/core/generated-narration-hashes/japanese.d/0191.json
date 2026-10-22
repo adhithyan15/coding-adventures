@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:5d942abf10a9e836",
+  "lessonIds": [
+    "JA-C191-shimaru",
+    "JA-C191-ichiba",
+    "JA-C191-sakaya",
+    "JA-C191-yakkyoku",
+    "JA-C191-mitsukeru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch191.txt",
+  "json": "japanese/narration/ch191.json",
+  "textHash": "fnv1a64:cb697ac0242bd1c5",
+  "jsonHash": "fnv1a64:8dfb07e65ce0e65d",
+  "findings": []
+}

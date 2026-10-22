@@ -1,0 +1,11 @@
+{
+  "id": "PA-C183-payoff",
+  "pathSegment": "PA-PATH-183-A2-HABITUAL-ROUTINE",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "PA-EXT-183-A2-HABITUAL-ROUTINE",
+      "order": 7
+    }
+  ]
+}

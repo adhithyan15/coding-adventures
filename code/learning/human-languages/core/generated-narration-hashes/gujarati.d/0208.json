@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:a5147180e3a6b6fc",
+  "lessonIds": [
+    "GU-C208-sadak",
+    "GU-C208-khado",
+    "GU-C208-traphik",
+    "GU-C208-paidu",
+    "GU-C208-phatak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch208.txt",
+  "json": "gujarati/narration/ch208.json",
+  "textHash": "fnv1a64:e1beabb13b0e7016",
+  "jsonHash": "fnv1a64:21e6a160923d6c28",
+  "findings": []
+}

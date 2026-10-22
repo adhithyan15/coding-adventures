@@ -254,10 +254,25 @@ remain conservative. Exact whole-number division is also permitted when the
 bounded result is the numerator and every possible transformed integer is
 divisible by the static nonzero divisor. Inexact or variable divisors and a
 bounded denominator remain conservative. Static whole-number factors may
-precede the bounded numerator when multiplication alone connects them to its
-root; a division before that root remains conservative.
-An exact variable-free exponent chain evaluating to one may preserve the
-bounded result before `entier`; other or dynamic exponents remain conservative.
+precede the bounded numerator, including exact divisions among those factors,
+provided multiplication connects the resulting prefix to its root; division
+by that root remains conservative.
+Variable-free integer `div` and `mod` reductions may likewise be folded
+left-to-right before that multiplying connection. Zero or dynamic divisors,
+oversized folded prefixes, and a non-multiplying connection to the root remain
+conservative.
+Positive variable-free whole-number powers may raise the exact sign-rooted
+integer transform within the existing exponent-unroll cap while checked
+exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and
+oversized powers remain conservative.
+Integer `div` by a variable-free nonzero whole number may reduce the exact
+sign-rooted transform, including composition through later powers, remainders,
+and exact real division. The quotient bound uses truncation toward zero; zero,
+dynamic, and sign-rooted divisors remain outside this composed proof.
+Integer `mod` by a variable-free nonzero whole number may reduce the exact
+sign-rooted transform, including composition through later exact powers and
+divisions; zero and dynamic divisors remain outside this composed provenance
+proof.
 Additional built-in `entier` calls may wrap that already integral bounded
 result; an unrestricted runtime `entier` operand remains conservative.
 Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`

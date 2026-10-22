@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Visits and invitations",
+  "label": "ch:gu-visits-and-invitations",
+  "canDo": "I can talk about invitations, visits and guests who will stay.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C180-vitavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can talk about invitations, visits and guests who will stay.",
+    "assesses": [
+      "GU-LEX-C180-VISIT180-03",
+      "GU-LEX-C180-VISIT180-04",
+      "GU-LEX-C180-VISIT180-05"
+    ]
+  }
+}

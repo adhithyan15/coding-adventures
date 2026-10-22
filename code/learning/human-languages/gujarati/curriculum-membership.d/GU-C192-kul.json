@@ -1,0 +1,11 @@
+{
+  "id": "GU-C192-kul",
+  "pathSegment": "GU-PATH-192-BILL192",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-192-BILL192",
+      "order": 1
+    }
+  ]
+}

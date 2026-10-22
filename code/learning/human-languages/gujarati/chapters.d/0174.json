@@ -1,0 +1,19 @@
+{
+  "chapter": 174,
+  "title": "October to Maha",
+  "label": "ch:gu-october-to-maha",
+  "canDo": "I can say in which month something will happen.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C174-saruat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 174: I can say in which month something will happen.",
+    "assesses": [
+      "GU-LEX-C174-MONTH174-03",
+      "GU-LEX-C174-MONTH174-04",
+      "GU-LEX-C174-MONTH174-05"
+    ]
+  }
+}

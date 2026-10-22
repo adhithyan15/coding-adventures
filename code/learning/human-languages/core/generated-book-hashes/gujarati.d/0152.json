@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:d3f5678ddcaa461f",
+  "lessonIds": [
+    "GU-C152-chiththi",
+    "GU-C152-maramat",
+    "GU-C152-bhadun",
+    "GU-C152-malik-chiththi",
+    "GU-R152-first-pass-future-notices",
+    "GU-R152-second-pass-core"
+  ],
+  "tex": "gujarati/book/chapters/ch152-reading-a-note-about-a-repair.tex"
+}

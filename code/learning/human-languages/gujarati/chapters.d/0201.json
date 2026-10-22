@@ -1,0 +1,19 @@
+{
+  "chapter": 201,
+  "title": "Getting things mended",
+  "label": "ch:gu-getting-things-mended",
+  "canDo": "I can name the people who mend, wash and cut things for me.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C201-suthar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 201: I can name the people who mend, wash and cut things for me.",
+    "assesses": [
+      "GU-LEX-C201-MEND201-03",
+      "GU-LEX-C201-MEND201-04",
+      "GU-LEX-C201-MEND201-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:c0cc320c0ac6f30c",
+  "lessonIds": [
+    "JA-C156-oshiire",
+    "JA-C156-hikidashi",
+    "JA-C156-shosai",
+    "JA-C156-ireru",
+    "JA-C156-naraberu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch156.txt",
+  "json": "japanese/narration/ch156.json",
+  "textHash": "fnv1a64:fa61990afbf1002c",
+  "jsonHash": "fnv1a64:b0a937b699f16bb3",
+  "findings": []
+}

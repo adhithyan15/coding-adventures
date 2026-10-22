@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C213-tadko",
+    "language": "gujarati",
+    "chapter": 213,
+    "sequence": 11610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25c8facc97076e25"
+  },
+  "findings": []
+}

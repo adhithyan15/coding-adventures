@@ -1,0 +1,11 @@
+{
+  "id": "GU-C195-thekanu",
+  "pathSegment": "GU-PATH-195-LOST195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-195-LOST195",
+      "order": 3
+    }
+  ]
+}

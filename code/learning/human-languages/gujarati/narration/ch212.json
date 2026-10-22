@@ -1,0 +1,898 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 212,
+  "title": "Resting on the way",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:7cc003add96fb653",
+  "lessons": [
+    {
+      "id": "GU-C212-dharmasala",
+      "sequence": 11490,
+      "title": "ધર્મશાળા (dharmaśāḷā) — rest house, pilgrims' lodge",
+      "headword": "ધર્મશાળા",
+      "romanization": "dharmaśāḷā",
+      "gloss": "rest house, pilgrims' lodge",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65736e5c99693296",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for pilgrimage, then the Gujarati for vehicle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધર્મશાળા",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધર્મશાળા — dharmaśāḷā — \"rest house, pilgrims' lodge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે રાત્રે ધર્મશાળામાં રહ્યા. — ame rātre dharmaśāḷāmā̃ rahyā — \"We spent the night at a rest house.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધર્મશાળા (dharmaśāḷā) is Sanskrit dharmaśālā, \"charitable asylum\", built from dhárma, \"duty, charity\", and śā́lā, \"hall\", taken over with Gujarati -ḷ-, a semi-tatsama (CDIAL 6760a)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharmaśāḷā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharmaśāḷā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dharmaśāḷā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dharmaśāḷā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame rātre dharmaśāḷāmā̃ rahyā — We spent the night at a rest house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame rātre dharmaśāḷāmā̃ rahyā* — We spent the night at a rest house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for pilgrimage, then the Gujarati for vehicle, then say dharmaśāḷā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for pilgrimage, then the Gujarati for vehicle, then say *dharmaśāḷā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધર્મશાળા (dharmaśāḷā) mean? (\"Rest house, pilgrims' lodge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C212-bhomiyo",
+      "sequence": 11500,
+      "title": "ભોમિયો (bhomiyo) — guide, one who knows the way",
+      "headword": "ભોમિયો",
+      "romanization": "bhomiyo",
+      "gloss": "guide, one who knows the way",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b957e4fac0e8430",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for vehicle, then the Gujarati for rest house."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ભોમિયો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભોમિયો — bhomiyo — \"guide, one who knows the way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ભોમિયાએ અમને રસ્તો બતાવ્યો. — bhomiyāe amne rasto batāvyo — \"The guide showed us the way.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ભોમિયો (bhomiyo) is built on bhom, \"land\", with the agent ending -iyo: the one who knows the land. CDIAL lists Gujarati bhom, \"a piece of land, field\", under Sanskrit bhaumika, \"being in the earth\", a derivative of bhū́mi, \"earth\" (CDIAL 9642)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhomiyo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhomiyo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhomiyo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhomiyo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhomiyāe amne rasto batāvyo — The guide showed us the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhomiyāe amne rasto batāvyo* — The guide showed us the way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for vehicle, then the Gujarati for rest house, then say bhomiyo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for vehicle, then the Gujarati for rest house, then say *bhomiyo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ભોમિયો (bhomiyo) mean? (\"Guide, one who knows the way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C212-rahdari",
+      "sequence": 11510,
+      "title": "રાહદારી (rāhdārī) — pedestrian, passer-by",
+      "headword": "રાહદારી",
+      "romanization": "rāhdārī",
+      "gloss": "pedestrian, passer-by",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d444013e55c63d8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for rest house, then the Gujarati for guide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રાહદારી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રાહદારી — rāhdārī — \"pedestrian, passer-by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "એક રાહદારીએ મને સરનામું કહ્યું. — ek rāhdārīe mane sarnāmũ kahyũ — \"A passer-by told me the address.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રાહદારી (rāhdārī) is built from rāh, \"road, way\", usually traced to Persian rāh, \"road\", the Persian suffix -dār, \"holder\", and the ending -ī: one who keeps to the road."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāhdārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāhdārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāhdārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāhdārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek rāhdārīe mane sarnāmũ kahyũ — A passer-by told me the address.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek rāhdārīe mane sarnāmũ kahyũ* — A passer-by told me the address.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for rest house, then the Gujarati for guide, then say rāhdārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for rest house, then the Gujarati for guide, then say *rāhdārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રાહદારી (rāhdārī) mean? (\"Pedestrian, passer-by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C212-surang",
+      "sequence": 11520,
+      "title": "સુરંગ (surang) — tunnel",
+      "headword": "સુરંગ",
+      "romanization": "surang",
+      "gloss": "tunnel",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3affe08983c367a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for guide, then the Gujarati for pedestrian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સુરંગ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુરંગ — surang — \"tunnel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ટ્રેન લાંબી સુરંગમાંથી ગઈ. — ṭren lā̃bī surangmā̃thī gaī — \"The train went through a long tunnel.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સુરંગ (surang) is a tadbhava. CDIAL lists it, glossed \"underground passage, mine for blasting\", under Sanskrit suruṅgā, \"subterranean passage, mine\" (CDIAL 13506)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "surang",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *surang*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "surang, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *surang*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭren lā̃bī surangmā̃thī gaī — The train went through a long tunnel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭren lā̃bī surangmā̃thī gaī* — The train went through a long tunnel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for guide, then the Gujarati for pedestrian, then say surang again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for guide, then the Gujarati for pedestrian, then say *surang* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સુરંગ (surang) mean? (\"Tunnel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C212-musapharkhanu",
+      "sequence": 11530,
+      "title": "મુસાફરખાનું (musāpharkhānũ) — waiting room",
+      "headword": "મુસાફરખાનું",
+      "romanization": "musāpharkhānũ",
+      "gloss": "waiting room",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:983fad05a5b61022",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for pedestrian, then the Gujarati for tunnel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મુસાફરખાનું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મુસાફરખાનું — musāpharkhānũ — \"waiting room\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મુસાફરખાનું ભરેલું હતું. — musāpharkhānũ bharelũ hatũ — \"The waiting room was full.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Built on મુસાફર, musāphar, 'traveller'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મુસાફરખાનું (musāpharkhānũ) is built from musāphar, \"traveller\", a loan from Arabic musāfir that reached Gujarati through Persian, and khānũ, \"house, room\", from Persian khāna. The Arabic root is s-f-r, \"to journey\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musāpharkhānũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musāpharkhānũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musāpharkhānũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musāpharkhānũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musāpharkhānũ bharelũ hatũ — The waiting room was full.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musāpharkhānũ bharelũ hatũ* — The waiting room was full.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for pedestrian, then the Gujarati for tunnel, then say musāpharkhānũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for pedestrian, then the Gujarati for tunnel, then say *musāpharkhānũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મુસાફરખાનું (musāpharkhānũ) mean? (\"Waiting room\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R212-review-207-212",
+      "sequence": 11540,
+      "title": "Travel by road and rail: a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 207-212",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e3a81e27758ce86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for car and taxi."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "car, taxi, driver, petrol, to hire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: car, taxi, driver, petrol, to hire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "main road, pothole, traffic, wheel, level crossing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: main road, pothole, traffic, wheel, level crossing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to break down, to push, to collide, to get stuck, to slide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to break down, to push, to collide, to get stuck, to slide]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "airport, passport, permit, to load, to lift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: airport, passport, permit, to load, to lift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boat, to ride, to steer, pilgrimage, vehicle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: boat, to ride, to steer, pilgrimage, vehicle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rest house, guide, pedestrian, tunnel, waiting room",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rest house, guide, pedestrian, tunnel, waiting room]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Car? (ગાડી.) Taxi? (ટેક્સી.) Driver? (ડ્રાઈવર.) Petrol? (પેટ્રોલ.) To hire? (ભાડે લેવું.) Main road? (સડક.) Pothole? (ખાડો.) Traffic? (ટ્રાફિક.) Wheel? (પૈડું.) Level crossing? (ફાટક.) To break down? (બગડવું.) To push? (ધકેલવું.) To collide? (અથડાવું.) To get stuck? (ફસાવું.) To slide? (સરકવું.) Airport? (એરપોર્ટ.) Passport? (પાસપોર્ટ.) Permit? (પરવાનો.) To load? (લાદવું.) To lift? (ઊંચકવું.) Boat? (હોડી.) To ride? (સવારી કરવી.) To steer? (હંકારવું.) Pilgrimage? (યાત્રા.) Vehicle? (વાહન.) Rest house? (ધર્મશાળા (dharmaśāḷā).) Guide? (ભોમિયો (bhomiyo).) Pedestrian? (રાહદારી (rāhdārī).) Tunnel? (સુરંગ (surang).) Waiting room? (મુસાફરખાનું (musāpharkhānũ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R212-review-final-212",
+      "sequence": 11550,
+      "title": "Resting on the way — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 212",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3be30d8c75817a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for rest house and guide."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rest house, guide, pedestrian, tunnel, waiting room",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rest house, guide, pedestrian, tunnel, waiting room]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rest house? (ધર્મશાળા (dharmaśāḷā).) Guide? (ભોમિયો (bhomiyo).) Pedestrian? (રાહદારી (rāhdārī).) Tunnel? (સુરંગ (surang).) Waiting room? (મુસાફરખાનું (musāpharkhānũ).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

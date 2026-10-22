@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-263-INLAWS263",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "GU-EXT-263-INLAWS263"
+  ],
+  "after": []
+}

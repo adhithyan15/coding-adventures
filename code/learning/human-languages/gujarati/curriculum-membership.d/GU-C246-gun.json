@@ -1,0 +1,11 @@
+{
+  "id": "GU-C246-gun",
+  "pathSegment": "GU-PATH-246-MARKS246",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-246-MARKS246",
+      "order": 1
+    }
+  ]
+}

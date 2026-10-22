@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C184-time-review",
+    "language": "punjabi",
+    "chapter": 184,
+    "sequence": 9790,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b80726c6152e082b"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:d7620319cef49c8a",
+  "lessonIds": [
+    "JA-C169-tokidoki",
+    "JA-C169-tamani",
+    "JA-C169-mettani",
+    "JA-C169-maitsuki",
+    "JA-C169-kurikaesu",
+    "JA-R169-review-164-169"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch169.txt",
+  "json": "japanese/narration/ch169.json",
+  "textHash": "fnv1a64:b5db5f003dce224b",
+  "jsonHash": "fnv1a64:a25db69c944ae7ba",
+  "findings": []
+}

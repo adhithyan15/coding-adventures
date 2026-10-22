@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C159-kaji",
+    "language": "japanese",
+    "chapter": 159,
+    "sequence": 9470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bdaa731668312e1"
+  },
+  "findings": []
+}

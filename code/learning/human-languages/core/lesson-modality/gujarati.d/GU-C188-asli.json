@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C188-asli",
+    "language": "gujarati",
+    "chapter": 188,
+    "sequence": 10270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a3430e666ec4503"
+  },
+  "findings": []
+}

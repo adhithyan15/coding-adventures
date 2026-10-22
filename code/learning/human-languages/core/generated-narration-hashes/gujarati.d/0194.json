@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:472a6b73913239db",
+  "lessonIds": [
+    "GU-C194-naku",
+    "GU-C194-signal",
+    "GU-C194-same",
+    "GU-C194-baju",
+    "GU-C194-olangvu",
+    "GU-R194-review-189-194"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch194.txt",
+  "json": "gujarati/narration/ch194.json",
+  "textHash": "fnv1a64:38ac039fb7215639",
+  "jsonHash": "fnv1a64:1adf34f5a83e7ea5",
+  "findings": []
+}

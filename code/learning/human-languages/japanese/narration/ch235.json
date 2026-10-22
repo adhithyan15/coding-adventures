@@ -1,0 +1,953 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 235,
+  "title": "Baseball and Judo",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2770bd2a3a55492a",
+  "lessons": [
+    {
+      "id": "JA-C235-nageru",
+      "sequence": 14160,
+      "title": "なげる (nageru) — to throw",
+      "headword": "なげる",
+      "romanization": "nageru",
+      "gloss": "to throw",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdccd41d9e73bf17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a player, then the Japanese for cheering."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なげる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なげる — nageru — \"to throw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうえんで いぬに ぼうを なげました。 — kōen de inu ni bō o nagemashita — \"In the park I threw a stick for the dog.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite なげます, nagemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なげる (nageru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nageru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nageru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nageru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nageru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōen de inu ni bō o nagemashita — In the park I threw a stick for the dog.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōen de inu ni bō o nagemashita* — In the park I threw a stick for the dog.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a player, then the Japanese for cheering, then say nageru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a player, then the Japanese for cheering, then say *nageru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なげる (nageru) mean? (\"To throw\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C235-nageru-type",
+              "prompt": "Say the Japanese for 'to throw'.",
+              "assesses": [
+                "JA-LEX-C235-BALL235-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なげる",
+                "nageru"
+              ],
+              "feedback": {
+                "correct": "Right: なげる (nageru) is 'to throw'.",
+                "incorrect": "'To throw' is なげる (nageru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C235-keru",
+      "sequence": 14170,
+      "title": "ける (keru) — to kick",
+      "headword": "ける",
+      "romanization": "keru",
+      "gloss": "to kick",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5488e7490c560cb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for cheering, then the Japanese for to throw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ける — keru — \"to kick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとうとは にわで まりを けりました。 — otōto wa niwa de mari o kerimashita — \"My younger brother kicked a ball in the garden.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite けります, kerimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ける (keru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otōto wa niwa de mari o kerimashita — My younger brother kicked a ball in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otōto wa niwa de mari o kerimashita* — My younger brother kicked a ball in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for cheering, then the Japanese for to throw, then say keru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for cheering, then the Japanese for to throw, then say *keru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ける (keru) mean? (\"To kick\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C235-keru-type",
+              "prompt": "Say the Japanese for 'to kick'.",
+              "assesses": [
+                "JA-LEX-C235-BALL235-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ける",
+                "keru"
+              ],
+              "feedback": {
+                "correct": "Right: ける (keru) is 'to kick'.",
+                "incorrect": "'To kick' is ける (keru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C235-yakyuu",
+      "sequence": 14180,
+      "title": "やきゅう (yakyū) — baseball",
+      "headword": "やきゅう",
+      "romanization": "yakyū",
+      "gloss": "baseball",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6d9130565d314af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to throw, then the Japanese for to kick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やきゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やきゅう — yakyū — \"baseball\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きのう ともだちと やきゅうを しました。 — kinō tomodachi to yakyū o shimashita — \"Yesterday I played baseball with friends.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やきゅう (yakyū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ya, \"field\" (Middle Chinese yaeX) and kyū, \"ball\" (gjuw) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakyū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakyū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakyū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakyū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinō tomodachi to yakyū o shimashita — Yesterday I played baseball with friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinō tomodachi to yakyū o shimashita* — Yesterday I played baseball with friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to throw, then the Japanese for to kick, then say yakyū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to throw, then the Japanese for to kick, then say *yakyū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やきゅう (yakyū) mean? (\"Baseball\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C235-yakyuu-type",
+              "prompt": "Say the Japanese for 'baseball'.",
+              "assesses": [
+                "JA-LEX-C235-BALL235-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やきゅう",
+                "yakyū",
+                "yakyuu",
+                "yakyu"
+              ],
+              "feedback": {
+                "correct": "Right: やきゅう (yakyū) is 'baseball'.",
+                "incorrect": "'Baseball' is やきゅう (yakyū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C235-juudou",
+      "sequence": 14190,
+      "title": "じゅうどう (jūdō) — judo",
+      "headword": "じゅうどう",
+      "romanization": "jūdō",
+      "gloss": "judo",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7522f12836db98ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to kick, then the Japanese for baseball."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じゅうどう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうどう — jūdō — \"judo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには きょねん じゅうどうを ならいました。 — ani wa kyonen jūdō o naraimashita — \"My elder brother took judo lessons last year.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じゅうどう (jūdō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jū, \"soft, gentle\" (Middle Chinese nyuw) and dō, \"way\" (dawX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūdō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūdō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jūdō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jūdō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa kyonen jūdō o naraimashita — My elder brother took judo lessons last year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa kyonen jūdō o naraimashita* — My elder brother took judo lessons last year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to kick, then the Japanese for baseball, then say jūdō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to kick, then the Japanese for baseball, then say *jūdō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じゅうどう (jūdō) mean? (\"Judo\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C235-juudou-type",
+              "prompt": "Say the Japanese for 'judo'.",
+              "assesses": [
+                "JA-LEX-C235-BALL235-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じゅうどう",
+                "jūdō",
+                "juudou",
+                "jūdoo",
+                "judo"
+              ],
+              "feedback": {
+                "correct": "Right: じゅうどう (jūdō) is 'judo'.",
+                "incorrect": "'Judo' is じゅうどう (jūdō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C235-yuushou",
+      "sequence": 14200,
+      "title": "ゆうしょう (yūshō) — a championship win; overall victory",
+      "headword": "ゆうしょう",
+      "romanization": "yūshō",
+      "gloss": "a championship win; overall victory",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f30c1bd378649ec6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for baseball, then the Japanese for judo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆうしょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうしょう — yūshō — \"a championship win; overall victory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんげつ あにの がっこうが ゆうしょうしました。 — sengetsu ani no gakkō ga yūshō shimashita — \"Last month my elder brother's school won the championship.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆうしょう (yūshō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yū, \"excel\" (Middle Chinese 'juw) and shō, \"win\" (syingH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūshō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūshō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūshō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūshō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sengetsu ani no gakkō ga yūshō shimashita — Last month my elder brother's school won the championship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sengetsu ani no gakkō ga yūshō shimashita* — Last month my elder brother's school won the championship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for baseball, then the Japanese for judo, then say yūshō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for baseball, then the Japanese for judo, then say *yūshō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆうしょう (yūshō) mean? (\"A championship win; overall victory\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C235-yuushou-type",
+              "prompt": "Say the Japanese for 'a championship win'.",
+              "assesses": [
+                "JA-LEX-C235-BALL235-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆうしょう",
+                "yūshō",
+                "yuushou",
+                "yūshoo",
+                "yusho"
+              ],
+              "feedback": {
+                "correct": "Right: ゆうしょう (yūshō) is 'a championship win; overall victory'.",
+                "incorrect": "'A championship win' is ゆうしょう (yūshō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R235-review-230-235",
+      "sequence": 14210,
+      "title": "Words from chapters 230–235 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 230-235",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66f1d5156eac9166",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a company president and a boss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a company president, a boss, a senior, a junior, to do one's best",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a company president, a boss, a senior, a junior, to do one's best]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hello on the phone, a number, contact, a response, to pass on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hello on the phone, a number, contact, a response, to pass on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to discuss, to put together, to entrust, to refuse, to inform",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to discuss, to put together, to entrust, to refuse, to inform]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to play, to swim, swimming, to run, exercise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to play, to swim, swimming, to run, exercise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a match, to win, to be beaten, a player, cheering",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a match, to win, to be beaten, a player, cheering]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to throw, to kick, baseball, judo, a championship win",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to throw, to kick, baseball, judo, a championship win]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A company president? (しゃちょう, shachō.) A boss? (じょうし, jōshi.) A senior? (せんぱい, senpai.) A junior? (こうはい, kōhai.) To do one's best? (がんばる, ganbaru.) Hello on the phone? (もしもし, moshimoshi.) A number? (ばんごう, bangō.) Contact? (れんらく, renraku.) A response? (へんじ, henji.) To pass on? (つたえる, tsutaeru.) To discuss? (はなしあう, hanashiau.) To put together? (まとめる, matomeru.) To entrust? (まかせる, makaseru.) To refuse? (ことわる, kotowaru.) To inform? (しらせる, shiraseru.) To play? (あそぶ, asobu.) To swim? (およぐ, oyogu.) Swimming? (すいえい, suiei.) To run? (はしる, hashiru.) Exercise? (うんどう, undō.) A match? (しあい, shiai.) To win? (かつ, katsu.) To be beaten? (まける, makeru.) A player? (せんしゅ, senshu.) Cheering? (おうえん, ōen.) To throw? (なげる, nageru.) To kick? (ける, keru.) Baseball? (やきゅう, yakyū.) Judo? (じゅうどう, jūdō.) A championship win? (ゆうしょう, yūshō.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R235-review-230-235-type",
+              "prompt": "Say the Japanese for 'a company president'.",
+              "assesses": [
+                "JA-LEX-C230-BOSS230-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃちょう",
+                "shachō",
+                "shachou",
+                "shachoo",
+                "shacho"
+              ],
+              "feedback": {
+                "correct": "Right: しゃちょう (shachō) is 'a company president'.",
+                "incorrect": "'A company president' is しゃちょう (shachō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

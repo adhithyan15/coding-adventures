@@ -1,0 +1,11 @@
+{
+  "id": "JA-C154-nichijou",
+  "pathSegment": "JA-PATH-154-HABIT154",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-154-HABIT154",
+      "order": 2
+    }
+  ]
+}

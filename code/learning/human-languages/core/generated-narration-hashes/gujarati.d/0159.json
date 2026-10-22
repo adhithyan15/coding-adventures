@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:a31d9df68aac0239",
+  "lessonIds": [
+    "GU-C159-majvu",
+    "GU-C159-sukavvu",
+    "GU-C159-nal",
+    "GU-C159-dholvu",
+    "GU-C159-bhoy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch159.txt",
+  "json": "gujarati/narration/ch159.json",
+  "textHash": "fnv1a64:8da06aa3cc426103",
+  "jsonHash": "fnv1a64:ad605e6663d11b3d",
+  "findings": []
+}

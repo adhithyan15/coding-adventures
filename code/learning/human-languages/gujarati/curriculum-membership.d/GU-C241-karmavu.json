@@ -1,0 +1,11 @@
+{
+  "id": "GU-C241-karmavu",
+  "pathSegment": "GU-PATH-241-BLOOM241",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-241-BLOOM241",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C221-taion",
+  "pathSegment": "JA-PATH-221-FEVER221",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-221-FEVER221",
+      "order": 0
+    }
+  ]
+}

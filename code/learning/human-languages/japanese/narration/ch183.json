@@ -1,0 +1,943 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 183,
+  "title": "Customers and Shop Staff",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:1ebdeb2ae60c4eba",
+  "lessons": [
+    {
+      "id": "JA-C183-kyaku",
+      "sequence": 10960,
+      "title": "きゃく (kyaku) — customer; guest, visitor",
+      "headword": "きゃく",
+      "romanization": "kyaku",
+      "gloss": "customer; guest, visitor",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8401dba76688d7fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for banknote, then the Japanese for small coins."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きゃく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゃく — kyaku — \"customer; guest, visitor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みせは きゃくが おおいです。 — kono mise wa kyaku ga ōi desu — \"This shop has many customers.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きゃく (kyaku) is Sino-Japanese (kango): one Chinese character, \"guest, customer\", read with its on'yomi, a reading borrowed from Chinese (Middle Chinese khaek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono mise wa kyaku ga ōi desu — This shop has many customers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono mise wa kyaku ga ōi desu* — This shop has many customers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for banknote, then the Japanese for small coins, then say kyaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for banknote, then the Japanese for small coins, then say *kyaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きゃく (kyaku) mean? (\"Customer; guest, visitor\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C183-kyaku-type",
+              "prompt": "Say the Japanese for 'customer'.",
+              "assesses": [
+                "JA-LEX-C183-STAFF183-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きゃく",
+                "kyaku"
+              ],
+              "feedback": {
+                "correct": "Right: きゃく (kyaku) is 'customer; guest, visitor'.",
+                "incorrect": "'Customer' is きゃく (kyaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C183-tenin",
+      "sequence": 10970,
+      "title": "てんいん (ten'in) — shop assistant; clerk",
+      "headword": "てんいん",
+      "romanization": "ten'in",
+      "gloss": "shop assistant; clerk",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc1d63aa88b2dab8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for small coins, then the Japanese for customer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てんいん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんいん — ten'in — \"shop assistant; clerk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あの てんいんは しんせつです。 — ano ten'in wa shinsetsu desu — \"That shop assistant is kind.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てんいん (ten'in) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ten, \"shop\" (Middle Chinese temH) and in, \"member, staff\" (hjwen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ten'in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ten'in*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ten'in, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ten'in*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano ten'in wa shinsetsu desu — That shop assistant is kind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano ten'in wa shinsetsu desu* — That shop assistant is kind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for small coins, then the Japanese for customer, then say ten'in again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for small coins, then the Japanese for customer, then say *ten'in* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てんいん (ten'in) mean? (\"Shop assistant; clerk\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C183-tenin-type",
+              "prompt": "Say the Japanese for 'shop assistant'.",
+              "assesses": [
+                "JA-LEX-C183-STAFF183-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てんいん",
+                "ten'in",
+                "tenin"
+              ],
+              "feedback": {
+                "correct": "Right: てんいん (ten'in) is 'shop assistant; clerk'.",
+                "incorrect": "'Shop assistant' is てんいん (ten'in)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C183-uriba",
+      "sequence": 10980,
+      "title": "うりば (uriba) — sales floor; counter, department",
+      "headword": "うりば",
+      "romanization": "uriba",
+      "gloss": "sales floor; counter, department",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:245e02b5c8f9a8d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for customer, then the Japanese for shop assistant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うりば",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うりば — uriba — \"sales floor; counter, department\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くつの うりばは どこですか。 — kutsu no uriba wa doko desu ka — \"Where is the shoe department?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うりば (uriba) is native Japanese, built from uri, the stem of uru, \"to sell\", and ba, \"place\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uriba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uriba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uriba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uriba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutsu no uriba wa doko desu ka — Where is the shoe department?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutsu no uriba wa doko desu ka* — Where is the shoe department?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for customer, then the Japanese for shop assistant, then say uriba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for customer, then the Japanese for shop assistant, then say *uriba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うりば (uriba) mean? (\"Sales floor; counter, department\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C183-uriba-type",
+              "prompt": "Say the Japanese for 'sales floor'.",
+              "assesses": [
+                "JA-LEX-C183-STAFF183-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うりば",
+                "uriba"
+              ],
+              "feedback": {
+                "correct": "Right: うりば (uriba) is 'sales floor; counter, department'.",
+                "incorrect": "'Sales floor' is うりば (uriba)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C183-erabu",
+      "sequence": 10990,
+      "title": "えらぶ (erabu) — to choose; to pick",
+      "headword": "えらぶ",
+      "romanization": "erabu",
+      "gloss": "to choose; to pick",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c035c914bc74e11d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for shop assistant, then the Japanese for sales floor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えらぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えらぶ — erabu — \"to choose; to pick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには いつも やすい くつを えらびます。 — ani wa itsumo yasui kutsu o erabimasu — \"My older brother always chooses cheap shoes.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite えらびます, erabimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えらぶ (erabu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "erabu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *erabu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "erabu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *erabu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa itsumo yasui kutsu o erabimasu — My older brother always chooses cheap shoes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa itsumo yasui kutsu o erabimasu* — My older brother always chooses cheap shoes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for shop assistant, then the Japanese for sales floor, then say erabu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for shop assistant, then the Japanese for sales floor, then say *erabu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えらぶ (erabu) mean? (\"To choose; to pick\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C183-erabu-type",
+              "prompt": "Say the Japanese for 'to choose'.",
+              "assesses": [
+                "JA-LEX-C183-STAFF183-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えらぶ",
+                "erabu"
+              ],
+              "feedback": {
+                "correct": "Right: えらぶ (erabu) is 'to choose; to pick'.",
+                "incorrect": "'To choose' is えらぶ (erabu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C183-narabu",
+      "sequence": 11000,
+      "title": "ならぶ (narabu) — to line up; to queue",
+      "headword": "ならぶ",
+      "romanization": "narabu",
+      "gloss": "to line up; to queue",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdadf6e82c2640dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sales floor, then the Japanese for to choose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ならぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ならぶ — narabu — \"to line up; to queue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きゃくが みせの まえに ならびます。 — kyaku ga mise no mae ni narabimasu — \"Customers line up in front of the shop.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ならびます, narabimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ならぶ (narabu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narabu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narabu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narabu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narabu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyaku ga mise no mae ni narabimasu — Customers line up in front of the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyaku ga mise no mae ni narabimasu* — Customers line up in front of the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sales floor, then the Japanese for to choose, then say narabu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sales floor, then the Japanese for to choose, then say *narabu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ならぶ (narabu) mean? (\"To line up; to queue\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C183-narabu-type",
+              "prompt": "Say the Japanese for 'to line up'.",
+              "assesses": [
+                "JA-LEX-C183-STAFF183-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ならぶ",
+                "narabu"
+              ],
+              "feedback": {
+                "correct": "Right: ならぶ (narabu) is 'to line up; to queue'.",
+                "incorrect": "'To line up' is ならぶ (narabu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R183-review-178-183",
+      "sequence": 11010,
+      "title": "Words from chapters 178–183 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 178-183",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e5b716066c8cf15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for pork and beef."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pork, beef, chicken meat, milk, to chill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pork, beef, chicken meat, milk, to chill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "black tea, rice wine, to pour, to spill, to warm up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: black tea, rice wine, to pour, to spill, to warm up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cafe, cafeteria, miso soup, to grip, rice ball",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cafe, cafeteria, miso soup, to grip, rice ball]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shopping, price, how much, to sell, to sell well",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: shopping, price, how much, to sell, to sell well]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pay, change, cash, banknote, small coins",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pay, change, cash, banknote, small coins]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "customer, shop assistant, sales floor, to choose, to line up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: customer, shop assistant, sales floor, to choose, to line up]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pork? (ぶたにく, butaniku.) Beef? (ぎゅうにく, gyūniku.) Chicken meat? (とりにく, toriniku.) Milk? (ぎゅうにゅう, gyūnyū.) To chill? (ひやす, hiyasu.) Black tea? (こうちゃ, kōcha.) Rice wine? (おさけ, osake.) To pour? (そそぐ, sosogu.) To spill? (こぼす, kobosu.) To warm up? (あたためる, atatameru.) Cafe? (きっさてん, kissaten.) Cafeteria? (しょくどう, shokudō.) Miso soup? (みそしる, misoshiru.) To grip? (にぎる, nigiru.) Rice ball? (おにぎり, onigiri.) Shopping? (かいもの, kaimono.) Price? (ねだん, nedan.) How much? (いくら, ikura.) To sell? (うる, uru.) To sell well? (うれる, ureru.) To pay? (はらう, harau.) Change? (おつり, otsuri.) Cash? (げんきん, genkin.) Banknote? (さつ, satsu.) Small coins? (こぜに, kozeni.) Customer? (きゃく, kyaku.) Shop assistant? (てんいん, ten'in.) Sales floor? (うりば, uriba.) To choose? (えらぶ, erabu.) To line up? (ならぶ, narabu.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R183-review-178-183-type",
+              "prompt": "Say the Japanese for 'pork'.",
+              "assesses": [
+                "JA-LEX-C178-MEAT178-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶたにく",
+                "butaniku"
+              ],
+              "feedback": {
+                "correct": "Right: ぶたにく (butaniku) is 'pork'.",
+                "incorrect": "'Pork' is ぶたにく (butaniku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

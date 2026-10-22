@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-208-HIGHWAY208",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "GU-EXT-208-HIGHWAY208"
+  ],
+  "after": []
+}

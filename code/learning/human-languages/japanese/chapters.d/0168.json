@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Deadlines and Putting Things Off",
+  "label": "ch:ja-deadlines-and-putting-things-off",
+  "canDo": "I can talk about deadlines and plans that move.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C168-nobiru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can talk about deadlines and plans that move.",
+    "assesses": [
+      "JA-LEX-C168-DELAY168-03",
+      "JA-LEX-C168-DELAY168-04",
+      "JA-LEX-C168-DELAY168-05"
+    ]
+  }
+}

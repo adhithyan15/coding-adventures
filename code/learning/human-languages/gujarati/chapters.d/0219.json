@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Thunder and hail",
+  "label": "ch:gu-thunder-and-hail",
+  "canDo": "I can say that it will thunder and that hail will fall.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C219-mavthu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can say that it will thunder and that hail will fall.",
+    "assesses": [
+      "GU-LEX-C219-THUNDER219-03",
+      "GU-LEX-C219-THUNDER219-04",
+      "GU-LEX-C219-THUNDER219-05"
+    ]
+  }
+}

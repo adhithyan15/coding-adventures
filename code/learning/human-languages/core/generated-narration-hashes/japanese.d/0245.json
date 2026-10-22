@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:44ec1740189ff218",
+  "lessonIds": [
+    "JA-C245-ureshii",
+    "JA-C245-sabishii",
+    "JA-C245-yorokobu",
+    "JA-C245-warau",
+    "JA-C245-egao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch245.txt",
+  "json": "japanese/narration/ch245.json",
+  "textHash": "fnv1a64:07b813522dbd4fc7",
+  "jsonHash": "fnv1a64:d1fd25244c7aa548",
+  "findings": []
+}

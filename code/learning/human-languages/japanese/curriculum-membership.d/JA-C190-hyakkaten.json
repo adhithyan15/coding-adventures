@@ -1,0 +1,11 @@
+{
+  "id": "JA-C190-hyakkaten",
+  "pathSegment": "JA-PATH-190-TOWN190",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-190-TOWN190",
+      "order": 2
+    }
+  ]
+}

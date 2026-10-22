@@ -1,0 +1,11 @@
+{
+  "id": "GU-C193-valvu-turn",
+  "pathSegment": "GU-PATH-193-WAY193",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-193-WAY193",
+      "order": 4
+    }
+  ]
+}

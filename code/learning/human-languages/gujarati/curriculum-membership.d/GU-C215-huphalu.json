@@ -1,0 +1,11 @@
+{
+  "id": "GU-C215-huphalu",
+  "pathSegment": "GU-PATH-215-FOG215",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-215-FOG215",
+      "order": 4
+    }
+  ]
+}

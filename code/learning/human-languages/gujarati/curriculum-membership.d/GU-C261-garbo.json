@@ -1,0 +1,11 @@
+{
+  "id": "GU-C261-garbo",
+  "pathSegment": "GU-PATH-261-KITES261",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-261-KITES261",
+      "order": 3
+    }
+  ]
+}

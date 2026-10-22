@@ -1,0 +1,11 @@
+{
+  "id": "JA-C236-miru",
+  "pathSegment": "JA-PATH-236-FILM236",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-236-FILM236",
+      "order": 1
+    }
+  ]
+}

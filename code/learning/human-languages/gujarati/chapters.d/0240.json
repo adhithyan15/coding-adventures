@@ -1,0 +1,19 @@
+{
+  "chapter": 240,
+  "title": "In the garden",
+  "label": "ch:gu-in-the-garden",
+  "canDo": "I can say what I planted and watered.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C240-gulab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 240: I can say what I planted and watered.",
+    "assesses": [
+      "GU-LEX-C240-GARDEN240-03",
+      "GU-LEX-C240-GARDEN240-04",
+      "GU-LEX-C240-GARDEN240-05"
+    ]
+  }
+}

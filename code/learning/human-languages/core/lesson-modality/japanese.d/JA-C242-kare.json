@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C242-kare",
+    "language": "japanese",
+    "chapter": 242,
+    "sequence": 14530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f5a728d394bf60a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 196,
+  "title": "Up to the top storey",
+  "label": "ch:gu-up-to-the-top-storey",
+  "canDo": "I can find my way in a building: the floor, the lift and the way in.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C196-praves",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 196: I can find my way in a building: the floor, the lift and the way in.",
+    "assesses": [
+      "GU-LEX-C196-STOREY196-03",
+      "GU-LEX-C196-STOREY196-04",
+      "GU-LEX-C196-STOREY196-05"
+    ]
+  }
+}

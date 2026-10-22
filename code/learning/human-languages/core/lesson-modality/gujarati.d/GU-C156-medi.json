@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C156-medi",
+    "language": "gujarati",
+    "chapter": 156,
+    "sequence": 8570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1e0f1e6be37162a"
+  },
+  "findings": []
+}

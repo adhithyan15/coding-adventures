@@ -1,0 +1,11 @@
+{
+  "id": "JA-C247-komaru",
+  "pathSegment": "JA-PATH-247-PRAISE247",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-247-PRAISE247",
+      "order": 3
+    }
+  ]
+}

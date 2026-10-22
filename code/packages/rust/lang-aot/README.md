@@ -29,14 +29,28 @@ their checked total stays within `2^53 - 1` units, so every path value remains
 an exact binary64 integer; the budget is tracked through parentheses and
 supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
-`2^53`, including exact additive composition; fractional factors, non-unit
-integer division, denominator roots, repeated roots, and oversized products
-stay conservative. A non-unit static divisor is accepted only when it divides
+`2^53`, including exact additive composition; fractional factors, denominator
+roots, repeated roots, and oversized products stay conservative. A non-unit
+static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
-whole-number factors may precede the sign-rooted numerator when multiplication
-alone connects them to that root; a division before the root stays
-conservative. Unary
-signs, arithmetic composition with finite static operands, and real-valued
+whole-number factors may precede the sign-rooted numerator, including exact
+divisions among those factors, when multiplication connects the resulting
+prefix to that root. Variable-free integer `div` and `mod` reductions may also
+be folded left-to-right in that prefix when multiplication connects the folded
+integer to the root; zero or dynamic divisors, oversized prefixes, and division
+by the root stay conservative. Positive
+variable-free whole-number powers may raise the exact sign-rooted integer
+transform within the existing exponent-unroll cap while checked exponentiation
+remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
+stay conservative. Integer `div` by a variable-free nonzero whole number may
+reduce the exact transform with a truncation-toward-zero bound, including
+composition through later powers, remainders, and exact real division; zero,
+dynamic, and sign-rooted divisors remain outside this composed proof. Integer
+`mod` by a variable-free nonzero whole number may
+reduce the exact transform, including composition through later exact powers
+and divisions; zero and dynamic divisors remain outside this composed
+provenance proof. Unary signs, arithmetic composition with finite static
+operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
 results may also widen through a real name formal. Other real name-actual
@@ -225,8 +239,8 @@ GC-linked integration tests use the static archive path reported by Cargo, so
 builds the archive in an isolated temporary target directory containing spaces.
 
 Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
-BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, Macsyma, and
-Perl** to native executables through the shared LANG VM chain.
+BASIC, Oct, McCarthy Lisp, ALGOL 60, FLOW-MATIC, COBOL-60, Macsyma, Perl,
+and Python** to native executables through the shared LANG VM chain.
 
 The language matrix compares text output using LF line endings, accepting the
 equivalent CRLF produced by Windows text runtimes. It preserves lone carriage
@@ -659,6 +673,50 @@ host — via the same `x86_64-backend` and `elf_object` / `pe_object` /
 No backend changes needed — every frontend gets x86-64 Linux, x86-64
 Windows, and ARM64 macOS for free.
 
+## Ruby (LANG84 phase 5a)
+
+`--lang ruby` (or `rb`, or a `.rb` file) compiles Ruby's `rb-int-puts`
+subset — `puts` of `+ - * / %` integer arithmetic — with `ruby-iir-compiler`
+on its default release, `3.3.6`. That frontend walks the parse tree the
+generic `GrammarLexer`/`GrammarParser` build from `ruby3.3.6.tokens` and
+`.grammar` (no hand-written lexer) and emits only LANG83 registry operations:
+`/` is `i64_div_floor`, `%` is `i64_mod_floor`, `puts` is `print_i64`, and
+`puts()` is `putchar 10`. So no backend has Ruby-specific code, and a zero
+divisor stops the program the LANG83 way: the output so far, then
+`Trap.DivZero`.
+
+Thirteen `lang_matrix` rows (each a case of
+`code/grammars/ruby/corpus/rb-int-puts/`) declare all eight executable
+columns. Four of them are the matrix's first `Expect::StdoutThenTrap` rows,
+which check the output written before the trap *and* the kind each column
+reports (stderr on native/LLVM/JVM/CLR, `env.__trap` on WASM,
+`VMError::Trap` on the VM and JIT, a caught `erlang:error` on BEAM):
+
+```sh
+cargo test -p lang-aot --test lang_matrix ruby_rows_ -- --nocapture
+```
+
+`ruby_rows_agree_with_the_host_ruby_oracle` re-checks every expectation
+against a host ruby 3.3 (the compiled programs never run on it),
+`ruby_rows_are_rb_int_puts_corpus_cases` ties the rows to the corpus, and
+`ruby_rows_pass_the_lang83_check_on_all_nine_backends` runs
+`check_module_for` on all nine backends.
+
+Since phase 5b, `--lang ruby@<release>` selects any profiled release of
+`code/grammars/ruby/releases.csv` exactly, through the same release API as
+Perl, and the module records it in `IIRModule::release`:
+
+```sh
+lang-aot prog.rb --lang ruby@3.3.7 --emit=llvm-ir
+```
+
+| Request | Result |
+|---|---|
+| `ruby`, `ruby@3.3.5`, `ruby@3.3.6`, `ruby@3.3.7` | compiled on that release (`ruby` is `3.3.6`) |
+| `ruby@3.3` | `UnknownRelease`, nearest inventory IDs suggested |
+| `ruby@3.3.4` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |
+| `ruby@0.49`, `ruby@0.50` | `ReleaseNotAvailable` (a grammar pair, but no IIR profile) |
+
 ## Standard operations and compile-time refusal (LANG83)
 
 A frontend that needs a new operation (floor division, output without a
@@ -742,6 +800,19 @@ and Ruby's integer subsets use to promote to a bignum). The conformance suite
 runs them at the i64 bounds and one step past them on every executable column.
 The JVM wide-model evidence for ops is now derived from the registry: every Op
 with an `i64` operand type keeps its module on `long`.
+
+Since LANG83 PR6a every backend lowers `write_f64_py` and `write_f64_js`. They
+print an `f64` the way Python's `repr` or JavaScript's `String(x)` does, as the
+shortest round-trip digits with no newline (`1e+16` vs `10000000000000000`,
+`-0.0` vs `0`, `inf` vs `Infinity`). Each backend derives the digits its own
+way:
+
+- the native runtime, LLVM and WASM carry a Burger–Dybvig core;
+- the JVM, CLR and BEAM re-lay out their host's shortest formatter;
+- the VM and JIT use Rust's formatting, with ties corrected to even.
+
+There is no shared helper library. The conformance suite checks a 90-value
+table on every executable column against host `python3` and `node`.
 
 ## Limitations
 
@@ -1230,3 +1301,46 @@ CLR simulator. Acceptance depends on the actual IIR: dynamic helper boundaries,
 McCarthy `ref<any>` and Nib narrow types remain unsupported, and the CLR01
 out-of-i32 literal gate remains in force. No type inference or fallback occurs.
 The default encoded API, CLI and textual result ABI retain their behavior.
+
+## Python on every backend (LANG84 phase 7a)
+
+`--lang python` (or `py`, or a `.py` file) compiles the `py-int-print`
+subset: `print(<expr>)` and `print()` over decimal integers, parentheses,
+unary `+`/`-` and `+ - * // %`. It goes through
+`python_iir_compiler::compile_source_at` on the frontend's default release,
+3.13.16. The compiler walks the tree that the generic
+`GrammarLexer`/`GrammarParser` build from `python3.13.16.tokens` and
+`.grammar`, and emits only LANG83 registry ops:
+
+| Python | IIR |
+|---|---|
+| `a + b`, `a - b`, `a * b`, `-a` | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` (PR4) |
+| `a // b`, `a % b` | `i64_div_floor`, `i64_mod_floor` |
+| `print(a)`, `print()` | `print_i64`, `putchar 10` |
+
+No backend has Python code. Python's ints are unbounded and these are
+`i64`. Where CPython would print a bigger int, the program prints what it
+has so far and stops with `Trap.Overflow`: a stated divergence, with bignum
+promotion left for later. A zero divisor stops it with `Trap.DivZero`, like
+`ZeroDivisionError`.
+
+The eighteen `lang_matrix` Python rows are every accepted case of
+`code/grammars/python/corpus/py-int-print/`, and they declare all eight
+executable columns. Nine of them are `StdoutThenTrap` rows, which check the
+output written before the trap *and* the kind each column reports. LANG79's
+float pilot (`python_iir_compiler::compile_source`) is a separate API and is
+not reachable from `lang-aot`.
+
+Since phase 7b, `--lang python@<release>` selects any profiled release of
+`code/grammars/python/releases.csv` exactly, through the same release API as
+Perl and Ruby, and the module records it in `IIRModule::release`:
+
+```sh
+lang-aot prog.py --lang python@3.0a1 --emit=llvm-ir
+```
+
+| Request | Result |
+|---|---|
+| `python`, `python@3.0a1`, `python@3.11.17`, `python@3.12.3`, `python@3.13.16`, `python@3.16.0a1` | compiled on that release (`python` is `3.13.16`) |
+| `python@3.13` | `UnknownRelease`, nearest inventory IDs suggested |
+| `python@3.12.2` | `ReleaseNotAvailable` (no grammar pair: `grammar_stage none`) |

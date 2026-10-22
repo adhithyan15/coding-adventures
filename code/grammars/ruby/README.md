@@ -106,7 +106,7 @@ No row has an empty date.
 ## Release pairs (LANG84 phase 3.2, slice R0)
 
 Five rows have a materialized pair and claim `partial`, stage `P`, subset
-`rb-int-puts` (declared in `subsets.csv`):
+`rb-int-puts` (declared in `subsets.csv`; `%` joined the subset in phase 5a):
 
 | Release | Basis | Token class | Grammar class |
 | --- | --- | --- | --- |
@@ -136,7 +136,37 @@ every `.tokens` file and pinned by tests in `code/packages/rust/ruby-parser`
 (`tests/r0_differential.rs`, `tests/r0_releases.rs`,
 `tests/release_probes.rs`).
 
-The `rb-int-puts` corpus directory named in `subsets.csv` arrives with the
-IIR stage (LANG84 phase 5); stage P is proven by the parser probes above.
+## IIR status (LANG84 phase 5a)
 
-`python3 code/scripts/release_inventory.py check` validates this file.
+`corpus/rb-int-puts/` is the subset's corpus. Each case is `<name>.rb` plus
+
+- `<name>.expect`: the exact stdout, followed — if the program stops on a
+  LANG83 trap — by one final line `trap:<kind>` (Ruby's `ZeroDivisionError`
+  is `trap:Trap.DivZero`); or
+- `<name>.reject`: one line naming the LANG84 C6 error category the compile
+  must fail with (`Parse`, `Lex`, `Unsupported`), for programs Ruby runs but
+  the subset refuses (Bignums, `puts -7`, strings, …);
+
+and always `<name>.cite`, the oracle record: the interpreter (host ruby 3.3.6
+for every case today), the command, and the observed result.
+
+`ruby-iir-compiler`'s `tests/release_subsets.rs` runs the corpus on every row
+whose `iir_status` lists `rb-int-puts` — today 3.3.5, 3.3.6 and 3.3.7, which
+name profile `ruby33` and compile to identical IIR — and re-checks every case
+against a host ruby 3.3. 3.3.6, the default release, also claims
+`backend_status`: `lang-aot`'s matrix runs thirteen corpus cases on every
+backend there. 0.49 and 0.50 stay at stage P with no profile: their grammars
+parse the subset, but in those releases `puts` is only `IO#puts` and
+`Fixnum#/` truncates, so the programs do not run as written (see
+`code/packages/rust/ruby-iir-compiler/src/profiles.rs`).
+
+`python3 code/scripts/release_inventory.py check --matrix` validates this
+file and `subsets.csv`.
+
+## Subsets (`subsets.csv`)
+
+`subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
+`iir_status` and `backend_status` may name. It has one entry, `rb-int-puts`:
+LANG80's integer `puts` subset (phase 5 brings it to stage I and B on the R0
+pairs), defined in LANG80. Its corpus goes in `corpus/rb-int-puts/` when a
+release first claims stage I. No row names it yet.

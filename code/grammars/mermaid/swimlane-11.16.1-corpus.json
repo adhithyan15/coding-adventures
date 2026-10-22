@@ -1,6 +1,7 @@
 {
   "upstream_version": "11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "complete pinned Mermaid 11.16.1 Swimlane syntax corpus",
   "fixtures": [
     {
       "name": "basic-handoff",
@@ -263,8 +264,12 @@
       "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\n  archive[Archive]\nend\ndraft o-.-o review\nreview x-.-> approve\napprove o==x publish\npublish x==> archive"
     },
     {
+      "name": "long-endpoint-markers",
+      "source": "swimlane-beta LR\nsubgraph Review\n  draft[Draft]\n  review[Review]\n  approve[Approve]\n  publish[Publish]\nend\ndraft o----> review\nreview x=====o approve\napprove <-....-> publish"
+    },
+    {
       "name": "minimum-link-lengths",
-      "source": "swimlane-beta LR\nsubgraph Review\n  first[One rank]\n  second[Two ranks]\n  third[Three ranks]\n  fourth[Complete]\nend\nfirst --> second\nsecond ===> third\nthird -...-> fourth"
+      "source": "swimlane-beta LR\nsubgraph Review\n  first[One rank]\n  second[Two ranks]\n  third[Three ranks]\n  fourth[Five ranks]\n  fifth[Complete]\nend\nfirst --> second\nsecond ===> third\nthird -...-> fourth\nfourth ------> fifth"
     },
     {
       "name": "styled-inline-link-labels",
@@ -297,6 +302,10 @@
     {
       "name": "edge-label-typography-styles",
       "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  review[Review]\n  done[Done]\nend\nrequest submit@-- submit --> review release@-- release --> done\nclassDef urgent font-size:22px,font-weight:bold,font-style:italic,font-family:\"Helvetica Neue\",color:#7c2d12\nclass submit urgent\nstyle release font-size:18px,font-weight:500,font-style:normal,font-family:Helvetica,color:#14532d"
+    },
+    {
+      "name": "edge-label-typography-layout",
+      "source": "swimlane-beta LR\nsubgraph Review\n  request[Request]\n  done[Done]\nend\nrequest styled@-- \"`Requires **additional** _review_`\" --> done\nclassDef emphasis font-size:20px,font-weight:500,font-style:normal,color:#7c2d12\nclass styled emphasis"
     },
     {
       "name": "positional-link-styles",
@@ -433,6 +442,18 @@
     {
       "name": "rank-crossing-optimization",
       "source": "---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n    optimizeRanksByCrossings: true\n---\nswimlane-beta LR\nsubgraph laneA[Lane A]\n  a[A]\nend\nsubgraph laneB[Lane B]\n  b[B]\nend\nsubgraph laneC[Lane C]\n  c[C]\nend\nsubgraph laneD[Lane D]\n  d[D]\nend\na --> d\nc --> b"
+    },
+    {
+      "name": "icon-glyph-node",
+      "source": "swimlane-beta LR\nsubgraph Services\n  parser@{ icon: \"logos:rust\", label: \"Parser\" }\n  paint[Paint]\nend\nparser --> paint"
+    },
+    {
+      "name": "icon-node-forms",
+      "source": "swimlane-beta LR\nsubgraph Services\n  plain@{ icon: \"logos:rust\" }\n  square@{ icon: \"logos:rust\", form: square, label: \"Square\", h: 60 }\n  circle@{ icon: \"logos:rust\", form: circle, label: \"Circle\", pos: t }\n  rounded@{ icon: \"logos:rust\", form: rounded, label: \"Rounded\" }\nend\nplain --> square --> circle --> rounded"
+    },
+    {
+      "name": "image-node",
+      "source": "swimlane-beta LR\nsubgraph Assets\n  logo@{ img: \"https://example.com/logo.png\", label: \"Logo\", pos: t, w: 96, h: 64, constraint: on }\n  output[Output]\nend\nlogo --> output"
     }
   ]
 }

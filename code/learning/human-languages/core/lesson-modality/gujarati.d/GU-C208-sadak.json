@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C208-sadak",
+    "language": "gujarati",
+    "chapter": 208,
+    "sequence": 11290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:744ed68aaa45c973"
+  },
+  "findings": []
+}

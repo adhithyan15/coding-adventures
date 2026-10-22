@@ -1,0 +1,11 @@
+{
+  "id": "GU-C145-na-nahi",
+  "pathSegment": "GU-PATH-145-NEG145",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-145-NEG145",
+      "order": 5
+    }
+  ]
+}

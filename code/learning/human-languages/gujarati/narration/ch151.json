@@ -1,0 +1,751 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 151,
+  "title": "Reading a shop notice",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:51f41cb592f130d2",
+  "lessons": [
+    {
+      "id": "GU-C151-notis",
+      "sequence": 7960,
+      "title": "નોટિસ (noṭis) — a posted notice",
+      "headword": "નોટિસ",
+      "romanization": "noṭis",
+      "gloss": "a posted notice, a notice",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7bd820dc7585080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say perhaps she'll come, then I'm going to go to the market, as a plan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નોટિસ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નોટિસ (noṭis) — \"a posted notice, a notice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A notice is a sheet put up for everyone: on a shop door, at a station, at work. Gujarati took the English word whole."
+            },
+            {
+              "kind": "speech",
+              "text": "નોટિસ ક્યાં છે? — noṭis kyā̃ che? — Where is the notice? મેં નોટિસ વાંચી. — mẽ noṭis vā̃cī. — I read the notice."
+            },
+            {
+              "kind": "speech",
+              "text": "વાંચી ends in -ી because નોટિસ (noṭis) is feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નોટિસ (noṭis) is a loan from English notice. English took it from French, and French from Latin notitia, \"a being known\", built on nōscere, \"to come to know\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading the notices on a street."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noṭis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noṭis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "મેં નોટિસ વાંચી — mẽ noṭis vā̃cī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **મેં નોટિસ વાંચી** — *mẽ noṭis vā̃cī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noṭis kyā̃ che?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noṭis kyā̃ che?*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નોટિસ (noṭis) mean? (A posted notice.) Why વાંચી after it? (It is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C151-khullun",
+      "sequence": 7970,
+      "title": "ખુલ્લું (khullũ) — not closed",
+      "headword": "ખુલ્લું",
+      "romanization": "khullũ",
+      "gloss": "not closed, open",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9e95a95c1bd9091",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say a posted notice, then I read the notice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખુલ્લું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખુલ્લું (khullũ) — \"not closed, open\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It describes a door, a window or a shop that stands open, and it bends like my:"
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાન ખુલ્લી છે. — dukān khullī che. — The shop is open. દરવાજો ખુલ્લો છે. — darvājo khullo che. — The gate is open. બારી ખુલ્લી હતી. — bārī khullī hatī. — The window was open."
+            },
+            {
+              "kind": "speech",
+              "text": "ખોલવું is the act, to open; ખુલ્લું (khullũ) is the state it leaves behind."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખુલ્લું (khullũ) is inherited. CDIAL sets ખોલવું kholvũ, \"to open\", and khulvũ, \"to be open\", under a reconstructed Indo-Aryan khōll- and khull- (CDIAL 3945); ખુલ્લું is the adjective of that second verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading the notices on a street."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khullũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khullũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "દુકાન ખુલ્લી છે — dukān khullī che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **દુકાન ખુલ્લી છે** — *dukān khullī che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "દુકાન ખુલ્લી નથી — dukān khullī nathī, the shop is not open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **દુકાન ખુલ્લી નથી** — *dukān khullī nathī*, the shop is not open]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખુલ્લું (khullũ) mean? (Not closed, open.) Why ખુલ્લી with દુકાન? (દુકાન is feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C151-phakt",
+      "sequence": 7980,
+      "title": "ફક્ત (phakt) — only",
+      "headword": "ફક્ત",
+      "romanization": "phakt",
+      "gloss": "only, no more than",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aae6e2427b122520",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the shop is open, then the window was open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ફક્ત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફક્ત (phakt) — \"only, no more than\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Notices are full of limits, and ફક્ત (phakt) sets them:"
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાન ફક્ત સવારે ખુલ્લી છે. — dukān phakt savāre khullī che. — The shop is open only in the morning. ફક્ત પાંચ રૂપિયા. — phakt pā̃c rūpiyā. — Only five rupees."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands right before the word it limits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ફક્ત (phakt) is usually traced, through Persian, to Arabic faqaṭ, \"only, and that is enough\". Lane treats faqaṭ under the root q-ṭ, whose qaṭ means \"enough, sufficient\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading the notices on a street."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phakt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phakt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukān phakt savāre khullī che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukān phakt savāre khullī che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ફક્ત ચા — phakt cā, only tea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ફક્ત ચા** — *phakt cā*, only tea]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ફક્ત (phakt) mean? (Only.) Where does it stand? (Right before the word it limits.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C151-jaher",
+      "sequence": 7990,
+      "title": "જાહેર (jāher) — public",
+      "headword": "જાહેર",
+      "romanization": "jāher",
+      "gloss": "public, open to all",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af195381e0a91fc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say only in the morning, then only five rupees."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: જાહેર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જાહેર (jāher) — \"public, open to all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It marks what belongs to everyone, and on a notice it most often comes before રજા, a holiday:"
+            },
+            {
+              "kind": "speech",
+              "text": "આવતીકાલે જાહેર રજા છે. — āvtīkāle jāher rajā che. — Tomorrow is a public holiday."
+            },
+            {
+              "kind": "speech",
+              "text": "A જાહેર (jāher) રજા closes offices, banks and many shops for everybody at once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જાહેર (jāher) is usually traced, through Persian, to Arabic ẓāhir, \"apparent, manifest\", from the root ẓ-h-r, \"to come out into the open, to become evident\" (Lane). What is out in the open is public."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading the notices on a street."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāher*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvtīkāle jāher rajā che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvtīkāle jāher rajā che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "શું આજે જાહેર (jāher) રજા છે? — is today a public holiday?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **શું આજે જાહેર રજા છે?** — is today a public holiday?]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does જાહેર (jāher) mean? (Public, open to all.) Which word does it stand before on a notice? (રજા.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C151-dukan-notis",
+      "sequence": 8000,
+      "title": "(reading) (dukān roj savāre ane sānje khullī che.) — a notice on a shop door",
+      "headword": "(reading)",
+      "romanization": "dukān roj savāre ane sānje khullī che.",
+      "gloss": "a shop's notice, read for what it lets you do and when",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type"
+      ],
+      "sourceHash": "fnv1a64:99773b69f93e2f5f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say tomorrow is a public holiday, then only in the morning."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nobody is talking to anybody on this page. A notice tells you what you may do, and when."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નોટિસ (noṭis) દુકાન રોજ સવારે અને સાંજે ખુલ્લી છે. બપોરે દુકાન ખુલ્લી નથી. રવિવારે રજા છે. આવતીકાલે, સોમવારે, જાહેર (jāher) રજા છે. મંગળવારે દુકાન ફક્ત (phakt) સવારે ખુલ્લી હશે. બુધવારે દુકાન સવારે અને સાંજે ફરી ખુલ્લી હશે. આજે કેરી સસ્તી છે! સાંજે દૂધ અને દહીં પણ છે. આભાર."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice once, straight through, without translating",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice once, straight through, without translating]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it a second time, and find every word that says when",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it a second time, and find every word that says *when*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Almost every line opens on a when: રોજ, બપોરે, then four days, each with the -ે of on. Two lines say ખુલ્લી હશે, will be open, about days still to come. The line with! is an advert, set into the notice to bring you in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "can you shop here tomorrow, Monday? (No: જાહેર (jāher) રજા.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: can you shop here tomorrow, Monday? (No: **જાહેર રજા**.)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "milk on Wednesday evening: yes or no? (Yes: open, with milk in the evening.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: milk on Wednesday evening: yes or no? (Yes: open, with milk in the evening.)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "what is cheap today? (Mangoes: કેરી.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: what is cheap today? (Mangoes: **કેરી**.)]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C151-dukan-notis-tuesday",
+              "prompt": "Tomorrow is Monday. You need rice on Tuesday afternoon. When should you go, and why?",
+              "assesses": [
+                "GU-SKILL-C151-READ-NOTICE-01",
+                "GU-LEX-C151-READ151-03"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "on tuesday morning: on tuesday the shop is open only in the morning",
+                "મંગળવારે સવારે",
+                "maṅgaḷvāre savāre",
+                "tuesday morning",
+                "on tuesday morning"
+              ],
+              "feedback": {
+                "correct": "phakt savāre: on Tuesday only the morning is open.",
+                "incorrect": "The Tuesday line says phakt savāre: only in the morning."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which day is the shop open only in the morning? (મંગળવારે, Tuesday.) Which two days is it closed? (રવિવારે and સોમવારે: Sunday, and the public holiday.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

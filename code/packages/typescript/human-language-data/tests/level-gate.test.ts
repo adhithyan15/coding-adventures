@@ -320,6 +320,13 @@ describe("the gate that would have caught the A2 claim", () => {
     // Telugu followed as the eighteenth, with chapters 153-277 (the negation
     // and questions, past, future and practical-reading nodes, 625 headwords,
     // 153 verbs), which moved it from the A1 row of HELD to the A2 row.
+    // Japanese followed, with chapters 146-249 (520 hiragana headwords, 210
+    // verbs, on its already-realized A2 spine nodes), which moved it from the
+    // A1 row of HELD to the A2 row.
+    // Gujarati followed, with chapters 145-152 (the negation and questions,
+    // past, future and practical-reading nodes, plus the letters ઓ ડ ઊ) and
+    // chapters 153-272 (600 headwords, 234 verbs), which moved it from the A1
+    // row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious

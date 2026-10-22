@@ -1,0 +1,11 @@
+{
+  "id": "GU-C187-vadhare",
+  "pathSegment": "GU-PATH-187-PRICE187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-187-PRICE187",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:1cca8e2b91b82711",
+  "lessonIds": [
+    "GU-C230-dadh",
+    "GU-C230-jadbu",
+    "GU-C230-asu",
+    "GU-C230-pidavu",
+    "GU-C230-bebhan-thavu",
+    "GU-R230-review-225-230"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch230.txt",
+  "json": "gujarati/narration/ch230.json",
+  "textHash": "fnv1a64:6e0c4e1206172f94",
+  "jsonHash": "fnv1a64:362d33e370ab1766",
+  "findings": []
+}

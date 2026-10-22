@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "Students and Classrooms",
+  "label": "ch:ja-students-and-classrooms",
+  "canDo": "I can talk about students, classrooms and lessons.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C224-narau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can talk about students, classrooms and lessons.",
+    "assesses": [
+      "JA-LEX-C224-SCHOOL224-03",
+      "JA-LEX-C224-SCHOOL224-04",
+      "JA-LEX-C224-SCHOOL224-05"
+    ]
+  }
+}

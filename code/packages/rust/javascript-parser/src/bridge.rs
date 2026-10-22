@@ -255,6 +255,13 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
     //                | statement ;
     // Alternation → exactly one child Node.
     let child = sole_node(node).ok_or_else(|| internal(node, "expected 1 child"))?;
+    convert_source_element_child(child)
+}
+
+/// Convert the one alternative a `source_element` matched. Blocks and switch
+/// clauses reuse it through [`convert_statement_list_item`], because their
+/// items are the same alternatives inlined into the parent rule.
+fn convert_source_element_child(child: &GrammarASTNode) -> Result<ProgramItem, BridgeError> {
     match child.rule_name.as_str() {
         // `function_declaration` and `generator_declaration` share the same
         // converter — the `*` distinguishes them and sets the `generator` flag
@@ -299,8 +306,42 @@ fn convert_source_element(node: &GrammarASTNode) -> Result<ProgramItem, BridgeEr
             let stmt = convert_statement(child)?;
             Ok(ProgramItem::Statement(stmt))
         }
-        // variable_statement / lexical_declaration land inside statement
+        // ES2015 lists `lexical_declaration` beside `statement` here; later
+        // editions reach it through `statement`. Either way it is the same node.
+        "lexical_declaration" => {
+            let decl = Declaration::VariableDeclaration(convert_lexical_declaration(child)?);
+            Ok(ProgramItem::Statement(Statement::Declaration(decl)))
+        }
+        // variable_statement lands inside statement
         _ => Err(unsupported(child)),
+    }
+}
+
+/// One item of a block, `case` clause or `default` clause: ECMA-262's
+/// StatementListItem, a statement *or* a declaration (#17877).
+///
+/// ```text
+///   block       = LBRACE { ( function_declaration | … | class_declaration | statement ) } RBRACE ;
+///   case_clause = "case" expression COLON { ( … | statement ) } ;
+/// ```
+///
+/// The group is inlined, so each child is the matched alternative itself:
+/// a `statement` node or a declaration node. Before #17877 these rules took
+/// only `statement`, and `{ function g(){} g() }` parsed `function g(){}` as
+/// a function *expression* that binds nothing, so the output threw
+/// `ReferenceError: g is not defined`.
+///
+/// A function or class declaration becomes [`Statement::Declaration`], the
+/// same node a function body holds. Import and export are module-top-level
+/// only and are not in the group, so the last arm is unreachable from the
+/// grammar; it declines rather than mis-bridges.
+fn convert_statement_list_item(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
+    match convert_source_element_child(node)? {
+        ProgramItem::Statement(stmt) => Ok(stmt),
+        ProgramItem::Declaration(
+            decl @ (Declaration::FunctionDeclaration(_) | Declaration::ClassDeclaration(_)),
+        ) => Ok(Statement::Declaration(decl)),
+        ProgramItem::Declaration(_) => Err(unsupported(node)),
     }
 }
 
@@ -606,11 +647,11 @@ fn convert_statement(node: &GrammarASTNode) -> Result<Statement, BridgeError> {
 // -------------------------------------------------------------------------
 
 fn convert_block_statement(node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
-    // block = LBRACE { statement } RBRACE ;
-    // All Node children are statement nodes.
+    // block = LBRACE { ( <declarations> | statement ) } RBRACE ;
+    // Each Node child is a statement or a declaration (#17877).
     let stmts: Result<Vec<Statement>, _> = node_children(node)
         .into_iter()
-        .map(convert_statement)
+        .map(convert_statement_list_item)
         .collect();
     Ok(BlockStatement { cv: None, body: stmts? })
 }
@@ -1020,21 +1061,21 @@ fn convert_switch_statement(node: &GrammarASTNode) -> Result<SwitchStatement, Br
 }
 
 fn convert_case_clause(node: &GrammarASTNode) -> Result<SwitchCase, BridgeError> {
-    // case_clause = "case" expression COLON { statement }
+    // case_clause = "case" expression COLON { ( <declarations> | statement ) }
     let nodes = node_children(node);
     let test_n = nodes
         .first()
         .ok_or_else(|| internal(node, "case_clause: missing test expression"))?;
     let test = Some(convert_expression(test_n)?);
     let consequent: Result<Vec<Statement>, _> =
-        nodes.iter().skip(1).map(|n| convert_statement(n)).collect();
+        nodes.iter().skip(1).map(|n| convert_statement_list_item(n)).collect();
     Ok(SwitchCase { cv: None, test, consequent: consequent? })
 }
 
 fn convert_default_clause(node: &GrammarASTNode) -> Result<SwitchCase, BridgeError> {
-    // default_clause = "default" COLON { statement }
+    // default_clause = "default" COLON { ( <declarations> | statement ) }
     let consequent: Result<Vec<Statement>, _> =
-        node_children(node).into_iter().map(convert_statement).collect();
+        node_children(node).into_iter().map(convert_statement_list_item).collect();
     Ok(SwitchCase { cv: None, test: None, consequent: consequent? })
 }
 
@@ -3768,7 +3809,7 @@ fn convert_primary_token(t: &Token, ctx: &GrammarASTNode) -> Result<Expression, 
         }
         TokenType::String => {
             let raw = t.value.clone();
-            let value = unquote_string(&raw);
+            let value = decode_string_escapes(&raw);
             return Ok(Expression::StringLiteral(StringLiteral { cv: t.cv.clone(), value, raw }));
         }
         TokenType::Name => {
@@ -3994,7 +4035,7 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
     //                                      // object at runtime.
     //
     // We now switch on `t.type_`, exactly mirroring `convert_primary_token`, and
-    // decode string keys through `unquote_string` so the key's `value` holds the
+    // decode string keys through `decode_string_escapes` so the key's `value` holds the
     // real property name. The quote-vs-bare *emission* choice is then made
     // soundly in the emitter (`emit_property_key`), which only drops the quotes
     // when the decoded name is a valid identifier (and never for `__proto__`).
@@ -4017,7 +4058,7 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
             match t.type_ {
                 TokenType::String => {
                     let raw = t.value.clone();
-                    let value = unquote_string(&raw);
+                    let value = decode_string_escapes(&raw);
                     return Ok(PropertyKey::StringLiteral(
                         coding_adventures_javascript_ast::expression::StringLiteral { cv: None, value, raw },
                     ));
@@ -4079,16 +4120,29 @@ fn parse_js_number(s: &str) -> Result<f64, ()> {
     cleaned.parse::<f64>().map_err(|_| ())
 }
 
-/// Strip the surrounding quotes and unescape the content of a JS string token.
-/// Returns the unescaped content (e.g. `"hello\nworld"` → `hello` + newline + `world`).
-fn unquote_string(raw: &str) -> String {
-    let s = if (raw.starts_with('"') && raw.ends_with('"'))
-        || (raw.starts_with('\'') && raw.ends_with('\''))
-    {
-        &raw[1..raw.len() - 1]
-    } else {
-        raw
-    };
+/// Decode the escape sequences in the interior of a JS string token.
+/// Returns the unescaped content (e.g. `hello\nworld` → `hello` + newline + `world`).
+///
+/// The input is the token's `value` **as the GrammarLexer delivers it**, and the
+/// GrammarLexer has already stripped the surrounding quotes (every `*STRING`
+/// token whose match is quoted loses its delimiters — see the lesson
+/// "GrammarLexer strips quotes from string capture groups"). So this function
+/// must NOT strip quotes itself:
+///
+/// ```text
+///   source       token value   old (stripped again)       now
+///   ----------   -----------   ------------------------   -----
+///   '"'          "             raw[1..0] → PANIC          "
+///   "'"          '             raw[1..0] → PANIC          '
+///   '"abc"'      "abc"         abc   (value miscompile)   "abc"
+///   ""           (empty)       (empty)                    (empty)
+/// ```
+///
+/// A one-character interior that happens to be a quote both "starts and ends"
+/// with that quote, so the old re-strip sliced `raw[1..0]` and panicked; a
+/// longer interior wrapped in matching quotes silently lost them. Neither shape
+/// can ever be a legitimately-quoted token here, so the strip is gone outright.
+fn decode_string_escapes(s: &str) -> String {
     let mut result = String::with_capacity(s.len());
     let mut chars = s.chars().peekable();
     while let Some(c) = chars.next() {
@@ -5389,6 +5443,66 @@ mod tests {
                     other => panic!("expected StringLiteral({want:?}) for {src}, got {other:?}"),
                 },
                 other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    /// Regression: the GrammarLexer already strips a STRING token's quotes, so
+    /// the bridge used to strip them a SECOND time. A one-character interior
+    /// that is itself a quote (`'"'` → token value `"`) both starts and ends
+    /// with `"`, so the old code sliced `raw[1..0]` and panicked ("byte range
+    /// starts at 1 but ends at 0"); a longer quote-wrapped interior (`'"abc"'`)
+    /// silently lost its quotes. Each case must decode to the true value.
+    #[test]
+    fn quote_only_and_quote_wrapped_strings_decode_without_panicking() {
+        use coding_adventures_javascript_ast::statement::TaggedStatement;
+        for (src, want) in [
+            ("'\"';", "\""),           // '"'
+            ("\"'\";", "'"),           // "'"
+            ("\"\\\"\";", "\""),       // "\""
+            ("'\\'';", "'"),           // '\''
+            ("\"\";", ""),             // ""
+            ("'';", ""),               // ''
+            ("'\"abc\"';", "\"abc\""), // '"abc"' keeps its inner quotes
+            ("\"'x'\";", "'x'"),       // "'x'" keeps its inner quotes
+        ] {
+            let p = bridge_ok(src);
+            match &p.body[0] {
+                ProgramItem::Statement(Statement::Tagged(
+                    TaggedStatement::ExpressionStatement(es),
+                )) => match &es.expression {
+                    Expression::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                    other => panic!("expected StringLiteral for {src}, got {other:?}"),
+                },
+                other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+            }
+        }
+        // The same decode path backs quoted object keys.
+        for (src, want) in [("({'\"': 1});", "\""), ("({\"'\": 1});", "'"), ("({\"\": 1});", "")] {
+            match first_object_key(src) {
+                PropertyKey::StringLiteral(s) => assert_eq!(s.value, want, "for {src}"),
+                other => panic!("expected StringLiteral key for {src}, got {other:?}"),
+            }
+        }
+    }
+
+    /// The exact reproduction from the differential check: an older edition
+    /// (whose lexer decodes escapes itself) must return `Ok`, not panic, for
+    /// every quote-only string in both quote styles.
+    #[test]
+    fn quote_only_strings_parse_in_every_edition() {
+        for &version in EsVersion::ALL {
+            for src in [
+                "console.log('\"');",
+                "console.log(\"'\");",
+                "console.log(\"\\\"\");",
+                "console.log('\\'');",
+                "console.log('');",
+            ] {
+                assert!(
+                    crate::parse_javascript_program(src, version).is_ok(),
+                    "{src} failed to parse under {version:?}"
+                );
             }
         }
     }
@@ -7646,8 +7760,6 @@ mod tests {
 
     // ---- Generators + yield (CLOC12.163 PR2, closes gap-164) -----------
 
-    use coding_adventures_javascript_ast::statement::TaggedStatement;
-
     /// Bridge `src`, expect a single generator/function *declaration*, and
     /// return `(generator_flag, first_body_expression)`.
     fn gen_decl(src: &str) -> (bool, Expression) {
@@ -7740,5 +7852,86 @@ mod tests {
             }
             other => panic!("expected a FunctionDeclaration, got {other:?}"),
         }
+    }
+
+    // ---------------------------------------------------------------------
+    // #17877: a block, case clause or default clause holds declarations
+    // ---------------------------------------------------------------------
+
+    use coding_adventures_javascript_ast::statement::TaggedStatement;
+
+    /// Classify each item of a statement list: `fn`, `class`, `expr` or
+    /// `other`, so a test can state the expected shape in one line.
+    fn kinds(stmts: &[Statement]) -> Vec<&'static str> {
+        stmts
+            .iter()
+            .map(|s| match s {
+                Statement::Declaration(Declaration::FunctionDeclaration(_)) => "fn",
+                Statement::Declaration(Declaration::ClassDeclaration(_)) => "class",
+                Statement::Tagged(TaggedStatement::ExpressionStatement(_)) => "expr",
+                _ => "other",
+            })
+            .collect()
+    }
+
+    /// The statements of the block that is the program's first item.
+    fn block_body(p: &Program) -> Vec<Statement> {
+        match &p.body[0] {
+            ProgramItem::Statement(Statement::Tagged(TaggedStatement::BlockStatement(b))) => {
+                b.body.clone()
+            }
+            other => panic!("expected a block statement, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn block_function_and_class_are_declarations() {
+        // Before #17877 the `function`/`class` here were function and class
+        // EXPRESSIONS, so `g` and `C` were never bound.
+        let p = bridge_ok("{function g(){}\nclass C{}\ng(); new C;}");
+        assert_eq!(kinds(&block_body(&p)), vec!["fn", "class", "expr", "expr"]);
+    }
+
+    #[test]
+    fn block_declaration_without_a_newline_parses() {
+        // `{function g(){} g()}` used to fail at the parse stage: as an
+        // expression statement, `function g(){}` needed a `;` before `g`.
+        let p = bridge_ok("{function g(){} g();}");
+        assert_eq!(kinds(&block_body(&p)), vec!["fn", "expr"]);
+        let p = bridge_ok("{function* gen(){} class K{} gen();}");
+        assert_eq!(kinds(&block_body(&p)), vec!["fn", "class", "expr"]);
+    }
+
+    #[test]
+    fn if_body_block_holds_a_declaration() {
+        let p = bridge_ok("if(x){function g(){} g();}");
+        let ProgramItem::Statement(Statement::Tagged(TaggedStatement::IfStatement(i))) = &p.body[0]
+        else {
+            panic!("expected an if statement");
+        };
+        let Statement::Tagged(TaggedStatement::BlockStatement(b)) = &*i.consequent else {
+            panic!("expected a block consequent");
+        };
+        assert_eq!(kinds(&b.body), vec!["fn", "expr"]);
+    }
+
+    #[test]
+    fn case_and_default_clauses_hold_declarations() {
+        let p = bridge_ok("switch(a){case 1:function h(){} h();default:class K{}}");
+        let ProgramItem::Statement(Statement::Tagged(TaggedStatement::SwitchStatement(sw))) =
+            &p.body[0]
+        else {
+            panic!("expected a switch statement");
+        };
+        assert_eq!(kinds(&sw.cases[0].consequent), vec!["fn", "expr"]);
+        assert_eq!(kinds(&sw.cases[1].consequent), vec!["class"]);
+    }
+
+    #[test]
+    fn a_parenthesised_function_in_a_block_stays_an_expression() {
+        // Only a statement that STARTS with `function`/`class` is a
+        // declaration; `(function g(){})` is still an expression statement.
+        let p = bridge_ok("{(function g(){}); (class C{});}");
+        assert_eq!(kinds(&block_body(&p)), vec!["expr", "expr"]);
     }
 }

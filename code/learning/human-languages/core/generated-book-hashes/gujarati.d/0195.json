@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:b9c62c62fa3beddf",
+  "lessonIds": [
+    "GU-C195-khovavu",
+    "GU-C195-rakhadvu",
+    "GU-C195-batavvu",
+    "GU-C195-thekanu",
+    "GU-C195-antar"
+  ],
+  "tex": "gujarati/book/chapters/ch195-lost-in-town.tex"
+}

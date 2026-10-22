@@ -1,0 +1,828 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 200,
+  "title": "At the post office",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:97b55d963c4dfbab",
+  "lessons": [
+    {
+      "id": "GU-C200-tapali",
+      "sequence": 10870,
+      "title": "ટપાલી (ṭapālī) — postman",
+      "headword": "ટપાલી",
+      "romanization": "ṭapālī",
+      "gloss": "postman",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c28509bbb5d136bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to sneak in, then the Gujarati for to move aside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ટપાલી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટપાલી — ṭapālī — \"postman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ટપાલી સવારે ટપાલ લાવે છે. — ṭapālī savāre ṭapāl lāve che — \"The postman brings the post in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ટપાલ, ṭapāl, 'post'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ટપાલી (ṭapālī) is built on ṭapāl, \"post, mail\", with the agent ending -ī. The origin of ṭapāl is not settled: neither CDIAL nor DEDR has an entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭapālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭapālī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭapālī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭapālī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭapālī savāre ṭapāl lāve che — The postman brings the post in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭapālī savāre ṭapāl lāve che* — The postman brings the post in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to sneak in, then the Gujarati for to move aside, then say ṭapālī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to sneak in, then the Gujarati for to move aside, then say *ṭapālī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ટપાલી (ṭapālī) mean? (\"Postman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C200-parbidiyu",
+      "sequence": 10880,
+      "title": "પરબીડિયું (parbīḍiyũ) — envelope",
+      "headword": "પરબીડિયું",
+      "romanization": "parbīḍiyũ",
+      "gloss": "envelope",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9019380d5cb7456",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to move aside, then the Gujarati for postman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પરબીડિયું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પરબીડિયું — parbīḍiyũ — \"envelope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "પત્ર પરબીડિયામાં છે. — patra parbīḍiyāmā̃ che — \"The letter is in the envelope.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of પરબીડિયું (parbīḍiyũ) is not settled. CDIAL has no entry for it, and EtymDB lists no source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parbīḍiyũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parbīḍiyũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parbīḍiyũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parbīḍiyũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patra parbīḍiyāmā̃ che — The letter is in the envelope.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patra parbīḍiyāmā̃ che* — The letter is in the envelope.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to move aside, then the Gujarati for postman, then say parbīḍiyũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to move aside, then the Gujarati for postman, then say *parbīḍiyũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પરબીડિયું (parbīḍiyũ) mean? (\"Envelope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C200-parsal",
+      "sequence": 10890,
+      "title": "પાર્સલ (pārsal) — parcel",
+      "headword": "પાર્સલ",
+      "romanization": "pārsal",
+      "gloss": "parcel",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff0d86050f04bc13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for postman, then the Gujarati for envelope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પાર્સલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાર્સલ — pārsal — \"parcel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મેં ગઈકાલે પાર્સલ મોકલ્યું. — mẽ gaīkāle pārsal mokalyũ — \"I sent a parcel yesterday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પાર્સલ (pārsal) is a loan from English parcel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārsal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārsal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārsal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārsal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mẽ gaīkāle pārsal mokalyũ — I sent a parcel yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mẽ gaīkāle pārsal mokalyũ* — I sent a parcel yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for postman, then the Gujarati for envelope, then say pārsal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for postman, then the Gujarati for envelope, then say *pārsal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પાર્સલ (pārsal) mean? (\"Parcel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C200-nakhvu",
+      "sequence": 10900,
+      "title": "નાખવું (nākhvũ) — to put in, to drop in",
+      "headword": "નાખવું",
+      "romanization": "nākhvũ",
+      "gloss": "to put in, to drop in",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0ba67185f00fb84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for envelope, then the Gujarati for parcel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નાખવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાખવું — nākhvũ — \"to put in, to drop in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે પત્ર ટપાલપેટીમાં નાખે છે. — te patra ṭapālpeṭīmā̃ nākhe che — \"She drops the letter into the postbox.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નાખવું (nākhvũ) is a tadbhava. CDIAL lists it, glossed \"to throw, put on, leave\", under Sanskrit naṅkṣyati, \"will perish\" (CDIAL 6930)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nākhvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nākhvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nākhvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nākhvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te patra ṭapālpeṭīmā̃ nākhe che — She drops the letter into the postbox.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te patra ṭapālpeṭīmā̃ nākhe che* — She drops the letter into the postbox.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for envelope, then the Gujarati for parcel, then say nākhvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for envelope, then the Gujarati for parcel, then say *nākhvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નાખવું (nākhvũ) mean? (\"To put in, to drop in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C200-nondhavvu",
+      "sequence": 10910,
+      "title": "નોંધાવવું (nõdhāvvũ) — to register, to book",
+      "headword": "નોંધાવવું",
+      "romanization": "nõdhāvvũ",
+      "gloss": "to register, to book",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd323ee8fadf2d39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for parcel, then the Gujarati for to put in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નોંધાવવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નોંધાવવું — nõdhāvvũ — \"to register, to book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મેં પત્ર નોંધાવ્યો. — mẽ patra nõdhāvyo — \"I had the letter registered.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નોંધાવવું (nõdhāvvũ) is the causative of nõdhvũ, \"to note down, enter in a book\", which CDIAL lists under nibandhati, beside Sanskrit níbadhnāti, \"binds on; writes down\" (CDIAL 7223)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nõdhāvvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nõdhāvvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nõdhāvvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nõdhāvvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mẽ patra nõdhāvyo — I had the letter registered.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mẽ patra nõdhāvyo* — I had the letter registered.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for parcel, then the Gujarati for to put in, then say nõdhāvvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for parcel, then the Gujarati for to put in, then say *nõdhāvvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નોંધાવવું (nõdhāvvũ) mean? (\"To register, to book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R200-review-195-200",
+      "sequence": 10920,
+      "title": "Words from chapters 195–200 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 195-200",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2b42575924e0ddb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for to get lost and to roam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get lost, to roam, to show, whereabouts, distance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get lost, to roam, to show, whereabouts, distance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "building, storey, elevator, to go in, entry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: building, storey, elevator, to go in, entry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "watchman, to check, identity card, closed, to open up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: watchman, to check, identity card, closed, to open up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "signboard, announcement, advertisement, ban, danger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: signboard, announcement, advertisement, ban, danger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "crowd, queue, rule, to sneak in, to move aside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: crowd, queue, rule, to sneak in, to move aside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "postman, envelope, parcel, to put in, to register",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: postman, envelope, parcel, to put in, to register]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To get lost? (ખોવાવું.) To roam? (રખડવું.) To show? (બતાવવું.) Whereabouts? (ઠેકાણું.) Distance? (અંતર.) Building? (મકાન.) Storey? (માળ.) Elevator? (લિફ્ટ.) To go in? (પેસવું.) Entry? (પ્રવેશ.) Watchman? (ચોકીદાર.) To check? (તપાસવું.) Identity card? (ઓળખપત્ર.) Closed? (બંધ.) To open up? (ખૂલવું.) Signboard? (પાટિયું.) Announcement? (સૂચના.) Advertisement? (જાહેરાત.) Ban? (મનાઈ.) Danger? (જોખમ.) Crowd? (ભીડ.) Queue? (કતાર.) Rule? (નિયમ.) To sneak in? (ઘૂસવું.) To move aside? (ખસવું.) Postman? (ટપાલી (ṭapālī).) Envelope? (પરબીડિયું (parbīḍiyũ).) Parcel? (પાર્સલ (pārsal).) To put in? (નાખવું (nākhvũ).) To register? (નોંધાવવું (nõdhāvvũ).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

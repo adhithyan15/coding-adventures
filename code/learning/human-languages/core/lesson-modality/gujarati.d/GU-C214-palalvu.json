@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C214-palalvu",
+    "language": "gujarati",
+    "chapter": 214,
+    "sequence": 11690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c9c4197b211b61b"
+  },
+  "findings": []
+}

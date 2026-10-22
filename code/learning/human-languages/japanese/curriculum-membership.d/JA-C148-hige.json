@@ -1,0 +1,11 @@
+{
+  "id": "JA-C148-hige",
+  "pathSegment": "JA-PATH-148-HAIR148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-148-HAIR148",
+      "order": 2
+    }
+  ]
+}

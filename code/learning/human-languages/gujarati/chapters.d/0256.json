@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "Paint, photos and knitting",
+  "label": "ch:gu-paint-photos-and-knitting",
+  "canDo": "I can say what I painted, photographed or knitted.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C256-guthvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say what I painted, photographed or knitted.",
+    "assesses": [
+      "GU-LEX-C256-PAINT256-03",
+      "GU-LEX-C256-PAINT256-04",
+      "GU-LEX-C256-PAINT256-05"
+    ]
+  }
+}

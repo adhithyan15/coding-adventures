@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C182-otsuri",
+    "language": "japanese",
+    "chapter": 182,
+    "sequence": 10920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b82b97dce2b7816"
+  },
+  "findings": []
+}

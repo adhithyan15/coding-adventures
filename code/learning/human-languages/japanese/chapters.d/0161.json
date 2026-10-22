@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Washing, Spreading and Drying",
+  "label": "ch:ja-washing-spreading-and-drying",
+  "canDo": "I can talk about doing the washing and drying it.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C161-kawakasu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can talk about doing the washing and drying it.",
+    "assesses": [
+      "JA-LEX-C161-LAUNDRY161-03",
+      "JA-LEX-C161-LAUNDRY161-04",
+      "JA-LEX-C161-LAUNDRY161-05"
+    ]
+  }
+}

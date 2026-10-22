@@ -1,0 +1,11 @@
+{
+  "id": "GU-C217-hava",
+  "pathSegment": "GU-PATH-217-WIND217",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-217-WIND217",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C187-tako",
+  "pathSegment": "GU-PATH-187-PRICE187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-187-PRICE187",
+      "order": 3
+    }
+  ]
+}

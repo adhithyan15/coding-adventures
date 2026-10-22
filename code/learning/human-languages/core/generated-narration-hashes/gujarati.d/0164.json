@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:03b4a8d5db8c5ab5",
+  "lessonIds": [
+    "GU-C164-dabbo",
+    "GU-C164-khad",
+    "GU-C164-mari",
+    "GU-C164-rai",
+    "GU-C164-elci",
+    "GU-R164-review-159-164"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch164.txt",
+  "json": "gujarati/narration/ch164.json",
+  "textHash": "fnv1a64:91c439747a29040a",
+  "jsonHash": "fnv1a64:0b7fc175fc385ebf",
+  "findings": []
+}

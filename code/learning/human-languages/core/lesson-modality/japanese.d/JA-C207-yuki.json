@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C207-yuki",
+    "language": "japanese",
+    "chapter": 207,
+    "sequence": 12480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cc4a3fc407639a5"
+  },
+  "findings": []
+}

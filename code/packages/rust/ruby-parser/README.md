@@ -84,11 +84,17 @@ assert!(matches!(
   column: `Lex`, `Parse`, `Budget`, `UnknownRelease`, `ReleaseNotAvailable`.
 - `tokenize_ruby_at` stops after lexing; `supported_releases()` lists the
   releases with a pair; `grammar_classes(release)` names the deduplicated
-  table modules a release compiles to.
+  table modules a release compiles to; `release_parser_grammar(release)`
+  returns a release's compiled grammar (for LANG84 C8 contract tests).
+- A requested ID is echoed in errors with control characters escaped.
+
+`ruby-iir-compiler` is the IIR consumer of this API (LANG84 phase 5a): it
+compiles the `rb-int-puts` subset from these trees for the releases that
+have an IIR profile (3.3.5–3.3.7) and never calls the legacy entry points.
 
 Today the pairs cover LANG84 slice R0 (numbers, names, variables, keywords,
-operators, comments, separators) and the `rb-int-puts` grammar subset for
-releases 0.49, 0.50 and 3.3.5–3.3.7. See `code/grammars/ruby/README.md`.
+operators, comments, separators) and the `rb-int-puts` grammar subset (`puts` of `+ - * / %` integer
+arithmetic) for releases 0.49, 0.50 and 3.3.5–3.3.7. See `code/grammars/ruby/README.md`.
 
 ## Generated tables
 

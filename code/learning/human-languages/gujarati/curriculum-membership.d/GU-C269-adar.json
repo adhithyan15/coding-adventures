@@ -1,0 +1,11 @@
+{
+  "id": "GU-C269-adar",
+  "pathSegment": "GU-PATH-269-CARE269",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-269-CARE269",
+      "order": 4
+    }
+  ]
+}

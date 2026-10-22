@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:e6539d5e1e65a1cd",
+  "lessonIds": [
+    "GU-C185-bhavtal-karvo",
+    "GU-C185-sodo",
+    "GU-C185-ochu",
+    "GU-C185-jodi",
+    "GU-C185-parakhvu"
+  ],
+  "tex": "gujarati/book/chapters/ch185-haggling-over-a-deal.tex"
+}

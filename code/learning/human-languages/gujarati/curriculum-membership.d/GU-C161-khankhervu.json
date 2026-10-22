@@ -1,0 +1,11 @@
+{
+  "id": "GU-C161-khankhervu",
+  "pathSegment": "GU-PATH-161-SHIFT161",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-161-SHIFT161",
+      "order": 1
+    }
+  ]
+}

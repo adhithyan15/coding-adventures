@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C182-mangalvar",
+    "language": "punjabi",
+    "chapter": 182,
+    "sequence": 9560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02cfb32e45b030d2"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C233-undou",
+  "pathSegment": "JA-PATH-233-SPORT233",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-233-SPORT233",
+      "order": 4
+    }
+  ]
+}

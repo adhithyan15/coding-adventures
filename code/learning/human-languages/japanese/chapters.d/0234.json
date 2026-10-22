@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Winning and Losing",
+  "label": "ch:ja-winning-and-losing",
+  "canDo": "I can say who won and who lost a match.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-C234-ouen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say who won and who lost a match.",
+    "assesses": [
+      "JA-LEX-C234-MATCH234-03",
+      "JA-LEX-C234-MATCH234-04",
+      "JA-LEX-C234-MATCH234-05"
+    ]
+  }
+}

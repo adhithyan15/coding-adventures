@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:f653779891c209de",
+  "lessonIds": [
+    "GU-C246-parinam",
+    "GU-C246-gun",
+    "GU-C246-napas-thavu",
+    "GU-C246-abhyas",
+    "GU-C246-mahenat-karvi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch246.txt",
+  "json": "gujarati/narration/ch246.json",
+  "textHash": "fnv1a64:3a1cdd24e536c4e1",
+  "jsonHash": "fnv1a64:7d04fdf295a27838",
+  "findings": []
+}

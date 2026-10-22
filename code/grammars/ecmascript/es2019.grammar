@@ -206,7 +206,12 @@ statement = block
           | lexical_declaration
           | expression_statement ;
 
-block = LBRACE { statement } RBRACE ;
+# A block, case clause or default clause holds a StatementList: statements
+# AND declarations (ECMA-262 StatementListItem). Without the declaration
+# alternatives, `{ function g(){} g() }` parsed `function g(){}` as a
+# function EXPRESSION, which binds nothing (#17877). The group mirrors
+# source_element minus import/export, which are module-top-level only.
+block = LBRACE { ( function_declaration | generator_declaration | async_function_declaration | async_generator_declaration | class_declaration | statement ) } RBRACE ;
 
 variable_statement = "var" variable_declaration_list SEMICOLON ;
 
@@ -265,9 +270,9 @@ with_statement = "with" LPAREN expression RPAREN statement ;
 switch_statement = "switch" LPAREN expression RPAREN
                    LBRACE { case_clause } [ default_clause { case_clause } ] RBRACE ;
 
-case_clause = "case" expression COLON { statement } ;
+case_clause = "case" expression COLON { ( function_declaration | generator_declaration | async_function_declaration | async_generator_declaration | class_declaration | statement ) } ;
 
-default_clause = "default" COLON { statement } ;
+default_clause = "default" COLON { ( function_declaration | generator_declaration | async_function_declaration | async_generator_declaration | class_declaration | statement ) } ;
 
 labelled_statement = NAME COLON statement ;
 

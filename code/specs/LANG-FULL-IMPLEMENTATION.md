@@ -1481,9 +1481,25 @@ backend immediately) come before the enabler-dependent items.
   Static nonzero whole-number division may reduce that transform when a
   conservative common-divisor proof shows that every possible path value is
   exactly divisible; inexact and dynamic divisors remain conservative.
-  Static whole-number numerator factors may precede the sign-rooted transform
-  when multiplication alone connects them to its root; division before the
-  root remains conservative.
+  Static whole-number numerator factors may precede the sign-rooted transform,
+  including exact divisions among those factors, when multiplication connects
+  the resulting prefix to its root; division by the root remains conservative.
+  Variable-free integer `div` and `mod` reductions may also be folded
+  left-to-right before that multiplying connection, including composition
+  through later exact operations. Zero and dynamic divisors, oversized folded
+  prefixes, and non-multiplying connections to the root remain conservative.
+  Positive variable-free whole-number powers may raise that exact sign-rooted
+  integer transform within the existing exponent-unroll cap when checked
+  exponentiation keeps its worst-case magnitude within `2^53`; zero, negative,
+  dynamic, deeper, and oversized powers remain conservative.
+  Integer `div` by a variable-free nonzero whole number may reduce the exact
+  sign-rooted transform with a truncation-toward-zero bound, including
+  composition through later powers, remainders, and exact real division; zero,
+  dynamic, and sign-rooted divisors remain outside this composed proof.
+  Integer `mod` by a variable-free nonzero whole number may reduce the exact
+  sign-rooted transform, including composition through later exact powers and
+  divisions; zero and dynamic divisors remain outside this composed provenance
+  proof.
   Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

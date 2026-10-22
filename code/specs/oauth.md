@@ -773,6 +773,102 @@ evidence. Recognition still is not semantic validation of other critical
 extensions, and this composition adds no algorithm routing, signature,
 complete path, trust, time, identity, revocation, TLS, HTTP, OAuth transport,
 or network authority.
+Selected RSA SHA-256 issuer authentication can now consume that outer issuing-CA
+role-policy evidence alongside the non-copyable candidate-selection evidence.
+It fails before key or signature work unless both inputs retain the same exact
+candidate certificate and the role-policy evidence was built for the issuing-CA
+role. A distinct non-copyable result retains both proofs so later consumers can
+require this stronger composition without confusing it with the earlier narrow
+issuer-link result. This does not turn recognition into semantic validation of
+other critical extensions or add complete path construction, constraints,
+trust, time, revocation, TLS, HTTP, OAuth transport, or network authority.
+A bounded algorithm-policy evidence follow-up now binds the existing exact,
+caller-supplied certificate algorithm-profile result to the same decoded
+certificate object that was checked. A stronger selected RSA SHA-256 issuer-link
+entry point consumes that certificate-bound algorithm evidence together with
+the issuing-CA role-policy and candidate-selection evidence. It rejects any
+cross-certificate or non-CA combination before RSA key parsing or signature
+verification, then retains all three proofs in one distinct non-copyable result.
+The algorithm profile remains policy data only: it neither chooses nor enables
+the hard-coded RSA SHA-256 verifier, and its encoded public-key length is not an
+RSA modulus-strength check. This composition still adds no general algorithm
+routing, complete path construction or validation, trust, time, identity,
+constraints, revocation, TLS, HTTP, OAuth transport, or network authority.
+A bounded reviewed-anchor binding follow-up now consumes that strongest RSA
+SHA-256 issuer-link evidence together with reviewed-root selection evidence.
+It fails closed unless both non-copyable inputs retain the same exact issuer
+certificate, then retains both proofs in one distinct non-copyable result. This
+proves only that one authenticated child-to-issuer link terminates at a
+certificate identity occurring exactly once in the reviewed Mozilla snapshot.
+It does not apply the selected anchor's name constraints, validate the target's
+role, purpose, validity, or identity, construct a multi-hop path, apply path
+length or other constraints, check revocation, or provide TLS, HTTP, OAuth
+transport, or network authority.
+A bounded `x509-server-certificate-policy` composition now consumes
+certificate-wide end-entity role-policy evidence and certificate-bound,
+caller-selected algorithm-policy evidence, rejecting them unless they retain
+the same exact decoded target certificate and the role is exactly end entity.
+Only then does it apply the existing SAN-only server-identity matcher, inclusive
+validity classifier at one explicit validated observation, and one explicit
+non-empty Extended Key Usage purpose policy to that same certificate. Its
+non-copyable result retains the two certificate-bound inputs plus the identity,
+validity, and purpose results so later path code cannot silently recombine
+detached evidence from different decoded certificate objects. The caller still
+owns critical-extension recognition, algorithm profiles, reference identity,
+time authority, and requested purpose. This target-only policy composition does
+not authenticate an issuer link, recognize or constrain a trust anchor,
+construct or validate a certification path, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or open a network connection.
+A bounded `x509-rsa-sha256-reviewed-server-link` composition now consumes that
+target server-policy evidence together with one-link reviewed-anchor evidence.
+It fails closed unless both non-copyable inputs retain the same exact decoded
+child certificate, then retains both proofs in one distinct non-copyable
+result. This binds the target's identity, validity, purpose, role, critical-
+extension recognition, and algorithm policy to one authenticated RSA SHA-256
+issuer link terminating at a selected reviewed Mozilla root. It still does not
+apply the root's name constraints, path-length or other anchor constraints,
+construct a multi-hop path, check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection.
+A bounded fail-closed anchor-policy follow-up now consumes that complete direct
+reviewed-server-link evidence and inspects the selected reviewed snapshot entry.
+It accepts only an entry whose optional out-of-band name constraints are absent,
+then retains the consumed link in a distinct non-copyable result. A reviewed
+root carrying name constraints is rejected with a payload-free category until
+repository-owned parsing and subtree evaluation can apply those constraints;
+their bytes are never treated as understood merely because the root was
+selected. This gate adds no NameConstraints parser, constrained-root support,
+multi-hop path construction, revocation, TLS, HTTP, OAuth transport, or network
+authority.
+A smaller repository-owned DER prerequisite for that future parser now opens an
+exact context-specific constructed value selected by its schema tag as one
+bounded child cursor. The cursor reuses the same depth, total-element, and DER
+framing limits as SEQUENCE, SET, and explicit-wrapper traversal, while rejecting
+the wrong class, primitive form, or tag before exposing children. This is only
+the missing IMPLICIT-constructed traversal primitive required by the
+`permittedSubtrees [0]` and `excludedSubtrees [1]` NameConstraints fields; it
+does not recognize either field, decode GeneralSubtree, apply a constraint, or
+grant certificate-path, trust, TLS, HTTP, OAuth, or network authority.
+A bounded repository-owned NameConstraints structural decoder now consumes the
+out-of-band SEQUENCE contents carried by reviewed trust anchors. Its first
+fail-closed subset accepts one `permittedSubtrees [0]` field containing one or
+more dNSName GeneralSubtree sequences with absent distance fields, retaining
+the non-empty ASCII subtree strings in fixed capacity and wire order. The
+decoder is data-driven and covers the reviewed `.tr` constraint without
+hard-coding that suffix. It does not validate DNS syntax, support excluded or
+non-DNS subtrees, evaluate a certificate name, bind the parsed bytes back to
+selected-anchor evidence, construct or validate a path, grant trust, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
+A separate bounded evaluator now validates every decoded permitted DNS subtree
+before matching caller-supplied DNS names. It enforces strict ASCII labels,
+case-insensitive label-boundary matching, the reviewed leading-dot semantics,
+and a complete-leftmost-label-only presented wildcard, then requires every
+supplied name to match at least one data-driven subtree. Both collections are
+capped at 256 and evaluation allocates nothing. The result retains only the
+evaluated count: it is not bound to certificate SAN evidence or the selected
+anchor, does not handle excluded or non-DNS subtrees, construct or validate a
+path, check trust or revocation, perform TLS or HTTP, authorize OAuth transport,
+or open a network connection. Concrete HTTPS therefore remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

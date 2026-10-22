@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:59451a8ff6ae375a",
+  "lessonIds": [
+    "GU-C261-patang",
+    "GU-C261-udadvu",
+    "GU-C261-melo",
+    "GU-C261-garbo",
+    "GU-C261-phatakdo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch261.txt",
+  "json": "gujarati/narration/ch261.json",
+  "textHash": "fnv1a64:bdd2e2b32140e0c8",
+  "jsonHash": "fnv1a64:f7126f1801da16bc",
+  "findings": []
+}

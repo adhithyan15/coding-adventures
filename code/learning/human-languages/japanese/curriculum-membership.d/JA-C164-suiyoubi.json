@@ -1,0 +1,11 @@
+{
+  "id": "JA-C164-suiyoubi",
+  "pathSegment": "JA-PATH-164-WEEK164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-164-WEEK164",
+      "order": 1
+    }
+  ]
+}

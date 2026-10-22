@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "Prices that rise and fall",
+  "label": "ch:gu-prices-that-rise-and-fall",
+  "canDo": "I can read whether prices go up or down and what is on offer.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C187-chut",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can read whether prices go up or down and what is on offer.",
+    "assesses": [
+      "GU-LEX-C187-PRICE187-03",
+      "GU-LEX-C187-PRICE187-04",
+      "GU-LEX-C187-PRICE187-05"
+    ]
+  }
+}

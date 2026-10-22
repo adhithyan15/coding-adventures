@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C168-sekvu",
+    "language": "gujarati",
+    "chapter": 168,
+    "sequence": 9210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c9d6c78413c7301"
+  },
+  "findings": []
+}

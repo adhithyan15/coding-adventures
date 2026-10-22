@@ -1,0 +1,24 @@
+{
+  "language": "punjabi",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:4979b1d4d56f35f7",
+  "lessonIds": [
+    "PA-C185-possessive-return",
+    "PA-C185-meri",
+    "PA-C185-mere",
+    "PA-C185-tuhadi",
+    "PA-C185-apni",
+    "PA-C185-apne",
+    "PA-C185-sada",
+    "PA-C185-sade",
+    "PA-C185-possessive-review",
+    "PA-C185-payoff"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch185.txt",
+  "json": "punjabi/narration/ch185.json",
+  "textHash": "fnv1a64:3719428cde5e526d",
+  "jsonHash": "fnv1a64:ef3e55b8f2803797",
+  "findings": []
+}

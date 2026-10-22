@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 272,
+  "sourceHash": "fnv1a64:4d9f98f964316e07",
+  "lessonIds": [
+    "GU-C272-himmat",
+    "GU-C272-vacan",
+    "GU-C272-notarvu",
+    "GU-C272-satavvu",
+    "GU-C272-asha-rakhvi",
+    "GU-R272-review-267-272",
+    "GU-R272-review-final-272"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch272.txt",
+  "json": "gujarati/narration/ch272.json",
+  "textHash": "fnv1a64:e7bfd920f4c36a01",
+  "jsonHash": "fnv1a64:55d59e96d80516a1",
+  "findings": []
+}

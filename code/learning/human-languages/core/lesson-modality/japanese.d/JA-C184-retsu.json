@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C184-retsu",
+    "language": "japanese",
+    "chapter": 184,
+    "sequence": 11030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9a7c789cd30aaef"
+  },
+  "findings": []
+}

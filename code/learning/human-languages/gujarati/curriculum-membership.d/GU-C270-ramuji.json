@@ -1,0 +1,11 @@
+{
+  "id": "GU-C270-ramuji",
+  "pathSegment": "GU-PATH-270-NATURE270",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-270-NATURE270",
+      "order": 3
+    }
+  ]
+}

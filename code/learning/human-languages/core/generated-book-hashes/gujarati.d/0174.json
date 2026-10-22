@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:780be4eb7eee8087",
+  "lessonIds": [
+    "GU-C174-oktobar",
+    "GU-C174-disembar",
+    "GU-C174-maha",
+    "GU-C174-tarikhiyu",
+    "GU-C174-saruat"
+  ],
+  "tex": "gujarati/book/chapters/ch174-october-to-maha.tex"
+}

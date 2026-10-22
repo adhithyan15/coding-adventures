@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "Games and competitions",
+  "label": "ch:gu-games-and-competitions",
+  "canDo": "I can say which game I played and which competition I took part in.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C257-jodavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can say which game I played and which competition I took part in.",
+    "assesses": [
+      "GU-LEX-C257-TEAM257-03",
+      "GU-LEX-C257-TEAM257-04",
+      "GU-LEX-C257-TEAM257-05"
+    ]
+  }
+}

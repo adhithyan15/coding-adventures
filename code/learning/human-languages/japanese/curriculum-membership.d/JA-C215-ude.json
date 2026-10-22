@@ -1,0 +1,11 @@
+{
+  "id": "JA-C215-ude",
+  "pathSegment": "JA-PATH-215-BODY215",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-215-BODY215",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C217-chuusha",
+  "pathSegment": "JA-PATH-217-DOCTOR217",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-217-DOCTOR217",
+      "order": 2
+    }
+  ]
+}

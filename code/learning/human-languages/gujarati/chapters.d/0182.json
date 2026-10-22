@@ -1,0 +1,19 @@
+{
+  "chapter": 182,
+  "title": "These days and for good",
+  "label": "ch:gu-these-days-and-for-good",
+  "canDo": "I can talk about these days, what will last and what I will keep in mind.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-R182-review-final-182",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 182: I can talk about these days, what will last and what I will keep in mind.",
+    "assesses": [
+      "GU-LEX-C182-NOW182-03",
+      "GU-LEX-C182-NOW182-04",
+      "GU-LEX-C182-NOW182-05"
+    ]
+  }
+}

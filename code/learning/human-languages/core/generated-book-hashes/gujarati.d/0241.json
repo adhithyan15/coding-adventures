@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:3ac7767ac277f47e",
+  "lessonIds": [
+    "GU-C241-khilvu",
+    "GU-C241-karmavu",
+    "GU-C241-mul",
+    "GU-C241-ukhedvu",
+    "GU-C241-marvu"
+  ],
+  "tex": "gujarati/book/chapters/ch241-flowers-that-bloomed-and-died.tex"
+}

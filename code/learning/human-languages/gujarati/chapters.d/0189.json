@@ -1,0 +1,19 @@
+{
+  "chapter": 189,
+  "title": "Wrapping up an order",
+  "label": "ch:gu-wrapping-up-an-order",
+  "canDo": "I can say what is wrapped, ordered, used up or left over.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C189-svikarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 189: I can say what is wrapped, ordered, used up or left over.",
+    "assesses": [
+      "GU-LEX-C189-ORDER189-03",
+      "GU-LEX-C189-ORDER189-04",
+      "GU-LEX-C189-ORDER189-05"
+    ]
+  }
+}

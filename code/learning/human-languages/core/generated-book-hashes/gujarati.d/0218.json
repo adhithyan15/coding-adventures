@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:5bf44efc1e0bd9c7",
+  "lessonIds": [
+    "GU-C218-ugvu",
+    "GU-C218-suryoday",
+    "GU-C218-athamvu",
+    "GU-C218-suryast",
+    "GU-C218-ajvalu",
+    "GU-R218-review-213-218"
+  ],
+  "tex": "gujarati/book/chapters/ch218-sunrise-and-sunset.tex"
+}

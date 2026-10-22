@@ -9,6 +9,9 @@ release, no aliases, explicitly partial pairs, and source evidence per release.
 LANG84 also extends the `releases.csv` schema: this file's columns stay, and
 `perlhist_line` becomes a Perl-specific extra column. It adds release
 selection for the Perl IIR frontend and measured G/P/I/B status stages.
+Since LANG84 phase 2b the inventory has the common LANG84 header, ISO dates,
+and rows in date order rather than `perlhist.pod` order. The rules that
+filled the new columns are in `code/grammars/perl/README.md`.
 
 ## Version range and evidence
 

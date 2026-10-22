@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:722420cbd8d0e229",
+  "lessonIds": [
+    "JA-C163-kirei",
+    "JA-C163-shizuka",
+    "JA-C163-benri",
+    "JA-C163-rusu",
+    "JA-C163-seiketsu",
+    "JA-R163-review-158-163"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch163.txt",
+  "json": "japanese/narration/ch163.json",
+  "textHash": "fnv1a64:c1f065b939cb31b5",
+  "jsonHash": "fnv1a64:b31ae83781f5d72b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C238-kidi",
+    "language": "gujarati",
+    "chapter": 238,
+    "sequence": 12920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9135f6d5dccdc14f"
+  },
+  "findings": []
+}

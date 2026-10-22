@@ -32,6 +32,9 @@ pub const OP_SUPPORT: &[(&str, OpSupport)] = &[
     ("putchar", Lowered),
     ("print_str", Lowered),
     ("write_i64", Lowered),
+    // LANG83 PR6a — module-local `linkonce_odr` `@__iir_write_f64`.
+    ("write_f64_py", Lowered),
+    ("write_f64_js", Lowered),
     // ── Strings (LANG-FULL E4) ──────────────────────────────────────────────
     ("str_const", Lowered),
     ("str_len", Lowered),

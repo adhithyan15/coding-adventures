@@ -1,0 +1,11 @@
+{
+  "id": "GU-C244-samjavvu",
+  "pathSegment": "GU-PATH-244-SUBJECT244",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-244-SUBJECT244",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C224-oshieru",
+  "pathSegment": "JA-PATH-224-SCHOOL224",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-224-SCHOOL224",
+      "order": 3
+    }
+  ]
+}

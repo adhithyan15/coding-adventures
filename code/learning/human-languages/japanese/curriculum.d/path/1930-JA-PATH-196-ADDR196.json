@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-196-ADDR196",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-196-ADDR196"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-227-INJURY227",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I am hurt and ask about a sprain.",
+  "prerequisites": []
+}

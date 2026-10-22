@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-202-DRIVE202",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-202-DRIVE202"
+  ],
+  "after": []
+}

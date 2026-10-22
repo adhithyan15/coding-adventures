@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C160-yogosu",
+    "language": "japanese",
+    "chapter": 160,
+    "sequence": 9550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e8d1e85c9685cc4"
+  },
+  "findings": []
+}

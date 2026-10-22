@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:0b47fbfa76967c2c",
+  "lessonIds": [
+    "JA-C166-gozen",
+    "JA-C166-hiru",
+    "JA-C166-ban",
+    "JA-C166-konban",
+    "JA-C166-maiban"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch166.txt",
+  "json": "japanese/narration/ch166.json",
+  "textHash": "fnv1a64:a3964535b0743480",
+  "jsonHash": "fnv1a64:88e0eb00ab3383a0",
+  "findings": []
+}

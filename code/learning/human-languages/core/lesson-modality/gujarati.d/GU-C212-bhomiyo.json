@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C212-bhomiyo",
+    "language": "gujarati",
+    "chapter": 212,
+    "sequence": 11500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b957e4fac0e8430"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C220-chalkavu",
+    "language": "gujarati",
+    "chapter": 220,
+    "sequence": 11970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac32d91acbf985f6"
+  },
+  "findings": []
+}

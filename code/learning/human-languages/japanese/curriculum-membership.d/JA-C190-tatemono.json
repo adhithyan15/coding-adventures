@@ -1,0 +1,11 @@
+{
+  "id": "JA-C190-tatemono",
+  "pathSegment": "JA-PATH-190-TOWN190",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-190-TOWN190",
+      "order": 0
+    }
+  ]
+}

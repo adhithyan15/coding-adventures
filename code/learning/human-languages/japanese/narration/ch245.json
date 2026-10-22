@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 245,
+  "title": "Glad, Lonely and Laughing",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:44ec1740189ff218",
+  "lessons": [
+    {
+      "id": "JA-C245-ureshii",
+      "sequence": 14680,
+      "title": "うれしい (ureshii) — glad; pleased",
+      "headword": "うれしい",
+      "romanization": "ureshii",
+      "gloss": "glad; pleased",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a19934c0d8aaf095",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to welcome, then the Japanese for marriage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うれしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うれしい — ureshii — \"glad; pleased\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この おくりものは うれしいですか。 — kono okurimono wa ureshii desu ka — \"Are you pleased with this present?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うれしい (ureshii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ureshii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ureshii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ureshii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ureshii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono okurimono wa ureshii desu ka — Are you pleased with this present?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono okurimono wa ureshii desu ka* — Are you pleased with this present?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to welcome, then the Japanese for marriage, then say ureshii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to welcome, then the Japanese for marriage, then say *ureshii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うれしい (ureshii) mean? (\"Glad; pleased\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C245-ureshii-type",
+              "prompt": "Say the Japanese for 'glad'.",
+              "assesses": [
+                "JA-LEX-C245-JOY245-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うれしい",
+                "ureshii"
+              ],
+              "feedback": {
+                "correct": "Right: うれしい (ureshii) is 'glad; pleased'.",
+                "incorrect": "'Glad' is うれしい (ureshii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C245-sabishii",
+      "sequence": 14690,
+      "title": "さびしい (sabishii) — lonely",
+      "headword": "さびしい",
+      "romanization": "sabishii",
+      "gloss": "lonely",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b36f85db433986a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for marriage, then the Japanese for glad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さびしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さびしい — sabishii — \"lonely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひとりで さびしいですか。 — hitori de sabishii desu ka — \"Are you lonely on your own?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さびしい (sabishii) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabishii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabishii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabishii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabishii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hitori de sabishii desu ka — Are you lonely on your own?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hitori de sabishii desu ka* — Are you lonely on your own?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for marriage, then the Japanese for glad, then say sabishii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for marriage, then the Japanese for glad, then say *sabishii* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さびしい (sabishii) mean? (\"Lonely\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C245-sabishii-type",
+              "prompt": "Say the Japanese for 'lonely'.",
+              "assesses": [
+                "JA-LEX-C245-JOY245-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さびしい",
+                "sabishii"
+              ],
+              "feedback": {
+                "correct": "Right: さびしい (sabishii) is 'lonely'.",
+                "incorrect": "'Lonely' is さびしい (sabishii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C245-yorokobu",
+      "sequence": 14700,
+      "title": "よろこぶ (yorokobu) — to be delighted; to rejoice",
+      "headword": "よろこぶ",
+      "romanization": "yorokobu",
+      "gloss": "to be delighted; to rejoice",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:798a8c5215e49b2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for glad, then the Japanese for lonely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よろこぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よろこぶ — yorokobu — \"to be delighted; to rejoice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははは この おくりものを よろこびますか。 — haha wa kono okurimono o yorokobimasu ka — \"Will my mother be delighted with this present?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite よろこびます, yorokobimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よろこぶ (yorokobu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yorokobu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yorokobu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yorokobu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yorokobu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha wa kono okurimono o yorokobimasu ka — Will my mother be delighted with this present?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha wa kono okurimono o yorokobimasu ka* — Will my mother be delighted with this present?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for glad, then the Japanese for lonely, then say yorokobu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for glad, then the Japanese for lonely, then say *yorokobu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よろこぶ (yorokobu) mean? (\"To be delighted; to rejoice\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C245-yorokobu-type",
+              "prompt": "Say the Japanese for 'to be delighted'.",
+              "assesses": [
+                "JA-LEX-C245-JOY245-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よろこぶ",
+                "yorokobu"
+              ],
+              "feedback": {
+                "correct": "Right: よろこぶ (yorokobu) is 'to be delighted; to rejoice'.",
+                "incorrect": "'To be delighted' is よろこぶ (yorokobu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C245-warau",
+      "sequence": 14710,
+      "title": "わらう (warau) — to laugh; to smile",
+      "headword": "わらう",
+      "romanization": "warau",
+      "gloss": "to laugh; to smile",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea382c2c387c29d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for lonely, then the Japanese for to be delighted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わらう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わらう — warau — \"to laugh; to smile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんせいは じゅぎょうで わらいますか。 — sensei wa jugyō de waraimasu ka — \"Does the teacher laugh in class?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite わらいます, waraimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わらう (warau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "warau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *warau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "warau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *warau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensei wa jugyō de waraimasu ka — Does the teacher laugh in class?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensei wa jugyō de waraimasu ka* — Does the teacher laugh in class?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for lonely, then the Japanese for to be delighted, then say warau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for lonely, then the Japanese for to be delighted, then say *warau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わらう (warau) mean? (\"To laugh; to smile\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C245-warau-type",
+              "prompt": "Say the Japanese for 'to laugh'.",
+              "assesses": [
+                "JA-LEX-C245-JOY245-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わらう",
+                "warau"
+              ],
+              "feedback": {
+                "correct": "Right: わらう (warau) is 'to laugh; to smile'.",
+                "incorrect": "'To laugh' is わらう (warau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C245-egao",
+      "sequence": 14720,
+      "title": "えがお (egao) — a smile; a smiling face",
+      "headword": "えがお",
+      "romanization": "egao",
+      "gloss": "a smile; a smiling face",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce707ff1704a03e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be delighted, then the Japanese for to laugh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えがお",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えがお — egao — \"a smile; a smiling face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "そぼは いつも えがおですか。 — sobo wa itsumo egao desu ka — \"Is my grandmother always smiling?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えがお (egao) is a native Japanese compound (wago), inherited rather than borrowed: it is built from e, from emu, \"to smile\", and kao, \"face\", with k voiced to g (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "egao",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *egao*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "egao, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *egao*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sobo wa itsumo egao desu ka — Is my grandmother always smiling?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sobo wa itsumo egao desu ka* — Is my grandmother always smiling?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be delighted, then the Japanese for to laugh, then say egao again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be delighted, then the Japanese for to laugh, then say *egao* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えがお (egao) mean? (\"A smile; a smiling face\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C245-egao-type",
+              "prompt": "Say the Japanese for 'a smile'.",
+              "assesses": [
+                "JA-LEX-C245-JOY245-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えがお",
+                "egao"
+              ],
+              "feedback": {
+                "correct": "Right: えがお (egao) is 'a smile; a smiling face'.",
+                "incorrect": "'A smile' is えがお (egao)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

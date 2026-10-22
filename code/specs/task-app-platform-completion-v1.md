@@ -311,7 +311,7 @@ Assert exact emitted bindings, negative inputs, and both authored themes before
 retiring the two Qt transform allowances (83 to 81 measured drops). Validate
 native Qt payload generation/build in CI; do not claim local Qt runtime proof.
 
-### Next release checkpoint — #17682: TaskApp v0.5.8
+### Published release checkpoint — #17682: TaskApp v0.5.8
 
 Roll forward the compatible Qt milestone rotation fix merged in #17676 as
 `task-app-v0.5.8`. Both themes preserve the two centered 45-degree diamonds;
@@ -319,7 +319,26 @@ the Qt style inventory falls from 83 to 81. Validate every existing payload on
 the selected source commit, publish from main after preparation merges, then
 audit the immutable tag, manifest source, thirteen assets and twelve checksums.
 Static HTML, Web Components, and Paint remain CI-only; signing, notarization,
-and installers remain #13977. Preparation is not publication.
+and installers remain #13977. Published and audited from
+`22755d9313ce8fed25a7e9a14aa96cb6865b9e4c` in run 39552054042:
+the immutable tag and manifest match, and all thirteen assets and twelve
+checksum entries match GitHub asset digests.
+
+### Next bounded fidelity item — #17913: Qt Text widths
+
+Preserve the authored calendar heading fill width and timeline label/window
+widths through Qt Text geometry. Refresh both themes before lowering or
+retiring allowances. Cover bare Text and painted text wrappers without duplicate
+QML property assignments or conflicting anchors. Accept only supported finite,
+nonnegative scalar widths and exact fill widths; unsupported units and
+incompatible state overrides must remain reported. Test state precedence,
+wrapper ownership, negative inputs, and exact emitted geometry. Keep every
+unrelated style allowance and release artifact boundary unchanged. Native Qt
+build evidence belongs to CI, not a local source-generation claim.
+
+Implemented bare Text scalar/fill lowering with ordered scalar states. Painted
+Text retains existing outer-wrapper scalar geometry. Both authored themes
+measure 78 style drops and zero width drops; all unrelated allowances remain.
 
 ### Tier C — reach, stated honestly
 

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C153-dadar",
+  "pathSegment": "GU-PATH-153-ROOMS153",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-153-ROOMS153",
+      "order": 4
+    }
+  ]
+}

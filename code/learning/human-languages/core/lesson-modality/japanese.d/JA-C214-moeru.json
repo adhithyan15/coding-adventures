@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C214-moeru",
+    "language": "japanese",
+    "chapter": 214,
+    "sequence": 12850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:767b72de34fae184"
+  },
+  "findings": []
+}

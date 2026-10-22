@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C235-juudou",
+    "language": "japanese",
+    "chapter": 235,
+    "sequence": 14190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7522f12836db98ad"
+  },
+  "findings": []
+}

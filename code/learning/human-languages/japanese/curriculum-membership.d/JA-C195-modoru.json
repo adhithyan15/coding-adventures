@@ -1,0 +1,11 @@
+{
+  "id": "JA-C195-modoru",
+  "pathSegment": "JA-PATH-195-CORNER195",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-195-CORNER195",
+      "order": 4
+    }
+  ]
+}

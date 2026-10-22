@@ -1,7 +1,4 @@
 {
-  "omits": [
-    "VERB-NEGATE",
-    "QUESTION-POLAR"
-  ],
+  "omits": [],
   "relocates": {}
 }

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C175-yuderu",
+  "pathSegment": "JA-PATH-175-COOK175",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-175-COOK175",
+      "order": 1
+    }
+  ]
+}

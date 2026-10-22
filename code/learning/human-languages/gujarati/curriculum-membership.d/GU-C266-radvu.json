@@ -1,0 +1,11 @@
+{
+  "id": "GU-C266-radvu",
+  "pathSegment": "GU-PATH-266-FEELINGS266",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-266-FEELINGS266",
+      "order": 3
+    }
+  ]
+}
