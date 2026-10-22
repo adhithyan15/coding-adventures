@@ -7,9 +7,9 @@ import {
 } from "../../../src/loader.js";
 import { lessonModalities, orderChapterLessons, unstartableCause } from "../../../src/modality.js";
 
-it("opens Punjabi chapter 187 by ear while retrieving singular past ਸੀ", () => {
+it("opens Punjabi chapter 187 by ear while retrieving familiar ਹੋਣਾ", () => {
   const opener = loadTrackLessons("punjabi").find(
-    (lesson) => lesson.realization.lessonId === "PA-C187-si-return",
+    (lesson) => lesson.realization.lessonId === "PA-C187-past-return",
   );
   expect(opener).toBeDefined();
   const [entry] = orderChapterLessons(lessonModalities([opener!]));
@@ -22,7 +22,9 @@ it("opens Punjabi chapter 187 by ear while retrieving singular past ਸੀ", () 
 it("adds a slow Punjabi A2 plural past-copula prerequisite without mock credit", () => {
   const lessons = loadTrackLessons("punjabi");
   const ids = [
-    "PA-C187-si-return",
+    "PA-C187-past-return",
+    "PA-C187-si",
+    "PA-C187-si-review",
     "PA-C187-san",
     "PA-C187-si-san-contrast",
     "PA-C187-san-description",
@@ -37,29 +39,33 @@ it("adds a slow Punjabi A2 plural past-copula prerequisite without mock credit",
   expect(chapterLessons.map((lesson) => Number(lesson?.frontmatter.chapter)))
     .toEqual(ids.map(() => 187));
   expect(chapterLessons.map((lesson) => Number(lesson?.frontmatter.sequence)))
-    .toEqual([9990, 10000, 10010, 10020, 10030, 10040, 10050]);
+    .toEqual([9990, 10000, 10010, 10020, 10030, 10040, 10050, 10060, 10070]);
 
-  const form = "ਸਨ";
-  const atom = "PA-FORM-SAN-187";
+  const targets = [
+    { form: "ਸੀ", atom: "PA-FORM-SI-187", ownerIndex: 1 },
+    { form: "ਸਨ", atom: "PA-FORM-SAN-187", ownerIndex: 3 },
+  ] as const;
+  const atoms = targets.map((target) => target.atom);
   expect(chapterLessons.map((lesson) => lesson?.frontmatter["introduces.knowledge"]))
-    .toEqual([[], [atom], [], [], [], [], []]);
+    .toEqual([[], [atoms[0]], [], [atoms[1]], [], [], [], [], []]);
 
-  const ownerIndex = 1;
-  const earlierCopy = chapterLessons.slice(0, ownerIndex)
-    .flatMap((lesson) => lesson?.blocks.map((block) => block.markdown) ?? [])
-    .join("\n");
-  expect(earlierCopy.includes(form), `${form} appears before its owner lesson`)
-    .toBe(false);
+  for (const { form, ownerIndex } of targets) {
+    const earlierCopy = chapterLessons.slice(0, ownerIndex)
+      .flatMap((lesson) => lesson?.blocks.map((block) => block.markdown) ?? [])
+      .join("\n");
+    expect(earlierCopy.includes(form), `${form} appears before its owner lesson`)
+      .toBe(false);
 
-  const rawBeforeOwner = ids.slice(0, ownerIndex).map((id) => {
-    const source = readFileSync(new URL(
-      `../../../../../../learning/human-languages/punjabi/lessons/${id}.md`,
-      import.meta.url,
-    ), "utf8");
-    return source.replace(/^---[\s\S]*?---\s*/u, "");
-  }).join("\n");
-  expect(rawBeforeOwner.includes(form), `${form} leaks in raw authored copy before its owner`)
-    .toBe(false);
+    const rawBeforeOwner = ids.slice(0, ownerIndex).map((id) => {
+      const source = readFileSync(new URL(
+        `../../../../../../learning/human-languages/punjabi/lessons/${id}.md`,
+        import.meta.url,
+      ), "utf8");
+      return source.replace(/^---[\s\S]*?---\s*/u, "");
+    }).join("\n");
+    expect(rawBeforeOwner.includes(form), `${form} leaks in raw authored copy before its owner`)
+      .toBe(false);
+  }
 
   for (const lesson of chapterLessons) {
     expect(Number(lesson?.frontmatter["duration.max_seconds"]))
@@ -70,22 +76,26 @@ it("adds a slow Punjabi A2 plural past-copula prerequisite without mock credit",
     expect(lesson?.frontmatter.introduces_culture_claims).toEqual([]);
   }
 
-  const owners = lessons.filter((lesson) =>
-    lesson.frontmatter["introduces.knowledge"].includes(atom),
-  );
-  expect(owners).toHaveLength(1);
-  const ownerSequence = Number(owners[0].frontmatter.sequence);
-  const laterPractices = chapterLessons.filter((lesson) =>
-    Number(lesson?.frontmatter.sequence) > ownerSequence &&
-    lesson?.frontmatter["practises.knowledge"].includes(atom),
-  );
-  expect(laterPractices.length).toBeGreaterThanOrEqual(2);
+  for (const { atom } of targets) {
+    const owners = lessons.filter((lesson) =>
+      lesson.frontmatter["introduces.knowledge"].includes(atom),
+    );
+    expect(owners).toHaveLength(1);
+    const ownerSequence = Number(owners[0].frontmatter.sequence);
+    const laterPractices = chapterLessons.filter((lesson) =>
+      Number(lesson?.frontmatter.sequence) > ownerSequence &&
+      lesson?.frontmatter["practises.knowledge"].includes(atom),
+    );
+    expect(laterPractices.length, `${atom} needs two later retrieval lessons`)
+      .toBeGreaterThanOrEqual(2);
+  }
 
   const learnerCopy = chapterLessons
     .flatMap((lesson) => lesson?.blocks.map((block) => block.markdown) ?? [])
     .join("\n").replace(/\s+/gu, " ");
+  expect(learnerCopy).toContain("ਅਮਨ ਘਰ ਵਿੱਚ ਸੀ");
   expect(learnerCopy).toContain("ਫੁੱਲ ਲਾਲ ਸਨ");
-  expect(learnerCopy).toContain("ਉਹ ਪੰਜਾਬੀ ਬੋਲਦੇ ਸਨ");
+  expect(learnerCopy).toContain("ਉਹ ਕੰਮ ਕਰਦੇ ਸਨ");
   expect(learnerCopy).toMatch(/tenth prerequisite tranche|does not unblock.*mock 1/is);
   expect(learnerCopy).toMatch(/not.*A2 mock|not A2 readiness/is);
 
@@ -97,21 +107,23 @@ it("adds a slow Punjabi A2 plural past-copula prerequisite without mock credit",
     ])
     .join("\n");
   const supportingPunjabi = new Set(learnerCopy.match(/[\u0A00-\u0A7F]+/gu) ?? []);
-  supportingPunjabi.delete(form);
+  for (const { form } of targets) supportingPunjabi.delete(form);
   for (const token of supportingPunjabi) {
     expect(taughtBefore.includes(token), `${token} must occur before chapter 187`).toBe(true);
   }
 
   const generatedBook = readFileSync(new URL(
     "../../../../../../learning/human-languages/punjabi/book/chapters/" +
-      "ch187-they-were-there.tex",
+      "ch187-he-was-there-they-were-there.tex",
     import.meta.url,
   ), "utf8");
-  const ownerLabel = generatedBook.indexOf(`label{lesson:${ids[ownerIndex]}}`);
-  expect(ownerLabel).toBeGreaterThan(0);
-  const ownerSection = generatedBook.lastIndexOf("\\section[", ownerLabel);
-  expect(ownerSection).toBeGreaterThan(0);
-  expect(generatedBook.slice(0, ownerSection)).not.toContain(form);
+  for (const { form, ownerIndex } of targets) {
+    const ownerLabel = generatedBook.indexOf(`label{lesson:${ids[ownerIndex]}}`);
+    expect(ownerLabel).toBeGreaterThan(0);
+    const ownerSection = generatedBook.lastIndexOf("\\section[", ownerLabel);
+    expect(ownerSection).toBeGreaterThan(0);
+    expect(generatedBook.slice(0, ownerSection)).not.toContain(form);
+  }
   expect(generatedBook).not.toMatch(/\[(?:YOU HEAR|YOU SAY|YOU READ|YOU WRITE):/u);
 
   const narration = JSON.parse(readFileSync(new URL(
@@ -119,7 +131,9 @@ it("adds a slow Punjabi A2 plural past-copula prerequisite without mock credit",
     import.meta.url,
   ), "utf8")) as { lessons: Array<{ id: string }> };
   expect(narration.lessons.map((lesson) => lesson.id)).toEqual(ids);
-  expect(JSON.stringify(narration.lessons.slice(0, ownerIndex))).not.toContain(form);
+  for (const { form, ownerIndex } of targets) {
+    expect(JSON.stringify(narration.lessons.slice(0, ownerIndex))).not.toContain(form);
+  }
 
   const payoff = chapterLessons.at(-1);
   expect(payoff?.frontmatter.skills)
@@ -130,7 +144,7 @@ it("adds a slow Punjabi A2 plural past-copula prerequisite without mock credit",
   const ledger = loadTrackChapters().find((track) => track.language === "punjabi");
   expect(ledger?.chapters.find((chapter) => chapter.chapter === 187)).toMatchObject({
     chapter: 187,
-    payoff: { lesson: "PA-C187-payoff", kind: "production", assesses: [atom] },
+    payoff: { lesson: "PA-C187-payoff", kind: "production", assesses: atoms },
   });
   const curriculum = loadTrackLanguageCurriculum("punjabi");
   const extension = curriculum?.extensions.find((candidate) =>
