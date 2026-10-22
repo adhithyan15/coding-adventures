@@ -1,8 +1,8 @@
 [package]
 name = "x509-rsa-sha256-reviewed-server-link"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "Reviewed-root RSA SHA-256 server-link binding and fail-closed anchor policy"
+description = "Reviewed-root RSA SHA-256 server-link binding with exact anchor DNS policy"
 
 [dependencies]
 der-asn1 = { path = "../der-asn1" }

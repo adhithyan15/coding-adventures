@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0 - 2026-10-22
+
+### Added
+
+- Applied exact selected-anchor permitted DNS constraints to every dNSName in
+  the exact target certificate retained by direct reviewed-server-link evidence.
+- Added separate caller-owned decoder limits, optional payload-free DNS success
+  evidence, and stable redacted parsing and constraint failure categories.
+- Preserved unconstrained-anchor support while keeping excluded/non-DNS
+  constraints, multi-hop paths, revocation, and transport outside this boundary.
+
 ## 0.2.0 - 2026-10-22
 
 ### Added
