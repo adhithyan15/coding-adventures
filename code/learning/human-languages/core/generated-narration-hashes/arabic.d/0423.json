@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:d7a288ff0ef25fd0",
+  "lessonIds": [
+    "AR-C423-bawwaba",
+    "AR-C423-maqad",
+    "AR-C423-hajaza",
+    "AR-C423-suud",
+    "AR-C423-madraj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch423.txt",
+  "json": "arabic/narration/ch423.json",
+  "textHash": "fnv1a64:c3ca7fae435e3c36",
+  "jsonHash": "fnv1a64:c10d8ee28bb37d61",
+  "findings": []
+}

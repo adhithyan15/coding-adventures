@@ -1,0 +1,11 @@
+{
+  "id": "AR-C549-mizlaj",
+  "pathSegment": "AR-PATH-549-BAB549",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-549-BAB549",
+      "order": 3
+    }
+  ]
+}

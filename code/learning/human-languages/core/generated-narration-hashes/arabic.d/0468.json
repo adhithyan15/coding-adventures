@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:e8ea1dbecfb8df24",
+  "lessonIds": [
+    "AR-C468-nabat",
+    "AR-C468-shujayra",
+    "AR-C468-dhabala",
+    "AR-C468-azhara",
+    "AR-C468-athmara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch468.txt",
+  "json": "arabic/narration/ch468.json",
+  "textHash": "fnv1a64:bd96c81e70dfc826",
+  "jsonHash": "fnv1a64:fee7476a0a0de51d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C546-mushajji",
+  "pathSegment": "AR-PATH-546-MUBARA546",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-546-MUBARA546",
+      "order": 1
+    }
+  ]
+}

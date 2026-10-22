@@ -1,0 +1,19 @@
+{
+  "chapter": 394,
+  "title": "Learning well",
+  "label": "ch:ar-learning-well",
+  "canDo": "I can say that someone mastered, acquired, went deeper or summarized, and talk about a summary.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C394-mulakhkhas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 394: I can say that someone mastered, acquired, went deeper or summarized, and talk about a summary.",
+    "assesses": [
+      "AR-LEX-C394-ITQAN394-03",
+      "AR-LEX-C394-ITQAN394-04",
+      "AR-LEX-C394-ITQAN394-05"
+    ]
+  }
+}

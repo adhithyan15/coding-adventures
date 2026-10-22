@@ -133,6 +133,39 @@ with the decoder's `MAX_DNS_SUBTREES` cap and the DNS textual length bounds,
 evaluation has a fixed worst-case comparison budget and performs no allocation.
 Successful evidence retains only the evaluated name count, not hostile names.
 
+## Exact Direct-Link Composition
+
+The direct reviewed-server anchor-policy composition consumes the existing
+non-copyable server-link evidence. That evidence already binds one exact target
+certificate to target role, identity, validity, purpose, and algorithm policy,
+one authenticated RSA SHA-256 child-to-root link, and one exactly selected
+reviewed Mozilla snapshot entry. Callers cannot separately provide constraint
+bytes, a target certificate, or presented DNS strings to the composition.
+
+If the selected snapshot entry has no out-of-band name constraints, the
+composition succeeds without DNS-constraint evidence. If constraint bytes are
+present, the composition:
+
+1. decodes those exact selected-entry bytes with one caller-bounded decoder;
+2. locates and decodes Subject Alternative Name from the exact target
+   certificate retained by the server-policy evidence with a separate
+   caller-bounded decoder; and
+3. evaluates every decoded target dNSName against the decoded permitted DNS
+   subtrees.
+
+Malformed constraints, a missing or malformed target Subject Alternative Name,
+invalid DNS syntax, or one DNS name outside every permitted subtree fails the
+composition. Other GeneralName forms do not become DNS names. A target with no
+dNSName values therefore satisfies DNS-only constraints because that name form
+is absent. The non-copyable success result retains the complete consumed link
+and an optional payload-free `PermittedDnsNames` result, preventing later code
+from substituting another anchor, certificate, or SAN collection.
+
+The two DER decoders have separate explicit `Asn1Limits`; resetting one
+structure's budget cannot increase the bounded work inside the other. Together
+with the 256-name and 256-subtree caps, this gives a fixed upper bound without
+heap allocation in the NameConstraints decoder or evaluator.
+
 ## Errors and Offsets
 
 Errors expose only a stable category and numeric offset. They retain no input
@@ -175,14 +208,19 @@ empty collections, complete-leftmost-label wildcards, every syntax category,
 the 256-name boundary, unmatched-name failure after another match, complete
 constraint prevalidation, deterministic indices, and redacted diagnostics.
 
+Composition tests cover absent constraints, the exact reviewed `.tr` bytes,
+multiple target DNS names, DNS-absent SANs, malformed selected constraint bytes,
+missing and malformed target SAN, constraint violations, caller decoder limits,
+optional success evidence, and payload-free diagnostics.
+
 ## Deliberate Non-Goals
 
-This slice does not decode an `id-ce-nameConstraints` extension, parse excluded
-subtrees or non-DNS names, perform IDNA conversion, evaluate directory names or
-IP addresses, bind the result to an exact certificate or selected-anchor
-evidence, construct or validate a path, apply self-issued-certificate rules,
-grant trust, check time or revocation, verify signatures, perform TLS or HTTP,
-authorize OAuth transport, or open a network connection. Successful decoding
-proves only that the supplied bytes match the narrow canonical structure;
-successful evaluation proves only that the supplied DNS strings satisfy that
-decoded permitted-subtree set.
+This slice does not decode an `id-ce-nameConstraints` certificate extension,
+parse excluded subtrees or non-DNS constraints, perform IDNA conversion,
+evaluate directory names or IP constraints, construct a multi-hop path, apply
+self-issued-certificate rules, check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection. Successful standalone decoding
+and evaluation retain their narrow meanings. Successful direct-link composition
+adds only that the exact selected anchor's supported DNS constraints were
+applied to every dNSName in the exact already-policy-validated direct child; it
+does not establish complete certificate-path or transport readiness.

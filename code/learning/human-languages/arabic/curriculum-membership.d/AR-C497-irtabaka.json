@@ -1,0 +1,11 @@
+{
+  "id": "AR-C497-irtabaka",
+  "pathSegment": "AR-PATH-497-TAWATTUR497",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-497-TAWATTUR497",
+      "order": 1
+    }
+  ]
+}

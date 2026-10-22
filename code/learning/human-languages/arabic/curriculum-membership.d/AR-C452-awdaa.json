@@ -1,0 +1,11 @@
+{
+  "id": "AR-C452-awdaa",
+  "pathSegment": "AR-PATH-452-FAR452",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-452-FAR452",
+      "order": 4
+    }
+  ]
+}

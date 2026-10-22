@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:ba99828a439bde55",
+  "lessonIds": [
+    "AR-C524-fawada",
+    "AR-C524-ijtahada",
+    "AR-C524-nawaba",
+    "AR-C524-taraqqa",
+    "AR-C524-maqarr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch524.txt",
+  "json": "arabic/narration/ch524.json",
+  "textHash": "fnv1a64:a96721f060e2c48e",
+  "jsonHash": "fnv1a64:45d2ac532b6f770a",
+  "findings": []
+}

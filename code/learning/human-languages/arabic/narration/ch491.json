@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 491,
+  "title": "Pride and thanks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e0c916acc0cce62f",
+  "lessons": [
+    {
+      "id": "AR-C491-fakhur",
+      "sequence": 27350,
+      "title": "فخور (fakhūr) — proud",
+      "headword": "فخور",
+      "romanization": "fakhūr",
+      "gloss": "proud",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd424527e5544cea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be surprised, then the Arabic for admiration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فخور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فخور — fakhūr — \"proud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الأم فخورة بابنها الطبيب. al-umm fakhūra bi-ibnihā aṭ-ṭabīb. The mother is proud of her son the doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ: فخور (fakhūr) بـ, proud of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فخور (fakhūr) is built on the native Arabic root f-kh-r, \"to boast, to glory in\" (Lane). Fakhūr is a pattern for a lasting trait: one who takes pride."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fakhūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fakhūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fakhūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fakhūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-umm fakhūra bi-ibnihā aṭ-ṭabīb. — The mother is proud of her son the doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-umm fakhūra bi-ibnihā aṭ-ṭabīb.* — The mother is proud of her son the doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be surprised, then the Arabic for admiration, then say fakhūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be surprised, then the Arabic for admiration, then say *fakhūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فخور (fakhūr) mean? (\"Proud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C491-iftakhara",
+      "sequence": 27360,
+      "title": "افتخر (iftakhara) — to take pride (in)",
+      "headword": "افتخر",
+      "romanization": "iftakhara",
+      "gloss": "to take pride (in)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:614f927f3d9f6750",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for admiration, then the Arabic for proud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: افتخر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افتخر — iftakhara — \"to take pride (in)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يفتخر جدي بحديقته الجميلة. yaftakhiru jaddī bi-ḥadīqatihi al-jamīla. My grandfather takes pride in his beautiful garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفتخر, yaftakhir."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ, like فخور (fakhūr)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افتخر (iftakhara) is built on the native Arabic root f-kh-r, \"to boast, to glory in\" (Lane). It is Form VIII of the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iftakhara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iftakhara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iftakhara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iftakhara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaftakhiru jaddī bi-ḥadīqatihi al-jamīla. — My grandfather takes pride in his beautiful garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaftakhiru jaddī bi-ḥadīqatihi al-jamīla.* — My grandfather takes pride in his beautiful garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for admiration, then the Arabic for proud, then say iftakhara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for admiration, then the Arabic for proud, then say *iftakhara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does افتخر (iftakhara) mean? (\"To take pride (in)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C491-imtinan",
+      "sequence": 27370,
+      "title": "امتنان (imtinān) — gratitude",
+      "headword": "امتنان",
+      "romanization": "imtinān",
+      "gloss": "gratitude",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e18c94925069d1cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for proud, then the Arabic for to take pride."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: امتنان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "امتنان — imtinān — \"gratitude\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كتبت رسالة امتنان إلى الممرضة. katabtu risālat imtinān ilā al-mumarriḍa. I wrote a letter of thanks to the nurse."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "امتنان (imtinān) is built on the native Arabic root m-n-n, \"to grant a favour\" (Lane). Imtinān is the feeling of one who has been granted a favour."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imtinān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imtinān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imtinān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imtinān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katabtu risālat imtinān ilā al-mumarriḍa. — I wrote a letter of thanks to the nurse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katabtu risālat imtinān ilā al-mumarriḍa.* — I wrote a letter of thanks to the nurse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for proud, then the Arabic for to take pride, then say imtinān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for proud, then the Arabic for to take pride, then say *imtinān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does امتنان (imtinān) mean? (\"Gratitude\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C491-mumtann",
+      "sequence": 27380,
+      "title": "ممتن (mumtann) — grateful",
+      "headword": "ممتن",
+      "romanization": "mumtann",
+      "gloss": "grateful",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7804cfa1e07f63c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to take pride, then the Arabic for gratitude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ممتن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ممتن — mumtann — \"grateful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أنا ممتن لك على مساعدتك. anā mumtann laka ʿalā musāʿadatik. I am grateful to you for your help."
+            },
+            {
+              "kind": "speech",
+              "text": "ممتن (mumtann) لـ someone على something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ممتن (mumtann) is built on the native Arabic root m-n-n, \"to grant a favour\" (Lane). Mumtann is the participle that goes with imtinān, gratitude."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mumtann",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mumtann*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mumtann, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mumtann*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anā mumtann laka ʿalā musāʿadatik. — I am grateful to you for your help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anā mumtann laka ʿalā musāʿadatik.* — I am grateful to you for your help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to take pride, then the Arabic for gratitude, then say mumtann again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to take pride, then the Arabic for gratitude, then say *mumtann* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ممتن (mumtann) mean? (\"Grateful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C491-ajaba",
+      "sequence": 27390,
+      "title": "أعجب (aʿjaba) — to impress, to please",
+      "headword": "أعجب",
+      "romanization": "aʿjaba",
+      "gloss": "to impress, to please",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c55aa356c8e088ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for gratitude, then the Arabic for grateful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أعجب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أعجب — aʿjaba — \"to impress, to please\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أعجبني الفيلم كثيرا. aʿjabanī al-fīlm kathīran. I liked the film a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعجب, yuʿjib."
+            },
+            {
+              "kind": "speech",
+              "text": "The one pleased is the object: أعجبني الفيلم, the film pleased me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أعجب (aʿjaba) is built on the native Arabic root ʿ-j-b, \"to wonder, to marvel\" (Lane). It is Form IV: to make someone marvel. Iʿjāb, admiration, is its verbal noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aʿjaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aʿjaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aʿjaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aʿjaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aʿjabanī al-fīlm kathīran. — I liked the film a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aʿjabanī al-fīlm kathīran.* — I liked the film a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for gratitude, then the Arabic for grateful, then say aʿjaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for gratitude, then the Arabic for grateful, then say *aʿjaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أعجب (aʿjaba) mean? (\"To impress, to please\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

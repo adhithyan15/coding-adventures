@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Aims and means",
+  "label": "ch:ar-aims-and-means",
+  "canDo": "I can talk about a means and an incentive, and say that someone strove, accomplished or contributed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C371-hafiz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can talk about a means and an incentive, and say that someone strove, accomplished or contributed.",
+    "assesses": [
+      "AR-LEX-C371-WASILA371-03",
+      "AR-LEX-C371-WASILA371-04",
+      "AR-LEX-C371-WASILA371-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 500,
+  "title": "Vain, selfish, cowardly and bold",
+  "label": "ch:ar-vain-selfish-cowardly-and-bold",
+  "canDo": "I can describe a person as conceited, arrogant, selfish, cowardly or bold.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C500-jari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can describe a person as conceited, arrogant, selfish, cowardly or bold.",
+    "assesses": [
+      "AR-LEX-C500-GHURUR500-03",
+      "AR-LEX-C500-GHURUR500-04",
+      "AR-LEX-C500-GHURUR500-05"
+    ]
+  }
+}

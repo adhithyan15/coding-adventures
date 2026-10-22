@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "People and nations",
+  "label": "ch:ar-people-and-nations",
+  "canDo": "I can talk about migration, a nation, nationality, a majority and a minority.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C387-aqalliyya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about migration, a nation, nationality, a majority and a minority.",
+    "assesses": [
+      "AR-LEX-C387-UMMA387-03",
+      "AR-LEX-C387-UMMA387-04",
+      "AR-LEX-C387-UMMA387-05"
+    ]
+  }
+}

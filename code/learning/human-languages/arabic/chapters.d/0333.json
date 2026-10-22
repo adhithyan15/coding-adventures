@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "Sailors and pirates",
+  "label": "ch:ar-sailors-and-pirates",
+  "canDo": "I can say to sink, a sailor, a fleet, a pirate and to capture.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C333-asara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can say to sink, a sailor, a fleet, a pirate and to capture.",
+    "assesses": [
+      "AR-LEX-C333-BAHR333-03",
+      "AR-LEX-C333-BAHR333-04",
+      "AR-LEX-C333-BAHR333-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-340-HUKM340",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-340-HUKM340"
+  ],
+  "after": []
+}

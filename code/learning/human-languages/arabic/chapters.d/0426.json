@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Through customs",
+  "label": "ch:ar-through-customs",
+  "canDo": "I can say customs, to search, to stamp, to empty out and to confiscate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C426-sadara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can say customs, to search, to stamp, to empty out and to confiscate.",
+    "assesses": [
+      "AR-LEX-C426-JAMARIK426-03",
+      "AR-LEX-C426-JAMARIK426-04",
+      "AR-LEX-C426-JAMARIK426-05"
+    ]
+  }
+}

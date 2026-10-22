@@ -1,0 +1,11 @@
+{
+  "id": "AR-C551-hawd",
+  "pathSegment": "AR-PATH-551-GHURFA551",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-551-GHURFA551",
+      "order": 2
+    }
+  ]
+}

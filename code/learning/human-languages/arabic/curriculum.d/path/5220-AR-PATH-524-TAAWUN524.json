@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-524-TAAWUN524",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-524-TAAWUN524"
+  ],
+  "after": []
+}

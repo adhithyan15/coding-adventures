@@ -1,0 +1,11 @@
+{
+  "id": "AR-C436-shubbak",
+  "pathSegment": "AR-PATH-436-KUSHK436",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-436-KUSHK436",
+      "order": 2
+    }
+  ]
+}

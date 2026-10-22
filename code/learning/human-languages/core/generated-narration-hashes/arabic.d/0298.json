@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:577bc0337b8e0fdd",
+  "lessonIds": [
+    "AR-C298-hariq",
+    "AR-C298-dukhan",
+    "AR-C298-ishtaala",
+    "AR-C298-ihtaraqa",
+    "AR-C298-rajul-itfa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch298.txt",
+  "json": "arabic/narration/ch298.json",
+  "textHash": "fnv1a64:888b4f7bd9ee938c",
+  "jsonHash": "fnv1a64:274620064f9d3b83",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C363-fardiyya",
+  "pathSegment": "AR-PATH-363-NAZARIYYA363",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-363-NAZARIYYA363",
+      "order": 1
+    }
+  ]
+}

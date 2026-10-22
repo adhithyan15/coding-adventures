@@ -1,0 +1,11 @@
+{
+  "id": "AR-C514-araq",
+  "pathSegment": "AR-PATH-514-TAAB514",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-514-TAAB514",
+      "order": 0
+    }
+  ]
+}

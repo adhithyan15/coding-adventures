@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C483-saqi",
+    "language": "arabic",
+    "chapter": 483,
+    "sequence": 26900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a17bff3388e61af"
+  },
+  "findings": []
+}

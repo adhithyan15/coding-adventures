@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:dc67b65206d50a1d",
+  "lessonIds": [
+    "AR-C479-tazallaja",
+    "AR-C479-wahsh",
+    "AR-C479-kis",
+    "AR-C479-tabadala",
+    "AR-C479-hazama"
+  ],
+  "tex": "arabic/book/chapters/ch479-a-day-in-the-hills.tex"
+}

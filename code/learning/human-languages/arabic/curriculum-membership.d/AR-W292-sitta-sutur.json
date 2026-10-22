@@ -1,0 +1,11 @@
+{
+  "id": "AR-W292-sitta-sutur",
+  "pathSegment": "AR-PATH-292-WOULD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-292-WOULD",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:711af0f98f12d6ed",
+  "lessonIds": [
+    "AR-C465-taqa",
+    "AR-C465-ghaz",
+    "AR-C465-naft",
+    "AR-C465-fahm",
+    "AR-C465-istahlaka"
+  ],
+  "tex": "arabic/book/chapters/ch465-energy.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 479,
+  "title": "A day in the hills",
+  "label": "ch:ar-a-day-in-the-hills",
+  "canDo": "I can say to ski, a wild beast, a plastic bag, to exchange and to pack.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C479-hazama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 479: I can say to ski, a wild beast, a plastic bag, to exchange and to pack.",
+    "assesses": [
+      "AR-LEX-C479-TAZALLUJ479-03",
+      "AR-LEX-C479-TAZALLUJ479-04",
+      "AR-LEX-C479-TAZALLUJ479-05"
+    ]
+  }
+}

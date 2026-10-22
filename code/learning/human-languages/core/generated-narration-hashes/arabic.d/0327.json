@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:98f86da066e40453",
+  "lessonIds": [
+    "AR-C327-fi-tilka-al-layla",
+    "AR-C327-fi-al-waqt-nafsih",
+    "AR-C327-halama",
+    "AR-C327-ila-an",
+    "AR-C327-tuwala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch327.txt",
+  "json": "arabic/narration/ch327.json",
+  "textHash": "fnv1a64:89ef606a78958b69",
+  "jsonHash": "fnv1a64:60482f2855eb19e6",
+  "findings": []
+}

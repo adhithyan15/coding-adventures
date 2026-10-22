@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:c834c835d738fb9b",
+  "lessonIds": [
+    "AR-C541-fannan",
+    "AR-C541-marid",
+    "AR-C541-nahhat",
+    "AR-C541-nahata",
+    "AR-C541-rassam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch541.txt",
+  "json": "arabic/narration/ch541.json",
+  "textHash": "fnv1a64:fc5b755328b52ed7",
+  "jsonHash": "fnv1a64:83206ccee26f7219",
+  "findings": []
+}

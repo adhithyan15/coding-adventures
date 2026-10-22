@@ -1,0 +1,11 @@
+{
+  "id": "AR-C509-waram",
+  "pathSegment": "AR-PATH-509-ADWA509",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-509-ADWA509",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-428-SIKKA428",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-428-SIKKA428"
+  ],
+  "after": []
+}

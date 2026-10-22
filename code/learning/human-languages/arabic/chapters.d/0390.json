@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "University life",
+  "label": "ch:ar-university-life",
+  "canDo": "I can talk about a faculty, a specialization, a dean and a scholarship, and say that someone enrolled.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C390-iltahaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can talk about a faculty, a specialization, a dean and a scholarship, and say that someone enrolled.",
+    "assesses": [
+      "AR-LEX-C390-KULLIYYA390-03",
+      "AR-LEX-C390-KULLIYYA390-04",
+      "AR-LEX-C390-KULLIYYA390-05"
+    ]
+  }
+}

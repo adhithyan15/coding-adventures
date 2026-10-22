@@ -1,0 +1,11 @@
+{
+  "id": "AR-C388-intahaka",
+  "pathSegment": "AR-PATH-388-FASAD388",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-388-FASAD388",
+      "order": 3
+    }
+  ]
+}

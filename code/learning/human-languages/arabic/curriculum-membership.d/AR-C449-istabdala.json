@@ -1,0 +1,11 @@
+{
+  "id": "AR-C449-istabdala",
+  "pathSegment": "AR-PATH-449-SHAKWA449",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-449-SHAKWA449",
+      "order": 4
+    }
+  ]
+}

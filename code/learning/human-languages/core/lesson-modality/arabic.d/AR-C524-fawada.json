@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C524-fawada",
+    "language": "arabic",
+    "chapter": 524,
+    "sequence": 29040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6704dfab8e5cd1ff"
+  },
+  "findings": []
+}

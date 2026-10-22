@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:9e098a3fec1b6ab9",
+  "lessonIds": [
+    "AR-C312-kashafa",
+    "AR-C312-iktashafa",
+    "AR-C312-athara-find",
+    "AR-C312-mustakshif",
+    "AR-C312-kanz"
+  ],
+  "tex": "arabic/book/chapters/ch312-discoveries.tex"
+}

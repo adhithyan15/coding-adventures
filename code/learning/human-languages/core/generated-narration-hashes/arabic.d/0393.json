@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:a3ae2115b0dd51b9",
+  "lessonIds": [
+    "AR-C393-ikhtibar",
+    "AR-C393-qabul",
+    "AR-C393-muaddal",
+    "AR-C393-tafawwaqa",
+    "AR-C393-qayyama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch393.txt",
+  "json": "arabic/narration/ch393.json",
+  "textHash": "fnv1a64:8deef45ff4a07385",
+  "jsonHash": "fnv1a64:68bc50f73e7b3ece",
+  "findings": []
+}

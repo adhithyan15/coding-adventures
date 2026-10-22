@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 359,
+  "title": "Points of view",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d9b2f07ce3968b1b",
+  "lessons": [
+    {
+      "id": "AR-C359-intiba",
+      "sequence": 20450,
+      "title": "انطباع (inṭibāʿ) — an impression",
+      "headword": "انطباع",
+      "romanization": "inṭibāʿ",
+      "gloss": "an impression",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36624a4e1385621a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to prove, then the Arabic for to convince."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انطباع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انطباع — inṭibāʿ — \"an impression\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ترك الفندق انطباعا جيدا عندي. taraka al-funduq inṭibāʿan jayyidan ʿindī. The hotel left a good impression on me."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انطباع (inṭibāʿ) is built on the native Arabic root ṭ-b-ʿ, \"to stamp, to imprint\" (Lane). Inṭibāʿ is the Form VII verbal noun, being stamped: the mark a thing leaves on the mind, an impression."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inṭibāʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inṭibāʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inṭibāʿ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inṭibāʿ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraka al-funduq inṭibāʿan jayyidan ʿindī. — The hotel left a good impression on me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraka al-funduq inṭibāʿan jayyidan ʿindī.* — The hotel left a good impression on me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to prove, then the Arabic for to convince, then say inṭibāʿ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to prove, then the Arabic for to convince, then say *inṭibāʿ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انطباع (inṭibāʿ) mean? (\"An impression\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C359-manzur",
+      "sequence": 20460,
+      "title": "منظور (manẓūr) — a perspective",
+      "headword": "منظور",
+      "romanization": "manẓūr",
+      "gloss": "a perspective",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5e62de5243466cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to convince, then the Arabic for an impression."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منظور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منظور — manẓūr — \"a perspective\"."
+            },
+            {
+              "kind": "speech",
+              "text": "من منظور الطبيب، النوم مهم جدا. min manẓūr aṭ-ṭabīb, an-nawm muhimm jiddan. From the doctor's perspective, sleep is very important."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منظور (manẓūr) is built on the native Arabic root n-ẓ-r, \"to look, to regard\" (Lane). Manẓūr is the passive participle, what is looked at; in modern use it is the angle you look from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manẓūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manẓūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manẓūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manẓūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "min manẓūr aṭ-ṭabīb, an-nawm muhimm jiddan. — From the doctor's perspective, sleep is very important.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *min manẓūr aṭ-ṭabīb, an-nawm muhimm jiddan.* — From the doctor's perspective, sleep is very important.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to convince, then the Arabic for an impression, then say manẓūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to convince, then the Arabic for an impression, then say *manẓūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منظور (manẓūr) mean? (\"A perspective\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C359-iftarada",
+      "sequence": 20470,
+      "title": "افترض (iftaraḍa) — to assume",
+      "headword": "افترض",
+      "romanization": "iftaraḍa",
+      "gloss": "to assume",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a27db67b77d98c40",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an impression, then the Arabic for a perspective."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: افترض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افترض — iftaraḍa — \"to assume\"."
+            },
+            {
+              "kind": "speech",
+              "text": "افترضنا أن القطار سيصل مبكرا. iftaraḍnā anna al-qiṭār sa-yaṣilu mubakkiran. We assumed that the train would arrive early."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفترض, yaftariḍ."
+            },
+            {
+              "kind": "speech",
+              "text": "Followed by أن: افترض (iftaraḍa) أن …, assumed that …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افترض (iftaraḍa) is built on the native Arabic root f-r-ḍ, \"to make a notch; to make binding\" (Lane). It is Form VIII: to take a thing as laid down, to assume it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iftaraḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iftaraḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iftaraḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iftaraḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iftaraḍnā anna al-qiṭār sa-yaṣilu mubakkiran. — We assumed that the train would arrive early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iftaraḍnā anna al-qiṭār sa-yaṣilu mubakkiran.* — We assumed that the train would arrive early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an impression, then the Arabic for a perspective, then say iftaraḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an impression, then the Arabic for a perspective, then say *iftaraḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does افترض (iftaraḍa) mean? (\"To assume\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C359-iqtaraha",
+      "sequence": 20480,
+      "title": "اقترح (iqtaraḥa) — to suggest",
+      "headword": "اقترح",
+      "romanization": "iqtaraḥa",
+      "gloss": "to suggest",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9b0feffbd12856e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a perspective, then the Arabic for to assume."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اقترح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اقترح — iqtaraḥa — \"to suggest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اقترح المعلم رحلة إلى المتحف. iqtaraḥa al-muʿallim riḥla ilā al-matḥaf. The teacher suggested a trip to the museum."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقترح, yaqtariḥ."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun اقتراح, iqtirāḥ, a suggestion, comes from it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اقترح (iqtaraḥa) is built on the native Arabic root q-r-ḥ, \"to wound\" (Lane). It is Form VIII. Its modern sense, to put an idea forward, is usually traced to an older one, to bring out something new."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaraḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaraḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaraḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaraḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaraḥa al-muʿallim riḥla ilā al-matḥaf. — The teacher suggested a trip to the museum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaraḥa al-muʿallim riḥla ilā al-matḥaf.* — The teacher suggested a trip to the museum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a perspective, then the Arabic for to assume, then say iqtaraḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a perspective, then the Arabic for to assume, then say *iqtaraḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اقترح (iqtaraḥa) mean? (\"To suggest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C359-muqni",
+      "sequence": 20490,
+      "title": "مقنع (muqniʿ) — convincing",
+      "headword": "مقنع",
+      "romanization": "muqniʿ",
+      "gloss": "convincing",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7272fab835247e9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to assume, then the Arabic for to suggest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مقنع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقنع — muqniʿ — \"convincing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان كلام المدير مقنعا. kāna kalām al-mudīr muqniʿan. The manager's words were convincing."
+            },
+            {
+              "kind": "speech",
+              "text": "After كان the adjective takes -an: كان مقنعا."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مقنع (muqniʿ) is built on the native Arabic root q-n-ʿ, \"to be content, satisfied\" (Lane). Muqniʿ is the Form IV active participle: that which convinces."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muqniʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muqniʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muqniʿ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muqniʿ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna kalām al-mudīr muqniʿan. — The manager's words were convincing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna kalām al-mudīr muqniʿan.* — The manager's words were convincing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to assume, then the Arabic for to suggest, then say muqniʿ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to assume, then the Arabic for to suggest, then say *muqniʿ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مقنع (muqniʿ) mean? (\"Convincing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:08628be5367650e3",
+  "lessonIds": [
+    "AR-C308-tahqiq",
+    "AR-C308-haqqaqa",
+    "AR-C308-muhaqqiq",
+    "AR-C308-dalil",
+    "AR-C308-basma",
+    "AR-R308-review-301-308"
+  ],
+  "tex": "arabic/book/chapters/ch308-an-investigation.tex"
+}

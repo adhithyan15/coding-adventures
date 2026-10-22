@@ -1,0 +1,11 @@
+{
+  "id": "AR-C392-ustadh",
+  "pathSegment": "AR-PATH-392-MUHADIR392",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-392-MUHADIR392",
+      "order": 1
+    }
+  ]
+}

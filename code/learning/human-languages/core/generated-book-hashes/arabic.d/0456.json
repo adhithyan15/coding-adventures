@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:10fbc76a09572ac0",
+  "lessonIds": [
+    "AR-C456-hajm",
+    "AR-C456-sinf",
+    "AR-C456-ayyina",
+    "AR-C456-nasaba",
+    "AR-C456-daqa"
+  ],
+  "tex": "arabic/book/chapters/ch456-finding-the-right-size.tex"
+}

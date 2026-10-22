@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C422-tasamuh",
+    "language": "arabic",
+    "chapter": 422,
+    "sequence": 23690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec7bcf96fe98fbc1"
+  },
+  "findings": []
+}

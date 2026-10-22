@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C512-afiya",
+    "language": "arabic",
+    "chapter": 512,
+    "sequence": 28460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0555083fe8853af7"
+  },
+  "findings": []
+}

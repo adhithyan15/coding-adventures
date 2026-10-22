@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:9e1659026bafb01b",
+  "lessonIds": [
+    "AR-C482-nasim",
+    "AR-C482-isar",
+    "AR-C482-asafa",
+    "AR-C482-ishtadda",
+    "AR-C482-khatar"
+  ],
+  "tex": "arabic/book/chapters/ch482-wind-and-storms.tex"
+}

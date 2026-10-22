@@ -1,0 +1,11 @@
+{
+  "id": "AR-C284-qissat-rihla",
+  "pathSegment": "AR-PATH-284-STORY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-284-STORY",
+      "order": 3
+    }
+  ]
+}

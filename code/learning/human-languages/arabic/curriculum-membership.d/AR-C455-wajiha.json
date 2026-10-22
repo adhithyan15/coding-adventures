@@ -1,0 +1,11 @@
+{
+  "id": "AR-C455-wajiha",
+  "pathSegment": "AR-PATH-455-WAJIHA455",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-455-WAJIHA455",
+      "order": 2
+    }
+  ]
+}

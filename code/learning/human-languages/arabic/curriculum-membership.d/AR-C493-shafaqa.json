@@ -1,0 +1,11 @@
+{
+  "id": "AR-C493-shafaqa",
+  "pathSegment": "AR-PATH-493-NADAM493",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-493-NADAM493",
+      "order": 2
+    }
+  ]
+}

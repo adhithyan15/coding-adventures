@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C365-fannada",
+    "language": "arabic",
+    "chapter": 365,
+    "sequence": 20780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88ae0b4e0cb581c6"
+  },
+  "findings": []
+}

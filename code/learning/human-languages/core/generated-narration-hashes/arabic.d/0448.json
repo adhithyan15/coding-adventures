@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:14d7640db7373039",
+  "lessonIds": [
+    "AR-C448-dajij",
+    "AR-C448-azaja",
+    "AR-C448-ayqaza",
+    "AR-C448-hadaa",
+    "AR-C448-ishtaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch448.txt",
+  "json": "arabic/narration/ch448.json",
+  "textHash": "fnv1a64:0d4070c1c8b0a912",
+  "jsonHash": "fnv1a64:925126cb02bcc084",
+  "findings": []
+}

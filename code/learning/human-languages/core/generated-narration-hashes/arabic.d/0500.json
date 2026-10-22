@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:414bb98aa619266e",
+  "lessonIds": [
+    "AR-C500-maghrur",
+    "AR-C500-mutakabbir",
+    "AR-C500-anani",
+    "AR-C500-jaban",
+    "AR-C500-jari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch500.txt",
+  "json": "arabic/narration/ch500.json",
+  "textHash": "fnv1a64:7c6a76d9c310ffc5",
+  "jsonHash": "fnv1a64:9c8900e7a2dc0a69",
+  "findings": []
+}

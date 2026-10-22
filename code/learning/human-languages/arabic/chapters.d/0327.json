@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "That night",
+  "label": "ch:ar-that-night",
+  "canDo": "I can say that night, at the same time, as soon as, until and throughout.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C327-tuwala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can say that night, at the same time, as soon as, until and throughout.",
+    "assesses": [
+      "AR-LEX-C327-LAYLA327-03",
+      "AR-LEX-C327-LAYLA327-04",
+      "AR-LEX-C327-LAYLA327-05"
+    ]
+  }
+}

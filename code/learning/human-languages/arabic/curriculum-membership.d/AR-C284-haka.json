@@ -1,0 +1,11 @@
+{
+  "id": "AR-C284-haka",
+  "pathSegment": "AR-PATH-284-STORY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-284-STORY",
+      "order": 1
+    }
+  ]
+}

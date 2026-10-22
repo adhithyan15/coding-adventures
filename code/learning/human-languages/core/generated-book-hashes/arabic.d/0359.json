@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:4e8320fd1aeffff9",
+  "lessonIds": [
+    "AR-C359-intiba",
+    "AR-C359-manzur",
+    "AR-C359-iftarada",
+    "AR-C359-iqtaraha",
+    "AR-C359-muqni"
+  ],
+  "tex": "arabic/book/chapters/ch359-points-of-view.tex"
+}

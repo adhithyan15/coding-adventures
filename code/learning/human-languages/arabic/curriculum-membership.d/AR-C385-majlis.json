@@ -1,0 +1,11 @@
+{
+  "id": "AR-C385-majlis",
+  "pathSegment": "AR-PATH-385-MUNAZZAMA385",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-385-MUNAZZAMA385",
+      "order": 3
+    }
+  ]
+}

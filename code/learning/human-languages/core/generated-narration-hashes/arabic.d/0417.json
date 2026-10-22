@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:557c51c7f8e1a17a",
+  "lessonIds": [
+    "AR-C417-ghamid",
+    "AR-C417-sarih",
+    "AR-C417-muhaddad",
+    "AR-C417-ittadaha",
+    "AR-C417-ashara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch417.txt",
+  "json": "arabic/narration/ch417.json",
+  "textHash": "fnv1a64:b61a8a0e045ebd68",
+  "jsonHash": "fnv1a64:bdac4ab964149e25",
+  "findings": []
+}

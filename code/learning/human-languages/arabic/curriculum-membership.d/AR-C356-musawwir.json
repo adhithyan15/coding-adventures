@@ -1,0 +1,11 @@
+{
+  "id": "AR-C356-musawwir",
+  "pathSegment": "AR-PATH-356-JUMHUR356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-356-JUMHUR356",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Protecting nature",
+  "label": "ch:ar-protecting-nature",
+  "canDo": "I can say a nature reserve, endangered, to protect, to die out and to squander.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C467-ahdara-waste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can say a nature reserve, endangered, to protect, to die out and to squander.",
+    "assesses": [
+      "AR-LEX-C467-MAHMIYYA467-03",
+      "AR-LEX-C467-MAHMIYYA467-04",
+      "AR-LEX-C467-MAHMIYYA467-05"
+    ]
+  }
+}

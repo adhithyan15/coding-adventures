@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C511-dammada",
+    "language": "arabic",
+    "chapter": 511,
+    "sequence": 28410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04dfc6dae8f3ade1"
+  },
+  "findings": []
+}

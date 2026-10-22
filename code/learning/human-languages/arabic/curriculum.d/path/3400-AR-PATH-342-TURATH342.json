@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-342-TURATH342",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-342-TURATH342"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:fce75e73f84bd790",
+  "lessonIds": [
+    "AR-C426-jamarik",
+    "AR-C426-fattasha",
+    "AR-C426-khatama",
+    "AR-C426-afragha",
+    "AR-C426-sadara"
+  ],
+  "tex": "arabic/book/chapters/ch426-through-customs.tex"
+}

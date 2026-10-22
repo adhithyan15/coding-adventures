@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-336-HADIYYA336",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-336-HADIYYA336"
+  ],
+  "after": []
+}

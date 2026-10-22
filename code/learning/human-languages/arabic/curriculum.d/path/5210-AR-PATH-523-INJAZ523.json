@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-523-INJAZ523",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-523-INJAZ523"
+  ],
+  "after": []
+}
