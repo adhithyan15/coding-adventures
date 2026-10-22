@@ -305,3 +305,7 @@ one creation and one removal; a null source counts every cleared row as removed.
 Disabled counters stay zero. This API performs no I/O and does not depend on the
 Rust host. Counts describe projected view models, not native realized elements;
 they do not by themselves establish performance or accessibility acceptance.
+
+Generated application hosts pass their component to the shared interaction
+profiler. With profiling enabled, JSONL intervals may include projection counter
+deltas; these are view-model counts and do not measure native realization.
