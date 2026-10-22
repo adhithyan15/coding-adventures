@@ -39,7 +39,8 @@ pub enum FrontendError {
     ReleaseNotAvailable {
         /// The inventory ID.
         release: String,
-        /// Why, e.g. the row's `grammar_stage` or `"no IIR profile"`.
+        /// Why, self-describing: `no grammar pair: grammar_stage none` or
+        /// `no IIR profile for …`.
         stage: String,
     },
     /// A LANG84 C5 budget was exceeded.
@@ -125,7 +126,19 @@ impl From<PythonFrontendError> for FrontendError {
                 requested,
                 suggestions,
             },
+            // python-parser's `stage` is either the row's bare
+            // `grammar_stage` (one word, such as `none`) or, for a
+            // regeneration bug, a fixed phrase (`token table missing
+            // (regenerate python-lexer)`). The first is prefixed here so the
+            // reason reads on its own next to this crate's other one, `no IIR
+            // profile …`, wherever it is shown, including lang-aot's `cannot
+            // compile yet (…)`; the phrase already says what is wrong.
             PythonFrontendError::ReleaseNotAvailable { release, stage } => {
+                let stage = if stage.contains(' ') {
+                    stage
+                } else {
+                    format!("no grammar pair: grammar_stage {stage}")
+                };
                 Self::ReleaseNotAvailable { release, stage }
             }
             PythonFrontendError::Budget {

@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased — LANG84 phase 5b, slice 1: release recorded and selectable through lang-aot
+
+### Added
+- The compiled module records the release that produced it:
+  `IIRModule::release` is `Some("3.3.5" | "3.3.6" | "3.3.7")` from
+  `compile_source_at`, `compile_source` (the default, `3.3.6`) and
+  `compile_cst` alike. lang-aot's `--lang ruby@<release>` relies on it.
+
+### Changed
+- `FrontendError::ReleaseNotAvailable.stage` is self-describing. A row with
+  no grammar pair now reads `no grammar pair: grammar_stage none` instead of
+  the bare `none`, next to the existing `no IIR profile: …`, so lang-aot
+  can show either as `release X cannot compile yet (…)`. ruby-parser's
+  regeneration-bug phrases (`token table missing (regenerate ruby-lexer)`)
+  already say what is wrong and are kept as they are (security review,
+  info).
+
 ## Unreleased — LANG84 phase 5a (= LANG83 PR2): the R0 release pairs, LANG83 ops
 
 ### Changed (breaking)
