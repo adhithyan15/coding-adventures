@@ -819,6 +819,16 @@ time authority, and requested purpose. This target-only policy composition does
 not authenticate an issuer link, recognize or constrain a trust anchor,
 construct or validate a certification path, check revocation, perform TLS or
 HTTP, authorize OAuth transport, or open a network connection.
+A bounded `x509-rsa-sha256-reviewed-server-link` composition now consumes that
+target server-policy evidence together with one-link reviewed-anchor evidence.
+It fails closed unless both non-copyable inputs retain the same exact decoded
+child certificate, then retains both proofs in one distinct non-copyable
+result. This binds the target's identity, validity, purpose, role, critical-
+extension recognition, and algorithm policy to one authenticated RSA SHA-256
+issuer link terminating at a selected reviewed Mozilla root. It still does not
+apply the root's name constraints, path-length or other anchor constraints,
+construct a multi-hop path, check revocation, perform TLS or HTTP, authorize
+OAuth transport, or open a network connection.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
