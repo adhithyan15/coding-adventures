@@ -1,0 +1,11 @@
+{
+  "id": "AR-C353-iqtahama",
+  "pathSegment": "AR-PATH-353-MUZAHARA353",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-353-MUZAHARA353",
+      "order": 3
+    }
+  ]
+}

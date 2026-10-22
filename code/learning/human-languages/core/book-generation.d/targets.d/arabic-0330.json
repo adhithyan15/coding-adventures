@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 330,
+  "output": "arabic/book/chapters/ch330-prison.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

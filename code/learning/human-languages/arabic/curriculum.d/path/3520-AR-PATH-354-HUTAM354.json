@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-354-HUTAM354",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-354-HUTAM354"
+  ],
+  "after": []
+}

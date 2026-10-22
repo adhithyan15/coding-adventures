@@ -1,0 +1,11 @@
+{
+  "id": "AR-C546-tanafasa",
+  "pathSegment": "AR-PATH-546-MUBARA546",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-546-MUBARA546",
+      "order": 4
+    }
+  ]
+}

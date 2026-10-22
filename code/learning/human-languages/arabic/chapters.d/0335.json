@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Fairy-tale creatures",
+  "label": "ch:ar-fairy-tale-creatures",
+  "canDo": "I can say a magician, an ogre, a dragon, a giant and a dwarf.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C335-qazam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can say a magician, an ogre, a dragon, a giant and a dwarf.",
+    "assesses": [
+      "AR-LEX-C335-SIHR335-03",
+      "AR-LEX-C335-SIHR335-04",
+      "AR-LEX-C335-SIHR335-05"
+    ]
+  }
+}

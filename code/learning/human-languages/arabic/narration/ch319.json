@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 319,
+  "title": "Mourning",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:01db12a29bdfb1e1",
+  "lessons": [
+    {
+      "id": "AR-C319-aza",
+      "sequence": 18330,
+      "title": "عزاء (ʿazāʾ) — condolence; a gathering of mourners",
+      "headword": "عزاء",
+      "romanization": "ʿazāʾ",
+      "gloss": "condolence; a gathering of mourners",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de563a87be01da11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a temple, then the Arabic for a pyramid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عزاء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عزاء — ʿazāʾ — \"condolence; a gathering of mourners\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ذهبنا إلى بيت العزاء مساء أمس. dhahabnā ilā bayt al-ʿazāʾ masāʾa ams. We went to the house of mourning yesterday evening."
+            },
+            {
+              "kind": "speech",
+              "text": "بيت العزاء is the home where the family receives visitors after a death."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عزاء (ʿazāʾ) is built on the native Arabic root ʿ-z-y (Lane), where ʿazāʾ is patience in the face of loss. To offer it to a family is to wish them that patience."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿazāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿazāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿazāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿazāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhahabnā ilā bayt al-ʿazāʾ masāʾa ams. — We went to the house of mourning yesterday evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhahabnā ilā bayt al-ʿazāʾ masāʾa ams.* — We went to the house of mourning yesterday evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a temple, then the Arabic for a pyramid, then say ʿazāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a temple, then the Arabic for a pyramid, then say *ʿazāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عزاء (ʿazāʾ) mean? (\"Condolence; a gathering of mourners\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C319-azza",
+      "sequence": 18340,
+      "title": "عزى (ʿazzā) — to console, to offer condolences",
+      "headword": "عزى",
+      "romanization": "ʿazzā",
+      "gloss": "to console, to offer condolences",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:164cd8ce7a7ab223",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a pyramid, then the Arabic for condolence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عزى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عزى — ʿazzā — \"to console, to offer condolences\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عزى الجيران الأسرة بعد الجنازة. ʿazzā al-jīrān al-usra baʿda al-janāza. The neighbours offered the family their condolences after the funeral."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعزي, yuʿazzī."
+            },
+            {
+              "kind": "speech",
+              "text": "عزى (ʿazzā) someone في the person who died: عزاه في أبيه."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عزى (ʿazzā) is built on the native Arabic root ʿ-z-y (Lane), patience under loss. It is Form II, \"to bid someone be patient\": to console."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿazzā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿazzā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿazzā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿazzā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿazzā al-jīrān al-usra baʿda al-janāza. — The neighbours offered the family their condolences after the funeral.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿazzā al-jīrān al-usra baʿda al-janāza.* — The neighbours offered the family their condolences after the funeral.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a pyramid, then the Arabic for condolence, then say ʿazzā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a pyramid, then the Arabic for condolence, then say *ʿazzā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عزى (ʿazzā) mean? (\"To console, to offer condolences\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C319-ratha",
+      "sequence": 18350,
+      "title": "رثى (rathā) — to lament, to mourn in verse",
+      "headword": "رثى",
+      "romanization": "rathā",
+      "gloss": "to lament, to mourn in verse",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbe40ba82242e9a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for condolence, then the Arabic for to console."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رثى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رثى — rathā — \"to lament, to mourn in verse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رثى الشاعر صديقه في قصيدة طويلة. rathā ash-shāʿir ṣadīqahu fī qaṣīda ṭawīla. The poet mourned his friend in a long poem."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرثي, yarthī."
+            },
+            {
+              "kind": "speech",
+              "text": "A poem of mourning is رثاء, an elegy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رثى (rathā) is built on the native Arabic root r-th-y (Lane), \"to weep for the dead and recount his good deeds\"; rithāʾ, the elegy, is one of the oldest kinds of Arabic poem."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rathā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rathā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rathā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rathā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rathā ash-shāʿir ṣadīqahu fī qaṣīda ṭawīla. — The poet mourned his friend in a long poem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rathā ash-shāʿir ṣadīqahu fī qaṣīda ṭawīla.* — The poet mourned his friend in a long poem.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for condolence, then the Arabic for to console, then say rathā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for condolence, then the Arabic for to console, then say *rathā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رثى (rathā) mean? (\"To lament, to mourn in verse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C319-naa",
+      "sequence": 18360,
+      "title": "نعى (naʿā) — to announce a death",
+      "headword": "نعى",
+      "romanization": "naʿā",
+      "gloss": "to announce a death",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b753d09d2ab4cc3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to console, then the Arabic for to lament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نعى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نعى — naʿā — \"to announce a death\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نعت الصحيفة الكاتب الكبير. naʿat aṣ-ṣaḥīfa al-kātib al-kabīr. The newspaper announced the death of the great writer."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينعى, yanʿā."
+            },
+            {
+              "kind": "speech",
+              "text": "A death notice in the paper is نعي."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نعى (naʿā) is built on the native Arabic root n-ʿ-y (Lane), \"to bring the news of someone's death\"; naʿy is that news."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naʿā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naʿā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naʿā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naʿā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naʿat aṣ-ṣaḥīfa al-kātib al-kabīr. — The newspaper announced the death of the great writer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naʿat aṣ-ṣaḥīfa al-kātib al-kabīr.* — The newspaper announced the death of the great writer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to console, then the Arabic for to lament, then say naʿā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to console, then the Arabic for to lament, then say *naʿā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نعى (naʿā) mean? (\"To announce a death\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C319-hidad",
+      "sequence": 18370,
+      "title": "حداد (ḥidād) — mourning, a period of mourning",
+      "headword": "حداد",
+      "romanization": "ḥidād",
+      "gloss": "mourning, a period of mourning",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b74e689e21b85dab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to lament, then the Arabic for to announce a death."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حداد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حداد — ḥidād — \"mourning, a period of mourning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لبست الأسرة الأسود في أيام الحداد. labisat al-usra al-aswad fī ayyām al-ḥidād. The family wore black in the days of mourning."
+            },
+            {
+              "kind": "speech",
+              "text": "أعلنت الحكومة الحداد ثلاثة أيام: three days of national mourning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حداد (ḥidād) is built on the native Arabic root ḥ-d-d (Lane), the root of ḥadd, a limit, and of ḥadīd, iron. Lane gives ḥidād as a widow's holding back from finery and perfume: mourning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥidād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥidād*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥidād, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥidād*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "labisat al-usra al-aswad fī ayyām al-ḥidād. — The family wore black in the days of mourning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *labisat al-usra al-aswad fī ayyām al-ḥidād.* — The family wore black in the days of mourning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to lament, then the Arabic for to announce a death, then say ḥidād again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to lament, then the Arabic for to announce a death, then say *ḥidād* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حداد (ḥidād) mean? (\"Mourning, a period of mourning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

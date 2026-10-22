@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:03bfa32daf123e77",
+  "lessonIds": [
+    "AR-C541-fannan",
+    "AR-C541-marid",
+    "AR-C541-nahhat",
+    "AR-C541-nahata",
+    "AR-C541-rassam"
+  ],
+  "tex": "arabic/book/chapters/ch541-at-the-exhibition.tex"
+}

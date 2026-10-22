@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:7e55d2d9bad41808",
+  "lessonIds": [
+    "AR-C504-kabid",
+    "AR-C504-tihal",
+    "AR-C504-mida",
+    "AR-C504-ama",
+    "AR-C504-nabd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch504.txt",
+  "json": "arabic/narration/ch504.json",
+  "textHash": "fnv1a64:98450aa48e7b49b2",
+  "jsonHash": "fnv1a64:94ba88f9ad295ac3",
+  "findings": []
+}

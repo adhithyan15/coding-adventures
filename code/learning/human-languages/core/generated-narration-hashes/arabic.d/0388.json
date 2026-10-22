@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 388,
+  "sourceHash": "fnv1a64:1f5f303ed69a3a92",
+  "lessonIds": [
+    "AR-C388-fasad",
+    "AR-C388-rashwa",
+    "AR-C388-islah",
+    "AR-C388-intahaka",
+    "AR-C388-istaghalla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch388.txt",
+  "json": "arabic/narration/ch388.json",
+  "textHash": "fnv1a64:a44f1a253b148e19",
+  "jsonHash": "fnv1a64:f1d318d6301c8914",
+  "findings": []
+}

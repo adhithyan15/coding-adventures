@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Social problems",
+  "label": "ch:ar-social-problems",
+  "canDo": "I can talk about poverty, unemployment, discrimination and violence, and say that people suffer.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-R381-review-374-381",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can talk about poverty, unemployment, discrimination and violence, and say that people suffer.",
+    "assesses": [
+      "AR-LEX-C381-MUJTAMA381-03",
+      "AR-LEX-C381-MUJTAMA381-04",
+      "AR-LEX-C381-MUJTAMA381-05"
+    ]
+  }
+}

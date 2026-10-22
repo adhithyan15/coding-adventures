@@ -1,0 +1,11 @@
+{
+  "id": "AR-C523-tafarragha",
+  "pathSegment": "AR-PATH-523-INJAZ523",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-523-INJAZ523",
+      "order": 2
+    }
+  ]
+}

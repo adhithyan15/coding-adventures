@@ -1,0 +1,11 @@
+{
+  "id": "AR-C404-ishtarata",
+  "pathSegment": "AR-PATH-404-SHART404",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-404-SHART404",
+      "order": 1
+    }
+  ]
+}

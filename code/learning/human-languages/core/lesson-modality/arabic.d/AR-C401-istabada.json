@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C401-istabada",
+    "language": "arabic",
+    "chapter": 401,
+    "sequence": 22640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0b61c6d7784554c"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C301-inqalaba",
+  "pathSegment": "AR-PATH-301-TARIQ301",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-301-TARIQ301",
+      "order": 1
+    }
+  ]
+}

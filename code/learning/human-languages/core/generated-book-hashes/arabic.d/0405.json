@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:265d5c13d1655f8f",
+  "lessonIds": [
+    "AR-C405-istithna",
+    "AR-C405-istathna",
+    "AR-C405-shamila",
+    "AR-C405-tadammana",
+    "AR-C405-taallaqa",
+    "AR-R405-review-398-405"
+  ],
+  "tex": "arabic/book/chapters/ch405-exceptions.tex"
+}

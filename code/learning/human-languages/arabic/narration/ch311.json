@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 311,
+  "title": "A birth",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ea468bf77c1fbe24",
+  "lessons": [
+    {
+      "id": "AR-C311-wilada",
+      "sequence": 17920,
+      "title": "ولادة (wilāda) — childbirth; a birth",
+      "headword": "ولادة",
+      "romanization": "wilāda",
+      "gloss": "childbirth; a birth",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebceb3d6dc6e096d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to call out to, then the Arabic for a rescuer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ولادة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ولادة — wilāda — \"childbirth; a birth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كانت الولادة في الليل. kānat al-wilāda fī al-layl. The birth was at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Birth certificate: شهادة ولادة (wilāda); many countries say شهادة ميلاد."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ولادة (wilāda) is built on the native Arabic root w-l-d (Lane), \"to give birth\", the root of the taught walad, a child, and mīlād, a birthday."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wilāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wilāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wilāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wilāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kānat al-wilāda fī al-layl. — The birth was at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kānat al-wilāda fī al-layl.* — The birth was at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to call out to, then the Arabic for a rescuer, then say wilāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to call out to, then the Arabic for a rescuer, then say *wilāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ولادة (wilāda) mean? (\"Childbirth; a birth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C311-mawlud",
+      "sequence": 17930,
+      "title": "مولود (mawlūd) — a newborn",
+      "headword": "مولود",
+      "romanization": "mawlūd",
+      "gloss": "a newborn",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43bd56ef8331da6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a rescuer, then the Arabic for childbirth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مولود",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مولود — mawlūd — \"a newborn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نام المولود بعد أن شرب الحليب. nāma al-mawlūd baʿda an shariba al-ḥalīb. The newborn fell asleep after drinking his milk."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: مواليد, mawālīd."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural مواليد also names everyone born in a given year."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مولود (mawlūd) is built on the native Arabic root w-l-d (Lane), \"to give birth\". Mawlūd is its passive participle, \"one who is born\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mawlūd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mawlūd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mawlūd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mawlūd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāma al-mawlūd baʿda an shariba al-ḥalīb. — The newborn fell asleep after drinking his milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāma al-mawlūd baʿda an shariba al-ḥalīb.* — The newborn fell asleep after drinking his milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a rescuer, then the Arabic for childbirth, then say mawlūd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a rescuer, then the Arabic for childbirth, then say *mawlūd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مولود (mawlūd) mean? (\"A newborn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C311-qabila-midwife",
+      "sequence": 17940,
+      "title": "قابلة (qābila) — a midwife",
+      "headword": "قابلة",
+      "romanization": "qābila",
+      "gloss": "a midwife",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b817b80312d73cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for childbirth, then the Arabic for a newborn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قابلة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قابلة — qābila — \"a midwife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ساعدت القابلة الأم في الولادة. sāʿadat al-qābila al-umm fī al-wilāda. The midwife helped the mother with the birth."
+            },
+            {
+              "kind": "speech",
+              "text": "Not the taught verb قابل, to meet: قابلة (qābila) is a noun here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قابلة (qābila) is built on the native Arabic root q-b-l (Lane), \"to face; to receive\". Qābila is the active participle, \"she who receives\": the midwife is usually explained as the woman who receives the child at its birth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qābila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qābila*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qābila, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qābila*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāʿadat al-qābila al-umm fī al-wilāda. — The midwife helped the mother with the birth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāʿadat al-qābila al-umm fī al-wilāda.* — The midwife helped the mother with the birth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for childbirth, then the Arabic for a newborn, then say qābila again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for childbirth, then the Arabic for a newborn, then say *qābila* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قابلة (qābila) mean? (\"A midwife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C311-anjaba",
+      "sequence": 17950,
+      "title": "أنجب (anjaba) — to have a child, to bear",
+      "headword": "أنجب",
+      "romanization": "anjaba",
+      "gloss": "to have a child, to bear",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a31e9fc0dd306529",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a newborn, then the Arabic for a midwife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أنجب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنجب — anjaba — \"to have a child, to bear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أنجبت جارتنا بنتا جميلة. anjabat jāratunā bintan jamīla. Our neighbour had a beautiful baby girl."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينجب, yunjib."
+            },
+            {
+              "kind": "speech",
+              "text": "Of either parent: أنجب (anjaba) الرجل ثلاثة أولاد."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنجب (anjaba) is built on the native Arabic root n-j-b (Lane), the root of najīb, noble, excellent. Form IV anjaba was first \"to beget a noble child\", then to have a child."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anjaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anjaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anjaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anjaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anjabat jāratunā bintan jamīla. — Our neighbour had a beautiful baby girl.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anjabat jāratunā bintan jamīla.* — Our neighbour had a beautiful baby girl.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a newborn, then the Arabic for a midwife, then say anjaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a newborn, then the Arabic for a midwife, then say *anjaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أنجب (anjaba) mean? (\"To have a child, to bear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C311-tasmiya",
+      "sequence": 17960,
+      "title": "تسمية (tasmiya) — a naming; a name given",
+      "headword": "تسمية",
+      "romanization": "tasmiya",
+      "gloss": "a naming; a name given",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c93a5147681d77c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a midwife, then the Arabic for to have a child."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تسمية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تسمية — tasmiya — \"a naming; a name given\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اختار الجد تسمية (tasmiya) المولود. ikhtāra al-jadd tasmiyat al-mawlūd. The grandfather chose the baby’s name."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb is سمى, to name."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تسمية (tasmiya) is built on the native Arabic root s-m-w (Lane), \"to be high\", the root of the taught ism, a name. Tasmiya is the verbal noun of Form II sammā, \"to give a name\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasmiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasmiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasmiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasmiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtāra al-jadd tasmiyat al-mawlūd. — The grandfather chose the baby’s name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtāra al-jadd tasmiyat al-mawlūd.* — The grandfather chose the baby’s name.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a midwife, then the Arabic for to have a child, then say tasmiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a midwife, then the Arabic for to have a child, then say *tasmiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تسمية (tasmiya) mean? (\"A naming; a name given\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

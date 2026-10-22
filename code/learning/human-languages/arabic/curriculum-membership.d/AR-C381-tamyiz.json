@@ -1,0 +1,11 @@
+{
+  "id": "AR-C381-tamyiz",
+  "pathSegment": "AR-PATH-381-MUJTAMA381",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-381-MUJTAMA381",
+      "order": 2
+    }
+  ]
+}

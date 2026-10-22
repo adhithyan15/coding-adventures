@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Hours and tasks",
+  "label": "ch:ar-hours-and-tasks",
+  "canDo": "I can talk about a shift, time off and a task, and say that someone carried out a plan or got used to the work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C520-naffadha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about a shift, time off and a task, and say that someone carried out a plan or got used to the work.",
+    "assesses": [
+      "AR-LEX-C520-DAWAM520-03",
+      "AR-LEX-C520-DAWAM520-04",
+      "AR-LEX-C520-DAWAM520-05"
+    ]
+  }
+}

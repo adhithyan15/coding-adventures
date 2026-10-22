@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Stretching and shaking",
+  "label": "ch:ar-stretching-and-shaking",
+  "canDo": "I can say that someone stretched out, bent down, trembled or had a cough, and talk about a sprain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C516-iltiwa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can say that someone stretched out, bent down, trembled or had a cough, and talk about a sprain.",
+    "assesses": [
+      "AR-LEX-C516-HARAKA516-03",
+      "AR-LEX-C516-HARAKA516-04",
+      "AR-LEX-C516-HARAKA516-05"
+    ]
+  }
+}

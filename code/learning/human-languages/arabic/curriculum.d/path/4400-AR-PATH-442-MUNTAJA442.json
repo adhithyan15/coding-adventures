@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-442-MUNTAJA442",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-442-MUNTAJA442"
+  ],
+  "after": []
+}

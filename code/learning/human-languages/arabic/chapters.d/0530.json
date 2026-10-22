@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Babies",
+  "label": "ch:ar-babies",
+  "canDo": "I can say that a woman is pregnant, talk about a cradle, and say that a mother breastfed, weaned or brought up a child.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C530-rabba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can say that a woman is pregnant, talk about a cradle, and say that a mother breastfed, weaned or brought up a child.",
+    "assesses": [
+      "AR-LEX-C530-ATFAL530-03",
+      "AR-LEX-C530-ATFAL530-04",
+      "AR-LEX-C530-ATFAL530-05"
+    ]
+  }
+}

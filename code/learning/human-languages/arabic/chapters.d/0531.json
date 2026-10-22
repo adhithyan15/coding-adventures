@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Growing up and growing old",
+  "label": "ch:ar-growing-up-and-growing-old",
+  "canDo": "I can name a teenager, a nanny and old age, and say that someone got older or matured.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C531-murabbiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can name a teenager, a nanny and old age, and say that someone got older or matured.",
+    "assesses": [
+      "AR-LEX-C531-KIBAR531-03",
+      "AR-LEX-C531-KIBAR531-04",
+      "AR-LEX-C531-KIBAR531-05"
+    ]
+  }
+}

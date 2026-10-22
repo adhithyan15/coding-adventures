@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:24b9f14b8e745c0a",
+  "lessonIds": [
+    "AR-C509-adwa",
+    "AR-C509-fayrus",
+    "AR-C509-jurthuma",
+    "AR-C509-tatim",
+    "AR-C509-waram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch509.txt",
+  "json": "arabic/narration/ch509.json",
+  "textHash": "fnv1a64:ca25bf98d65df12b",
+  "jsonHash": "fnv1a64:5287e75a3a01efae",
+  "findings": []
+}

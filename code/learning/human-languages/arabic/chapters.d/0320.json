@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "The media",
+  "label": "ch:ar-the-media",
+  "canDo": "I can say the media, an agency, a source, to report and to clarify.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C320-awdaha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can say the media, an agency, a source, to report and to clarify.",
+    "assesses": [
+      "AR-LEX-C320-ILAM320-03",
+      "AR-LEX-C320-ILAM320-04",
+      "AR-LEX-C320-ILAM320-05"
+    ]
+  }
+}

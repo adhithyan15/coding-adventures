@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:d1d3fa6d34f05adc",
+  "lessonIds": [
+    "AR-C361-qadiyya",
+    "AR-C361-masala",
+    "AR-C361-siyaq",
+    "AR-C361-athara",
+    "AR-C361-tasaala"
+  ],
+  "tex": "arabic/book/chapters/ch361-issues-and-questions.tex"
+}

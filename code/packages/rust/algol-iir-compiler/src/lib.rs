@@ -4809,9 +4809,9 @@ impl Compiler {
                             }
                             rooted_index = Some(index);
                         } else {
-                            let units = exact_sign_integer_units(
-                                expr_static_real_arithmetic_value_with(operand, &|_| None)?,
-                            )?;
+                            let value =
+                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            let units = exact_sign_integer_units(value)?;
                             let operator = (index > 0)
                                 .then(|| sequence.get(index - 1))
                                 .flatten()
@@ -4819,7 +4819,7 @@ impl Compiler {
                                     Piece::Op(op) => Some(op.as_str()),
                                     Piece::Node(_) => None,
                                 });
-                            static_terms.push((index, operator, units));
+                            static_terms.push((index, operator, units, value as i64));
                         }
                     } else {
                         let Piece::Op(op) = piece else {
@@ -4833,7 +4833,44 @@ impl Compiler {
                 }
                 let mut proof = rooted?;
                 let rooted_index = rooted_index?;
-                if rooted_index > 0
+                let folds_integer_prefix = static_terms.iter().any(
+                    |(index, operator, _, _)| {
+                        *index < rooted_index && matches!(*operator, Some("div" | "mod"))
+                    },
+                );
+                if folds_integer_prefix {
+                    if !matches!(
+                        sequence.get(rooted_index - 1),
+                        Some(Piece::Op(op)) if op == "*"
+                    ) {
+                        return None;
+                    }
+                    let mut prefix_value: Option<i64> = None;
+                    for (index, operator, _, signed_units) in &static_terms {
+                        if *index >= rooted_index {
+                            continue;
+                        }
+                        prefix_value = Some(match (prefix_value, *operator) {
+                            (None, None) => *signed_units,
+                            (Some(lhs), Some("*")) => lhs.checked_mul(*signed_units)?,
+                            (Some(lhs), Some("/")) => {
+                                if *signed_units == 0 || lhs % *signed_units != 0 {
+                                    return None;
+                                }
+                                lhs.checked_div(*signed_units)?
+                            }
+                            (Some(lhs), Some("div")) => lhs.checked_div(*signed_units)?,
+                            (Some(lhs), Some("mod")) => lhs.checked_rem(*signed_units)?,
+                            _ => return None,
+                        });
+                    }
+                    let prefix_units = prefix_value?.unsigned_abs();
+                    proof.magnitude = proof.magnitude.checked_mul(prefix_units)?;
+                    proof.value_gcd = proof.value_gcd.checked_mul(prefix_units)?;
+                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                        return None;
+                    }
+                } else if rooted_index > 0
                     && matches!(
                         sequence.get(rooted_index - 1),
                         Some(Piece::Op(op)) if matches!(op.as_str(), "/" | "div" | "mod")
@@ -4841,7 +4878,10 @@ impl Compiler {
                 {
                     return None;
                 }
-                for (index, operator, units) in static_terms {
+                for (index, operator, units, _) in static_terms {
+                    if folds_integer_prefix && index < rooted_index {
+                        continue;
+                    }
                     if operator == Some("div") {
                         if index < rooted_index || units == 0 {
                             return None;
@@ -15467,6 +15507,42 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a zero or dynamic integer divisor and a later inexact real quotient must remain outside the composed proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_static_prefix_integer_reductions() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(6 div 4 * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(11 mod 4 * ((2 * sign(pick())) + 2)); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(2 * 9 div 4 * ((sign(pick()) + 3) ^ 2) div 2); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a static integer quotient or remainder prefix preserves a later multiplied sign-rooted integer for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_static_prefix_integer_reductions_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(6 div 4 / sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 4; result := entier(6 div divisor * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(6 div 0 * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(9007199254740992 div 1 * (sign(pick()) + 1)); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a denominator-position root, dynamic or zero divisor, or oversized prefix must remain outside the composed proof",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

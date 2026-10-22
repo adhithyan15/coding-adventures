@@ -1,0 +1,186 @@
+Arabic, chapter 283: The Past, Person By Person.
+5 lessons. All 5 can be done entirely by ear.
+
+
+Lesson 1 of 5.
+يكتب (yaktubu) — the present, for everyone.
+
+Warm-up.
+[pause 2 seconds]
+Say "I write". (Aktub.) Then say the Arabic for a sentence and a barber. (Jumla, ḥallāq.)
+[pause 1 second]
+Chapter thirty-seven gave you the present for one person only: أ at the front means I. A story needs he, she and we as well, and they come from the same front door.
+
+Grammar Lens: one stem, four prefixes.
+Keep the stem -ktub- and change the letter in front of it:
+أكتب aktubu, I write, تكتب taktubu, you write, يكتب yaktubu, he writes, تكتب taktubu, she writes, نكتب naktubu, we write.
+Ta- does two jobs: "you" said to a man, and "she". The sentence around it tells them apart. Said to a woman, "you write" adds -īna at the back, taktubīna; "they write" adds -ūna, yaktubūna, and so does "you write" said to several people, taktubūna.
+The -u at the end is the present's own vowel. At the end of a sentence it is usually dropped, which is why chapter thirty-seven wrote aktub; inside a sentence you will hear it.
+
+Grammar Lens: the same door on other verbs.
+هي تكتب رسالة. — hiya taktubu risāla — She is writing a letter.
+نحن نذهب إلى المدرسة. — naḥnu nadhhabu ilā al-madrasa — We go to school.
+Dhahaba gives nadhhabu; qaraʾa gives yaqraʾu, he reads. One present covers "I write" and "I am writing"; English splits what Arabic keeps as one. Anā is "I", huwa "he", hiya "she", naḥnu "we", and they are often left out, because the prefix already says who.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: aktubu, taktubu, yaktubu, naktubu]
+[pause 8 seconds for the answer]
+[your turn — say: "She is writing a letter" — hiya taktubu risāla]
+[pause 8 seconds for the answer]
+[your turn — say: "He reads a book" — yaqraʾu kitāban]
+[pause 8 seconds for the answer]
+[your turn — say: "We go to school" — nadhhabu ilā al-madrasa]
+[pause 8 seconds for the answer]
+[your turn — say: "The actor reads", with the word from chapter two hundred and eighty-one — al-mumaththil yaqraʾu]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter at the front means we? (ن, na-.) And he? (ي, ya-.) Why can تكتب mean two people? (Ta- is "you" and "she": the sentence decides.) Where is the -u dropped? (At the end of a sentence.)
+
+
+Lesson 2 of 5.
+كتبت (katabtu) — the past, person by person.
+
+Warm-up.
+[pause 2 seconds]
+Say "we write", then "he writes". (Naktubu, yaktubu.)
+[pause 1 second]
+You have said qaḍaytu al-ʿuṭla fī al-qarya, "I spent the holiday in the village". That -tu at the back is "I" in the past. Here is the rest of the set.
+
+Grammar Lens: the endings at the back.
+Kataba, he wrote, is the bare past. Every other person is an ending on the same stem, katab-:
+كتبتُ katabtu, I wrote, كتبتَ katabta, you wrote (to a man), كتبتِ katabti, you wrote (to a woman), كتبَ kataba, he wrote, كتبتْ katabat, she wrote, كتبنا katabnā, we wrote, كتبوا katabū, they wrote, كتبتم katabtum, you wrote (to several).
+The present put the person at the front; the past puts it at the back.
+Without its vowel marks, كتبت spells four of these at once: katabtu, katabta, katabti and katabat. That is why they carry marks here, and why, on an unmarked page, the rest of the sentence tells you who wrote.
+
+Grammar Lens: other verbs, and "did not".
+أمس كتبت رسالة إلى جدتي. — ams katabtu risālatan ilā jaddatī — Yesterday I wrote a letter to my grandmother.
+ذهبنا إلى السوق. — dhahabnā ilā as-sūq — We went to the market.
+Qaraʾa gives qaraʾtu, I read; dhahaba gives dhahabat, she went. The ا at the end of كتبوا is written and not said.
+ما in front makes it "did not": mā katabtu, I didn't write; mā dhahabnā, we didn't go.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: katabtu, katabta, katabti, kataba, katabat, katabnā, katabū]
+[pause 8 seconds for the answer]
+[your turn — say: "Yesterday I wrote a letter" — ams katabtu risālatan]
+[pause 8 seconds for the answer]
+[your turn — say: "We went to the market", then "we didn't go" — dhahabnā ilā as-sūq, mā dhahabnā]
+[pause 8 seconds for the answer]
+[your turn — say: "They came back to the house" — rajaʿū ilā al-manzil]
+[pause 8 seconds for the answer]
+[your turn — say: "The engineer read the letter" — al-muhandis qaraʾa ar-risāla]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does the past mark the person? (At the back.) "She wrote"? (Katabat.) "We wrote"? (Katabnā.) How many persons can an unmarked كتبت be? (Four: katabtu, katabta, katabti, katabat.) "I didn't go"? (Mā dhahabtu.)
+
+
+Lesson 3 of 5.
+كان (kāna) — was.
+
+Warm-up.
+[pause 2 seconds]
+Say "I wrote" and "she wrote". (Katabtu, katabat.)
+[pause 1 second]
+Now say "I am at the office". (Anā fī al-maktab.) There is no "am" in it: in the present, Arabic sets the two halves side by side. In the past it cannot, and it needs a verb.
+
+You'll want to know: كان.
+كان — kāna — "he was, it was": the past of "to be".
+كنت في المكتب أمس. — kuntu fī al-maktab ams — I was at the office yesterday.
+كانت جدتي في القرية. — kānat jaddatī fī al-qarya — My grandmother was in the village.
+It takes the endings of the lesson before, with one change. Where the ending starts with a consonant, the long ā shrinks to u: kuntu, I was; kunta, kunti, you were; kunnā, we were. Where it does not, the ā stays: kāna, kānat, kānū, they were.
+
+The word, taken apart.
+كان (kāna) is built on the native Arabic root k-w-n, "to be, to come into being" (Lane). Lane lists makāna, "a place of being", among the words of the same root. The w of the root is the reason for the two shapes: it surfaces as long ā in kāna and as short u in kuntu.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kāna, kānat — then kuntu, kunnā]
+[pause 8 seconds for the answer]
+[your turn — say: "I was at the office yesterday" — kuntu fī al-maktab ams]
+[pause 8 seconds for the answer]
+[your turn — say: "We were in the restaurant" — kunnā fī al-maṭʿam]
+[pause 8 seconds for the answer]
+[your turn — say: "My grandmother was in the village" — kānat jaddatī fī al-qarya]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does كان (kāna) mean? ("He was; it was".) "I was"? (Kuntu, with a short u.) "She was"? (Kānat, with a long ā.) Why does the present not need it? (Arabic sets the two halves side by side.)
+
+
+Lesson 4 of 5.
+كان يكتب (kāna yaktubu) — the past that is still running.
+
+Warm-up.
+[pause 2 seconds]
+Say "I was at the office", then "I wrote". (Kuntu fī al-maktab, katabtu.)
+[pause 1 second]
+Katabtu has an edge: the writing happened, and it is over. A story also needs a past with no edge on it.
+
+Grammar Lens: kāna in front of the present.
+Put kāna in its past form, then the present of the verb you mean, both for the same person:
+kuntu + aktubu becomes كنت أكتب — kuntu aktubu — I was writing; I used to write.
+So kānat taqraʾu, she was reading; kunnā nadhhabu, we used to go. It answers two English shapes. "Was ‑ing": the action was under way. "Used to": it happened again and again.
+كنت أمشي إلى المدرسة كل يوم. — kuntu amshī ilā al-madrasa kulla yawm — I used to walk to school every day.
+Mā goes in front of kāna: mā kuntu aʿrifu, I didn't know.
+
+Grammar Lens: the scene, and the event.
+A told story splits its verbs in two. Kāna with the present paints the scene: what was going on. The plain past drops the events into it: what happened.
+كنت أقرأ كتابا حينما اتصل صديقي. — kuntu aqraʾu kitāban ḥīnamā ittaṣala ṣadīqī — I was reading a book when my friend phoned.
+The reading is scene, still running when the call cuts into it. The call is an event, over in a moment, and ḥīnamā is the joint between them.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kuntu aktubu, kānat taktubu, kunnā naktubu]
+[pause 8 seconds for the answer]
+[your turn — say: "I used to walk to school every day" — kuntu amshī ilā al-madrasa kulla yawm]
+[pause 8 seconds for the answer]
+[your turn — say: kuntu aqraʾu kitāban ḥīnamā ittaṣala ṣadīqī]
+[pause 8 seconds for the answer]
+[your turn — say: "I didn't know" — mā kuntu aʿrifu]
+[pause 8 seconds for the answer]
+[your turn — say: "She was reading a page" — kānat taqraʾu ṣafḥa]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you build "I was writing"? (Kuntu + aktubu: kuntu aktubu.) In the phone sentence, which verb is the scene? (Kuntu aqraʾu, still running.) Which is the event? (Ittaṣala, over in a moment.) Do both verbs agree with the person? (Yes: kunnā naktubu.)
+
+
+Lesson 5 of 5.
+Review — the scene, and what cut into it.
+
+Warm-up.
+[pause 2 seconds]
+Say "he writes" for today, then "he wrote" for yesterday. (Yaktubu, kataba.) Then the Arabic for a calculator and a pencil case. (Ḥāsiba, miqlama.)
+
+What you've built.
+Four lessons, one stem, and three shapes of it. The present marks the person at the front: aktubu, taktubu, yaktubu, naktubu. The past marks it at the back: katabtu, katabat, katabnā, katabū. And kāna in front of the present gives the past that is still running: kuntu aktubu.
+[pause 2 seconds]
+Al-māḍī sets the time:
+كنت أعمل في المكتب الأسبوع الماضي. — kuntu aʿmalu fī al-maktab al-usbūʿa al-māḍī — Last week I was working at the office.
+[pause 2 seconds]
+And ḥīnamā joins the scene to the event that cut into it:
+كانت تكتب قصة حينما جاء أخوها. — kānat taktubu qiṣṣa ḥīnamā jāʾa akhūhā — She was writing a story when her brother came.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: a scene in two — kuntu fī al-maktab. kuntu aktubu.]
+[pause 8 seconds for the answer]
+[your turn — say: "Last week I was working at the office" — kuntu aʿmalu fī al-maktab al-usbūʿa al-māḍī]
+[pause 8 seconds for the answer]
+[your turn — say: kānat taktubu qiṣṣa ḥīnamā jāʾa akhūhā]
+[pause 8 seconds for the answer]
+[your turn — say: "The pilot was waiting", then "the presenter came" — kāna aṭ-ṭayyār yantaẓiru, jāʾa al-mudhīʿ]
+[pause 8 seconds for the answer]
+[your turn — say: one of your own: kuntu with a present, then ḥīnamā and one thing that happened]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+After ḥīnamā in a story, which past? (The plain one, the event: jāʾa.) Which past paints the scene? (Kāna with the present.) "We were"? (Kunnā.) "Last week"? (Al-usbūʿ al-māḍī.)

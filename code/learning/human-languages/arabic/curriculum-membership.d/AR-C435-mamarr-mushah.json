@@ -1,0 +1,11 @@
+{
+  "id": "AR-C435-mamarr-mushah",
+  "pathSegment": "AR-PATH-435-MASAR435",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-435-MASAR435",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C429-rasa",
+  "pathSegment": "AR-PATH-429-QARIB429",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-429-QARIB429",
+      "order": 4
+    }
+  ]
+}

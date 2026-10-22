@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Agreeing and objecting",
+  "label": "ch:ar-agreeing-and-objecting",
+  "canDo": "I can say that someone approved, objected or argued, and talk about consensus and controversy.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C360-jadal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can say that someone approved, objected or argued, and talk about consensus and controversy.",
+    "assesses": [
+      "AR-LEX-C360-JADAL360-03",
+      "AR-LEX-C360-JADAL360-04",
+      "AR-LEX-C360-JADAL360-05"
+    ]
+  }
+}

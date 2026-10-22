@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-370-NAQD370",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-370-NAQD370"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:e67557f334b6f95e",
+  "lessonIds": [
+    "AR-C340-hakim",
+    "AR-C340-sultan",
+    "AR-C340-qabila",
+    "AR-C340-balat",
+    "AR-C340-tawalla",
+    "AR-R340-review-333-340"
+  ],
+  "tex": "arabic/book/chapters/ch340-rulers-and-tribes.tex"
+}

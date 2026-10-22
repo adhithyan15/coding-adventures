@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Sightseeing",
+  "label": "ch:ar-sightseeing",
+  "canDo": "I can say tourism, a tour, an outing, to wander around and a great traveller.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R438-review-431-438",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can say tourism, a tour, an outing, to wander around and a great traveller.",
+    "assesses": [
+      "AR-LEX-C438-SIYAHA438-03",
+      "AR-LEX-C438-SIYAHA438-04",
+      "AR-LEX-C438-SIYAHA438-05"
+    ]
+  }
+}

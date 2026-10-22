@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-485-SAMA485",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-485-SAMA485"
+  ],
+  "after": []
+}

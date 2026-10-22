@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-483-BARD483",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say coldness, chilly, biting, frost and to get cold.",
+  "prerequisites": []
+}

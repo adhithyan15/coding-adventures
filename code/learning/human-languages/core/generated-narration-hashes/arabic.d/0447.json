@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:97805956e2c032b7",
+  "lessonIds": [
+    "AR-C447-dush",
+    "AR-C447-mikwah",
+    "AR-C447-mujaffif",
+    "AR-C447-taattala",
+    "AR-C447-tafaqqada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch447.txt",
+  "json": "arabic/narration/ch447.json",
+  "textHash": "fnv1a64:f803afa12086ef90",
+  "jsonHash": "fnv1a64:b6e90fc78c882d04",
+  "findings": []
+}

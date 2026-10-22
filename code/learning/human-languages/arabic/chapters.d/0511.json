@@ -1,0 +1,19 @@
+{
+  "chapter": 511,
+  "title": "Doses and drops",
+  "label": "ch:ar-doses-and-drops",
+  "canDo": "I can talk about a dose, a capsule, a drop and a splint, and say that a nurse bound up a wound.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R511-review-504-511",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about a dose, a capsule, a drop and a splint, and say that a nurse bound up a wound.",
+    "assesses": [
+      "AR-LEX-C511-JURA511-03",
+      "AR-LEX-C511-JURA511-04",
+      "AR-LEX-C511-JURA511-05"
+    ]
+  }
+}

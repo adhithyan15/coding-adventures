@@ -1,6 +1,7 @@
 {
   "upstream_version": "11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "complete pinned Mermaid 11.16.1 Swimlane syntax corpus",
   "fixtures": [
     {
       "name": "basic-handoff",

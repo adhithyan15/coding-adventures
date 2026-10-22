@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Heat",
+  "label": "ch:ar-heat",
+  "canDo": "I can say a heatwave, stifling, humidity, drought and to evaporate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C484-tabakhkhara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can say a heatwave, stifling, humidity, drought and to evaporate.",
+    "assesses": [
+      "AR-LEX-C484-HARR484-03",
+      "AR-LEX-C484-HARR484-04",
+      "AR-LEX-C484-HARR484-05"
+    ]
+  }
+}

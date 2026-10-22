@@ -1,0 +1,11 @@
+{
+  "id": "AR-C480-daraja",
+  "pathSegment": "AR-PATH-480-NASHRA480",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-480-NASHRA480",
+      "order": 1
+    }
+  ]
+}

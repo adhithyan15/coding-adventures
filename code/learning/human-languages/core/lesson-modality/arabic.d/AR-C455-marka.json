@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C455-marka",
+    "language": "arabic",
+    "chapter": 455,
+    "sequence": 25450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d35e8f2afc19339"
+  },
+  "findings": []
+}

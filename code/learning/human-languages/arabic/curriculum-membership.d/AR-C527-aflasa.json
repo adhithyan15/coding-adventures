@@ -1,0 +1,11 @@
+{
+  "id": "AR-C527-aflasa",
+  "pathSegment": "AR-PATH-527-MAL527",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-527-MAL527",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "AR-C284-qissat-rihla",
+    "language": "arabic",
+    "chapter": 284,
+    "sequence": 16480,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a35f1197fd8043c4"
+  },
+  "findings": []
+}

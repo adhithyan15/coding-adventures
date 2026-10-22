@@ -1,0 +1,19 @@
+{
+  "chapter": 395,
+  "title": "Reading and quoting",
+  "label": "ch:ar-reading-and-quoting",
+  "canDo": "I can talk about a reference, and say that someone cited, quoted, read up on or reflected.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C395-taammala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 395: I can talk about a reference, and say that someone cited, quoted, read up on or reflected.",
+    "assesses": [
+      "AR-LEX-C395-MARJI395-03",
+      "AR-LEX-C395-MARJI395-04",
+      "AR-LEX-C395-MARJI395-05"
+    ]
+  }
+}

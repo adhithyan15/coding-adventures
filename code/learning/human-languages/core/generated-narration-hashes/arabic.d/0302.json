@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:38c24d2a6d2f44b3",
+  "lessonIds": [
+    "AR-C302-hiwar",
+    "AR-C302-hawara",
+    "AR-C302-ajra",
+    "AR-C302-istadafa",
+    "AR-C302-mutahaddith"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch302.txt",
+  "json": "arabic/narration/ch302.json",
+  "textHash": "fnv1a64:2644accbac09b683",
+  "jsonHash": "fnv1a64:1e457dea3f349327",
+  "findings": []
+}

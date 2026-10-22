@@ -1,0 +1,11 @@
+{
+  "id": "AR-C426-afragha",
+  "pathSegment": "AR-PATH-426-JAMARIK426",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-426-JAMARIK426",
+      "order": 3
+    }
+  ]
+}

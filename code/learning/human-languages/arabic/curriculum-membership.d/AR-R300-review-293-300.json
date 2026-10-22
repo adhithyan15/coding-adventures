@@ -1,0 +1,11 @@
+{
+  "id": "AR-R300-review-293-300",
+  "pathSegment": "AR-PATH-300-JARIMA300",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-300-JARIMA300",
+      "order": 5
+    }
+  ]
+}

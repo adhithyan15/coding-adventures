@@ -1,0 +1,11 @@
+{
+  "id": "AR-C535-takhasama",
+  "pathSegment": "AR-PATH-535-RIFAQ535",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-535-RIFAQ535",
+      "order": 3
+    }
+  ]
+}

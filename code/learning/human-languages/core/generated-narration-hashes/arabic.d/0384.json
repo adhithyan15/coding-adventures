@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:45ef0723ff17f114",
+  "lessonIds": [
+    "AR-C384-mawwala",
+    "AR-C384-khassasa",
+    "AR-C384-sinaa",
+    "AR-C384-ziraa",
+    "AR-C384-tanmiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch384.txt",
+  "json": "arabic/narration/ch384.json",
+  "textHash": "fnv1a64:4a4358a599f76a2f",
+  "jsonHash": "fnv1a64:608d47cf7e51c3fd",
+  "findings": []
+}

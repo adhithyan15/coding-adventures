@@ -1,0 +1,11 @@
+{
+  "id": "AR-C446-rahhaba",
+  "pathSegment": "AR-PATH-446-KHIDMA446",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-446-KHIDMA446",
+      "order": 3
+    }
+  ]
+}

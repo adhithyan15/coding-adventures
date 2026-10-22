@@ -1,0 +1,11 @@
+{
+  "id": "AR-C484-rutuba",
+  "pathSegment": "AR-PATH-484-HARR484",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-484-HARR484",
+      "order": 2
+    }
+  ]
+}
