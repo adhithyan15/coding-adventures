@@ -551,9 +551,10 @@ release claims B(S) while a case of S has neither a matrix row on its
 boundary release nor membership in a class whose representative has one.
 Since phase 4c every row of a language with an inventory must name its
 release (and the corpus case it runs); a row that names none is an error.
-Perl's rows name the three IIR-identity class representatives; Ruby's and
-Python's rows name their default releases (3.3.6, 3.13.16), which are the
-releases whose B claims they back until the 5b/7b boundary sweeps add rows.
+Perl's rows name the three IIR-identity class representatives. Ruby's and
+Python's rows name their default releases (3.3.6, 3.13.16) and, since phases
+5b and 7b slice 2, each class representative from their own
+`release_sweep.rs`.
 Corpus overrides `<name>.expect@<x>` and `<name>.reject@<x>` both need the
 plain `.expect`; `<x>` is a profile some `profiles.rs` defines (Perl's
 `zero_and_negation.reject@perl_nv`) or a row of the language's `releases.csv`
@@ -1161,11 +1162,39 @@ Python):
 
 Nothing falls back: `ruby@3.3` is `UnknownRelease`, not 3.3.6.
 
-**Phase 5b, slice 2 (remaining).** Matrix rows with `Prog.release` (Perl
-phase 4c's field) on the boundary releases 3.3.5 and 3.3.7 (or the release
-sweep of [CI bounding](#ci-bounding)), after which those rows may claim
-`backend_status`; the release-identity class check in a
-`release_sweep.rs`.
+**Phase 5b, slice 2 (release sweep).** Ruby gets Perl phase 4c's
+[CI bounding](#ci-bounding) machinery for `rb-int-puts`, and with it B for
+every release that claims I:
+
+- **Sweep.** `ruby-iir-compiler/tests/release_sweep.rs` compiles every
+  positive case under every release whose `iir_status` claims the subset
+  (3.3.5, 3.3.6, 3.3.7, in `releases.csv` order). It digests each module's
+  `interpreter_ir::serialise` bytes with SHA-256 and names each release's
+  class by the first 16 hex digits of the digest of its whole outcome
+  vector, as Perl's sweep does. It then compares the result with the
+  committed `code/grammars/ruby/release_classes.csv`
+  (`subset,case,release,class`). `RUBY_RELEASE_SWEEP_WRITE=1` rewrites the
+  file; the run that writes fails on purpose and refuses `CI` and
+  `GITHUB_ACTIONS`. Only claiming releases are swept: 0.49 and 0.50 have
+  pairs but no profile, so they refuse every case. Ruby's corpus has no
+  per-release override, so a claiming release that refuses a positive case
+  fails the sweep. That is never a `rejected` cell. The test pins the
+  representatives, so a new class is a reviewed change.
+  `release_subsets.rs` keeps its Debug-based identity check, and both tests
+  read the corpus through a shared `tests/common/mod.rs`.
+- **Matrix.** The fourteen default-release rows (3.3.6) stay. The matrix
+  also runs every case on each class representative, which is the class's
+  first release in inventory order. If the three releases form one class,
+  that is 3.3.5, not the default. The new rows include the corpus source
+  with `include_str!`, as Perl's do. A new named test,
+  `ruby_rows_run_their_corpus_case`, mirrors
+  `perl_rows_run_their_corpus_case`. Each row names a release and a case,
+  and runs exactly that case's source and `.expect`. The rows must equal the
+  boundary set read from `release_classes.csv` exactly. The LANG83 check runs
+  each row's module compiled at the row's release.
+- **CSV.** `backend_status` gains `rb-int-puts` for 3.3.5 and 3.3.7 once
+  `release_inventory.py check --matrix` shows that every case is covered,
+  either directly or through the class representative.
 
 ### JavaScript: rewrite to walk the CST
 
@@ -1749,9 +1778,33 @@ API exactly as Ruby does in 5b slice 1, in the same change:
   have an IIR profile, so Python has no pair-without-profile row today; the
   frontend's `no IIR profile: …` reason covers one if it appears.
 
-**Phase 7b, slice 2 (remaining)** is the release-boundary matrix sweep on
-`Prog.release` rows (after Perl 4c), and 7c the rest of the 7b/7c row in
-the phase table (Python 2, more releases, the float subset).
+**Phase 7b, slice 2 (release sweep)** is phase 5b slice 2's change for
+`py-int-print`, made in the same change:
+
+- **Sweep.** `python-iir-compiler/tests/release_sweep.rs` sweeps the five
+  claiming releases in `releases.csv` order (3.0a1, 3.12.3, 3.13.16,
+  3.11.17, 3.16.0a1, which is date order) into
+  `code/grammars/python/release_classes.csv`.
+  `PYTHON_RELEASE_SWEEP_WRITE=1` rewrites the file under the same rules as
+  Ruby's. A cell is `rejected` only when a `.reject@<release>` override
+  says so and the compile error has the category it names. The one such
+  override is `int_underscores.reject@3.0a1`: PEP 515 separators arrived in
+  3.6. Any other refusal of a positive case fails. 3.0a1 refuses one case,
+  so its outcome vector differs and it is expected to be a class of its own.
+- **Matrix.** The eighteen default-release rows (3.13.16) stay.
+  `include_str!` rows run every case each class representative accepts.
+  `python_rows_run_their_corpus_case` checks the rows against the boundary
+  set. `python_rows_are_py_int_print_corpus_cases` keeps its "every case
+  has a row" direction for the default release's rows. The LANG83 check
+  compiles each row at its release.
+- **CSV.** `backend_status` gains `py-int-print` for 3.0a1, 3.11.17, 3.12.3
+  and 3.16.0a1 once `check --matrix` covers them.
+  `the_default_release_claims_py_int_print_on_the_backends` changes from
+  "only the default claims B" to "B is claimed by exactly the releases that
+  claim I".
+
+7c is the rest of the 7b/7c row in the phase table: Python 2, more
+releases, and the float subset.
 
 ### Wire every IIR frontend into lang-aot
 
