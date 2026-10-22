@@ -1488,6 +1488,10 @@ backend immediately) come before the enabler-dependent items.
   integer transform within the existing exponent-unroll cap when checked
   exponentiation keeps its worst-case magnitude within `2^53`; zero, negative,
   dynamic, deeper, and oversized powers remain conservative.
+  Integer `mod` by a variable-free nonzero whole number may reduce the exact
+  sign-rooted transform, including composition through later exact powers and
+  divisions; zero and dynamic divisors remain outside this composed provenance
+  proof.
   Globals, captured locals, and other real-name branches remain conservative. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

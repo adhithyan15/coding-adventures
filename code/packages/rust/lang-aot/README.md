@@ -39,7 +39,10 @@ prefix to that root; division by the root stays conservative. Positive
 variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
-stay conservative. Unary signs, arithmetic composition with finite static
+stay conservative. Integer `mod` by a variable-free nonzero whole number may
+reduce the exact transform, including composition through later exact powers
+and divisions; zero and dynamic divisors remain outside this composed
+provenance proof. Unary signs, arithmetic composition with finite static
 operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`
