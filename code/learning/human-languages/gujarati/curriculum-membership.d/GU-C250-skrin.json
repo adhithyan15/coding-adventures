@@ -1,0 +1,11 @@
+{
+  "id": "GU-C250-skrin",
+  "pathSegment": "GU-PATH-250-COMPUTER250",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-250-COMPUTER250",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 224,
+  "title": "At the doctor's",
+  "label": "ch:gu-at-the-doctor-s",
+  "canDo": "I can answer the doctor's questions about my pulse and breathing.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-R224-review-219-224",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 224: I can answer the doctor's questions about my pulse and breathing.",
+    "assesses": [
+      "GU-LEX-C224-DOCTOR224-03",
+      "GU-LEX-C224-DOCTOR224-04",
+      "GU-LEX-C224-DOCTOR224-05"
+    ]
+  }
+}

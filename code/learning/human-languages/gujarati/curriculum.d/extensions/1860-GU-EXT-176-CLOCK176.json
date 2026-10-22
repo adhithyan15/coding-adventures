@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-176-CLOCK176",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how long something will take in hours and quarters.",
+  "prerequisites": []
+}

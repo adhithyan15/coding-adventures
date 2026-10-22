@@ -441,6 +441,18 @@
     {
       "name": "rank-crossing-optimization",
       "source": "---\nconfig:\n  swimlane:\n    ignoreCrossLaneEdges: false\n    optimizeRanksByCrossings: true\n---\nswimlane-beta LR\nsubgraph laneA[Lane A]\n  a[A]\nend\nsubgraph laneB[Lane B]\n  b[B]\nend\nsubgraph laneC[Lane C]\n  c[C]\nend\nsubgraph laneD[Lane D]\n  d[D]\nend\na --> d\nc --> b"
+    },
+    {
+      "name": "icon-glyph-node",
+      "source": "swimlane-beta LR\nsubgraph Services\n  parser@{ icon: \"logos:rust\", label: \"Parser\" }\n  paint[Paint]\nend\nparser --> paint"
+    },
+    {
+      "name": "icon-node-forms",
+      "source": "swimlane-beta LR\nsubgraph Services\n  plain@{ icon: \"logos:rust\" }\n  square@{ icon: \"logos:rust\", form: square, label: \"Square\", h: 60 }\n  circle@{ icon: \"logos:rust\", form: circle, label: \"Circle\", pos: t }\n  rounded@{ icon: \"logos:rust\", form: rounded, label: \"Rounded\" }\nend\nplain --> square --> circle --> rounded"
+    },
+    {
+      "name": "image-node",
+      "source": "swimlane-beta LR\nsubgraph Assets\n  logo@{ img: \"https://example.com/logo.png\", label: \"Logo\", pos: t, w: 96, h: 64, constraint: on }\n  output[Output]\nend\nlogo --> output"
     }
   ]
 }

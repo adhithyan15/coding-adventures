@@ -60,3 +60,20 @@ The JavaScript lexer produces these token categories:
 ## Checked provenance errors (CV02)
 
 CV02: propagate checked token-identity allocation failures as lexer errors, with an exhausted-node-budget regression. The caller must propagate the error and reject the compilation result.
+
+## Exact lexical source intervals (CV04a)
+
+`tokenize_javascript_typed_with_ranges(source, version, LexicalLimits::default())`
+selects the same generated ECMAScript grammar and returns the generic lexer's
+source-bound snapshot. Raw ranges include quotes, escape spelling, skipped
+trivia and zero-width EOF. Existing Token values, locations, CVs and flags match
+`tokenize_javascript_typed`; processed string escape policy varies by edition.
+UTF8/scalar/UTF16 coordinates belong to the inspected buffer, separate from
+legacy Token positions. Capture is bounded and returns distinct malformed-source,
+resource and unsupported errors.
+
+A successful partition covers only lexer input. This API creates no CV graph,
+serialized inventory, source authentication or output mapping. The compiler must
+explicitly bind buffer identity and connect these tokens to existing CLOC27 leaf
+IDs in the next slice. Bare U+2028/U+2029 currently reject between ES2025 tokens;
+capture preserves that known grammar parity gap.

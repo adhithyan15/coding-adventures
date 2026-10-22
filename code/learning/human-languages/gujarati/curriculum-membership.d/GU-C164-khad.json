@@ -1,0 +1,11 @@
+{
+  "id": "GU-C164-khad",
+  "pathSegment": "GU-PATH-164-SPICE164",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-164-SPICE164",
+      "order": 1
+    }
+  ]
+}

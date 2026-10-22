@@ -1,0 +1,19 @@
+{
+  "chapter": 241,
+  "title": "Flowers that bloomed and died",
+  "label": "ch:gu-flowers-that-bloomed-and-died",
+  "canDo": "I can say how my plants grew, bloomed and died.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C241-marvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 241: I can say how my plants grew, bloomed and died.",
+    "assesses": [
+      "GU-LEX-C241-BLOOM241-03",
+      "GU-LEX-C241-BLOOM241-04",
+      "GU-LEX-C241-BLOOM241-05"
+    ]
+  }
+}

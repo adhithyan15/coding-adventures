@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:2dc36c5b0ea24a97",
+  "lessonIds": [
+    "GU-C216-tapvu",
+    "GU-C216-ukalat",
+    "GU-C216-bhej",
+    "GU-C216-tapman",
+    "GU-C216-digri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch216.txt",
+  "json": "gujarati/narration/ch216.json",
+  "textHash": "fnv1a64:ae8d8ec609598ff9",
+  "jsonHash": "fnv1a64:9718d350556a01c9",
+  "findings": []
+}

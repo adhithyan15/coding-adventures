@@ -1,0 +1,11 @@
+{
+  "id": "GU-C168-vanvu",
+  "pathSegment": "GU-PATH-168-ROTLI168",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-168-ROTLI168",
+      "order": 2
+    }
+  ]
+}

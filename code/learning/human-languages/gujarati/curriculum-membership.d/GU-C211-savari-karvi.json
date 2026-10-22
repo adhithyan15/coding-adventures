@@ -1,0 +1,11 @@
+{
+  "id": "GU-C211-savari-karvi",
+  "pathSegment": "GU-PATH-211-RIDES211",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-211-RIDES211",
+      "order": 1
+    }
+  ]
+}

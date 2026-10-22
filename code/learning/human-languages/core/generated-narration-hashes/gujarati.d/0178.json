@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:11ad08e626dff10e",
+  "lessonIds": [
+    "GU-C178-saru-karvu",
+    "GU-C178-patavvu",
+    "GU-C178-samaysar",
+    "GU-C178-baki",
+    "GU-C178-vitvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch178.txt",
+  "json": "gujarati/narration/ch178.json",
+  "textHash": "fnv1a64:be775da040a6aa38",
+  "jsonHash": "fnv1a64:e30b70f4e7c3a08b",
+  "findings": []
+}

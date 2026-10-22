@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C176-lagbhag",
+    "language": "gujarati",
+    "chapter": 176,
+    "sequence": 9620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:430fe3433813f1b7"
+  },
+  "findings": []
+}

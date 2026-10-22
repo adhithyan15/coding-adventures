@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C164-dabbo",
+    "language": "gujarati",
+    "chapter": 164,
+    "sequence": 8960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b05ef2d3cb72a2b0"
+  },
+  "findings": []
+}

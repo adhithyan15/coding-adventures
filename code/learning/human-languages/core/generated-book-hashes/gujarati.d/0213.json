@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:9a86e7b6312263a2",
+  "lessonIds": [
+    "GU-C213-havaman",
+    "GU-C213-tadko",
+    "GU-C213-thandu",
+    "GU-C213-vadalchayu",
+    "GU-C213-varasvu"
+  ],
+  "tex": "gujarati/book/chapters/ch213-tomorrow-s-weather.tex"
+}

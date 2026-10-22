@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Lending at interest",
+  "label": "ch:gu-lending-at-interest",
+  "canDo": "I can talk about lending, interest, savings, profit and loss.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C191-khot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can talk about lending, interest, savings, profit and loss.",
+    "assesses": [
+      "GU-LEX-C191-LEND191-03",
+      "GU-LEX-C191-LEND191-04",
+      "GU-LEX-C191-LEND191-05"
+    ]
+  }
+}

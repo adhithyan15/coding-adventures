@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Kneading and rolling rotli",
+  "label": "ch:gu-kneading-and-rolling-rotli",
+  "canDo": "I can describe how rotli is kneaded, rolled and roasted.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C168-sekvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 168: I can describe how rotli is kneaded, rolled and roasted.",
+    "assesses": [
+      "GU-LEX-C168-ROTLI168-03",
+      "GU-LEX-C168-ROTLI168-04",
+      "GU-LEX-C168-ROTLI168-05"
+    ]
+  }
+}

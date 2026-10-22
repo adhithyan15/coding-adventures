@@ -1,5 +1,7 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
+use std::collections::BTreeMap;
+
 pub const VERSION: &str = "0.85.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -2060,6 +2062,32 @@ pub struct SwimlaneNode {
     pub id: String, pub label: DiagramLabel, pub lane_id: Option<String>, pub shape: DiagramShape,
     pub classes: Vec<String>, pub style: DiagramStyle,
 }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SwimlaneIconForm { Square, Circle, Rounded }
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub enum SwimlaneLabelPosition { Top, #[default] Bottom }
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneIconNode {
+    pub form: Option<SwimlaneIconForm>,
+    pub label_position: SwimlaneLabelPosition,
+    pub height: f64,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneImageNode {
+    pub source: String,
+    pub width: Option<f64>,
+    pub height: Option<f64>,
+    pub preserve_aspect_ratio: bool,
+    pub label_position: SwimlaneLabelPosition,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedSwimlaneImageNode {
+    pub source: String,
+    pub width: f64,
+    pub height: f64,
+    pub preserve_aspect_ratio: bool,
+    pub label_position: SwimlaneLabelPosition,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane {
     pub id: String, pub label: DiagramLabel, pub node_ids: Vec<String>, pub classes: Vec<String>, pub style: DiagramStyle,
@@ -2135,6 +2163,9 @@ pub struct SwimlaneDiagram {
     pub ignore_cross_lane_edges: bool, pub optimize_ranks_by_crossings: bool,
     pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
+    pub icons: BTreeMap<String, String>,
+    pub icon_nodes: BTreeMap<String, SwimlaneIconNode>,
+    pub image_nodes: BTreeMap<String, SwimlaneImageNode>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane {
@@ -2172,6 +2203,10 @@ pub struct LayoutedSwimlaneDiagram {
     pub optimize_ranks_by_crossings: bool,
     pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
+    pub icons: BTreeMap<String, String>,
+    pub icon_nodes: BTreeMap<String, SwimlaneIconNode>,
+    pub image_nodes: BTreeMap<String, LayoutedSwimlaneImageNode>,
+    pub icon_glyphs: BTreeMap<String, DiagramIconGlyph>,
 }
 
 // GRAMMAR VISUALIZATION FAMILY

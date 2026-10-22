@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:fbb43714cfd0996f",
+  "lessonIds": [
+    "GU-C234-vachardu",
+    "GU-C234-bhabharvu",
+    "GU-C234-dohvu",
+    "GU-C234-ghetu",
+    "GU-C234-carvu"
+  ],
+  "tex": "gujarati/book/chapters/ch234-milking-time.tex"
+}

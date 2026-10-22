@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "Maths, maps and essays",
+  "label": "ch:gu-maths-maps-and-essays",
+  "canDo": "I can name school subjects and say who explains and solves problems.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C244-ukelvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can name school subjects and say who explains and solves problems.",
+    "assesses": [
+      "GU-LEX-C244-SUBJECT244-03",
+      "GU-LEX-C244-SUBJECT244-04",
+      "GU-LEX-C244-SUBJECT244-05"
+    ]
+  }
+}

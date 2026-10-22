@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C201-suthar",
+    "language": "gujarati",
+    "chapter": 201,
+    "sequence": 10970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7e939d692d97a34"
+  },
+  "findings": []
+}

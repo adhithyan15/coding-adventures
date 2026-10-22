@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:34103a90654cd40d",
+  "lessonIds": [
+    "GU-C264-padoshi",
+    "GU-C264-dost",
+    "GU-C264-bahenpani",
+    "GU-C264-olakhvu",
+    "GU-C264-bhetvu"
+  ],
+  "tex": "gujarati/book/chapters/ch264-friends-and-neighbours.tex"
+}

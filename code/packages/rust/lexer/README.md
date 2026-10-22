@@ -76,3 +76,32 @@ tokens        -->  parser (next layer)                -->  AST
 ```
 cargo test -p lexer -- --nocapture
 ```
+
+## Exact source ranges (CV04a)
+
+`GrammarLexer::tokenize_source_with_ranges(source, &grammar, LexicalLimits::default())`
+returns a snapshot borrowing the inspected UTF8 buffer. `tokens()` preserves the
+ordinary token stream; `pieces()` partitions raw bytes into accepted token,
+skipped trivia and terminal zero-width EOF ranges. Quotes and escapes are
+measured before Token value processing. Positions independently report zero-based
+byte/scalar/UTF16 offsets and ECMAScript line/scalar/UTF16 columns; existing
+one-based Token locations are preserved.
+
+```rust
+use grammar_tools::token_grammar::parse_token_grammar;
+use lexer::grammar_lexer::GrammarLexer;
+use lexer::lexical::{validate_lexical_partition, LexicalLimits};
+let grammar = parse_token_grammar("NAME = /[a-z]+/").unwrap();
+let snapshot = GrammarLexer::tokenize_source_with_ranges("x", &grammar, LexicalLimits::default()).unwrap();
+assert_eq!(snapshot.pieces()[0].range.end.byte_offset, 1);
+validate_lexical_partition(snapshot.source(), snapshot.tokens().len(), snapshot.pieces(), LexicalLimits::default()).unwrap();
+```
+
+Detached partition validation checks coordinates, coverage and ordinals against
+supplied bytes in one forward walk. It does not authenticate content identity or
+recognize grammar categories. Capture requires a fresh standard lexer and rejects
+callbacks, pre/post hooks, indentation/layout and reuse before their execution.
+Standalone handwritten/DFA APIs retain their existing behavior and make no new
+range claim. Defaults cap source at 8 MiB, descriptors at 262144/64 MiB and cursor
+work at 32 Mi units. Lower limits can be supplied; excessive configuration rejects.
+This API adds no raw-source copies, required Token fields or dependencies.

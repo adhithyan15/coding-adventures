@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C220-pur",
+    "language": "gujarati",
+    "chapter": 220,
+    "sequence": 11980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60e6ae49f7a02351"
+  },
+  "findings": []
+}

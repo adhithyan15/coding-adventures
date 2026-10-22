@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-192-BILL192",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the total on a bill and the amount to pay.",
+  "prerequisites": []
+}

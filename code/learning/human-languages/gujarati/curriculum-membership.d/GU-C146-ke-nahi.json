@@ -1,0 +1,11 @@
+{
+  "id": "GU-C146-ke-nahi",
+  "pathSegment": "GU-PATH-146-ASK146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-146-ASK146",
+      "order": 1
+    }
+  ]
+}

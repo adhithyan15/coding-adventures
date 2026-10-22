@@ -1,0 +1,828 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 158,
+  "title": "Sweeping and wiping",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b3785a305662a5b1",
+  "lessons": [
+    {
+      "id": "GU-C158-saph-karvu",
+      "sequence": 8650,
+      "title": "સાફ કરવું (sāph karvũ) — to clean up, to clean",
+      "headword": "સાફ કરવું",
+      "romanization": "sāph karvũ",
+      "gloss": "to clean up, to clean",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ea0883a0ee296cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for curtain, then the Gujarati for shelf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સાફ કરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાફ કરવું — sāph karvũ — \"to clean up, to clean\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે રોજ ઘર સાફ કરીએ છીએ. — ame roj ghar sāph karīe chīe — \"We clean the house every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાફ કરવું (sāph karvũ) is built from sāph, \"clean\", and the inherited karvũ, \"to do\". Sāph is a loan from Persian sāf, \"clear, pure\" (EtymDB), which comes from Arabic; its Arabic root is ṣ-f-w, \"to be clear\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāph karvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāph karvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāph karvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāph karvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame roj ghar sāph karīe chīe — We clean the house every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame roj ghar sāph karīe chīe* — We clean the house every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for curtain, then the Gujarati for shelf, then say sāph karvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for curtain, then the Gujarati for shelf, then say *sāph karvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સાફ કરવું (sāph karvũ) mean? (\"To clean up, to clean\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C158-valvu",
+      "sequence": 8660,
+      "title": "વાળવું (vāḷvũ) — to sweep, to fold",
+      "headword": "વાળવું",
+      "romanization": "vāḷvũ",
+      "gloss": "to sweep, to fold",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0fbd5b79eb0dba3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for shelf, then the Gujarati for to clean up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વાળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાળવું — vāḷvũ — \"to sweep, to fold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે સાવરણીથી કચરો વાળે છે. — te sāvarṇīthī kacro vāḷe che — \"She sweeps the rubbish with a broom.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It also means to fold or to turn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વાળવું (vāḷvũ) is inherited, but the sweeping sense is not settled. CDIAL lists Gujarati vāḷvũ, \"to fold, twist, turn\", under Sanskrit valati, \"turns\", and does not list the sense of sweeping (CDIAL 11405)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te sāvarṇīthī kacro vāḷe che — She sweeps the rubbish with a broom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te sāvarṇīthī kacro vāḷe che* — She sweeps the rubbish with a broom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for shelf, then the Gujarati for to clean up, then say vāḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for shelf, then the Gujarati for to clean up, then say *vāḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વાળવું (vāḷvũ) mean? (\"To sweep, to fold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C158-luchvu",
+      "sequence": 8670,
+      "title": "લૂછવું (lūchvũ) — to wipe, to dry off",
+      "headword": "લૂછવું",
+      "romanization": "lūchvũ",
+      "gloss": "to wipe, to dry off",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:998493aa44284e3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to clean up, then the Gujarati for to sweep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: લૂછવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "લૂછવું — lūchvũ — \"to wipe, to dry off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું ટુવાલથી હાથ લૂછું છું. — hũ ṭuvālthī hāth lūchũ chũ — \"I wipe my hands with a towel.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of લૂછવું (lūchvũ) is not settled. CDIAL lists no Gujarati verb of this form; it lists the similar pũchvũ, \"to wipe\", under Sanskrit proñchati, \"wipes off\", without linking the two (CDIAL 9011)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lūchvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lūchvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lūchvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lūchvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ ṭuvālthī hāth lūchũ chũ — I wipe my hands with a towel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ ṭuvālthī hāth lūchũ chũ* — I wipe my hands with a towel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to clean up, then the Gujarati for to sweep, then say lūchvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to clean up, then the Gujarati for to sweep, then say *lūchvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does લૂછવું (lūchvũ) mean? (\"To wipe, to dry off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C158-potu",
+      "sequence": 8680,
+      "title": "પોતું (potũ) — floor cloth, mop",
+      "headword": "પોતું",
+      "romanization": "potũ",
+      "gloss": "floor cloth, mop",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7a36d8da194b295",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to sweep, then the Gujarati for to wipe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પોતું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પોતું — potũ — \"floor cloth, mop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે સવારે પોતું કરે છે. — te savāre potũ kare che — \"He mops the floor in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "પોતું કરવું, potũ karvũ, to mop the floor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પોતું (potũ) is a tadbhava. It comes from pōtta, \"cloth\", a reconstructed by-form of Sanskrit pōta, \"cloth\", and CDIAL glosses the Gujarati word \"rag\" (CDIAL 8400)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te savāre potũ kare che — He mops the floor in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te savāre potũ kare che* — He mops the floor in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to sweep, then the Gujarati for to wipe, then say potũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to sweep, then the Gujarati for to wipe, then say *potũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પોતું (potũ) mean? (\"Floor cloth, mop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C158-dagh",
+      "sequence": 8690,
+      "title": "ડાઘ (ḍāgh) — stain, spot",
+      "headword": "ડાઘ",
+      "romanization": "ḍāgh",
+      "gloss": "stain, spot",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1e18a5a2ea8ed74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to wipe, then the Gujarati for floor cloth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ડાઘ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડાઘ — ḍāgh — \"stain, spot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ ડાઘ નથી જતો. — ā ḍāgh nathī jato — \"This stain does not come out.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ડાઘ (ḍāgh) is a loan, usually traced to Persian dāgh, \"mark, brand, stain\". CDIAL, which follows inherited words, lists no Gujarati form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāgh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāgh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍāgh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍāgh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā ḍāgh nathī jato — This stain does not come out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā ḍāgh nathī jato* — This stain does not come out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to wipe, then the Gujarati for floor cloth, then say ḍāgh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to wipe, then the Gujarati for floor cloth, then say *ḍāgh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ડાઘ (ḍāgh) mean? (\"Stain, spot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R158-review-153-158",
+      "sequence": 8700,
+      "title": "Home and dress words, a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 153-158",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a73c638d7258311",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for room and kitchen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "room, kitchen, terrace, veranda, stairs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: room, kitchen, terrace, veranda, stairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cloth, sari, scarf, to take off, to wrap oneself in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cloth, sari, scarf, to take off, to wrap oneself in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wake someone, to get ready, to comb one's hair, perfume, to apply",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wake someone, to get ready, to comb one's hair, perfume, to apply]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ornament, bindi, henna, to decorate, to tie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ornament, bindi, henna, to decorate, to tie]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to arrange, to put, to hang up, curtain, shelf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to arrange, to put, to hang up, curtain, shelf]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to clean up, to sweep, to wipe, floor cloth, stain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to clean up, to sweep, to wipe, floor cloth, stain]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Room? (ઓરડો.) Kitchen? (રસોડું.) Terrace? (અગાસી.) Veranda? (ઓસરી.) Stairs? (દાદર.) Cloth? (કપડું.) Sari? (સાડી.) Scarf? (દુપટ્ટો.) To take off? (ઉતારવું.) To wrap oneself in? (ઓઢવું.) To wake someone? (ઉઠાડવું.) To get ready? (તૈયાર થવું.) To comb one's hair? (ઓળવું.) Perfume? (અત્તર.) To apply? (લગાડવું.) Ornament? (ઘરેણું.) Bindi? (ચાંલ્લો.) Henna? (મેંદી.) To decorate? (સજાવવું.) To tie? (બાંધવું.) To arrange? (ગોઠવવું.) To put? (મૂકવું.) To hang up? (ટાંગવું.) Curtain? (પડદો.) Shelf? (છાજલી.) To clean up? (સાફ કરવું (sāph karvũ).) To sweep? (વાળવું (vāḷvũ).) To wipe? (લૂછવું (lūchvũ).) Floor cloth? (પોતું (potũ).) Stain? (ડાઘ (ḍāgh).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

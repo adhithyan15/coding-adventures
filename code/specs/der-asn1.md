@@ -38,7 +38,11 @@ later certificate schema decoder:
   `2^64 - 1`;
 - SEQUENCE and SET must carry their exact constructed universal tags;
 - an explicit context-specific wrapper must be constructed and contain exactly
-  one complete DER element.
+  one complete DER element;
+- a schema-selected implicit constructed value must carry the exact
+  context-specific constructed tag supplied by the caller and opens only a
+  bounded cursor over that element's contents; child sequence, cardinality,
+  and meaning remain owned by the caller's schema;
 - schema-selected implicit OCTET STRING, IA5String, and OBJECT IDENTIFIER
   values must carry the exact primitive context-specific tag supplied by the
   caller and reuse the same value validation as their universal forms.
@@ -71,9 +75,12 @@ The certificate-oriented defaults retain `DerLimits::default()` and add:
 
 `Asn1Decoder::decode_exact` creates a depth-zero root and rejects trailing
 data. Every successful root, sibling, or explicit child consumes one shared
-total-element unit. `sequence`, `set`, and explicit-wrapper entry derive the
-child depth from an unforgeable element wrapper and reject entry before parsing
-when the depth limit would be exceeded.
+total-element unit. `sequence`, `set`, implicit-constructed entry, and
+explicit-wrapper entry derive the child depth from an unforgeable element
+wrapper and reject entry before parsing when the depth limit would be exceeded.
+Implicit-constructed entry validates only the exact context-specific
+constructed tag selected by the caller; the schema must still validate child
+types and cardinality through the returned cursor.
 
 An `Asn1Cursor` is semantically iterative. Its `read` method accepts the same
 decoder state, so sibling cursors and nested cursors share one work budget.
@@ -117,6 +124,11 @@ impl Asn1Decoder {
     pub fn set<'a>(
         &self,
         element: Asn1Element<'a>,
+    ) -> Result<Asn1Cursor<'a>, Asn1Error>;
+    pub fn implicit_constructed<'a>(
+        &self,
+        element: Asn1Element<'a>,
+        tag_number: u32,
     ) -> Result<Asn1Cursor<'a>, Asn1Error>;
     pub fn explicit<'a>(
         &mut self,
@@ -226,7 +238,9 @@ equality;
 universal and implicit IA5String ASCII validation with exact offsets; OID
 first-arc folding, multi-octet arcs, minimality, truncation, overflow, and arc
 limits in universal and implicit forms; exact primitive context-specific tags
-and constructed bits; exact explicit wrappers; and SEQUENCE/SET tag confusion.
+and constructed bits; implicit-constructed class, tag, and primitive-form
+confusion plus shared depth enforcement and bounded child traversal; exact
+explicit wrappers; and SEQUENCE/SET tag confusion.
 
 ## Language-Neutral Conformance
 
@@ -243,6 +257,13 @@ counters. This avoids host numeric precision becoming an accidental protocol
 rule. Portable errors use the stable typed category, a numeric byte offset, and
 an explicit `operation-input` or `container-value` domain. A lower-level
 failure additionally carries the exact DER TLV framing identifier.
+
+The schema-selected implicit-constructed cursor is a post-v1 composition
+extension currently implemented by the Rust package for later X.509 schema
+work. It is intentionally absent from the closed v1 portable corpus and its
+capability manifests, so this slice makes no cross-language coverage claim.
+Any later portable adoption must add a versioned operation, projections,
+adversarial rows, and lane capability evidence before claiming conformance.
 
 The contract targets all 15 established implementation lanes through
 package-native tests and empty capability manifests. The aggregate registry

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C159-sukavvu",
+  "pathSegment": "GU-PATH-159-WASH159",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-159-WASH159",
+      "order": 1
+    }
+  ]
+}

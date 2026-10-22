@@ -279,6 +279,30 @@ fn sequence_set_and_explicit_wrappers_are_exact() {
 }
 
 #[test]
+fn implicit_constructed_wrappers_are_exact_bounded_cursors() {
+    // NameConstraints permittedSubtrees [0] containing one GeneralSubtree
+    // SEQUENCE whose base is the dNSName constraint ".tr".
+    let (mut decoder, permitted) = decode(&[0xa0, 0x07, 0x30, 0x05, 0x82, 0x03, b'.', b't', b'r']);
+    let mut subtrees = decoder.implicit_constructed(permitted, 0).unwrap();
+    let subtree = subtrees.read(&mut decoder).unwrap().unwrap();
+    let mut fields = decoder.sequence(subtree).unwrap();
+    let base = fields.read(&mut decoder).unwrap().unwrap();
+    assert_eq!(decode_implicit_ia5_string(base, 2).unwrap(), ".tr");
+    assert!(fields.read(&mut decoder).unwrap().is_none());
+    fields.finish().unwrap();
+    assert!(subtrees.read(&mut decoder).unwrap().is_none());
+    subtrees.finish().unwrap();
+
+    for input in [&[0x30, 0x00][..], &[0x80, 0x00], &[0xa1, 0x00]] {
+        let (decoder, element) = decode(input);
+        assert_eq!(
+            decoder.implicit_constructed(element, 0).unwrap_err().kind(),
+            Asn1ErrorKind::UnexpectedTag
+        );
+    }
+}
+
+#[test]
 fn depth_and_total_element_limits_are_shared() {
     let limits = Asn1Limits {
         max_depth: 1,
@@ -288,6 +312,13 @@ fn depth_and_total_element_limits_are_shared() {
     let root = decoder.decode_exact(&[0x30, 0x00]).unwrap();
     assert_eq!(
         decoder.sequence(root).unwrap_err().kind(),
+        Asn1ErrorKind::DepthLimitExceeded
+    );
+
+    let mut decoder = Asn1Decoder::new(limits);
+    let root = decoder.decode_exact(&[0xa0, 0x00]).unwrap();
+    assert_eq!(
+        decoder.implicit_constructed(root, 0).unwrap_err().kind(),
         Asn1ErrorKind::DepthLimitExceeded
     );
 

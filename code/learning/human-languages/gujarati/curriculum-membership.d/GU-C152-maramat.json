@@ -1,0 +1,11 @@
+{
+  "id": "GU-C152-maramat",
+  "pathSegment": "GU-PATH-152-READ152",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-152-READ152",
+      "order": 1
+    }
+  ]
+}

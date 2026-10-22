@@ -1,0 +1,11 @@
+{
+  "id": "GU-C251-shabdkosh",
+  "pathSegment": "GU-PATH-251-MEANING251",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-251-MEANING251",
+      "order": 2
+    }
+  ]
+}

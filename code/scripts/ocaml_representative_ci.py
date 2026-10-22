@@ -23,7 +23,7 @@ MANIFEST_RELATIVE_PATH = Path(
 )
 WORKFLOW_RELATIVE_PATH = Path(".github/workflows/build-ocaml-representative.yml")
 EXPECTED_WORKFLOW_SHA256 = (
-    "f00dbbcb1f1b4fa4504b4770f0e6899aae31ee0429905f6e2db54df94c515ed4"
+    "f6167bf933ee2ca7809595594ce15ab087cdc77f6bb8ffbf3f42d4ed9bdbed34"
 )
 WINDOWS_COVERAGE_PREFIX_BLOCK = (
     '          coverage_prefix="$PWD/bisect"\n'
@@ -55,7 +55,7 @@ VERSIONS = {
 ACTIONS = {
     "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
     "setup_ocaml": "15d660006c1d3110d77c34b7faa3bddefe8b82f0",
-    "upload_artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    "upload_artifact": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
 }
 OPAM_REPOSITORY_COMMIT = "ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff"
 COVERAGE_MINIMUM_BASIS_POINTS = 9500

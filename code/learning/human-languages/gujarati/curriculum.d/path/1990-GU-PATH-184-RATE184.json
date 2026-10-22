@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-184-RATE184",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-184-RATE184"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Breath nose and throat",
+  "label": "ch:gu-breath-nose-and-throat",
+  "canDo": "I can say that I am shivering or out of breath and ask about swallowing.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C226-phephsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say that I am shivering or out of breath and ask about swallowing.",
+    "assesses": [
+      "GU-LEX-C226-BREATH226-03",
+      "GU-LEX-C226-BREATH226-04",
+      "GU-LEX-C226-BREATH226-05"
+    ]
+  }
+}

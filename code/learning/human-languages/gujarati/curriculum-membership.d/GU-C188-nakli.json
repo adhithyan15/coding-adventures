@@ -1,0 +1,11 @@
+{
+  "id": "GU-C188-nakli",
+  "pathSegment": "GU-PATH-188-GOODS188",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-188-GOODS188",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Full moon and new moon",
+  "label": "ch:gu-full-moon-and-new-moon",
+  "canDo": "I can talk about the full moon, the new moon and the end of the month.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C175-satat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can talk about the full moon, the new moon and the end of the month.",
+    "assesses": [
+      "GU-LEX-C175-MOON175-03",
+      "GU-LEX-C175-MOON175-04",
+      "GU-LEX-C175-MOON175-05"
+    ]
+  }
+}

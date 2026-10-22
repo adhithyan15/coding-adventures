@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:c915f131703490b8",
+  "lessonIds": [
+    "GU-C228-sojo",
+    "GU-C228-sujvu",
+    "GU-C228-khanjvalvu",
+    "GU-C228-camdi",
+    "GU-C228-phollo"
+  ],
+  "tex": "gujarati/book/chapters/ch228-swelling-and-itching.tex"
+}

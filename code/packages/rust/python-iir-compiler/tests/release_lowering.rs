@@ -188,3 +188,42 @@ fn forged_trees_are_refused() {
         Err(FrontendError::Budget { which: "module name bytes", .. })
     ));
 }
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 7b: the module records its release; reasons read on their own
+// ---------------------------------------------------------------------------
+
+/// Every profiled release compiles and the module names the one that did,
+/// from source and from a caller-supplied tree alike; `None` is the default.
+#[test]
+fn the_module_records_the_release_that_produced_it() {
+    let budgets = FrontendBudgets::default();
+    for &release in python_iir_compiler::supported_releases() {
+        let module = compile_source_at("print(1)\n", Some(release), "t", &budgets).unwrap();
+        assert_eq!(module.release.as_deref(), Some(release));
+        let from_tree = compile_cst(&tree("print(1)\n"), Some(release), "t").unwrap();
+        assert_eq!(from_tree.release.as_deref(), Some(release));
+    }
+    let default = compile_source_at("print(1)\n", None, "t", &budgets).unwrap();
+    assert_eq!(default.release.as_deref(), Some(python_iir_compiler::DEFAULT_RELEASE));
+}
+
+/// A row with no grammar pair says so in its reason (lang-aot shows it as
+/// `cannot compile yet (…)`); a regeneration-bug phrase is not relabelled
+/// as a `grammar_stage`.
+#[test]
+fn release_not_available_reasons_are_self_describing() {
+    let budgets = FrontendBudgets::default();
+    match compile_source_at("print(1)\n", Some("3.12.2"), "t", &budgets) {
+        Err(FrontendError::ReleaseNotAvailable { stage, .. }) => {
+            assert_eq!(stage, "no grammar pair: grammar_stage none");
+        }
+        other => panic!("3.12.2: {other:?}"),
+    }
+    let phrase = "token table missing (regenerate python-lexer)";
+    let bug = FrontendError::from(coding_adventures_python_parser::PythonFrontendError::ReleaseNotAvailable {
+        release: "3.13.16".into(),
+        stage: phrase.into(),
+    });
+    assert!(matches!(&bug, FrontendError::ReleaseNotAvailable { stage, .. } if stage == phrase), "{bug:?}");
+}

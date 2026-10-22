@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:a43ea869413bed27",
+  "lessonIds": [
+    "GU-C240-chod",
+    "GU-C240-bij",
+    "GU-C240-ropvu",
+    "GU-C240-sicvu",
+    "GU-C240-gulab"
+  ],
+  "tex": "gujarati/book/chapters/ch240-in-the-garden.tex"
+}

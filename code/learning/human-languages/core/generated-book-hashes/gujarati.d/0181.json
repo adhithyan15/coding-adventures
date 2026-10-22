@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:a5a7b80fec76c2e0",
+  "lessonIds": [
+    "GU-C181-utaval-karvi",
+    "GU-C181-multavi-rakhvu",
+    "GU-C181-talvu-avoid",
+    "GU-C181-rad-karvu",
+    "GU-C181-lambavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch181-hurry-and-delay.tex"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "GU-EXT-146-ASK146",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask a question that is answered yes or no, with śũ, ke nahī̃ or kharũ, answer it, and say whose things are whose and what someone likes or has.",
+  "prerequisites": [
+    "GU-EXT-145-NEG145"
+  ]
+}

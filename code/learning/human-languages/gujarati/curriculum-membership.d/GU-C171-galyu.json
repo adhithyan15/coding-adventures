@@ -1,0 +1,11 @@
+{
+  "id": "GU-C171-galyu",
+  "pathSegment": "GU-PATH-171-TASTE171",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-171-TASTE171",
+      "order": 4
+    }
+  ]
+}

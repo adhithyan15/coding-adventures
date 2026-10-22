@@ -1,0 +1,19 @@
+{
+  "chapter": 218,
+  "title": "Sunrise and sunset",
+  "label": "ch:gu-sunrise-and-sunset",
+  "canDo": "I can say when the sun will rise and set.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-R218-review-213-218",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 218: I can say when the sun will rise and set.",
+    "assesses": [
+      "GU-LEX-C218-SUN218-03",
+      "GU-LEX-C218-SUN218-04",
+      "GU-LEX-C218-SUN218-05"
+    ]
+  }
+}

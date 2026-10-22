@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "Moving things about",
+  "label": "ch:gu-moving-things-about",
+  "canDo": "I can say what I move, cover and shake out at home.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C161-bhegu-karvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: I can say what I move, cover and shake out at home.",
+    "assesses": [
+      "GU-LEX-C161-SHIFT161-03",
+      "GU-LEX-C161-SHIFT161-04",
+      "GU-LEX-C161-SHIFT161-05"
+    ]
+  }
+}

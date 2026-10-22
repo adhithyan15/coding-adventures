@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:c2efa6a0f454e511",
+  "lessonIds": [
+    "GU-C147-hato",
+    "GU-C147-gaikale",
+    "GU-C147-gayo",
+    "GU-C147-thayo",
+    "GU-C147-modu",
+    "GU-W47-dda",
+    "GU-C147-past-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch147.txt",
+  "json": "gujarati/narration/ch147.json",
+  "textHash": "fnv1a64:604ea748a0437490",
+  "jsonHash": "fnv1a64:22607a28c61e511d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-R188-review-183-188",
+  "pathSegment": "GU-PATH-188-GOODS188",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-188-GOODS188",
+      "order": 5
+    }
+  ]
+}
