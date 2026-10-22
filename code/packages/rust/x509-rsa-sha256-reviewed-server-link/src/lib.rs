@@ -107,11 +107,7 @@ impl fmt::Debug for BoundX509RsaSha256ReviewedServerLink<'_, '_, '_, '_> {
     }
 }
 
-#[cfg(test)]
-fn same_exact_certificate<'encoded>(
-    left: &x509_certificate::X509Certificate<'encoded>,
-    right: &x509_certificate::X509Certificate<'encoded>,
-) -> bool {
+fn same_exact_object<T>(left: &T, right: &T) -> bool {
     std::ptr::eq(left, right)
 }
 
@@ -148,7 +144,7 @@ pub fn bind_x509_rsa_sha256_reviewed_server_link<
         .role_policy_link()
         .verified_link()
         .child();
-    if !std::ptr::eq(server_policy.certificate(), linked_child) {
+    if !same_exact_object(server_policy.certificate(), linked_child) {
         return Err(X509RsaSha256ReviewedServerLinkError::evidence_mismatch());
     }
 
@@ -222,8 +218,8 @@ mod tests {
         let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
         let other_certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
 
-        assert!(same_exact_certificate(&certificate, &certificate));
-        assert!(!same_exact_certificate(&certificate, &other_certificate));
+        assert!(same_exact_object(&certificate, &certificate));
+        assert!(!same_exact_object(&certificate, &other_certificate));
     }
 
     #[test]
