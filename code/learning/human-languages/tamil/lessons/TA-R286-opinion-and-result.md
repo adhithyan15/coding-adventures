@@ -41,7 +41,7 @@ reviews_of: [TA-C286-tonrukiratu, TA-C286-enave, TA-C285-vantu]
 
 [PAUSE 2s each]
 - [YOU SAY: In my opinion, this is a good shop.]
-- [YOU SAY: It seems to me he will not come.]
+- [YOU SAY: It seems to me he will come tomorrow.]
 - [YOU SAY: It rained. So I stayed at home.]
 - [YOU SAY: The bus did not come. Therefore we walked to school.]
 - [YOU SAY: one thing that happened to you, and what you did because of it, with அதனால்]

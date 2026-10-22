@@ -15,7 +15,7 @@
   chapter ends on its review, which is its payoff. Written standard Tamil
   throughout, with the spoken form named beside it (போகணும், வந்தா, ஏன்னா).
 - TA-C284-vanten tells the reader once that from here the italics spell the
-  letters (k, ṭ, t, p), while the sound softens between vowels.
+  letters (k, c, ṭ, t, p), while the sound softens between vowels.
 - Added four headwords (ஈரம், இருக்கை, ஆசை, இலக்கு) and the guided six-line
   writing task TA-W293-six-lines (connected composition).
 - Added the letter lesson TA-S141-letter-ii (the independent vowel ஈ, anchored

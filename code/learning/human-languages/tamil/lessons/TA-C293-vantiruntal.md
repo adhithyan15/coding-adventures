@@ -35,7 +35,7 @@ reviews_of: [TA-C292-vantal, TA-C285-vantu, TA-C293-poruttatu, TA-C48-time]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C292-CONDITIONAL-01, TA-GRAMMAR-C285-VERBAL-PARTICIPLE-01, TA-GRAMMAR-C293-DEPENDS-01] -->
 
-[PAUSE 2s] Say "having come" (*vantu*) and "if (I) was" (*iruntāl*). Then "It depends on the weather." (*atu vāṉilaiyaip poṟuttatu*.)
+[PAUSE 2s] Say "having come" (*vantu*) and "if (it) is" (*iruntāl*). Then "It depends on the weather." (*atu vāṉilaiyaip poṟuttatu*.)
 
 ## You'll want to know: -இருந்தால் … -இருப்பேன்
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C293-UNREAL-IF-01]; assesses=[TA-LEX-C48-LEAVE-02, TA-GRAMMAR-C285-VERBAL-PARTICIPLE-01, TA-GRAMMAR-C292-CONDITIONAL-01, TA-LEX-VAA-01] -->
@@ -44,7 +44,7 @@ reviews_of: [TA-C292-vantal, TA-C285-vantu, TA-C293-poruttatu, TA-C48-time]
 >
 > *eṉakku nēram iruntiruntāl, nāṉ vantiruppēṉ.* — "If I had had time, I would have come."
 
-Two pieces you know make the if-clause: the **-உ** form and **இருந்தால்**, "if (it) was". **வந்து** + **இருந்தால்** → **வந்திருந்தால்**, "if (someone) had come"; the **-உ** drops before the **இ**. With **இரு** itself: **இருந்திருந்தால்**, "if (there) had been".
+Two pieces you know make the if-clause: the **-உ** form and **இருந்தால்**, "if (it) is". **வந்து** + **இருந்தால்** → **வந்திருந்தால்**, "if (someone) had come"; the **-உ** drops before the **இ**. With **இரு** itself: **இருந்திருந்தால்**, "if (there) had been".
 
 The main clause takes **இருப்பேன்**, "I will be", on the same **-உ** form: **வந்திருப்பேன்**, "I would have come". After **போய்** the **இ** stays whole: **போயிருப்பேன்**, "I would have gone".
 

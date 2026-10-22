@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "What Happened and What Was Going On",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a824ce56c328ef3d",
+  "sourceHash": "fnv1a64:67861f20c7be2809",
   "lessons": [
     {
       "id": "TA-C284-vanten",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2ded70c5825a94d",
+      "sourceHash": "fnv1a64:3a33d027b6117483",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "From here on, the italics spell the letters: க is k, ட ṭ, த t, ப p, wherever they stand. Between vowels and after a nasal these letters soften as you say them, the way paḍi showed it: வந்தேன் is spelled vantēṉ and said with a d."
+              "text": "From here on, the italics spell the letters: க is k, ச c, ட ṭ, த t, ப p, wherever they stand. Between vowels and after a nasal these letters soften as you say them, the way paḍi showed it: வந்தேன் is spelled vantēṉ and said with a d."
             }
           ]
         },

@@ -41,7 +41,7 @@ reviews_of: [TA-C287-poka-ventum, TA-C287-vantatal, TA-C286-enave]
 
 [PAUSE 2s each]
 - [YOU SAY: You must not eat now. Because you have a fever.]
-- [YOU SAY: Because the bus did not come, we walked.]
+- [YOU SAY: Because I missed the bus, I walked.]
 - [YOU SAY: In my opinion, you must see a doctor.]
 - [YOU SAY: You don't need to come tomorrow. So you may stay at home.]
 - [YOU SAY: one piece of advice for a friend, with வேண்டும் or கூடாது, and the reason, with -ததால் or ஏனென்றால்]

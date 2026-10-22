@@ -40,7 +40,7 @@ reviews_of: [TA-W283-a2-connected-composition, TA-R280-second-pass-words-from-ch
 ## Sounds you'll need: the italics from here
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-From here on, the italics spell the **letters**: க is *k*, ட *ṭ*, த *t*, ப *p*, wherever they stand. Between vowels and after a nasal these letters soften as you say them, the way *paḍi* showed it: **வந்தேன்** is spelled *vantēṉ* and said with a *d*.
+From here on, the italics spell the **letters**: க is *k*, ச *c*, ட *ṭ*, த *t*, ப *p*, wherever they stand. Between vowels and after a nasal these letters soften as you say them, the way *paḍi* showed it: **வந்தேன்** is spelled *vantēṉ* and said with a *d*.
 
 ## You'll want to know: the past, person by person
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C284-PAST-PERSON-01]; assesses=[TA-LEX-C73-WHEN-02, TA-LEX-UUR-01, TA-LEX-PO-01, TA-LEX-C85-AVAN-AVAL-01, TA-LEX-C37-AVAR-01, TA-LEX-C85-AVARGAL-01, TA-LEX-C85-NAAM-NAANGAL-01, TA-LEX-C02-NII-NIINGAL-01] -->

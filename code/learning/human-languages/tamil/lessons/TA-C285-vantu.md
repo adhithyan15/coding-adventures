@@ -52,7 +52,7 @@ The first verb carries no person and no time: **வந்து**, "having come"
 >
 > *avaṉ kaṭaikkup pōy oru puttakam vāṅki vīṭṭukku vantāṉ.* — "He went to the shop, bought a book and came home."
 
-Build it from the "I" past. Where the past has **-இன்-** (**பேசினேன்**, **வாங்கினேன்**), the form ends in **-இ**: **பேசி**, **வாங்கி**. Elsewhere, put **-உ** in place of **-ஏன்**: **வந்தேன்** → **வந்து**, **பார்த்தேன்** → **பார்த்து**, **செய்தேன்** → **செய்து**. Two go their own way: **போ** → **போய்**, **சொல்** → **சொல்லி**.
+Build it from the "I" past. Where the past has **-இன்-** (**பேசினேன்**, **வாங்கினேன்**), the form ends in **-இ**: **பேசி**, **வாங்கி**. Elsewhere, put **-உ** in place of **-ஏன்**: **வந்தேன்** → **வந்து**, **பார்த்தேன்** → **பார்த்து**, **செய்தேன்** → **செய்து**. A few go their own way, among them **போ** → **போய்** and **சொல்** → **சொல்லி**.
 
 You have said it for a long time: **போய் வருகிறேன்**, "having gone, I come (back)"; **தயவுசெய்து**, "having done (a kindness)".
 

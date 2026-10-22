@@ -4,7 +4,7 @@
   "chapter": 289,
   "title": "Tickets, Seats and Trouble",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3c9deb87d4073b8c",
+  "sourceHash": "fnv1a64:317f6c68da32567f",
   "lessons": [
     {
       "id": "TA-C289-irukkai",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43b4d94baed14800",
+      "sourceHash": "fnv1a64:bcbeab8f164a4f0e",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "The place you are going takes -க்கு: மதுரைக்கு, \"to Madurai\", a city in the south of Tamil Nadu. கொடுங்கள் is கொடு with the polite -உங்கள்: \"give (me)\". After a number Tamil often leaves the noun as it is: இரண்டு சீட்டு. For seats side by side: இரண்டு இருக்கைகள் சேர்ந்து வேண்டும் (iraṇṭu irukkaikaḷ cērntu vēṇṭum, \"I need two seats together\"); சேர்ந்து is \"having joined\", from சேர்."
+              "text": "The place you are going takes -க்கு: மதுரைக்கு, \"to Madurai\", a city in the south of Tamil Nadu. கொடுங்கள் is கொடு with the polite -உங்கள்: \"give (me)\". After a number Tamil often leaves the noun as it is: இரண்டு சீட்டு. For seats side by side: இரண்டு இருக்கைகள் வேண்டும். நாங்கள் சேர்ந்து உட்கார வேண்டும். (iraṇṭu irukkaikaḷ vēṇṭum. nāṅkaḷ cērntu uṭkāra vēṇṭum., \"We need two seats. We need to sit together.\") சேர்ந்து, \"together\", is \"having joined\", from சேர்."
             }
           ]
         },
@@ -226,11 +226,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I need two seats together\" — iraṇṭu irukkaikaḷ cērntu vēṇṭum",
+              "instruction": "\"We need two seats. We need to sit together.\" — iraṇṭu irukkaikaḷ vēṇṭum. nāṅkaḷ cērntu uṭkāra vēṇṭum.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I need two seats together\" — *iraṇṭu irukkaikaḷ cērntu vēṇṭum*]"
+              "source": "[YOU SAY: \"We need two seats. We need to sit together.\" — *iraṇṭu irukkaikaḷ vēṇṭum. nāṅkaḷ cērntu uṭkāra vēṇṭum.*]"
             },
             {
               "kind": "prompt",

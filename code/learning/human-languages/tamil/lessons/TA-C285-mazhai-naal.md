@@ -35,12 +35,12 @@ reviews_of: [TA-C284-vanta-potu, TA-C285-vantu, TA-C73-yesterday, TA-C101-grandm
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C284-WHEN-PAST-01, TA-GRAMMAR-C285-VERBAL-PARTICIPLE-01] -->
 
-[PAUSE 2s] About eighty words, nearly all met before; the few new forms are glossed after it. The writer is a young man, telling a friend about yesterday.
+[PAUSE 2s] About eighty words, nearly all met before; new forms are glossed after it. A young man tells a friend about yesterday.
 
 ## Reading
 <!-- hl-knowledge: introduces=[TA-SKILL-C285-READ-STORY-01]; assesses=[TA-LEX-C73-WHEN-02, TA-LEX-C101-GRAND-02, TA-LEX-VEEDU-01, TA-ETYMON-KAALAI-01, TA-LEX-C91-WEATHER-01, TA-LEX-C69-GOING-02, TA-LEX-PAAR-01, TA-LEX-TENEER-01, TA-LEX-GIVE, TA-LEX-C05-PESU-01, TA-LEX-C172-NERAM172-03, TA-ETYMON-MAALAI-01, TA-LEX-C48-LEAVE-05, TA-LEX-C62-JOIN-05, TA-LEX-C69-GOING-05, TA-LEX-C158-KALAM158-04, TA-LEX-C46-ROLE-01, TA-LEX-C274-PORUL274-03, TA-LEX-C77-SAY-01, TA-LEX-C185-PORUL185-04, TA-LEX-C65-DOING-02, TA-LEX-C60-MADE-03, TA-LEX-C67-WEAR-01, TA-LEX-C285-IRAM-01, TA-SCRIPT-RECOG-141, TA-LEX-C68-SHOP-05, TA-LEX-C78-WHY-03, TA-LEX-C48-LEAVE-04, TA-LEX-C174-IDAM174-05, TA-LEX-C56-AMOUNT-02, TA-LEX-C262-NERAM262-04, TA-LEX-IRAVU-01, TA-LEX-NUMBERS-6-10-01, TA-ETYMON-MANI-01, TA-LEX-KUDUMBAM-02, TA-LEX-C150-QUAL150-04, TA-LEX-SAAPPIDU-01, TA-LEX-C71-DAY-02, TA-LEX-C41-ADJ-03, TA-ETYMON-NAAL-01, TA-GRAMMAR-C284-PAST-PERSON-01, TA-GRAMMAR-C284-ONGOING-PAST-01, TA-GRAMMAR-C284-THERE-WAS-01, TA-GRAMMAR-C285-FIRST-THEN-01, TA-GRAMMAR-C285-AFTER-DOING-01] -->
 
-> நேற்று நான் பாட்டி வீட்டுக்குப் போனேன். காலையில் வெயில் இருந்தது. நான் பேருந்தில் போய் பாட்டியைப்
+> நேற்று நான் பாட்டி வீட்டுக்குப் போனேன். காலையில் வெயில் இருந்தது. நான் பேருந்தில் போய்ப் பாட்டியைப்
 > பார்த்தேன். பாட்டி எனக்குத் தேநீர் கொடுத்தார். அவர் ஒரு காலத்தில் ஆசிரியராக இருந்தார். அவர் எனக்கு ஒரு
 > கதை சொன்னார்.
 >
@@ -58,7 +58,7 @@ reviews_of: [TA-C284-vanta-potu, TA-C285-vantu, TA-C73-yesterday, TA-C101-grandm
 
 [PAUSE 2s] New forms: **பேருந்தில்**, "by bus"; **பாட்டியை**, "grandmother", with the **-ஐ** of the one you see; **ஆசிரியராக**, "(as) a teacher"; **சொன்னார்**, "(she) told", the past of **சொல்**; **பயணிகள்**, "passengers"; **பையிலும்**, "in the bag too".
 
-The scenes are **பேசிக்கொண்டிருந்த போது** and the two **-கொண்டிருந்தார்**; the chains are **போய்** and **நடந்து போனேன்**, "went walking". The rest are events.
+The scenes are **பேசிக்கொண்டிருந்த போது**, the two **-கொண்டிருந்தார்** and every "was"; the chains are **போய்** and **நடந்து போனேன்**. The rest are events.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SKILL-C285-READ-STORY-01, TA-GRAMMAR-C284-ONGOING-PAST-01, TA-LEX-C285-IRAM-01] -->

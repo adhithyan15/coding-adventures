@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 293,
-  "sourceHash": "fnv1a64:b99cbc050b9843ef",
+  "sourceHash": "fnv1a64:6920be3ed0a7929b",
   "lessonIds": [
     "TA-C293-poruttatu",
     "TA-C293-vantiruntal",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch293.txt",
   "json": "tamil/narration/ch293.json",
-  "textHash": "fnv1a64:dad8e7a7813375d9",
-  "jsonHash": "fnv1a64:57506ea832fabd81",
+  "textHash": "fnv1a64:605541b4ff4e393b",
+  "jsonHash": "fnv1a64:c0177d8d2ef19ac5",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "What I Think and So",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:82bdf8491ad1b3b6",
+  "sourceHash": "fnv1a64:7da41ac671580f13",
   "lessons": [
     {
       "id": "TA-C286-tonrukiratu",
@@ -292,7 +292,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:c2af89bdba7ddb91",
+      "sourceHash": "fnv1a64:9813c4690f9903fb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -344,11 +344,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "It seems to me he will not come.",
+              "instruction": "It seems to me he will come tomorrow.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: It seems to me he will not come.]"
+              "source": "[YOU SAY: It seems to me he will come tomorrow.]"
             },
             {
               "kind": "prompt",

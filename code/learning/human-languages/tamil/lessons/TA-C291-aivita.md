@@ -55,11 +55,11 @@ With an amount, **அதிகம்**, "more, a lot", and **குறைவு*
 ## You'll want to know: the most, எல்லாவற்றையும்விட
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C291-MOST-01]; assesses=[TA-LEX-C181-GUNAM181-04, TA-LEX-PIDI-01, TA-LEX-C71-DAY-03, TA-LEX-C85-AVAN-AVAL-01, TA-LEX-C145-QUAL145-05] -->
 
-> **எனக்கு எல்லாவற்றையும்விட தமிழ் பிடிக்கும்.**
+> **எனக்கு எல்லாவற்றையும்விடத் தமிழ் பிடிக்கும்.**
 >
-> *eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum.* — "I like Tamil most of all."
+> *eṉakku ellāvaṟṟaiyumviṭat tamiḻ piṭikkum.* — "I like Tamil most of all."
 
-"Most" is "more than everything": **எல்லாம்**, "everything", takes **-ஐ** in the shape **எல்லாவற்றை**, then **-உம்**, "all of it", then **-விட**. For people, **எல்லோரையும்விட** (*ellōraiyumviṭa*, "than everyone"):
+"Most" is "more than everything": **எல்லாம்**, "everything", takes **-ஐ** in the shape **எல்லாவற்றை**, then **-உம்**, "all of it", then **-விட**. As after any to-form, the first letter after **விட** doubles in writing: **-விடத் தமிழ்**. For people, **எல்லோரையும்விட** (*ellōraiyumviṭa*, "than everyone"):
 
 > **அவள் எல்லோரையும்விட வேகமாக ஓடினாள்.**
 >
@@ -73,7 +73,7 @@ With an amount, **அதிகம்**, "more, a lot", and **குறைவு*
 [PAUSE 1s]
 - [YOU SAY: "That house is bigger than this house" — *inta vīṭṭaiviṭa anta vīṭu periyatu*]
 - [YOU SAY: "The train is better than the bus" — *pēruntaiviṭa rayil nallatu*]
-- [YOU SAY: "I like Tamil most of all" — *eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum*]
+- [YOU SAY: "I like Tamil most of all" — *eṉakku ellāvaṟṟaiyumviṭat tamiḻ piṭikkum*]
 - [YOU SAY: two places you know, compared, with -ஐவிட]
 
 ## Wrap-up Recall

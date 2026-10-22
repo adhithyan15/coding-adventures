@@ -4,7 +4,7 @@
   "chapter": 285,
   "title": "Telling a Story in Order",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c5c715b9620f812d",
+  "sourceHash": "fnv1a64:0cd223100a50e752",
   "lessons": [
     {
       "id": "TA-C285-iram",
@@ -462,7 +462,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:879de28eade416ae",
+      "sourceHash": "fnv1a64:5abddc0cdcd5666a",
       "notice": null,
       "blocks": [
         {
@@ -511,7 +511,7 @@
             },
             {
               "kind": "speech",
-              "text": "Build it from the \"I\" past. Where the past has -இன்- (பேசினேன், வாங்கினேன்), the form ends in -இ: பேசி, வாங்கி. Elsewhere, put -உ in place of -ஏன்: வந்தேன் becomes வந்து (vantu), பார்த்தேன் becomes பார்த்து, செய்தேன் becomes செய்து. Two go their own way: போ becomes போய், சொல் becomes சொல்லி."
+              "text": "Build it from the \"I\" past. Where the past has -இன்- (பேசினேன், வாங்கினேன்), the form ends in -இ: பேசி, வாங்கி. Elsewhere, put -உ in place of -ஏன்: வந்தேன் becomes வந்து (vantu), பார்த்தேன் becomes பார்த்து, செய்தேன் becomes செய்து. A few go their own way, among them போ becomes போய் and சொல் becomes சொல்லி."
             },
             {
               "kind": "speech",
@@ -607,7 +607,7 @@
         "reading-type",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:f7f978ff2850486c",
+      "sourceHash": "fnv1a64:f1a00c7a33419f8e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -633,7 +633,7 @@
             },
             {
               "kind": "speech",
-              "text": "About eighty words, nearly all met before; the few new forms are glossed after it. The writer is a young man, telling a friend about yesterday."
+              "text": "About eighty words, nearly all met before; new forms are glossed after it. A young man tells a friend about yesterday."
             }
           ]
         },
@@ -644,7 +644,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "நேற்று நான் பாட்டி வீட்டுக்குப் போனேன். காலையில் வெயில் இருந்தது. நான் பேருந்தில் போய் பாட்டியைப் பார்த்தேன். பாட்டி எனக்குத் தேநீர் கொடுத்தார். அவர் ஒரு காலத்தில் ஆசிரியராக இருந்தார். அவர் எனக்கு ஒரு கதை சொன்னார். நாங்கள் பேசிக்கொண்டிருந்த போது திடீரென்று மழை பெய்தது. மாலையில் நான் வீட்டுக்குப் புறப்பட்டேன். முதலில் பேருந்து நிலையத்துக்கு நடந்து போனேன். என் குடை வீட்டில் இருந்தது. அதனால் என் சட்டை ஈரமாக இருந்தது. என் பையிலும் ஈரம் (īram). அதன் பிறகு (ataṉ piṟaku) பேருந்து வந்தது. பேருந்தில் நிறைய பயணிகள் இருந்தார்கள். கடைசியில் இரவு எட்டு மணிக்கு வீட்டுக்கு வந்தேன். அப்பா செய்தி படித்துக்கொண்டிருந்தார். அம்மா சமைத்துக்கொண்டிருந்தார். நான் சாப்பிட்ட பிறகு தூங்கினேன். அது ஒரு நல்ல நாள்."
+              "text": "நேற்று நான் பாட்டி வீட்டுக்குப் போனேன். காலையில் வெயில் இருந்தது. நான் பேருந்தில் போய்ப் பாட்டியைப் பார்த்தேன். பாட்டி எனக்குத் தேநீர் கொடுத்தார். அவர் ஒரு காலத்தில் ஆசிரியராக இருந்தார். அவர் எனக்கு ஒரு கதை சொன்னார். நாங்கள் பேசிக்கொண்டிருந்த போது திடீரென்று மழை பெய்தது. மாலையில் நான் வீட்டுக்குப் புறப்பட்டேன். முதலில் பேருந்து நிலையத்துக்கு நடந்து போனேன். என் குடை வீட்டில் இருந்தது. அதனால் என் சட்டை ஈரமாக இருந்தது. என் பையிலும் ஈரம் (īram). அதன் பிறகு (ataṉ piṟaku) பேருந்து வந்தது. பேருந்தில் நிறைய பயணிகள் இருந்தார்கள். கடைசியில் இரவு எட்டு மணிக்கு வீட்டுக்கு வந்தேன். அப்பா செய்தி படித்துக்கொண்டிருந்தார். அம்மா சமைத்துக்கொண்டிருந்தார். நான் சாப்பிட்ட பிறகு தூங்கினேன். அது ஒரு நல்ல நாள்."
             },
             {
               "kind": "pause",
@@ -675,7 +675,7 @@
             },
             {
               "kind": "speech",
-              "text": "The scenes are பேசிக்கொண்டிருந்த போது and the two -கொண்டிருந்தார்; the chains are போய் and நடந்து போனேன், \"went walking\". The rest are events."
+              "text": "The scenes are பேசிக்கொண்டிருந்த போது, the two -கொண்டிருந்தார் and every \"was\"; the chains are போய் and நடந்து போனேன். The rest are events."
             }
           ]
         },

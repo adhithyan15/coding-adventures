@@ -16,8 +16,8 @@ Tamil has no "-er" on the describing word. It says "leaving this house aside, th
 With an amount, அதிகம், "more, a lot", and குறைவு, "less", do the comparing: இங்கே விலை குறைவு (iṅkē vilai kuṟaivu, "prices are lower here").
 
 You'll want to know: the most, எல்லாவற்றையும்விட.
-எனக்கு எல்லாவற்றையும்விட தமிழ் பிடிக்கும். eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum. — "I like Tamil most of all."
-"Most" is "more than everything": எல்லாம், "everything", takes -ஐ in the shape எல்லாவற்றை, then -உம், "all of it", then -விட. For people, எல்லோரையும்விட (ellōraiyumviṭa, "than everyone"):
+எனக்கு எல்லாவற்றையும்விடத் தமிழ் பிடிக்கும். eṉakku ellāvaṟṟaiyumviṭat tamiḻ piṭikkum. — "I like Tamil most of all."
+"Most" is "more than everything": எல்லாம், "everything", takes -ஐ in the shape எல்லாவற்றை, then -உம், "all of it", then -விட. As after any to-form, the first letter after விட doubles in writing: -விடத் தமிழ். For people, எல்லோரையும்விட (ellōraiyumviṭa, "than everyone"):
 அவள் எல்லோரையும்விட வேகமாக ஓடினாள். avaḷ ellōraiyumviṭa vēkamāka ōṭiṉāḷ. — "She ran fastest of all."
 வேகமாக, "fast", is the -ஆக form of வேகமான.
 
@@ -27,7 +27,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "The train is better than the bus" — pēruntaiviṭa rayil nallatu]
 [pause 8 seconds for the answer]
-[your turn — say: "I like Tamil most of all" — eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum]
+[your turn — say: "I like Tamil most of all" — eṉakku ellāvaṟṟaiyumviṭat tamiḻ piṭikkum]
 [pause 8 seconds for the answer]
 [your turn — say: two places you know, compared, with -ஐவிட (-aiviṭa)]
 [pause 8 seconds for the answer]
@@ -98,4 +98,4 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-"Bigger than this house"? (இந்த வீட்டைவிட பெரியது.) "Most of all"? (எல்லாவற்றையும்விட.) "For two years"? (இரண்டு வருடமாக.) "From … until"? (-இலிருந்து … வரை.)
+"Bigger than this house"? (இந்த வீட்டைவிடப் பெரியது.) "Most of all"? (எல்லாவற்றையும்விட.) "For two years"? (இரண்டு வருடமாக.) "From … until"? (-இலிருந்து … வரை.)

@@ -4,7 +4,7 @@
   "chapter": 287,
   "title": "Must, Must Not and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:940ee774354ad0cc",
+  "sourceHash": "fnv1a64:f70df02356eeff64",
   "lessons": [
     {
       "id": "TA-C287-poka-ventum",
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:81d4411c4a254153",
+      "sourceHash": "fnv1a64:fdf229058036db6d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -391,11 +391,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "Because the bus did not come, we walked.",
+              "instruction": "Because I missed the bus, I walked.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: Because the bus did not come, we walked.]"
+              "source": "[YOU SAY: Because I missed the bus, I walked.]"
             },
             {
               "kind": "prompt",

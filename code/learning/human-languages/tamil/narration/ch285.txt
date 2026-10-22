@@ -116,7 +116,7 @@ You'll want to know: the -உ and -இ form.
 நான் வீட்டுக்கு வந்து சாப்பிட்டேன். nāṉ vīṭṭukku vantu cāppiṭṭēṉ. — "I came home and ate."
 The first verb carries no person and no time: வந்து (vantu), "having come". Only the last verb says who and when. So a chain of these runs on to one full verb at the end:
 அவன் கடைக்குப் போய் ஒரு புத்தகம் வாங்கி வீட்டுக்கு வந்தான். avaṉ kaṭaikkup pōy oru puttakam vāṅki vīṭṭukku vantāṉ. — "He went to the shop, bought a book and came home."
-Build it from the "I" past. Where the past has -இன்- (பேசினேன், வாங்கினேன்), the form ends in -இ: பேசி, வாங்கி. Elsewhere, put -உ in place of -ஏன்: வந்தேன் becomes வந்து (vantu), பார்த்தேன் becomes பார்த்து, செய்தேன் becomes செய்து. Two go their own way: போ becomes போய், சொல் becomes சொல்லி.
+Build it from the "I" past. Where the past has -இன்- (பேசினேன், வாங்கினேன்), the form ends in -இ: பேசி, வாங்கி. Elsewhere, put -உ in place of -ஏன்: வந்தேன் becomes வந்து (vantu), பார்த்தேன் becomes பார்த்து, செய்தேன் becomes செய்து. A few go their own way, among them போ becomes போய் and சொல் becomes சொல்லி.
 You have said it for a long time: போய் வருகிறேன், "having gone, I come (back)"; தயவுசெய்து, "having done (a kindness)".
 
 You'll want to know: -த பிறகு, after doing.
@@ -144,18 +144,18 @@ Before we start: this one needs your eyes, so it is not a driving lesson. You wi
 
 Warm-up.
 [pause 2 seconds]
-About eighty words, nearly all met before; the few new forms are glossed after it. The writer is a young man, telling a friend about yesterday.
+About eighty words, nearly all met before; new forms are glossed after it. A young man tells a friend about yesterday.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Reading.
-நேற்று நான் பாட்டி வீட்டுக்குப் போனேன். காலையில் வெயில் இருந்தது. நான் பேருந்தில் போய் பாட்டியைப் பார்த்தேன். பாட்டி எனக்குத் தேநீர் கொடுத்தார். அவர் ஒரு காலத்தில் ஆசிரியராக இருந்தார். அவர் எனக்கு ஒரு கதை சொன்னார். நாங்கள் பேசிக்கொண்டிருந்த போது திடீரென்று மழை பெய்தது. மாலையில் நான் வீட்டுக்குப் புறப்பட்டேன். முதலில் பேருந்து நிலையத்துக்கு நடந்து போனேன். என் குடை வீட்டில் இருந்தது. அதனால் என் சட்டை ஈரமாக இருந்தது. என் பையிலும் ஈரம் (īram). அதன் பிறகு (ataṉ piṟaku) பேருந்து வந்தது. பேருந்தில் நிறைய பயணிகள் இருந்தார்கள். கடைசியில் இரவு எட்டு மணிக்கு வீட்டுக்கு வந்தேன். அப்பா செய்தி படித்துக்கொண்டிருந்தார். அம்மா சமைத்துக்கொண்டிருந்தார். நான் சாப்பிட்ட பிறகு தூங்கினேன். அது ஒரு நல்ல நாள்.
+நேற்று நான் பாட்டி வீட்டுக்குப் போனேன். காலையில் வெயில் இருந்தது. நான் பேருந்தில் போய்ப் பாட்டியைப் பார்த்தேன். பாட்டி எனக்குத் தேநீர் கொடுத்தார். அவர் ஒரு காலத்தில் ஆசிரியராக இருந்தார். அவர் எனக்கு ஒரு கதை சொன்னார். நாங்கள் பேசிக்கொண்டிருந்த போது திடீரென்று மழை பெய்தது. மாலையில் நான் வீட்டுக்குப் புறப்பட்டேன். முதலில் பேருந்து நிலையத்துக்கு நடந்து போனேன். என் குடை வீட்டில் இருந்தது. அதனால் என் சட்டை ஈரமாக இருந்தது. என் பையிலும் ஈரம் (īram). அதன் பிறகு (ataṉ piṟaku) பேருந்து வந்தது. பேருந்தில் நிறைய பயணிகள் இருந்தார்கள். கடைசியில் இரவு எட்டு மணிக்கு வீட்டுக்கு வந்தேன். அப்பா செய்தி படித்துக்கொண்டிருந்தார். அம்மா சமைத்துக்கொண்டிருந்தார். நான் சாப்பிட்ட பிறகு தூங்கினேன். அது ஒரு நல்ல நாள்.
 [pause 2 seconds]
 Read it once without stopping, then once more, sorting every verb: event, scene, or a step in a chain.
 
 Why it's said this way.
 [pause 2 seconds]
 New forms: பேருந்தில், "by bus"; பாட்டியை, "grandmother", with the -ஐ of the one you see; ஆசிரியராக, "(as) a teacher"; சொன்னார், "(she) told", the past of சொல்; பயணிகள், "passengers"; பையிலும், "in the bag too".
-The scenes are பேசிக்கொண்டிருந்த போது and the two -கொண்டிருந்தார்; the chains are போய் and நடந்து போனேன், "went walking". The rest are events.
+The scenes are பேசிக்கொண்டிருந்த போது, the two -கொண்டிருந்தார் and every "was"; the chains are போய் and நடந்து போனேன். The rest are events.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
 Guided Practice.

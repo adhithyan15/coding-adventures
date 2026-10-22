@@ -4,7 +4,7 @@
   "chapter": 293,
   "title": "It Depends and What Would Have Been",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b99cbc050b9843ef",
+  "sourceHash": "fnv1a64:6920be3ed0a7929b",
   "lessons": [
     {
       "id": "TA-C293-poruttatu",
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:def760c551853910",
+      "sourceHash": "fnv1a64:d812cd29b0586a94",
       "notice": null,
       "blocks": [
         {
@@ -163,7 +163,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"having come\" (vantu) and \"if (I) was\" (iruntāl). Then \"It depends on the weather.\" (atu vāṉilaiyaip poṟuttatu.)"
+              "text": "Say \"having come\" (vantu) and \"if (it) is\" (iruntāl). Then \"It depends on the weather.\" (atu vāṉilaiyaip poṟuttatu.)"
             }
           ]
         },
@@ -178,7 +178,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two pieces you know make the if-clause: the -உ form and இருந்தால், \"if (it) was\". வந்து + இருந்தால் becomes வந்திருந்தால் (vantiruntāl), \"if (someone) had come\"; the -உ drops before the இ. With இரு itself: இருந்திருந்தால், \"if (there) had been\"."
+              "text": "Two pieces you know make the if-clause: the -உ form and இருந்தால், \"if (it) is\". வந்து + இருந்தால் becomes வந்திருந்தால் (vantiruntāl), \"if (someone) had come\"; the -உ drops before the இ. With இரு itself: இருந்திருந்தால், \"if (there) had been\"."
             },
             {
               "kind": "speech",

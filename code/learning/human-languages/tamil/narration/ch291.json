@@ -4,7 +4,7 @@
   "chapter": 291,
   "title": "Bigger, Best and How Long",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8721fa4c064d9824",
+  "sourceHash": "fnv1a64:bcb39239bcd22bb9",
   "lessons": [
     {
       "id": "TA-C291-aivita",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd24dd3f1e575996",
+      "sourceHash": "fnv1a64:4bd684e0425f6e8e",
       "notice": null,
       "blocks": [
         {
@@ -69,11 +69,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "எனக்கு எல்லாவற்றையும்விட தமிழ் பிடிக்கும். eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum. — \"I like Tamil most of all.\""
+              "text": "எனக்கு எல்லாவற்றையும்விடத் தமிழ் பிடிக்கும். eṉakku ellāvaṟṟaiyumviṭat tamiḻ piṭikkum. — \"I like Tamil most of all.\""
             },
             {
               "kind": "speech",
-              "text": "\"Most\" is \"more than everything\": எல்லாம், \"everything\", takes -ஐ in the shape எல்லாவற்றை, then -உம், \"all of it\", then -விட. For people, எல்லோரையும்விட (ellōraiyumviṭa, \"than everyone\"):"
+              "text": "\"Most\" is \"more than everything\": எல்லாம், \"everything\", takes -ஐ in the shape எல்லாவற்றை, then -உம், \"all of it\", then -விட. As after any to-form, the first letter after விட doubles in writing: -விடத் தமிழ். For people, எல்லோரையும்விட (ellōraiyumviṭa, \"than everyone\"):"
             },
             {
               "kind": "speech",
@@ -117,11 +117,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I like Tamil most of all\" — eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum",
+              "instruction": "\"I like Tamil most of all\" — eṉakku ellāvaṟṟaiyumviṭat tamiḻ piṭikkum",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I like Tamil most of all\" — *eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum*]"
+              "source": "[YOU SAY: \"I like Tamil most of all\" — *eṉakku ellāvaṟṟaiyumviṭat tamiḻ piṭikkum*]"
             },
             {
               "kind": "prompt",
@@ -317,7 +317,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b9aad1826d312ec8",
+      "sourceHash": "fnv1a64:21be8ca1c18b8170",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -417,7 +417,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Bigger than this house\"? (இந்த வீட்டைவிட பெரியது.) \"Most of all\"? (எல்லாவற்றையும்விட.) \"For two years\"? (இரண்டு வருடமாக.) \"From … until\"? (-இலிருந்து … வரை.)"
+              "text": "\"Bigger than this house\"? (இந்த வீட்டைவிடப் பெரியது.) \"Most of all\"? (எல்லாவற்றையும்விட.) \"For two years\"? (இரண்டு வருடமாக.) \"From … until\"? (-இலிருந்து … வரை.)"
             }
           ]
         }

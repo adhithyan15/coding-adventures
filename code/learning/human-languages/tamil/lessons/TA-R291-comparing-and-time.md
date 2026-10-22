@@ -49,4 +49,4 @@ reviews_of: [TA-C291-aivita, TA-C291-matamaka, TA-C290-poka-acai]
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C291-THAN-01, TA-GRAMMAR-C291-MOST-01, TA-GRAMMAR-C291-SPAN-01, TA-GRAMMAR-C291-FROM-UNTIL-01] -->
 
-[PAUSE 3s] "Bigger than this house"? (**இந்த வீட்டைவிட பெரியது**.) "Most of all"? (**எல்லாவற்றையும்விட**.) "For two years"? (**இரண்டு வருடமாக**.) "From … until"? (**-இலிருந்து … வரை**.)
+[PAUSE 3s] "Bigger than this house"? (**இந்த வீட்டைவிடப் பெரியது**.) "Most of all"? (**எல்லாவற்றையும்விட**.) "For two years"? (**இரண்டு வருடமாக**.) "From … until"? (**-இலிருந்து … வரை**.)
