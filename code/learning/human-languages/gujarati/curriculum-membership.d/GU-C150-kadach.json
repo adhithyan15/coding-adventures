@@ -1,0 +1,11 @@
+{
+  "id": "GU-C150-kadach",
+  "pathSegment": "GU-PATH-150-FUT150",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-150-FUT150",
+      "order": 2
+    }
+  ]
+}

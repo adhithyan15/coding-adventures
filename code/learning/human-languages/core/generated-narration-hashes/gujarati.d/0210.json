@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:927f28da2d8008aa",
+  "lessonIds": [
+    "GU-C210-erport",
+    "GU-C210-pasport",
+    "GU-C210-parvano",
+    "GU-C210-ladvu",
+    "GU-C210-uncakvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch210.txt",
+  "json": "gujarati/narration/ch210.json",
+  "textHash": "fnv1a64:cb548c57acd49ef5",
+  "jsonHash": "fnv1a64:96f02807ec675a45",
+  "findings": []
+}

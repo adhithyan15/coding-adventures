@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C158-potu",
+    "language": "gujarati",
+    "chapter": 158,
+    "sequence": 8680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7a36d8da194b295"
+  },
+  "findings": []
+}

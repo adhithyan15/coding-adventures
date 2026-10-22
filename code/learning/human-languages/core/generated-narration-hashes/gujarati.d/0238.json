@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:9e09b34d5790cee8",
+  "lessonIds": [
+    "GU-C238-biladi",
+    "GU-C238-garoli",
+    "GU-C238-karoliyo",
+    "GU-C238-kidi",
+    "GU-C238-latakvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch238.txt",
+  "json": "gujarati/narration/ch238.json",
+  "textHash": "fnv1a64:9cad18a1c84fcce6",
+  "jsonHash": "fnv1a64:9f55436d64c11503",
+  "findings": []
+}

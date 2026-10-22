@@ -1,0 +1,11 @@
+{
+  "id": "GU-C172-vasi",
+  "pathSegment": "GU-PATH-172-STALE172",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-172-STALE172",
+      "order": 1
+    }
+  ]
+}

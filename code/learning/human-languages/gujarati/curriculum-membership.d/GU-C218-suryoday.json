@@ -1,0 +1,11 @@
+{
+  "id": "GU-C218-suryoday",
+  "pathSegment": "GU-PATH-218-SUN218",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-218-SUN218",
+      "order": 1
+    }
+  ]
+}

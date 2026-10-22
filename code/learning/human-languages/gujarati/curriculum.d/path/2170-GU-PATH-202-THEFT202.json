@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-202-THEFT202",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-202-THEFT202"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C163-pirasvu",
+  "pathSegment": "GU-PATH-163-MEAL163",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-163-MEAL163",
+      "order": 3
+    }
+  ]
+}

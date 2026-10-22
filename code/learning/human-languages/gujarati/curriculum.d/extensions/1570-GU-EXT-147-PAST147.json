@@ -1,0 +1,10 @@
+{
+  "id": "GU-EXT-147-PAST147",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say where I was and where I went yesterday, with the past of to be, of going and coming, and of happening, and say that I came late.",
+  "prerequisites": [
+    "GU-EXT-146-ASK146"
+  ]
+}

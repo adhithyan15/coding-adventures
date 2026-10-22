@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:1eba9d993ebbb860",
+  "lessonIds": [
+    "GU-C172-phiku",
+    "GU-C172-vasi",
+    "GU-C172-balvu",
+    "GU-C172-narangi",
+    "GU-C172-ras"
+  ],
+  "tex": "gujarati/book/chapters/ch172-stale-burnt-and-fresh-juice.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-183-A2-HABITUAL-ROUTINE",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "PA-EXT-183-A2-HABITUAL-ROUTINE"
+  ],
+  "after": []
+}

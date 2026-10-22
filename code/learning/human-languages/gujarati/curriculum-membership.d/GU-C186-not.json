@@ -1,0 +1,11 @@
+{
+  "id": "GU-C186-not",
+  "pathSegment": "GU-PATH-186-TILL186",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-186-TILL186",
+      "order": 3
+    }
+  ]
+}

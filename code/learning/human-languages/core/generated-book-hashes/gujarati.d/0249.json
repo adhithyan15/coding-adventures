@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:e131c682791a22c3",
+  "lessonIds": [
+    "GU-C249-mobail",
+    "GU-C249-nambar",
+    "GU-C249-sandesho",
+    "GU-C249-avaj",
+    "GU-C249-melavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch249-calls-and-messages.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Kind, honest and funny",
+  "label": "ch:gu-kind-honest-and-funny",
+  "canDo": "I can say what people are like and what they are not like.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C270-ghamandi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can say what people are like and what they are not like.",
+    "assesses": [
+      "GU-LEX-C270-NATURE270-03",
+      "GU-LEX-C270-NATURE270-04",
+      "GU-LEX-C270-NATURE270-05"
+    ]
+  }
+}

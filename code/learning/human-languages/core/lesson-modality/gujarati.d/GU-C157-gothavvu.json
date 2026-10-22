@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C157-gothavvu",
+    "language": "gujarati",
+    "chapter": 157,
+    "sequence": 8600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f64292c17b4e4079"
+  },
+  "findings": []
+}

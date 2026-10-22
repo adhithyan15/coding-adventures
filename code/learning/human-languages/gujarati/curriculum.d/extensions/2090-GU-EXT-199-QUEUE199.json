@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-199-QUEUE199",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can wait in a queue and say who pushes in.",
+  "prerequisites": []
+}

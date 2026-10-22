@@ -67,6 +67,8 @@ assert!(matches!(
 there `puts` is only an `IO` method and `Fixnum#/` truncates (both cited to
 the tags' `io.c` and `numeric.c`). The compiler varies by release only
 through the CST shape and the profile, never by comparing release IDs.
+The module records the release that produced it in `IIRModule::release`,
+which is how lang-aot's `--lang ruby@<release>` reports what it compiled.
 
 Errors (`FrontendError`) are the LANG84 C6 categories — `Lex`, `Parse`,
 `Unsupported`, `Budget`, `UnknownRelease`, `ReleaseNotAvailable` — and each

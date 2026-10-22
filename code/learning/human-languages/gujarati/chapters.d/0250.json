@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "At the computer",
+  "label": "ch:gu-at-the-computer",
+  "canDo": "I can talk about using a computer: pressing keys, saving and printing.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C250-chapvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can talk about using a computer: pressing keys, saving and printing.",
+    "assesses": [
+      "GU-LEX-C250-COMPUTER250-03",
+      "GU-LEX-C250-COMPUTER250-04",
+      "GU-LEX-C250-COMPUTER250-05"
+    ]
+  }
+}

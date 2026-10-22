@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Which way to go",
+  "label": "ch:gu-which-way-to-go",
+  "canDo": "I can read and give directions: left, right and straight on.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C193-valvu-turn",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can read and give directions: left, right and straight on.",
+    "assesses": [
+      "GU-LEX-C193-WAY193-03",
+      "GU-LEX-C193-WAY193-04",
+      "GU-LEX-C193-WAY193-05"
+    ]
+  }
+}

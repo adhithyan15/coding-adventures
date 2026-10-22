@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-232-HEALTHY232",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "GU-EXT-232-HEALTHY232"
+  ],
+  "after": []
+}

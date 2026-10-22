@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-239-POND239",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what happened down by the pond.",
+  "prerequisites": []
+}

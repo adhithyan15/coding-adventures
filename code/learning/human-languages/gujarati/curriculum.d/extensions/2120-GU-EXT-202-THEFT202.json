@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-202-THEFT202",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can report a theft at the police station.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C203-saman",
+  "pathSegment": "GU-PATH-203-TRIP203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-203-TRIP203",
+      "order": 1
+    }
+  ]
+}

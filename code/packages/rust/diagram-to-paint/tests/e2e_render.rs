@@ -20,8 +20,8 @@ mod apple {
     use diagram_layout_graph::{GraphLayoutOptions, layout_graph_diagram};
     use diagram_layout_grid::layout_grid_diagram;
     use diagram_layout_hierarchy::{
-        layout_railroad, layout_swimlane, layout_treeview, layout_treeview_with_options, layout_treemap,
-        TreeViewLayoutOptions,
+        layout_railroad, layout_swimlane, layout_swimlane_with_options, layout_treeview,
+        layout_treeview_with_options, layout_treemap, SwimlaneLayoutOptions, TreeViewLayoutOptions,
     };
     use diagram_layout_geometric::{layout_cynefin, layout_info, layout_ishikawa, layout_venn, layout_wardley};
     use diagram_layout_packet::layout_packet_diagram;
@@ -3824,7 +3824,16 @@ line "Target" [35, 50, 68, 82]"##,
                 .unwrap_or_else(|| panic!("missing Swimlane fixture {fixture_name}"));
             let diagram = parse_swimlane(fixture["source"].as_str().expect("swimlane source"))
                 .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
-            let layout = layout_swimlane(&diagram);
+            let icon_options = SwimlaneLayoutOptions { icon_glyphs: BTreeMap::from([(
+                "logos:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() },
+            )]), image_dimensions: BTreeMap::from([(
+                "https://example.com/logo.png".into(), (160.0, 80.0),
+            )]) };
+            let layout = if matches!(fixture_name, "icon-glyph-node" | "icon-node-forms" | "image-node") {
+                layout_swimlane_with_options(&diagram, Some(&icon_options))
+            } else {
+                layout_swimlane(&diagram)
+            };
             let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
                 background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
@@ -3835,6 +3844,38 @@ line "Target" [35, 50, 68, 82]"##,
                 resolver: &resolver,
             });
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            if fixture_name == "icon-glyph-node" {
+                assert_eq!(layout.icons.get("parser").map(String::as_str), Some("logos:rust"));
+                assert_eq!(layout.icon_glyphs.get("parser").map(|glyph| glyph.text.as_str()), Some("R"));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.parser.icon")), Some(&"logos:rust".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.parser.iconResolved")), Some(&"true".to_string()));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 24.0 && !run.glyphs.is_empty()
+                )), "resolved icon glyph must lower to backend-neutral text paint");
+            }
+            if fixture_name == "icon-node-forms" {
+                assert_eq!(layout.nodes.iter().find(|node| node.id == "plain").unwrap().label.text, "");
+                assert_eq!(layout.icon_nodes["square"].height, 60.0);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(ellipse) if ellipse.rx == 32.0 && ellipse.ry == 32.0
+                )), "circle icon form must lower to backend-neutral ellipse paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.circle.iconPosition")), Some(&"t".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.square.iconHeight")), Some(&"60".to_string()));
+            }
+            if fixture_name == "image-node" {
+                assert_eq!((layout.image_nodes["logo"].width, layout.image_nodes["logo"].height), (128.0, 64.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Image(image) if image.width == 128.0 && image.height == 64.0
+                        && matches!(&image.src, paint_instructions::ImageSrc::Uri(source)
+                            if source == "https://example.com/logo.png")
+                )), "image node must lower to backend-neutral URI image paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.logo.imageConstraint")), Some(&"on".to_string()));
+            }
             if fixture_name == "default-lane-for-loose-nodes" {
                 assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
                     vec!["OwnedLane", "__swimlane_default__"]);

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C222-vatavaran",
+  "pathSegment": "GU-PATH-222-EARTH222",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-222-EARTH222",
+      "order": 1
+    }
+  ]
+}

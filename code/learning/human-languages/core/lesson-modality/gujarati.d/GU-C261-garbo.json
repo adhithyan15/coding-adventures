@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C261-garbo",
+    "language": "gujarati",
+    "chapter": 261,
+    "sequence": 14160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ad4a1e8a0b1a4de"
+  },
+  "findings": []
+}

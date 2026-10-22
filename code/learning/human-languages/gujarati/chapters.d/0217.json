@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "Wind and dust",
+  "label": "ch:gu-wind-and-dust",
+  "canDo": "I can say that the wind will blow and that a dust storm will come.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C217-phelavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can say that the wind will blow and that a dust storm will come.",
+    "assesses": [
+      "GU-LEX-C217-WIND217-03",
+      "GU-LEX-C217-WIND217-04",
+      "GU-LEX-C217-WIND217-05"
+    ]
+  }
+}

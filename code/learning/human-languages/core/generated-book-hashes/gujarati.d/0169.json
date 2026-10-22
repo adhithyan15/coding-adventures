@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:48717984b4c3da6d",
+  "lessonIds": [
+    "GU-C169-bhakhri",
+    "GU-C169-khicdi",
+    "GU-C169-papad",
+    "GU-C169-kadai",
+    "GU-C169-dhaknu"
+  ],
+  "tex": "gujarati/book/chapters/ch169-khichdi-bhakhri-and-papad.tex"
+}

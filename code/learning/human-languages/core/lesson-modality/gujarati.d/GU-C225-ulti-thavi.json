@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C225-ulti-thavi",
+    "language": "gujarati",
+    "chapter": 225,
+    "sequence": 12230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f4e8d89a23e5599"
+  },
+  "findings": []
+}

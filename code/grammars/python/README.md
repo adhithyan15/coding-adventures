@@ -100,7 +100,8 @@ question 10). They are recorded in the CSV header:
 
 Every row is `pending`, stage `none`, except the five phase-7a rows below.
 
-`python3 code/scripts/release_inventory.py check` validates this file.
+`python3 code/scripts/release_inventory.py check --matrix` validates this
+file and `subsets.csv`.
 
 ## Release pairs (LANG84 phase 7a)
 
@@ -180,3 +181,13 @@ Each rejected case's `.cite` records whether CPython accepts the program
 (`host-python: accepts`) or rejects it too (`host-python: SyntaxError`,
 `IndentationError`). A `py-int-print` refusal of a valid Python program is a
 subset limit, not a claim about Python.
+
+## Subsets (`subsets.csv`)
+
+`subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
+`iir_status` and `backend_status` may name:
+
+- `py-int-print` (phase 7a, above), with its corpus in `corpus/py-int-print/`.
+- `py-float-print`: LANG79's float `print` subset (phase 7), defined in
+  LANG79. Its corpus goes in `corpus/py-float-print/` when a release first
+  claims stage I. No row names it yet.

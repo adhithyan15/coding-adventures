@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:0821c151dbe08b1d",
+  "lessonIds": [
+    "GU-C201-sudharvu",
+    "GU-C201-moci",
+    "GU-C201-dhobi",
+    "GU-C201-hajam",
+    "GU-C201-suthar"
+  ],
+  "tex": "gujarati/book/chapters/ch201-getting-things-mended.tex"
+}

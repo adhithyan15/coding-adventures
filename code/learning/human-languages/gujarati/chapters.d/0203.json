@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Setting off on a trip",
+  "label": "ch:gu-setting-off-on-a-trip",
+  "canDo": "I can say when we set out and who saw us off.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C203-valavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can say when we set out and who saw us off.",
+    "assesses": [
+      "GU-LEX-C203-TRIP203-03",
+      "GU-LEX-C203-TRIP203-04",
+      "GU-LEX-C203-TRIP203-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Words and their meanings",
+  "label": "ch:gu-words-and-their-meanings",
+  "canDo": "I can ask about meanings, translations and dictionaries.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C251-yad-karvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can ask about meanings, translations and dictionaries.",
+    "assesses": [
+      "GU-LEX-C251-MEANING251-03",
+      "GU-LEX-C251-MEANING251-04",
+      "GU-LEX-C251-MEANING251-05"
+    ]
+  }
+}

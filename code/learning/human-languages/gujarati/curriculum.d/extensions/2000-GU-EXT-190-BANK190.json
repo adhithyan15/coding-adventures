@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-190-BANK190",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read bank words for accounts, deposits and cheques.",
+  "prerequisites": []
+}

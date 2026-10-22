@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C223-dukhvu",
+    "language": "gujarati",
+    "chapter": 223,
+    "sequence": 12130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52265f682f2e3e02"
+  },
+  "findings": []
+}

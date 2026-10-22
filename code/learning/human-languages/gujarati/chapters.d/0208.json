@@ -1,0 +1,19 @@
+{
+  "chapter": 208,
+  "title": "Out on the highway",
+  "label": "ch:gu-out-on-the-highway",
+  "canDo": "I can describe the road we drove along.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C208-phatak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 208: I can describe the road we drove along.",
+    "assesses": [
+      "GU-LEX-C208-HIGHWAY208-03",
+      "GU-LEX-C208-HIGHWAY208-04",
+      "GU-LEX-C208-HIGHWAY208-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Birds in the neem tree",
+  "label": "ch:gu-birds-in-the-neem-tree",
+  "canDo": "I can say what the birds did in the tree.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-R236-review-231-236",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can say what the birds did in the tree.",
+    "assesses": [
+      "GU-LEX-C236-NEEM236-03",
+      "GU-LEX-C236-NEEM236-04",
+      "GU-LEX-C236-NEEM236-05"
+    ]
+  }
+}

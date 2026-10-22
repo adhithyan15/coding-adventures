@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:154e7ca92d6c4009",
+  "lessonIds": [
+    "GU-C245-grhkarya",
+    "GU-C245-jodni",
+    "GU-C245-bhusvu",
+    "GU-C245-rabar",
+    "GU-C245-uccarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch245.txt",
+  "json": "gujarati/narration/ch245.json",
+  "textHash": "fnv1a64:f7a9203bef97906d",
+  "jsonHash": "fnv1a64:12107495ccdc4c3d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Again and again",
+  "label": "ch:gu-again-and-again",
+  "canDo": "I can say how often I will do something.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C177-rojindu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say how often I will do something.",
+    "assesses": [
+      "GU-LEX-C177-OFTEN177-03",
+      "GU-LEX-C177-OFTEN177-04",
+      "GU-LEX-C177-OFTEN177-05"
+    ]
+  }
+}

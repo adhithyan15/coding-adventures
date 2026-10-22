@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:d353b152bdee6b7f",
+  "lessonIds": [
+    "GU-C215-tharvu",
+    "GU-C215-him",
+    "GU-C215-os",
+    "GU-C215-gadh",
+    "GU-C215-huphalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch215.txt",
+  "json": "gujarati/narration/ch215.json",
+  "textHash": "fnv1a64:85c67d1fe74afb8e",
+  "jsonHash": "fnv1a64:ceca136b509f3474",
+  "findings": []
+}

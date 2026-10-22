@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:1cda78f979d47c61",
+  "lessonIds": [
+    "GU-C209-bagadvu",
+    "GU-C209-dhakelvu",
+    "GU-C209-athadavu",
+    "GU-C209-phasavu",
+    "GU-C209-sarakvu"
+  ],
+  "tex": "gujarati/book/chapters/ch209-a-breakdown-on-the-road.tex"
+}

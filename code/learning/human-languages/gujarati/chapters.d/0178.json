@@ -1,0 +1,19 @@
+{
+  "chapter": 178,
+  "title": "Starting and finishing",
+  "label": "ch:gu-starting-and-finishing",
+  "canDo": "I can say when I will start and finish something.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C178-vitvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 178: I can say when I will start and finish something.",
+    "assesses": [
+      "GU-LEX-C178-START178-03",
+      "GU-LEX-C178-START178-04",
+      "GU-LEX-C178-START178-05"
+    ]
+  }
+}

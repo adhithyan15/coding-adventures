@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:015988710500d2d0",
+  "lessonIds": [
+    "GU-C173-athvadiyu",
+    "GU-C173-pakhvadiyu",
+    "GU-C173-avtu",
+    "GU-C173-chellu",
+    "GU-C173-akhu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch173.txt",
+  "json": "gujarati/narration/ch173.json",
+  "textHash": "fnv1a64:0373a6501e602edf",
+  "jsonHash": "fnv1a64:e71e4d50ae206f3e",
+  "findings": []
+}

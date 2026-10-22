@@ -1,0 +1,934 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 146,
+  "title": "Asking yes or no",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:ebcd353c96ad9b9b",
+  "lessons": [
+    {
+      "id": "GU-C146-shun-polar",
+      "sequence": 7670,
+      "title": "શું …? (śũ …?) — the yes-or-no question",
+      "headword": "શું …?",
+      "romanization": "śũ …?",
+      "gloss": "the śũ you know as what, moved to the front, where it asks for yes or no",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9ef8909a6b8ecdd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say શું, what, as in your name: તમારું નામ શું છે. Then the two oldest answers in the book, હા and ના. And one sentence from the last chapter: I don't speak Gujarati."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: શું at the front",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શું તમે ગુજરાતી બોલો છો? — śũ tame gujarātī bolo cho? — Do you speak Gujarati?"
+            },
+            {
+              "kind": "speech",
+              "text": "Inside a sentence શું means what. At the very front it means nothing at all: it marks the sentence as a yes-or-no question, and not one other word moves. English rebuilds the sentence around do; Gujarati sets a flag at the front."
+            },
+            {
+              "kind": "speech",
+              "text": "તમારું નામ શું છે — what is your name — inside;"
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમે ગુજરાતી બોલો છો — do you speak Gujarati — in front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the voice can carry it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In speech the flag often drops, and the voice does its work: તમે ગુજરાતી બોલો છો? with the pitch rising on the last word asks the same question. On the page the question mark carries the rise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: answering",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gujarati answers with હા or ના, and then, usually, with the verb again:"
+            },
+            {
+              "kind": "speech",
+              "text": "હા, હું ગુજરાતી બોલું છું. — hā, hũ gujarātī bolũ chũ. ના, હું ગુજરાતી નથી બોલતો. — nā, hũ gujarātī nathī bolto."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "શું તમે અહીં રહો છો? — śũ tame ahī̃ raho cho?, do you live here?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **શું તમે અહીં રહો છો?** — *śũ tame ahī̃ raho cho?*, do you live here?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "with હા and the verb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: with **હા** and the verb again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same question with no શું, the voice rising at the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same question with no **શું**, the voice rising at the end]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C146-shun-polar-ask",
+              "prompt": "Ask someone, politely, whether they speak Gujarati, then answer no.",
+              "assesses": [
+                "GU-GRAMMAR-C146-POLAR-SHUN-01",
+                "GU-GRAMMAR-C145-NEGATE-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "śũ tame gujarātī bolo cho? — nā, hũ gujarātī nathī bolto (boltī).",
+                "શું તમે ગુજરાતી બોલો છો? ના, હું ગુજરાતી નથી બોલતો.",
+                "શું તમે ગુજરાતી બોલો છો? ના, હું ગુજરાતી નથી બોલતી."
+              ],
+              "feedback": {
+                "correct": "śũ in front, nothing else moved, and nathī in the answer.",
+                "incorrect": "Put śũ at the very front of the statement; answer with nā and nathī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શું mean at the very front? (Nothing; it marks a yes-or-no question.) What else moves? (Nothing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C146-ke-nahi",
+      "sequence": 7680,
+      "title": "કે નહીં? and ખરું? — two tags at the end",
+      "headword": "… કે નહીં? · …, ખરું?",
+      "romanization": "… ke nahī̃? · …, kharũ?",
+      "gloss": "or not, and right: two tags that close a yes-or-no question",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd5899fdd972caa1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask do you speak Gujarati? twice: once with શું, once with your voice alone. Then say નહીં, the not for one word, and સાચું, true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: … કે નહીં?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તમે આવો છો કે નહીં? — tame āvo cho ke nahī̃? — Are you coming or not?"
+            },
+            {
+              "kind": "speech",
+              "text": "The કે you know as that also means or between two choices. The tag offers both answers and asks the listener to pick one. It is firmer than શું: a parent at the door, a friend whose bus is leaving."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: …, ખરું?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખરું (kharũ) means true, real, a close neighbour of સાચું. As a tag it asks for agreement:"
+            },
+            {
+              "kind": "speech",
+              "text": "તમે અહીં રહો છો, ખરું? — tame ahī̃ raho cho, kharũ? — You live here, right?"
+            },
+            {
+              "kind": "speech",
+              "text": "The speaker already expects હા and checks it. So the three sound different: શું in front opens the question, કે નહીં at the end asks for a pick, and ખરું at the end asks for a yes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "તમે ચા પીઓ છો કે નહીં? — tame cā pīo cho ke nahī̃?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **તમે ચા પીઓ છો કે નહીં?** — *tame cā pīo cho ke nahī̃?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "તે ગુજરાતી બોલે છે, ખરું? — te gujarātī bole che, kharũ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **તે ગુજરાતી બોલે છે, ખરું?** — *te gujarātī bole che, kharũ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "આપણે ચા પીએ છીએ, ખરું? — āpṇe cā pīe chīe, kharũ?, we drink tea, right?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **આપણે ચા પીએ છીએ, ખરું?** — *āpṇe cā pīe chīe, kharũ?*, we drink tea, right?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "each one, with હા or ના and the verb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: each one, with **હા** or **ના** and the verb again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which tag already expects yes? (ખરું?) What does કે mean in કે નહીં? (Or.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C146-mane",
+      "sequence": 7690,
+      "title": "મને, તને, તેને — the pronouns things happen to",
+      "headword": "મને · તને · તેને",
+      "romanization": "mane · tane · tene",
+      "gloss": "to me, to you, to him or her: the pronouns that likes and fevers happen to",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7be856e46a238c5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask are you coming or not?, then you live here, right? And from the verb chapters long ago: મને ગુજરાતી ગમે છે, I like Gujarati."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the person something happens to",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "In મને ગુજરાતી ગમે છે the thing liked is the subject, and I stand to one side as મને, to me. Gujarati speaks of a fever the same way: it arrives to someone."
+            },
+            {
+              "kind": "speech",
+              "text": "મને તાવ છે. — mane tāv che. — I have a fever."
+            },
+            {
+              "kind": "speech",
+              "text": "The to forms for one person:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "pronoun",
+                "to form"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "who: I. pronoun: હું. to form: મને.",
+                "who: you (familiar). pronoun: તું. to form: તને.",
+                "who: he, she. pronoun: તે. to form: તેને."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: more than one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તમને has been in the book since the second day, inside તમને મળીને આનંદ થયો: to you, meeting, joy happened. Its partners:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "pronoun",
+                "to form"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "who: we. pronoun: અમે. to form: અમને.",
+                "who: you (respectful). pronoun: તમે. to form: તમને.",
+                "who: they. pronoun: તેઓ. to form: તેમને."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "તેઓ turns into તેમ- before the ending: તેમને, to them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "મને ચા ગમે છે — mane cā game che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **મને ચા ગમે છે** — *mane cā game che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "શું તમને તાવ છે? — śũ tamne tāv che?, do you have a fever?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **શું તમને તાવ છે?** — *śũ tamne tāv che?*, do you have a fever?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "તેમને ગુજરાતી ગમે છે — temne gujarātī game che, they like Gujarati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **તેમને ગુજરાતી ગમે છે** — *temne gujarātī game che*, they like Gujarati]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who is the subject of મને ચા ગમે છે? (The tea; I am મને, to me.) What does તેઓ become before to? (તેમને.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C146-maaro",
+      "sequence": 7700,
+      "title": "મારો ભાઈ, મારી બહેન — my agrees with what is owned",
+      "headword": "મારો · મારી · મારું · મારા",
+      "romanization": "māro · mārī · mārũ · mārā",
+      "gloss": "my, agreeing with the thing owned and not with the owner",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e6d3d9f2e8ab2b54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I have a fever and they like Gujarati. Then the first possessive you ever learned: મારું નામ, my name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending follows the thing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મારું ends in -ું because નામ is a neuter noun. Change the noun and my changes its last sign to match it:"
+            },
+            {
+              "kind": "speech",
+              "text": "મારો ભાઈ — māro bhāī — my brother: masculine, -ો;"
+            },
+            {
+              "kind": "speech",
+              "text": "મારી બહેન — mārī bahen — my sister: feminine, -ી;"
+            },
+            {
+              "kind": "speech",
+              "text": "મારું ઘર — mārũ ghar — my home: neuter, -ું;"
+            },
+            {
+              "kind": "speech",
+              "text": "મારા પિતા — mārā pitā — my father: -ા, for more than one, or for one person spoken of with respect."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman and a man say મારો ભાઈ alike. The ending follows the brother, not whoever owns him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "મારા પિતા અહીં છે — mārā pitā ahī̃ che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **મારા પિતા અહીં છે** — *mārā pitā ahī̃ che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "મારી ચા — mārī cā, my tea, and why it is -ી (ચા is feminine)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **મારી ચા** — *mārī cā*, my tea, and why it is **-ી** (**ચા** is feminine)]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C146-maaro-r1",
+              "prompt": "Say my brother, my sister, and my home.",
+              "assesses": [
+                "GU-GRAMMAR-C146-POSS-AGREE-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "māro bhāī, mārī bahen, mārũ ghar",
+                "મારો ભાઈ, મારી બહેન, મારું ઘર"
+              ],
+              "feedback": {
+                "correct": "-o, -ī, -ũ: each one follows the noun.",
+                "incorrect": "Let the noun choose: bhāī takes māro, bahen takes mārī, ghar takes mārũ."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Whose gender decides the ending of my? (The thing owned.) Why મારા પિતા? (Respect takes -ા.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C146-tamaro",
+      "sequence": 7710,
+      "title": "તમારો ફોન, તેની બહેન — every possessive bends the same way",
+      "headword": "તારું · તેનું · અમારું · આપણું · તમારું · તેમનું",
+      "romanization": "tārũ · tenũ · amārũ · āpṇũ · tamārũ · temnũ",
+      "gloss": "your, his or her, our, their: every possessive bends the way māro does",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61078b9858b7dbdb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say my brother, my sister and my home. Then the first question you ever asked: તમારું નામ શું છે?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one owner",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "owner",
+                "my, your, his: the -ું form"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "owner: હું. my, your, his: the -ું form: મારું.",
+                "owner: તું. my, your, his: the -ું form: તારું.",
+                "owner: તે. my, your, his: the -ું form: તેનું."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "તેનું નામ મીરા છે. — tenũ nām mīrā che. — Her name is Mira."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: more than one owner",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "owner",
+                "the -ું form"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "owner: અમે. the -ું form: અમારું.",
+                "owner: આપણે. the -ું form: આપણું.",
+                "owner: તમે. the -ું form: તમારું.",
+                "owner: તેઓ. the -ું form: તેમનું."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "તેમનું comes from the same તેમ- as તેમને. Every one of them bends exactly as મારું does, to -ો, -ી, -ું or -ા:"
+            },
+            {
+              "kind": "speech",
+              "text": "તમારો ફોન — tamāro phon — your phone;"
+            },
+            {
+              "kind": "speech",
+              "text": "તેની બહેન — tenī bahen — his sister, or her sister;"
+            },
+            {
+              "kind": "speech",
+              "text": "આપણું ગામ — āpṇũ gām — our village, yours and mine;"
+            },
+            {
+              "kind": "speech",
+              "text": "તમારા પિતા, તેના પિતા — tamārā pitā, tenā pitā — your father, his or her father: respect takes -ા."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "તારું નામ શું છે? — tārũ nām śũ che?, to a child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **તારું નામ શું છે?** — *tārũ nām śũ che?*, to a child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amārũ ghar, then āpṇũ ghar, and who is left out of the first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amārũ ghar*, then *āpṇũ ghar*, and who is left out of the first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "તેમનો ભાઈ — temno bhāī, their brother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **તેમનો ભાઈ** — *temno bhāī*, their brother]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C146-tamaro-r1",
+              "prompt": "Say your phone, politely, then her sister.",
+              "assesses": [
+                "GU-GRAMMAR-C146-POSS-SG-01",
+                "GU-GRAMMAR-C146-POSS-PL-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "tamāro phon; tenī bahen",
+                "તમારો ફોન, તેની બહેન",
+                "tamāro phon, tenī bahen"
+              ],
+              "feedback": {
+                "correct": "phon is masculine and bahen feminine, so -o, then -ī.",
+                "incorrect": "Let the thing owned choose the ending: tamāro phon, tenī bahen."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What decides the last sign of તેની બહેન? (બહેન is feminine.) Which our takes the listener in? (આપણું.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C146-ask-practice",
+      "sequence": 7720,
+      "title": "Yes or no — a practice",
+      "headword": "શું …? · કે નહીં? · ખરું?",
+      "romanization": "śũ …? · ke nahī̃? · kharũ?",
+      "gloss": "a short exchange of yes-or-no questions about likes, family and plans",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e88d5c52d488afc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say her name is Mira. Then our village twice: once leaving the listener out, once taking the listener in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange: likes, family and a plan",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— શું તમને ચા ગમે છે? — હા, મને ચા ગમે છે. તમને? — ના, મને ચા નથી ગમતી. મને દૂધ ગમે છે. — તમારી બહેન અહીં રહે છે, ખરું? — હા. તેનું ઘર અહીં છે. — તમે આવો છો કે નહીં? — હા, આવું છું!"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exchange aloud, taking each part in turn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exchange aloud, taking each part in turn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why it is નથી ગમતી and not નથી ગમતો (ચા is feminine, and the tea is the subject)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why it is **નથી ગમતી** and not **નથી ગમતો** (**ચા** is feminine, and the tea is the subject)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "a friend whether she has a fever, with શું",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: a friend whether she has a fever, with **શું**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "whether their village is far, with ખરું? — temnũ gām dūr che, kharũ?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: whether their village is far, with **ખરું?** — *temnũ gām dūr che, kharũ?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "અહીં કોઈ નથી, ખરું? — ahī̃ koī nathī, kharũ?, nobody is here, right?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **અહીં કોઈ નથી, ખરું?** — *ahī̃ koī nathī, kharũ?*, nobody is here, right?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "શું તમે કંઈ નથી ખાતા? — śũ tame kaī̃ nathī khātā?, aren't you eating anything?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **શું તમે કંઈ નથી ખાતા?** — *śũ tame kaī̃ nathī khātā?*, aren't you eating anything?]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C146-ask-practice-reply",
+              "prompt": "Someone asks: śũ tamne cā game che? Answer no, and say that you like milk.",
+              "assesses": [
+                "GU-GRAMMAR-C146-DATIVE-SG-01",
+                "GU-GRAMMAR-C145-NEGATE-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "nā, mane cā nathī gamtī. mane dūdh game che.",
+                "ના, મને ચા નથી ગમતી. મને દૂધ ગમે છે.",
+                "nā, mane cā nathī gamtī; mane dūdh game che"
+              ],
+              "feedback": {
+                "correct": "mane stays to one side, and gamtī agrees with the tea.",
+                "incorrect": "Keep mane; the verb agrees with cā, so nathī gamtī."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which question asked for a choice? (તમે આવો છો કે નહીં?) Which one expected yes? (…, ખરું?)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

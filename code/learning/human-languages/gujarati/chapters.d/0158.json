@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Sweeping and wiping",
+  "label": "ch:gu-sweeping-and-wiping",
+  "canDo": "I can describe how we sweep, wipe and mop the house.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-R158-review-153-158",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can describe how we sweep, wipe and mop the house.",
+    "assesses": [
+      "GU-LEX-C158-SWEEP158-03",
+      "GU-LEX-C158-SWEEP158-04",
+      "GU-LEX-C158-SWEEP158-05"
+    ]
+  }
+}

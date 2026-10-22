@@ -15,6 +15,19 @@ again. The public accessor `previous_token() -> Option<&Token>` is
 unchanged; the callback context is consumed before the lexer records the
 next emitted token.
 
+## [Unreleased] — 2026-10-07 — CV04a exact lexical range capture
+
+- Add repository-owned read-only source-bound snapshots and Token/Trivia/EOF
+  descriptors captured by the actual standard match/skip cursor.
+- Preserve ordinary Token values, CVs, locations, ASI flags and other dispatch
+  paths. Capture rejects synthesis/hooks/reuse and zero-width matches explicitly.
+- Provide separate zero-based UTF8/scalar/UTF16 coordinates with ECMAScript line
+  terminators and CRLF handling, plus bounded monotonic detached validation.
+- Admit finite source/piece/descriptor-capacity/work limits before additional
+  ownership; failed capture returns no partial snapshot. No dependencies added.
+- Detached structural validation is not grammar recognition/content authenticity;
+  compiler source inventory, source-root/leaf reuse and output joins follow later.
+
 ## [0.7.0] — 2026-06-29 — `Token` carries an optional correlation-vector id (CLOC27 P1)
 
 `Token` gains a `pub cv: Option<String>` field — the correlation-vector id of

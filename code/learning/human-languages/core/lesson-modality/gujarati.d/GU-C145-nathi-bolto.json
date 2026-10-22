@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C145-nathi-bolto",
+    "language": "gujarati",
+    "chapter": 145,
+    "sequence": 7630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db481d997cc191a8"
+  },
+  "findings": []
+}

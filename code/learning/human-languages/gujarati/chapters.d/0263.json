@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Aunts and in-laws",
+  "label": "ch:gu-aunts-and-in-laws",
+  "canDo": "I can ask and answer questions about aunts, in-laws and nephews.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C263-bhatrijo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can ask and answer questions about aunts, in-laws and nephews.",
+    "assesses": [
+      "GU-LEX-C263-INLAWS263-03",
+      "GU-LEX-C263-INLAWS263-04",
+      "GU-LEX-C263-INLAWS263-05"
+    ]
+  }
+}

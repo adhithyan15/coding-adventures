@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:80f7f20bf4014410",
+  "lessonIds": [
+    "GU-C216-tapvu",
+    "GU-C216-ukalat",
+    "GU-C216-bhej",
+    "GU-C216-tapman",
+    "GU-C216-digri"
+  ],
+  "tex": "gujarati/book/chapters/ch216-the-hot-months.tex"
+}

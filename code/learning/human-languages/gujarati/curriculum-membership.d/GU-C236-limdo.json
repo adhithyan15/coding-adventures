@@ -1,0 +1,11 @@
+{
+  "id": "GU-C236-limdo",
+  "pathSegment": "GU-PATH-236-NEEM236",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-236-NEEM236",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:8a888a53d5cd50e6",
+  "lessonIds": [
+    "GU-C204-samaypatrak",
+    "GU-C204-puchparach",
+    "GU-C204-pletphorm",
+    "GU-C204-upadvu",
+    "GU-C204-chutvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch204.txt",
+  "json": "gujarati/narration/ch204.json",
+  "textHash": "fnv1a64:563b58b0d4bf56a5",
+  "jsonHash": "fnv1a64:59e00eca2c94eb46",
+  "findings": []
+}

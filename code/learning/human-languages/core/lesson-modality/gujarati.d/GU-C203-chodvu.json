@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C203-chodvu",
+    "language": "gujarati",
+    "chapter": 203,
+    "sequence": 11060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:994475adf521539b"
+  },
+  "findings": []
+}
