@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- LANG84 phase 2b: the `cst_contract` note now says that `iir_status`
+  exists in `releases.csv` but is `-` until phase 4c. No code change; the
+  tests pass against the reordered inventory.
+
 - LANG84 phase 4b: `DEFAULT_RELEASE` is the inventory release `5.38.0`
   (new `DEFAULT_RELEASE_ID`), whose pair is grounded in the `v5.38.0` tag.
   `Release` is now a newtype over one checked inventory ID (`id()` returns

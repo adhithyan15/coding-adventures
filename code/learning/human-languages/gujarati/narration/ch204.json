@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 204,
+  "title": "Reading the timetable",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8a888a53d5cd50e6",
+  "lessons": [
+    {
+      "id": "GU-C204-samaypatrak",
+      "sequence": 11080,
+      "title": "સમયપત્રક (samaypatrak) — timetable",
+      "headword": "સમયપત્રક",
+      "romanization": "samaypatrak",
+      "gloss": "timetable",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4741bc777c8c4be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to drop off, then the Gujarati for to see off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સમયપત્રક",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સમયપત્રક — samaypatrak — \"timetable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સ્ટેશન પર નવું સમયપત્રક હતું. — sṭeśan par navũ samaypatrak hatũ — \"There was a new timetable at the station.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Built on સમય, samay, 'time'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સમયપત્રક (samaypatrak) is a learned compound built from Sanskrit samaya, \"time\", and patraka, \"leaf, sheet\", a form of páttra, \"leaf\" (CDIAL 7733)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samaypatrak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samaypatrak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samaypatrak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samaypatrak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeśan par navũ samaypatrak hatũ — There was a new timetable at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeśan par navũ samaypatrak hatũ* — There was a new timetable at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to drop off, then the Gujarati for to see off, then say samaypatrak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to drop off, then the Gujarati for to see off, then say *samaypatrak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સમયપત્રક (samaypatrak) mean? (\"Timetable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C204-puchparach",
+      "sequence": 11090,
+      "title": "પૂછપરછ (pūchparach) — enquiry, enquiries",
+      "headword": "પૂછપરછ",
+      "romanization": "pūchparach",
+      "gloss": "enquiry, enquiries",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a777b80bfbec2d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to see off, then the Gujarati for timetable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પૂછપરછ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પૂછપરછ — pūchparach — \"enquiry, enquiries\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મેં પૂછપરછમાં સમય પૂછ્યો. — mẽ pūchparachmā̃ samay pūchyo — \"I asked the time at the enquiry desk.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પૂછપરછ (pūchparach) is built on pūch, \"asking\", doubled with a rhyming partner. CDIAL lists Gujarati puch-parach, \"questioning\", under Sanskrit pṛcchā, \"asking\" (CDIAL 8354), the noun beside pṛccháti, \"asks\", which gave pūchvũ, \"to ask\" (CDIAL 8352)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūchparach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūchparach*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūchparach, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūchparach*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mẽ pūchparachmā̃ samay pūchyo — I asked the time at the enquiry desk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mẽ pūchparachmā̃ samay pūchyo* — I asked the time at the enquiry desk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to see off, then the Gujarati for timetable, then say pūchparach again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to see off, then the Gujarati for timetable, then say *pūchparach* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પૂછપરછ (pūchparach) mean? (\"Enquiry, enquiries\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C204-pletphorm",
+      "sequence": 11100,
+      "title": "પ્લેટફોર્મ (pleṭphorm) — platform",
+      "headword": "પ્લેટફોર્મ",
+      "romanization": "pleṭphorm",
+      "gloss": "platform",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dccbb09c48ebdab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for timetable, then the Gujarati for enquiry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પ્લેટફોર્મ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્લેટફોર્મ — pleṭphorm — \"platform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ટ્રેન ત્રીજા પ્લેટફોર્મ પર આવી. — ṭren trījā pleṭphorm par āvī — \"The train came in at platform three.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પ્લેટફોર્મ (pleṭphorm) is a loan from English platform."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pleṭphorm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pleṭphorm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pleṭphorm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pleṭphorm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭren trījā pleṭphorm par āvī — The train came in at platform three.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭren trījā pleṭphorm par āvī* — The train came in at platform three.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for timetable, then the Gujarati for enquiry, then say pleṭphorm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for timetable, then the Gujarati for enquiry, then say *pleṭphorm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પ્લેટફોર્મ (pleṭphorm) mean? (\"Platform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C204-upadvu",
+      "sequence": 11110,
+      "title": "ઊપડવું (ūpaḍvũ) — to start off, to depart",
+      "headword": "ઊપડવું",
+      "romanization": "ūpaḍvũ",
+      "gloss": "to start off, to depart",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:142530ca8e0524b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for enquiry, then the Gujarati for platform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઊપડવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊપડવું — ūpaḍvũ — \"to start off, to depart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ટ્રેન સવારે ઊપડી. — ṭren savāre ūpaḍī — \"The train left in the morning.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊપડવું (ūpaḍvũ) is a tadbhava. CDIAL lists it as upaṛvũ, \"to move away, depart, be lifted, rise\", under Sanskrit útpatati, \"flies up, ascends\" (CDIAL 1810)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūpaḍvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūpaḍvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūpaḍvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūpaḍvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭren savāre ūpaḍī — The train left in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭren savāre ūpaḍī* — The train left in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for enquiry, then the Gujarati for platform, then say ūpaḍvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for enquiry, then the Gujarati for platform, then say *ūpaḍvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઊપડવું (ūpaḍvũ) mean? (\"To start off, to depart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C204-chutvu",
+      "sequence": 11120,
+      "title": "છૂટવું (chūṭvũ) — to leave, to get loose",
+      "headword": "છૂટવું",
+      "romanization": "chūṭvũ",
+      "gloss": "to leave, to get loose",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15d624bc04ceb5c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for platform, then the Gujarati for to start off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છૂટવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છૂટવું — chūṭvũ — \"to leave, to get loose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારી ટ્રેન છૂટી ગઈ. — mārī ṭren chūṭī gaī — \"My train left without me.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છૂટવું (chūṭvũ) is a tadbhava. CDIAL lists it, glossed \"to get loose\", under kṣuṭyatē, \"is released\", a reconstructed form (CDIAL 3707)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūṭvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūṭvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūṭvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūṭvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārī ṭren chūṭī gaī — My train left without me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārī ṭren chūṭī gaī* — My train left without me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for platform, then the Gujarati for to start off, then say chūṭvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for platform, then the Gujarati for to start off, then say *chūṭvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does છૂટવું (chūṭvũ) mean? (\"To leave, to get loose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

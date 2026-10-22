@@ -1,0 +1,11 @@
+{
+  "id": "GU-C146-ask-practice",
+  "pathSegment": "GU-PATH-146-ASK146",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-146-ASK146",
+      "order": 5
+    }
+  ]
+}

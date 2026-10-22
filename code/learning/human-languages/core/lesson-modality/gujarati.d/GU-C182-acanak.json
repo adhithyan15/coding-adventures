@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C182-acanak",
+    "language": "gujarati",
+    "chapter": 182,
+    "sequence": 9910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6dc48aa36a6ff13f"
+  },
+  "findings": []
+}

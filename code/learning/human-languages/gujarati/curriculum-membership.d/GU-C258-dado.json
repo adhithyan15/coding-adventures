@@ -1,0 +1,11 @@
+{
+  "id": "GU-C258-dado",
+  "pathSegment": "GU-PATH-258-CRICKET258",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-258-CRICKET258",
+      "order": 1
+    }
+  ]
+}

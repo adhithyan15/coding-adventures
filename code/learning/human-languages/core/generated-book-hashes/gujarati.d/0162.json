@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:7920a53205b12201",
+  "lessonIds": [
+    "GU-C162-gharkam",
+    "GU-C162-ghantadi",
+    "GU-C162-sametvu",
+    "GU-C162-matlu",
+    "GU-C162-khuno"
+  ],
+  "tex": "gujarati/book/chapters/ch162-housework-and-the-doorbell.tex"
+}

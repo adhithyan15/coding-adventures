@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C152-maramat",
+    "language": "gujarati",
+    "chapter": 152,
+    "sequence": 8020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a6a5b0790db5dab"
+  },
+  "findings": []
+}

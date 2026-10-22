@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Lessons and school bags",
+  "label": "ch:gu-lessons-and-school-bags",
+  "canDo": "I can talk about lessons, schoolbooks and who is present in class.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C243-hajar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can talk about lessons, schoolbooks and who is present in class.",
+    "assesses": [
+      "GU-LEX-C243-SCHOOL243-03",
+      "GU-LEX-C243-SCHOOL243-04",
+      "GU-LEX-C243-SCHOOL243-05"
+    ]
+  }
+}

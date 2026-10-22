@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-218-SUN218",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when the sun will rise and set.",
+  "prerequisites": []
+}

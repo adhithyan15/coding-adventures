@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-208-HIGHWAY208",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe the road we drove along.",
+  "prerequisites": []
+}

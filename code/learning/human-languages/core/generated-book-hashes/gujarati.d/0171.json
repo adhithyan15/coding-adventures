@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:3af119418da98bad",
+  "lessonIds": [
+    "GU-C171-svad",
+    "GU-C171-cakhvu",
+    "GU-C171-kadvu",
+    "GU-C171-kharu",
+    "GU-C171-galyu"
+  ],
+  "tex": "gujarati/book/chapters/ch171-bitter-salty-and-sweet.tex"
+}

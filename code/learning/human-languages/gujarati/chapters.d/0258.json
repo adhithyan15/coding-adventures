@@ -1,0 +1,19 @@
+{
+  "chapter": 258,
+  "title": "Bat and ball",
+  "label": "ch:gu-bat-and-ball",
+  "canDo": "I can say who hit the ball, how it bounced and what we played.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C258-uchalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 258: I can say who hit the ball, how it bounced and what we played.",
+    "assesses": [
+      "GU-LEX-C258-CRICKET258-03",
+      "GU-LEX-C258-CRICKET258-04",
+      "GU-LEX-C258-CRICKET258-05"
+    ]
+  }
+}

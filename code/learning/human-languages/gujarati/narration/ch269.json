@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 269,
+  "title": "Caring for each other",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4e10e8eae67190fa",
+  "lessons": [
+    {
+      "id": "GU-C269-sambhalvu",
+      "sequence": 14540,
+      "title": "સંભાળવું (sambhāḷvũ) — to look after, to take care of",
+      "headword": "સંભાળવું",
+      "romanization": "sambhāḷvũ",
+      "gloss": "to look after, to take care of",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46cb14d97031ea4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to persuade, then the Gujarati for advice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સંભાળવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંભાળવું — sambhāḷvũ — \"to look after, to take care of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમે તમારી દાદીને સંભાળો છો? — śũ tame tamārī dādīne sambhāḷo cho? — \"Do you look after your grandmother?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Not the taught સાંભળવું, sā̃bhaḷvũ, \"to hear\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સંભાળવું (sambhāḷvũ) is a tadbhava. CDIAL lists it, glossed \"to guard, take care of\", under Sanskrit sáṁbharati, \"brings together\", and its causative saṁbhārayati, \"maintains\" (CDIAL 12961)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāḷvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāḷvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sambhāḷvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sambhāḷvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tame tamārī dādīne sambhāḷo cho? — Do you look after your grandmother?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tame tamārī dādīne sambhāḷo cho?* — Do you look after your grandmother?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to persuade, then the Gujarati for advice, then say sambhāḷvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to persuade, then the Gujarati for advice, then say *sambhāḷvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સંભાળવું (sambhāḷvũ) mean? (\"To look after, to take care of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C269-uchervu",
+      "sequence": 14550,
+      "title": "ઉછેરવું (uchervũ) — to bring up, to raise",
+      "headword": "ઉછેરવું",
+      "romanization": "uchervũ",
+      "gloss": "to bring up, to raise",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a2d42d5ebf5aeda4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for advice, then the Gujarati for to look after."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉછેરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉછેરવું — uchervũ — \"to bring up, to raise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમારી દાદીએ તમને ઉછેર્યા? — śũ tamārī dādīe tamne ucheryā? — \"Did your grandmother bring you up?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉછેરવું (uchervũ) is inherited, the transitive partner of ucharvũ, \"to be brought up\". CDIAL derives ucharvũ from ut-śrīyatē, Sanskrit úcchrīyatē, \"is raised\" (CDIAL 1864)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchervũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchervũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchervũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchervũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tamārī dādīe tamne ucheryā? — Did your grandmother bring you up?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tamārī dādīe tamne ucheryā?* — Did your grandmother bring you up?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for advice, then the Gujarati for to look after, then say uchervũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for advice, then the Gujarati for to look after, then say *uchervũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉછેરવું (uchervũ) mean? (\"To bring up, to raise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C269-vakhanvu",
+      "sequence": 14560,
+      "title": "વખાણવું (vakhāṇvũ) — to praise",
+      "headword": "વખાણવું",
+      "romanization": "vakhāṇvũ",
+      "gloss": "to praise",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d1ea5d119adff652",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to look after, then the Gujarati for to bring up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વખાણવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વખાણવું — vakhāṇvũ — \"to praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સાહેબ ક્યારેય કોઈને નથી વખાણતા. — sāheb kyārey koīne nathī vakhāṇtā — \"The boss never praises anyone.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વખાણવું (vakhāṇvũ) is a tadbhava. CDIAL derives it from Sanskrit vyākhyā́na, \"comment, narration\", by way of the noun vakhāṇ, \"praise\" (CDIAL 12188)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vakhāṇvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vakhāṇvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vakhāṇvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vakhāṇvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāheb kyārey koīne nathī vakhāṇtā — The boss never praises anyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāheb kyārey koīne nathī vakhāṇtā* — The boss never praises anyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to look after, then the Gujarati for to bring up, then say vakhāṇvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to look after, then the Gujarati for to bring up, then say *vakhāṇvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વખાણવું (vakhāṇvũ) mean? (\"To praise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C269-yad-avvi",
+      "sequence": 14570,
+      "title": "યાદ આવવી (yād āvvī) — to remember fondly, to miss",
+      "headword": "યાદ આવવી",
+      "romanization": "yād āvvī",
+      "gloss": "to remember fondly, to miss",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbba8645746e15b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to bring up, then the Gujarati for to praise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: યાદ આવવી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "યાદ આવવી — yād āvvī — \"to remember fondly, to miss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમને ઘરની યાદ આવે છે? — śũ tamne gharnī yād āve che? — \"Do you miss home?\""
+            },
+            {
+              "kind": "speech",
+              "text": "The one who misses takes -ને: મને તારી યાદ આવે છે, mane tārī yād āve che, \"I miss you\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "યાદ આવવી (yād āvvī), for a memory to come, is built from yād, \"memory\", a loan usually traced to Persian yād, and the verb āvvī, \"to come\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yād āvvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yād āvvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yād āvvī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yād āvvī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tamne gharnī yād āve che? — Do you miss home?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tamne gharnī yād āve che?* — Do you miss home?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to bring up, then the Gujarati for to praise, then say yād āvvī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to bring up, then the Gujarati for to praise, then say *yād āvvī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does યાદ આવવી (yād āvvī) mean? (\"To remember fondly, to miss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C269-adar",
+      "sequence": 14580,
+      "title": "આદર (ādar) — respect",
+      "headword": "આદર",
+      "romanization": "ādar",
+      "gloss": "respect",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18d6bf03d874509a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to praise, then the Gujarati for to remember fondly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: આદર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આદર — ādar — \"respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું તમે તમારા ગુરુનો આદર કરો છો? — śũ tame tamārā guruno ādar karo cho? — \"Do you respect your teacher?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આદર (ādar) is Sanskrit ādara, \"respect\", taken over whole as a tatsama (CDIAL 1142); EtymDB also lists it as borrowed from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ādar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ādar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ tame tamārā guruno ādar karo cho? — Do you respect your teacher?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ tame tamārā guruno ādar karo cho?* — Do you respect your teacher?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to praise, then the Gujarati for to remember fondly, then say ādar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to praise, then the Gujarati for to remember fondly, then say *ādar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does આદર (ādar) mean? (\"Respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C183-routine-review",
+    "language": "punjabi",
+    "chapter": 183,
+    "sequence": 9710,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:685f942ca4d3aea1"
+  },
+  "findings": []
+}

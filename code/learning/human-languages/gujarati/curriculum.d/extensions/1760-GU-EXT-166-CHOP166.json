@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-166-CHOP166",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe chopping, peeling and grinding food.",
+  "prerequisites": []
+}

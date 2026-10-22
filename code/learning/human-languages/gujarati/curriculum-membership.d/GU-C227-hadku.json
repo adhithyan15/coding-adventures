@@ -1,0 +1,11 @@
+{
+  "id": "GU-C227-hadku",
+  "pathSegment": "GU-PATH-227-INJURY227",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-227-INJURY227",
+      "order": 2
+    }
+  ]
+}

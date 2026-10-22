@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "Kites and fairs",
+  "label": "ch:gu-kites-and-fairs",
+  "canDo": "I can say how we flew kites and what we did at the fair.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C261-phatakdo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can say how we flew kites and what we did at the fair.",
+    "assesses": [
+      "GU-LEX-C261-KITES261-03",
+      "GU-LEX-C261-KITES261-04",
+      "GU-LEX-C261-KITES261-05"
+    ]
+  }
+}

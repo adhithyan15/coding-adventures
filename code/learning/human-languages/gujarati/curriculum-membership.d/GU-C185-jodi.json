@@ -1,0 +1,11 @@
+{
+  "id": "GU-C185-jodi",
+  "pathSegment": "GU-PATH-185-HAGGLE185",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-185-HAGGLE185",
+      "order": 3
+    }
+  ]
+}

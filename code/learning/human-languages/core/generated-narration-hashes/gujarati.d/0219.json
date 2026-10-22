@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:40761f14cbb3c488",
+  "lessonIds": [
+    "GU-C219-gajvu",
+    "GU-C219-camakvu",
+    "GU-C219-chavavu",
+    "GU-C219-kara",
+    "GU-C219-mavthu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch219.txt",
+  "json": "gujarati/narration/ch219.json",
+  "textHash": "fnv1a64:b5c0d711b407c36c",
+  "jsonHash": "fnv1a64:e719d39827816d4d",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:fa94bb44d96d214c",
+  "lessonIds": [
+    "GU-C160-pathari",
+    "GU-C160-patharvu",
+    "GU-C160-hincko",
+    "GU-C160-batti",
+    "GU-C160-holavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch160-bedding-swing-and-light.tex"
+}

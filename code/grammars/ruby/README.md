@@ -160,4 +160,13 @@ parse the subset, but in those releases `puts` is only `IO#puts` and
 `Fixnum#/` truncates, so the programs do not run as written (see
 `code/packages/rust/ruby-iir-compiler/src/profiles.rs`).
 
-`python3 code/scripts/release_inventory.py check` validates this file.
+`python3 code/scripts/release_inventory.py check --matrix` validates this
+file and `subsets.csv`.
+
+## Subsets (`subsets.csv`)
+
+`subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
+`iir_status` and `backend_status` may name. It has one entry, `rb-int-puts`:
+LANG80's integer `puts` subset (phase 5 brings it to stage I and B on the R0
+pairs), defined in LANG80. Its corpus goes in `corpus/rb-int-puts/` when a
+release first claims stage I. No row names it yet.

@@ -1,0 +1,32 @@
+{
+  "lesson": {
+    "id": "GU-W47-dda",
+    "language": "gujarati",
+    "chapter": 147,
+    "sequence": 7780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:97cb1df88564f721",
+    "detachableSegments": [
+      "Script — meet one form",
+      "Writing — notice and trace",
+      "Writing — copy with the model",
+      "Writing — recall after hiding"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

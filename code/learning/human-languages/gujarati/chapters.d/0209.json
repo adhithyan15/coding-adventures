@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "A breakdown on the road",
+  "label": "ch:gu-a-breakdown-on-the-road",
+  "canDo": "I can say what went wrong on the road and what we did.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C209-sarakvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can say what went wrong on the road and what we did.",
+    "assesses": [
+      "GU-LEX-C209-BREAKDOWN209-03",
+      "GU-LEX-C209-BREAKDOWN209-04",
+      "GU-LEX-C209-BREAKDOWN209-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C229-angutho",
+    "language": "gujarati",
+    "chapter": 229,
+    "sequence": 12430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a0e088fef2e9589"
+  },
+  "findings": []
+}

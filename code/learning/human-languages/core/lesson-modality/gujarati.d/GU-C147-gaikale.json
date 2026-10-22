@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C147-gaikale",
+    "language": "gujarati",
+    "chapter": 147,
+    "sequence": 7740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43936db64376b63b"
+  },
+  "findings": []
+}

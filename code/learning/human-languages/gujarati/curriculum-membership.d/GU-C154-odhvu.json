@@ -1,0 +1,11 @@
+{
+  "id": "GU-C154-odhvu",
+  "pathSegment": "GU-PATH-154-CLOTH154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-154-CLOTH154",
+      "order": 4
+    }
+  ]
+}

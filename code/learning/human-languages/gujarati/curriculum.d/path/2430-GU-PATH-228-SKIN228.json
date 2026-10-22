@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-228-SKIN228",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "GU-EXT-228-SKIN228"
+  ],
+  "after": []
+}

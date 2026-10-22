@@ -1,0 +1,11 @@
+{
+  "id": "GU-C165-halavvu",
+  "pathSegment": "GU-PATH-165-STIR165",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-165-STIR165",
+      "order": 2
+    }
+  ]
+}

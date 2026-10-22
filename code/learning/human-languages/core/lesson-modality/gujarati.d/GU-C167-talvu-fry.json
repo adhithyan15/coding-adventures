@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C167-talvu-fry",
+    "language": "gujarati",
+    "chapter": 167,
+    "sequence": 9160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58f6aece95026dad"
+  },
+  "findings": []
+}

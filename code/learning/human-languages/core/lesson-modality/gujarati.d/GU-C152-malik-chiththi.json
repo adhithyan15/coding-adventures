@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C152-malik-chiththi",
+    "language": "gujarati",
+    "chapter": 152,
+    "sequence": 8040,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:894c1cc109b12786"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C222-ot",
+    "language": "gujarati",
+    "chapter": 222,
+    "sequence": 12100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fc13fe8abd63eeb"
+  },
+  "findings": []
+}

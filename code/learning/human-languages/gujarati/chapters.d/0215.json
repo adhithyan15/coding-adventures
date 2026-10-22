@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "A cold foggy morning",
+  "label": "ch:gu-a-cold-foggy-morning",
+  "canDo": "I can say that it will freeze and that the morning will be foggy.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C215-huphalu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can say that it will freeze and that the morning will be foggy.",
+    "assesses": [
+      "GU-LEX-C215-FOG215-03",
+      "GU-LEX-C215-FOG215-04",
+      "GU-LEX-C215-FOG215-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:635386f75a9167aa",
+  "lessonIds": [
+    "GU-C237-kagdo",
+    "GU-C237-ghuvad",
+    "GU-C237-pakh",
+    "GU-C237-phaphadvu",
+    "GU-C237-udvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch237.txt",
+  "json": "gujarati/narration/ch237.json",
+  "textHash": "fnv1a64:d6d3baf8dae3a970",
+  "jsonHash": "fnv1a64:794fb2683dc9d682",
+  "findings": []
+}

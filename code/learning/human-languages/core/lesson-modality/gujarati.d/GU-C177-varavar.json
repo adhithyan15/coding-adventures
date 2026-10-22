@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C177-varavar",
+    "language": "gujarati",
+    "chapter": 177,
+    "sequence": 9640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae4bd920418f9d79"
+  },
+  "findings": []
+}

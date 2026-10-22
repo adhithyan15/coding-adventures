@@ -1,0 +1,11 @@
+{
+  "id": "GU-C183-dukandar",
+  "pathSegment": "GU-PATH-183-GROCER183",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-183-GROCER183",
+      "order": 1
+    }
+  ]
+}

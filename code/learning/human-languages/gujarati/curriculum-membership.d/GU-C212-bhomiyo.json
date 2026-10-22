@@ -1,0 +1,11 @@
+{
+  "id": "GU-C212-bhomiyo",
+  "pathSegment": "GU-PATH-212-REST212",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-212-REST212",
+      "order": 1
+    }
+  ]
+}

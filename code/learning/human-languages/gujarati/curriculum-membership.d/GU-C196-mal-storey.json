@@ -1,0 +1,11 @@
+{
+  "id": "GU-C196-mal-storey",
+  "pathSegment": "GU-PATH-196-STOREY196",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-196-STOREY196",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:5c790b90cc0912af",
+  "lessonIds": [
+    "GU-C223-tabiyat",
+    "GU-C223-sharir",
+    "GU-C223-dukhvu",
+    "GU-C223-shardi",
+    "GU-C223-chikvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch223.txt",
+  "json": "gujarati/narration/ch223.json",
+  "textHash": "fnv1a64:d3fde0ad2e1525d4",
+  "jsonHash": "fnv1a64:c141830bbd000be8",
+  "findings": []
+}

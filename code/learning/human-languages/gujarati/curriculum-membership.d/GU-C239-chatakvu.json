@@ -1,0 +1,11 @@
+{
+  "id": "GU-C239-chatakvu",
+  "pathSegment": "GU-PATH-239-POND239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-239-POND239",
+      "order": 4
+    }
+  ]
+}

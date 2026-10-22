@@ -187,6 +187,21 @@ impl Asn1Decoder {
         self.constructed(element, TagClass::Universal, SET_TAG)
     }
 
+    /// Open a schema-selected context-specific IMPLICIT constructed value as
+    /// a bounded child cursor.
+    ///
+    /// This validates only the exact class, constructed bit, and caller-owned
+    /// tag number. The caller's schema remains responsible for the child
+    /// sequence and cardinality. Reads share this decoder's depth and total
+    /// element budget.
+    pub fn implicit_constructed<'a>(
+        &self,
+        element: Asn1Element<'a>,
+        tag_number: u32,
+    ) -> Result<Asn1Cursor<'a>, Asn1Error> {
+        self.constructed(element, TagClass::ContextSpecific, tag_number)
+    }
+
     /// Decode the single child of an exact context-specific explicit wrapper.
     pub fn explicit<'a>(
         &mut self,

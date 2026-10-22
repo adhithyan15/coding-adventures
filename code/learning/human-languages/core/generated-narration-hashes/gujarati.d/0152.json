@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:b4c487e65c93c2ba",
+  "lessonIds": [
+    "GU-C152-chiththi",
+    "GU-C152-maramat",
+    "GU-C152-bhadun",
+    "GU-C152-malik-chiththi",
+    "GU-R152-first-pass-future-notices",
+    "GU-R152-second-pass-core"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "gujarati/narration/ch152.txt",
+  "json": "gujarati/narration/ch152.json",
+  "textHash": "fnv1a64:36b2e8de90ca30de",
+  "jsonHash": "fnv1a64:f58e772383ea131f",
+  "findings": []
+}

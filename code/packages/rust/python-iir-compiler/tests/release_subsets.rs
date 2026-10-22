@@ -223,7 +223,14 @@ fn claiming_releases_form_one_iir_identity_class() {
         let dumps: Vec<String> = releases
             .iter()
             .filter(|r| !case.overrides.contains_key(r.as_str()))
-            .map(|r| format!("{:?}", compile_source_at(&case.source, Some(r), "id", &budgets).unwrap()))
+            .map(|r| {
+                // `release` names the release on purpose (LANG84 phase 7b);
+                // check it, then set it aside before comparing.
+                let mut module = compile_source_at(&case.source, Some(r), "id", &budgets).unwrap();
+                assert_eq!(module.release.as_deref(), Some(r.as_str()), "{}", case.name);
+                module.release = None;
+                format!("{module:?}")
+            })
             .collect();
         assert!(dumps.len() >= 4, "{}", case.name);
         assert!(dumps.windows(2).all(|w| w[0] == w[1]), "{}: IIR differs between {releases:?}", case.name);

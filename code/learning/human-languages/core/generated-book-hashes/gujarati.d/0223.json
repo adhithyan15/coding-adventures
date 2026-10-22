@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:9372026223ee689e",
+  "lessonIds": [
+    "GU-C223-tabiyat",
+    "GU-C223-sharir",
+    "GU-C223-dukhvu",
+    "GU-C223-shardi",
+    "GU-C223-chikvu"
+  ],
+  "tex": "gujarati/book/chapters/ch223-how-are-you-feeling.tex"
+}

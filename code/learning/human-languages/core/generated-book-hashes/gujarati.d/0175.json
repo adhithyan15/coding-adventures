@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:3579c41cc33f7b2c",
+  "lessonIds": [
+    "GU-C175-punam",
+    "GU-C175-amas",
+    "GU-C175-ant",
+    "GU-C175-addhu",
+    "GU-C175-satat"
+  ],
+  "tex": "gujarati/book/chapters/ch175-full-moon-and-new-moon.tex"
+}

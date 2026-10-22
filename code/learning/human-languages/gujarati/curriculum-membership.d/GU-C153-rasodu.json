@@ -1,0 +1,11 @@
+{
+  "id": "GU-C153-rasodu",
+  "pathSegment": "GU-PATH-153-ROOMS153",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-153-ROOMS153",
+      "order": 1
+    }
+  ]
+}

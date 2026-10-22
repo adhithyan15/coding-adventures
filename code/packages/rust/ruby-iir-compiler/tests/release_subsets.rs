@@ -170,7 +170,9 @@ fn rb_int_puts_corpus_holds_on_every_claiming_release() {
 }
 
 /// Releases that share a grammar class and a profile are indistinguishable
-/// to every backend: their IIR is identical for every case.
+/// to every backend: their IIR is identical for every case. The one field
+/// that differs is `IIRModule::release`, which names the release on purpose
+/// (LANG84 phase 5b); it is checked and then set aside before comparing.
 #[test]
 fn claiming_releases_form_one_iir_identity_class() {
     let budgets = FrontendBudgets::default();
@@ -178,7 +180,12 @@ fn claiming_releases_form_one_iir_identity_class() {
     for case in corpus().iter().filter(|c| matches!(c.outcome, Outcome::Runs { .. })) {
         let dumps: Vec<String> = releases
             .iter()
-            .map(|r| format!("{:?}", compile_source_at(&case.source, Some(r), "id", &budgets).unwrap()))
+            .map(|r| {
+                let mut module = compile_source_at(&case.source, Some(r), "id", &budgets).unwrap();
+                assert_eq!(module.release.as_deref(), Some(r.as_str()), "{}", case.name);
+                module.release = None;
+                format!("{module:?}")
+            })
             .collect();
         assert!(dumps.windows(2).all(|w| w[0] == w[1]), "{}: IIR differs between {releases:?}", case.name);
     }

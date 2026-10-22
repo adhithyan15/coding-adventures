@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C146-shun-polar",
+    "language": "gujarati",
+    "chapter": 146,
+    "sequence": 7670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9ef8909a6b8ecdd"
+  },
+  "findings": []
+}

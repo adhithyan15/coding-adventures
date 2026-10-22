@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C266-lagni",
+    "language": "gujarati",
+    "chapter": 266,
+    "sequence": 14380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce874202561b3d7b"
+  },
+  "findings": []
+}

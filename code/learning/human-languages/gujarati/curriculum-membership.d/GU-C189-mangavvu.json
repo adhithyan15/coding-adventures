@@ -1,0 +1,11 @@
+{
+  "id": "GU-C189-mangavvu",
+  "pathSegment": "GU-PATH-189-ORDER189",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-189-ORDER189",
+      "order": 1
+    }
+  ]
+}

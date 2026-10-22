@@ -1,0 +1,11 @@
+{
+  "id": "GU-C206-pravasi",
+  "pathSegment": "GU-PATH-206-ARRIVE206",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-206-ARRIVE206",
+      "order": 2
+    }
+  ]
+}

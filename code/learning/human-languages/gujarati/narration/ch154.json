@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 154,
+  "title": "Saris, scarves and cloth",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3eb2e2bd0966936a",
+  "lessons": [
+    {
+      "id": "GU-C154-kapdu",
+      "sequence": 8450,
+      "title": "કપડું (kapḍũ) — cloth, garment",
+      "headword": "કપડું",
+      "romanization": "kapḍũ",
+      "gloss": "cloth, garment",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7de10d8c7ffbfe42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for veranda, then the Gujarati for stairs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કપડું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કપડું — kapḍũ — \"cloth, garment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ કપડું નરમ છે. — ā kapḍũ naram che — \"This cloth is soft.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The plural કપડાં, kapḍā̃, means clothes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કપડું (kapḍũ) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from karpaṭa, \"patched garment, rag\"; CDIAL glosses the Gujarati word \"any garment\" and asks whether it came by way of Hindi (CDIAL 2871)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapḍũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapḍũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapḍũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapḍũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā kapḍũ naram che — This cloth is soft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā kapḍũ naram che* — This cloth is soft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for veranda, then the Gujarati for stairs, then say kapḍũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for veranda, then the Gujarati for stairs, then say *kapḍũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does કપડું (kapḍũ) mean? (\"Cloth, garment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C154-sadi",
+      "sequence": 8460,
+      "title": "સાડી (sāḍī) — sari",
+      "headword": "સાડી",
+      "romanization": "sāḍī",
+      "gloss": "sari",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:282b78b4ddedf007",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for stairs, then the Gujarati for cloth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: સાડી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાડી — sāḍī — \"sari\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મારી બહેન સાડી પહેરે છે. — mārī bahen sāḍī pahere che — \"My sister wears a sari.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "સાડી (sāḍī) is a tadbhava. It comes from Sanskrit śāṭa, śāṭī, \"strip of cloth\", and CDIAL glosses the Gujarati word \"sari\" (CDIAL 12381)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mārī bahen sāḍī pahere che — My sister wears a sari.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mārī bahen sāḍī pahere che* — My sister wears a sari.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for stairs, then the Gujarati for cloth, then say sāḍī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for stairs, then the Gujarati for cloth, then say *sāḍī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does સાડી (sāḍī) mean? (\"Sari\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C154-dupatto",
+      "sequence": 8470,
+      "title": "દુપટ્ટો (dupaṭṭo) — scarf, stole",
+      "headword": "દુપટ્ટો",
+      "romanization": "dupaṭṭo",
+      "gloss": "scarf, stole",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b27a8ad4b00f9767",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for cloth, then the Gujarati for sari."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: દુપટ્ટો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દુપટ્ટો — dupaṭṭo — \"scarf, stole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેનો દુપટ્ટો લાલ છે. — teno dupaṭṭo lāl che — \"Her scarf is red.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "દુપટ્ટો (dupaṭṭo) is built from du-, \"two\", and paṭṭo, \"strip of cloth\". Under Sanskrit paṭṭa, \"cloth\", which it thinks probably non-Aryan, CDIAL lists the kindred Gujarati pāṭ, \"strip of cloth\", and pāṭo, \"bandage\", but no form of the compound itself (CDIAL 7700)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dupaṭṭo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dupaṭṭo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dupaṭṭo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dupaṭṭo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teno dupaṭṭo lāl che — Her scarf is red.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teno dupaṭṭo lāl che* — Her scarf is red.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for cloth, then the Gujarati for sari, then say dupaṭṭo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for cloth, then the Gujarati for sari, then say *dupaṭṭo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does દુપટ્ટો (dupaṭṭo) mean? (\"Scarf, stole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C154-utarvu",
+      "sequence": 8480,
+      "title": "ઉતારવું (utārvũ) — to take off, to take down",
+      "headword": "ઉતારવું",
+      "romanization": "utārvũ",
+      "gloss": "to take off, to take down",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19164a5bf332d1da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for sari, then the Gujarati for scarf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉતારવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉતારવું — utārvũ — \"to take off, to take down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે ઘરે બૂટ ઉતારે છે. — te ghare būṭ utāre che — \"He takes off his shoes at home.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉતારવું (utārvũ) is a tadbhava. It comes from Sanskrit uttārayati, \"makes come out, makes descend\", and CDIAL glosses the Gujarati verb \"to set down, bring down\" (CDIAL 1770)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utārvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utārvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utārvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utārvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te ghare būṭ utāre che — He takes off his shoes at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te ghare būṭ utāre che* — He takes off his shoes at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for sari, then the Gujarati for scarf, then say utārvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for sari, then the Gujarati for scarf, then say *utārvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઉતારવું (utārvũ) mean? (\"To take off, to take down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C154-odhvu",
+      "sequence": 8490,
+      "title": "ઓઢવું (oḍhvũ) — to wrap oneself in, to cover oneself",
+      "headword": "ઓઢવું",
+      "romanization": "oḍhvũ",
+      "gloss": "to wrap oneself in, to cover oneself",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0603d07cbbf1f05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for scarf, then the Gujarati for to take off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઓઢવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઓઢવું — oḍhvũ — \"to wrap oneself in, to cover oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શિયાળામાં હું ધાબળો ઓઢું છું. — śiyāḷāmā̃ hũ dhābaḷo oḍhũ chũ — \"In winter I wrap myself in a blanket.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઓઢવું (oḍhvũ) is inherited through Prakrit. It comes from ōḍḍh, \"put on, wear, cover\", a reconstructed form that CDIAL takes to be borrowed from Dravidian, beside Tamil uṭu-, \"to dress\", though it notes that Burrow derives the Tamil verb otherwise (CDIAL 2547)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḍhvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḍhvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḍhvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḍhvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śiyāḷāmā̃ hũ dhābaḷo oḍhũ chũ — In winter I wrap myself in a blanket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śiyāḷāmā̃ hũ dhābaḷo oḍhũ chũ* — In winter I wrap myself in a blanket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for scarf, then the Gujarati for to take off, then say oḍhvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for scarf, then the Gujarati for to take off, then say *oḍhvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઓઢવું (oḍhvũ) mean? (\"To wrap oneself in, to cover oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "Earth air and sea",
+  "label": "ch:gu-earth-air-and-sea",
+  "canDo": "I can say what the earth and the sea will do.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C222-ot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 222: I can say what the earth and the sea will do.",
+    "assesses": [
+      "GU-LEX-C222-EARTH222-03",
+      "GU-LEX-C222-EARTH222-04",
+      "GU-LEX-C222-EARTH222-05"
+    ]
+  }
+}

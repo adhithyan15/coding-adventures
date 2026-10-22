@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:d9b84e8ce497eb4a",
+  "lessonIds": [
+    "GU-C249-mobail",
+    "GU-C249-nambar",
+    "GU-C249-sandesho",
+    "GU-C249-avaj",
+    "GU-C249-melavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch249.txt",
+  "json": "gujarati/narration/ch249.json",
+  "textHash": "fnv1a64:569e5f15e3234a1b",
+  "jsonHash": "fnv1a64:47411edad3cad4d1",
+  "findings": []
+}
