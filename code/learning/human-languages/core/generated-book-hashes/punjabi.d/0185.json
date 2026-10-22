@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:fca44634d07fb824",
+  "lessonIds": [
+    "PA-C185-possessive-return",
+    "PA-C185-meri",
+    "PA-C185-mere",
+    "PA-C185-tuhadi",
+    "PA-C185-apni",
+    "PA-C185-apne",
+    "PA-C185-sada",
+    "PA-C185-sade",
+    "PA-C185-possessive-review",
+    "PA-C185-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch185-whose-book-whose-home.tex"
+}

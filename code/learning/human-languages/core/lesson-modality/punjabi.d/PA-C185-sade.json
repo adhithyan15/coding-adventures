@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C185-sade",
+    "language": "punjabi",
+    "chapter": 185,
+    "sequence": 9880,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:938a95b34db6a5e8"
+  },
+  "findings": []
+}
