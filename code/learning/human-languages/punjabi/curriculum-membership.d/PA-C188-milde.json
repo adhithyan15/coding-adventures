@@ -1,0 +1,11 @@
+{
+  "id": "PA-C188-milde",
+  "pathSegment": "PA-PATH-188-A2-MEETING-FAMILY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-188-A2-MEETING-FAMILY",
+      "order": 3
+    }
+  ]
+}
