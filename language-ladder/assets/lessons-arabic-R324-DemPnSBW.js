@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R324-review-317-324
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18630
+chapter: 324
+type: review
+headword: (dialogue)
+gloss: a review of chapters 317-324
+concept_tag: REVIEW
+prerequisites: [AR-C317-qabada, AR-C317-ihtajaza, AR-C317-awqafa, AR-C317-dawriyya, AR-C317-hajiz, AR-C318-hadara, AR-C318-athar, AR-C318-atlal, AR-C318-mabad, AR-C318-haram, AR-C319-aza, AR-C319-azza, AR-C319-ratha, AR-C319-naa, AR-C319-hidad, AR-C320-ilam, AR-C320-wakala, AR-C320-masdar, AR-C320-afada, AR-C320-awdaha, AR-C321-sariq, AR-C321-nashshal, AR-C321-isaba, AR-C321-salaba, AR-C321-nahaba, AR-C322-qala, AR-C322-hisn, AR-C322-sur, AR-C322-hasara, AR-C322-dafaa-defend, AR-C323-nashaa, AR-C323-taraara, AR-C323-masqat-ras, AR-C323-siba, AR-C323-kuhula, AR-C324-hadhdhara, AR-C324-haddada-threaten, AR-C324-indhar, AR-C324-saffara, AR-C324-fawda]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C317-TAWQIF317-01, AR-LEX-C317-TAWQIF317-02, AR-LEX-C317-TAWQIF317-03, AR-LEX-C317-TAWQIF317-04, AR-LEX-C317-TAWQIF317-05, AR-LEX-C318-HADARA318-01, AR-LEX-C318-HADARA318-02, AR-LEX-C318-HADARA318-03, AR-LEX-C318-HADARA318-04, AR-LEX-C318-HADARA318-05, AR-LEX-C319-AZA319-01, AR-LEX-C319-AZA319-02, AR-LEX-C319-AZA319-03, AR-LEX-C319-AZA319-04, AR-LEX-C319-AZA319-05, AR-LEX-C320-ILAM320-01, AR-LEX-C320-ILAM320-02, AR-LEX-C320-ILAM320-03, AR-LEX-C320-ILAM320-04, AR-LEX-C320-ILAM320-05, AR-LEX-C321-SARIQ321-01, AR-LEX-C321-SARIQ321-02, AR-LEX-C321-SARIQ321-03, AR-LEX-C321-SARIQ321-04, AR-LEX-C321-SARIQ321-05, AR-LEX-C322-QALA322-01, AR-LEX-C322-QALA322-02, AR-LEX-C322-QALA322-03, AR-LEX-C322-QALA322-04, AR-LEX-C322-QALA322-05, AR-LEX-C323-NASHAA323-01, AR-LEX-C323-NASHAA323-02, AR-LEX-C323-NASHAA323-03, AR-LEX-C323-NASHAA323-04, AR-LEX-C323-NASHAA323-05, AR-LEX-C324-KHATAR324-01, AR-LEX-C324-KHATAR324-02, AR-LEX-C324-KHATAR324-03, AR-LEX-C324-KHATAR324-04, AR-LEX-C324-KHATAR324-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C317-TAWQIF317-01, AR-LEX-C317-TAWQIF317-02, AR-LEX-C317-TAWQIF317-03, AR-LEX-C317-TAWQIF317-04, AR-LEX-C317-TAWQIF317-05, AR-LEX-C318-HADARA318-01, AR-LEX-C318-HADARA318-02, AR-LEX-C318-HADARA318-03, AR-LEX-C318-HADARA318-04, AR-LEX-C318-HADARA318-05, AR-LEX-C319-AZA319-01, AR-LEX-C319-AZA319-02, AR-LEX-C319-AZA319-03, AR-LEX-C319-AZA319-04, AR-LEX-C319-AZA319-05, AR-LEX-C320-ILAM320-01, AR-LEX-C320-ILAM320-02, AR-LEX-C320-ILAM320-03, AR-LEX-C320-ILAM320-04, AR-LEX-C320-ILAM320-05, AR-LEX-C321-SARIQ321-01, AR-LEX-C321-SARIQ321-02, AR-LEX-C321-SARIQ321-03, AR-LEX-C321-SARIQ321-04, AR-LEX-C321-SARIQ321-05, AR-LEX-C322-QALA322-01, AR-LEX-C322-QALA322-02, AR-LEX-C322-QALA322-03, AR-LEX-C322-QALA322-04, AR-LEX-C322-QALA322-05, AR-LEX-C323-NASHAA323-01, AR-LEX-C323-NASHAA323-02, AR-LEX-C323-NASHAA323-03, AR-LEX-C323-NASHAA323-04, AR-LEX-C323-NASHAA323-05, AR-LEX-C324-KHATAR324-01, AR-LEX-C324-KHATAR324-02, AR-LEX-C324-KHATAR324-03, AR-LEX-C324-KHATAR324-04, AR-LEX-C324-KHATAR324-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C317-qabada, AR-C317-ihtajaza, AR-C317-awqafa, AR-C317-dawriyya, AR-C317-hajiz, AR-C318-hadara, AR-C318-athar, AR-C318-atlal, AR-C318-mabad, AR-C318-haram, AR-C319-aza, AR-C319-azza, AR-C319-ratha, AR-C319-naa, AR-C319-hidad, AR-C320-ilam, AR-C320-wakala, AR-C320-masdar, AR-C320-afada, AR-C320-awdaha, AR-C321-sariq, AR-C321-nashshal, AR-C321-isaba, AR-C321-salaba, AR-C321-nahaba, AR-C322-qala, AR-C322-hisn, AR-C322-sur, AR-C322-hasara, AR-C322-dafaa-defend, AR-C323-nashaa, AR-C323-taraara, AR-C323-masqat-ras, AR-C323-siba, AR-C323-kuhula, AR-C324-hadhdhara, AR-C324-haddada-threaten, AR-C324-indhar, AR-C324-saffara, AR-C324-fawda]
+---
+
+# Words from chapters 317–324 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C317-TAWQIF317-01, AR-LEX-C317-TAWQIF317-02] -->
+
+[PAUSE 3s] Say the Arabic for to seize and to detain.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C317-TAWQIF317-01, AR-LEX-C317-TAWQIF317-02, AR-LEX-C317-TAWQIF317-03, AR-LEX-C317-TAWQIF317-04, AR-LEX-C317-TAWQIF317-05, AR-LEX-C318-HADARA318-01, AR-LEX-C318-HADARA318-02, AR-LEX-C318-HADARA318-03, AR-LEX-C318-HADARA318-04, AR-LEX-C318-HADARA318-05, AR-LEX-C319-AZA319-01, AR-LEX-C319-AZA319-02, AR-LEX-C319-AZA319-03, AR-LEX-C319-AZA319-04, AR-LEX-C319-AZA319-05, AR-LEX-C320-ILAM320-01, AR-LEX-C320-ILAM320-02, AR-LEX-C320-ILAM320-03, AR-LEX-C320-ILAM320-04, AR-LEX-C320-ILAM320-05, AR-LEX-C321-SARIQ321-01, AR-LEX-C321-SARIQ321-02, AR-LEX-C321-SARIQ321-03, AR-LEX-C321-SARIQ321-04, AR-LEX-C321-SARIQ321-05, AR-LEX-C322-QALA322-01, AR-LEX-C322-QALA322-02, AR-LEX-C322-QALA322-03, AR-LEX-C322-QALA322-04, AR-LEX-C322-QALA322-05, AR-LEX-C323-NASHAA323-01, AR-LEX-C323-NASHAA323-02, AR-LEX-C323-NASHAA323-03, AR-LEX-C323-NASHAA323-04, AR-LEX-C323-NASHAA323-05, AR-LEX-C324-KHATAR324-01, AR-LEX-C324-KHATAR324-02, AR-LEX-C324-KHATAR324-03, AR-LEX-C324-KHATAR324-04, AR-LEX-C324-KHATAR324-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to seize, to detain, to stop someone, a patrol, a checkpoint]
+- [YOU SAY: a civilization, a trace, remains of a dwelling, a temple, a pyramid]
+- [YOU SAY: condolence, to console, to lament, to announce a death, mourning]
+- [YOU SAY: the media, an agency, a source, to give news, to clarify]
+- [YOU SAY: a robber, a pickpocket, a gang, to rob, to loot]
+- [YOU SAY: a castle, a fort, a city wall, to besiege, to defend]
+- [YOU SAY: to be reared, to be brought up, a birthplace, boyhood, middle age]
+- [YOU SAY: to warn, to threaten, an alarm, a whistle, chaos]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C317-TAWQIF317-01, AR-LEX-C317-TAWQIF317-02, AR-LEX-C317-TAWQIF317-03, AR-LEX-C317-TAWQIF317-04, AR-LEX-C317-TAWQIF317-05, AR-LEX-C318-HADARA318-01, AR-LEX-C318-HADARA318-02, AR-LEX-C318-HADARA318-03, AR-LEX-C318-HADARA318-04, AR-LEX-C318-HADARA318-05, AR-LEX-C319-AZA319-01, AR-LEX-C319-AZA319-02, AR-LEX-C319-AZA319-03, AR-LEX-C319-AZA319-04, AR-LEX-C319-AZA319-05, AR-LEX-C320-ILAM320-01, AR-LEX-C320-ILAM320-02, AR-LEX-C320-ILAM320-03, AR-LEX-C320-ILAM320-04, AR-LEX-C320-ILAM320-05, AR-LEX-C321-SARIQ321-01, AR-LEX-C321-SARIQ321-02, AR-LEX-C321-SARIQ321-03, AR-LEX-C321-SARIQ321-04, AR-LEX-C321-SARIQ321-05, AR-LEX-C322-QALA322-01, AR-LEX-C322-QALA322-02, AR-LEX-C322-QALA322-03, AR-LEX-C322-QALA322-04, AR-LEX-C322-QALA322-05, AR-LEX-C323-NASHAA323-01, AR-LEX-C323-NASHAA323-02, AR-LEX-C323-NASHAA323-03, AR-LEX-C323-NASHAA323-04, AR-LEX-C323-NASHAA323-05, AR-LEX-C324-KHATAR324-01, AR-LEX-C324-KHATAR324-02, AR-LEX-C324-KHATAR324-03, AR-LEX-C324-KHATAR324-04, AR-LEX-C324-KHATAR324-05] -->
+
+[PAUSE 3s] To seize? (**قبض**, *qabaḍa*.) To detain? (**احتجز**, *iḥtajaza*.) To stop someone? (**أوقف**, *awqafa*.) A patrol? (**دورية**, *dawriyya*.) A checkpoint? (**حاجز**, *ḥājiz*.) A civilization? (**حضارة**, *ḥaḍāra*.) A trace? (**أثر**, *athar*.) Remains of a dwelling? (**أطلال**, *aṭlāl*.) A temple? (**معبد**, *maʿbad*.) A pyramid? (**هرم**, *haram*.) Condolence? (**عزاء**, *ʿazāʾ*.) To console? (**عزى**, *ʿazzā*.) To lament? (**رثى**, *rathā*.) To announce a death? (**نعى**, *naʿā*.) Mourning? (**حداد**, *ḥidād*.) The media? (**إعلام**, *iʿlām*.) An agency? (**وكالة**, *wakāla*.) A source? (**مصدر**, *maṣdar*.) To give news? (**أفاد**, *afāda*.) To clarify? (**أوضح**, *awḍaḥa*.) A robber? (**سارق**, *sāriq*.) A pickpocket? (**نشال**, *nashshāl*.) A gang? (**عصابة**, *ʿiṣāba*.) To rob? (**سلب**, *salaba*.) To loot? (**نهب**, *nahaba*.) A castle? (**قلعة**, *qalʿa*.) A fort? (**حصن**, *ḥiṣn*.) A city wall? (**سور**, *sūr*.) To besiege? (**حاصر**, *ḥāṣara*.) To defend? (**دافع**, *dāfaʿa*.) To be reared? (**نشأ**, *nashaʾa*.) To be brought up? (**ترعرع**, *taraʿraʿa*.) A birthplace? (**مسقط رأس**, *masqaṭ raʾs*.) Boyhood? (**صبا**, *ṣibā*.) Middle age? (**كهولة**, *kuhūla*.) To warn? (**حذر**, *ḥadhdhara*.) To threaten? (**هدد**, *haddada*.) An alarm? (**إنذار**, *indhār*.) A whistle? (**صفارة**, *ṣaffāra*.) Chaos? (**فوضى**, *fawḍā*.)
+`;export{t};

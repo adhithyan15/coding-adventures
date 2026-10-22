@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R495-review-488-495
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 27600
+chapter: 495
+type: review
+headword: (dialogue)
+gloss: a review of chapters 488-495
+concept_tag: REVIEW
+prerequisites: [AR-C488-saada, AR-C488-malal, AR-C488-ghadiba, AR-C488-hazina, AR-C488-tanahhada, AR-C489-dhur, AR-C489-rub, AR-C489-hudu, AR-C489-irtaasha, AR-C489-akhafa, AR-C490-dahsha, AR-C490-mundahish, AR-C490-indahasha, AR-C490-tafajaa, AR-C490-ijab, AR-C491-fakhur, AR-C491-iftakhara, AR-C491-imtinan, AR-C491-mumtann, AR-C491-ajaba, AR-C492-ghira, AR-C492-ghayur, AR-C492-hasud, AR-C492-hasada-envy, AR-C492-ghara, AR-C493-nadima, AR-C493-nadim, AR-C493-shafaqa, AR-C493-ataba, AR-C493-yas, AR-C494-kaaba, AR-C494-hanin, AR-C494-ihbat, AR-C494-muhbat, AR-C494-malla, AR-C495-inziaj, AR-C495-munzaij, AR-C495-musta, AR-C495-tahammala, AR-C495-dajira]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C488-MAZAJ488-01, AR-LEX-C488-MAZAJ488-02, AR-LEX-C488-MAZAJ488-03, AR-LEX-C488-MAZAJ488-04, AR-LEX-C488-MAZAJ488-05, AR-LEX-C489-KHAWF489-01, AR-LEX-C489-KHAWF489-02, AR-LEX-C489-KHAWF489-03, AR-LEX-C489-KHAWF489-04, AR-LEX-C489-KHAWF489-05, AR-LEX-C490-DAHSHA490-01, AR-LEX-C490-DAHSHA490-02, AR-LEX-C490-DAHSHA490-03, AR-LEX-C490-DAHSHA490-04, AR-LEX-C490-DAHSHA490-05, AR-LEX-C491-FAKHR491-01, AR-LEX-C491-FAKHR491-02, AR-LEX-C491-FAKHR491-03, AR-LEX-C491-FAKHR491-04, AR-LEX-C491-FAKHR491-05, AR-LEX-C492-GHIRA492-01, AR-LEX-C492-GHIRA492-02, AR-LEX-C492-GHIRA492-03, AR-LEX-C492-GHIRA492-04, AR-LEX-C492-GHIRA492-05, AR-LEX-C493-NADAM493-01, AR-LEX-C493-NADAM493-02, AR-LEX-C493-NADAM493-03, AR-LEX-C493-NADAM493-04, AR-LEX-C493-NADAM493-05, AR-LEX-C494-KAABA494-01, AR-LEX-C494-KAABA494-02, AR-LEX-C494-KAABA494-03, AR-LEX-C494-KAABA494-04, AR-LEX-C494-KAABA494-05, AR-LEX-C495-INZIAJ495-01, AR-LEX-C495-INZIAJ495-02, AR-LEX-C495-INZIAJ495-03, AR-LEX-C495-INZIAJ495-04, AR-LEX-C495-INZIAJ495-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C488-MAZAJ488-01, AR-LEX-C488-MAZAJ488-02, AR-LEX-C488-MAZAJ488-03, AR-LEX-C488-MAZAJ488-04, AR-LEX-C488-MAZAJ488-05, AR-LEX-C489-KHAWF489-01, AR-LEX-C489-KHAWF489-02, AR-LEX-C489-KHAWF489-03, AR-LEX-C489-KHAWF489-04, AR-LEX-C489-KHAWF489-05, AR-LEX-C490-DAHSHA490-01, AR-LEX-C490-DAHSHA490-02, AR-LEX-C490-DAHSHA490-03, AR-LEX-C490-DAHSHA490-04, AR-LEX-C490-DAHSHA490-05, AR-LEX-C491-FAKHR491-01, AR-LEX-C491-FAKHR491-02, AR-LEX-C491-FAKHR491-03, AR-LEX-C491-FAKHR491-04, AR-LEX-C491-FAKHR491-05, AR-LEX-C492-GHIRA492-01, AR-LEX-C492-GHIRA492-02, AR-LEX-C492-GHIRA492-03, AR-LEX-C492-GHIRA492-04, AR-LEX-C492-GHIRA492-05, AR-LEX-C493-NADAM493-01, AR-LEX-C493-NADAM493-02, AR-LEX-C493-NADAM493-03, AR-LEX-C493-NADAM493-04, AR-LEX-C493-NADAM493-05, AR-LEX-C494-KAABA494-01, AR-LEX-C494-KAABA494-02, AR-LEX-C494-KAABA494-03, AR-LEX-C494-KAABA494-04, AR-LEX-C494-KAABA494-05, AR-LEX-C495-INZIAJ495-01, AR-LEX-C495-INZIAJ495-02, AR-LEX-C495-INZIAJ495-03, AR-LEX-C495-INZIAJ495-04, AR-LEX-C495-INZIAJ495-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C488-saada, AR-C488-malal, AR-C488-ghadiba, AR-C488-hazina, AR-C488-tanahhada, AR-C489-dhur, AR-C489-rub, AR-C489-hudu, AR-C489-irtaasha, AR-C489-akhafa, AR-C490-dahsha, AR-C490-mundahish, AR-C490-indahasha, AR-C490-tafajaa, AR-C490-ijab, AR-C491-fakhur, AR-C491-iftakhara, AR-C491-imtinan, AR-C491-mumtann, AR-C491-ajaba, AR-C492-ghira, AR-C492-ghayur, AR-C492-hasud, AR-C492-hasada-envy, AR-C492-ghara, AR-C493-nadima, AR-C493-nadim, AR-C493-shafaqa, AR-C493-ataba, AR-C493-yas, AR-C494-kaaba, AR-C494-hanin, AR-C494-ihbat, AR-C494-muhbat, AR-C494-malla, AR-C495-inziaj, AR-C495-munzaij, AR-C495-musta, AR-C495-tahammala, AR-C495-dajira]
+---
+
+# Feelings and moods — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C488-MAZAJ488-01, AR-LEX-C488-MAZAJ488-02] -->
+
+[PAUSE 3s] Say the Arabic for happiness and boredom.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C488-MAZAJ488-01, AR-LEX-C488-MAZAJ488-02, AR-LEX-C488-MAZAJ488-03, AR-LEX-C488-MAZAJ488-04, AR-LEX-C488-MAZAJ488-05, AR-LEX-C489-KHAWF489-01, AR-LEX-C489-KHAWF489-02, AR-LEX-C489-KHAWF489-03, AR-LEX-C489-KHAWF489-04, AR-LEX-C489-KHAWF489-05, AR-LEX-C490-DAHSHA490-01, AR-LEX-C490-DAHSHA490-02, AR-LEX-C490-DAHSHA490-03, AR-LEX-C490-DAHSHA490-04, AR-LEX-C490-DAHSHA490-05, AR-LEX-C491-FAKHR491-01, AR-LEX-C491-FAKHR491-02, AR-LEX-C491-FAKHR491-03, AR-LEX-C491-FAKHR491-04, AR-LEX-C491-FAKHR491-05, AR-LEX-C492-GHIRA492-01, AR-LEX-C492-GHIRA492-02, AR-LEX-C492-GHIRA492-03, AR-LEX-C492-GHIRA492-04, AR-LEX-C492-GHIRA492-05, AR-LEX-C493-NADAM493-01, AR-LEX-C493-NADAM493-02, AR-LEX-C493-NADAM493-03, AR-LEX-C493-NADAM493-04, AR-LEX-C493-NADAM493-05, AR-LEX-C494-KAABA494-01, AR-LEX-C494-KAABA494-02, AR-LEX-C494-KAABA494-03, AR-LEX-C494-KAABA494-04, AR-LEX-C494-KAABA494-05, AR-LEX-C495-INZIAJ495-01, AR-LEX-C495-INZIAJ495-02, AR-LEX-C495-INZIAJ495-03, AR-LEX-C495-INZIAJ495-04, AR-LEX-C495-INZIAJ495-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: happiness, boredom, to get angry, to grieve, to sigh]
+- [YOU SAY: panic, terror, calm, to shiver, to frighten]
+- [YOU SAY: astonishment, astonished, to be amazed, to be surprised, admiration]
+- [YOU SAY: proud, to take pride, gratitude, grateful, to impress]
+- [YOU SAY: jealousy, jealous, envious, to envy, to be jealous]
+- [YOU SAY: to regret, regretful, pity, to reproach, despair]
+- [YOU SAY: gloom, nostalgia, frustration, frustrated, to get bored]
+- [YOU SAY: annoyance, annoyed, displeased, to put up with, to be fed up]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C488-MAZAJ488-01, AR-LEX-C488-MAZAJ488-02, AR-LEX-C488-MAZAJ488-03, AR-LEX-C488-MAZAJ488-04, AR-LEX-C488-MAZAJ488-05, AR-LEX-C489-KHAWF489-01, AR-LEX-C489-KHAWF489-02, AR-LEX-C489-KHAWF489-03, AR-LEX-C489-KHAWF489-04, AR-LEX-C489-KHAWF489-05, AR-LEX-C490-DAHSHA490-01, AR-LEX-C490-DAHSHA490-02, AR-LEX-C490-DAHSHA490-03, AR-LEX-C490-DAHSHA490-04, AR-LEX-C490-DAHSHA490-05, AR-LEX-C491-FAKHR491-01, AR-LEX-C491-FAKHR491-02, AR-LEX-C491-FAKHR491-03, AR-LEX-C491-FAKHR491-04, AR-LEX-C491-FAKHR491-05, AR-LEX-C492-GHIRA492-01, AR-LEX-C492-GHIRA492-02, AR-LEX-C492-GHIRA492-03, AR-LEX-C492-GHIRA492-04, AR-LEX-C492-GHIRA492-05, AR-LEX-C493-NADAM493-01, AR-LEX-C493-NADAM493-02, AR-LEX-C493-NADAM493-03, AR-LEX-C493-NADAM493-04, AR-LEX-C493-NADAM493-05, AR-LEX-C494-KAABA494-01, AR-LEX-C494-KAABA494-02, AR-LEX-C494-KAABA494-03, AR-LEX-C494-KAABA494-04, AR-LEX-C494-KAABA494-05, AR-LEX-C495-INZIAJ495-01, AR-LEX-C495-INZIAJ495-02, AR-LEX-C495-INZIAJ495-03, AR-LEX-C495-INZIAJ495-04, AR-LEX-C495-INZIAJ495-05] -->
+
+[PAUSE 3s] Happiness? (**سعادة**, *saʿāda*.) Boredom? (**ملل**, *malal*.) To get angry? (**غضب**, *ghaḍiba*.) To grieve? (**حزن**, *ḥazina*.) To sigh? (**تنهد**, *tanahhada*.) Panic? (**ذعر**, *dhuʿr*.) Terror? (**رعب**, *ruʿb*.) Calm? (**هدوء**, *hudūʾ*.) To shiver? (**ارتعش**, *irtaʿasha*.) To frighten? (**أخاف**, *akhāfa*.) Astonishment? (**دهشة**, *dahsha*.) Astonished? (**مندهش**, *mundahish*.) To be amazed? (**اندهش**, *indahasha*.) To be surprised? (**تفاجأ**, *tafājaʾa*.) Admiration? (**إعجاب**, *iʿjāb*.) Proud? (**فخور**, *fakhūr*.) To take pride? (**افتخر**, *iftakhara*.) Gratitude? (**امتنان**, *imtinān*.) Grateful? (**ممتن**, *mumtann*.) To impress? (**أعجب**, *aʿjaba*.) Jealousy? (**غيرة**, *ghīra*.) Jealous? (**غيور**, *ghayūr*.) Envious? (**حسود**, *ḥasūd*.) To envy? (**حسد**, *ḥasada*.) To be jealous? (**غار**, *ghāra*.) To regret? (**ندم**, *nadima*.) Regretful? (**نادم**, *nādim*.) Pity? (**شفقة**, *shafaqa*.) To reproach? (**عاتب**, *ʿātaba*.) Despair? (**يأس**, *yaʾs*.) Gloom? (**كآبة**, *kaʾāba*.) Nostalgia? (**حنين**, *ḥanīn*.) Frustration? (**إحباط**, *iḥbāṭ*.) Frustrated? (**محبط**, *muḥbaṭ*.) To get bored? (**مل**, *malla*.) Annoyance? (**انزعاج**, *inziʿāj*.) Annoyed? (**منزعج**, *munzaʿij*.) Displeased? (**مستاء**, *mustāʾ*.) To put up with? (**تحمل**, *taḥammala*.) To be fed up? (**ضجر**, *ḍajira*.)
+`;export{t};

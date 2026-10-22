@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R300-review-293-300
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 17400
+chapter: 300
+type: review
+headword: (dialogue)
+gloss: a review of chapters 293-300
+concept_tag: REVIEW
+prerequisites: [AR-C293-murasil, AR-C293-bayan, AR-C293-sahifa, AR-C293-alana, AR-C293-sarraha, AR-C294-fajatan, AR-C294-waqaa, AR-C294-infajara, AR-C294-fi-al-bidaya, AR-C294-fi-tilka-al-lahza, AR-C295-hikaya, AR-C295-rawa, AR-C295-qassa, AR-C295-sarada, AR-C295-dhata-yawm, AR-C296-sahafa, AR-C296-muharrir, AR-C296-maqal, AR-C296-harrara, AR-C296-nashra, AR-C297-idhaa, AR-C297-qanah, AR-C297-midhya, AR-C297-adhaa, AR-C297-ala-al-hawa, AR-C298-hariq, AR-C298-dukhan, AR-C298-ishtaala, AR-C298-ihtaraqa, AR-C298-rajul-itfa, AR-C299-fi-hadhihi-al-athna, AR-C299-fima-bad, AR-C299-fi-al-yawm-at-tali, AR-C299-dhakara-mention, AR-C299-naqala, AR-C300-jarima, AR-C300-mujrim, AR-C300-liss, AR-C300-saraqa, AR-C300-itaqala]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C293-AKHBAR293-01, AR-LEX-C293-AKHBAR293-02, AR-LEX-C293-AKHBAR293-03, AR-LEX-C293-AKHBAR293-04, AR-LEX-C293-AKHBAR293-05, AR-LEX-C294-FAJATAN294-01, AR-LEX-C294-FAJATAN294-02, AR-LEX-C294-FAJATAN294-03, AR-LEX-C294-FAJATAN294-04, AR-LEX-C294-FAJATAN294-05, AR-LEX-C295-RIWAYA295-01, AR-LEX-C295-RIWAYA295-02, AR-LEX-C295-RIWAYA295-03, AR-LEX-C295-RIWAYA295-04, AR-LEX-C295-RIWAYA295-05, AR-LEX-C296-SAHAFA296-01, AR-LEX-C296-SAHAFA296-02, AR-LEX-C296-SAHAFA296-03, AR-LEX-C296-SAHAFA296-04, AR-LEX-C296-SAHAFA296-05, AR-LEX-C297-IDHAA297-01, AR-LEX-C297-IDHAA297-02, AR-LEX-C297-IDHAA297-03, AR-LEX-C297-IDHAA297-04, AR-LEX-C297-IDHAA297-05, AR-LEX-C298-HARIQ298-01, AR-LEX-C298-HARIQ298-02, AR-LEX-C298-HARIQ298-03, AR-LEX-C298-HARIQ298-04, AR-LEX-C298-HARIQ298-05, AR-LEX-C299-ATHNA299-01, AR-LEX-C299-ATHNA299-02, AR-LEX-C299-ATHNA299-03, AR-LEX-C299-ATHNA299-04, AR-LEX-C299-ATHNA299-05, AR-LEX-C300-JARIMA300-01, AR-LEX-C300-JARIMA300-02, AR-LEX-C300-JARIMA300-03, AR-LEX-C300-JARIMA300-04, AR-LEX-C300-JARIMA300-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C293-AKHBAR293-01, AR-LEX-C293-AKHBAR293-02, AR-LEX-C293-AKHBAR293-03, AR-LEX-C293-AKHBAR293-04, AR-LEX-C293-AKHBAR293-05, AR-LEX-C294-FAJATAN294-01, AR-LEX-C294-FAJATAN294-02, AR-LEX-C294-FAJATAN294-03, AR-LEX-C294-FAJATAN294-04, AR-LEX-C294-FAJATAN294-05, AR-LEX-C295-RIWAYA295-01, AR-LEX-C295-RIWAYA295-02, AR-LEX-C295-RIWAYA295-03, AR-LEX-C295-RIWAYA295-04, AR-LEX-C295-RIWAYA295-05, AR-LEX-C296-SAHAFA296-01, AR-LEX-C296-SAHAFA296-02, AR-LEX-C296-SAHAFA296-03, AR-LEX-C296-SAHAFA296-04, AR-LEX-C296-SAHAFA296-05, AR-LEX-C297-IDHAA297-01, AR-LEX-C297-IDHAA297-02, AR-LEX-C297-IDHAA297-03, AR-LEX-C297-IDHAA297-04, AR-LEX-C297-IDHAA297-05, AR-LEX-C298-HARIQ298-01, AR-LEX-C298-HARIQ298-02, AR-LEX-C298-HARIQ298-03, AR-LEX-C298-HARIQ298-04, AR-LEX-C298-HARIQ298-05, AR-LEX-C299-ATHNA299-01, AR-LEX-C299-ATHNA299-02, AR-LEX-C299-ATHNA299-03, AR-LEX-C299-ATHNA299-04, AR-LEX-C299-ATHNA299-05, AR-LEX-C300-JARIMA300-01, AR-LEX-C300-JARIMA300-02, AR-LEX-C300-JARIMA300-03, AR-LEX-C300-JARIMA300-04, AR-LEX-C300-JARIMA300-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C293-murasil, AR-C293-bayan, AR-C293-sahifa, AR-C293-alana, AR-C293-sarraha, AR-C294-fajatan, AR-C294-waqaa, AR-C294-infajara, AR-C294-fi-al-bidaya, AR-C294-fi-tilka-al-lahza, AR-C295-hikaya, AR-C295-rawa, AR-C295-qassa, AR-C295-sarada, AR-C295-dhata-yawm, AR-C296-sahafa, AR-C296-muharrir, AR-C296-maqal, AR-C296-harrara, AR-C296-nashra, AR-C297-idhaa, AR-C297-qanah, AR-C297-midhya, AR-C297-adhaa, AR-C297-ala-al-hawa, AR-C298-hariq, AR-C298-dukhan, AR-C298-ishtaala, AR-C298-ihtaraqa, AR-C298-rajul-itfa, AR-C299-fi-hadhihi-al-athna, AR-C299-fima-bad, AR-C299-fi-al-yawm-at-tali, AR-C299-dhakara-mention, AR-C299-naqala, AR-C300-jarima, AR-C300-mujrim, AR-C300-liss, AR-C300-saraqa, AR-C300-itaqala]
+---
+
+# News and stories — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C293-AKHBAR293-01, AR-LEX-C293-AKHBAR293-02] -->
+
+[PAUSE 3s] Say the Arabic for a correspondent and a statement.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C293-AKHBAR293-01, AR-LEX-C293-AKHBAR293-02, AR-LEX-C293-AKHBAR293-03, AR-LEX-C293-AKHBAR293-04, AR-LEX-C293-AKHBAR293-05, AR-LEX-C294-FAJATAN294-01, AR-LEX-C294-FAJATAN294-02, AR-LEX-C294-FAJATAN294-03, AR-LEX-C294-FAJATAN294-04, AR-LEX-C294-FAJATAN294-05, AR-LEX-C295-RIWAYA295-01, AR-LEX-C295-RIWAYA295-02, AR-LEX-C295-RIWAYA295-03, AR-LEX-C295-RIWAYA295-04, AR-LEX-C295-RIWAYA295-05, AR-LEX-C296-SAHAFA296-01, AR-LEX-C296-SAHAFA296-02, AR-LEX-C296-SAHAFA296-03, AR-LEX-C296-SAHAFA296-04, AR-LEX-C296-SAHAFA296-05, AR-LEX-C297-IDHAA297-01, AR-LEX-C297-IDHAA297-02, AR-LEX-C297-IDHAA297-03, AR-LEX-C297-IDHAA297-04, AR-LEX-C297-IDHAA297-05, AR-LEX-C298-HARIQ298-01, AR-LEX-C298-HARIQ298-02, AR-LEX-C298-HARIQ298-03, AR-LEX-C298-HARIQ298-04, AR-LEX-C298-HARIQ298-05, AR-LEX-C299-ATHNA299-01, AR-LEX-C299-ATHNA299-02, AR-LEX-C299-ATHNA299-03, AR-LEX-C299-ATHNA299-04, AR-LEX-C299-ATHNA299-05, AR-LEX-C300-JARIMA300-01, AR-LEX-C300-JARIMA300-02, AR-LEX-C300-JARIMA300-03, AR-LEX-C300-JARIMA300-04, AR-LEX-C300-JARIMA300-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a correspondent, a statement, a gazette, to announce, to declare]
+- [YOU SAY: suddenly, to take place, to explode, at first, at that moment]
+- [YOU SAY: a tale, to narrate, to tell a story, to recount, one day]
+- [YOU SAY: journalism, an editor, an article, to edit, a bulletin]
+- [YOU SAY: a radio station, a channel, a radio set, to put on air, on air]
+- [YOU SAY: a blaze, smoke, to catch fire, to burn down, a firefighter]
+- [YOU SAY: meanwhile, later on, the next day, to mention, to pass on]
+- [YOU SAY: a crime, a criminal, a thief, to steal, to arrest]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C293-AKHBAR293-01, AR-LEX-C293-AKHBAR293-02, AR-LEX-C293-AKHBAR293-03, AR-LEX-C293-AKHBAR293-04, AR-LEX-C293-AKHBAR293-05, AR-LEX-C294-FAJATAN294-01, AR-LEX-C294-FAJATAN294-02, AR-LEX-C294-FAJATAN294-03, AR-LEX-C294-FAJATAN294-04, AR-LEX-C294-FAJATAN294-05, AR-LEX-C295-RIWAYA295-01, AR-LEX-C295-RIWAYA295-02, AR-LEX-C295-RIWAYA295-03, AR-LEX-C295-RIWAYA295-04, AR-LEX-C295-RIWAYA295-05, AR-LEX-C296-SAHAFA296-01, AR-LEX-C296-SAHAFA296-02, AR-LEX-C296-SAHAFA296-03, AR-LEX-C296-SAHAFA296-04, AR-LEX-C296-SAHAFA296-05, AR-LEX-C297-IDHAA297-01, AR-LEX-C297-IDHAA297-02, AR-LEX-C297-IDHAA297-03, AR-LEX-C297-IDHAA297-04, AR-LEX-C297-IDHAA297-05, AR-LEX-C298-HARIQ298-01, AR-LEX-C298-HARIQ298-02, AR-LEX-C298-HARIQ298-03, AR-LEX-C298-HARIQ298-04, AR-LEX-C298-HARIQ298-05, AR-LEX-C299-ATHNA299-01, AR-LEX-C299-ATHNA299-02, AR-LEX-C299-ATHNA299-03, AR-LEX-C299-ATHNA299-04, AR-LEX-C299-ATHNA299-05, AR-LEX-C300-JARIMA300-01, AR-LEX-C300-JARIMA300-02, AR-LEX-C300-JARIMA300-03, AR-LEX-C300-JARIMA300-04, AR-LEX-C300-JARIMA300-05] -->
+
+[PAUSE 3s] A correspondent? (**مراسل**, *murāsil*.) A statement? (**بيان**, *bayān*.) A gazette? (**صحيفة**, *ṣaḥīfa*.) To announce? (**أعلن**, *aʿlana*.) To declare? (**صرح**, *ṣarraḥa*.) Suddenly? (**فجأة**, *fajʾatan*.) To take place? (**وقع**, *waqaʿa*.) To explode? (**انفجر**, *infajara*.) At first? (**في البداية**, *fī al-bidāya*.) At that moment? (**في تلك اللحظة**, *fī tilka al-laḥẓa*.) A tale? (**حكاية**, *ḥikāya*.) To narrate? (**روى**, *rawā*.) To tell a story? (**قص**, *qaṣṣa*.) To recount? (**سرد**, *sarada*.) One day? (**ذات يوم**, *dhāta yawm*.) Journalism? (**صحافة**, *ṣaḥāfa*.) An editor? (**محرر**, *muḥarrir*.) An article? (**مقال**, *maqāl*.) To edit? (**حرر**, *ḥarrara*.) A bulletin? (**نشرة**, *nashra*.) A radio station? (**إذاعة**, *idhāʿa*.) A channel? (**قناة**, *qanāh*.) A radio set? (**مذياع**, *midhyāʿ*.) To put on air? (**أذاع**, *adhāʿa*.) On air? (**على الهواء**, *ʿalā al-hawāʾ*.) A blaze? (**حريق**, *ḥarīq*.) Smoke? (**دخان**, *dukhān*.) To catch fire? (**اشتعل**, *ishtaʿala*.) To burn down? (**احترق**, *iḥtaraqa*.) A firefighter? (**رجل إطفاء**, *rajul iṭfāʾ*.) Meanwhile? (**في هذه الأثناء**, *fī hādhihi al-athnāʾ*.) Later on? (**فيما بعد**, *fīmā baʿd*.) The next day? (**في اليوم التالي**, *fī al-yawm at-tālī*.) To mention? (**ذكر**, *dhakara*.) To pass on? (**نقل**, *naqala*.) A crime? (**جريمة**, *jarīma*.) A criminal? (**مجرم**, *mujrim*.) A thief? (**لص**, *liṣṣ*.) To steal? (**سرق**, *saraqa*.) To arrest? (**اعتقل**, *iʿtaqala*.)
+`;export{t};

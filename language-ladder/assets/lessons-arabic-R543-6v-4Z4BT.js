@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R543-review-536-543
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 30060
+chapter: 543
+type: review
+headword: (dialogue)
+gloss: a review of chapters 536-543
+concept_tag: REVIEW
+prerequisites: [AR-C536-sayd, AR-C536-sinnara, AR-C536-istada, AR-C536-istajamma, AR-C536-istamtaa, AR-C537-takhyim, AR-C537-ghaws, AR-C537-taswir, AR-C537-fakhkhar, AR-C537-kalimat-mutaqatia, AR-C538-tatriz, AR-C538-tarraza, AR-C538-hiyaka, AR-C538-haka-knit, AR-C538-khata, AR-C539-nard, AR-C539-urjuha, AR-C539-tasalla, AR-C539-bastana, AR-C539-taarjaha, AR-C540-qiraa, AR-C540-ishtaraka, AR-C540-iltaqa, AR-C540-shaghaf, AR-C540-wala, AR-C541-fannan, AR-C541-marid, AR-C541-nahhat, AR-C541-nahata, AR-C541-rassam, AR-C542-masrahiyya, AR-C542-mashhad, AR-C542-tasfiq, AR-C542-saffaqa, AR-C542-tamthil, AR-C543-lahn, AR-C543-iqa, AR-C543-azafa, AR-C543-mulahhin, AR-C543-jawqa]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C536-SAYD536-01, AR-LEX-C536-SAYD536-02, AR-LEX-C536-SAYD536-03, AR-LEX-C536-SAYD536-04, AR-LEX-C536-SAYD536-05, AR-LEX-C537-HIWAYA537-01, AR-LEX-C537-HIWAYA537-02, AR-LEX-C537-HIWAYA537-03, AR-LEX-C537-HIWAYA537-04, AR-LEX-C537-HIWAYA537-05, AR-LEX-C538-IBRA538-01, AR-LEX-C538-IBRA538-02, AR-LEX-C538-IBRA538-03, AR-LEX-C538-IBRA538-04, AR-LEX-C538-IBRA538-05, AR-LEX-C539-LUAB539-01, AR-LEX-C539-LUAB539-02, AR-LEX-C539-LUAB539-03, AR-LEX-C539-LUAB539-04, AR-LEX-C539-LUAB539-05, AR-LEX-C540-NADI540-01, AR-LEX-C540-NADI540-02, AR-LEX-C540-NADI540-03, AR-LEX-C540-NADI540-04, AR-LEX-C540-NADI540-05, AR-LEX-C541-FANN541-01, AR-LEX-C541-FANN541-02, AR-LEX-C541-FANN541-03, AR-LEX-C541-FANN541-04, AR-LEX-C541-FANN541-05, AR-LEX-C542-MASRAH542-01, AR-LEX-C542-MASRAH542-02, AR-LEX-C542-MASRAH542-03, AR-LEX-C542-MASRAH542-04, AR-LEX-C542-MASRAH542-05, AR-LEX-C543-MUSIQA543-01, AR-LEX-C543-MUSIQA543-02, AR-LEX-C543-MUSIQA543-03, AR-LEX-C543-MUSIQA543-04, AR-LEX-C543-MUSIQA543-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C536-SAYD536-01, AR-LEX-C536-SAYD536-02, AR-LEX-C536-SAYD536-03, AR-LEX-C536-SAYD536-04, AR-LEX-C536-SAYD536-05, AR-LEX-C537-HIWAYA537-01, AR-LEX-C537-HIWAYA537-02, AR-LEX-C537-HIWAYA537-03, AR-LEX-C537-HIWAYA537-04, AR-LEX-C537-HIWAYA537-05, AR-LEX-C538-IBRA538-01, AR-LEX-C538-IBRA538-02, AR-LEX-C538-IBRA538-03, AR-LEX-C538-IBRA538-04, AR-LEX-C538-IBRA538-05, AR-LEX-C539-LUAB539-01, AR-LEX-C539-LUAB539-02, AR-LEX-C539-LUAB539-03, AR-LEX-C539-LUAB539-04, AR-LEX-C539-LUAB539-05, AR-LEX-C540-NADI540-01, AR-LEX-C540-NADI540-02, AR-LEX-C540-NADI540-03, AR-LEX-C540-NADI540-04, AR-LEX-C540-NADI540-05, AR-LEX-C541-FANN541-01, AR-LEX-C541-FANN541-02, AR-LEX-C541-FANN541-03, AR-LEX-C541-FANN541-04, AR-LEX-C541-FANN541-05, AR-LEX-C542-MASRAH542-01, AR-LEX-C542-MASRAH542-02, AR-LEX-C542-MASRAH542-03, AR-LEX-C542-MASRAH542-04, AR-LEX-C542-MASRAH542-05, AR-LEX-C543-MUSIQA543-01, AR-LEX-C543-MUSIQA543-02, AR-LEX-C543-MUSIQA543-03, AR-LEX-C543-MUSIQA543-04, AR-LEX-C543-MUSIQA543-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C536-sayd, AR-C536-sinnara, AR-C536-istada, AR-C536-istajamma, AR-C536-istamtaa, AR-C537-takhyim, AR-C537-ghaws, AR-C537-taswir, AR-C537-fakhkhar, AR-C537-kalimat-mutaqatia, AR-C538-tatriz, AR-C538-tarraza, AR-C538-hiyaka, AR-C538-haka-knit, AR-C538-khata, AR-C539-nard, AR-C539-urjuha, AR-C539-tasalla, AR-C539-bastana, AR-C539-taarjaha, AR-C540-qiraa, AR-C540-ishtaraka, AR-C540-iltaqa, AR-C540-shaghaf, AR-C540-wala, AR-C541-fannan, AR-C541-marid, AR-C541-nahhat, AR-C541-nahata, AR-C541-rassam, AR-C542-masrahiyya, AR-C542-mashhad, AR-C542-tasfiq, AR-C542-saffaqa, AR-C542-tamthil, AR-C543-lahn, AR-C543-iqa, AR-C543-azafa, AR-C543-mulahhin, AR-C543-jawqa]
+---
+
+# Words from chapters 536–543 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C536-SAYD536-01, AR-LEX-C536-SAYD536-02] -->
+
+[PAUSE 3s] Say the Arabic for hunting and a fishing rod.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C536-SAYD536-01, AR-LEX-C536-SAYD536-02, AR-LEX-C536-SAYD536-03, AR-LEX-C536-SAYD536-04, AR-LEX-C536-SAYD536-05, AR-LEX-C537-HIWAYA537-01, AR-LEX-C537-HIWAYA537-02, AR-LEX-C537-HIWAYA537-03, AR-LEX-C537-HIWAYA537-04, AR-LEX-C537-HIWAYA537-05, AR-LEX-C538-IBRA538-01, AR-LEX-C538-IBRA538-02, AR-LEX-C538-IBRA538-03, AR-LEX-C538-IBRA538-04, AR-LEX-C538-IBRA538-05, AR-LEX-C539-LUAB539-01, AR-LEX-C539-LUAB539-02, AR-LEX-C539-LUAB539-03, AR-LEX-C539-LUAB539-04, AR-LEX-C539-LUAB539-05, AR-LEX-C540-NADI540-01, AR-LEX-C540-NADI540-02, AR-LEX-C540-NADI540-03, AR-LEX-C540-NADI540-04, AR-LEX-C540-NADI540-05, AR-LEX-C541-FANN541-01, AR-LEX-C541-FANN541-02, AR-LEX-C541-FANN541-03, AR-LEX-C541-FANN541-04, AR-LEX-C541-FANN541-05, AR-LEX-C542-MASRAH542-01, AR-LEX-C542-MASRAH542-02, AR-LEX-C542-MASRAH542-03, AR-LEX-C542-MASRAH542-04, AR-LEX-C542-MASRAH542-05, AR-LEX-C543-MUSIQA543-01, AR-LEX-C543-MUSIQA543-02, AR-LEX-C543-MUSIQA543-03, AR-LEX-C543-MUSIQA543-04, AR-LEX-C543-MUSIQA543-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: hunting, a fishing rod, to go fishing, to unwind, to enjoy]
+- [YOU SAY: camping, diving, photography, pottery, a crossword]
+- [YOU SAY: embroidery, to embroider, knitting, to knit, to sew]
+- [YOU SAY: dice, a swing, to have fun, gardening, to swing]
+- [YOU SAY: reading, to subscribe, to meet up, passion, fondness]
+- [YOU SAY: an artist, an exhibition, a sculptor, to carve, a painter]
+- [YOU SAY: a stage play, a scene, applause, to applaud, acting]
+- [YOU SAY: a melody, a rhythm, to play an instrument, a composer, a choir]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C536-SAYD536-01, AR-LEX-C536-SAYD536-02, AR-LEX-C536-SAYD536-03, AR-LEX-C536-SAYD536-04, AR-LEX-C536-SAYD536-05, AR-LEX-C537-HIWAYA537-01, AR-LEX-C537-HIWAYA537-02, AR-LEX-C537-HIWAYA537-03, AR-LEX-C537-HIWAYA537-04, AR-LEX-C537-HIWAYA537-05, AR-LEX-C538-IBRA538-01, AR-LEX-C538-IBRA538-02, AR-LEX-C538-IBRA538-03, AR-LEX-C538-IBRA538-04, AR-LEX-C538-IBRA538-05, AR-LEX-C539-LUAB539-01, AR-LEX-C539-LUAB539-02, AR-LEX-C539-LUAB539-03, AR-LEX-C539-LUAB539-04, AR-LEX-C539-LUAB539-05, AR-LEX-C540-NADI540-01, AR-LEX-C540-NADI540-02, AR-LEX-C540-NADI540-03, AR-LEX-C540-NADI540-04, AR-LEX-C540-NADI540-05, AR-LEX-C541-FANN541-01, AR-LEX-C541-FANN541-02, AR-LEX-C541-FANN541-03, AR-LEX-C541-FANN541-04, AR-LEX-C541-FANN541-05, AR-LEX-C542-MASRAH542-01, AR-LEX-C542-MASRAH542-02, AR-LEX-C542-MASRAH542-03, AR-LEX-C542-MASRAH542-04, AR-LEX-C542-MASRAH542-05, AR-LEX-C543-MUSIQA543-01, AR-LEX-C543-MUSIQA543-02, AR-LEX-C543-MUSIQA543-03, AR-LEX-C543-MUSIQA543-04, AR-LEX-C543-MUSIQA543-05] -->
+
+[PAUSE 3s] Hunting? (**صيد**, *ṣayd*.) A fishing rod? (**صنارة**, *ṣinnāra*.) To go fishing? (**اصطاد**, *iṣṭāda*.) To unwind? (**استجم**, *istajamma*.) To enjoy? (**استمتع**, *istamtaʿa*.) Camping? (**تخييم**, *takhyīm*.) Diving? (**غوص**, *ghawṣ*.) Photography? (**تصوير**, *taṣwīr*.) Pottery? (**فخار**, *fakhkhār*.) A crossword? (**كلمات متقاطعة**, *kalimāt mutaqāṭiʿa*.) Embroidery? (**تطريز**, *taṭrīz*.) To embroider? (**طرز**, *ṭarraza*.) Knitting? (**حياكة**, *ḥiyāka*.) To knit? (**حاك**, *ḥāka*.) To sew? (**خاط**, *khāṭa*.) Dice? (**نرد**, *nard*.) A swing? (**أرجوحة**, *urjūḥa*.) To have fun? (**تسلى**, *tasallā*.) Gardening? (**بستنة**, *bastana*.) To swing? (**تأرجح**, *taʾarjaḥa*.) Reading? (**قراءة**, *qirāʾa*.) To subscribe? (**اشترك**, *ishtaraka*.) To meet up? (**التقى**, *iltaqā*.) Passion? (**شغف**, *shaghaf*.) Fondness? (**ولع**, *walaʿ*.) An artist? (**فنان**, *fannān*.) An exhibition? (**معرض**, *maʿriḍ*.) A sculptor? (**نحات**, *naḥḥāt*.) To carve? (**نحت**, *naḥata*.) A painter? (**رسام**, *rassām*.) A stage play? (**مسرحية**, *masraḥiyya*.) A scene? (**مشهد**, *mashhad*.) Applause? (**تصفيق**, *taṣfīq*.) To applaud? (**صفق**, *ṣaffaqa*.) Acting? (**تمثيل**, *tamthīl*.) A melody? (**لحن**, *laḥn*.) A rhythm? (**إيقاع**, *īqāʿ*.) To play an instrument? (**عزف**, *ʿazafa*.) A composer? (**ملحن**, *mulaḥḥin*.) A choir? (**جوقة**, *jawqa*.)
+`;export{t};

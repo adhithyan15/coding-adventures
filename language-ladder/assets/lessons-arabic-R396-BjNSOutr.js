@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R397-review-390-397
+spine_node: SPINE-GIVE-REASONS
+sequence: 22440
+chapter: 397
+type: review
+headword: (dialogue)
+gloss: a review of chapters 390-397
+concept_tag: REVIEW
+prerequisites: [AR-C390-kulliyya, AR-C390-takhassus, AR-C390-amid, AR-C390-minha, AR-C390-iltahaqa, AR-C391-bahith, AR-C391-dirasa, AR-C391-mukhtabar, AR-C391-mahad, AR-C391-istibyan, AR-C392-muhadir, AR-C392-ustadh, AR-C392-ashrafa, AR-C392-mushrif, AR-C392-dhakara, AR-C393-ikhtibar, AR-C393-qabul, AR-C393-muaddal, AR-C393-tafawwaqa, AR-C393-qayyama, AR-C394-atqana, AR-C394-iktasaba, AR-C394-taammaqa, AR-C394-lakhkhasa, AR-C394-mulakhkhas, AR-C395-marji, AR-C395-istashhada, AR-C395-iqtabasa, AR-C395-talaa, AR-C395-taammala, AR-C396-mustalah, AR-C396-tarif, AR-C396-fihris, AR-C396-utruha, AR-C396-manhaj, AR-C397-bakaluriyus, AR-C397-majistir, AR-C397-duktura, AR-C397-muqarrar, AR-C397-tadrib]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C390-KULLIYYA390-01, AR-LEX-C390-KULLIYYA390-02, AR-LEX-C390-KULLIYYA390-03, AR-LEX-C390-KULLIYYA390-04, AR-LEX-C390-KULLIYYA390-05, AR-LEX-C391-BAHTH391-01, AR-LEX-C391-BAHTH391-02, AR-LEX-C391-BAHTH391-03, AR-LEX-C391-BAHTH391-04, AR-LEX-C391-BAHTH391-05, AR-LEX-C392-MUHADIR392-01, AR-LEX-C392-MUHADIR392-02, AR-LEX-C392-MUHADIR392-03, AR-LEX-C392-MUHADIR392-04, AR-LEX-C392-MUHADIR392-05, AR-LEX-C393-TAQYIM393-01, AR-LEX-C393-TAQYIM393-02, AR-LEX-C393-TAQYIM393-03, AR-LEX-C393-TAQYIM393-04, AR-LEX-C393-TAQYIM393-05, AR-LEX-C394-ITQAN394-01, AR-LEX-C394-ITQAN394-02, AR-LEX-C394-ITQAN394-03, AR-LEX-C394-ITQAN394-04, AR-LEX-C394-ITQAN394-05, AR-LEX-C395-MARJI395-01, AR-LEX-C395-MARJI395-02, AR-LEX-C395-MARJI395-03, AR-LEX-C395-MARJI395-04, AR-LEX-C395-MARJI395-05, AR-LEX-C396-MUSTALAH396-01, AR-LEX-C396-MUSTALAH396-02, AR-LEX-C396-MUSTALAH396-03, AR-LEX-C396-MUSTALAH396-04, AR-LEX-C396-MUSTALAH396-05, AR-LEX-C397-SHAHADA397-01, AR-LEX-C397-SHAHADA397-02, AR-LEX-C397-SHAHADA397-03, AR-LEX-C397-SHAHADA397-04, AR-LEX-C397-SHAHADA397-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C390-KULLIYYA390-01, AR-LEX-C390-KULLIYYA390-02, AR-LEX-C390-KULLIYYA390-03, AR-LEX-C390-KULLIYYA390-04, AR-LEX-C390-KULLIYYA390-05, AR-LEX-C391-BAHTH391-01, AR-LEX-C391-BAHTH391-02, AR-LEX-C391-BAHTH391-03, AR-LEX-C391-BAHTH391-04, AR-LEX-C391-BAHTH391-05, AR-LEX-C392-MUHADIR392-01, AR-LEX-C392-MUHADIR392-02, AR-LEX-C392-MUHADIR392-03, AR-LEX-C392-MUHADIR392-04, AR-LEX-C392-MUHADIR392-05, AR-LEX-C393-TAQYIM393-01, AR-LEX-C393-TAQYIM393-02, AR-LEX-C393-TAQYIM393-03, AR-LEX-C393-TAQYIM393-04, AR-LEX-C393-TAQYIM393-05, AR-LEX-C394-ITQAN394-01, AR-LEX-C394-ITQAN394-02, AR-LEX-C394-ITQAN394-03, AR-LEX-C394-ITQAN394-04, AR-LEX-C394-ITQAN394-05, AR-LEX-C395-MARJI395-01, AR-LEX-C395-MARJI395-02, AR-LEX-C395-MARJI395-03, AR-LEX-C395-MARJI395-04, AR-LEX-C395-MARJI395-05, AR-LEX-C396-MUSTALAH396-01, AR-LEX-C396-MUSTALAH396-02, AR-LEX-C396-MUSTALAH396-03, AR-LEX-C396-MUSTALAH396-04, AR-LEX-C396-MUSTALAH396-05, AR-LEX-C397-SHAHADA397-01, AR-LEX-C397-SHAHADA397-02, AR-LEX-C397-SHAHADA397-03, AR-LEX-C397-SHAHADA397-04, AR-LEX-C397-SHAHADA397-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C390-kulliyya, AR-C390-takhassus, AR-C390-amid, AR-C390-minha, AR-C390-iltahaqa, AR-C391-bahith, AR-C391-dirasa, AR-C391-mukhtabar, AR-C391-mahad, AR-C391-istibyan, AR-C392-muhadir, AR-C392-ustadh, AR-C392-ashrafa, AR-C392-mushrif, AR-C392-dhakara, AR-C393-ikhtibar, AR-C393-qabul, AR-C393-muaddal, AR-C393-tafawwaqa, AR-C393-qayyama, AR-C394-atqana, AR-C394-iktasaba, AR-C394-taammaqa, AR-C394-lakhkhasa, AR-C394-mulakhkhas, AR-C395-marji, AR-C395-istashhada, AR-C395-iqtabasa, AR-C395-talaa, AR-C395-taammala, AR-C396-mustalah, AR-C396-tarif, AR-C396-fihris, AR-C396-utruha, AR-C396-manhaj, AR-C397-bakaluriyus, AR-C397-majistir, AR-C397-duktura, AR-C397-muqarrar, AR-C397-tadrib]
+---
+
+# Words from chapters 390–397 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C390-KULLIYYA390-01, AR-LEX-C390-KULLIYYA390-02] -->
+
+[PAUSE 3s] Say the Arabic for a faculty and a specialization.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C390-KULLIYYA390-01, AR-LEX-C390-KULLIYYA390-02, AR-LEX-C390-KULLIYYA390-03, AR-LEX-C390-KULLIYYA390-04, AR-LEX-C390-KULLIYYA390-05, AR-LEX-C391-BAHTH391-01, AR-LEX-C391-BAHTH391-02, AR-LEX-C391-BAHTH391-03, AR-LEX-C391-BAHTH391-04, AR-LEX-C391-BAHTH391-05, AR-LEX-C392-MUHADIR392-01, AR-LEX-C392-MUHADIR392-02, AR-LEX-C392-MUHADIR392-03, AR-LEX-C392-MUHADIR392-04, AR-LEX-C392-MUHADIR392-05, AR-LEX-C393-TAQYIM393-01, AR-LEX-C393-TAQYIM393-02, AR-LEX-C393-TAQYIM393-03, AR-LEX-C393-TAQYIM393-04, AR-LEX-C393-TAQYIM393-05, AR-LEX-C394-ITQAN394-01, AR-LEX-C394-ITQAN394-02, AR-LEX-C394-ITQAN394-03, AR-LEX-C394-ITQAN394-04, AR-LEX-C394-ITQAN394-05, AR-LEX-C395-MARJI395-01, AR-LEX-C395-MARJI395-02, AR-LEX-C395-MARJI395-03, AR-LEX-C395-MARJI395-04, AR-LEX-C395-MARJI395-05, AR-LEX-C396-MUSTALAH396-01, AR-LEX-C396-MUSTALAH396-02, AR-LEX-C396-MUSTALAH396-03, AR-LEX-C396-MUSTALAH396-04, AR-LEX-C396-MUSTALAH396-05, AR-LEX-C397-SHAHADA397-01, AR-LEX-C397-SHAHADA397-02, AR-LEX-C397-SHAHADA397-03, AR-LEX-C397-SHAHADA397-04, AR-LEX-C397-SHAHADA397-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a faculty, a specialization, a dean, a scholarship, to enrol]
+- [YOU SAY: a researcher, a study, a laboratory, an institute, a questionnaire]
+- [YOU SAY: a lecturer, a professor, to supervise, a supervisor, to study for]
+- [YOU SAY: a test, admission, an average, to excel, to evaluate]
+- [YOU SAY: to master, to acquire, to go deeper, to summarize, a summary]
+- [YOU SAY: a reference, to cite, to quote, to read up on, to reflect]
+- [YOU SAY: a term, a definition, an index, a thesis, a curriculum]
+- [YOU SAY: a bachelor's degree, a master's degree, a doctorate, a syllabus, training]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C390-KULLIYYA390-01, AR-LEX-C390-KULLIYYA390-02, AR-LEX-C390-KULLIYYA390-03, AR-LEX-C390-KULLIYYA390-04, AR-LEX-C390-KULLIYYA390-05, AR-LEX-C391-BAHTH391-01, AR-LEX-C391-BAHTH391-02, AR-LEX-C391-BAHTH391-03, AR-LEX-C391-BAHTH391-04, AR-LEX-C391-BAHTH391-05, AR-LEX-C392-MUHADIR392-01, AR-LEX-C392-MUHADIR392-02, AR-LEX-C392-MUHADIR392-03, AR-LEX-C392-MUHADIR392-04, AR-LEX-C392-MUHADIR392-05, AR-LEX-C393-TAQYIM393-01, AR-LEX-C393-TAQYIM393-02, AR-LEX-C393-TAQYIM393-03, AR-LEX-C393-TAQYIM393-04, AR-LEX-C393-TAQYIM393-05, AR-LEX-C394-ITQAN394-01, AR-LEX-C394-ITQAN394-02, AR-LEX-C394-ITQAN394-03, AR-LEX-C394-ITQAN394-04, AR-LEX-C394-ITQAN394-05, AR-LEX-C395-MARJI395-01, AR-LEX-C395-MARJI395-02, AR-LEX-C395-MARJI395-03, AR-LEX-C395-MARJI395-04, AR-LEX-C395-MARJI395-05, AR-LEX-C396-MUSTALAH396-01, AR-LEX-C396-MUSTALAH396-02, AR-LEX-C396-MUSTALAH396-03, AR-LEX-C396-MUSTALAH396-04, AR-LEX-C396-MUSTALAH396-05, AR-LEX-C397-SHAHADA397-01, AR-LEX-C397-SHAHADA397-02, AR-LEX-C397-SHAHADA397-03, AR-LEX-C397-SHAHADA397-04, AR-LEX-C397-SHAHADA397-05] -->
+
+[PAUSE 3s] A faculty? (**كلية**, *kulliyya*.) A specialization? (**تخصص**, *takhaṣṣuṣ*.) A dean? (**عميد**, *ʿamīd*.) A scholarship? (**منحة**, *minḥa*.) To enrol? (**التحق**, *iltaḥaqa*.) A researcher? (**باحث**, *bāḥith*.) A study? (**دراسة**, *dirāsa*.) A laboratory? (**مختبر**, *mukhtabar*.) An institute? (**معهد**, *maʿhad*.) A questionnaire? (**استبيان**, *istibyān*.) A lecturer? (**محاضر**, *muḥāḍir*.) A professor? (**أستاذ**, *ustādh*.) To supervise? (**أشرف**, *ashrafa*.) A supervisor? (**مشرف**, *mushrif*.) To study for? (**ذاكر**, *dhākara*.) A test? (**اختبار**, *ikhtibār*.) Admission? (**قبول**, *qabūl*.) An average? (**معدل**, *muʿaddal*.) To excel? (**تفوق**, *tafawwaqa*.) To evaluate? (**قيم**, *qayyama*.) To master? (**أتقن**, *atqana*.) To acquire? (**اكتسب**, *iktasaba*.) To go deeper? (**تعمق**, *taʿammaqa*.) To summarize? (**لخص**, *lakhkhaṣa*.) A summary? (**ملخص**, *mulakhkhaṣ*.) A reference? (**مرجع**, *marjiʿ*.) To cite? (**استشهد**, *istashhada*.) To quote? (**اقتبس**, *iqtabasa*.) To read up on? (**طالع**, *ṭālaʿa*.) To reflect? (**تأمل**, *taʾammala*.) A term? (**مصطلح**, *muṣṭalaḥ*.) A definition? (**تعريف**, *taʿrīf*.) An index? (**فهرس**, *fihris*.) A thesis? (**أطروحة**, *uṭrūḥa*.) A curriculum? (**منهج**, *manhaj*.) A bachelor's degree? (**بكالوريوس**, *bakālūriyūs*.) A master's degree? (**ماجستير**, *mājistīr*.) A doctorate? (**دكتوراه**, *duktūrāh*.) A syllabus? (**مقرر**, *muqarrar*.) Training? (**تدريب**, *tadrīb*.)
+`;export{t};

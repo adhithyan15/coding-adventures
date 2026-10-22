@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R527-review-520-527
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 29240
+chapter: 527
+type: review
+headword: (dialogue)
+gloss: a review of chapters 520-527
+concept_tag: REVIEW
+prerequisites: [AR-C520-itada, AR-C520-munawaba, AR-C520-ijaza, AR-C520-mahamma, AR-C520-naffadha, AR-C521-ajr, AR-C521-mukafaa, AR-C521-tarqiya, AR-C521-raqqa, AR-C521-taiba, AR-C522-bashara, AR-C522-kadaha, AR-C522-istiqala, AR-C522-mutaqaid, AR-C522-atil, AR-C523-khattata, AR-C523-atamma, AR-C523-tafarragha, AR-C523-taqyim, AR-C523-intaj, AR-C524-fawada, AR-C524-ijtahada, AR-C524-nawaba, AR-C524-taraqqa, AR-C524-maqarr, AR-C525-antaja, AR-C525-sammama, AR-C525-musammim, AR-C525-barmaja, AR-C525-mubarmij, AR-C526-mikaniki, AR-C526-muqawil, AR-C526-dahhan, AR-C526-banna, AR-C526-iskafi, AR-C527-fallah, AR-C527-bustani, AR-C527-rabiha, AR-C527-aflasa, AR-C527-iddakhara]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C520-DAWAM520-01, AR-LEX-C520-DAWAM520-02, AR-LEX-C520-DAWAM520-03, AR-LEX-C520-DAWAM520-04, AR-LEX-C520-DAWAM520-05, AR-LEX-C521-MUKAFAA521-01, AR-LEX-C521-MUKAFAA521-02, AR-LEX-C521-MUKAFAA521-03, AR-LEX-C521-MUKAFAA521-04, AR-LEX-C521-MUKAFAA521-05, AR-LEX-C522-AMAL522-01, AR-LEX-C522-AMAL522-02, AR-LEX-C522-AMAL522-03, AR-LEX-C522-AMAL522-04, AR-LEX-C522-AMAL522-05, AR-LEX-C523-INJAZ523-01, AR-LEX-C523-INJAZ523-02, AR-LEX-C523-INJAZ523-03, AR-LEX-C523-INJAZ523-04, AR-LEX-C523-INJAZ523-05, AR-LEX-C524-TAAWUN524-01, AR-LEX-C524-TAAWUN524-02, AR-LEX-C524-TAAWUN524-03, AR-LEX-C524-TAAWUN524-04, AR-LEX-C524-TAAWUN524-05, AR-LEX-C525-TASMIM525-01, AR-LEX-C525-TASMIM525-02, AR-LEX-C525-TASMIM525-03, AR-LEX-C525-TASMIM525-04, AR-LEX-C525-TASMIM525-05, AR-LEX-C526-HIRAF526-01, AR-LEX-C526-HIRAF526-02, AR-LEX-C526-HIRAF526-03, AR-LEX-C526-HIRAF526-04, AR-LEX-C526-HIRAF526-05, AR-LEX-C527-MAL527-01, AR-LEX-C527-MAL527-02, AR-LEX-C527-MAL527-03, AR-LEX-C527-MAL527-04, AR-LEX-C527-MAL527-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C520-DAWAM520-01, AR-LEX-C520-DAWAM520-02, AR-LEX-C520-DAWAM520-03, AR-LEX-C520-DAWAM520-04, AR-LEX-C520-DAWAM520-05, AR-LEX-C521-MUKAFAA521-01, AR-LEX-C521-MUKAFAA521-02, AR-LEX-C521-MUKAFAA521-03, AR-LEX-C521-MUKAFAA521-04, AR-LEX-C521-MUKAFAA521-05, AR-LEX-C522-AMAL522-01, AR-LEX-C522-AMAL522-02, AR-LEX-C522-AMAL522-03, AR-LEX-C522-AMAL522-04, AR-LEX-C522-AMAL522-05, AR-LEX-C523-INJAZ523-01, AR-LEX-C523-INJAZ523-02, AR-LEX-C523-INJAZ523-03, AR-LEX-C523-INJAZ523-04, AR-LEX-C523-INJAZ523-05, AR-LEX-C524-TAAWUN524-01, AR-LEX-C524-TAAWUN524-02, AR-LEX-C524-TAAWUN524-03, AR-LEX-C524-TAAWUN524-04, AR-LEX-C524-TAAWUN524-05, AR-LEX-C525-TASMIM525-01, AR-LEX-C525-TASMIM525-02, AR-LEX-C525-TASMIM525-03, AR-LEX-C525-TASMIM525-04, AR-LEX-C525-TASMIM525-05, AR-LEX-C526-HIRAF526-01, AR-LEX-C526-HIRAF526-02, AR-LEX-C526-HIRAF526-03, AR-LEX-C526-HIRAF526-04, AR-LEX-C526-HIRAF526-05, AR-LEX-C527-MAL527-01, AR-LEX-C527-MAL527-02, AR-LEX-C527-MAL527-03, AR-LEX-C527-MAL527-04, AR-LEX-C527-MAL527-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C520-itada, AR-C520-munawaba, AR-C520-ijaza, AR-C520-mahamma, AR-C520-naffadha, AR-C521-ajr, AR-C521-mukafaa, AR-C521-tarqiya, AR-C521-raqqa, AR-C521-taiba, AR-C522-bashara, AR-C522-kadaha, AR-C522-istiqala, AR-C522-mutaqaid, AR-C522-atil, AR-C523-khattata, AR-C523-atamma, AR-C523-tafarragha, AR-C523-taqyim, AR-C523-intaj, AR-C524-fawada, AR-C524-ijtahada, AR-C524-nawaba, AR-C524-taraqqa, AR-C524-maqarr, AR-C525-antaja, AR-C525-sammama, AR-C525-musammim, AR-C525-barmaja, AR-C525-mubarmij, AR-C526-mikaniki, AR-C526-muqawil, AR-C526-dahhan, AR-C526-banna, AR-C526-iskafi, AR-C527-fallah, AR-C527-bustani, AR-C527-rabiha, AR-C527-aflasa, AR-C527-iddakhara]
+---
+
+# Words from chapters 520–527 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C520-DAWAM520-01, AR-LEX-C520-DAWAM520-02] -->
+
+[PAUSE 3s] Say the Arabic for to get used to and a shift.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C520-DAWAM520-01, AR-LEX-C520-DAWAM520-02, AR-LEX-C520-DAWAM520-03, AR-LEX-C520-DAWAM520-04, AR-LEX-C520-DAWAM520-05, AR-LEX-C521-MUKAFAA521-01, AR-LEX-C521-MUKAFAA521-02, AR-LEX-C521-MUKAFAA521-03, AR-LEX-C521-MUKAFAA521-04, AR-LEX-C521-MUKAFAA521-05, AR-LEX-C522-AMAL522-01, AR-LEX-C522-AMAL522-02, AR-LEX-C522-AMAL522-03, AR-LEX-C522-AMAL522-04, AR-LEX-C522-AMAL522-05, AR-LEX-C523-INJAZ523-01, AR-LEX-C523-INJAZ523-02, AR-LEX-C523-INJAZ523-03, AR-LEX-C523-INJAZ523-04, AR-LEX-C523-INJAZ523-05, AR-LEX-C524-TAAWUN524-01, AR-LEX-C524-TAAWUN524-02, AR-LEX-C524-TAAWUN524-03, AR-LEX-C524-TAAWUN524-04, AR-LEX-C524-TAAWUN524-05, AR-LEX-C525-TASMIM525-01, AR-LEX-C525-TASMIM525-02, AR-LEX-C525-TASMIM525-03, AR-LEX-C525-TASMIM525-04, AR-LEX-C525-TASMIM525-05, AR-LEX-C526-HIRAF526-01, AR-LEX-C526-HIRAF526-02, AR-LEX-C526-HIRAF526-03, AR-LEX-C526-HIRAF526-04, AR-LEX-C526-HIRAF526-05, AR-LEX-C527-MAL527-01, AR-LEX-C527-MAL527-02, AR-LEX-C527-MAL527-03, AR-LEX-C527-MAL527-04, AR-LEX-C527-MAL527-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to get used to, a shift, time off, a task, to carry out]
+- [YOU SAY: a wage, a bonus, a promotion, to promote, to get tired]
+- [YOU SAY: to set to work, to toil, a resignation, retired, unemployed]
+- [YOU SAY: to make plans, to complete, to devote oneself, an evaluation, production]
+- [YOU SAY: to hold talks, to work hard, to be on duty, to be promoted, headquarters]
+- [YOU SAY: to produce, to design, a designer, to program, a programmer]
+- [YOU SAY: a mechanic, a building contractor, a house painter, a builder, a cobbler]
+- [YOU SAY: a peasant farmer, a gardener, to make a profit, to go bankrupt, to put aside]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C520-DAWAM520-01, AR-LEX-C520-DAWAM520-02, AR-LEX-C520-DAWAM520-03, AR-LEX-C520-DAWAM520-04, AR-LEX-C520-DAWAM520-05, AR-LEX-C521-MUKAFAA521-01, AR-LEX-C521-MUKAFAA521-02, AR-LEX-C521-MUKAFAA521-03, AR-LEX-C521-MUKAFAA521-04, AR-LEX-C521-MUKAFAA521-05, AR-LEX-C522-AMAL522-01, AR-LEX-C522-AMAL522-02, AR-LEX-C522-AMAL522-03, AR-LEX-C522-AMAL522-04, AR-LEX-C522-AMAL522-05, AR-LEX-C523-INJAZ523-01, AR-LEX-C523-INJAZ523-02, AR-LEX-C523-INJAZ523-03, AR-LEX-C523-INJAZ523-04, AR-LEX-C523-INJAZ523-05, AR-LEX-C524-TAAWUN524-01, AR-LEX-C524-TAAWUN524-02, AR-LEX-C524-TAAWUN524-03, AR-LEX-C524-TAAWUN524-04, AR-LEX-C524-TAAWUN524-05, AR-LEX-C525-TASMIM525-01, AR-LEX-C525-TASMIM525-02, AR-LEX-C525-TASMIM525-03, AR-LEX-C525-TASMIM525-04, AR-LEX-C525-TASMIM525-05, AR-LEX-C526-HIRAF526-01, AR-LEX-C526-HIRAF526-02, AR-LEX-C526-HIRAF526-03, AR-LEX-C526-HIRAF526-04, AR-LEX-C526-HIRAF526-05, AR-LEX-C527-MAL527-01, AR-LEX-C527-MAL527-02, AR-LEX-C527-MAL527-03, AR-LEX-C527-MAL527-04, AR-LEX-C527-MAL527-05] -->
+
+[PAUSE 3s] To get used to? (**اعتاد**, *iʿtāda*.) A shift? (**مناوبة**, *munāwaba*.) Time off? (**إجازة**, *ijāza*.) A task? (**مهمة**, *mahamma*.) To carry out? (**نفذ**, *naffadha*.) A wage? (**أجر**, *ajr*.) A bonus? (**مكافأة**, *mukāfaʾa*.) A promotion? (**ترقية**, *tarqiya*.) To promote? (**رقى**, *raqqā*.) To get tired? (**تعب**, *taʿiba*.) To set to work? (**باشر**, *bāshara*.) To toil? (**كدح**, *kadaḥa*.) A resignation? (**استقالة**, *istiqāla*.) Retired? (**متقاعد**, *mutaqāʿid*.) Unemployed? (**عاطل**, *ʿāṭil*.) To make plans? (**خطط**, *khaṭṭaṭa*.) To complete? (**أتم**, *atamma*.) To devote oneself? (**تفرغ**, *tafarragha*.) An evaluation? (**تقييم**, *taqyīm*.) Production? (**إنتاج**, *intāj*.) To hold talks? (**فاوض**, *fāwaḍa*.) To work hard? (**اجتهد**, *ijtahada*.) To be on duty? (**ناوب**, *nāwaba*.) To be promoted? (**ترقى**, *taraqqā*.) Headquarters? (**مقر**, *maqarr*.) To produce? (**أنتج**, *antaja*.) To design? (**صمم**, *ṣammama*.) A designer? (**مصمم**, *muṣammim*.) To program? (**برمج**, *barmaja*.) A programmer? (**مبرمج**, *mubarmij*.) A mechanic? (**ميكانيكي**, *mīkānīkī*.) A building contractor? (**مقاول**, *muqāwil*.) A house painter? (**دهان**, *dahhān*.) A builder? (**بناء**, *bannāʾ*.) A cobbler? (**إسكافي**, *iskāfī*.) A peasant farmer? (**فلاح**, *fallāḥ*.) A gardener? (**بستاني**, *bustānī*.) To make a profit? (**ربح**, *rabiḥa*.) To go bankrupt? (**أفلس**, *aflasa*.) To put aside? (**ادخر**, *iddakhara*.)
+`;export{t};

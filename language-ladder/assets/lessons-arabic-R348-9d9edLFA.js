@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R348-review-341-348
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 19860
+chapter: 348
+type: review
+headword: (dialogue)
+gloss: a review of chapters 341-348
+concept_tag: REVIEW
+prerequisites: [AR-C341-faris, AR-C341-khudha, AR-C341-hudna, AR-C341-muahada, AR-C341-khana, AR-C342-turath, AR-C342-makhtuta, AR-C342-naqsh, AR-C342-laqab, AR-C342-ikhtaraa, AR-C343-mughamara, AR-C343-majhul, AR-C343-mufajaa, AR-C343-sudfa, AR-C343-khatara, AR-C344-hattab, AR-C344-sahara, AR-C344-tahawwala, AR-C344-tahaqqaqa, AR-C344-intaqama, AR-C345-tahadda, AR-C345-wajaha, AR-C345-taghallaba, AR-C345-iqtaraba, AR-C345-ibtaada, AR-C346-tajassasa, AR-C346-tanakkara, AR-C346-ishtabaha, AR-C346-tasallala, AR-C346-tarada, AR-C347-ikhtatafa, AR-C347-lahiqa, AR-C347-rahina, AR-C347-fidya, AR-C347-khatif, AR-C348-tuhma, AR-C348-jinaya, AR-C348-uquba, AR-C348-aqaba, AR-C348-ballagha]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C341-FARIS341-01, AR-LEX-C341-FARIS341-02, AR-LEX-C341-FARIS341-03, AR-LEX-C341-FARIS341-04, AR-LEX-C341-FARIS341-05, AR-LEX-C342-TURATH342-01, AR-LEX-C342-TURATH342-02, AR-LEX-C342-TURATH342-03, AR-LEX-C342-TURATH342-04, AR-LEX-C342-TURATH342-05, AR-LEX-C343-MUGHAMARA343-01, AR-LEX-C343-MUGHAMARA343-02, AR-LEX-C343-MUGHAMARA343-03, AR-LEX-C343-MUGHAMARA343-04, AR-LEX-C343-MUGHAMARA343-05, AR-LEX-C344-HIKAYA344-01, AR-LEX-C344-HIKAYA344-02, AR-LEX-C344-HIKAYA344-03, AR-LEX-C344-HIKAYA344-04, AR-LEX-C344-HIKAYA344-05, AR-LEX-C345-MUWAJAHA345-01, AR-LEX-C345-MUWAJAHA345-02, AR-LEX-C345-MUWAJAHA345-03, AR-LEX-C345-MUWAJAHA345-04, AR-LEX-C345-MUWAJAHA345-05, AR-LEX-C346-JASUS346-01, AR-LEX-C346-JASUS346-02, AR-LEX-C346-JASUS346-03, AR-LEX-C346-JASUS346-04, AR-LEX-C346-JASUS346-05, AR-LEX-C347-KHATF347-01, AR-LEX-C347-KHATF347-02, AR-LEX-C347-KHATF347-03, AR-LEX-C347-KHATF347-04, AR-LEX-C347-KHATF347-05, AR-LEX-C348-TUHMA348-01, AR-LEX-C348-TUHMA348-02, AR-LEX-C348-TUHMA348-03, AR-LEX-C348-TUHMA348-04, AR-LEX-C348-TUHMA348-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C341-FARIS341-01, AR-LEX-C341-FARIS341-02, AR-LEX-C341-FARIS341-03, AR-LEX-C341-FARIS341-04, AR-LEX-C341-FARIS341-05, AR-LEX-C342-TURATH342-01, AR-LEX-C342-TURATH342-02, AR-LEX-C342-TURATH342-03, AR-LEX-C342-TURATH342-04, AR-LEX-C342-TURATH342-05, AR-LEX-C343-MUGHAMARA343-01, AR-LEX-C343-MUGHAMARA343-02, AR-LEX-C343-MUGHAMARA343-03, AR-LEX-C343-MUGHAMARA343-04, AR-LEX-C343-MUGHAMARA343-05, AR-LEX-C344-HIKAYA344-01, AR-LEX-C344-HIKAYA344-02, AR-LEX-C344-HIKAYA344-03, AR-LEX-C344-HIKAYA344-04, AR-LEX-C344-HIKAYA344-05, AR-LEX-C345-MUWAJAHA345-01, AR-LEX-C345-MUWAJAHA345-02, AR-LEX-C345-MUWAJAHA345-03, AR-LEX-C345-MUWAJAHA345-04, AR-LEX-C345-MUWAJAHA345-05, AR-LEX-C346-JASUS346-01, AR-LEX-C346-JASUS346-02, AR-LEX-C346-JASUS346-03, AR-LEX-C346-JASUS346-04, AR-LEX-C346-JASUS346-05, AR-LEX-C347-KHATF347-01, AR-LEX-C347-KHATF347-02, AR-LEX-C347-KHATF347-03, AR-LEX-C347-KHATF347-04, AR-LEX-C347-KHATF347-05, AR-LEX-C348-TUHMA348-01, AR-LEX-C348-TUHMA348-02, AR-LEX-C348-TUHMA348-03, AR-LEX-C348-TUHMA348-04, AR-LEX-C348-TUHMA348-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C341-faris, AR-C341-khudha, AR-C341-hudna, AR-C341-muahada, AR-C341-khana, AR-C342-turath, AR-C342-makhtuta, AR-C342-naqsh, AR-C342-laqab, AR-C342-ikhtaraa, AR-C343-mughamara, AR-C343-majhul, AR-C343-mufajaa, AR-C343-sudfa, AR-C343-khatara, AR-C344-hattab, AR-C344-sahara, AR-C344-tahawwala, AR-C344-tahaqqaqa, AR-C344-intaqama, AR-C345-tahadda, AR-C345-wajaha, AR-C345-taghallaba, AR-C345-iqtaraba, AR-C345-ibtaada, AR-C346-tajassasa, AR-C346-tanakkara, AR-C346-ishtabaha, AR-C346-tasallala, AR-C346-tarada, AR-C347-ikhtatafa, AR-C347-lahiqa, AR-C347-rahina, AR-C347-fidya, AR-C347-khatif, AR-C348-tuhma, AR-C348-jinaya, AR-C348-uquba, AR-C348-aqaba, AR-C348-ballagha]
+---
+
+# Words from chapters 341–348 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C341-FARIS341-01, AR-LEX-C341-FARIS341-02] -->
+
+[PAUSE 3s] Say the Arabic for a knight and a helmet.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C341-FARIS341-01, AR-LEX-C341-FARIS341-02, AR-LEX-C341-FARIS341-03, AR-LEX-C341-FARIS341-04, AR-LEX-C341-FARIS341-05, AR-LEX-C342-TURATH342-01, AR-LEX-C342-TURATH342-02, AR-LEX-C342-TURATH342-03, AR-LEX-C342-TURATH342-04, AR-LEX-C342-TURATH342-05, AR-LEX-C343-MUGHAMARA343-01, AR-LEX-C343-MUGHAMARA343-02, AR-LEX-C343-MUGHAMARA343-03, AR-LEX-C343-MUGHAMARA343-04, AR-LEX-C343-MUGHAMARA343-05, AR-LEX-C344-HIKAYA344-01, AR-LEX-C344-HIKAYA344-02, AR-LEX-C344-HIKAYA344-03, AR-LEX-C344-HIKAYA344-04, AR-LEX-C344-HIKAYA344-05, AR-LEX-C345-MUWAJAHA345-01, AR-LEX-C345-MUWAJAHA345-02, AR-LEX-C345-MUWAJAHA345-03, AR-LEX-C345-MUWAJAHA345-04, AR-LEX-C345-MUWAJAHA345-05, AR-LEX-C346-JASUS346-01, AR-LEX-C346-JASUS346-02, AR-LEX-C346-JASUS346-03, AR-LEX-C346-JASUS346-04, AR-LEX-C346-JASUS346-05, AR-LEX-C347-KHATF347-01, AR-LEX-C347-KHATF347-02, AR-LEX-C347-KHATF347-03, AR-LEX-C347-KHATF347-04, AR-LEX-C347-KHATF347-05, AR-LEX-C348-TUHMA348-01, AR-LEX-C348-TUHMA348-02, AR-LEX-C348-TUHMA348-03, AR-LEX-C348-TUHMA348-04, AR-LEX-C348-TUHMA348-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a knight, a helmet, a truce, a treaty, to betray]
+- [YOU SAY: heritage, a manuscript, an inscription, a title, to invent]
+- [YOU SAY: an adventure, unknown, a surprise, a coincidence, to take a risk]
+- [YOU SAY: a woodcutter, to enchant, to turn into, to come true, to take revenge]
+- [YOU SAY: to challenge, to confront, to overcome, to approach, to move away]
+- [YOU SAY: to spy, to disguise oneself, to suspect, to sneak in, to chase]
+- [YOU SAY: to kidnap, to catch up with, a hostage, a ransom, a kidnapper]
+- [YOU SAY: an accusation, a felony, a penalty, to punish, to inform the police]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C341-FARIS341-01, AR-LEX-C341-FARIS341-02, AR-LEX-C341-FARIS341-03, AR-LEX-C341-FARIS341-04, AR-LEX-C341-FARIS341-05, AR-LEX-C342-TURATH342-01, AR-LEX-C342-TURATH342-02, AR-LEX-C342-TURATH342-03, AR-LEX-C342-TURATH342-04, AR-LEX-C342-TURATH342-05, AR-LEX-C343-MUGHAMARA343-01, AR-LEX-C343-MUGHAMARA343-02, AR-LEX-C343-MUGHAMARA343-03, AR-LEX-C343-MUGHAMARA343-04, AR-LEX-C343-MUGHAMARA343-05, AR-LEX-C344-HIKAYA344-01, AR-LEX-C344-HIKAYA344-02, AR-LEX-C344-HIKAYA344-03, AR-LEX-C344-HIKAYA344-04, AR-LEX-C344-HIKAYA344-05, AR-LEX-C345-MUWAJAHA345-01, AR-LEX-C345-MUWAJAHA345-02, AR-LEX-C345-MUWAJAHA345-03, AR-LEX-C345-MUWAJAHA345-04, AR-LEX-C345-MUWAJAHA345-05, AR-LEX-C346-JASUS346-01, AR-LEX-C346-JASUS346-02, AR-LEX-C346-JASUS346-03, AR-LEX-C346-JASUS346-04, AR-LEX-C346-JASUS346-05, AR-LEX-C347-KHATF347-01, AR-LEX-C347-KHATF347-02, AR-LEX-C347-KHATF347-03, AR-LEX-C347-KHATF347-04, AR-LEX-C347-KHATF347-05, AR-LEX-C348-TUHMA348-01, AR-LEX-C348-TUHMA348-02, AR-LEX-C348-TUHMA348-03, AR-LEX-C348-TUHMA348-04, AR-LEX-C348-TUHMA348-05] -->
+
+[PAUSE 3s] A knight? (**فارس**, *fāris*.) A helmet? (**خوذة**, *khūdha*.) A truce? (**هدنة**, *hudna*.) A treaty? (**معاهدة**, *muʿāhada*.) To betray? (**خان**, *khāna*.) Heritage? (**تراث**, *turāth*.) A manuscript? (**مخطوطة**, *makhṭūṭa*.) An inscription? (**نقش**, *naqsh*.) A title? (**لقب**, *laqab*.) To invent? (**اخترع**, *ikhtaraʿa*.) An adventure? (**مغامرة**, *mughāmara*.) Unknown? (**مجهول**, *majhūl*.) A surprise? (**مفاجأة**, *mufājaʾa*.) A coincidence? (**صدفة**, *ṣudfa*.) To take a risk? (**خاطر**, *khāṭara*.) A woodcutter? (**حطاب**, *ḥaṭṭāb*.) To enchant? (**سحر**, *saḥara*.) To turn into? (**تحول**, *taḥawwala*.) To come true? (**تحقق**, *taḥaqqaqa*.) To take revenge? (**انتقم**, *intaqama*.) To challenge? (**تحدى**, *taḥaddā*.) To confront? (**واجه**, *wājaha*.) To overcome? (**تغلب**, *taghallaba*.) To approach? (**اقترب**, *iqtaraba*.) To move away? (**ابتعد**, *ibtaʿada*.) To spy? (**تجسس**, *tajassasa*.) To disguise oneself? (**تنكر**, *tanakkara*.) To suspect? (**اشتبه**, *ishtabaha*.) To sneak in? (**تسلل**, *tasallala*.) To chase? (**طارد**, *ṭārada*.) To kidnap? (**اختطف**, *ikhtaṭafa*.) To catch up with? (**لحق**, *laḥiqa*.) A hostage? (**رهينة**, *rahīna*.) A ransom? (**فدية**, *fidya*.) A kidnapper? (**خاطف**, *khāṭif*.) An accusation? (**تهمة**, *tuhma*.) A felony? (**جناية**, *jināya*.) A penalty? (**عقوبة**, *ʿuqūba*.) To punish? (**عاقب**, *ʿāqaba*.) To inform the police? (**بلغ**, *ballagha*.)
+`;export{t};

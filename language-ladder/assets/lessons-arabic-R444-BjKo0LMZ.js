@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R446-review-439-446
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 25020
+chapter: 446
+type: review
+headword: (dialogue)
+gloss: a review of chapters 439-446
+concept_tag: REVIEW
+prerequisites: [AR-C439-manzar, AR-C439-burj, AR-C439-nusb, AR-C439-istakshafa, AR-C439-istahaba, AR-C440-nafura, AR-C440-tidhkar, AR-C440-istiraha, AR-C440-rafaqa, AR-C440-awsala, AR-C441-istiqbal, AR-C441-nazil, AR-C441-iqama, AR-C441-ghadara, AR-C441-akhla, AR-C442-mukhayyam, AR-C442-muntaja, AR-C442-shalih, AR-C442-ashala, AR-C442-sanawbar, AR-C443-bawwab, AR-C443-mulaa, AR-C443-nazafa, AR-C443-atalla, AR-C443-khazna, AR-C444-kahraba, AR-C444-sakhkhana, AR-C444-inqataa, AR-C444-muhawwil, AR-C444-anara, AR-C445-tram, AR-C445-shahina, AR-C445-miqwad, AR-C445-tamahhala, AR-C445-arqala, AR-C446-baqshish, AR-C446-khidma, AR-C446-khadama, AR-C446-rahhaba, AR-C446-awsa]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C439-MANZAR439-01, AR-LEX-C439-MANZAR439-02, AR-LEX-C439-MANZAR439-03, AR-LEX-C439-MANZAR439-04, AR-LEX-C439-MANZAR439-05, AR-LEX-C440-TIDHKAR440-01, AR-LEX-C440-TIDHKAR440-02, AR-LEX-C440-TIDHKAR440-03, AR-LEX-C440-TIDHKAR440-04, AR-LEX-C440-TIDHKAR440-05, AR-LEX-C441-ISTIQBAL441-01, AR-LEX-C441-ISTIQBAL441-02, AR-LEX-C441-ISTIQBAL441-03, AR-LEX-C441-ISTIQBAL441-04, AR-LEX-C441-ISTIQBAL441-05, AR-LEX-C442-MUNTAJA442-01, AR-LEX-C442-MUNTAJA442-02, AR-LEX-C442-MUNTAJA442-03, AR-LEX-C442-MUNTAJA442-04, AR-LEX-C442-MUNTAJA442-05, AR-LEX-C443-MULAA443-01, AR-LEX-C443-MULAA443-02, AR-LEX-C443-MULAA443-03, AR-LEX-C443-MULAA443-04, AR-LEX-C443-MULAA443-05, AR-LEX-C444-KAHRABA444-01, AR-LEX-C444-KAHRABA444-02, AR-LEX-C444-KAHRABA444-03, AR-LEX-C444-KAHRABA444-04, AR-LEX-C444-KAHRABA444-05, AR-LEX-C445-TRAM445-01, AR-LEX-C445-TRAM445-02, AR-LEX-C445-TRAM445-03, AR-LEX-C445-TRAM445-04, AR-LEX-C445-TRAM445-05, AR-LEX-C446-KHIDMA446-01, AR-LEX-C446-KHIDMA446-02, AR-LEX-C446-KHIDMA446-03, AR-LEX-C446-KHIDMA446-04, AR-LEX-C446-KHIDMA446-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C439-MANZAR439-01, AR-LEX-C439-MANZAR439-02, AR-LEX-C439-MANZAR439-03, AR-LEX-C439-MANZAR439-04, AR-LEX-C439-MANZAR439-05, AR-LEX-C440-TIDHKAR440-01, AR-LEX-C440-TIDHKAR440-02, AR-LEX-C440-TIDHKAR440-03, AR-LEX-C440-TIDHKAR440-04, AR-LEX-C440-TIDHKAR440-05, AR-LEX-C441-ISTIQBAL441-01, AR-LEX-C441-ISTIQBAL441-02, AR-LEX-C441-ISTIQBAL441-03, AR-LEX-C441-ISTIQBAL441-04, AR-LEX-C441-ISTIQBAL441-05, AR-LEX-C442-MUNTAJA442-01, AR-LEX-C442-MUNTAJA442-02, AR-LEX-C442-MUNTAJA442-03, AR-LEX-C442-MUNTAJA442-04, AR-LEX-C442-MUNTAJA442-05, AR-LEX-C443-MULAA443-01, AR-LEX-C443-MULAA443-02, AR-LEX-C443-MULAA443-03, AR-LEX-C443-MULAA443-04, AR-LEX-C443-MULAA443-05, AR-LEX-C444-KAHRABA444-01, AR-LEX-C444-KAHRABA444-02, AR-LEX-C444-KAHRABA444-03, AR-LEX-C444-KAHRABA444-04, AR-LEX-C444-KAHRABA444-05, AR-LEX-C445-TRAM445-01, AR-LEX-C445-TRAM445-02, AR-LEX-C445-TRAM445-03, AR-LEX-C445-TRAM445-04, AR-LEX-C445-TRAM445-05, AR-LEX-C446-KHIDMA446-01, AR-LEX-C446-KHIDMA446-02, AR-LEX-C446-KHIDMA446-03, AR-LEX-C446-KHIDMA446-04, AR-LEX-C446-KHIDMA446-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C439-manzar, AR-C439-burj, AR-C439-nusb, AR-C439-istakshafa, AR-C439-istahaba, AR-C440-nafura, AR-C440-tidhkar, AR-C440-istiraha, AR-C440-rafaqa, AR-C440-awsala, AR-C441-istiqbal, AR-C441-nazil, AR-C441-iqama, AR-C441-ghadara, AR-C441-akhla, AR-C442-mukhayyam, AR-C442-muntaja, AR-C442-shalih, AR-C442-ashala, AR-C442-sanawbar, AR-C443-bawwab, AR-C443-mulaa, AR-C443-nazafa, AR-C443-atalla, AR-C443-khazna, AR-C444-kahraba, AR-C444-sakhkhana, AR-C444-inqataa, AR-C444-muhawwil, AR-C444-anara, AR-C445-tram, AR-C445-shahina, AR-C445-miqwad, AR-C445-tamahhala, AR-C445-arqala, AR-C446-baqshish, AR-C446-khidma, AR-C446-khadama, AR-C446-rahhaba, AR-C446-awsa]
+---
+
+# Words from chapters 439–446 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C439-MANZAR439-01, AR-LEX-C439-MANZAR439-02] -->
+
+[PAUSE 3s] Say the Arabic for a view and a tower.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C439-MANZAR439-01, AR-LEX-C439-MANZAR439-02, AR-LEX-C439-MANZAR439-03, AR-LEX-C439-MANZAR439-04, AR-LEX-C439-MANZAR439-05, AR-LEX-C440-TIDHKAR440-01, AR-LEX-C440-TIDHKAR440-02, AR-LEX-C440-TIDHKAR440-03, AR-LEX-C440-TIDHKAR440-04, AR-LEX-C440-TIDHKAR440-05, AR-LEX-C441-ISTIQBAL441-01, AR-LEX-C441-ISTIQBAL441-02, AR-LEX-C441-ISTIQBAL441-03, AR-LEX-C441-ISTIQBAL441-04, AR-LEX-C441-ISTIQBAL441-05, AR-LEX-C442-MUNTAJA442-01, AR-LEX-C442-MUNTAJA442-02, AR-LEX-C442-MUNTAJA442-03, AR-LEX-C442-MUNTAJA442-04, AR-LEX-C442-MUNTAJA442-05, AR-LEX-C443-MULAA443-01, AR-LEX-C443-MULAA443-02, AR-LEX-C443-MULAA443-03, AR-LEX-C443-MULAA443-04, AR-LEX-C443-MULAA443-05, AR-LEX-C444-KAHRABA444-01, AR-LEX-C444-KAHRABA444-02, AR-LEX-C444-KAHRABA444-03, AR-LEX-C444-KAHRABA444-04, AR-LEX-C444-KAHRABA444-05, AR-LEX-C445-TRAM445-01, AR-LEX-C445-TRAM445-02, AR-LEX-C445-TRAM445-03, AR-LEX-C445-TRAM445-04, AR-LEX-C445-TRAM445-05, AR-LEX-C446-KHIDMA446-01, AR-LEX-C446-KHIDMA446-02, AR-LEX-C446-KHIDMA446-03, AR-LEX-C446-KHIDMA446-04, AR-LEX-C446-KHIDMA446-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a view, a tower, a monument, to explore, to take along]
+- [YOU SAY: a fountain, a souvenir, a rest stop, to accompany, to give a lift]
+- [YOU SAY: reception, a hotel guest, a residence, to depart from, to vacate]
+- [YOU SAY: a campsite, a resort, a chalet, to set alight, pine trees]
+- [YOU SAY: a doorman, a bed sheet, cleanliness, to overlook, a strongbox]
+- [YOU SAY: electricity, to heat up, to be cut off, an adapter, to light up]
+- [YOU SAY: a tram, a lorry, a steering wheel, to slow down, to hamper]
+- [YOU SAY: a tip, a service, to serve, to greet warmly, to recommend]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C439-MANZAR439-01, AR-LEX-C439-MANZAR439-02, AR-LEX-C439-MANZAR439-03, AR-LEX-C439-MANZAR439-04, AR-LEX-C439-MANZAR439-05, AR-LEX-C440-TIDHKAR440-01, AR-LEX-C440-TIDHKAR440-02, AR-LEX-C440-TIDHKAR440-03, AR-LEX-C440-TIDHKAR440-04, AR-LEX-C440-TIDHKAR440-05, AR-LEX-C441-ISTIQBAL441-01, AR-LEX-C441-ISTIQBAL441-02, AR-LEX-C441-ISTIQBAL441-03, AR-LEX-C441-ISTIQBAL441-04, AR-LEX-C441-ISTIQBAL441-05, AR-LEX-C442-MUNTAJA442-01, AR-LEX-C442-MUNTAJA442-02, AR-LEX-C442-MUNTAJA442-03, AR-LEX-C442-MUNTAJA442-04, AR-LEX-C442-MUNTAJA442-05, AR-LEX-C443-MULAA443-01, AR-LEX-C443-MULAA443-02, AR-LEX-C443-MULAA443-03, AR-LEX-C443-MULAA443-04, AR-LEX-C443-MULAA443-05, AR-LEX-C444-KAHRABA444-01, AR-LEX-C444-KAHRABA444-02, AR-LEX-C444-KAHRABA444-03, AR-LEX-C444-KAHRABA444-04, AR-LEX-C444-KAHRABA444-05, AR-LEX-C445-TRAM445-01, AR-LEX-C445-TRAM445-02, AR-LEX-C445-TRAM445-03, AR-LEX-C445-TRAM445-04, AR-LEX-C445-TRAM445-05, AR-LEX-C446-KHIDMA446-01, AR-LEX-C446-KHIDMA446-02, AR-LEX-C446-KHIDMA446-03, AR-LEX-C446-KHIDMA446-04, AR-LEX-C446-KHIDMA446-05] -->
+
+[PAUSE 3s] A view? (**منظر**, *manẓar*.) A tower? (**برج**, *burj*.) A monument? (**نصب**, *nuṣb*.) To explore? (**استكشف**, *istakshafa*.) To take along? (**اصطحب**, *iṣṭaḥaba*.) A fountain? (**نافورة**, *nāfūra*.) A souvenir? (**تذكار**, *tidhkār*.) A rest stop? (**استراحة**, *istirāḥa*.) To accompany? (**رافق**, *rāfaqa*.) To give a lift? (**أوصل**, *awṣala*.) Reception? (**استقبال**, *istiqbāl*.) A hotel guest? (**نزيل**, *nazīl*.) A residence? (**إقامة**, *iqāma*.) To depart from? (**غادر**, *ghādara*.) To vacate? (**أخلى**, *akhlā*.) A campsite? (**مخيم**, *mukhayyam*.) A resort? (**منتجع**, *muntajaʿ*.) A chalet? (**شاليه**, *shālīh*.) To set alight? (**أشعل**, *ashʿala*.) Pine trees? (**صنوبر**, *ṣanawbar*.) A doorman? (**بواب**, *bawwāb*.) A bed sheet? (**ملاءة**, *mulāʾa*.) Cleanliness? (**نظافة**, *naẓāfa*.) To overlook? (**أطل**, *aṭalla*.) A strongbox? (**خزنة**, *khazna*.) Electricity? (**كهرباء**, *kahrabāʾ*.) To heat up? (**سخن**, *sakhkhana*.) To be cut off? (**انقطع**, *inqaṭaʿa*.) An adapter? (**محول**, *muḥawwil*.) To light up? (**أنار**, *anāra*.) A tram? (**ترام**, *trām*.) A lorry? (**شاحنة**, *shāḥina*.) A steering wheel? (**مقود**, *miqwad*.) To slow down? (**تمهل**, *tamahhala*.) To hamper? (**عرقل**, *ʿarqala*.) A tip? (**بقشيش**, *baqshīsh*.) A service? (**خدمة**, *khidma*.) To serve? (**خدم**, *khadama*.) To greet warmly? (**رحب**, *raḥḥaba*.) To recommend? (**أوصى**, *awṣā*.)
+`;export{t};

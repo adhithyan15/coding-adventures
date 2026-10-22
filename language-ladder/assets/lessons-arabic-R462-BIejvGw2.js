@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: AR-R462-review-455-462
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 25840
+chapter: 462
+type: review
+headword: (dialogue)
+gloss: a review of chapters 455-462
+concept_tag: REVIEW
+prerequisites: [AR-C455-muntaj, AR-C455-marka, AR-C455-wajiha, AR-C455-arada-display, AR-C455-basta, AR-C456-hajm, AR-C456-sinf, AR-C456-ayyina, AR-C456-nasaba, AR-C456-daqa, AR-C457-takhfid, AR-C457-qasima, AR-C457-khaffada, AR-C457-rakhusa, AR-C457-anfaqa, AR-C458-daman, AR-C458-sir, AR-C458-silaa, AR-C458-arjaa, AR-C458-qayada, AR-C459-mustahlik, AR-C459-mizaniyya, AR-C459-masarif, AR-C459-mushtarayat, AR-C459-iqtasada, AR-C460-utl, AR-C460-khalal, AR-C460-inkasara, AR-C460-talifa, AR-C460-tadarrara, AR-C461-ilgha, AR-C461-tajil, AR-C461-algha, AR-C461-fawwata, AR-C461-dayyaa, AR-C462-istaadda, AR-C462-ikhtasara, AR-C462-nafida, AR-C462-ittasaa, AR-C462-rafaa]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-LEX-C455-WAJIHA455-01, AR-LEX-C455-WAJIHA455-02, AR-LEX-C455-WAJIHA455-03, AR-LEX-C455-WAJIHA455-04, AR-LEX-C455-WAJIHA455-05, AR-LEX-C456-HAJM456-01, AR-LEX-C456-HAJM456-02, AR-LEX-C456-HAJM456-03, AR-LEX-C456-HAJM456-04, AR-LEX-C456-HAJM456-05, AR-LEX-C457-TAKHFID457-01, AR-LEX-C457-TAKHFID457-02, AR-LEX-C457-TAKHFID457-03, AR-LEX-C457-TAKHFID457-04, AR-LEX-C457-TAKHFID457-05, AR-LEX-C458-DAMAN458-01, AR-LEX-C458-DAMAN458-02, AR-LEX-C458-DAMAN458-03, AR-LEX-C458-DAMAN458-04, AR-LEX-C458-DAMAN458-05, AR-LEX-C459-MIZANIYYA459-01, AR-LEX-C459-MIZANIYYA459-02, AR-LEX-C459-MIZANIYYA459-03, AR-LEX-C459-MIZANIYYA459-04, AR-LEX-C459-MIZANIYYA459-05, AR-LEX-C460-ATAL460-01, AR-LEX-C460-ATAL460-02, AR-LEX-C460-ATAL460-03, AR-LEX-C460-ATAL460-04, AR-LEX-C460-ATAL460-05, AR-LEX-C461-ILGHA461-01, AR-LEX-C461-ILGHA461-02, AR-LEX-C461-ILGHA461-03, AR-LEX-C461-ILGHA461-04, AR-LEX-C461-ILGHA461-05, AR-LEX-C462-ISTIDAD462-01, AR-LEX-C462-ISTIDAD462-02, AR-LEX-C462-ISTIDAD462-03, AR-LEX-C462-ISTIDAD462-04, AR-LEX-C462-ISTIDAD462-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [AR-LEX-C455-WAJIHA455-01, AR-LEX-C455-WAJIHA455-02, AR-LEX-C455-WAJIHA455-03, AR-LEX-C455-WAJIHA455-04, AR-LEX-C455-WAJIHA455-05, AR-LEX-C456-HAJM456-01, AR-LEX-C456-HAJM456-02, AR-LEX-C456-HAJM456-03, AR-LEX-C456-HAJM456-04, AR-LEX-C456-HAJM456-05, AR-LEX-C457-TAKHFID457-01, AR-LEX-C457-TAKHFID457-02, AR-LEX-C457-TAKHFID457-03, AR-LEX-C457-TAKHFID457-04, AR-LEX-C457-TAKHFID457-05, AR-LEX-C458-DAMAN458-01, AR-LEX-C458-DAMAN458-02, AR-LEX-C458-DAMAN458-03, AR-LEX-C458-DAMAN458-04, AR-LEX-C458-DAMAN458-05, AR-LEX-C459-MIZANIYYA459-01, AR-LEX-C459-MIZANIYYA459-02, AR-LEX-C459-MIZANIYYA459-03, AR-LEX-C459-MIZANIYYA459-04, AR-LEX-C459-MIZANIYYA459-05, AR-LEX-C460-ATAL460-01, AR-LEX-C460-ATAL460-02, AR-LEX-C460-ATAL460-03, AR-LEX-C460-ATAL460-04, AR-LEX-C460-ATAL460-05, AR-LEX-C461-ILGHA461-01, AR-LEX-C461-ILGHA461-02, AR-LEX-C461-ILGHA461-03, AR-LEX-C461-ILGHA461-04, AR-LEX-C461-ILGHA461-05, AR-LEX-C462-ISTIDAD462-01, AR-LEX-C462-ISTIDAD462-02, AR-LEX-C462-ISTIDAD462-03, AR-LEX-C462-ISTIDAD462-04, AR-LEX-C462-ISTIDAD462-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: modern-standard-arabic
+reviews_of: [AR-C455-muntaj, AR-C455-marka, AR-C455-wajiha, AR-C455-arada-display, AR-C455-basta, AR-C456-hajm, AR-C456-sinf, AR-C456-ayyina, AR-C456-nasaba, AR-C456-daqa, AR-C457-takhfid, AR-C457-qasima, AR-C457-khaffada, AR-C457-rakhusa, AR-C457-anfaqa, AR-C458-daman, AR-C458-sir, AR-C458-silaa, AR-C458-arjaa, AR-C458-qayada, AR-C459-mustahlik, AR-C459-mizaniyya, AR-C459-masarif, AR-C459-mushtarayat, AR-C459-iqtasada, AR-C460-utl, AR-C460-khalal, AR-C460-inkasara, AR-C460-talifa, AR-C460-tadarrara, AR-C461-ilgha, AR-C461-tajil, AR-C461-algha, AR-C461-fawwata, AR-C461-dayyaa, AR-C462-istaadda, AR-C462-ikhtasara, AR-C462-nafida, AR-C462-ittasaa, AR-C462-rafaa]
+---
+
+# Words from chapters 455–462 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C455-WAJIHA455-01, AR-LEX-C455-WAJIHA455-02] -->
+
+[PAUSE 3s] Say the Arabic for a product and a brand.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C455-WAJIHA455-01, AR-LEX-C455-WAJIHA455-02, AR-LEX-C455-WAJIHA455-03, AR-LEX-C455-WAJIHA455-04, AR-LEX-C455-WAJIHA455-05, AR-LEX-C456-HAJM456-01, AR-LEX-C456-HAJM456-02, AR-LEX-C456-HAJM456-03, AR-LEX-C456-HAJM456-04, AR-LEX-C456-HAJM456-05, AR-LEX-C457-TAKHFID457-01, AR-LEX-C457-TAKHFID457-02, AR-LEX-C457-TAKHFID457-03, AR-LEX-C457-TAKHFID457-04, AR-LEX-C457-TAKHFID457-05, AR-LEX-C458-DAMAN458-01, AR-LEX-C458-DAMAN458-02, AR-LEX-C458-DAMAN458-03, AR-LEX-C458-DAMAN458-04, AR-LEX-C458-DAMAN458-05, AR-LEX-C459-MIZANIYYA459-01, AR-LEX-C459-MIZANIYYA459-02, AR-LEX-C459-MIZANIYYA459-03, AR-LEX-C459-MIZANIYYA459-04, AR-LEX-C459-MIZANIYYA459-05, AR-LEX-C460-ATAL460-01, AR-LEX-C460-ATAL460-02, AR-LEX-C460-ATAL460-03, AR-LEX-C460-ATAL460-04, AR-LEX-C460-ATAL460-05, AR-LEX-C461-ILGHA461-01, AR-LEX-C461-ILGHA461-02, AR-LEX-C461-ILGHA461-03, AR-LEX-C461-ILGHA461-04, AR-LEX-C461-ILGHA461-05, AR-LEX-C462-ISTIDAD462-01, AR-LEX-C462-ISTIDAD462-02, AR-LEX-C462-ISTIDAD462-03, AR-LEX-C462-ISTIDAD462-04, AR-LEX-C462-ISTIDAD462-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a product, a brand, a shop window, to display, a market stall]
+- [YOU SAY: volume, a variety, a sample, to fit, to be too tight]
+- [YOU SAY: a price cut, a voucher, to lower, to get cheaper, to spend money]
+- [YOU SAY: a guarantee, a rate, a commodity, to take back, to barter]
+- [YOU SAY: a consumer, a budget, expenses, purchases, to economise]
+- [YOU SAY: a breakdown, a malfunction, to get broken, to go bad, to suffer damage]
+- [YOU SAY: a cancellation, a postponement, to cancel, to miss, to waste time]
+- [YOU SAY: to get ready, to shorten, to run out, to have room for, to raise]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-C455-WAJIHA455-01, AR-LEX-C455-WAJIHA455-02, AR-LEX-C455-WAJIHA455-03, AR-LEX-C455-WAJIHA455-04, AR-LEX-C455-WAJIHA455-05, AR-LEX-C456-HAJM456-01, AR-LEX-C456-HAJM456-02, AR-LEX-C456-HAJM456-03, AR-LEX-C456-HAJM456-04, AR-LEX-C456-HAJM456-05, AR-LEX-C457-TAKHFID457-01, AR-LEX-C457-TAKHFID457-02, AR-LEX-C457-TAKHFID457-03, AR-LEX-C457-TAKHFID457-04, AR-LEX-C457-TAKHFID457-05, AR-LEX-C458-DAMAN458-01, AR-LEX-C458-DAMAN458-02, AR-LEX-C458-DAMAN458-03, AR-LEX-C458-DAMAN458-04, AR-LEX-C458-DAMAN458-05, AR-LEX-C459-MIZANIYYA459-01, AR-LEX-C459-MIZANIYYA459-02, AR-LEX-C459-MIZANIYYA459-03, AR-LEX-C459-MIZANIYYA459-04, AR-LEX-C459-MIZANIYYA459-05, AR-LEX-C460-ATAL460-01, AR-LEX-C460-ATAL460-02, AR-LEX-C460-ATAL460-03, AR-LEX-C460-ATAL460-04, AR-LEX-C460-ATAL460-05, AR-LEX-C461-ILGHA461-01, AR-LEX-C461-ILGHA461-02, AR-LEX-C461-ILGHA461-03, AR-LEX-C461-ILGHA461-04, AR-LEX-C461-ILGHA461-05, AR-LEX-C462-ISTIDAD462-01, AR-LEX-C462-ISTIDAD462-02, AR-LEX-C462-ISTIDAD462-03, AR-LEX-C462-ISTIDAD462-04, AR-LEX-C462-ISTIDAD462-05] -->
+
+[PAUSE 3s] A product? (**منتج**, *muntaj*.) A brand? (**ماركة**, *mārka*.) A shop window? (**واجهة**, *wājiha*.) To display? (**عرض**, *ʿaraḍa*.) A market stall? (**بسطة**, *basṭa*.) Volume? (**حجم**, *ḥajm*.) A variety? (**صنف**, *ṣinf*.) A sample? (**عينة**, *ʿayyina*.) To fit? (**ناسب**, *nāsaba*.) To be too tight? (**ضاق**, *ḍāqa*.) A price cut? (**تخفيض**, *takhfīḍ*.) A voucher? (**قسيمة**, *qasīma*.) To lower? (**خفض**, *khaffaḍa*.) To get cheaper? (**رخص**, *rakhuṣa*.) To spend money? (**أنفق**, *anfaqa*.) A guarantee? (**ضمان**, *ḍamān*.) A rate? (**سعر**, *siʿr*.) A commodity? (**سلعة**, *silʿa*.) To take back? (**أرجع**, *arjaʿa*.) To barter? (**قايض**, *qāyaḍa*.) A consumer? (**مستهلك**, *mustahlik*.) A budget? (**ميزانية**, *mīzāniyya*.) Expenses? (**مصاريف**, *maṣārīf*.) Purchases? (**مشتريات**, *mushtarayāt*.) To economise? (**اقتصد**, *iqtaṣada*.) A breakdown? (**عطل**, *ʿuṭl*.) A malfunction? (**خلل**, *khalal*.) To get broken? (**انكسر**, *inkasara*.) To go bad? (**تلف**, *talifa*.) To suffer damage? (**تضرر**, *taḍarrara*.) A cancellation? (**إلغاء**, *ilghāʾ*.) A postponement? (**تأجيل**, *taʾjīl*.) To cancel? (**ألغى**, *alghā*.) To miss? (**فوت**, *fawwata*.) To waste time? (**ضيع**, *ḍayyaʿa*.) To get ready? (**استعد**, *istaʿadda*.) To shorten? (**اختصر**, *ikhtaṣara*.) To run out? (**نفد**, *nafida*.) To have room for? (**اتسع**, *ittasaʿa*.) To raise? (**رفع**, *rafaʿa*.)
+`;export{t};
