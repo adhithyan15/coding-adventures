@@ -42,17 +42,19 @@ it("adds a slow Punjabi A2 possessive-agreement prerequisite without mock credit
   expect(chapterLessons.map((lesson) => Number(lesson?.frontmatter.sequence)))
     .toEqual([9810, 9820, 9830, 9840, 9850, 9860, 9870, 9880, 9890, 9900]);
 
-  const forms = ["ਮੇਰੀ", "ਮੇਰੇ", "ਤੁਹਾਡੀ", "ਆਪਣੀ", "ਆਪਣੇ", "ਸਾਡੇ"];
-  const atoms = [
-    "PA-FORM-MERI-185",
-    "PA-FORM-MERE-185",
-    "PA-FORM-TUHADI-185",
-    "PA-FORM-APNI-185",
-    "PA-FORM-APNE-185",
-    "PA-FORM-SADE-185",
-  ];
-  const ownerIndexes = [1, 2, 3, 4, 5, 7];
   const scaffoldAtom = "PA-FORM-SADA-185";
+  const targets = [
+    { form: "ਮੇਰੀ", atom: "PA-FORM-MERI-185", ownerIndex: 1, measured: true },
+    { form: "ਮੇਰੇ", atom: "PA-FORM-MERE-185", ownerIndex: 2, measured: true },
+    { form: "ਤੁਹਾਡੀ", atom: "PA-FORM-TUHADI-185", ownerIndex: 3, measured: true },
+    { form: "ਆਪਣੀ", atom: "PA-FORM-APNI-185", ownerIndex: 4, measured: true },
+    { form: "ਆਪਣੇ", atom: "PA-FORM-APNE-185", ownerIndex: 5, measured: true },
+    { form: "ਸਾਡਾ", atom: scaffoldAtom, ownerIndex: 6, measured: false },
+    { form: "ਸਾਡੇ", atom: "PA-FORM-SADE-185", ownerIndex: 7, measured: true },
+  ] as const;
+  const measuredTargets = targets.filter((target) => target.measured);
+  const forms = measuredTargets.map((target) => target.form);
+  const atoms = measuredTargets.map((target) => target.atom);
   expect(chapterLessons.map((lesson) => lesson?.frontmatter["introduces.knowledge"]))
     .toEqual([
       [],
@@ -67,8 +69,7 @@ it("adds a slow Punjabi A2 possessive-agreement prerequisite without mock credit
       [],
     ]);
 
-  for (const [formIndex, form] of forms.entries()) {
-    const ownerIndex = ownerIndexes[formIndex];
+  for (const { form, ownerIndex } of targets) {
     const earlierCopy = chapterLessons.slice(0, ownerIndex)
       .flatMap((lesson) => lesson?.blocks.map((block) => block.markdown) ?? [])
       .join("\n");
@@ -95,7 +96,7 @@ it("adds a slow Punjabi A2 possessive-agreement prerequisite without mock credit
     expect(lesson?.frontmatter.introduces_culture_claims).toEqual([]);
   }
 
-  for (const atom of [scaffoldAtom, ...atoms]) {
+  for (const { atom } of targets) {
     const owners = lessons.filter((lesson) =>
       lesson.frontmatter["introduces.knowledge"].includes(atom),
     );
@@ -131,7 +132,7 @@ it("adds a slow Punjabi A2 possessive-agreement prerequisite without mock credit
     ])
     .join("\n");
   const supportingPunjabi = new Set(learnerCopy.match(/[\u0A00-\u0A7F]+/gu) ?? []);
-  for (const form of ["ਸਾਡਾ", ...forms]) supportingPunjabi.delete(form);
+  for (const { form } of targets) supportingPunjabi.delete(form);
   for (const token of supportingPunjabi) {
     expect(taughtBefore.includes(token), `${token} must occur before chapter 185`).toBe(true);
   }
@@ -141,14 +142,27 @@ it("adds a slow Punjabi A2 possessive-agreement prerequisite without mock credit
       "ch185-whose-book-whose-home.tex",
     import.meta.url,
   ), "utf8");
-  for (const [formIndex, form] of forms.entries()) {
-    const ownerLabel = generatedBook.indexOf(`label{lesson:${ids[ownerIndexes[formIndex]]}}`);
+  for (const { form, ownerIndex } of targets) {
+    const ownerLabel = generatedBook.indexOf(`label{lesson:${ids[ownerIndex]}}`);
     expect(ownerLabel).toBeGreaterThan(0);
     const ownerSection = generatedBook.lastIndexOf("\\section[", ownerLabel);
     expect(ownerSection).toBeGreaterThan(0);
     expect(generatedBook.slice(0, ownerSection)).not.toContain(form);
   }
   expect(generatedBook).not.toMatch(/\[(?:YOU HEAR|YOU SAY|YOU READ|YOU WRITE):/u);
+
+  const narration = JSON.parse(readFileSync(new URL(
+    "../../../../../../learning/human-languages/punjabi/narration/ch185.json",
+    import.meta.url,
+  ), "utf8")) as { lessons: Array<{ id: string }> };
+  expect(narration.lessons.map((lesson) => lesson.id)).toEqual(ids);
+  for (const { form, ownerIndex } of targets) {
+    const narrationBeforeOwner = JSON.stringify(narration.lessons.slice(0, ownerIndex));
+    expect(
+      narrationBeforeOwner.includes(form),
+      `${form} leaks in generated narration before ${ids[ownerIndex]}`,
+    ).toBe(false);
+  }
 
   const payoff = chapterLessons.at(-1);
   expect(payoff?.frontmatter.skills)
