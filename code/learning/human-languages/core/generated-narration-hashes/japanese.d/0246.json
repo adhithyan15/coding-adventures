@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:55b1016139be4d8a",
+  "lessonIds": [
+    "JA-C246-okoru",
+    "JA-C246-kenka",
+    "JA-C246-ayamaru",
+    "JA-C246-yurusu",
+    "JA-C246-zannen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch246.txt",
+  "json": "japanese/narration/ch246.json",
+  "textHash": "fnv1a64:45d8b0d31c8ec0a5",
+  "jsonHash": "fnv1a64:682a2188c2ed41e8",
+  "findings": []
+}

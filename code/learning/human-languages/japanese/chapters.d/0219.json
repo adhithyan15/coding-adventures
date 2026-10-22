@@ -1,0 +1,19 @@
+{
+  "chapter": 219,
+  "title": "Slips, Falls and Breaks",
+  "label": "ch:ja-slips-falls-and-breaks",
+  "canDo": "I can ask whether someone fell or got hurt.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C219-kega",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 219: I can ask whether someone fell or got hurt.",
+    "assesses": [
+      "JA-LEX-C219-FALL219-03",
+      "JA-LEX-C219-FALL219-04",
+      "JA-LEX-C219-FALL219-05"
+    ]
+  }
+}

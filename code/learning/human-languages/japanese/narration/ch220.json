@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 220,
+  "title": "Weight and Staying Healthy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4a1ed9f3967ea1ef",
+  "lessons": [
+    {
+      "id": "JA-C220-kenkou",
+      "sequence": 13130,
+      "title": "けんこう (kenkō) — health",
+      "headword": "けんこう",
+      "romanization": "kenkō",
+      "gloss": "health",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c91ec25cc347cfa4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to collapse, then the Japanese for an injury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けんこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんこう — kenkō — \"health\"."
+            },
+            {
+              "kind": "speech",
+              "text": "けんこうは たいせつです。 — kenkō wa taisetsu desu — \"Health is important.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんこう (kenkō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ken, \"strong\" (Middle Chinese gjonH) and kō, \"at ease\" (khang) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenkō wa taisetsu desu — Health is important.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenkō wa taisetsu desu* — Health is important.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to collapse, then the Japanese for an injury, then say kenkō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to collapse, then the Japanese for an injury, then say *kenkō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けんこう (kenkō) mean? (\"Health\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C220-kenkou-type",
+              "prompt": "Say the Japanese for 'health'.",
+              "assesses": [
+                "JA-LEX-C220-WEIGHT220-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けんこう",
+                "kenkō",
+                "kenkou",
+                "kenkoo",
+                "kenko"
+              ],
+              "feedback": {
+                "correct": "Right: けんこう (kenkō) is 'health'.",
+                "incorrect": "'Health' is けんこう (kenkō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C220-joubu",
+      "sequence": 13140,
+      "title": "じょうぶ (jōbu) — robust; sturdy",
+      "headword": "じょうぶ",
+      "romanization": "jōbu",
+      "gloss": "robust; sturdy",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f06c1369f359916",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an injury, then the Japanese for health."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じょうぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょうぶ — jōbu — \"robust; sturdy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは からだが じょうぶです。 — chichi wa karada ga jōbu desu — \"My father has a strong body.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょうぶ (jōbu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jō, \"ten feet, a full height\" (Middle Chinese drjangX) and bu, \"man\" (pju) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōbu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōbu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōbu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa karada ga jōbu desu — My father has a strong body.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa karada ga jōbu desu* — My father has a strong body.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an injury, then the Japanese for health, then say jōbu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an injury, then the Japanese for health, then say *jōbu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じょうぶ (jōbu) mean? (\"Robust; sturdy\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C220-joubu-type",
+              "prompt": "Say the Japanese for 'robust'.",
+              "assesses": [
+                "JA-LEX-C220-WEIGHT220-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じょうぶ",
+                "jōbu",
+                "joubu",
+                "joobu",
+                "jobu"
+              ],
+              "feedback": {
+                "correct": "Right: じょうぶ (jōbu) is 'robust; sturdy'.",
+                "incorrect": "'Robust' is じょうぶ (jōbu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C220-futoru",
+      "sequence": 13150,
+      "title": "ふとる (futoru) — to gain weight",
+      "headword": "ふとる",
+      "romanization": "futoru",
+      "gloss": "to gain weight",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9e1d6da0185ee50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for health, then the Japanese for robust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ふとる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふとる — futoru — \"to gain weight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いぬは ふとりましたか。 — inu wa futorimashita ka — \"Has the dog put on weight?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ふとります, futorimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ふとる (futoru) is a native Japanese word (wago), inherited rather than borrowed and built on the same stem as futoi, \"thick\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inu wa futorimashita ka — Has the dog put on weight?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inu wa futorimashita ka* — Has the dog put on weight?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for health, then the Japanese for robust, then say futoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for health, then the Japanese for robust, then say *futoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ふとる (futoru) mean? (\"To gain weight\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C220-futoru-type",
+              "prompt": "Say the Japanese for 'to gain weight'.",
+              "assesses": [
+                "JA-LEX-C220-WEIGHT220-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ふとる",
+                "futoru"
+              ],
+              "feedback": {
+                "correct": "Right: ふとる (futoru) is 'to gain weight'.",
+                "incorrect": "'To gain weight' is ふとる (futoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C220-yaseru",
+      "sequence": 13160,
+      "title": "やせる (yaseru) — to lose weight; to get thin",
+      "headword": "やせる",
+      "romanization": "yaseru",
+      "gloss": "to lose weight; to get thin",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64b3b4c707d56b8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for robust, then the Japanese for to gain weight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やせる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やせる — yaseru — \"to lose weight; to get thin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは やせませんでした。 — chichi wa yasemasen deshita — \"My father did not lose weight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite やせます, yasemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やせる (yaseru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaseru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaseru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaseru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaseru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa yasemasen deshita — My father did not lose weight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa yasemasen deshita* — My father did not lose weight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for robust, then the Japanese for to gain weight, then say yaseru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for robust, then the Japanese for to gain weight, then say *yaseru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やせる (yaseru) mean? (\"To lose weight; to get thin\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C220-yaseru-type",
+              "prompt": "Say the Japanese for 'to lose weight'.",
+              "assesses": [
+                "JA-LEX-C220-WEIGHT220-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やせる",
+                "yaseru"
+              ],
+              "feedback": {
+                "correct": "Right: やせる (yaseru) is 'to lose weight; to get thin'.",
+                "incorrect": "'To lose weight' is やせる (yaseru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C220-shokuyoku",
+      "sequence": 13170,
+      "title": "しょくよく (shokuyoku) — an appetite",
+      "headword": "しょくよく",
+      "romanization": "shokuyoku",
+      "gloss": "an appetite",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a788c32f95758b44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to gain weight, then the Japanese for to lose weight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょくよく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょくよく — shokuyoku — \"an appetite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょくよくは ありますか。 — shokuyoku wa arimasu ka — \"Do you have an appetite?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょくよく (shokuyoku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shoku, \"to eat\" (Middle Chinese zyik) and yoku, \"desire\" (yowk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokuyoku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokuyoku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokuyoku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokuyoku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokuyoku wa arimasu ka — Do you have an appetite?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokuyoku wa arimasu ka* — Do you have an appetite?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to gain weight, then the Japanese for to lose weight, then say shokuyoku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to gain weight, then the Japanese for to lose weight, then say *shokuyoku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょくよく (shokuyoku) mean? (\"An appetite\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C220-shokuyoku-type",
+              "prompt": "Say the Japanese for 'an appetite'.",
+              "assesses": [
+                "JA-LEX-C220-WEIGHT220-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょくよく",
+                "shokuyoku"
+              ],
+              "feedback": {
+                "correct": "Right: しょくよく (shokuyoku) is 'an appetite'.",
+                "incorrect": "'An appetite' is しょくよく (shokuyoku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C229-tsutomeru",
+  "pathSegment": "JA-PATH-229-OFFICE229",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-229-OFFICE229",
+      "order": 3
+    }
+  ]
+}

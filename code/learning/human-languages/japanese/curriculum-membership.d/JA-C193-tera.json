@@ -1,0 +1,11 @@
+{
+  "id": "JA-C193-tera",
+  "pathSegment": "JA-PATH-193-SIGHT193",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-193-SIGHT193",
+      "order": 1
+    }
+  ]
+}

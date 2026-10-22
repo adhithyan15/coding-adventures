@@ -1,0 +1,11 @@
+{
+  "id": "JA-C151-tabi",
+  "pathSegment": "JA-PATH-151-KIMONO151",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-151-KIMONO151",
+      "order": 2
+    }
+  ]
+}

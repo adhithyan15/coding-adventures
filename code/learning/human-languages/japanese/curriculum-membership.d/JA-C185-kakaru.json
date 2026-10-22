@@ -1,0 +1,11 @@
+{
+  "id": "JA-C185-kakaru",
+  "pathSegment": "JA-PATH-185-SALE185",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-185-SALE185",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C191-yakkyoku",
+    "language": "japanese",
+    "chapter": 191,
+    "sequence": 11410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a172bbddbf95f3b6"
+  },
+  "findings": []
+}

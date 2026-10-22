@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:3c6f536c21c22d1b",
+  "lessonIds": [
+    "JA-C199-shuppatsu",
+    "JA-C199-touchaku",
+    "JA-C199-tokkyuu",
+    "JA-C199-tomaru",
+    "JA-C199-kyuukou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch199.txt",
+  "json": "japanese/narration/ch199.json",
+  "textHash": "fnv1a64:39766d3171ce843d",
+  "jsonHash": "fnv1a64:d81b65ea45b2c9b8",
+  "findings": []
+}

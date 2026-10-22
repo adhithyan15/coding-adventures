@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Storms, Shaking and Fire",
+  "label": "ch:ja-storms-shaking-and-fire",
+  "canDo": "I can talk about storms, shaking and fire.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C214-kieru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can talk about storms, shaking and fire.",
+    "assesses": [
+      "JA-LEX-C214-STORM214-03",
+      "JA-LEX-C214-STORM214-04",
+      "JA-LEX-C214-STORM214-05"
+    ]
+  }
+}

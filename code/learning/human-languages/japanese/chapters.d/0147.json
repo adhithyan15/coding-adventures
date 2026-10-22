@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Washing Up with Soap and Hot Water",
+  "label": "ch:ja-washing-up-with-soap-and-hot-water",
+  "canDo": "I can say how I wash in the morning.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C147-sekken",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: I can say how I wash in the morning.",
+    "assesses": [
+      "JA-LEX-C147-WASH147-03",
+      "JA-LEX-C147-WASH147-04",
+      "JA-LEX-C147-WASH147-05"
+    ]
+  }
+}

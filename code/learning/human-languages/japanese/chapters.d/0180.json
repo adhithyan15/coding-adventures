@@ -1,0 +1,19 @@
+{
+  "chapter": 180,
+  "title": "Cafes, Canteens and Rice Balls",
+  "label": "ch:ja-cafes-canteens-and-rice-balls",
+  "canDo": "I can talk about eating out and simple Japanese dishes.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C180-onigiri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 180: I can talk about eating out and simple Japanese dishes.",
+    "assesses": [
+      "JA-LEX-C180-EATOUT180-03",
+      "JA-LEX-C180-EATOUT180-04",
+      "JA-LEX-C180-EATOUT180-05"
+    ]
+  }
+}

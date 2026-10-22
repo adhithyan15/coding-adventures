@@ -478,6 +478,9 @@ class SubsetsTest(Fixture):
         self.case("lang", "s", "both", "rb", "expect", "cite", "reject")
         self.case("lang", "s", "neither", "rb")
         self.case("lang", "s", "orphan", "rb", "reject", "expect@p18")
+        self.case("lang", "s", "relrefuse", "rb", "expect", "cite", "reject@1.0")
+        self.case("lang", "s", "relorphan", "rb", "reject", "reject@1.0")
+        self.case("lang", "s", "relbogus", "rb", "expect", "cite", "reject@9.9")
         self.case("lang", "s", "bad name", "rb", "expect", "cite")
         self.case("lang", "s", "zero", "rb", "expect", "cite", "reject@p18")
         self.case("lang", "s", "orphan2", "rb", "reject", "reject@p18")
@@ -492,13 +495,17 @@ class SubsetsTest(Fixture):
             "corpus/s/both: needs exactly one of .expect or .reject",
             "corpus/s/neither: needs exactly one of .expect or .reject",
             "corpus/s/orphan: a profile override needs the plain .expect",
+            "corpus/s/relorphan: a profile override needs the plain .expect",
+            "corpus/s/relbogus: override .'reject@9.9' names no profile defined in a profiles.rs and no releases.csv row",
             "corpus/s/bad name: case name must match",
             "corpus/s/orphan2: a profile override needs the plain .expect",
-            "corpus/s/badprofile: override .reject@9x names no profile",
-            "corpus/s/twice: more than one override for profile p",
+            "corpus/s/badprofile: override .'reject@9x' names no profile",
+            "corpus/s/twice: more than one override for 'p'",
         ):
             self.assertTrue(any(fragment in e for e in errors), (fragment, errors))
         self.assertFalse(any("corpus/s/good" in e for e in errors), errors)
+        # `<name>.reject@<release>` is an override, not a second source file.
+        self.assertFalse(any("corpus/s/relrefuse" in e for e in errors), errors)
         # `.reject@<profile>` (LANG84 4c) is an override, not a second source.
         self.assertFalse(any("corpus/s/zero" in e for e in errors), errors)
 
@@ -556,7 +563,7 @@ class SubsetsTest(Fixture):
                 {"zero"},
             )
             self.assertTrue(
-                any(".expect@nosuch names no profile" in e for e in report.errors),
+                any(".'expect@nosuch' names no profile" in e for e in report.errors),
                 report.errors,
             )
             self.case("lang", "s", "zero", "reject@real")

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C179-koucha",
+    "language": "japanese",
+    "chapter": 179,
+    "sequence": 10760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e405ca148838d265"
+  },
+  "findings": []
+}

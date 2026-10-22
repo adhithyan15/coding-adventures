@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-161-LAUNDRY161",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "JA-EXT-161-LAUNDRY161"
+  ],
+  "after": []
+}

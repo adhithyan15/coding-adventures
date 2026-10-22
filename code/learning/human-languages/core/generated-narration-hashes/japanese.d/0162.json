@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:6a31f5bd4e2bbe0f",
+  "lessonIds": [
+    "JA-C162-kowareru",
+    "JA-C162-wareru",
+    "JA-C162-toreru",
+    "JA-C162-shuuri",
+    "JA-C162-furui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch162.txt",
+  "json": "japanese/narration/ch162.json",
+  "textHash": "fnv1a64:fd9a1fae5267659e",
+  "jsonHash": "fnv1a64:9e2d1d0175d98094",
+  "findings": []
+}

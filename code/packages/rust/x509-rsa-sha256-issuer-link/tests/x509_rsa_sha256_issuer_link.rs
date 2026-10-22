@@ -3,16 +3,28 @@ use rsa_public_operation::RsaPublicOperationLimits;
 use std::cell::Cell;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_issuer_candidate_selection::select_unique_x509_issuer_candidate_by;
-use x509_certificate_policy::{X509CertificateIssuerLinkErrorKind, X509CertificateRoleErrorKind};
+use x509_certificate_policy::{
+    validate_certificate_algorithm_policy, validate_certificate_role_policy,
+    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
+    X509CertificateIssuerLinkErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
+};
 use x509_rsa_pkcs1_v1_5_sha256_signature::X509RsaSha256SignatureErrorKind;
 use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha256_issuer_link::{
-    verify_selected_x509_rsa_sha256_issuer_link, verify_x509_rsa_sha256_issuer_link,
-    X509RsaSha256IssuerLinkErrorKind, X509RsaSha256IssuerLinkPolicy,
+    verify_selected_x509_rsa_sha256_issuer_link,
+    verify_selected_x509_rsa_sha256_issuer_link_with_policies,
+    verify_selected_x509_rsa_sha256_issuer_link_with_role_policy,
+    verify_x509_rsa_sha256_issuer_link, X509RsaSha256IssuerLinkErrorKind,
+    X509RsaSha256IssuerLinkPolicy, X509RsaSha256IssuerPolicyLinkErrorKind,
+    X509RsaSha256IssuerRolePolicyLinkErrorKind,
 };
 
 const RSA_ENCRYPTION_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
+const SHA256_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
+const RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 1];
+const NULL_DER: &[u8] = &[0x05, 0x00];
 const BASIC_CONSTRAINTS_OID_DER: &[u8] = &[0x55, 0x1d, 0x13];
+const KEY_USAGE_OID_DER: &[u8] = &[0x55, 0x1d, 0x0f];
 
 // A static OpenSSL-generated 2048-bit self-signed CA certificate. OpenSSL is
 // not invoked by the tests; this is an independent interoperability vector.
@@ -73,6 +85,20 @@ fn policy() -> X509RsaSha256IssuerLinkPolicy<'static> {
         Asn1Limits::default(),
         RsaPublicOperationLimits::new(256).unwrap(),
     )
+}
+
+fn algorithm_profiles() -> [X509CertificateAlgorithmProfile<'static>; 1] {
+    [X509CertificateAlgorithmProfile::new(
+        SHA256_WITH_RSA_ENCRYPTION_OID,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        RSA_ENCRYPTION_OID,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        2_048,
+        8_192,
+        2_048,
+        2_048,
+    )
+    .unwrap()]
 }
 
 fn mutate_first(encoded: &mut [u8], needle: &[u8], mutate: impl FnOnce(&mut [u8])) {
@@ -162,6 +188,276 @@ fn authenticates_the_exact_pair_consumed_from_selection_evidence() {
     assert!(std::ptr::eq(verified.child(), &child));
     assert!(std::ptr::eq(verified.candidate_issuer(), &candidates[1]));
     assert_eq!(verified.issuer_public_key().modulus_bits(), 2_048);
+}
+
+#[test]
+fn authenticates_selected_pair_with_exact_critical_role_policy_evidence() {
+    let child_encoded = fixture();
+    let mut other_encoded = fixture();
+    mutate_every(&mut other_encoded, b"fixture.example", |name| {
+        name[0] = b'o';
+    });
+    let mut issuer_encoded = fixture();
+    mutate_first(&mut issuer_encoded, &[0x02, 0x01, 0x01], |serial| {
+        serial[2] = 2;
+    });
+    let child = decode(&child_encoded);
+    let candidates = vec![decode(&other_encoded), decode(&issuer_encoded)];
+    let name_calls = Cell::new(0);
+    let critical_calls = Cell::new(0);
+
+    let selected = select_unique_x509_issuer_candidate_by(
+        &child,
+        &candidates,
+        2,
+        |child_issuer, candidate_subject| {
+            name_calls.set(name_calls.get() + 1);
+            child_issuer.encoded() == candidate_subject.encoded()
+        },
+    )
+    .unwrap();
+    let issuer_role_policy = validate_certificate_role_policy(
+        &candidates[1],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| {
+            critical_calls.set(critical_calls.get() + 1);
+            oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15])
+        },
+    )
+    .unwrap();
+
+    let verified = verify_selected_x509_rsa_sha256_issuer_link_with_role_policy(
+        selected,
+        issuer_role_policy,
+        policy(),
+    )
+    .unwrap();
+
+    assert_eq!(name_calls.get(), 2);
+    assert_eq!(critical_calls.get(), 2);
+    assert!(std::ptr::eq(verified.verified_link().child(), &child));
+    assert!(std::ptr::eq(
+        verified.verified_link().candidate_issuer(),
+        &candidates[1]
+    ));
+    assert!(std::ptr::eq(
+        verified.issuer_role_policy().certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        verified.issuer_role_policy().role_extensions().role(),
+        X509CertificateRole::IssuingCertificateAuthority
+    );
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509RsaSha256IssuerRolePolicyLink"
+    );
+}
+
+#[test]
+fn authenticates_selected_pair_with_exact_role_and_algorithm_policy_evidence() {
+    let child_encoded = fixture();
+    let mut other_encoded = fixture();
+    mutate_every(&mut other_encoded, b"fixture.example", |name| {
+        name[0] = b'o';
+    });
+    let mut issuer_encoded = fixture();
+    mutate_first(&mut issuer_encoded, &[0x02, 0x01, 0x01], |serial| {
+        serial[2] = 2;
+    });
+    let child = decode(&child_encoded);
+    let candidates = vec![decode(&other_encoded), decode(&issuer_encoded)];
+    let profiles = algorithm_profiles();
+
+    let selected = select_unique_x509_issuer_candidate_by(
+        &child,
+        &candidates,
+        2,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let issuer_role_policy = validate_certificate_role_policy(
+        &candidates[1],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let issuer_algorithm_policy =
+        validate_certificate_algorithm_policy(&candidates[1], &profiles).unwrap();
+
+    let verified = verify_selected_x509_rsa_sha256_issuer_link_with_policies(
+        selected,
+        issuer_role_policy,
+        issuer_algorithm_policy,
+        policy(),
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        verified.role_policy_link().verified_link().child(),
+        &child
+    ));
+    assert!(std::ptr::eq(
+        verified
+            .role_policy_link()
+            .verified_link()
+            .candidate_issuer(),
+        &candidates[1]
+    ));
+    assert!(std::ptr::eq(
+        verified.issuer_algorithm_policy().certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        verified
+            .issuer_algorithm_policy()
+            .algorithm_profile()
+            .profile_index(),
+        0
+    );
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509RsaSha256IssuerPolicyLink"
+    );
+}
+
+#[test]
+fn rejects_algorithm_policy_evidence_for_another_candidate_before_rsa_work() {
+    let child_encoded = fixture();
+    let mut selected_issuer_encoded = fixture();
+    mutate_first(
+        &mut selected_issuer_encoded,
+        RSA_ENCRYPTION_OID_DER,
+        |oid| {
+            oid[oid.len() - 1] = 0x0b;
+        },
+    );
+    let algorithm_issuer_encoded = fixture();
+    let child = decode(&child_encoded);
+    let candidates = vec![decode(&selected_issuer_encoded)];
+    let algorithm_issuer = decode(&algorithm_issuer_encoded);
+    let profiles = algorithm_profiles();
+
+    let selected = select_unique_x509_issuer_candidate_by(
+        &child,
+        &candidates,
+        1,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let issuer_role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let issuer_algorithm_policy =
+        validate_certificate_algorithm_policy(&algorithm_issuer, &profiles).unwrap();
+
+    let error = verify_selected_x509_rsa_sha256_issuer_link_with_policies(
+        selected,
+        issuer_role_policy,
+        issuer_algorithm_policy,
+        policy(),
+    )
+    .expect_err("cross-certificate algorithm evidence must fail before RSA parsing");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256IssuerPolicyLinkErrorKind::EvidenceMismatch
+    );
+    assert!(!error.to_string().contains("fixture"));
+}
+
+#[test]
+fn rejects_role_policy_evidence_for_a_different_selected_candidate_first() {
+    let child_encoded = fixture();
+    let mut selected_issuer_encoded = fixture();
+    mutate_first(
+        &mut selected_issuer_encoded,
+        RSA_ENCRYPTION_OID_DER,
+        |oid| {
+            oid[oid.len() - 1] = 0x0b;
+        },
+    );
+    let mut role_issuer_encoded = fixture();
+    mutate_first(&mut role_issuer_encoded, &[0x02, 0x01, 0x01], |serial| {
+        serial[2] = 2;
+    });
+    let child = decode(&child_encoded);
+    let candidates = vec![decode(&selected_issuer_encoded)];
+    let role_issuer = decode(&role_issuer_encoded);
+
+    let selected = select_unique_x509_issuer_candidate_by(
+        &child,
+        &candidates,
+        1,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let issuer_role_policy = validate_certificate_role_policy(
+        &role_issuer,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+
+    let error = verify_selected_x509_rsa_sha256_issuer_link_with_role_policy(
+        selected,
+        issuer_role_policy,
+        policy(),
+    )
+    .expect_err("different-certificate evidence must fail");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256IssuerRolePolicyLinkErrorKind::EvidenceMismatch
+    );
+}
+
+#[test]
+fn rejects_non_ca_role_policy_evidence_for_the_selected_candidate_first() {
+    let child_encoded = fixture();
+    let mut issuer_encoded = fixture();
+    mutate_first(&mut issuer_encoded, BASIC_CONSTRAINTS_OID_DER, |oid| {
+        oid[2] = 0x7e;
+    });
+    mutate_first(&mut issuer_encoded, KEY_USAGE_OID_DER, |oid| {
+        oid[2] = 0x7d;
+    });
+    let child = decode(&child_encoded);
+    let candidates = vec![decode(&issuer_encoded)];
+
+    let selected = select_unique_x509_issuer_candidate_by(
+        &child,
+        &candidates,
+        1,
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let issuer_role_policy = validate_certificate_role_policy(
+        &candidates[0],
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap();
+
+    let error = verify_selected_x509_rsa_sha256_issuer_link_with_role_policy(
+        selected,
+        issuer_role_policy,
+        policy(),
+    )
+    .expect_err("non-CA role evidence must fail");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256IssuerRolePolicyLinkErrorKind::EvidenceMismatch
+    );
 }
 
 #[test]

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:c676c4cab4981f84",
+  "lessonIds": [
+    "JA-C245-ureshii",
+    "JA-C245-sabishii",
+    "JA-C245-yorokobu",
+    "JA-C245-warau",
+    "JA-C245-egao"
+  ],
+  "tex": "japanese/book/chapters/ch245-glad-lonely-and-laughing.tex"
+}

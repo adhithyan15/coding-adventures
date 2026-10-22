@@ -1,0 +1,11 @@
+{
+  "id": "JA-C155-genkan",
+  "pathSegment": "JA-PATH-155-MOVE155",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-155-MOVE155",
+      "order": 4
+    }
+  ]
+}

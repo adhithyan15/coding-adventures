@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-223-SAFETY223",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can warn about danger and ask if someone is safe.",
+  "prerequisites": []
+}

@@ -358,14 +358,17 @@ def read_subsets(report: Report, directory: Path) -> dict[str, dict[str, str]]:
     return subsets
 
 
-def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | None:
+def corpus_cases(
+    report: Report, directory: Path, subset: str, releases: set[str] | None = None
+) -> set[str] | None:
     """Positive case names of a subset's corpus, or None when it has none.
 
     A case is `<name>.<ext>` + `<name>.expect` + `<name>.cite`; a negative
     probe is `<name>.<ext>` + `<name>.reject`. Overrides `<name>.expect@<p>`
-    and `<name>.reject@<p>` need the plain `.expect` and a profile `<p>`
-    that some `profiles.rs` defines. Only positive cases need backend
-    coverage.
+    and `<name>.reject@<p>` need the plain `.expect`. `<p>` is a profile
+    that some `profiles.rs` defines (Perl's `reject@perl_nv`) or a row of
+    this language's `releases.csv` (Python's `int_underscores.reject@3.0a1`).
+    Only positive cases need backend coverage.
     """
     corpus = directory / "corpus" / subset
     if not corpus.is_dir():
@@ -414,15 +417,17 @@ def corpus_cases(report: Report, directory: Path, subset: str) -> set[str] | Non
             report.error(f"{where}: .expect has no .cite oracle record")
         if overrides and not positive:
             report.error(f"{where}: a profile override needs the plain .expect")
-        profiles = [o.partition("@")[2] for o in overrides]
-        for profile in sorted({p for p in profiles if profiles.count(p) > 1}):
-            report.error(f"{where}: more than one override for profile {profile}")
+        targets = [o.partition("@")[2] for o in overrides]
+        for target in sorted({t for t in targets if targets.count(t) > 1}):
+            report.error(f"{where}: more than one override for {printable(repr(target))}")
         for override in sorted(overrides):
-            profile = override.partition("@")[2]
-            if not PROFILE_RE.match(profile) or not known_profile(profile):
+            target = override.partition("@")[2]
+            is_profile = bool(PROFILE_RE.match(target)) and known_profile(target)
+            is_release = releases is not None and target in releases
+            if not (is_profile or is_release):
                 report.error(
-                    f"{where}: override .{override} names no profile defined "
-                    "in a profiles.rs"
+                    f"{where}: override .{printable(repr(override))} names no "
+                    "profile defined in a profiles.rs and no releases.csv row"
                 )
         if positive:
             cases.add(stem)
@@ -564,9 +569,10 @@ def check_claimed_corpora(
     for row in rows:
         if not row.get("__malformed__"):
             claimed |= split_list(row["iir_status"]) | split_list(row["backend_status"])
+    releases = {row["release"] for row in rows if not row.get("__malformed__")}
     cases: dict[str, set[str]] = {}
     for subset in sorted(claimed & subsets):
-        found = corpus_cases(report, directory, subset)
+        found = corpus_cases(report, directory, subset, releases)
         if not found:
             report.error(
                 f"subset {subset!r} is claimed at stage I or B but corpus/{subset}/ "

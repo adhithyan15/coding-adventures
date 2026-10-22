@@ -1,0 +1,11 @@
+{
+  "id": "JA-C195-sugiru",
+  "pathSegment": "JA-PATH-195-CORNER195",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-195-CORNER195",
+      "order": 3
+    }
+  ]
+}

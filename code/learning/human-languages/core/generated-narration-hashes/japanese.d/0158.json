@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:e35d7999f770a2e5",
+  "lessonIds": [
+    "JA-C158-kagi",
+    "JA-C158-kesu",
+    "JA-C158-denki",
+    "JA-C158-akeru",
+    "JA-C158-kurai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch158.txt",
+  "json": "japanese/narration/ch158.json",
+  "textHash": "fnv1a64:4fbfaf58ec0e56e7",
+  "jsonHash": "fnv1a64:81a248f84cca3f48",
+  "findings": []
+}

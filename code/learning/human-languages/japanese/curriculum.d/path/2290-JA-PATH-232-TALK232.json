@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-232-TALK232",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "JA-EXT-232-TALK232"
+  ],
+  "after": []
+}

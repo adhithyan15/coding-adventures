@@ -24,7 +24,7 @@ and `*-parser` crates with matching files under `code/grammars`, and writes
 (`sql-lexer`), package stem (`sql`), or grammar stem (`dartmouth_basic`).
 
 Languages with a LANG84 release inventory (`code/grammars/<dir>/releases.csv`;
-today Ruby and Perl) are generated as **release families**: the release list comes from
+today Ruby, Perl and Python) are generated as **release families**: the release list comes from
 the CSV, each row past stage `none` must have its own `<prefix><release>.tokens`
 and `.grammar`, and releases whose pairs are identical apart from comments and
 line numbers share one embedded module named `g_<first 12 hex of SHA-256>`.
@@ -34,6 +34,10 @@ The generated file exposes `SUPPORTED_RELEASES`, `token_grammar(release)` or
 frontend can tell an unknown release from one whose pair is not written yet.
 The unversioned pair, when a family keeps it, is `unversioned_parser_grammar()`
 (and, for Perl, `unversioned_token_grammar()`), never the `""` release.
+A family may also keep pre-LANG84 minor-line pairs (Python's `python3.12.*`)
+for a legacy version API: they go in a separate `pub mod legacy_versions` with
+its own selector, so no release ID can reach them. Release pairs are always
+validated, even when a package's legacy grammars need `force`.
 
 The CSV is read by header name, and a row is refused, failing the whole
 generation, when it is quoted, has a different field count from the header,
@@ -43,8 +47,9 @@ because each ID becomes a file name) or a duplicate one, or names an unknown
 header's `grammar_stage` column; Perl's inventory gained it in LANG84 phase 2b.
 
 ```bash
-grammar-tools generate-rust-compiled-grammars ruby   # 5 pairs
-grammar-tools generate-rust-compiled-grammars perl   # 117 pairs -> 5 + 2 tables
+grammar-tools generate-rust-compiled-grammars ruby     # 5 pairs
+grammar-tools generate-rust-compiled-grammars perl     # 118 pairs -> 5 + 2 tables
+grammar-tools generate-rust-compiled-grammars python   # 5 pairs -> 3 + 1 tables, + 6 minor lines
 ```
 
 See `code/specs/LANG84-grammar-driven-versioned-frontends.md`.

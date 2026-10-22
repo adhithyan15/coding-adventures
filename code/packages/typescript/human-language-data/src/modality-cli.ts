@@ -134,7 +134,25 @@ export function generatedModalityOutputsFromLessons(
   outputDir: string = MODALITY_MANIFEST_DIR,
   options: ModalityOptions = {},
 ): Map<string, string> {
-  const manifest = buildModalityManifest(lessons, options);
+  return generatedModalityOutputsFromManifest(buildModalityManifest(lessons, options), outputDir);
+}
+
+/**
+ * The same map, from a manifest the caller has already built.
+ *
+ * `runModalityManifest` needs the manifest itself (to validate languages, collect
+ * the expected ids and compare the round trip) AND its owner files. It used to get
+ * the first from `buildModalityManifest(lessons)` and the second from
+ * `generatedModalityOutputsFromLessons(lessons)`, which built the identical
+ * manifest a second time from the identical lessons — about 2 s of derivation per
+ * `--check`, measured, for an answer it already held. Rendering from the one
+ * manifest is the same function of the same data, so `--write` and `--check` still
+ * consume byte-identical output; there is just one derivation behind it.
+ */
+export function generatedModalityOutputsFromManifest(
+  manifest: ModalityManifest,
+  outputDir: string = MODALITY_MANIFEST_DIR,
+): Map<string, string> {
   return new Map(
     [...modalityOwnerContents(manifest)].map(([relative, contents]) => [
       `${outputDir}/${relative}`,
@@ -442,7 +460,7 @@ export function runModalityManifest(
     assertModalityManifestLanguages(manifest, languages);
     const sourceIds = expectedLessonIds(manifest);
     const narrationIds = narrationLessonIdentityIndex(root, languages);
-    const outputs = generatedModalityOutputsFromLessons(lessons);
+    const outputs = generatedModalityOutputsFromManifest(manifest);
 
     if (mode === "--write") {
       recoverInterruptedInstall(root, MODALITY_MANIFEST_DIR);

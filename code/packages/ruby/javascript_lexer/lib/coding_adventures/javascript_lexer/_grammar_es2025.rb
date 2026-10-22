@@ -18,7 +18,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
   definitions: [
       GT::TokenDefinition.new(
         name: "HASHBANG",
-        pattern: "^#![^\\n]*",
+        pattern: "^#![^\\n\\r]*",
         is_regex: true,
         line_number: 79,
         alias_name: nil,
@@ -130,21 +130,21 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "TEMPLATE_HEAD",
-        pattern: "`([^`\\\\$]|\\\\.|\\$[^{])*\\$\\{",
+        pattern: "`([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*\\$\\{",
         is_regex: true,
         line_number: 117,
         alias_name: nil,
       ),
       GT::TokenDefinition.new(
         name: "TEMPLATE_NO_SUB",
-        pattern: "`([^`\\\\$]|\\\\.|\\$[^{])*`",
+        pattern: "`([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*`",
         is_regex: true,
         line_number: 118,
         alias_name: nil,
       ),
       GT::TokenDefinition.new(
         name: "REGEX",
-        pattern: "\\/([^\\/\\\\\\n]|\\\\.)+\\/[dgimsuvy]*",
+        pattern: "\\/([^\\/\\\\\\n\\r]|\\\\[^\\n\\r])+\\/[dgimsuvy]*",
         is_regex: true,
         line_number: 122,
         alias_name: nil,
@@ -569,14 +569,14 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "LINE_COMMENT",
-        pattern: "\\/\\/[^\\n]*",
+        pattern: "\\/\\/[^\\n\\r]*",
         is_regex: true,
         line_number: 410,
         alias_name: nil,
       ),
       GT::TokenDefinition.new(
         name: "BLOCK_COMMENT",
-        pattern: "\\/\\*([^*]|\\*[^\\/])*\\*\\/",
+        pattern: "\\/\\*[^*]*\\*+([^\\/*][^*]*\\*+)*\\/",
         is_regex: true,
         line_number: 411,
         alias_name: nil,
@@ -607,7 +607,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "BAD_TEMPLATE",
-        pattern: "`([^`\\\\$]|\\\\.|\\$[^{])*$",
+        pattern: "`([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*$",
         is_regex: true,
         line_number: 421,
         alias_name: nil,
@@ -619,14 +619,14 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
         definitions: [
           GT::TokenDefinition.new(
             name: "TEMPLATE_MIDDLE",
-            pattern: "\\}([^`\\\\$]|\\\\.|\\$[^{])*\\$\\{",
+            pattern: "\\}([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*\\$\\{",
             is_regex: true,
             line_number: 293,
             alias_name: nil,
           ),
           GT::TokenDefinition.new(
             name: "TEMPLATE_TAIL",
-            pattern: "\\}([^`\\\\$]|\\\\.|\\$[^{])*`",
+            pattern: "\\}([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*`",
             is_regex: true,
             line_number: 294,
             alias_name: nil,
@@ -671,14 +671,14 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
           ),
           GT::TokenDefinition.new(
             name: "TEMPLATE_MIDDLE",
-            pattern: "\\}([^`\\\\$]|\\\\.|\\$[^{])*\\$\\{",
+            pattern: "\\}([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*\\$\\{",
             is_regex: true,
             line_number: 359,
             alias_name: nil,
           ),
           GT::TokenDefinition.new(
             name: "TEMPLATE_TAIL",
-            pattern: "\\}([^`\\\\$]|\\\\.|\\$[^{])*`",
+            pattern: "\\}([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*`",
             is_regex: true,
             line_number: 360,
             alias_name: nil,

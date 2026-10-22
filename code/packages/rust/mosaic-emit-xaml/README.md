@@ -7,6 +7,10 @@ drop into a Windows App SDK project.
 
 See `code/specs/mosaic-emit-xaml.md` for the design.
 
+Native-complete UserControl windows refresh both properties and host status after
+deferred effects finish. File-dialog completion therefore replaces stale pending
+warnings while retaining any persistence failure reported by the runtime.
+
 ## Projection updates
 
 Generated `For` bindings retain their ItemsSource collection and reconcile rows

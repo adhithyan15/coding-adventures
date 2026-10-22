@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:f24374805d906d06",
+  "lessonIds": [
+    "JA-C200-norikaeru",
+    "JA-C200-deru",
+    "JA-C200-tetsudou",
+    "JA-C200-noriba",
+    "JA-C200-teiryuujo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch200.txt",
+  "json": "japanese/narration/ch200.json",
+  "textHash": "fnv1a64:7c71508b3c38c393",
+  "jsonHash": "fnv1a64:7a34e9c1270ab3ef",
+  "findings": []
+}

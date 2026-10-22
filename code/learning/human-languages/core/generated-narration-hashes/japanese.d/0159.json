@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:5596bc119d336ed9",
+  "lessonIds": [
+    "JA-C159-kaji",
+    "JA-C159-suteru",
+    "JA-C159-wakeru",
+    "JA-C159-kasaneru",
+    "JA-C159-seiri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch159.txt",
+  "json": "japanese/narration/ch159.json",
+  "textHash": "fnv1a64:ec48e20ac0fa7918",
+  "jsonHash": "fnv1a64:0858f9598ce67813",
+  "findings": []
+}

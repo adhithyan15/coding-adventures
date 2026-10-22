@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C167-hajimaru",
+    "language": "japanese",
+    "chapter": 167,
+    "sequence": 9880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e77991655c795026"
+  },
+  "findings": []
+}

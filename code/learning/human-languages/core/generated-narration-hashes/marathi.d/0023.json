@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 23,
-  "sourceHash": "fnv1a64:14bda49a08865677",
+  "sourceHash": "fnv1a64:1769cf8d7dc0c7e5",
   "lessonIds": [
     "MR-A1F01-naav",
     "MR-A1F01-shahar",
@@ -18,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch23.txt",
   "json": "marathi/narration/ch23.json",
-  "textHash": "fnv1a64:d6964cbbabd79872",
-  "jsonHash": "fnv1a64:9fe3ca5b167c9c89",
+  "textHash": "fnv1a64:968864091b8c2e91",
+  "jsonHash": "fnv1a64:8885cd10fb9d2879",
   "findings": []
 }

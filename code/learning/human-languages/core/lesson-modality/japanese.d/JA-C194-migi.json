@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C194-migi",
+    "language": "japanese",
+    "chapter": 194,
+    "sequence": 11530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b56daa4681c03e57"
+  },
+  "findings": []
+}

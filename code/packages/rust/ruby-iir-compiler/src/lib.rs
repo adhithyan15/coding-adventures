@@ -1,355 +1,220 @@
-//! Ruby's bounded integer-expression grammar tree lowered directly to IIR.
+//! # Ruby → InterpreterIR, straight from the release's parse tree
 //!
-//! The compiler follows Ruby's existing parser tree. It proves every value
-//! fits in `i64` before emitting arithmetic, so accepted expressions agree
-//! with Ruby even though Ruby's full integer tower is not implemented yet.
+//! This crate is the Ruby frontend of LANG84 ("grammar-driven,
+//! release-versioned frontends") and the Ruby half of LANG83 PR2. It compiles
+//! the `rb-int-puts` subset — `puts` of decimal integer arithmetic — for one
+//! exact Ruby release:
+//!
+//! ```text
+//!   source ──► resolve_release ──► GrammarLexer(ruby<release>.tokens)
+//!          ──► GrammarParser(ruby<release>.grammar) ──► GrammarASTNode
+//!          ──► lower.rs (walks the tree in place; reads a ReleaseProfile)
+//!          ──► IIRModule of LANG83 registry ops ──► any of the nine backends
+//! ```
+//!
+//! The first three stages are generic and table-driven and live in
+//! `ruby-parser`. The hand-written `ruby-lexer` state machine is **not** on
+//! this path (LANG84 C2 forbids hand-written lexers): `tests/iir_path.rs`
+//! scans this crate's source to keep it that way.
+//!
+//! ## The subset
+//!
+//! One or more `puts` calls, separated by newlines or `;`:
+//!
+//! ```ruby
+//! puts(1 + 2)          # 3
+//! puts 7 / -2, 7 % -2  # -4, -1   (Ruby rounds toward negative infinity)
+//! puts()               # an empty line
+//! puts(1_000 * (2 - 5))
+//! ```
+//!
+//! Arguments are decimal integer literals (with `_` separators and a folded
+//! `+`), parentheses, unary `-`, and binary `+ - * / %` at Ruby's precedence.
+//! Every value must fit in `i64`; the compiler proves that while it lowers,
+//! because Ruby would silently switch to a Bignum where IIR cannot follow.
+//! A zero divisor is *not* refused: like Ruby's `ZeroDivisionError`, it
+//! stops the program at run time after the earlier output — LANG83's
+//! `i64_div_floor` traps with `Trap.DivZero`.
+//!
+//! Narrower than Ruby on purpose: `puts -7` (whether that `-` is unary
+//! depends on the space before it, which needs LANG84's E6 adjacency
+//! predicates — write `puts(-7)`), bare `puts` with no argument, strings,
+//! variables and everything else.
+//!
+//! ## Releases
+//!
+//! [`compile_source_at`] takes an exact inventory ID from
+//! `code/grammars/ruby/releases.csv` (or `None` for
+//! [`DEFAULT_RELEASE`], `3.3.6`). Only releases with a
+//! [`profiles::ReleaseProfile`] compile; today that is `3.3.5`–`3.3.7`. The
+//! 1994 releases `0.49` and `0.50` parse the subset but cannot run it
+//! (`puts` was an IO method then and `/` truncated), so they are a typed
+//! `ReleaseNotAvailable` error rather than 3.3 semantics under the wrong
+//! name. See `profiles.rs`.
 
-use coding_adventures_ruby_parser::try_create_ruby_parser;
-use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-use lexer::token::TokenType;
-use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::sync::{Arc, Mutex};
+
+use coding_adventures_ruby_parser::{parse_ruby_at, resolve_release};
+use interpreter_ir::{IIRFunction, IIRModule};
+use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use vm_core::{errors::VMError, value::Value, VMCore};
 
-/// Maximum source size accepted by the first native Ruby pilot.
-pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
+mod error;
+mod lower;
+pub mod profiles;
+
+pub use coding_adventures_ruby_parser::{
+    supported_releases, FrontendBudgets, DEFAULT_MAX_SOURCE_BYTES, DEFAULT_RELEASE,
+};
+pub use error::FrontendError;
+pub use lower::{DISPATCHED_RULES, DISPATCHED_TOKENS, MAX_IIR_INSTRUCTIONS};
+
+/// Source bytes the untrusted default budget accepts (64 KiB).
+pub const MAX_SOURCE_BYTES: usize = DEFAULT_MAX_SOURCE_BYTES;
+
+/// The subset this compiler lowers, as `code/grammars/ruby/subsets.csv`
+/// names it.
+pub const SUBSET: &str = "rb-int-puts";
+
+// Budgets for a caller-supplied tree (LANG84 C5). A tree that came from
+// source is already bounded by the parser's token and depth budgets; one
+// handed in directly is not, so `compile_cst` measures it first.
 const MAX_AST_ITEMS: usize = 16_384;
 const MAX_AST_DEPTH: usize = 256;
 const MAX_AST_TEXT_BYTES: usize = 1024 * 1024;
 const MAX_AST_FIELD_BYTES: usize = 64 * 1024;
+/// Bytes of output the VM runner keeps before refusing to write more.
 const MAX_OUTPUT_BYTES: usize = 1_000_000;
 
-/// Parse Ruby 3.0 source and lower the supported subset directly to IIR.
-pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, String> {
-    if source.len() > MAX_SOURCE_BYTES {
-        return Err("Ruby source exceeds the native pilot limit".into());
-    }
-    let mut parser = try_create_ruby_parser(source)?;
-    let ast = parser.parse().map_err(|error| error.to_string())?;
-    compile_ast(&ast, module_name)
+/// Lex, parse and compile `source` against exactly one Ruby release.
+///
+/// `release` is `None` for [`DEFAULT_RELEASE`] or an exact inventory ID such
+/// as `Some("3.3.7")`. An unknown ID, a row with no grammar pair, or a row
+/// with no IIR profile is a typed error: nothing falls back to a
+/// neighbouring release (LANG84 C4).
+pub fn compile_source_at(
+    source: &str,
+    release: Option<&str>,
+    module_name: &str,
+    budgets: &FrontendBudgets,
+) -> Result<IIRModule, FrontendError> {
+    let (release, profile) = release_and_profile(release)?;
+    check_module_name(release, module_name)?;
+    let parsed = parse_ruby_at(source, Some(release), budgets)?;
+    finish(release, profile, module_name, &parsed.ast)
 }
 
-/// Lower a Ruby parser tree without passing through Semantic IR.
-pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule, String> {
+/// [`compile_source_at`] on the default release with the untrusted budgets.
+pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, FrontendError> {
+    compile_source_at(source, None, module_name, &FrontendBudgets::default())
+}
+
+/// Compile a parse tree the caller already has, as if `release` produced it.
+///
+/// The tree is measured against the caller-supplied-tree budgets (items,
+/// depth, text) before anything walks it, because unlike a tree from
+/// [`compile_source_at`] nothing upstream bounded it.
+pub fn compile_cst(
+    ast: &GrammarASTNode,
+    release: Option<&str>,
+    module_name: &str,
+) -> Result<IIRModule, FrontendError> {
+    let (release, profile) = release_and_profile(release)?;
+    check_module_name(release, module_name)?;
+    check_ast_budget(release, ast)?;
+    finish(release, profile, module_name, ast)
+}
+
+/// [`compile_cst`] on the default release.
+pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule, FrontendError> {
+    compile_cst(ast, None, module_name)
+}
+
+fn release_and_profile(
+    release: Option<&str>,
+) -> Result<(&'static str, &'static profiles::ReleaseProfile), FrontendError> {
+    let release = resolve_release(release)?;
+    let profile = profiles::profile_for(release).ok_or_else(|| FrontendError::ReleaseNotAvailable {
+        release: release.to_string(),
+        stage: format!("no IIR profile: its {SUBSET} programs do not run as Ruby 3.3's do (iir_status is -)"),
+    })?;
+    Ok((release, profile))
+}
+
+fn check_module_name(release: &str, module_name: &str) -> Result<(), FrontendError> {
     if module_name.len() > MAX_AST_FIELD_BYTES {
-        return Err("Ruby IIR module name exceeds the native pilot limit".into());
+        return Err(FrontendError::Budget {
+            release: release.to_string(),
+            which: "module name bytes",
+            limit: MAX_AST_FIELD_BYTES,
+        });
     }
-    check_ast_budget(ast)?;
-    if ast.rule_name != "program" || ast.children.is_empty() {
-        return Err("expected Ruby statements in a program".into());
-    }
-    let mut compiler = Compiler::default();
-    for child in &ast.children {
-        let ASTNodeOrToken::Node(statement) = child else {
-            return Err("unsupported Ruby program item".into());
-        };
-        if statement.rule_name != "statement" {
-            return Err("unsupported Ruby statement rule".into());
-        }
-        let [ASTNodeOrToken::Node(call)] = statement.children.as_slice() else {
-            return Err("unsupported Ruby statement shape".into());
-        };
-        let expressions = match call.rule_name.as_str() {
-            "method_call"
-                if call.children.len() == 3
-                    && is_puts_callee(&call.children[0])
-                    && is_parenthesis(&call.children[1], true)
-                    && is_parenthesis(&call.children[2], false) =>
-            {
-                vec![]
-            }
-            "method_call"
-                if call.children.len() == 4
-                    && is_puts_callee(&call.children[0])
-                    && is_parenthesis(&call.children[1], true)
-                    && is_parenthesis(&call.children[3], false) =>
-            {
-                let ASTNodeOrToken::Node(argument) = &call.children[2] else {
-                    return Err("unsupported Ruby puts argument".into());
-                };
-                if argument.rule_name != "call_arg" {
-                    return Err("unsupported Ruby puts argument".into());
-                }
-                vec![only_node(argument, "expression")?]
-            }
-            "method_call"
-                if call.children.len() == 6
-                    && is_puts_callee(&call.children[0])
-                    && is_parenthesis(&call.children[1], true)
-                    && is_comma(&call.children[3])
-                    && is_parenthesis(&call.children[5], false) =>
-            {
-                let (ASTNodeOrToken::Node(first), ASTNodeOrToken::Node(second)) =
-                    (&call.children[2], &call.children[4])
-                else {
-                    return Err("unsupported Ruby puts arguments".into());
-                };
-                if first.rule_name != "call_arg" || second.rule_name != "call_arg" {
-                    return Err("unsupported Ruby puts arguments".into());
-                }
-                vec![
-                    only_node(first, "expression")?,
-                    only_node(second, "expression")?,
-                ]
-            }
-            "method_call"
-                if call.children.len() == 8
-                    && is_puts_callee(&call.children[0])
-                    && is_parenthesis(&call.children[1], true)
-                    && is_comma(&call.children[3])
-                    && is_comma(&call.children[5])
-                    && is_parenthesis(&call.children[7], false) =>
-            {
-                // A call_arg with extra children denotes a keyword, splat, or
-                // other form. Borrow only its sole expression after validating
-                // every wrapper; caller-supplied trees follow the same contract.
-                let mut expressions = Vec::with_capacity(3);
-                for index in [2, 4, 6] {
-                    let ASTNodeOrToken::Node(argument) = &call.children[index] else {
-                        return Err("unsupported Ruby puts arguments".into());
-                    };
-                    if argument.rule_name != "call_arg" {
-                        return Err("unsupported Ruby puts arguments".into());
-                    }
-                    expressions.push(only_node(argument, "expression")?);
-                }
-                expressions
-            }
-            "method_call_no_paren" => {
-                let [callee, ASTNodeOrToken::Node(expression)] = call.children.as_slice() else {
-                    return Err("native Ruby pilot requires puts one expression".into());
-                };
-                if !is_puts_callee(callee) || expression.rule_name != "expression" {
-                    return Err("native Ruby pilot requires puts one expression".into());
-                }
-                vec![expression]
-            }
-            _ => return Err("native Ruby pilot requires puts one expression".into()),
-        };
-        match expressions.as_slice() {
-            [] => compiler.emit(
-                "call_builtin",
-                None,
-                vec![Operand::Var("rb_puts_empty".into())],
-                "void",
-            ),
-            [expression] => {
-                let compiled = compiler.compile_expression(expression)?;
-                compiler.emit(
-                    "call_builtin",
-                    None,
-                    vec![Operand::Var("rb_puts_int".into()), compiled.operand],
-                    "void",
-                );
-            }
-            [first, second] => {
-                let first = compiler.compile_expression(first)?.operand;
-                let second = compiler.compile_expression(second)?.operand;
-                compiler.emit(
-                    "call_builtin",
-                    None,
-                    vec![Operand::Var("rb_puts_two_ints".into()), first, second],
-                    "void",
-                );
-            }
-            [first, second, third] => {
-                let first = compiler.compile_expression(first)?.operand;
-                let second = compiler.compile_expression(second)?.operand;
-                let third = compiler.compile_expression(third)?.operand;
-                compiler.emit(
-                    "call_builtin",
-                    None,
-                    vec![
-                        Operand::Var("rb_puts_three_ints".into()),
-                        first,
-                        second,
-                        third,
-                    ],
-                    "void",
-                );
-            }
-            _ => return Err("unsupported Ruby puts argument count".into()),
-        }
-    }
-    compiler.emit("ret_void", None, vec![], "void");
+    Ok(())
+}
+
+/// Lower the tree into `main` and check the result is valid IIR.
+fn finish(
+    release: &'static str,
+    profile: &profiles::ReleaseProfile,
+    module_name: &str,
+    ast: &GrammarASTNode,
+) -> Result<IIRModule, FrontendError> {
+    let instructions = lower::Lowering::new(release, profile).lower_program(ast)?;
     let mut module = IIRModule::new(module_name, "ruby");
     module.entry_point = Some("main".into());
-    module.add_or_replace(IIRFunction::new(
-        "main",
-        vec![],
-        "void",
-        compiler.instructions,
-    ));
+    // LANG84 "Selection API": the module names the one release whose grammar
+    // produced it, so a backend, a cache key or a test can tell a 3.3.5
+    // module from a 3.3.7 one even when their instructions are identical.
+    module.release = Some(release.to_string());
+    module.add_or_replace(IIRFunction::new("main", vec![], "i64", instructions));
     let errors = module.validate();
     if !errors.is_empty() {
-        return Err(format!("invalid Ruby IIR: {}", errors.join("; ")));
+        // Unreachable for trees the walker accepted; reported, not panicked.
+        return Err(FrontendError::Unsupported {
+            release: release.to_string(),
+            rule: lower::shown_rule(&ast.rule_name),
+            start: None,
+            end: None,
+            message: format!("the lowered module is not valid IIR: {}", errors.join("; ")),
+        });
     }
     Ok(module)
 }
 
-/// Execute Ruby source on the repository's Rust VM and capture `puts` output.
-pub fn run_source(source: &str) -> Result<String, String> {
-    let mut module = compile_source(source, "ruby-script")?;
-    let output = Arc::new(Mutex::new(String::new()));
-    let captured = Arc::clone(&output);
-    let mut vm = VMCore::new();
-    vm.max_instructions = Some(100_000);
-    vm.builtins_mut().register("rb_int_div", |args| {
-        let [Value::Int(left), Value::Int(right)] = args else {
-            return Err(VMError::Custom("rb_int_div expects two integers".into()));
-        };
-        if *right == 0 {
-            return Err(VMError::Custom("ZeroDivisionError: divided by 0".into()));
-        }
-        let quotient = floor_div(i128::from(*left), i128::from(*right));
-        let value = i64::try_from(quotient)
-            .map_err(|_| VMError::Custom("Ruby integer exceeds native pilot range".into()))?;
-        Ok(Value::Int(value))
-    });
-    vm.builtins_mut().register("rb_puts_int", move |args| {
-        let [Value::Int(number)] = args else {
-            return Err(VMError::Custom("rb_puts_int expects one integer".into()));
-        };
-        let rendered = number.to_string();
-        let mut sink = captured
-            .lock()
-            .map_err(|_| VMError::Custom("Ruby output lock poisoned".into()))?;
-        if sink
-            .len()
-            .checked_add(rendered.len() + 1)
-            .is_none_or(|size| size > MAX_OUTPUT_BYTES)
-        {
-            return Err(VMError::Custom("Ruby output limit exceeded".into()));
-        }
-        sink.push_str(&rendered);
-        sink.push('\n');
-        Ok(Value::Null)
-    });
-    let captured_empty = Arc::clone(&output);
-    vm.builtins_mut().register("rb_puts_empty", move |args| {
-        if !args.is_empty() {
-            return Err(VMError::Custom("rb_puts_empty expects no arguments".into()));
-        }
-        let mut sink = captured_empty
-            .lock()
-            .map_err(|_| VMError::Custom("Ruby output lock poisoned".into()))?;
-        if sink
-            .len()
-            .checked_add(1)
-            .is_none_or(|size| size > MAX_OUTPUT_BYTES)
-        {
-            return Err(VMError::Custom("Ruby output limit exceeded".into()));
-        }
-        sink.push('\n');
-        Ok(Value::Null)
-    });
-    let captured_two = Arc::clone(&output);
-    vm.builtins_mut().register("rb_puts_two_ints", move |args| {
-        let [Value::Int(first), Value::Int(second)] = args else {
-            return Err(VMError::Custom(
-                "rb_puts_two_ints expects two integers".into(),
-            ));
-        };
-        let first = first.to_string();
-        let second = second.to_string();
-        let mut sink = captured_two
-            .lock()
-            .map_err(|_| VMError::Custom("Ruby output lock poisoned".into()))?;
-        if sink
-            .len()
-            .checked_add(first.len())
-            .and_then(|size| size.checked_add(second.len()))
-            .and_then(|size| size.checked_add(2))
-            .is_none_or(|size| size > MAX_OUTPUT_BYTES)
-        {
-            return Err(VMError::Custom("Ruby output limit exceeded".into()));
-        }
-        sink.push_str(&first);
-        sink.push('\n');
-        sink.push_str(&second);
-        sink.push('\n');
-        Ok(Value::Null)
-    });
-    let captured_three = Arc::clone(&output);
-    vm.builtins_mut()
-        .register("rb_puts_three_ints", move |args| {
-            puts_three_ints(args, &captured_three)
-        });
-    vm.execute(&mut module, "main", &[])
-        .map_err(|error| error.to_string())?;
-    let result = output
-        .lock()
-        .map_err(|_| "Ruby output lock poisoned")?
-        .clone();
-    Ok(result)
-}
-
-/// Render one three-integer call before touching its output sink. The only
-/// temporary strings have bounded i64 decimal lengths, and the combined size
-/// check ensures that a failing call cannot append a partial line or argument.
-fn puts_three_ints(args: &[Value], captured: &Mutex<String>) -> Result<Value, VMError> {
-    let [Value::Int(first), Value::Int(second), Value::Int(third)] = args else {
-        return Err(VMError::Custom(
-            "rb_puts_three_ints expects three integers".into(),
-        ));
+/// Walk a caller-supplied tree once, iteratively, and refuse it if it is too
+/// large, too deep or carries too much text. The item count is checked
+/// before a node's children are queued, so a hostile tree costs at most the
+/// budget's worth of work.
+fn check_ast_budget(release: &str, root: &GrammarASTNode) -> Result<(), FrontendError> {
+    let budget = |which: &'static str, limit: usize| FrontendError::Budget {
+        release: release.to_string(),
+        which,
+        limit,
     };
-    let rendered = [first.to_string(), second.to_string(), third.to_string()];
-    let mut sink = captured
-        .lock()
-        .map_err(|_| VMError::Custom("Ruby output lock poisoned".into()))?;
-    if rendered
-        .iter()
-        .try_fold(sink.len(), |size, value| {
-            size.checked_add(value.len())?.checked_add(1)
-        })
-        .is_none_or(|size| size > MAX_OUTPUT_BYTES)
-    {
-        return Err(VMError::Custom("Ruby output limit exceeded".into()));
-    }
-    for value in rendered {
-        sink.push_str(&value);
-        sink.push('\n');
-    }
-    Ok(Value::Null)
-}
-
-fn floor_div(left: i128, right: i128) -> i128 {
-    let quotient = left / right;
-    if left % right != 0 && (left < 0) != (right < 0) {
-        quotient - 1
-    } else {
-        quotient
-    }
-}
-
-fn check_ast_budget(root: &GrammarASTNode) -> Result<(), String> {
     let mut pending = vec![(root, 1_usize)];
     let mut visited = 1_usize;
     let mut text_bytes = 0_usize;
     while let Some((node, depth)) = pending.pop() {
-        if depth > MAX_AST_DEPTH {
-            return Err("Ruby AST exceeds the native pilot depth limit".into());
-        }
-        count_ast_text(&node.rule_name, &mut text_bytes)?;
+        count_text(&node.rule_name, &mut text_bytes).map_err(|(w, l)| budget(w, l))?;
         for child in &node.children {
             if visited == MAX_AST_ITEMS {
-                return Err("Ruby AST exceeds the native pilot AST item limit".into());
+                return Err(budget("CST items", MAX_AST_ITEMS));
             }
             visited += 1;
             match child {
                 ASTNodeOrToken::Node(inner) => {
                     if depth == MAX_AST_DEPTH {
-                        return Err("Ruby AST exceeds the native pilot depth limit".into());
+                        return Err(budget("CST depth", MAX_AST_DEPTH));
                     }
                     pending.push((inner, depth + 1));
                 }
                 ASTNodeOrToken::Token(token) => {
-                    count_ast_text(&token.value, &mut text_bytes)?;
-                    if let Some(type_name) = &token.type_name {
-                        count_ast_text(type_name, &mut text_bytes)?;
+                    count_text(&token.value, &mut text_bytes).map_err(|(w, l)| budget(w, l))?;
+                    if let Some(name) = &token.type_name {
+                        count_text(name, &mut text_bytes).map_err(|(w, l)| budget(w, l))?;
                     }
                     if let Some(cv) = &token.cv {
-                        count_ast_text(cv, &mut text_bytes)?;
+                        count_text(cv, &mut text_bytes).map_err(|(w, l)| budget(w, l))?;
                     }
                 }
             }
@@ -358,899 +223,126 @@ fn check_ast_budget(root: &GrammarASTNode) -> Result<(), String> {
     Ok(())
 }
 
-fn count_ast_text(field: &str, total: &mut usize) -> Result<(), String> {
-    if field.len() > MAX_AST_FIELD_BYTES
-        || total
-            .checked_add(field.len())
-            .is_none_or(|next| next > MAX_AST_TEXT_BYTES)
+fn count_text(field: &str, total: &mut usize) -> Result<(), (&'static str, usize)> {
+    if field.len() > MAX_AST_FIELD_BYTES {
+        return Err(("CST field bytes", MAX_AST_FIELD_BYTES));
+    }
+    match total.checked_add(field.len()) {
+        Some(next) if next <= MAX_AST_TEXT_BYTES => {
+            *total = next;
+            Ok(())
+        }
+        _ => Err(("CST text bytes", MAX_AST_TEXT_BYTES)),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Running a module on the repository's own VM
+// ---------------------------------------------------------------------------
+
+/// What a program did on `vm-core`: its output, and the LANG83 trap kind if
+/// it stopped on one (after that output, as Ruby prints before raising).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RunOutput {
+    /// Everything `puts` wrote, in order.
+    pub stdout: String,
+    /// `Some("Trap.DivZero")` when the program trapped.
+    pub trap: Option<String>,
+}
+
+/// Why a run produced no [`RunOutput`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RunError {
+    /// The source did not compile.
+    Frontend(FrontendError),
+    /// The VM stopped for a reason other than a LANG83 trap (a budget).
+    Vm(String),
+}
+
+impl std::fmt::Display for RunError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RunError::Frontend(error) => write!(f, "{error}"),
+            RunError::Vm(message) => write!(f, "VM error: {message}"),
+        }
+    }
+}
+
+impl std::error::Error for RunError {}
+
+/// Compile `source` for `release` and run it on `vm-core`.
+pub fn run_source_at(source: &str, release: Option<&str>) -> Result<RunOutput, RunError> {
+    let module = compile_source_at(source, release, "ruby-script", &FrontendBudgets::default())
+        .map_err(RunError::Frontend)?;
+    run_module(module)
+}
+
+/// Run a compiled module on `vm-core`, capturing `print_i64` and `putchar`
+/// into one ordered, bounded buffer (LANG83 "ordered output stream").
+pub fn run_module(mut module: IIRModule) -> Result<RunOutput, RunError> {
+    let output = Arc::new(Mutex::new(Vec::<u8>::new()));
+    let mut vm = VMCore::new();
+    // The program is straight-line, so it can execute at most as many
+    // instructions as it holds.
+    vm.max_instructions = Some(MAX_IIR_INSTRUCTIONS as u64);
+    let sink = Arc::clone(&output);
+    vm.builtins_mut().register("print_i64", move |args| {
+        let [Value::Int(number)] = args else {
+            return Err(VMError::Custom("print_i64 expects one integer".into()));
+        };
+        append(&sink, format!("{number}\n").as_bytes())
+    });
+    let sink = Arc::clone(&output);
+    vm.builtins_mut().register("putchar", move |args| {
+        let [Value::Int(byte)] = args else {
+            return Err(VMError::Custom("putchar expects one integer".into()));
+        };
+        append(&sink, &[(*byte & 0xFF) as u8])
+    });
+    let outcome = vm.execute(&mut module, "main", &[]);
+    let stdout = String::from_utf8_lossy(
+        &output
+            .lock()
+            .map_err(|_| RunError::Vm("Ruby output lock poisoned".into()))?,
+    )
+    .into_owned();
+    match outcome {
+        Ok(_) => Ok(RunOutput { stdout, trap: None }),
+        Err(VMError::Trap { kind }) => Ok(RunOutput {
+            stdout,
+            trap: Some(kind),
+        }),
+        Err(error) => Err(RunError::Vm(error.to_string())),
+    }
+}
+
+/// Append to the bounded output buffer, all or nothing.
+fn append(sink: &Mutex<Vec<u8>>, bytes: &[u8]) -> Result<Value, VMError> {
+    let mut buffer = sink
+        .lock()
+        .map_err(|_| VMError::Custom("Ruby output lock poisoned".into()))?;
+    if buffer
+        .len()
+        .checked_add(bytes.len())
+        .is_none_or(|size| size > MAX_OUTPUT_BYTES)
     {
-        return Err("Ruby AST exceeds the native pilot AST text limit".into());
+        return Err(VMError::Custom("Ruby output limit exceeded".into()));
     }
-    *total += field.len();
-    Ok(())
+    buffer.extend_from_slice(bytes);
+    Ok(Value::Null)
 }
 
-// Direct AST callers bypass lexing. Canonical builtin punctuation has its
-// enum kind and spelling together, with no custom grammar-name override.
-fn syntax_token(child: &ASTNodeOrToken, kind: TokenType, spelling: &str) -> bool {
-    matches!(child, ASTNodeOrToken::Token(token)
-        if token.type_ == kind && token.type_name.is_none() && token.value == spelling)
-}
-
-fn arithmetic_token(child: &ASTNodeOrToken) -> Option<&str> {
-    let ASTNodeOrToken::Token(token) = child else {
-        return None;
-    };
-    let kind = match token.value.as_str() {
-        "+" => TokenType::Plus,
-        "-" => TokenType::Minus,
-        "*" => TokenType::Star,
-        "/" => TokenType::Slash,
-        _ => return None,
-    };
-    syntax_token(child, kind, &token.value).then_some(token.value.as_str())
-}
-
-fn is_puts_callee(child: &ASTNodeOrToken) -> bool {
-    let ASTNodeOrToken::Token(token) = child else {
-        return false;
-    };
-    token.value == "puts"
-        && matches!(token.type_, TokenType::Name | TokenType::Keyword)
-        && matches!(token.effective_type_name(), "NAME" | "KEYWORD")
-}
-
-fn is_parenthesis(child: &ASTNodeOrToken, left: bool) -> bool {
-    let ASTNodeOrToken::Token(token) = child else {
-        return false;
-    };
-    if left {
-        token.value == "("
-            && token.type_ == TokenType::LParen
-            && token.effective_type_name() == "LPAREN"
-    } else {
-        token.value == ")"
-            && token.type_ == TokenType::RParen
-            && token.effective_type_name() == "RPAREN"
+/// Compile and run on the default release; a trap is an error here.
+///
+/// Kept for the LANG80 pilot's callers. [`run_source_at`] keeps the output
+/// a trapping program wrote before it stopped.
+pub fn run_source(source: &str) -> Result<String, String> {
+    match run_source_at(source, None) {
+        Ok(RunOutput { stdout, trap: None }) => Ok(stdout),
+        Ok(RunOutput { trap: Some(kind), .. }) => Err(format!("trap: {kind}")),
+        Err(error) => Err(error.to_string()),
     }
-}
-
-fn is_comma(child: &ASTNodeOrToken) -> bool {
-    let ASTNodeOrToken::Token(token) = child else {
-        return false;
-    };
-    token.value == "," && token.type_ == TokenType::Comma && token.effective_type_name() == "COMMA"
-}
-
-fn only_node<'a>(parent: &'a GrammarASTNode, rule: &str) -> Result<&'a GrammarASTNode, String> {
-    let [ASTNodeOrToken::Node(child)] = parent.children.as_slice() else {
-        return Err(format!("unsupported Ruby {} shape", parent.rule_name));
-    };
-    if child.rule_name != rule {
-        return Err(format!("unsupported Ruby {} shape", parent.rule_name));
-    }
-    Ok(child)
-}
-
-struct Compiled {
-    operand: Operand,
-    value: i128,
-}
-
-#[derive(Default)]
-struct Compiler {
-    instructions: Vec<IIRInstr>,
-    next_register: usize,
-}
-
-impl Compiler {
-    fn emit(&mut self, op: &str, dest: Option<String>, srcs: Vec<Operand>, type_hint: &str) {
-        self.instructions
-            .push(IIRInstr::new(op, dest, srcs, type_hint));
-    }
-
-    fn register(&mut self) -> String {
-        let result = format!("rb{}", self.next_register);
-        self.next_register += 1;
-        result
-    }
-
-    fn compile_expression(&mut self, node: &GrammarASTNode) -> Result<Compiled, String> {
-        match node.rule_name.as_str() {
-            "expression" => self.compile_expression(only_node(node, "ternary")?),
-            "ternary" => self.compile_expression(only_node(node, "range")?),
-            "range" => self.compile_expression(only_node(node, "logical_or")?),
-            "logical_or" => self.compile_expression(only_node(node, "logical_and")?),
-            "logical_and" => self.compile_expression(only_node(node, "logical_not")?),
-            "logical_not" => self.compile_expression(only_node(node, "comparison")?),
-            "comparison" => self.compile_expression(only_node(node, "shift")?),
-            "shift" => self.compile_expression(only_node(node, "sum")?),
-            "sum" | "term" => self.compile_chain(node),
-            "factor" => self.compile_factor(node),
-            "unary_minus" => {
-                let [sign, ASTNodeOrToken::Node(factor)] = node.children.as_slice() else {
-                    return Err("unsupported Ruby unary expression".into());
-                };
-                if !syntax_token(sign, TokenType::Minus, "-") || factor.rule_name != "factor" {
-                    return Err("unsupported Ruby unary expression".into());
-                }
-                let inner = self.compile_expression(factor)?;
-                let value = checked_i64(-inner.value)?;
-                let dest = self.register();
-                self.emit("neg", Some(dest.clone()), vec![inner.operand], "i64");
-                Ok(Compiled {
-                    operand: Operand::Var(dest),
-                    value,
-                })
-            }
-            _ => Err(format!("unsupported Ruby {} expression", node.rule_name)),
-        }
-    }
-
-    fn compile_factor(&mut self, node: &GrammarASTNode) -> Result<Compiled, String> {
-        match node.children.as_slice() {
-            [ASTNodeOrToken::Token(token)]
-                if token.type_ == TokenType::Number
-                    && token.value.bytes().all(|c| c.is_ascii_digit()) =>
-            {
-                if token.value.len() > 1 && token.value.starts_with('0') {
-                    return Err("Ruby legacy octal literal is outside the decimal pilot".into());
-                }
-                let value = token
-                    .value
-                    .parse::<i128>()
-                    .map_err(|_| "Ruby integer exceeds native pilot range")?;
-                let value = checked_i64(value)?;
-                let dest = self.register();
-                self.emit(
-                    "const",
-                    Some(dest.clone()),
-                    vec![Operand::Int(value as i64)],
-                    "i64",
-                );
-                Ok(Compiled {
-                    operand: Operand::Var(dest),
-                    value,
-                })
-            }
-            [ASTNodeOrToken::Node(unary)] if unary.rule_name == "unary_minus" => {
-                self.compile_expression(unary)
-            }
-            [open, ASTNodeOrToken::Node(inner), close]
-                if syntax_token(open, TokenType::LParen, "(")
-                    && syntax_token(close, TokenType::RParen, ")")
-                    && inner.rule_name == "expression" =>
-            {
-                self.compile_expression(inner)
-            }
-            _ => Err("unsupported Ruby factor in native integer pilot".into()),
-        }
-    }
-
-    fn compile_chain(&mut self, node: &GrammarASTNode) -> Result<Compiled, String> {
-        let expected_child = if node.rule_name == "sum" {
-            "term"
-        } else {
-            "factor"
-        };
-        let Some(ASTNodeOrToken::Node(first)) = node.children.first() else {
-            return Err("Ruby arithmetic chain has no operand".into());
-        };
-        if first.rule_name != expected_child {
-            return Err("unsupported Ruby arithmetic chain".into());
-        }
-        let mut acc = self.compile_expression(first)?;
-        let (pairs, remainder) = node.children[1..].as_chunks::<2>();
-        for pair in pairs {
-            let [op_token, ASTNodeOrToken::Node(right)] = pair else {
-                return Err("unsupported Ruby arithmetic chain".into());
-            };
-            if right.rule_name != expected_child {
-                return Err("unsupported Ruby arithmetic chain".into());
-            }
-            let op = arithmetic_token(op_token).ok_or("invalid Ruby arithmetic operator token")?;
-            let rhs = self.compile_expression(right)?;
-            let (iir_op, value) = match op {
-                "+" if node.rule_name == "sum" => ("add", acc.value + rhs.value),
-                "-" if node.rule_name == "sum" => ("sub", acc.value - rhs.value),
-                "*" if node.rule_name == "term" => ("mul", acc.value * rhs.value),
-                "/" if node.rule_name == "term" && rhs.value != 0 => {
-                    ("call_builtin", floor_div(acc.value, rhs.value))
-                }
-                "/" if node.rule_name == "term" => {
-                    return Err("ZeroDivisionError: divided by 0".into());
-                }
-                _ => return Err("unsupported Ruby arithmetic operator".into()),
-            };
-            let value = checked_i64(value)?;
-            let dest = self.register();
-            let mut srcs = vec![acc.operand, rhs.operand];
-            if iir_op == "call_builtin" {
-                srcs.insert(0, Operand::Var("rb_int_div".into()));
-            }
-            self.emit(iir_op, Some(dest.clone()), srcs, "i64");
-            acc = Compiled {
-                operand: Operand::Var(dest),
-                value,
-            };
-        }
-        if !remainder.is_empty() {
-            return Err("unsupported Ruby arithmetic chain".into());
-        }
-        Ok(acc)
-    }
-}
-
-fn checked_i64(value: i128) -> Result<i128, String> {
-    i64::try_from(value)
-        .map(|_| value)
-        .map_err(|_| "Ruby integer exceeds native pilot range".into())
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    // Locate syntax in the real parser tree rather than inventing a grammar
-    // wrapper. The token kind distinguishes grouping from a numeric factor.
-    fn syntax_child_mut<'a>(
-        node: &'a mut GrammarASTNode,
-        rule: &str,
-        index: usize,
-        kind: TokenType,
-    ) -> Option<&'a mut ASTNodeOrToken> {
-        if node.rule_name == rule
-            && matches!(node.children.get(index), Some(ASTNodeOrToken::Token(t)) if t.type_ == kind)
-        {
-            return node.children.get_mut(index);
-        }
-        for child in &mut node.children {
-            if let ASTNodeOrToken::Node(inner) = child {
-                if let Some(found) = syntax_child_mut(inner, rule, index, kind) {
-                    return Some(found);
-                }
-            }
-        }
-        None
-    }
-
-    #[test]
-    fn direct_ast_rejects_forged_arithmetic_and_grouping_tokens() {
-        let families = [
-            ("-2", "unary_minus", 0, TokenType::Minus, "MINUS"),
-            ("1 + 2", "sum", 1, TokenType::Plus, "PLUS"),
-            ("5 - 2", "sum", 1, TokenType::Minus, "MINUS"),
-            ("2 * 3", "term", 1, TokenType::Star, "STAR"),
-            ("7 / 2", "term", 1, TokenType::Slash, "SLASH"),
-            ("(2)", "factor", 0, TokenType::LParen, "LPAREN"),
-            ("(2)", "factor", 2, TokenType::RParen, "RPAREN"),
-        ];
-        let mut cases = 0;
-        for (expression, rule, index, kind, name) in families {
-            let contexts = [
-                if rule == "factor" {
-                    format!("puts 0 + {expression}")
-                } else {
-                    format!("puts {expression}")
-                },
-                format!("puts({expression})"),
-                format!("puts({expression}, 8)"),
-                format!("puts(8, {expression})"),
-                format!("puts({expression}, 8, 9)"),
-                format!("puts(8, {expression}, 9)"),
-                format!("puts(8, 9, {expression})"),
-            ];
-            for (position, source) in contexts.into_iter().enumerate() {
-                let mut parsed = try_create_ruby_parser(&source).unwrap().parse().unwrap();
-                if position == 0 {
-                    assert_eq!(puts_call_mut(&mut parsed).rule_name, "method_call_no_paren");
-                }
-                assert!(compile_ast(&parsed, "original").is_ok(), "{source}");
-                for mutation in 0..7 {
-                    let mut forged = parsed.clone();
-                    let child = syntax_child_mut(&mut forged, rule, index, kind)
-                        .unwrap_or_else(|| panic!("{source}: missing {name} syntax"));
-                    if mutation == 6 {
-                        *child = ASTNodeOrToken::Node(empty_node("syntax"));
-                    } else {
-                        let ASTNodeOrToken::Token(token) = child else {
-                            unreachable!();
-                        };
-                        match mutation {
-                            0 => token.type_ = TokenType::String,
-                            1 => token.type_ = TokenType::Name,
-                            2 => token.type_ = TokenType::Equals,
-                            3 => token.type_name = Some("STRING".into()),
-                            4 => token.type_name = Some(name.into()),
-                            5 => token.value = "_".into(),
-                            _ => unreachable!(),
-                        }
-                    }
-                    assert!(
-                        compile_ast(&forged, "forged").is_err(),
-                        "{source}: {name} mutation {mutation} accepted"
-                    );
-                    cases += 1;
-                }
-            }
-        }
-        assert_eq!(cases, 343);
-    }
-
-    #[test]
-    fn direct_ast_grouping_requires_one_expression_and_exact_shape() {
-        let parsed = try_create_ruby_parser("puts((2))")
-            .unwrap()
-            .parse()
-            .unwrap();
-        for mutation in 0..3 {
-            let mut forged = parsed.clone();
-            // The grouping factor requires exactly three children, with an
-            // expression node between the two syntax tokens.
-            fn grouping_mut(node: &mut GrammarASTNode) -> Option<&mut GrammarASTNode> {
-                if node.rule_name == "factor" && node.children.len() == 3 {
-                    return Some(node);
-                }
-                for child in &mut node.children {
-                    if let ASTNodeOrToken::Node(inner) = child {
-                        if let Some(found) = grouping_mut(inner) {
-                            return Some(found);
-                        }
-                    }
-                }
-                None
-            }
-            let factor = grouping_mut(&mut forged).unwrap();
-            match mutation {
-                0 => {
-                    let ASTNodeOrToken::Node(inner) = &mut factor.children[1] else {
-                        unreachable!();
-                    };
-                    inner.rule_name = "term".into();
-                }
-                1 => factor.children.push(factor.children[1].clone()),
-                2 => factor.children[1] = factor.children[0].clone(),
-                _ => unreachable!(),
-            }
-            assert!(compile_ast(&forged, "bad-grouping").is_err());
-        }
-    }
-
-    fn parsed_three_puts() -> GrammarASTNode {
-        try_create_ruby_parser("puts(1, 2, 3)")
-            .unwrap()
-            .parse()
-            .unwrap()
-    }
-
-    fn puts_call_mut(ast: &mut GrammarASTNode) -> &mut GrammarASTNode {
-        let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
-            panic!("expected statement");
-        };
-        let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
-            panic!("expected call");
-        };
-        call
-    }
-
-    #[test]
-    fn three_parenthesized_puts_arguments_execute_iir_in_source_order() {
-        assert_eq!(
-            run_source("puts(1 + 2, -7 / 2, (3 + 4) * 5)\nputs()\nputs 9\nputs(10, 11)").unwrap(),
-            "3\n-4\n35\n\n9\n10\n11\n"
-        );
-        assert_eq!(
-            run_source("puts(9223372036854775807, -9223372036854775807 - 1, 0)").unwrap(),
-            "9223372036854775807\n-9223372036854775808\n0\n"
-        );
-        let module = compile_source("puts(1 + 2, 7 / -2, 3 * 4)", "three").unwrap();
-        let instructions = &module.functions[0].instructions;
-        let call = instructions
-            .iter()
-            .find(|i| {
-                i.op == "call_builtin"
-                    && i.srcs.first() == Some(&Operand::Var("rb_puts_three_ints".into()))
-            })
-            .unwrap();
-        assert_eq!(call.srcs.len(), 4);
-        // Each source operand is the result of its expression, in source order;
-        // none of the arithmetic is replaced with a pre-rendered output string.
-        for (operand, expected_op) in call.srcs[1..].iter().zip(["add", "call_builtin", "mul"]) {
-            let Operand::Var(name) = operand else {
-                panic!("expected register");
-            };
-            let producer = instructions
-                .iter()
-                .find(|i| i.dest.as_ref() == Some(name))
-                .unwrap();
-            assert_eq!(producer.op, expected_op);
-        }
-        let ops: Vec<_> = instructions.iter().map(|i| i.op.as_str()).collect();
-        assert_eq!(
-            ops,
-            [
-                "const",
-                "const",
-                "add",
-                "const",
-                "const",
-                "neg",
-                "call_builtin",
-                "const",
-                "const",
-                "mul",
-                "call_builtin",
-                "ret_void"
-            ]
-        );
-    }
-
-    #[test]
-    fn three_puts_rejects_unsupported_or_invalid_expressions_in_every_position() {
-        for bad in [
-            "x",
-            "'3'",
-            "010",
-            "9223372036854775808",
-            "9223372036854775807 + 1",
-            "1 / 0",
-        ] {
-            for index in 0..3 {
-                let mut arguments = ["1", "2", "3"];
-                arguments[index] = bad;
-                let source = format!("puts(99)\nputs({})", arguments.join(", "));
-                assert!(run_source(&source).is_err(), "{source}");
-            }
-        }
-        for source in [
-            "puts(1, 2, 3, 4)",
-            "puts 1, 2, 3",
-            "puts(1, 2, *3)",
-            "puts(1, 2, k: 3)",
-            "puts(1, 2, 3).foo",
-        ] {
-            assert!(compile_source(source, "unsupported").is_err(), "{source}");
-        }
-    }
-
-    #[test]
-    fn direct_ast_three_puts_validates_tokens_and_all_argument_wrappers() {
-        let ast = parsed_three_puts();
-        let mut valid = ast.clone();
-        assert_eq!(puts_call_mut(&mut valid).children.len(), 8);
-        assert!(compile_ast(&valid, "valid").is_ok());
-        for index in [0, 1, 3, 5, 7] {
-            for mutation in 0..3 {
-                let mut forged = ast.clone();
-                let ASTNodeOrToken::Token(token) = &mut puts_call_mut(&mut forged).children[index]
-                else {
-                    panic!("expected callee, comma or delimiter");
-                };
-                match mutation {
-                    0 => token.type_ = TokenType::String,
-                    1 => token.type_name = Some("STRING".into()),
-                    _ => token.value = "bad".into(),
-                }
-                assert!(
-                    compile_ast(&forged, "forged-token").is_err(),
-                    "index {index}, mutation {mutation}"
-                );
-            }
-        }
-        for index in [2, 4, 6] {
-            for mutation in 0..3 {
-                let mut forged = ast.clone();
-                let ASTNodeOrToken::Node(argument) =
-                    &mut puts_call_mut(&mut forged).children[index]
-                else {
-                    panic!("expected argument");
-                };
-                match mutation {
-                    0 => argument.rule_name = "expression".into(),
-                    1 => argument.children.clear(),
-                    _ => argument
-                        .children
-                        .push(ASTNodeOrToken::Node(empty_node("expression"))),
-                }
-                assert!(
-                    compile_ast(&forged, "forged-argument").is_err(),
-                    "index {index}, mutation {mutation}"
-                );
-            }
-        }
-    }
-
-    #[test]
-    fn three_puts_ast_budgets_cover_the_third_argument_before_lowering() {
-        let ast = parsed_three_puts();
-        let mut wide = ast.clone();
-        let ASTNodeOrToken::Node(argument) = &mut puts_call_mut(&mut wide).children[6] else {
-            unreachable!();
-        };
-        argument.children = (0..MAX_AST_ITEMS)
-            .map(|_| ASTNodeOrToken::Node(empty_node("expression")))
-            .collect();
-        assert!(compile_ast(&wide, "wide-third")
-            .unwrap_err()
-            .contains("AST item limit"));
-
-        let mut text = ast.clone();
-        let ASTNodeOrToken::Node(argument) = &mut puts_call_mut(&mut text).children[6] else {
-            unreachable!();
-        };
-        argument.rule_name = "x".repeat(MAX_AST_FIELD_BYTES + 1);
-        assert!(compile_ast(&text, "text-third")
-            .unwrap_err()
-            .contains("AST text limit"));
-
-        for index in [2, 4, 6] {
-            let mut deep = ast.clone();
-            let mut nested = empty_node("expression");
-            for _ in 0..MAX_AST_DEPTH {
-                let mut parent = empty_node("expression");
-                parent.children.push(ASTNodeOrToken::Node(nested));
-                nested = parent;
-            }
-            let ASTNodeOrToken::Node(argument) = &mut puts_call_mut(&mut deep).children[index]
-            else {
-                unreachable!();
-            };
-            argument.children = vec![ASTNodeOrToken::Node(nested)];
-            assert!(
-                compile_ast(&deep, "deep-argument")
-                    .unwrap_err()
-                    .contains("depth limit"),
-                "index {index}"
-            );
-        }
-    }
-
-    #[test]
-    fn three_puts_output_boundary_and_invalid_values_preserve_the_sink() {
-        let args = [Value::Int(i64::MIN), Value::Int(i64::MAX), Value::Int(0)];
-        let rendered = "-9223372036854775808\n9223372036854775807\n0\n";
-        let sink = Mutex::new("p".repeat(MAX_OUTPUT_BYTES - rendered.len()));
-        puts_three_ints(&args, &sink).unwrap();
-        let output = sink.lock().unwrap();
-        assert_eq!(output.len(), MAX_OUTPUT_BYTES);
-        assert!(output.ends_with(rendered));
-        drop(output);
-
-        let prior = "p".repeat(MAX_OUTPUT_BYTES - rendered.len() + 1);
-        let sink = Mutex::new(prior.clone());
-        assert!(puts_three_ints(&args, &sink)
-            .unwrap_err()
-            .to_string()
-            .contains("output limit"));
-        assert_eq!(*sink.lock().unwrap(), prior);
-
-        for index in 0..3 {
-            let mut invalid = args.clone();
-            invalid[index] = Value::Null;
-            let sink = Mutex::new("earlier\n".into());
-            assert!(puts_three_ints(&invalid, &sink).is_err());
-            assert_eq!(*sink.lock().unwrap(), "earlier\n");
-        }
-        for count in [0, 1, 2, 4] {
-            let sink = Mutex::new("earlier\n".into());
-            assert!(puts_three_ints(&vec![Value::Int(1); count], &sink).is_err());
-            assert_eq!(*sink.lock().unwrap(), "earlier\n");
-        }
-    }
-
-    fn empty_node(rule_name: &str) -> GrammarASTNode {
-        GrammarASTNode {
-            rule_name: rule_name.into(),
-            children: vec![],
-            start_line: None,
-            start_column: None,
-            end_line: None,
-            end_column: None,
-        }
-    }
-
-    fn number_token(node: &GrammarASTNode) -> Option<ASTNodeOrToken> {
-        for child in &node.children {
-            match child {
-                ASTNodeOrToken::Token(token) if token.value == "1" => return Some(child.clone()),
-                ASTNodeOrToken::Node(inner) => {
-                    if let Some(token) = number_token(inner) {
-                        return Some(token);
-                    }
-                }
-                _ => {}
-            }
-        }
-        None
-    }
-
-    #[test]
-    fn executes_ruby_integer_expressions_on_our_vm() {
-        assert_eq!(
-            run_source("puts(1 + 2)\nputs(7 / 2)\nputs(-7 / 2)").unwrap(),
-            "3\n3\n-4\n"
-        );
-        assert_eq!(run_source("puts((1 + 2) * 3)").unwrap(), "9\n");
-        assert_eq!(run_source("puts(7 / -2)").unwrap(), "-4\n");
-    }
-
-    #[test]
-    fn bare_puts_uses_the_same_integer_iir_path() {
-        assert_eq!(run_source("puts 1 + 2\nputs -7 / 2").unwrap(), "3\n-4\n");
-        let module = compile_source("puts 7 / 2", "bare").unwrap();
-        let builtin_calls = module.functions[0]
-            .instructions
-            .iter()
-            .filter(|instruction| instruction.op == "call_builtin")
-            .count();
-        assert_eq!(builtin_calls, 2, "division and puts both execute in IIR");
-        for source in ["puts 1, 2", "print 1", "puts 010", "puts 1 / 0"] {
-            assert!(run_source(source).is_err(), "{source}");
-        }
-    }
-
-    #[test]
-    fn empty_parenthesized_puts_emits_newline_in_source_order() {
-        assert_eq!(run_source("puts()\nputs(7)\nputs()").unwrap(), "\n7\n\n");
-        assert!(run_source("puts").is_err());
-        assert!(run_source("puts(1, 2, 3, 4)").is_err());
-
-        let module = compile_source("puts()", "empty").unwrap();
-        let calls: Vec<_> = module.functions[0]
-            .instructions
-            .iter()
-            .filter(|instruction| instruction.op == "call_builtin")
-            .collect();
-        assert_eq!(calls.len(), 1);
-        assert_eq!(calls[0].srcs.len(), 1);
-    }
-
-    #[test]
-    fn two_parenthesized_puts_arguments_emit_two_lines_in_order() {
-        assert_eq!(
-            run_source("puts(1 + 2, 7 / 2)\nputs()\nputs(9)").unwrap(),
-            "3\n3\n\n9\n"
-        );
-        assert!(compile_source("puts(1, 2, 3, 4)", "too-many").is_err());
-        assert!(compile_source("puts 1, 2", "bare-two").is_err());
-        assert!(compile_source("puts(1, 2 / 0)", "bad-second").is_err());
-        assert!(compile_source("puts(1, 9223372036854775808)", "wide-second").is_err());
-
-        let module = compile_source("puts(1, 2)", "two").unwrap();
-        let calls: Vec<_> = module.functions[0]
-            .instructions
-            .iter()
-            .filter(|instruction| instruction.op == "call_builtin")
-            .collect();
-        assert_eq!(calls.len(), 1);
-        assert_eq!(calls[0].srcs.len(), 3);
-    }
-
-    #[test]
-    fn direct_ast_rejects_forged_two_puts_argument_shape() {
-        let mut parser = try_create_ruby_parser("puts(1, 2)").unwrap();
-        let ast = parser.parse().unwrap();
-        let ASTNodeOrToken::Node(statement) = &ast.children[0] else {
-            panic!("expected statement");
-        };
-        let ASTNodeOrToken::Node(call) = &statement.children[0] else {
-            panic!("expected call");
-        };
-        assert_eq!(call.children.len(), 6);
-
-        let mut forged = ast.clone();
-        let ASTNodeOrToken::Node(statement) = &mut forged.children[0] else {
-            unreachable!();
-        };
-        statement.rule_name = "expression_stmt".into();
-        assert!(compile_ast(&forged, "forged-statement").is_err());
-
-        let mut forged = ast.clone();
-        let ASTNodeOrToken::Node(statement) = &mut forged.children[0] else {
-            unreachable!();
-        };
-        let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
-            unreachable!();
-        };
-        let ASTNodeOrToken::Token(comma) = &mut call.children[3] else {
-            panic!("expected comma");
-        };
-        comma.type_ = TokenType::String;
-        assert!(compile_ast(&forged, "forged-comma").is_err());
-
-        let mut forged = ast.clone();
-        let ASTNodeOrToken::Node(statement) = &mut forged.children[0] else {
-            unreachable!();
-        };
-        let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
-            unreachable!();
-        };
-        let ASTNodeOrToken::Token(comma) = &mut call.children[3] else {
-            unreachable!();
-        };
-        comma.type_name = Some("STRING".into());
-        assert!(compile_ast(&forged, "forged-comma-type").is_err());
-
-        for argument_index in [2, 4] {
-            let mut forged = ast.clone();
-            let ASTNodeOrToken::Node(statement) = &mut forged.children[0] else {
-                unreachable!();
-            };
-            let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
-                unreachable!();
-            };
-            let ASTNodeOrToken::Node(argument) = &mut call.children[argument_index] else {
-                panic!("expected argument");
-            };
-            argument.rule_name = "expression".into();
-            assert!(compile_ast(&forged, "forged-argument").is_err());
-        }
-    }
-
-    #[test]
-    fn direct_ast_rejects_forged_empty_puts_delimiters() {
-        for source in ["puts()", "puts(1)", "puts(1, 2)"] {
-            let right_index = match source {
-                "puts()" => 2,
-                "puts(1)" => 3,
-                _ => 5,
-            };
-            for delimiter_index in [1, right_index] {
-                let mut parser = try_create_ruby_parser(source).unwrap();
-                let mut ast = parser.parse().unwrap();
-                let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
-                    panic!("expected statement");
-                };
-                let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
-                    panic!("expected call");
-                };
-                let ASTNodeOrToken::Token(delimiter) = &mut call.children[delimiter_index] else {
-                    panic!("expected delimiter");
-                };
-                delimiter.type_ = TokenType::String;
-                assert!(compile_ast(&ast, "forged").is_err(), "{source}");
-
-                let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
-                    unreachable!();
-                };
-                let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
-                    unreachable!();
-                };
-                let ASTNodeOrToken::Token(delimiter) = &mut call.children[delimiter_index] else {
-                    unreachable!();
-                };
-                delimiter.type_ = if delimiter_index == 1 {
-                    TokenType::LParen
-                } else {
-                    TokenType::RParen
-                };
-                delimiter.type_name = Some("STRING".into());
-                assert!(compile_ast(&ast, "forged").is_err(), "{source}");
-            }
-        }
-    }
-
-    #[test]
-    fn direct_ast_rejects_a_forged_puts_callee() {
-        for source in ["puts 1", "puts(1)", "puts()", "puts(1, 2)"] {
-            let mut parser = try_create_ruby_parser(source).unwrap();
-            let mut ast = parser.parse().unwrap();
-            let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
-                panic!("expected statement");
-            };
-            let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
-                panic!("expected call");
-            };
-            let ASTNodeOrToken::Token(callee) = &mut call.children[0] else {
-                panic!("expected callee");
-            };
-            callee.type_ = TokenType::String;
-            assert!(compile_ast(&ast, "forged").is_err(), "{source}");
-
-            let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
-                unreachable!();
-            };
-            let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
-                unreachable!();
-            };
-            let ASTNodeOrToken::Token(callee) = &mut call.children[0] else {
-                unreachable!();
-            };
-            callee.type_ = TokenType::Name;
-            callee.type_name = Some("STRING".into());
-            assert!(compile_ast(&ast, "forged").is_err(), "{source}");
-        }
-    }
-
-    #[test]
-    fn emitted_ir_executes_arithmetic_and_ruby_builtins() {
-        let module = compile_source("puts(7 / 2 + 1)", "ir").unwrap();
-        let ops: Vec<_> = module.functions[0]
-            .instructions
-            .iter()
-            .map(|instr| instr.op.as_str())
-            .collect();
-        assert!(ops.contains(&"add"));
-        assert_eq!(ops.iter().filter(|op| **op == "call_builtin").count(), 2);
-    }
-
-    #[test]
-    fn unsupported_and_out_of_range_inputs_are_rejected() {
-        for source in [
-            "puts(x)",
-            "puts(1, 2, 3, 4)",
-            "x = 1",
-            "puts('hello')",
-            "puts('123')",
-            "puts(\"123\")",
-            "puts(9223372036854775808)",
-            "puts(9223372036854775807 + 1)",
-            "puts(1 / 0)",
-            "puts(-9223372036854775807 - 2)",
-            "puts(010)",
-        ] {
-            assert!(run_source(source).is_err(), "{source}");
-        }
-        assert!(compile_source(&" ".repeat(MAX_SOURCE_BYTES + 1), "oversized").is_err());
-    }
-
-    #[test]
-    fn malformed_source_returns_an_error_without_panicking() {
-        let outcome = std::panic::catch_unwind(|| compile_source("puts(\"unterminated)", "bad"));
-        assert!(
-            matches!(outcome, Ok(Err(_))),
-            "malformed source must remain fallible"
-        );
-    }
-
-    #[test]
-    fn direct_ast_item_and_text_limits_apply_before_lowering() {
-        let mut parser = try_create_ruby_parser("puts(1)").unwrap();
-        let parsed = parser.parse().unwrap();
-        let token = number_token(&parsed).unwrap();
-
-        let mut too_many_tokens = empty_node("program");
-        too_many_tokens.children = vec![token.clone(); MAX_AST_ITEMS];
-        assert!(compile_ast(&too_many_tokens, "test")
-            .unwrap_err()
-            .contains("AST item limit"));
-
-        let mut huge_token = token.clone();
-        if let ASTNodeOrToken::Token(value) = &mut huge_token {
-            value.value = "9".repeat(64 * 1024 + 1);
-        }
-        let mut oversized_text = empty_node("program");
-        oversized_text.children.push(huge_token);
-        assert!(compile_ast(&oversized_text, "test")
-            .unwrap_err()
-            .contains("AST text limit"));
-
-        let mut huge_cv = token;
-        if let ASTNodeOrToken::Token(value) = &mut huge_cv {
-            value.cv = Some("c".repeat(64 * 1024 + 1));
-        }
-        let mut oversized_cv = empty_node("program");
-        oversized_cv.children.push(huge_cv);
-        assert!(compile_ast(&oversized_cv, "test")
-            .unwrap_err()
-            .contains("AST text limit"));
-
-        let mut aggregate = empty_node("program");
-        aggregate.children = (0..18)
-            .map(|_| {
-                let mut node = empty_node("child");
-                node.rule_name = "r".repeat(60_000);
-                ASTNodeOrToken::Node(node)
-            })
-            .collect();
-        assert!(compile_ast(&aggregate, "test")
-            .unwrap_err()
-            .contains("AST text limit"));
-
-        assert!(
-            compile_ast(&empty_node("program"), &"m".repeat(64 * 1024 + 1))
-                .unwrap_err()
-                .contains("module name")
-        );
-    }
-}
+mod tests;

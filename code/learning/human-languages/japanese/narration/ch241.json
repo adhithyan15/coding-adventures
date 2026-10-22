@@ -1,0 +1,949 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 241,
+  "title": "Invitations and Plays",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:73ba898b2117c5d2",
+  "lessons": [
+    {
+      "id": "JA-C241-sasou",
+      "sequence": 14470,
+      "title": "さそう (sasou) — to invite; to ask out",
+      "headword": "さそう",
+      "romanization": "sasou",
+      "gloss": "to invite; to ask out",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c886e731248b600c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for disliked, then the Japanese for to get tired of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さそう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さそう — sasou — \"to invite; to ask out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんしゅう ともだちを えいがに さそいました。 — senshū tomodachi o eiga ni sasoimashita — \"Last week I invited a friend to a film.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite さそいます, sasoimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さそう (sasou) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sasou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sasou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senshū tomodachi o eiga ni sasoimashita — Last week I invited a friend to a film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senshū tomodachi o eiga ni sasoimashita* — Last week I invited a friend to a film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for disliked, then the Japanese for to get tired of, then say sasou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for disliked, then the Japanese for to get tired of, then say *sasou* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さそう (sasou) mean? (\"To invite; to ask out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C241-sasou-type",
+              "prompt": "Say the Japanese for 'to invite'.",
+              "assesses": [
+                "JA-LEX-C241-OUTING241-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さそう",
+                "sasou"
+              ],
+              "feedback": {
+                "correct": "Right: さそう (sasou) is 'to invite; to ask out'.",
+                "incorrect": "'To invite' is さそう (sasou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C241-shibai",
+      "sequence": 14480,
+      "title": "しばい (shibai) — a stage play; theatre",
+      "headword": "しばい",
+      "romanization": "shibai",
+      "gloss": "a stage play; theatre",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fc9921c10178c26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get tired of, then the Japanese for to invite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しばい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しばい — shibai — \"a stage play; theatre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんげつ ははと しばいを みました。 — sengetsu haha to shibai o mimashita — \"Last month I saw a play with my mother.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しばい (shibai) is a native Japanese compound (wago), inherited rather than borrowed: it is built from shiba, \"turf, lawn\", and i, from iru, \"to be, to sit\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shibai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shibai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shibai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shibai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sengetsu haha to shibai o mimashita — Last month I saw a play with my mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sengetsu haha to shibai o mimashita* — Last month I saw a play with my mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get tired of, then the Japanese for to invite, then say shibai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get tired of, then the Japanese for to invite, then say *shibai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しばい (shibai) mean? (\"A stage play; theatre\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C241-shibai-type",
+              "prompt": "Say the Japanese for 'a stage play'.",
+              "assesses": [
+                "JA-LEX-C241-OUTING241-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しばい",
+                "shibai"
+              ],
+              "feedback": {
+                "correct": "Right: しばい (shibai) is 'a stage play; theatre'.",
+                "incorrect": "'A stage play' is しばい (shibai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C241-yukai",
+      "sequence": 14490,
+      "title": "ゆかい (yukai) — pleasant; delightful",
+      "headword": "ゆかい",
+      "romanization": "yukai",
+      "gloss": "pleasant; delightful",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68a1c309c90da65f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to invite, then the Japanese for a stage play."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆかい — yukai — \"pleasant; delightful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きのうの しばいは ゆかいでした。 — kinō no shibai wa yukai deshita — \"Yesterday's play was delightful.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆかい (yukai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yu, \"joy\" (Middle Chinese yu) and kai, \"cheerful\" (khwaejH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yukai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yukai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinō no shibai wa yukai deshita — Yesterday's play was delightful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinō no shibai wa yukai deshita* — Yesterday's play was delightful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to invite, then the Japanese for a stage play, then say yukai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to invite, then the Japanese for a stage play, then say *yukai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆかい (yukai) mean? (\"Pleasant; delightful\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C241-yukai-type",
+              "prompt": "Say the Japanese for 'pleasant'.",
+              "assesses": [
+                "JA-LEX-C241-OUTING241-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆかい",
+                "yukai"
+              ],
+              "feedback": {
+                "correct": "Right: ゆかい (yukai) is 'pleasant; delightful'.",
+                "incorrect": "'Pleasant' is ゆかい (yukai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C241-moushikomu",
+      "sequence": 14500,
+      "title": "もうしこむ (mōshikomu) — to sign up; to apply",
+      "headword": "もうしこむ",
+      "romanization": "mōshikomu",
+      "gloss": "to sign up; to apply",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:659be91211f1e1c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a stage play, then the Japanese for pleasant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もうしこむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もうしこむ — mōshikomu — \"to sign up; to apply\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんげつ あには じゅうどうの しあいに もうしこみました。 — sengetsu ani wa jūdō no shiai ni mōshikomimashita — \"Last month my elder brother signed up for a judo match.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite もうしこみます, mōshikomimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もうしこむ (mōshikomu) is a native Japanese compound (wago), inherited rather than borrowed: it is built from mōshi, from mōsu, \"to say\", and komu, \"to go in, to crowd in\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōshikomu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōshikomu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mōshikomu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mōshikomu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sengetsu ani wa jūdō no shiai ni mōshikomimashita — Last month my elder brother signed up for a judo match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sengetsu ani wa jūdō no shiai ni mōshikomimashita* — Last month my elder brother signed up for a judo match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a stage play, then the Japanese for pleasant, then say mōshikomu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a stage play, then the Japanese for pleasant, then say *mōshikomu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もうしこむ (mōshikomu) mean? (\"To sign up; to apply\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C241-moushikomu-type",
+              "prompt": "Say the Japanese for 'to sign up'.",
+              "assesses": [
+                "JA-LEX-C241-OUTING241-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もうしこむ",
+                "mōshikomu",
+                "moushikomu",
+                "mooshikomu",
+                "moshikomu"
+              ],
+              "feedback": {
+                "correct": "Right: もうしこむ (mōshikomu) is 'to sign up; to apply'.",
+                "incorrect": "'To sign up' is もうしこむ (mōshikomu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C241-yaru",
+      "sequence": 14510,
+      "title": "やる (yaru) — to do; to play (a game)",
+      "headword": "やる",
+      "romanization": "yaru",
+      "gloss": "to do; to play (a game)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d53412e3018bb9f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for pleasant, then the Japanese for to sign up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やる — yaru — \"to do; to play (a game)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きのう ともだちと しょうぎを やりました。 — kinō tomodachi to shōgi o yarimashita — \"Yesterday I played shogi with a friend.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite やります, yarimasu; a godan verb, more casual than します."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やる (yaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and the word is usually written in kana (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinō tomodachi to shōgi o yarimashita — Yesterday I played shogi with a friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinō tomodachi to shōgi o yarimashita* — Yesterday I played shogi with a friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for pleasant, then the Japanese for to sign up, then say yaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for pleasant, then the Japanese for to sign up, then say *yaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やる (yaru) mean? (\"To do; to play (a game)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C241-yaru-type",
+              "prompt": "Say the Japanese for 'to do'.",
+              "assesses": [
+                "JA-LEX-C241-OUTING241-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やる",
+                "yaru"
+              ],
+              "feedback": {
+                "correct": "Right: やる (yaru) is 'to do; to play (a game)'.",
+                "incorrect": "'To do' is やる (yaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R241-review-236-241",
+      "sequence": 14520,
+      "title": "Words from chapters 236–241 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 236-241",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35b1d65e1548aaf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for a film and to watch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a film, to watch, to listen, music, a musical performance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a film, to watch, to listen, music, a musical performance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a photo, to photograph, to collect, to gather, a doll",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a photo, to photograph, to collect, to gather, a doll]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comics, a novel, reading, a programme, boring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: comics, a novel, reading, a programme, boring]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dance, to go fishing, a walk, a magic trick, shogi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dance, to go fishing, a walk, a magic trick, shogi]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skilful, unskilful, liked, disliked, to get tired of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: skilful, unskilful, liked, disliked, to get tired of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to invite, a stage play, pleasant, to sign up, to do",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to invite, a stage play, pleasant, to sign up, to do]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A film? (えいが, eiga.) To watch? (みる, miru.) To listen? (きく, kiku.) Music? (おんがく, ongaku.) A musical performance? (えんそう, ensō.) A photo? (しゃしん, shashin.) To photograph? (とる, toru.) To collect? (あつめる, atsumeru.) To gather? (あつまる, atsumaru.) A doll? (にんぎょう, ningyō.) Comics? (まんが, manga.) A novel? (しょうせつ, shōsetsu.) Reading? (どくしょ, dokusho.) A programme? (ばんぐみ, bangumi.) Boring? (つまらない, tsumaranai.) To dance? (おどる, odoru.) To go fishing? (つる, tsuru.) A walk? (さんぽ, sanpo.) A magic trick? (てじな, tejina.) Shogi? (しょうぎ, shōgi.) Skilful? (じょうず, jōzu.) Unskilful? (へた, heta.) Liked? (すき, suki.) Disliked? (きらい, kirai.) To get tired of? (あきる, akiru.) To invite? (さそう, sasou.) A stage play? (しばい, shibai.) Pleasant? (ゆかい, yukai.) To sign up? (もうしこむ, mōshikomu.) To do? (やる, yaru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R241-review-236-241-type",
+              "prompt": "Say the Japanese for 'a film'.",
+              "assesses": [
+                "JA-LEX-C236-FILM236-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えいが",
+                "eiga"
+              ],
+              "feedback": {
+                "correct": "Right: えいが (eiga) is 'a film; a movie'.",
+                "incorrect": "'A film' is えいが (eiga)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

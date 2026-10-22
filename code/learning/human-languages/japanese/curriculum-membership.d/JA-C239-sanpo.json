@@ -1,0 +1,11 @@
+{
+  "id": "JA-C239-sanpo",
+  "pathSegment": "JA-PATH-239-PASTIME239",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-239-PASTIME239",
+      "order": 2
+    }
+  ]
+}

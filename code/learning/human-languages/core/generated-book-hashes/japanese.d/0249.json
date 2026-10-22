@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:ff49cb4059405b86",
+  "lessonIds": [
+    "JA-C249-kokoro",
+    "JA-C249-kimochi",
+    "JA-C249-seikaku",
+    "JA-C249-majime",
+    "JA-C249-wagamama",
+    "JA-R249-review-248-249",
+    "JA-R249-review-final-249"
+  ],
+  "tex": "japanese/book/chapters/ch249-heart-and-character.tex"
+}

@@ -7,7 +7,7 @@
 //! lang-aot --help
 //! ```
 //!
-//! `--lang perl@5.004_72` compiles against exactly that row of the
+//! `--lang perl@5.004_72` (or `ruby@3.3.7`, `python@3.0a1`) compiles against exactly that row of the
 //! language's `releases.csv` (LANG84); a bare `--lang perl` uses the
 //! frontend's default release. An unknown or pending release is an error,
 //! never a fallback to another grammar.
@@ -346,11 +346,13 @@ Options:
                            (native) or with .ll extension (--emit=llvm-ir).
   -l, --lang <LANG>        Override language detection
                            (twig, nib, bf, basic, oct, mccarthy-lisp/mcl/lisp,
-                            algol60/algol/a60, perl/pl).
+                            algol60/algol/a60, ruby/rb, perl/pl, python/py).
                            A language with a release inventory takes
                            <LANG>@<RELEASE>, an exact releases.csv ID
-                           (e.g. perl@5.004_72); without one, the
-                           frontend's default release (perl: 5.38.0).
+                           (e.g. perl@5.004_72, ruby@3.3.7,
+                           python@3.0a1); without one, the frontend's
+                           default release (perl: 5.38.0, ruby: 3.3.6,
+                           python: 3.13.16).
       --emit=<MODE>        What to emit:
                              native           → host executable (default)
                              llvm-ir | llvm | ll

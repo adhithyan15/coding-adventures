@@ -408,14 +408,14 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "LINE_COMMENT",
-        pattern: "\\/\\/[^\\n]*",
+        pattern: "\\/\\/[^\\n\\r]*",
         is_regex: true,
         line_number: 183,
         alias_name: nil,
       ),
       GT::TokenDefinition.new(
         name: "BLOCK_COMMENT",
-        pattern: "\\/\\*([^*]|\\*[^\\/])*\\*\\/",
+        pattern: "\\/\\*[^*]*\\*+([^\\/*][^*]*\\*+)*\\/",
         is_regex: true,
         line_number: 184,
         alias_name: nil,

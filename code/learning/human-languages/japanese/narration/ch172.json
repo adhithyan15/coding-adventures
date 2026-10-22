@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 172,
+  "title": "Mealtimes and Hunger",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:31c0ffde5eb625af",
+  "lessons": [
+    {
+      "id": "JA-C172-shokuji",
+      "sequence": 10400,
+      "title": "しょくじ (shokuji) — meal; dining",
+      "headword": "しょくじ",
+      "romanization": "shokuji",
+      "gloss": "meal; dining",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9278069fff289267",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for open for business, then the Japanese for not yet open."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょくじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょくじ — shokuji — \"meal; dining\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいにち かぞくと しょくじを します。 — mainichi kazoku to shokuji o shimasu — \"I have meals with my family every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょくじ (shokuji) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shoku, \"eat, food\" (Middle Chinese zyik) and ji, \"matter, thing\" (dzriH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokuji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokuji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shokuji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shokuji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainichi kazoku to shokuji o shimasu — I have meals with my family every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainichi kazoku to shokuji o shimasu* — I have meals with my family every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for open for business, then the Japanese for not yet open, then say shokuji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for open for business, then the Japanese for not yet open, then say *shokuji* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょくじ (shokuji) mean? (\"Meal; dining\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C172-shokuji-type",
+              "prompt": "Say the Japanese for 'meal'.",
+              "assesses": [
+                "JA-LEX-C172-MEALS172-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょくじ",
+                "shokuji"
+              ],
+              "feedback": {
+                "correct": "Right: しょくじ (shokuji) is 'meal; dining'.",
+                "incorrect": "'Meal' is しょくじ (shokuji)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C172-hirugohan",
+      "sequence": 10410,
+      "title": "ひるごはん (hirugohan) — lunch",
+      "headword": "ひるごはん",
+      "romanization": "hirugohan",
+      "gloss": "lunch",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1060e06c3e863d2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for not yet open, then the Japanese for meal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひるごはん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひるごはん — hirugohan — \"lunch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひるごはんに うどんを たべます。 — hirugohan ni udon o tabemasu — \"I eat udon for lunch.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひるごはん (hirugohan) is built from native hiru, \"midday\", and Sino-Japanese gohan, \"cooked rice, a meal\", whose two parts are readings borrowed from Chinese (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hirugohan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hirugohan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hirugohan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hirugohan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hirugohan ni udon o tabemasu — I eat udon for lunch.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hirugohan ni udon o tabemasu* — I eat udon for lunch.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for not yet open, then the Japanese for meal, then say hirugohan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for not yet open, then the Japanese for meal, then say *hirugohan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひるごはん (hirugohan) mean? (\"Lunch\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C172-hirugohan-type",
+              "prompt": "Say the Japanese for 'lunch'.",
+              "assesses": [
+                "JA-LEX-C172-MEALS172-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひるごはん",
+                "hirugohan"
+              ],
+              "feedback": {
+                "correct": "Right: ひるごはん (hirugohan) is 'lunch'.",
+                "incorrect": "'Lunch' is ひるごはん (hirugohan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C172-suku",
+      "sequence": 10420,
+      "title": "すく (suku) — to get hungry; to become empty, to thin out",
+      "headword": "すく",
+      "romanization": "suku",
+      "gloss": "to get hungry; to become empty, to thin out",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7075456d2c691347",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for meal, then the Japanese for lunch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すく — suku — \"to get hungry; to become empty, to thin out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆうがた おなかが すきます。 — yūgata onaka ga sukimasu — \"I get hungry in the evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite すきます, sukimasu; a godan verb. The hungry one is the stomach: おなかが すきます."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すく (suku) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūgata onaka ga sukimasu — I get hungry in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūgata onaka ga sukimasu* — I get hungry in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for meal, then the Japanese for lunch, then say suku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for meal, then the Japanese for lunch, then say *suku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すく (suku) mean? (\"To get hungry; to become empty, to thin out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C172-suku-type",
+              "prompt": "Say the Japanese for 'to get hungry'.",
+              "assesses": [
+                "JA-LEX-C172-MEALS172-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すく",
+                "suku"
+              ],
+              "feedback": {
+                "correct": "Right: すく (suku) is 'to get hungry; to become empty, to thin out'.",
+                "incorrect": "'To get hungry' is すく (suku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C172-bangohan",
+      "sequence": 10430,
+      "title": "ばんごはん (bangohan) — dinner; evening meal",
+      "headword": "ばんごはん",
+      "romanization": "bangohan",
+      "gloss": "dinner; evening meal",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13cc03460b8a2347",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for lunch, then the Japanese for to get hungry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ばんごはん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばんごはん — bangohan — \"dinner; evening meal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ばんごはんは いつも うちで たべます。 — bangohan wa itsumo uchi de tabemasu — \"I always eat dinner at home.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ばんごはん (bangohan) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ban, \"evening\" (Middle Chinese mjonX), go, \"honourable\" (ngjoH) and han, \"cooked rice\" (bjonH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bangohan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bangohan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bangohan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bangohan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bangohan wa itsumo uchi de tabemasu — I always eat dinner at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bangohan wa itsumo uchi de tabemasu* — I always eat dinner at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for lunch, then the Japanese for to get hungry, then say bangohan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for lunch, then the Japanese for to get hungry, then say *bangohan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ばんごはん (bangohan) mean? (\"Dinner; evening meal\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C172-bangohan-type",
+              "prompt": "Say the Japanese for 'dinner'.",
+              "assesses": [
+                "JA-LEX-C172-MEALS172-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ばんごはん",
+                "bangohan"
+              ],
+              "feedback": {
+                "correct": "Right: ばんごはん (bangohan) is 'dinner; evening meal'.",
+                "incorrect": "'Dinner' is ばんごはん (bangohan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C172-yaku",
+      "sequence": 10440,
+      "title": "やく (yaku) — to grill; to bake, to roast",
+      "headword": "やく",
+      "romanization": "yaku",
+      "gloss": "to grill; to bake, to roast",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ac7d073a787be80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get hungry, then the Japanese for dinner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やく — yaku — \"to grill; to bake, to roast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "にわで にくを やきます。 — niwa de niku o yakimasu — \"We grill meat in the garden.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite やきます, yakimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やく (yaku) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niwa de niku o yakimasu — We grill meat in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niwa de niku o yakimasu* — We grill meat in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get hungry, then the Japanese for dinner, then say yaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get hungry, then the Japanese for dinner, then say *yaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やく (yaku) mean? (\"To grill; to bake, to roast\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C172-yaku-type",
+              "prompt": "Say the Japanese for 'to grill'.",
+              "assesses": [
+                "JA-LEX-C172-MEALS172-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やく",
+                "yaku"
+              ],
+              "feedback": {
+                "correct": "Right: やく (yaku) is 'to grill; to bake, to roast'.",
+                "incorrect": "'To grill' is やく (yaku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

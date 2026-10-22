@@ -1,0 +1,815 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 164,
+  "title": "Tuesday Through to Sunday",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c048e5176f2c9466",
+  "lessons": [
+    {
+      "id": "JA-C164-kayoubi",
+      "sequence": 9730,
+      "title": "かようび (kayōbi) — Tuesday",
+      "headword": "かようび",
+      "romanization": "kayōbi",
+      "gloss": "Tuesday",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99cd39cfe9f463e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for being out, then the Japanese for hygienic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かようび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かようび — kayōbi — \"Tuesday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいしゅうの かようびに ともだちに あいます。 — raishū no kayōbi ni tomodachi ni aimasu — \"I will meet a friend next Tuesday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かようび (kayōbi) is a mixed word: Sino-Japanese ka, \"fire\" (Middle Chinese xwaX), and yō, \"planet, weekday\" (yewH), borrowed from Chinese, with native hi, \"day\", voiced to bi (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kayōbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kayōbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kayōbi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kayōbi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raishū no kayōbi ni tomodachi ni aimasu — I will meet a friend next Tuesday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raishū no kayōbi ni tomodachi ni aimasu* — I will meet a friend next Tuesday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for being out, then the Japanese for hygienic, then say kayōbi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for being out, then the Japanese for hygienic, then say *kayōbi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かようび (kayōbi) mean? (\"Tuesday\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C164-kayoubi-type",
+              "prompt": "Say the Japanese for 'Tuesday'.",
+              "assesses": [
+                "JA-LEX-C164-WEEK164-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かようび",
+                "kayōbi",
+                "kayoubi",
+                "kayoobi",
+                "kayobi"
+              ],
+              "feedback": {
+                "correct": "Right: かようび (kayōbi) is 'Tuesday'.",
+                "incorrect": "'Tuesday' is かようび (kayōbi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C164-suiyoubi",
+      "sequence": 9740,
+      "title": "すいようび (suiyōbi) — Wednesday",
+      "headword": "すいようび",
+      "romanization": "suiyōbi",
+      "gloss": "Wednesday",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e23f4b3b87b30ae6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for hygienic, then the Japanese for Tuesday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すいようび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいようび — suiyōbi — \"Wednesday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "すいようびは あめでしょう。 — suiyōbi wa ame deshō — \"It will probably rain on Wednesday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいようび (suiyōbi) is a mixed word: Sino-Japanese sui, \"water\" (Middle Chinese sywijX), and yō, \"planet, weekday\" (yewH), borrowed from Chinese, with native hi, \"day\", voiced to bi (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suiyōbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suiyōbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suiyōbi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suiyōbi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suiyōbi wa ame deshō — It will probably rain on Wednesday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suiyōbi wa ame deshō* — It will probably rain on Wednesday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for hygienic, then the Japanese for Tuesday, then say suiyōbi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for hygienic, then the Japanese for Tuesday, then say *suiyōbi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すいようび (suiyōbi) mean? (\"Wednesday\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C164-suiyoubi-type",
+              "prompt": "Say the Japanese for 'Wednesday'.",
+              "assesses": [
+                "JA-LEX-C164-WEEK164-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すいようび",
+                "suiyōbi",
+                "suiyoubi",
+                "suiyoobi",
+                "suiyobi"
+              ],
+              "feedback": {
+                "correct": "Right: すいようび (suiyōbi) is 'Wednesday'.",
+                "incorrect": "'Wednesday' is すいようび (suiyōbi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C164-mokuyoubi",
+      "sequence": 9750,
+      "title": "もくようび (mokuyōbi) — Thursday",
+      "headword": "もくようび",
+      "romanization": "mokuyōbi",
+      "gloss": "Thursday",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69e13fb164daabc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for Tuesday, then the Japanese for Wednesday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もくようび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もくようび — mokuyōbi — \"Thursday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "もくようびに はたらく つもりです。 — mokuyōbi ni hataraku tsumori desu — \"I plan to work on Thursday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もくようび (mokuyōbi) is a mixed word: Sino-Japanese moku, \"tree, wood\" (Middle Chinese muwk), and yō, \"planet, weekday\" (yewH), borrowed from Chinese, with native hi, \"day\", voiced to bi (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokuyōbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokuyōbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokuyōbi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokuyōbi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokuyōbi ni hataraku tsumori desu — I plan to work on Thursday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokuyōbi ni hataraku tsumori desu* — I plan to work on Thursday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for Tuesday, then the Japanese for Wednesday, then say mokuyōbi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for Tuesday, then the Japanese for Wednesday, then say *mokuyōbi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もくようび (mokuyōbi) mean? (\"Thursday\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C164-mokuyoubi-type",
+              "prompt": "Say the Japanese for 'Thursday'.",
+              "assesses": [
+                "JA-LEX-C164-WEEK164-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もくようび",
+                "mokuyōbi",
+                "mokuyoubi",
+                "mokuyoobi",
+                "mokuyobi"
+              ],
+              "feedback": {
+                "correct": "Right: もくようび (mokuyōbi) is 'Thursday'.",
+                "incorrect": "'Thursday' is もくようび (mokuyōbi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C164-kinyoubi",
+      "sequence": 9760,
+      "title": "きんようび (kin'yōbi) — Friday",
+      "headword": "きんようび",
+      "romanization": "kin'yōbi",
+      "gloss": "Friday",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3451571fa883493a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for Wednesday, then the Japanese for Thursday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きんようび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんようび — kin'yōbi — \"Friday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きんようびに うちに かえります。 — kin'yōbi ni uchi ni kaerimasu — \"I will go home on Friday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きんようび (kin'yōbi) is a mixed word: Sino-Japanese kin, \"gold, metal\" (Middle Chinese kim), and yō, \"planet, weekday\" (yewH), borrowed from Chinese, with native hi, \"day\", voiced to bi (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kin'yōbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kin'yōbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kin'yōbi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kin'yōbi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kin'yōbi ni uchi ni kaerimasu — I will go home on Friday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kin'yōbi ni uchi ni kaerimasu* — I will go home on Friday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for Wednesday, then the Japanese for Thursday, then say kin'yōbi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for Wednesday, then the Japanese for Thursday, then say *kin'yōbi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きんようび (kin'yōbi) mean? (\"Friday\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C164-kinyoubi-type",
+              "prompt": "Say the Japanese for 'Friday'.",
+              "assesses": [
+                "JA-LEX-C164-WEEK164-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きんようび",
+                "kin'yōbi",
+                "kin'youbi",
+                "kin'yoobi",
+                "kin'yobi",
+                "kinyōbi",
+                "kinyoubi",
+                "kinyoobi",
+                "kinyobi"
+              ],
+              "feedback": {
+                "correct": "Right: きんようび (kin'yōbi) is 'Friday'.",
+                "incorrect": "'Friday' is きんようび (kin'yōbi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C164-nichiyoubi",
+      "sequence": 9770,
+      "title": "にちようび (nichiyōbi) — Sunday",
+      "headword": "にちようび",
+      "romanization": "nichiyōbi",
+      "gloss": "Sunday",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:38c28614f64f8f19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for Thursday, then the Japanese for Friday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にちようび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にちようび — nichiyōbi — \"Sunday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいしゅうの にちようびは うちで やすみます。 — raishū no nichiyōbi wa uchi de yasumimasu — \"Next Sunday I will rest at home.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にちようび (nichiyōbi) is a mixed word: Sino-Japanese nichi, \"sun, day\" (Middle Chinese nyit), and yō, \"planet, weekday\" (yewH), borrowed from Chinese, with native hi, \"day\", voiced to bi (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nichiyōbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nichiyōbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nichiyōbi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nichiyōbi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raishū no nichiyōbi wa uchi de yasumimasu — Next Sunday I will rest at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raishū no nichiyōbi wa uchi de yasumimasu* — Next Sunday I will rest at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for Thursday, then the Japanese for Friday, then say nichiyōbi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for Thursday, then the Japanese for Friday, then say *nichiyōbi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にちようび (nichiyōbi) mean? (\"Sunday\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C164-nichiyoubi-type",
+              "prompt": "Say the Japanese for 'Sunday'.",
+              "assesses": [
+                "JA-LEX-C164-WEEK164-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にちようび",
+                "nichiyōbi",
+                "nichiyoubi",
+                "nichiyoobi",
+                "nichiyobi"
+              ],
+              "feedback": {
+                "correct": "Right: にちようび (nichiyōbi) is 'Sunday'.",
+                "incorrect": "'Sunday' is にちようび (nichiyōbi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

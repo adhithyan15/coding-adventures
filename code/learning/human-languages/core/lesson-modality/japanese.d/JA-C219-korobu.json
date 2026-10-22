@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C219-korobu",
+    "language": "japanese",
+    "chapter": 219,
+    "sequence": 13080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72c6e5cc4653d42f"
+  },
+  "findings": []
+}

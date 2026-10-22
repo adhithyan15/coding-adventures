@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:a7e4e6b20277a031",
+  "lessonIds": [
+    "JA-C218-nyuuin",
+    "JA-C218-taiin",
+    "JA-C218-shujutsu",
+    "JA-C218-kizu",
+    "JA-C218-inochi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch218.txt",
+  "json": "japanese/narration/ch218.json",
+  "textHash": "fnv1a64:b65a6b2e6a34fb2e",
+  "jsonHash": "fnv1a64:cd07665890890c14",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C178-hiyasu",
+  "pathSegment": "JA-PATH-178-MEAT178",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-178-MEAT178",
+      "order": 4
+    }
+  ]
+}

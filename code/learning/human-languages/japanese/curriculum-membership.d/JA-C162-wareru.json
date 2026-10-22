@@ -1,0 +1,11 @@
+{
+  "id": "JA-C162-wareru",
+  "pathSegment": "JA-PATH-162-REPAIR162",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-162-REPAIR162",
+      "order": 1
+    }
+  ]
+}

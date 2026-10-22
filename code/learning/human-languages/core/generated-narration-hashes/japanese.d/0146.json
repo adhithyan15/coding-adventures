@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:b6a8ad2089f89b1b",
+  "lessonIds": [
+    "JA-C146-nemuru",
+    "JA-C146-gussuri",
+    "JA-C146-sameru",
+    "JA-C146-okosu",
+    "JA-C146-suimin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch146.txt",
+  "json": "japanese/narration/ch146.json",
+  "textHash": "fnv1a64:d7e5721027ab5786",
+  "jsonHash": "fnv1a64:55e19063fd64aea1",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C187-tsuuchou",
+  "pathSegment": "JA-PATH-187-BANK187",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-187-BANK187",
+      "order": 2
+    }
+  ]
+}
