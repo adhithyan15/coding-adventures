@@ -99,7 +99,7 @@ it("adds a slow Punjabi A2 third-person future prerequisite without mock credit"
   expect(learnerCopy).toContain("ਕੰਮ ਹੋਵੇਗਾ");
   expect(learnerCopy).toContain("ਯਾਤਰਾ ਹੋਵੇਗੀ");
   expect(learnerCopy).toContain("ਅਮਨ ਆਵੇਗਾ");
-  expect(learnerCopy).toContain("ਮੀਰਾ ਆਵੇਗੀ");
+  expect(learnerCopy).toContain("ਰੇਲ ਆਵੇਗੀ");
   expect(learnerCopy).toMatch(/ninth prerequisite tranche|does not unblock.*mock 1/is);
   expect(learnerCopy).toMatch(/not.*A2 mock|not A2 readiness/is);
 
