@@ -1110,7 +1110,15 @@ var opamCommandRe = regexp.MustCompile(`(^|[\s;&|(])opam(\s|$)`)
 // package's `luarocks make`, and failed a full-build shard with exactly that
 // error. Read-only subcommands (`show`, `path`) do not take the lock and do
 // not need serializing.
-var luarocksTreeWriteRe = regexp.MustCompile(`(^|[\s;&|(])luarocks\s+(make|remove|install)(\s|$)`)
+//
+// A missed match costs a red shard while an extra one only serializes a
+// build, so the pattern leans towards matching. The program name may follow
+// any non-word character, which covers paths (`/usr/bin/luarocks`), quotes
+// (`sh -c "luarocks make x"`), command substitution (`$(luarocks make)`) and
+// shell operators. It may be `luarocks.bat` or `luarocks.exe`, and flags may
+// precede the subcommand (`luarocks --local make`). `\b` ends the subcommand,
+// so `make;`, `make)` and `make"` match while `makefile` does not.
+var luarocksTreeWriteRe = regexp.MustCompile(`(^|[^A-Za-z0-9_.-])luarocks(\.bat|\.exe)?(\s+-{1,2}\S+)*\s+(make|remove|install)\b`)
 
 func isGradleCommand(command string) bool {
 	trimmed := strings.TrimSpace(command)
