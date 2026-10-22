@@ -148,7 +148,7 @@ it("adds a slow Punjabi A2 plural past-copula prerequisite without mock credit",
   });
   const curriculum = loadTrackLanguageCurriculum("punjabi");
   const extension = curriculum?.extensions.find((candidate) =>
-    candidate.id === "PA-EXT-187-A2-PLURAL-PAST-COPULA",
+    candidate.id === "PA-EXT-187-A2-PAST-COPULA",
   );
   expect(extension).toMatchObject({ stage: "A2", kind: "required", category: "grammar" });
   expect(extension?.prerequisites).toContain("PA-EXT-186-A2-THIRD-PERSON-FUTURE");
