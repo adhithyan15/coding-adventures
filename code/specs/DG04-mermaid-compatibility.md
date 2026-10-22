@@ -1335,7 +1335,10 @@ backend-neutral text paint, while scene metadata records both identity and resol
 nodes also preserve Mermaid's optional `square`, `circle`, and `rounded` background forms, top or
 bottom label position, and minimum 48-pixel `h` sizing through typed semantic IR, deterministic
 layout, and backend-neutral paint. Omitting `label` produces the upstream icon-only node.
+Flowchart-style `img` nodes preserve URI sources, width, height, aspect-ratio constraint, and label
+position in typed semantic and layout IR before lowering to backend-neutral `PaintImage` instructions;
+URI fetching and decoding remain the responsibility of the selected paint backend.
 
-This is intentionally partial. Automatic external icon-pack loading and Flowchart images, additional link forms beyond the documented
+This is intentionally partial. Automatic external icon-pack loading and backend-specific URI decoding, additional link forms beyond the documented
 marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

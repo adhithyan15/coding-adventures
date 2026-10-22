@@ -109,6 +109,7 @@
     "cross-lane-rank-constraints",
     "rank-crossing-optimization",
     "icon-glyph-node",
-    "icon-node-forms"
+    "icon-node-forms",
+    "image-node"
   ]
 }

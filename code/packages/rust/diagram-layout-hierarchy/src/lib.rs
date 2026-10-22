@@ -328,6 +328,10 @@ fn swimlane_icon_size(icon: &SwimlaneIconNode, has_label: bool) -> (f64, f64) {
     (box_size, box_size + if has_label { 30.0 } else { 0.0 })
 }
 
+fn swimlane_image_size(image: &diagram_ir::SwimlaneImageNode, has_label: bool) -> (f64, f64) {
+    (image.width, image.height + if has_label { 30.0 } else { 0.0 })
+}
+
 /// Lay out top-level Mermaid subgraphs as stable ownership lanes.
 pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
     layout_swimlane_with_options(diagram, None)
@@ -356,7 +360,9 @@ pub fn layout_swimlane_with_options(
     let node_height = diagram.flowchart_config.padding
         .map(|padding| 26.0 + padding * 2.0).unwrap_or(54.0).max(54.0);
     let rank_slot_height = diagram.nodes.iter().filter_map(|node| diagram.icon_nodes.get(&node.id)
-        .map(|icon| swimlane_icon_size(icon, !node.label.text.is_empty()).1))
+        .map(|icon| swimlane_icon_size(icon, !node.label.text.is_empty()).1)
+        .or_else(|| diagram.image_nodes.get(&node.id).map(|image|
+            swimlane_image_size(image, !node.label.text.is_empty()).1)))
         .fold(node_height, f64::max);
     let node_gap = diagram.flowchart_config.rank_spacing.unwrap_or(42.0);
     let rank_gap = diagram.edges.iter().filter_map(|edge| edge.label.as_ref().map(|label| {
@@ -371,6 +377,8 @@ pub fn layout_swimlane_with_options(
             diagram.flowchart_config.padding);
         diagram.icon_nodes.get(&node.id).map_or(width, |icon|
             width.max(swimlane_icon_size(icon, !node.label.text.is_empty()).0))
+            .max(diagram.image_nodes.get(&node.id).map_or(0.0, |image|
+                swimlane_image_size(image, !node.label.text.is_empty()).0))
     }
     ).fold(node_width, f64::max);
     let max_group_depth = diagram.groups.iter().map(|group| {
@@ -481,10 +489,14 @@ pub fn layout_swimlane_with_options(
                     &node.shape, &node.label, &node.style, diagram.theme.font_size.unwrap_or(13.0),
                     diagram.flowchart_config.wrapping_width, diagram.flowchart_config.padding,
                     );
-                    diagram.icon_nodes.get(node_id).map_or((width, node_height), |icon| {
+                    let icon_size = diagram.icon_nodes.get(node_id).map(|icon| {
                         let (icon_width, icon_height) = swimlane_icon_size(icon, !node.label.text.is_empty());
                         (width.max(icon_width), node_height.max(icon_height))
-                    })
+                    });
+                    icon_size.or_else(|| diagram.image_nodes.get(node_id).map(|image| {
+                        let (image_width, image_height) = swimlane_image_size(image, !node.label.text.is_empty());
+                        (width.max(image_width), node_height.max(image_height))
+                    })).unwrap_or((width, node_height))
                 },
             };
             let rank = cross_lane_ranks.as_ref().and_then(|ranks| ranks.get(node_id)).copied();
@@ -626,6 +638,7 @@ pub fn layout_swimlane_with_options(
         theme: diagram.theme.clone(),
         icons: diagram.icons.clone(),
         icon_nodes: diagram.icon_nodes.clone(),
+        image_nodes: diagram.image_nodes.clone(),
         icon_glyphs: diagram.icons.iter().filter_map(|(node_id, icon)|
             options.and_then(|options| options.icon_glyphs.get(icon)).cloned()
                 .map(|glyph| (node_id.clone(), glyph))
@@ -1232,6 +1245,7 @@ mod tests {
             theme: Default::default(),
             icons: BTreeMap::new(),
             icon_nodes: BTreeMap::new(),
+            image_nodes: BTreeMap::new(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -1261,6 +1275,7 @@ mod tests {
             theme: Default::default(),
             icons: BTreeMap::new(),
             icon_nodes: BTreeMap::new(),
+            image_nodes: BTreeMap::new(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);
@@ -1283,6 +1298,7 @@ mod tests {
             icon_nodes: BTreeMap::from([("parser".into(), diagram_ir::SwimlaneIconNode {
                 form: None, label_position: diagram_ir::SwimlaneLabelPosition::Bottom, height: 48.0,
             })]),
+            image_nodes: BTreeMap::new(),
         };
         let options = SwimlaneLayoutOptions { icon_glyphs: BTreeMap::from([(
             "logos:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Icon Font".into() },
@@ -1318,6 +1334,7 @@ mod tests {
             ignore_cross_lane_edges: true, optimize_ranks_by_crossings: true,
             flowchart_config: Default::default(), theme: Default::default(), icons: BTreeMap::new(),
             icon_nodes: BTreeMap::new(),
+            image_nodes: BTreeMap::new(),
         };
 
         let layout = layout_swimlane(&diagram);
@@ -1430,6 +1447,7 @@ mod tests {
             theme: Default::default(),
             icons: BTreeMap::new(),
             icon_nodes: BTreeMap::new(),
+            image_nodes: BTreeMap::new(),
         };
         let layout = layout_swimlane(&diagram);
         assert_eq!(layout.nodes[0].shape, DiagramShape::Cloud);
