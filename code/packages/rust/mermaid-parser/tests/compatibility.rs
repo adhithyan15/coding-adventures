@@ -2008,7 +2008,7 @@ fn swimlane_image_node_options_reach_semantic_ir() {
 
     let image = &diagram.image_nodes["logo"];
     assert_eq!(image.source, "https://example.com/logo.png");
-    assert_eq!((image.width, image.height), (96.0, 64.0));
+    assert_eq!((image.width, image.height), (Some(96.0), Some(64.0)));
     assert!(image.preserve_aspect_ratio);
     assert_eq!(image.label_position, SwimlaneLabelPosition::Top);
     assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, constraint: maybe }\nend").is_err());
