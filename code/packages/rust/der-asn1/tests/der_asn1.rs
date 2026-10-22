@@ -296,10 +296,7 @@ fn implicit_constructed_wrappers_are_exact_bounded_cursors() {
     for input in [&[0x30, 0x00][..], &[0x80, 0x00], &[0xa1, 0x00]] {
         let (decoder, element) = decode(input);
         assert_eq!(
-            decoder
-                .implicit_constructed(element, 0)
-                .unwrap_err()
-                .kind(),
+            decoder.implicit_constructed(element, 0).unwrap_err().kind(),
             Asn1ErrorKind::UnexpectedTag
         );
     }
@@ -321,10 +318,7 @@ fn depth_and_total_element_limits_are_shared() {
     let mut decoder = Asn1Decoder::new(limits);
     let root = decoder.decode_exact(&[0xa0, 0x00]).unwrap();
     assert_eq!(
-        decoder
-            .implicit_constructed(root, 0)
-            .unwrap_err()
-            .kind(),
+        decoder.implicit_constructed(root, 0).unwrap_err().kind(),
         Asn1ErrorKind::DepthLimitExceeded
     );
 
