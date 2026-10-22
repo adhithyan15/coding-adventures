@@ -445,6 +445,10 @@
     {
       "name": "icon-glyph-node",
       "source": "swimlane-beta LR\nsubgraph Services\n  parser@{ icon: \"logos:rust\", label: \"Parser\" }\n  paint[Paint]\nend\nparser --> paint"
+    },
+    {
+      "name": "icon-node-forms",
+      "source": "swimlane-beta LR\nsubgraph Services\n  plain@{ icon: \"logos:rust\" }\n  square@{ icon: \"logos:rust\", form: square, label: \"Square\", h: 60 }\n  circle@{ icon: \"logos:rust\", form: circle, label: \"Circle\", pos: t }\n  rounded@{ icon: \"logos:rust\", form: rounded, label: \"Rounded\" }\nend\nplain --> square --> circle --> rounded"
     }
   ]
 }

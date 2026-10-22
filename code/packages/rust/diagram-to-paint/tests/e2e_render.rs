@@ -3827,7 +3827,7 @@ line "Target" [35, 50, 68, 82]"##,
             let icon_options = SwimlaneLayoutOptions { icon_glyphs: BTreeMap::from([(
                 "logos:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() },
             )]) };
-            let layout = if fixture_name == "icon-glyph-node" {
+            let layout = if matches!(fixture_name, "icon-glyph-node" | "icon-node-forms") {
                 layout_swimlane_with_options(&diagram, Some(&icon_options))
             } else {
                 layout_swimlane(&diagram)
@@ -3852,6 +3852,17 @@ line "Target" [35, 50, 68, 82]"##,
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::GlyphRun(run) if run.font_size == 24.0 && !run.glyphs.is_empty()
                 )), "resolved icon glyph must lower to backend-neutral text paint");
+            }
+            if fixture_name == "icon-node-forms" {
+                assert_eq!(layout.nodes.iter().find(|node| node.id == "plain").unwrap().label.text, "");
+                assert_eq!(layout.icon_nodes["square"].height, 60.0);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(ellipse) if ellipse.rx == 32.0 && ellipse.ry == 32.0
+                )), "circle icon form must lower to backend-neutral ellipse paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.circle.iconPosition")), Some(&"t".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.square.iconHeight")), Some(&"60".to_string()));
             }
             if fixture_name == "default-lane-for-loose-nodes" {
                 assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
