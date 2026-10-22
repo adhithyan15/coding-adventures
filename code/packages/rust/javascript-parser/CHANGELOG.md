@@ -212,7 +212,7 @@ Legacy octal is forbidden in strict-mode source, but sloppy string literals
 permit it, so the compiler must round-trip the identical value Closure does.
 
 **Known adjacent divergence (filed as a follow-up):** the emitter renders a NUL
-code unit as ` ` where Closure emits `\x00` — a string-*rendering* issue in
+code unit as a raw, unescaped U+0000 where Closure emits `\x00` — a string-*rendering* issue in
 `closure-emitter`, independent of this decode fix (the decoded *value* is
 correct either way).
 
