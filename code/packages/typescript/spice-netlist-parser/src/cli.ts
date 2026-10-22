@@ -2,6 +2,7 @@
 
 import { readFile } from "node:fs/promises";
 import { stdin, stderr, stdout } from "node:process";
+import { pathToFileURL } from "node:url";
 
 import { CLI_ERROR_CODE, inspectNetlistJson, runNetlistJson } from "./index.js";
 
@@ -32,7 +33,11 @@ export async function main(argv: readonly string[]): Promise<number> {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Run only when executed directly, not when imported. Compare URLs, not a
+// hand-built `file://${path}` string: on Windows argv[1] is `D:\a\...\cli.js`
+// while import.meta.url is `file:///D:/a/.../cli.js`, so the string form never
+// matched there and the CLI silently printed nothing with exit status 0.
+if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main(process.argv.slice(2)).then((status) => {
     process.exitCode = status;
   });

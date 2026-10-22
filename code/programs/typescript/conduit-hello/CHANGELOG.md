@@ -1,5 +1,13 @@
 # Changelog — conduit-hello (TypeScript)
 
+## [Unreleased]
+
+### Fixed
+
+- Added a `BUILD_windows` skip stub. The program needs `typescript/conduit`'s
+  native addon, which conduit's own `BUILD_windows` does not build on Windows,
+  so its tests failed with `Cannot find module '../conduit_native_node.node'`.
+
 ## [0.1.0] — 2026-04-25
 
 ### Added
