@@ -1,0 +1,11 @@
+{
+  "id": "GU-C264-bahenpani",
+  "pathSegment": "GU-PATH-264-FRIENDS264",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-264-FRIENDS264",
+      "order": 2
+    }
+  ]
+}

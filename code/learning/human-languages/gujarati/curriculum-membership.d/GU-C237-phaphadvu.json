@@ -1,0 +1,11 @@
+{
+  "id": "GU-C237-phaphadvu",
+  "pathSegment": "GU-PATH-237-WINGS237",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-237-WINGS237",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C200-parbidiyu",
+  "pathSegment": "GU-PATH-200-POST200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-200-POST200",
+      "order": 1
+    }
+  ]
+}

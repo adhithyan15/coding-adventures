@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-220-RIVER220",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that the river will overflow and that the water will go down.",
+  "prerequisites": []
+}

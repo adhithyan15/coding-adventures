@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:4e8be60218993b36",
+  "lessonIds": [
+    "GU-C202-corvu",
+    "GU-C202-thanu",
+    "GU-C202-luntvu",
+    "GU-C202-jadvu",
+    "GU-C202-kadhvu"
+  ],
+  "tex": "gujarati/book/chapters/ch202-a-theft-in-the-bazaar.tex"
+}

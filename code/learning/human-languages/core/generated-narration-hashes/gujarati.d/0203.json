@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 203,
+  "sourceHash": "fnv1a64:dd9231f1cf57e4a2",
+  "lessonIds": [
+    "GU-C203-pravas",
+    "GU-C203-saman",
+    "GU-C203-nikalvu",
+    "GU-C203-chodvu",
+    "GU-C203-valavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch203.txt",
+  "json": "gujarati/narration/ch203.json",
+  "textHash": "fnv1a64:8ebadf2f85cd7844",
+  "jsonHash": "fnv1a64:a5402b1eb06e56f5",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 173,
+  "sourceHash": "fnv1a64:f0ea9cfa627bbb27",
+  "lessonIds": [
+    "GU-C173-athvadiyu",
+    "GU-C173-pakhvadiyu",
+    "GU-C173-avtu",
+    "GU-C173-chellu",
+    "GU-C173-akhu"
+  ],
+  "tex": "gujarati/book/chapters/ch173-a-week-and-a-fortnight.tex"
+}

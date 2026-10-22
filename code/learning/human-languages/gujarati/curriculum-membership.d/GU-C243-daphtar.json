@@ -1,0 +1,11 @@
+{
+  "id": "GU-C243-daphtar",
+  "pathSegment": "GU-PATH-243-SCHOOL243",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-243-SCHOOL243",
+      "order": 3
+    }
+  ]
+}

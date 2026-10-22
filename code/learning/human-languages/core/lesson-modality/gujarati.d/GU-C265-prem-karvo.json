@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C265-prem-karvo",
+    "language": "gujarati",
+    "chapter": 265,
+    "sequence": 14330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f7e9f79873d6fd0"
+  },
+  "findings": []
+}

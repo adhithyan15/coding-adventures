@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-187-PRICE187",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read whether prices go up or down and what is on offer.",
+  "prerequisites": []
+}

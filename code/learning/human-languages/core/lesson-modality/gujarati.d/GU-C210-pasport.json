@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C210-pasport",
+    "language": "gujarati",
+    "chapter": 210,
+    "sequence": 11400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7d6d19813d74b4c"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-229-LIMBS229",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "GU-EXT-229-LIMBS229"
+  ],
+  "after": []
+}

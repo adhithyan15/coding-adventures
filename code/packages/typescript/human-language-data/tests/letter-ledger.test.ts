@@ -16,7 +16,12 @@ import {
   type LetterLedger,
   type LedgerLetter,
 } from "../src/letter-ledger.js";
-import { loadEverything, loadChapterPolicy } from "../src/loader.js";
+import {
+  loadChapterPolicy,
+  loadLessons,
+  loadLetterLedgers,
+  loadScripts,
+} from "../src/loader.js";
 import type { ParsedLesson } from "../src/parse.js";
 
 // Tamil letters and marks, by code point. TAMIL LETTER KA, MA, NA, NNA, NNNA,
@@ -277,7 +282,13 @@ describe("summary", () => {
 // --- The real ledgers --------------------------------------------------------
 
 describe("the committed ledgers against the real corpus", () => {
-  const { lessons, letterLedgers } = loadEverything();
+  // Exactly the three things these cases read, loaded once for the block.
+  // `loadEverything()` also built the book corpus, the curricula and the
+  // dataset, and the scripts case below called it a SECOND time — a whole
+  // extra corpus read that timed out under full-suite load on macOS.
+  const lessons = loadLessons();
+  const letterLedgers = loadLetterLedgers();
+  const scripts = loadScripts();
   const policy = loadChapterPolicy();
 
   it("loads one ledger per script that has one", () => {
@@ -289,7 +300,6 @@ describe("the committed ledgers against the real corpus", () => {
   it("does not let a ledger masquerade as a script inventory", () => {
     // Both files live in data/scripts and both carry the same `script` key, so
     // reading them into one map would have had one silently overwrite the other.
-    const { scripts } = loadEverything();
     expect(scripts["tamil"]?.letters?.length ?? 0).toBeGreaterThan(0);
     expect((scripts["tamil"] as unknown as LetterLedger).letters[0]).not.toHaveProperty(
       "position");

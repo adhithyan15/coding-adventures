@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 251,
+  "title": "Words and their meanings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0e11d430b3024b03",
+  "lessons": [
+    {
+      "id": "GU-C251-arth",
+      "sequence": 13610,
+      "title": "અર્થ (arth) — meaning",
+      "headword": "અર્થ",
+      "romanization": "arth",
+      "gloss": "meaning",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4972692920c93e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to keep safe, then the Gujarati for to print."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અર્થ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અર્થ — arth — \"meaning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ શબ્દનો અર્થ શું છે? — ā śabdano arth śũ che? — \"What is the meaning of this word?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અર્થ (arth) is Sanskrit ártha, \"aim, thing\" and later \"meaning\", taken over whole as a tatsama (CDIAL 638). The same entry lists an inherited Gujarati āth, \"store of money\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arth*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arth, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arth*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā śabdano arth śũ che? — What is the meaning of this word?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā śabdano arth śũ che?* — What is the meaning of this word?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to keep safe, then the Gujarati for to print, then say arth again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to keep safe, then the Gujarati for to print, then say *arth* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અર્થ (arth) mean? (\"Meaning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C251-anuvad",
+      "sequence": 13620,
+      "title": "અનુવાદ (anuvād) — translation",
+      "headword": "અનુવાદ",
+      "romanization": "anuvād",
+      "gloss": "translation",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7cebc8dfb6299a07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to print, then the Gujarati for meaning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અનુવાદ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અનુવાદ — anuvād — \"translation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તે પત્રનો અનુવાદ કરે છે. — te patrano anuvād kare che — \"She translates the letter.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અનુવાદ (anuvād) is Sanskrit anuvāda, built from anu, \"after\", and vāda, \"speaking\", taken over whole as a tatsama. CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anuvād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anuvād*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anuvād, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anuvād*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te patrano anuvād kare che — She translates the letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te patrano anuvād kare che* — She translates the letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to print, then the Gujarati for meaning, then say anuvād again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to print, then the Gujarati for meaning, then say *anuvād* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અનુવાદ (anuvād) mean? (\"Translation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C251-shabdkosh",
+      "sequence": 13630,
+      "title": "શબ્દકોશ (śabdkoś) — dictionary",
+      "headword": "શબ્દકોશ",
+      "romanization": "śabdkoś",
+      "gloss": "dictionary",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a16584f87d6ede7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for meaning, then the Gujarati for translation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શબ્દકોશ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શબ્દકોશ — śabdkoś — \"dictionary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું શબ્દકોશમાં અર્થ શોધું છું. — hũ śabdkośmā̃ arth śodhũ chũ — \"I look up the meaning in the dictionary.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શબ્દકોશ (śabdkoś), a store of words, is a learned compound of two tatsamas: Sanskrit śabda, \"sound, word\" (CDIAL 12298), and kōśa, \"case, storeroom\" (CDIAL 3539)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śabdkoś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śabdkoś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śabdkoś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śabdkoś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ śabdkośmā̃ arth śodhũ chũ — I look up the meaning in the dictionary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ śabdkośmā̃ arth śodhũ chũ* — I look up the meaning in the dictionary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for meaning, then the Gujarati for translation, then say śabdkoś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for meaning, then the Gujarati for translation, then say *śabdkoś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શબ્દકોશ (śabdkoś) mean? (\"Dictionary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C251-dhyan-apvu",
+      "sequence": 13640,
+      "title": "ધ્યાન આપવું (dhyān āpvũ) — to pay attention",
+      "headword": "ધ્યાન આપવું",
+      "romanization": "dhyān āpvũ",
+      "gloss": "to pay attention",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35b2f00027d6f219",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for translation, then the Gujarati for dictionary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધ્યાન આપવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધ્યાન આપવું — dhyān āpvũ — \"to pay attention\"."
+            },
+            {
+              "kind": "speech",
+              "text": "વિદ્યાર્થી વર્ગમાં ધ્યાન આપે છે. — vidyārthī vargmā̃ dhyān āpe che — \"The students pay attention in class.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધ્યાન આપવું (dhyān āpvũ), to give attention, is built from dhyān, Sanskrit dhyāna, \"meditation\", taken over as a tatsama (CDIAL 6889), and the inherited verb āpvũ, \"to give\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhyān āpvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhyān āpvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhyān āpvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhyān āpvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidyārthī vargmā̃ dhyān āpe che — The students pay attention in class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidyārthī vargmā̃ dhyān āpe che* — The students pay attention in class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for translation, then the Gujarati for dictionary, then say dhyān āpvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for translation, then the Gujarati for dictionary, then say *dhyān āpvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધ્યાન આપવું (dhyān āpvũ) mean? (\"To pay attention\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C251-yad-karvu",
+      "sequence": 13650,
+      "title": "યાદ કરવું (yād karvũ) — to memorize, to recall",
+      "headword": "યાદ કરવું",
+      "romanization": "yād karvũ",
+      "gloss": "to memorize, to recall",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84f8463f20241c73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for dictionary, then the Gujarati for to pay attention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: યાદ કરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "યાદ કરવું — yād karvũ — \"to memorize, to recall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું રોજ દસ નવા શબ્દ યાદ કરું છું. — hũ roj das navā śabda yād karũ chũ — \"I memorize ten new words every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "યાદ કરવું (yād karvũ) is built from yād, \"memory\", a loan usually traced to Persian yād, and the verb karvũ, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yād karvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yād karvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yād karvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yād karvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ roj das navā śabda yād karũ chũ — I memorize ten new words every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ roj das navā śabda yād karũ chũ* — I memorize ten new words every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for dictionary, then the Gujarati for to pay attention, then say yād karvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for dictionary, then the Gujarati for to pay attention, then say *yād karvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does યાદ કરવું (yād karvũ) mean? (\"To memorize, to recall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

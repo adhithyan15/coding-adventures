@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — grammar-tools adjacency predicates (E6)
+
+### Changed
+- `tests/cst_contract.rs`'s `referenced_tokens` covers the new
+  `GrammarElement::AdjacencyPredicate` (`@no_space_before` …), which tests
+  the trivia between tokens and names no token. The exhaustive `match`
+  stopped compiling when grammar-tools gained the variant.
+
 ## Unreleased — LANG84 phase 7b, slice 1: release recorded and selectable through lang-aot
 
 ### Added

@@ -17,7 +17,8 @@ use diagram_ir::{
     DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadConfig, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
-    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
+    SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind, SwimlaneGroup, SwimlaneIconForm,
+    SwimlaneIconNode, SwimlaneImageNode, SwimlaneLabelPosition, SwimlaneLane, SwimlaneLineHops, SwimlaneNode,
 };
 use grammar_tools::parser_grammar::parse_parser_grammar;
 use lexer::token::{Token, TokenType};
@@ -7021,6 +7022,8 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         flowchart_config,
         theme,
         icons: BTreeMap::new(),
+        icon_nodes: BTreeMap::new(),
+        image_nodes: BTreeMap::new(),
     };
     let mut current_lane: Option<usize> = None;
     let mut group_stack = Vec::<usize>::new();
@@ -7156,6 +7159,8 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             line_number,
             current_lane.map(|lane| diagram.lanes[lane].id.clone()),
             &mut diagram.icons,
+            &mut diagram.icon_nodes,
+            &mut diagram.image_nodes,
         )?;
         upsert_swimlane_node(&mut diagram, node, current_lane, group_stack.last().copied());
     }
@@ -7852,6 +7857,8 @@ fn parse_swimlane_edge_chain(
             line_number,
             lane.map(|index| diagram.lanes[index].id.clone()),
             &mut diagram.icons,
+            &mut diagram.icon_nodes,
+            &mut diagram.image_nodes,
         )?;
         let previous = first.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
         for node in first {
@@ -7894,6 +7901,8 @@ fn parse_swimlane_edge_chain(
             line_number,
             lane.map(|index| diagram.lanes[index].id.clone()),
             &mut diagram.icons,
+            &mut diagram.icon_nodes,
+            &mut diagram.image_nodes,
         )?;
         let next_ids = nodes.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
         for from in &previous {
@@ -7938,6 +7947,8 @@ fn parse_swimlane_node_group(
     line: usize,
     lane_id: Option<String>,
     icons: &mut BTreeMap<String, String>,
+    icon_nodes: &mut BTreeMap<String, SwimlaneIconNode>,
+    image_nodes: &mut BTreeMap<String, SwimlaneImageNode>,
 ) -> Result<Vec<SwimlaneNode>, ParseError> {
     let mut nodes = Vec::new();
     let mut start = 0;
@@ -7952,13 +7963,15 @@ fn parse_swimlane_node_group(
                     line,
                     lane_id.clone(),
                     icons,
+                    icon_nodes,
+                    image_nodes,
                 )?);
                 start = index + character.len_utf8();
             }
             _ => {}
         }
     }
-    nodes.push(parse_swimlane_node(&value[start..], line, lane_id, icons)?);
+    nodes.push(parse_swimlane_node(&value[start..], line, lane_id, icons, icon_nodes, image_nodes)?);
     Ok(nodes)
 }
 
@@ -8206,6 +8219,8 @@ fn parse_swimlane_node(
     line: usize,
     lane_id: Option<String>,
     icons: &mut BTreeMap<String, String>,
+    icon_nodes: &mut BTreeMap<String, SwimlaneIconNode>,
+    image_nodes: &mut BTreeMap<String, SwimlaneImageNode>,
 ) -> Result<SwimlaneNode, ParseError> {
     let (value, classes) = split_swimlane_class_decorators(value.trim());
     let id_end = value
@@ -8219,9 +8234,16 @@ fn parse_swimlane_node(
     let (label, shape) = if suffix.is_empty() {
         (id.to_string(), DiagramShape::RoundedRect)
     } else if suffix.starts_with("@{") {
-        let (label, shape, icon) = parse_swimlane_shape_attributes(suffix, id, line)?;
+        let ParsedSwimlaneShapeAttributes { label, shape, icon, icon_node, image_node } =
+            parse_swimlane_shape_attributes(suffix, id, line)?;
         if let Some(icon) = icon {
             icons.insert(id.to_string(), icon);
+        }
+        if let Some(icon_node) = icon_node {
+            icon_nodes.insert(id.to_string(), icon_node);
+        }
+        if let Some(image_node) = image_node {
+            image_nodes.insert(id.to_string(), image_node);
         }
         (label, shape)
     } else if suffix.starts_with("(((") && suffix.ends_with(")))") {
@@ -8298,7 +8320,7 @@ fn parse_swimlane_node(
         ));
     };
     let label = normalize_swimlane_label(&label);
-    if label.trim().is_empty() {
+    if label.trim().is_empty() && !icons.contains_key(id) && !image_nodes.contains_key(id) {
         return Err(swimlane_error(
             line,
             "Swimlane node label must not be empty",
@@ -8314,16 +8336,30 @@ fn parse_swimlane_node(
     })
 }
 
+struct ParsedSwimlaneShapeAttributes {
+    label: String,
+    shape: DiagramShape,
+    icon: Option<String>,
+    icon_node: Option<SwimlaneIconNode>,
+    image_node: Option<SwimlaneImageNode>,
+}
+
 fn parse_swimlane_shape_attributes(
     suffix: &str,
     default_label: &str,
     line: usize,
-) -> Result<(String, DiagramShape, Option<String>), ParseError> {
+) -> Result<ParsedSwimlaneShapeAttributes, ParseError> {
     let body = suffix.strip_prefix("@{").and_then(|value| value.strip_suffix('}'))
         .ok_or_else(|| swimlane_error(line, "unterminated Swimlane shape attributes"))?;
     let mut label = None;
     let mut shape = None;
     let mut icon = None;
+    let mut image = None;
+    let mut form = None;
+    let mut label_position = SwimlaneLabelPosition::Bottom;
+    let mut icon_height = 48.0;
+    let mut image_width = None;
+    let mut preserve_aspect_ratio = false;
     for field in split_mermaid_metadata_fields(body) {
         let (key, value) = field.split_once(':')
             .ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require key: value"))?;
@@ -8337,6 +8373,41 @@ fn parse_swimlane_shape_attributes(
                 }
                 icon = Some(value);
             }
+            "img" => {
+                if value.trim().is_empty() {
+                    return Err(swimlane_error(line, "Swimlane image source must not be empty"));
+                }
+                image = Some(value);
+            }
+            "form" => form = Some(match value.to_ascii_lowercase().as_str() {
+                "square" => SwimlaneIconForm::Square,
+                "circle" => SwimlaneIconForm::Circle,
+                "rounded" => SwimlaneIconForm::Rounded,
+                other => return Err(swimlane_error(line, format!("unsupported Swimlane icon form {other:?}"))),
+            }),
+            "pos" => label_position = match value.to_ascii_lowercase().as_str() {
+                "t" => SwimlaneLabelPosition::Top,
+                "b" => SwimlaneLabelPosition::Bottom,
+                other => return Err(swimlane_error(line, format!("unsupported Swimlane icon label position {other:?}"))),
+            },
+            "h" => {
+                icon_height = value.parse::<f64>().map_err(|_| swimlane_error(line, "Swimlane icon height must be a number"))?;
+                if !icon_height.is_finite() || icon_height <= 0.0 {
+                    return Err(swimlane_error(line, "Swimlane icon height must be positive and finite"));
+                }
+            }
+            "w" => {
+                let width = value.parse::<f64>().map_err(|_| swimlane_error(line, "Swimlane image width must be a number"))?;
+                if !width.is_finite() || width <= 0.0 {
+                    return Err(swimlane_error(line, "Swimlane image width must be positive and finite"));
+                }
+                image_width = Some(width);
+            }
+            "constraint" => preserve_aspect_ratio = match value.to_ascii_lowercase().as_str() {
+                "on" => true,
+                "off" => false,
+                other => return Err(swimlane_error(line, format!("unsupported Swimlane image constraint {other:?}"))),
+            },
             "shape" => {
                 shape = Some(match value.to_ascii_lowercase().as_str() {
                     "rect" | "proc" | "process" | "rectangle" | "squarerect" => DiagramShape::Rect,
@@ -8397,9 +8468,24 @@ fn parse_swimlane_shape_attributes(
             other => return Err(swimlane_error(line, format!("unsupported Swimlane shape attribute {other:?}"))),
         }
     }
-    let shape = shape.or_else(|| icon.as_ref().map(|_| DiagramShape::RoundedRect))
+    if icon.is_some() && image.is_some() {
+        return Err(swimlane_error(line, "Swimlane node cannot contain both icon and img"));
+    }
+    if icon.is_none() && image.is_none() && (form.is_some() || label_position != SwimlaneLabelPosition::Bottom || icon_height != 48.0 || image_width.is_some() || preserve_aspect_ratio) {
+        return Err(swimlane_error(line, "Swimlane asset form, pos, w, h, and constraint require icon or img"));
+    }
+    if image.is_some() && form.is_some() {
+        return Err(swimlane_error(line, "Swimlane image nodes do not support icon form"));
+    }
+    let shape = shape.or_else(|| icon.as_ref().or(image.as_ref()).map(|_| DiagramShape::RoundedRect))
         .ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require shape"))?;
-    Ok((label.unwrap_or_else(|| default_label.to_string()), shape, icon))
+    let icon_node = icon.as_ref().map(|_| SwimlaneIconNode { form, label_position, height: icon_height.max(48.0) });
+    let image_node = image.map(|source| SwimlaneImageNode {
+        source, width: image_width, height: (icon_height != 48.0).then_some(icon_height),
+        preserve_aspect_ratio, label_position,
+    });
+    let label = label.unwrap_or_else(|| if icon.is_some() || image_node.is_some() { String::new() } else { default_label.to_string() });
+    Ok(ParsedSwimlaneShapeAttributes { label, shape, icon, icon_node, image_node })
 }
 
 fn split_swimlane_class_decorators(value: &str) -> (&str, Vec<String>) {

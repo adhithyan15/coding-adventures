@@ -266,6 +266,8 @@ fn the_emitted_xaml_host_answers_effects() {
     let profile_path = project.join("profile.jsonl");
     for (case, path) in [
         ("profile-disabled", PathBuf::new()),
+        ("projection-profile", project.join("projection.jsonl")),
+        ("projection-validate", project.join("projection.jsonl")),
         ("profile-bounded", profile_path.clone()),
         ("profile-bounded", project.join("missing").join("profile.jsonl")),
         ("profile-validate", profile_path.clone()),

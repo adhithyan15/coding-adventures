@@ -1,0 +1,19 @@
+{
+  "chapter": 238,
+  "title": "Creatures in the house",
+  "label": "ch:gu-creatures-in-the-house",
+  "canDo": "I can say what the small creatures in the house did.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C238-latakvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say what the small creatures in the house did.",
+    "assesses": [
+      "GU-LEX-C238-HOUSE238-03",
+      "GU-LEX-C238-HOUSE238-04",
+      "GU-LEX-C238-HOUSE238-05"
+    ]
+  }
+}

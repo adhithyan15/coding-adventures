@@ -1,0 +1,11 @@
+{
+  "id": "GU-C161-bhegu-karvu",
+  "pathSegment": "GU-PATH-161-SHIFT161",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-161-SHIFT161",
+      "order": 4
+    }
+  ]
+}

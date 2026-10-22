@@ -1,0 +1,11 @@
+{
+  "id": "GU-C174-tarikhiyu",
+  "pathSegment": "GU-PATH-174-MONTH174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-174-MONTH174",
+      "order": 3
+    }
+  ]
+}

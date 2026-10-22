@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "The dog that barked",
+  "label": "ch:gu-the-dog-that-barked",
+  "canDo": "I can say what a pet dog did.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C235-puchdi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can say what a pet dog did.",
+    "assesses": [
+      "GU-LEX-C235-DOG235-03",
+      "GU-LEX-C235-DOG235-04",
+      "GU-LEX-C235-DOG235-05"
+    ]
+  }
+}

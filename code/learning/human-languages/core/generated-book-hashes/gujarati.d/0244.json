@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:45298c28b08a2f57",
+  "lessonIds": [
+    "GU-C244-ganit",
+    "GU-C244-bhugol",
+    "GU-C244-nibandh",
+    "GU-C244-samjavvu",
+    "GU-C244-ukelvu"
+  ],
+  "tex": "gujarati/book/chapters/ch244-maths-maps-and-essays.tex"
+}

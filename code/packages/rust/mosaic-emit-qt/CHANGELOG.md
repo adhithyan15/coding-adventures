@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-21 (Text layout widths)
+
+- Bare styled Text emits finite nonnegative scalar widths and exact fill-width
+  requests. Scalar state overrides preserve ordered precedence; invalid or
+  mixed fill/scalar overrides remain reported. Painted text keeps sizing on
+  its outer wrapper without duplicating inner geometry.
+
 ## 2026-10-19 (Every text field binds its placeholder)
 
 - `HostNumberInput ( placeholder : slot: x )` binds `placeholderText: x`

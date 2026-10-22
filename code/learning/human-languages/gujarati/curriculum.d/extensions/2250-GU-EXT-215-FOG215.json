@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-215-FOG215",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that it will freeze and that the morning will be foggy.",
+  "prerequisites": []
+}

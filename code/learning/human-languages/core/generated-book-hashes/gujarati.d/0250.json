@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:bf9f1f4c43843908",
+  "lessonIds": [
+    "GU-C250-kampyutar",
+    "GU-C250-skrin",
+    "GU-C250-dabavvu",
+    "GU-C250-sacavvu",
+    "GU-C250-chapvu"
+  ],
+  "tex": "gujarati/book/chapters/ch250-at-the-computer.tex"
+}

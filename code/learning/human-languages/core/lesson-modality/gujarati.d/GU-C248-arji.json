@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C248-arji",
+    "language": "gujarati",
+    "chapter": 248,
+    "sequence": 13460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:036cea4aa5cfc63e"
+  },
+  "findings": []
+}

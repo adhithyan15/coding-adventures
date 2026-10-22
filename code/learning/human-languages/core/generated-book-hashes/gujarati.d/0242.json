@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:91724edb5c781379",
+  "lessonIds": [
+    "GU-C242-pakvu",
+    "GU-C242-lanvu",
+    "GU-C242-cutvu",
+    "GU-C242-khodvu",
+    "GU-C242-gadhedo",
+    "GU-R242-review-237-242",
+    "GU-R242-review-final-242"
+  ],
+  "tex": "gujarati/book/chapters/ch242-harvest-time.tex"
+}

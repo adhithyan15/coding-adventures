@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-224-DOCTOR224",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer the doctor's questions about my pulse and breathing.",
+  "prerequisites": []
+}

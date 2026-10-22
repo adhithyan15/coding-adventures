@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C271-svarthi",
+    "language": "gujarati",
+    "chapter": 271,
+    "sequence": 14660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b322316adab5a3d7"
+  },
+  "findings": []
+}

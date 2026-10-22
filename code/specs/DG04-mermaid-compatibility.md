@@ -1331,8 +1331,15 @@ Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
 `__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
 Flowchart-style `icon` node attributes preserve their fully qualified identity in semantic and layout
 IR. Integrator-registered glyphs resolve through layout options and lower above the node label as
-backend-neutral text paint, while scene metadata records both identity and resolution state.
+backend-neutral text paint, while scene metadata records both identity and resolution state. Icon
+nodes also preserve Mermaid's optional `square`, `circle`, and `rounded` background forms, top or
+bottom label position, and minimum 48-pixel `h` sizing through typed semantic IR, deterministic
+layout, and backend-neutral paint. Omitting `label` produces the upstream icon-only node.
+Flowchart-style `img` nodes preserve URI sources, width, height, aspect-ratio constraint, and label
+position in typed semantic and layout IR before lowering to backend-neutral `PaintImage` instructions;
+integrator-supplied intrinsic dimensions resolve omitted sizes and `constraint: on` aspect ratios during
+layout. URI fetching and decoding remain the responsibility of the selected paint backend.
 
-This is intentionally partial. Automatic external icon-pack loading and Flowchart images, additional link forms beyond the documented
+This is intentionally partial. Automatic external icon-pack loading and backend-specific URI decoding, additional link forms beyond the documented
 marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:e6f30ff7369e10ac",
+  "lessonIds": [
+    "GU-C192-hisab",
+    "GU-C192-kul",
+    "GU-C192-rakam",
+    "GU-C192-bil",
+    "GU-C192-vedaphvu"
+  ],
+  "tex": "gujarati/book/chapters/ch192-adding-up-the-bill.tex"
+}

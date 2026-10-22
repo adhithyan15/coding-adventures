@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:609d13afc175fd22",
+  "lessonIds": [
+    "GU-C247-saheb",
+    "GU-C247-karmacari",
+    "GU-C247-dhandho",
+    "GU-C247-kamavu",
+    "GU-C247-mahenatu"
+  ],
+  "tex": "gujarati/book/chapters/ch247-earning-a-living.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 152,
+  "title": "Reading a note about a repair",
+  "label": "ch:gu-reading-a-note-about-a-repair",
+  "canDo": "I can read a short note about a repair and the rent, find what it asks of me, and answer it.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C152-malik-chiththi",
+    "kind": "task",
+    "summary": "Read a 52-word note from a landlord about a repair and the rent, find the one question it asks, and plan the reply.",
+    "assesses": [
+      "GU-LEX-C152-READ152-01",
+      "GU-LEX-C152-READ152-02",
+      "GU-LEX-C152-READ152-03",
+      "GU-SKILL-C152-READ-NOTE-01"
+    ]
+  }
+}

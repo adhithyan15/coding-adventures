@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:b7f80b5c522b658d",
+  "lessonIds": [
+    "GU-C221-dukal",
+    "GU-C221-kharvu",
+    "GU-C221-ag",
+    "GU-C221-salagvu",
+    "GU-C221-bhukamp"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch221.txt",
+  "json": "gujarati/narration/ch221.json",
+  "textHash": "fnv1a64:b54258dbb89b5c9c",
+  "jsonHash": "fnv1a64:1d27a88b2ea7debe",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C229-edi",
+  "pathSegment": "GU-PATH-229-LIMBS229",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-229-LIMBS229",
+      "order": 3
+    }
+  ]
+}

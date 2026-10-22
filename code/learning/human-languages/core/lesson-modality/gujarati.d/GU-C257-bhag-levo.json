@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C257-bhag-levo",
+    "language": "gujarati",
+    "chapter": 257,
+    "sequence": 13950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f524e09e6d9e7efa"
+  },
+  "findings": []
+}

@@ -11,7 +11,7 @@ import {
   renderMetalanguage,
   termsUsedIn,
 } from "../src/metalanguage.js";
-import { loadEverything, loadMetalanguage } from "../src/loader.js";
+import { loadLessons, loadMetalanguage } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import type { MetalanguageInventory } from "../src/types.js";
 
@@ -235,8 +235,17 @@ describe("the committed inventory", () => {
 });
 
 describe("the committed corpus", () => {
+  // Both cases below read the same ~42,000 lessons and nothing else, so they
+  // share one read. `loadEverything()` here used to pay for the book corpus,
+  // the curricula and the dataset too, twice per file — under full-suite load
+  // on a 3-core macOS runner that pushed a single case past its 30 s budget.
+  // The memo is per file (Vitest gives each file its own module graph) and
+  // neither case mutates what it reads.
+  let memo: ReturnType<typeof loadLessons> | undefined;
+  const committedLessons = () => (memo ??= loadLessons());
+
   it("pins the first measurement", () => {
-    const { lessons } = loadEverything();
+    const lessons = committedLessons();
     const r = measureMetalanguage(lessons, loadMetalanguage());
     expect(r.summary.terms).toBe(54);
     expect(r.summary.lessonsUsingTerms).toBeGreaterThanOrEqual(2002) // FLOOR — content only grows; see the note at the top of this file; // +8: HL-C94 // +4: HL-C98 // +40: vocabulary wave 5 // +4: HL-C88 slices 5-6 // +3: HL-C88 slice 8 // +54: vocabulary wave 6 // +3: HL-C113 preterite plural // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive // HL12: +30 recognition segments (telugu/kannada/malayalam 8 each, sanskrit 6). Every segment says letter, consonant, vowel sign or abugida, and none of those is introduced first -- the same debt HL11's Tamil segments added, now in four more tracks // HL12 payment two: +8 Hindi segments
@@ -257,7 +266,7 @@ describe("the committed corpus", () => {
   });
 
   it("reports the technical subset in the rendered lines", () => {
-    const { lessons } = loadEverything();
+    const lessons = committedLessons();
     const text = renderMetalanguage(measureMetalanguage(lessons, loadMetalanguage())).join("\n");
     expect(text).toContain("technical terms");
     expect(text).toContain("verb");

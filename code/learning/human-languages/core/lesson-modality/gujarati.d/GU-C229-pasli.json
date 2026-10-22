@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C229-pasli",
+    "language": "gujarati",
+    "chapter": 229,
+    "sequence": 12460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f804a6293eb763b"
+  },
+  "findings": []
+}

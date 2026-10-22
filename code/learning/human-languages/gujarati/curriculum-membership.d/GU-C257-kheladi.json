@@ -1,0 +1,11 @@
+{
+  "id": "GU-C257-kheladi",
+  "pathSegment": "GU-PATH-257-TEAM257",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-257-TEAM257",
+      "order": 1
+    }
+  ]
+}

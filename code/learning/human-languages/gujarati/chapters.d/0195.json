@@ -1,0 +1,19 @@
+{
+  "chapter": 195,
+  "title": "Lost in town",
+  "label": "ch:gu-lost-in-town",
+  "canDo": "I can say that I am lost and that someone showed me the way.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C195-antar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 195: I can say that I am lost and that someone showed me the way.",
+    "assesses": [
+      "GU-LEX-C195-LOST195-03",
+      "GU-LEX-C195-LOST195-04",
+      "GU-LEX-C195-LOST195-05"
+    ]
+  }
+}

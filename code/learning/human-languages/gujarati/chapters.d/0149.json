@@ -1,0 +1,24 @@
+{
+  "chapter": 149,
+  "title": "What will happen",
+  "label": "ch:gu-what-will-happen",
+  "canDo": "I can say what I and other people will do tomorrow with the future endings, ask when someone will come, and say that I am sleepy.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C149-future-practice",
+    "kind": "task",
+    "summary": "Tell tomorrow from morning to night, then ask someone when they will come and say where you will be.",
+    "assesses": [
+      "GU-GRAMMAR-C149-ISH-01",
+      "GU-GRAMMAR-C149-ISHUN-01",
+      "GU-GRAMMAR-C149-SHE-01",
+      "GU-GRAMMAR-C149-SHO-01",
+      "GU-GRAMMAR-C149-JAISH-01",
+      "GU-GRAMMAR-C149-THASHE-01",
+      "GU-LEX-C149-FUT149-01",
+      "GU-SCRIPT-C149-UU-01"
+    ]
+  }
+}

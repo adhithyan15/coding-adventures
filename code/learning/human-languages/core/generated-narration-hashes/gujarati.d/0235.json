@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:35aaa18880248e17",
+  "lessonIds": [
+    "GU-C235-bhasvu",
+    "GU-C235-karadvu",
+    "GU-C235-palvu",
+    "GU-C235-catvu",
+    "GU-C235-puchdi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch235.txt",
+  "json": "gujarati/narration/ch235.json",
+  "textHash": "fnv1a64:946bfacc408f5b97",
+  "jsonHash": "fnv1a64:647839f94044a5b6",
+  "findings": []
+}

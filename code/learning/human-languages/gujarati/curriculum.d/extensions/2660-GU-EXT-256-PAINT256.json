@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-256-PAINT256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what I painted, photographed or knitted.",
+  "prerequisites": []
+}

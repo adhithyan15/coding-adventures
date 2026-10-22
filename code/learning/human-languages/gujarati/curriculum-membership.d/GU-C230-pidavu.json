@@ -1,0 +1,11 @@
+{
+  "id": "GU-C230-pidavu",
+  "pathSegment": "GU-PATH-230-TOOTH230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-230-TOOTH230",
+      "order": 3
+    }
+  ]
+}

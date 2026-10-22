@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-204-TIMES204",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the timetable and say when the train left.",
+  "prerequisites": []
+}

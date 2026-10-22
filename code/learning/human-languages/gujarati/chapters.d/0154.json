@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Saris, scarves and cloth",
+  "label": "ch:gu-saris-scarves-and-cloth",
+  "canDo": "I can talk about the clothes people put on and take off.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C154-odhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: I can talk about the clothes people put on and take off.",
+    "assesses": [
+      "GU-LEX-C154-CLOTH154-03",
+      "GU-LEX-C154-CLOTH154-04",
+      "GU-LEX-C154-CLOTH154-05"
+    ]
+  }
+}

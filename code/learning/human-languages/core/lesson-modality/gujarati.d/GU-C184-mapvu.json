@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C184-mapvu",
+    "language": "gujarati",
+    "chapter": 184,
+    "sequence": 10080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a610198f8ee9d35"
+  },
+  "findings": []
+}
