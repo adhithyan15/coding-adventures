@@ -1,0 +1,11 @@
+{
+  "id": "AR-C408-tamattaa",
+  "pathSegment": "AR-PATH-408-MASLAHA408",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-408-MASLAHA408",
+      "order": 1
+    }
+  ]
+}

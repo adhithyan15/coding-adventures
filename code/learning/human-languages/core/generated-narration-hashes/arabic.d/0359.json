@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:d9b2f07ce3968b1b",
+  "lessonIds": [
+    "AR-C359-intiba",
+    "AR-C359-manzur",
+    "AR-C359-iftarada",
+    "AR-C359-iqtaraha",
+    "AR-C359-muqni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch359.txt",
+  "json": "arabic/narration/ch359.json",
+  "textHash": "fnv1a64:c816b0e4173f950a",
+  "jsonHash": "fnv1a64:2fa8579f7660c3d1",
+  "findings": []
+}

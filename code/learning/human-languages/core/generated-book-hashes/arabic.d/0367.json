@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:814affb922ffcc7a",
+  "lessonIds": [
+    "AR-C367-adraka",
+    "AR-C367-tasawwara",
+    "AR-C367-istawaba",
+    "AR-C367-way",
+    "AR-C367-marifa"
+  ],
+  "tex": "arabic/book/chapters/ch367-grasping-ideas.tex"
+}

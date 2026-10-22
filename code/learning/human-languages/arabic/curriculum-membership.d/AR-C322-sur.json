@@ -1,0 +1,11 @@
+{
+  "id": "AR-C322-sur",
+  "pathSegment": "AR-PATH-322-QALA322",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-322-QALA322",
+      "order": 2
+    }
+  ]
+}

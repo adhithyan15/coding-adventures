@@ -1,0 +1,11 @@
+{
+  "id": "AR-C431-izdiham",
+  "pathSegment": "AR-PATH-431-MURUR431",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-431-MURUR431",
+      "order": 3
+    }
+  ]
+}

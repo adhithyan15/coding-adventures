@@ -1,0 +1,11 @@
+{
+  "id": "AR-C422-istankara",
+  "pathSegment": "AR-PATH-422-MAWDUI422",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-422-MAWDUI422",
+      "order": 4
+    }
+  ]
+}

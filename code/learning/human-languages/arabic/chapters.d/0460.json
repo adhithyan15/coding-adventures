@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "When things break",
+  "label": "ch:ar-when-things-break",
+  "canDo": "I can say a breakdown, a malfunction, to get broken, to go bad and to suffer damage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C460-tadarrara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say a breakdown, a malfunction, to get broken, to go bad and to suffer damage.",
+    "assesses": [
+      "AR-LEX-C460-ATAL460-03",
+      "AR-LEX-C460-ATAL460-04",
+      "AR-LEX-C460-ATAL460-05"
+    ]
+  }
+}

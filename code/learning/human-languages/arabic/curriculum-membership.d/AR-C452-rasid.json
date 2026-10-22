@@ -1,0 +1,11 @@
+{
+  "id": "AR-C452-rasid",
+  "pathSegment": "AR-PATH-452-FAR452",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-452-FAR452",
+      "order": 1
+    }
+  ]
+}

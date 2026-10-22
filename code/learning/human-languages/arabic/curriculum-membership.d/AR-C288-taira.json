@@ -1,0 +1,11 @@
+{
+  "id": "AR-C288-taira",
+  "pathSegment": "AR-PATH-288-STATION",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-288-STATION",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C460-khalal",
+  "pathSegment": "AR-PATH-460-ATAL460",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-460-ATAL460",
+      "order": 1
+    }
+  ]
+}

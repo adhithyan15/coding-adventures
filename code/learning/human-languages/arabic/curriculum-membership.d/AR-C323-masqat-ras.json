@@ -1,0 +1,11 @@
+{
+  "id": "AR-C323-masqat-ras",
+  "pathSegment": "AR-PATH-323-NASHAA323",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-323-NASHAA323",
+      "order": 2
+    }
+  ]
+}

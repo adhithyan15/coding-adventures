@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C531-murahiq",
+    "language": "arabic",
+    "chapter": 531,
+    "sequence": 29400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:706fce6bb216f338"
+  },
+  "findings": []
+}

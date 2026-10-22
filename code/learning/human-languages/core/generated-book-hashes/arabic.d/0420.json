@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:b7c5308e3c0ad8e4",
+  "lessonIds": [
+    "AR-C420-istajaba",
+    "AR-C420-tajahala",
+    "AR-C420-rashshaha",
+    "AR-C420-tasawa",
+    "AR-C420-mushtarak"
+  ],
+  "tex": "arabic/book/chapters/ch420-responding.tex"
+}

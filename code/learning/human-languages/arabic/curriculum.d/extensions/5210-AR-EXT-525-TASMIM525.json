@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-525-TASMIM525",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone produced, designed or programmed something, and name a designer and a programmer.",
+  "prerequisites": []
+}

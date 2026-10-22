@@ -1,0 +1,19 @@
+{
+  "chapter": 548,
+  "title": "In the pool and the ring",
+  "label": "ch:ar-in-the-pool-and-the-ring",
+  "canDo": "I can talk about swimming and boxing, and say that someone wrestled, competed with others or punched.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C548-lakama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 548: I can talk about swimming and boxing, and say that someone wrestled, competed with others or punched.",
+    "assesses": [
+      "AR-LEX-C548-HALABA548-03",
+      "AR-LEX-C548-HALABA548-04",
+      "AR-LEX-C548-HALABA548-05"
+    ]
+  }
+}

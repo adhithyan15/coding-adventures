@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 509,
+  "title": "Germs and jabs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:24b9f14b8e745c0a",
+  "lessons": [
+    {
+      "id": "AR-C509-adwa",
+      "sequence": 28270,
+      "title": "عدوى (ʿadwā) — an infection, contagion",
+      "headword": "عدوى",
+      "romanization": "ʿadwā",
+      "gloss": "an infection, contagion",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae4ce7c37f9b90db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an inflammation, then the Arabic for to swell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عدوى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عدوى — ʿadwā — \"an infection, contagion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انتقلت العدوى من طفل إلى طفل. intaqalat al-ʿadwā min ṭifl ilā ṭifl. The infection passed from child to child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عدوى (ʿadwā) is built on the native Arabic root ʿ-d-w, \"to run, to pass beyond\" (Lane). ʿAdwā is a thing that runs from one person to another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿadwā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿadwā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿadwā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿadwā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intaqalat al-ʿadwā min ṭifl ilā ṭifl. — The infection passed from child to child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intaqalat al-ʿadwā min ṭifl ilā ṭifl.* — The infection passed from child to child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an inflammation, then the Arabic for to swell, then say ʿadwā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an inflammation, then the Arabic for to swell, then say *ʿadwā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عدوى (ʿadwā) mean? (\"An infection, contagion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C509-fayrus",
+      "sequence": 28280,
+      "title": "فيروس (fayrūs) — a virus",
+      "headword": "فيروس",
+      "romanization": "fayrūs",
+      "gloss": "a virus",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd93d3766c317390",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to swell, then the Arabic for an infection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فيروس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فيروس — fayrūs — \"a virus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الزكام سببه فيروس. az-zukām sababuhu fayrūs. A cold is caused by a virus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فيروس (fayrūs) is a modern loan, usually traced to Latin virus, \"poison, slime\", which reached Arabic through European languages."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fayrūs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fayrūs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fayrūs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fayrūs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "az-zukām sababuhu fayrūs. — A cold is caused by a virus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *az-zukām sababuhu fayrūs.* — A cold is caused by a virus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to swell, then the Arabic for an infection, then say fayrūs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to swell, then the Arabic for an infection, then say *fayrūs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فيروس (fayrūs) mean? (\"A virus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C509-jurthuma",
+      "sequence": 28290,
+      "title": "جرثومة (jurthūma) — a germ",
+      "headword": "جرثومة",
+      "romanization": "jurthūma",
+      "gloss": "a germ",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:852823c73c5e8542",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an infection, then the Arabic for a virus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جرثومة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جرثومة — jurthūma — \"a germ\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يقتل الصابون الجراثيم. yaqtulu aṣ-ṣābūn al-jarāthīm. Soap kills germs."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: جراثيم, jarāthīm."
+            },
+            {
+              "kind": "speech",
+              "text": "It is mostly met in the plural جراثيم."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جرثومة (jurthūma) is built on a native four-letter root, j-r-th-m, where it named the root or origin of a thing; modern Arabic gave it the sense of a germ. The origin of the root itself is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jurthūma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jurthūma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jurthūma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jurthūma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaqtulu aṣ-ṣābūn al-jarāthīm. — Soap kills germs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaqtulu aṣ-ṣābūn al-jarāthīm.* — Soap kills germs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an infection, then the Arabic for a virus, then say jurthūma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an infection, then the Arabic for a virus, then say *jurthūma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جرثومة (jurthūma) mean? (\"A germ\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C509-tatim",
+      "sequence": 28300,
+      "title": "تطعيم (taṭʿīm) — a vaccination",
+      "headword": "تطعيم",
+      "romanization": "taṭʿīm",
+      "gloss": "a vaccination",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd8977cea5602c3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a virus, then the Arabic for a germ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تطعيم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تطعيم — taṭʿīm — \"a vaccination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أخذ الأطفال التطعيم في المدرسة. akhadha al-aṭfāl at-taṭʿīm fī al-madrasa. The children had their vaccination at school."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تطعيم (taṭʿīm) is built on the native Arabic root ṭ-ʿ-m, \"to eat, to taste\" (Lane), the root of ṭaʿām, food. Lane gives Form II ṭaʿʿama as \"to graft\" a branch; modern Arabic uses the same word for putting a vaccine into the body."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭʿīm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭʿīm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭʿīm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭʿīm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhadha al-aṭfāl at-taṭʿīm fī al-madrasa. — The children had their vaccination at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhadha al-aṭfāl at-taṭʿīm fī al-madrasa.* — The children had their vaccination at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a virus, then the Arabic for a germ, then say taṭʿīm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a virus, then the Arabic for a germ, then say *taṭʿīm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تطعيم (taṭʿīm) mean? (\"A vaccination\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C509-waram",
+      "sequence": 28310,
+      "title": "ورم (waram) — a swelling; a tumour",
+      "headword": "ورم",
+      "romanization": "waram",
+      "gloss": "a swelling; a tumour",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f487314e0dda592",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a germ, then the Arabic for a vaccination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ورم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ورم — waram — \"a swelling; a tumour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ظهر ورم صغير على ركبتي. ẓahara waram ṣaghīr ʿalā rukbatī. A small swelling appeared on my knee."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أورام, awrām."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ورم (waram) is built on the native Arabic root w-r-m, \"to swell\" (Lane). Tawarrama, to swell up, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ẓahara waram ṣaghīr ʿalā rukbatī. — A small swelling appeared on my knee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ẓahara waram ṣaghīr ʿalā rukbatī.* — A small swelling appeared on my knee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a germ, then the Arabic for a vaccination, then say waram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a germ, then the Arabic for a vaccination, then say *waram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ورم (waram) mean? (\"A swelling; a tumour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

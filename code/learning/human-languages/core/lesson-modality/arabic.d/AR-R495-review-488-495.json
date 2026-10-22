@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R495-review-488-495",
+    "language": "arabic",
+    "chapter": 495,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:573188a662b0465d"
+  },
+  "findings": []
+}

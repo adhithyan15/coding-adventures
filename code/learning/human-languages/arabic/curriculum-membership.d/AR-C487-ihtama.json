@@ -1,0 +1,11 @@
+{
+  "id": "AR-C487-ihtama",
+  "pathSegment": "AR-PATH-487-MALJA487",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-487-MALJA487",
+      "order": 2
+    }
+  ]
+}

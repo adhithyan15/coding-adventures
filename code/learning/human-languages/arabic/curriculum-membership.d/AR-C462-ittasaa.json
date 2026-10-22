@@ -1,0 +1,11 @@
+{
+  "id": "AR-C462-ittasaa",
+  "pathSegment": "AR-PATH-462-ISTIDAD462",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-462-ISTIDAD462",
+      "order": 3
+    }
+  ]
+}

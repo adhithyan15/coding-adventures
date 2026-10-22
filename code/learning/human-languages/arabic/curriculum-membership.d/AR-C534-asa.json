@@ -1,0 +1,11 @@
+{
+  "id": "AR-C534-asa",
+  "pathSegment": "AR-PATH-534-NASIHA534",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-534-NASIHA534",
+      "order": 1
+    }
+  ]
+}

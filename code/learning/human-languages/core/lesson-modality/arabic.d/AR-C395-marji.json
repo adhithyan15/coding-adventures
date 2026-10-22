@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C395-marji",
+    "language": "arabic",
+    "chapter": 395,
+    "sequence": 22290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f722713cdd3b6e14"
+  },
+  "findings": []
+}

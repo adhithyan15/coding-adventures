@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Castles and walls",
+  "label": "ch:ar-castles-and-walls",
+  "canDo": "I can say a castle, a fort, a city wall, to besiege and to defend.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C322-dafaa-defend",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can say a castle, a fort, a city wall, to besiege and to defend.",
+    "assesses": [
+      "AR-LEX-C322-QALA322-03",
+      "AR-LEX-C322-QALA322-04",
+      "AR-LEX-C322-QALA322-05"
+    ]
+  }
+}

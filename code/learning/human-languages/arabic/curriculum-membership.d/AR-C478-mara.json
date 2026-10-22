@@ -1,0 +1,11 @@
+{
+  "id": "AR-C478-mara",
+  "pathSegment": "AR-PATH-478-QATI478",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-478-QATI478",
+      "order": 1
+    }
+  ]
+}

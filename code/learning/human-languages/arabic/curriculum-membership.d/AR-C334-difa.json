@@ -1,0 +1,11 @@
+{
+  "id": "AR-C334-difa",
+  "pathSegment": "AR-PATH-334-MUHAKAMA334",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-334-MUHAKAMA334",
+      "order": 2
+    }
+  ]
+}

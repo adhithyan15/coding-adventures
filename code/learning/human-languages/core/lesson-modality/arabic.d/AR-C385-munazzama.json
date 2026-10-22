@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C385-munazzama",
+    "language": "arabic",
+    "chapter": 385,
+    "sequence": 21780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cb9d81079e1a508"
+  },
+  "findings": []
+}

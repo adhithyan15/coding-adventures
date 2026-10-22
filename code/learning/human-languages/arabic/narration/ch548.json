@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 548,
+  "title": "In the pool and the ring",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:69fc1ead9a5847e0",
+  "lessons": [
+    {
+      "id": "AR-C548-sibaha",
+      "sequence": 30270,
+      "title": "سباحة (sibāḥa) — swimming",
+      "headword": "سباحة",
+      "romanization": "sibāḥa",
+      "gloss": "swimming",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dcdc37ccef48c8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a medal, then the Arabic for to qualify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سباحة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سباحة — sibāḥa — \"swimming\"."
+            },
+            {
+              "kind": "speech",
+              "text": "السباحة رياضة صحية. as-sibāḥa riyāḍa ṣiḥḥiyya. Swimming is a healthy sport."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سباحة (sibāḥa) is built on the native Arabic root s-b-ḥ, \"to swim, to float\" (Lane). Sabaḥa, to swim, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sibāḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sibāḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sibāḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sibāḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "as-sibāḥa riyāḍa ṣiḥḥiyya. — Swimming is a healthy sport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *as-sibāḥa riyāḍa ṣiḥḥiyya.* — Swimming is a healthy sport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a medal, then the Arabic for to qualify, then say sibāḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a medal, then the Arabic for to qualify, then say *sibāḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سباحة (sibāḥa) mean? (\"Swimming\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C548-mulakama",
+      "sequence": 30280,
+      "title": "ملاكمة (mulākama) — boxing",
+      "headword": "ملاكمة",
+      "romanization": "mulākama",
+      "gloss": "boxing",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3459fb5903f65770",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to qualify, then the Arabic for swimming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ملاكمة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ملاكمة — mulākama — \"boxing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يشاهد أبي الملاكمة على التلفاز. yushāhidu abī al-mulākama ʿalā at-tilfāz. My father watches boxing on television."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ملاكمة (mulākama) is built on the native Arabic root l-k-m, \"to strike with the fist\" (Lane). Mulākama is the verbal noun of Form III: hitting one another with the fist."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulākama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulākama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mulākama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mulākama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yushāhidu abī al-mulākama ʿalā at-tilfāz. — My father watches boxing on television.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yushāhidu abī al-mulākama ʿalā at-tilfāz.* — My father watches boxing on television.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to qualify, then the Arabic for swimming, then say mulākama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to qualify, then the Arabic for swimming, then say *mulākama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ملاكمة (mulākama) mean? (\"Boxing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C548-saraa",
+      "sequence": 30290,
+      "title": "صارع (ṣāraʿa) — to wrestle (with)",
+      "headword": "صارع",
+      "romanization": "ṣāraʿa",
+      "gloss": "to wrestle (with)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60eb56e4831e4b44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for swimming, then the Arabic for boxing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: صارع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صارع — ṣāraʿa — \"to wrestle (with)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صارع اللاعب بطل البلد. ṣāraʿa al-lāʿib baṭal al-balad. The player wrestled the national champion."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يصارع, yuṣāriʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صارع (ṣāraʿa) is built on the native Arabic root ṣ-r-ʿ, \"to throw down\" (Lane). Form III ṣāraʿa is to try to throw one another down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣāraʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣāraʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣāraʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣāraʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣāraʿa al-lāʿib baṭal al-balad. — The player wrestled the national champion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣāraʿa al-lāʿib baṭal al-balad.* — The player wrestled the national champion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for swimming, then the Arabic for boxing, then say ṣāraʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for swimming, then the Arabic for boxing, then say *ṣāraʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does صارع (ṣāraʿa) mean? (\"To wrestle (with)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C548-nafasa",
+      "sequence": 30300,
+      "title": "نافس (nāfasa) — to compete with",
+      "headword": "نافس",
+      "romanization": "nāfasa",
+      "gloss": "to compete with",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4321028b9c926978",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for boxing, then the Arabic for to wrestle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نافس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نافس — nāfasa — \"to compete with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نافست أختي عشر بنات في السباق. nāfasat ukhtī ʿashr banāt fī as-sibāq. My sister competed with ten girls in the race."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينافس, yunāfis."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نافس (nāfasa) is built on the native Arabic root n-f-s, \"a soul; to be precious\" (Lane). Form III nāfasa is to vie with someone for a precious thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāfasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāfasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāfasa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāfasa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāfasat ukhtī ʿashr banāt fī as-sibāq. — My sister competed with ten girls in the race.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāfasat ukhtī ʿashr banāt fī as-sibāq.* — My sister competed with ten girls in the race.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for boxing, then the Arabic for to wrestle, then say nāfasa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for boxing, then the Arabic for to wrestle, then say *nāfasa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نافس (nāfasa) mean? (\"To compete with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C548-lakama",
+      "sequence": 30310,
+      "title": "لكم (lakama) — to punch",
+      "headword": "لكم",
+      "romanization": "lakama",
+      "gloss": "to punch",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8bdd50785ad5c6d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to wrestle, then the Arabic for to compete with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لكم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لكم — lakama — \"to punch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لكم الملاكم خصمه. lakama al-mulākim khaṣmahu. The boxer punched his opponent."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يلكم, yalkum."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لكم (lakama) is built on the native Arabic root l-k-m, \"to strike with the fist\" (Lane). Lane gives lakma as a blow with the fist; mulākama, boxing, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lakama al-mulākim khaṣmahu. — The boxer punched his opponent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lakama al-mulākim khaṣmahu.* — The boxer punched his opponent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to wrestle, then the Arabic for to compete with, then say lakama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to wrestle, then the Arabic for to compete with, then say *lakama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لكم (lakama) mean? (\"To punch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

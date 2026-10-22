@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 522,
+  "title": "Starting and stopping work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8eb1be479e6a2048",
+  "lessons": [
+    {
+      "id": "AR-C522-bashara",
+      "sequence": 28940,
+      "title": "باشر (bāshara) — to set to work, to start on",
+      "headword": "باشر",
+      "romanization": "bāshara",
+      "gloss": "to set to work, to start on",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46e90d0f22b02545",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to promote, then the Arabic for to get tired."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: باشر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "باشر — bāshara — \"to set to work, to start on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "باشر الموظف الجديد عمله يوم الأحد. bāshara al-muwaẓẓaf al-jadīd ʿamalahu yawm al-aḥad. The new employee started work on Sunday."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يباشر, yubāshir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "باشر (bāshara) is built on the native Arabic root b-sh-r, \"the skin; to touch directly\" (Lane). Form III bāshara is to put one's own hand to a task. Mubāshir, direct, which you know, is its participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāshara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāshara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāshara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāshara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāshara al-muwaẓẓaf al-jadīd ʿamalahu yawm al-aḥad. — The new employee started work on Sunday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāshara al-muwaẓẓaf al-jadīd ʿamalahu yawm al-aḥad.* — The new employee started work on Sunday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to promote, then the Arabic for to get tired, then say bāshara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to promote, then the Arabic for to get tired, then say *bāshara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does باشر (bāshara) mean? (\"To set to work, to start on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C522-kadaha",
+      "sequence": 28950,
+      "title": "كدح (kadaḥa) — to toil",
+      "headword": "كدح",
+      "romanization": "kadaḥa",
+      "gloss": "to toil",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e288b72b6fe5a31a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to get tired, then the Arabic for to set to work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كدح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كدح — kadaḥa — \"to toil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كدح المزارع في الحقل طوال اليوم. kadaḥa al-muzāriʿ fī al-ḥaql ṭūla al-yawm. The farmer toiled in the field all day."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يكدح, yakdaḥ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كدح (kadaḥa) is built on the native Arabic root k-d-ḥ, \"to labour, to strive\" (Lane). Lane gives yakdaḥu as its present."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadaḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadaḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadaḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadaḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadaḥa al-muzāriʿ fī al-ḥaql ṭūla al-yawm. — The farmer toiled in the field all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadaḥa al-muzāriʿ fī al-ḥaql ṭūla al-yawm.* — The farmer toiled in the field all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to get tired, then the Arabic for to set to work, then say kadaḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to get tired, then the Arabic for to set to work, then say *kadaḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كدح (kadaḥa) mean? (\"To toil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C522-istiqala",
+      "sequence": 28960,
+      "title": "استقالة (istiqāla) — a resignation",
+      "headword": "استقالة",
+      "romanization": "istiqāla",
+      "gloss": "a resignation",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5be425f3734c3f9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to set to work, then the Arabic for to toil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استقالة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقالة — istiqāla — \"a resignation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كتب الموظف استقالته وأعطاها للمدير. kataba al-muwaẓẓaf istiqālatahu wa-aʿṭāhā li-l-mudīr. The employee wrote his resignation and gave it to the manager."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb استقال, to resign, goes with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقالة (istiqāla) is built on the native Arabic root q-y-l, \"to release from a bargain\" (Lane). Istiqāla is asking to be released."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istiqāla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istiqāla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istiqāla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istiqāla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kataba al-muwaẓẓaf istiqālatahu wa-aʿṭāhā li-l-mudīr. — The employee wrote his resignation and gave it to the manager.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kataba al-muwaẓẓaf istiqālatahu wa-aʿṭāhā li-l-mudīr.* — The employee wrote his resignation and gave it to the manager.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to set to work, then the Arabic for to toil, then say istiqāla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to set to work, then the Arabic for to toil, then say *istiqāla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استقالة (istiqāla) mean? (\"A resignation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C522-mutaqaid",
+      "sequence": 28970,
+      "title": "متقاعد (mutaqāʿid) — retired; a pensioner",
+      "headword": "متقاعد",
+      "romanization": "mutaqāʿid",
+      "gloss": "retired; a pensioner",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1d008a9b7219e67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to toil, then the Arabic for a resignation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: متقاعد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متقاعد — mutaqāʿid — \"retired; a pensioner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جارنا معلم متقاعد. jārunā muʿallim mutaqāʿid. Our neighbour is a retired teacher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متقاعد (mutaqāʿid) is built on the native Arabic root q-ʿ-d, \"to sit\" (Lane). Mutaqāʿid is the participle of Form VI."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutaqāʿid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutaqāʿid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutaqāʿid, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutaqāʿid*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jārunā muʿallim mutaqāʿid. — Our neighbour is a retired teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jārunā muʿallim mutaqāʿid.* — Our neighbour is a retired teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to toil, then the Arabic for a resignation, then say mutaqāʿid again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to toil, then the Arabic for a resignation, then say *mutaqāʿid* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does متقاعد (mutaqāʿid) mean? (\"Retired; a pensioner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C522-atil",
+      "sequence": 28980,
+      "title": "عاطل (ʿāṭil) — unemployed, out of work",
+      "headword": "عاطل",
+      "romanization": "ʿāṭil",
+      "gloss": "unemployed, out of work",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:569f09c8cc2ae335",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a resignation, then the Arabic for retired."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عاطل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عاطل — ʿāṭil — \"unemployed, out of work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ابن عمي عاطل عن العمل. ibn ʿammī ʿāṭil ʿan al-ʿamal. My cousin is out of work."
+            },
+            {
+              "kind": "speech",
+              "text": "The full phrase is عاطل (ʿāṭil) عن العمل."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عاطل (ʿāṭil) is built on the native Arabic root ʿ-ṭ-l, \"to be empty, without use\" (Lane). Muʿaṭṭal, out of order, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿāṭil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿāṭil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿāṭil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿāṭil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibn ʿammī ʿāṭil ʿan al-ʿamal. — My cousin is out of work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibn ʿammī ʿāṭil ʿan al-ʿamal.* — My cousin is out of work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a resignation, then the Arabic for retired, then say ʿāṭil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a resignation, then the Arabic for retired, then say *ʿāṭil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عاطل (ʿāṭil) mean? (\"Unemployed, out of work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

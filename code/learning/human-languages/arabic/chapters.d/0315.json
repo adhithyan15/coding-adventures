@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Victory and defeat",
+  "label": "ch:ar-victory-and-defeat",
+  "canDo": "I can say a victory in battle, a defeat, to triumph, to defeat and to surrender.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C315-istaslama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can say a victory in battle, a defeat, to triumph, to defeat and to surrender.",
+    "assesses": [
+      "AR-LEX-C315-NASR315-03",
+      "AR-LEX-C315-NASR315-04",
+      "AR-LEX-C315-NASR315-05"
+    ]
+  }
+}

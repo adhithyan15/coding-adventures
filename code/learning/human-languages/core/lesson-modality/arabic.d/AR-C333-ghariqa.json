@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C333-ghariqa",
+    "language": "arabic",
+    "chapter": 333,
+    "sequence": 19050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad229a31c0c4d840"
+  },
+  "findings": []
+}

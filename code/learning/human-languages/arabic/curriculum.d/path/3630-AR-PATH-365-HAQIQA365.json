@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-365-HAQIQA365",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-365-HAQIQA365"
+  ],
+  "after": []
+}

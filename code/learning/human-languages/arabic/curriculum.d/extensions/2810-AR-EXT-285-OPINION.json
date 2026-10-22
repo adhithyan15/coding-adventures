@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-285-OPINION",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can ask a question, give my opinion, and say what followed from a reason.",
+  "prerequisites": []
+}

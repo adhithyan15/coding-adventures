@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Getting well again",
+  "label": "ch:ar-getting-well-again",
+  "canDo": "I can talk about recovery, convalescence and good health, and say that someone recovered or was in pain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C512-taallama-pain",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about recovery, convalescence and good health, and say that someone recovered or was in pain.",
+    "assesses": [
+      "AR-LEX-C512-SHIFA512-03",
+      "AR-LEX-C512-SHIFA512-04",
+      "AR-LEX-C512-SHIFA512-05"
+    ]
+  }
+}

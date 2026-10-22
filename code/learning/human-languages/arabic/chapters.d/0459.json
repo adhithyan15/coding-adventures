@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Spending wisely",
+  "label": "ch:ar-spending-wisely",
+  "canDo": "I can say a consumer, a budget, expenses, purchases and to economise.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C459-iqtasada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say a consumer, a budget, expenses, purchases and to economise.",
+    "assesses": [
+      "AR-LEX-C459-MIZANIYYA459-03",
+      "AR-LEX-C459-MIZANIYYA459-04",
+      "AR-LEX-C459-MIZANIYYA459-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Honest and loyal",
+  "label": "ch:ar-honest-and-loyal",
+  "canDo": "I can describe a person as honest, upright, untruthful, loyal or faithful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C499-wafi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can describe a person as honest, upright, untruthful, loyal or faithful.",
+    "assesses": [
+      "AR-LEX-C499-AMANA499-03",
+      "AR-LEX-C499-AMANA499-04",
+      "AR-LEX-C499-AMANA499-05"
+    ]
+  }
+}

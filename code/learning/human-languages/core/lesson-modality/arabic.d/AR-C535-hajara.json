@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C535-hajara",
+    "language": "arabic",
+    "chapter": 535,
+    "sequence": 29640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:228afaa57f499f96"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:0e00c63babe2097f",
+  "lessonIds": [
+    "AR-C417-ghamid",
+    "AR-C417-sarih",
+    "AR-C417-muhaddad",
+    "AR-C417-ittadaha",
+    "AR-C417-ashara"
+  ],
+  "tex": "arabic/book/chapters/ch417-clear-or-vague.tex"
+}

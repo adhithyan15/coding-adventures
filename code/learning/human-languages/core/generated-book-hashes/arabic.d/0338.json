@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:9ef3c41e842780f6",
+  "lessonIds": [
+    "AR-C338-tabin",
+    "AR-C338-darih",
+    "AR-C338-wafah",
+    "AR-C338-maqbara",
+    "AR-C338-nash"
+  ],
+  "tex": "arabic/book/chapters/ch338-remembering-the-dead.tex"
+}

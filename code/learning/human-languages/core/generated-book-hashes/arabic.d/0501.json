@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:662c1032c0f8455a",
+  "lessonIds": [
+    "AR-C501-hakim",
+    "AR-C501-mahir",
+    "AR-C501-mubdi",
+    "AR-C501-aqil",
+    "AR-C501-thiqa"
+  ],
+  "tex": "arabic/book/chapters/ch501-wise-skilled-and-sure.tex"
+}

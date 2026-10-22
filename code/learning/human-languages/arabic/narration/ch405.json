@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 405,
+  "title": "Exceptions",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:68c290de1d2bc189",
+  "lessons": [
+    {
+      "id": "AR-C405-istithna",
+      "sequence": 22800,
+      "title": "استثناء (istithnāʾ) — an exception",
+      "headword": "استثناء",
+      "romanization": "istithnāʾ",
+      "gloss": "an exception",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa24559ebc71990e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for as if, then the Arabic for to ensure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استثناء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استثناء — istithnāʾ — \"an exception\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لكل قاعدة استثناء. li-kulli qāʿida istithnāʾ. Every rule has an exception."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استثناء (istithnāʾ) is built on the native Arabic root th-n-y, \"to fold, to bend back\" (Lane). Istithnāʾ is the Form X verbal noun, bending a thing back out of the rest: an exception."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istithnāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istithnāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istithnāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istithnāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "li-kulli qāʿida istithnāʾ. — Every rule has an exception.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *li-kulli qāʿida istithnāʾ.* — Every rule has an exception.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for as if, then the Arabic for to ensure, then say istithnāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for as if, then the Arabic for to ensure, then say *istithnāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استثناء (istithnāʾ) mean? (\"An exception\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C405-istathna",
+      "sequence": 22810,
+      "title": "استثنى (istathnā) — to exclude",
+      "headword": "استثنى",
+      "romanization": "istathnā",
+      "gloss": "to exclude",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd7ac6f9e0e00651",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to ensure, then the Arabic for an exception."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استثنى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استثنى — istathnā — \"to exclude\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استثنى المدير الموظفين الجدد من الاجتماع. istathnā al-mudīr al-muwaẓẓafīn al-judud min al-ijtimāʿ. The manager excluded the new employees from the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستثني, yastathnī."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من: استثنى (istathnā) … من …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استثنى (istathnā) is built on the native Arabic root th-n-y, \"to fold, to bend back\" (Lane). It is Form X, to bend a thing back out of a group: to exclude, to except."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istathnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istathnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istathnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istathnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istathnā al-mudīr al-muwaẓẓafīn al-judud min al-ijtimāʿ. — The manager excluded the new employees from the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istathnā al-mudīr al-muwaẓẓafīn al-judud min al-ijtimāʿ.* — The manager excluded the new employees from the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to ensure, then the Arabic for an exception, then say istathnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to ensure, then the Arabic for an exception, then say *istathnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استثنى (istathnā) mean? (\"To exclude\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C405-shamila",
+      "sequence": 22820,
+      "title": "شمل (shamila) — to include",
+      "headword": "شمل",
+      "romanization": "shamila",
+      "gloss": "to include",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4c959796fb29948",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an exception, then the Arabic for to exclude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شمل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شمل — shamila — \"to include\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تشمل الرحلة زيارة المتحف. tashmalu ar-riḥla ziyārat al-matḥaf. The trip includes a visit to the museum."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشمل, yashmal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شمل (shamila) is built on the native Arabic root sh-m-l, \"to comprise, to cover\" (Lane). Shamila is a Form I verb, to cover all of a thing: to include."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shamila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shamila*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shamila, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shamila*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tashmalu ar-riḥla ziyārat al-matḥaf. — The trip includes a visit to the museum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tashmalu ar-riḥla ziyārat al-matḥaf.* — The trip includes a visit to the museum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an exception, then the Arabic for to exclude, then say shamila again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an exception, then the Arabic for to exclude, then say *shamila* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شمل (shamila) mean? (\"To include\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C405-tadammana",
+      "sequence": 22830,
+      "title": "تضمن (taḍammana) — to contain",
+      "headword": "تضمن",
+      "romanization": "taḍammana",
+      "gloss": "to contain",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3f6a6f8774148ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to exclude, then the Arabic for to include."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تضمن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تضمن — taḍammana — \"to contain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يتضمن الكتاب صورا جميلة. yataḍammanu al-kitāb ṣuwaran jamīla. The book contains beautiful pictures."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتضمن, yataḍamman."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تضمن (taḍammana) is built on the native Arabic root ḍ-m-n, \"to be surety for\" (Lane). It is Form V, to take a thing within oneself: to contain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍammana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍammana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍammana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍammana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yataḍammanu al-kitāb ṣuwaran jamīla. — The book contains beautiful pictures.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yataḍammanu al-kitāb ṣuwaran jamīla.* — The book contains beautiful pictures.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to exclude, then the Arabic for to include, then say taḍammana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to exclude, then the Arabic for to include, then say *taḍammana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تضمن (taḍammana) mean? (\"To contain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C405-taallaqa",
+      "sequence": 22840,
+      "title": "تعلق (taʿallaqa) — to concern",
+      "headword": "تعلق",
+      "romanization": "taʿallaqa",
+      "gloss": "to concern",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3b6b1f373c2d56b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to include, then the Arabic for to contain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعلق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعلق — taʿallaqa — \"to concern\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يتعلق الأمر بصحة أبي. yataʿallaqu al-amr bi-ṣiḥḥat abī. The matter concerns my father's health."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتعلق, yataʿallaq."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ: يتعلق بـ …, it is about …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعلق (taʿallaqa) is built on the native Arabic root ʿ-l-q, \"to hang, to cling\" (Lane). It is Form V, to hang on a thing: to be attached to it, to concern it. علق, to hang, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿallaqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿallaqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿallaqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿallaqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yataʿallaqu al-amr bi-ṣiḥḥat abī. — The matter concerns my father's health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yataʿallaqu al-amr bi-ṣiḥḥat abī.* — The matter concerns my father's health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to include, then the Arabic for to contain, then say taʿallaqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to include, then the Arabic for to contain, then say *taʿallaqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعلق (taʿallaqa) mean? (\"To concern\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R405-review-398-405",
+      "sequence": 22850,
+      "title": "Words from chapters 398–405 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 398-405",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0bbce068fabf4f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for education and upbringing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "education, upbringing, a kindergarten, literacy, attendance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: education, upbringing, a kindergarten, literacy, attendance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unless, in case, provided that, as long as, otherwise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: unless, in case, provided that, as long as, otherwise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "if not for, whatever, whenever, whether, wherever",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: if not for, whatever, whenever, whether, wherever]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a probability, probable, to tolerate, to consider likely, to rule out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a probability, probable, to tolerate, to consider likely, to rule out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inevitably, necessarily, relatively, not at all, certainty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: inevitably, necessarily, relatively, not at all, certainty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to make certain, to be suspicious, impossible, most probably, in general",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to make certain, to be suspicious, impossible, most probably, in general]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a condition, to stipulate, even if, as if, to ensure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a condition, to stipulate, even if, as if, to ensure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an exception, to exclude, to include, to contain, to concern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an exception, to exclude, to include, to contain, to concern]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Education? (تعليم, taʿlīm.) Upbringing? (تربية, tarbiya.) A kindergarten? (روضة, rawḍa.) Literacy? (محو الأمية, maḥw al-ummiyya.) Attendance? (حضور, ḥuḍūr.) Unless? (إلا إذا, illā idhā.) In case? (في حال, fī ḥāl.) Provided that? (بشرط أن, bi-sharṭi an.) As long as? (طالما, ṭālamā.) Otherwise? (وإلا, wa-illā.) If not for? (لولا, lawlā.) Whatever? (مهما, mahmā.) Whenever? (كلما, kullamā.) Whether? (سواء, sawāʾ.) Wherever? (أينما, aynamā.) A probability? (احتمال, iḥtimāl.) Probable? (محتمل, muḥtamal.) To tolerate? (احتمل, iḥtamala.) To consider likely? (رجح, rajjaḥa.) To rule out? (استبعد, istabʿada.) Inevitably? (حتما, ḥatman.) Necessarily? (بالضرورة, bi-ḍ-ḍarūra.) Relatively? (نسبيا, nisbiyyan.) Not at all? (إطلاقا, iṭlāqan.) Certainty? (يقين, yaqīn.) To make certain? (تيقن, tayaqqana.) To be suspicious? (ارتاب, irtāba.) Impossible? (مستحيل, mustaḥīl.) Most probably? (على الأرجح, ʿalā al-arjaḥ.) In general? (عموما, ʿumūman.) A condition? (شرط, sharṭ.) To stipulate? (اشترط, ishtaraṭa.) Even if? (حتى لو, ḥattā law.) As if? (كما لو, kamā law.) To ensure? (ضمن, ḍamina.) An exception? (استثناء, istithnāʾ.) To exclude? (استثنى, istathnā.) To include? (شمل, shamila.) To contain? (تضمن, taḍammana.) To concern? (تعلق, taʿallaqa.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

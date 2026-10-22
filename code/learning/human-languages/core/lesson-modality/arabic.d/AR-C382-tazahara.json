@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C382-tazahara",
+    "language": "arabic",
+    "chapter": 382,
+    "sequence": 21650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb3f21e0aa111668"
+  },
+  "findings": []
+}

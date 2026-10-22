@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 369,
+  "title": "Advice and hesitation",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5760dc1b119a5d16",
+  "lessons": [
+    {
+      "id": "AR-C369-nasaha",
+      "sequence": 20960,
+      "title": "نصح (naṣaḥa) — to advise",
+      "headword": "نصح",
+      "romanization": "naṣaḥa",
+      "gloss": "to advise",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a19e46ed79c9f8c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to neglect, then the Arabic for to care about."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نصح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نصح — naṣaḥa — \"to advise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نصحني الطبيب بالراحة. naṣaḥanī aṭ-ṭabīb bi-r-rāḥa. The doctor advised me to rest."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينصح, yanṣaḥ."
+            },
+            {
+              "kind": "speech",
+              "text": "The advice comes after بـ or أن: نصحه بـ …, نصحه أن …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نصح (naṣaḥa) is built on the native Arabic root n-ṣ-ḥ, \"to be sincere\" (Lane). Naṣaḥa is a Form I verb: to give sincere counsel, to advise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣaḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣaḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣaḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣaḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṣaḥanī aṭ-ṭabīb bi-r-rāḥa. — The doctor advised me to rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṣaḥanī aṭ-ṭabīb bi-r-rāḥa.* — The doctor advised me to rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to neglect, then the Arabic for to care about, then say naṣaḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to neglect, then the Arabic for to care about, then say *naṣaḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نصح (naṣaḥa) mean? (\"To advise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C369-lammaha",
+      "sequence": 20970,
+      "title": "لمح (lammaḥa) — to hint",
+      "headword": "لمح",
+      "romanization": "lammaḥa",
+      "gloss": "to hint",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1a5d274b158cdac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to care about, then the Arabic for to advise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: لمح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لمح — lammaḥa — \"to hint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لمح المدير إلى تغيير قريب. lammaḥa al-mudīr ilā taghyīr qarīb. The manager hinted at a change coming soon."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يلمح, yulammiḥ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes إلى: لمح (lammaḥa) إلى …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "لمح (lammaḥa) is built on the native Arabic root l-m-ḥ, \"to glance\" (Lane). It is Form II, to make someone catch a glance: to hint at a thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lammaḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lammaḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lammaḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lammaḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lammaḥa al-mudīr ilā taghyīr qarīb. — The manager hinted at a change coming soon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lammaḥa al-mudīr ilā taghyīr qarīb.* — The manager hinted at a change coming soon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to care about, then the Arabic for to advise, then say lammaḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to care about, then the Arabic for to advise, then say *lammaḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does لمح (lammaḥa) mean? (\"To hint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C369-shajjaa",
+      "sequence": 20980,
+      "title": "شجع (shajjaʿa) — to encourage",
+      "headword": "شجع",
+      "romanization": "shajjaʿa",
+      "gloss": "to encourage",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd49efe45d680cf1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to advise, then the Arabic for to hint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شجع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شجع — shajjaʿa — \"to encourage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شجعني أبي على تعلم الرسم. shajjaʿanī abī ʿalā taʿallum ar-rasm. My father encouraged me to learn drawing."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشجع, yushajjiʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: شجعه على …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شجع (shajjaʿa) is built on the native Arabic root sh-j-ʿ, \"to be brave\" (Lane). It is Form II, to make brave: to encourage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shajjaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shajjaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shajjaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shajjaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shajjaʿanī abī ʿalā taʿallum ar-rasm. — My father encouraged me to learn drawing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shajjaʿanī abī ʿalā taʿallum ar-rasm.* — My father encouraged me to learn drawing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to advise, then the Arabic for to hint, then say shajjaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to advise, then the Arabic for to hint, then say *shajjaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شجع (shajjaʿa) mean? (\"To encourage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C369-taraddada",
+      "sequence": 20990,
+      "title": "تردد (taraddada) — to hesitate",
+      "headword": "تردد",
+      "romanization": "taraddada",
+      "gloss": "to hesitate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d30bce20bcad1c15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to hint, then the Arabic for to encourage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تردد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تردد — taraddada — \"to hesitate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تردد الولد قبل أن يقفز في الماء. taraddada al-walad qabla an yaqfiza fī al-māʾ. The boy hesitated before jumping into the water."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتردد, yataraddad."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to go often: تردد (taraddada) على السوق, went to the market often."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تردد (taraddada) is built on the native Arabic root r-d-d, \"to send back\" (Lane). It is Form V, to turn back and forth: to waver, to hesitate."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraddada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraddada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraddada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraddada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taraddada al-walad qabla an yaqfiza fī al-māʾ. — The boy hesitated before jumping into the water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taraddada al-walad qabla an yaqfiza fī al-māʾ.* — The boy hesitated before jumping into the water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to hint, then the Arabic for to encourage, then say taraddada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to hint, then the Arabic for to encourage, then say *taraddada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تردد (taraddada) mean? (\"To hesitate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C369-badil",
+      "sequence": 21000,
+      "title": "بديل (badīl) — an alternative",
+      "headword": "بديل",
+      "romanization": "badīl",
+      "gloss": "an alternative",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2c9956547163576",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to encourage, then the Arabic for to hesitate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بديل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بديل — badīl — \"an alternative\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الدراجة بديل جيد عن السيارة. ad-darrāja badīl jayyid ʿan as-sayyāra. A bicycle is a good alternative to a car."
+            },
+            {
+              "kind": "speech",
+              "text": "بديل (badīl) عن or بديل (badīl) لـ: an alternative to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بديل (badīl) is built on the native Arabic root b-d-l, \"to change, to put in place of\" (Lane). A badīl is what is put in place of another: a substitute, an alternative."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badīl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badīl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badīl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badīl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ad-darrāja badīl jayyid ʿan as-sayyāra. — A bicycle is a good alternative to a car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ad-darrāja badīl jayyid ʿan as-sayyāra.* — A bicycle is a good alternative to a car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to encourage, then the Arabic for to hesitate, then say badīl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to encourage, then the Arabic for to hesitate, then say *badīl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بديل (badīl) mean? (\"An alternative\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

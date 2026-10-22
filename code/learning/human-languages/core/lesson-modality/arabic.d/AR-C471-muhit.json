@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C471-muhit",
+    "language": "arabic",
+    "chapter": 471,
+    "sequence": 26270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83bb472e39f9411f"
+  },
+  "findings": []
+}

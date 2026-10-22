@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C539-tasalla",
+    "language": "arabic",
+    "chapter": 539,
+    "sequence": 29830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8b9591cd95a5525"
+  },
+  "findings": []
+}

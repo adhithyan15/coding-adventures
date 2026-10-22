@@ -1,0 +1,11 @@
+{
+  "id": "AR-R285-opinion-and-so",
+  "pathSegment": "AR-PATH-285-OPINION",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-285-OPINION",
+      "order": 5
+    }
+  ]
+}

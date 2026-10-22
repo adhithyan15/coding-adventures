@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 320,
+  "title": "The media",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8707aef27aac3060",
+  "lessons": [
+    {
+      "id": "AR-C320-ilam",
+      "sequence": 18380,
+      "title": "إعلام (iʿlām) — the media; informing",
+      "headword": "إعلام",
+      "romanization": "iʿlām",
+      "gloss": "the media; informing",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac7335682bd5a66c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to announce a death, then the Arabic for mourning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إعلام",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إعلام — iʿlām — \"the media; informing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تكلم الإعلام كثيرا عن الحادث. takallama al-iʿlām kathīran ʿan al-ḥādith. The media talked a lot about the accident."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إعلام (iʿlām) is built on the native Arabic root ʿ-l-m (Lane), \"to know\", the root of ʿilm, knowledge. Iʿlām is the verbal noun of Form IV aʿlama, \"to let someone know\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿlām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿlām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿlām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿlām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takallama al-iʿlām kathīran ʿan al-ḥādith. — The media talked a lot about the accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takallama al-iʿlām kathīran ʿan al-ḥādith.* — The media talked a lot about the accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to announce a death, then the Arabic for mourning, then say iʿlām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to announce a death, then the Arabic for mourning, then say *iʿlām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إعلام (iʿlām) mean? (\"The media; informing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C320-wakala",
+      "sequence": 18390,
+      "title": "وكالة (wakāla) — an agency",
+      "headword": "وكالة",
+      "romanization": "wakāla",
+      "gloss": "an agency",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cda0bce4b3a48320",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for mourning, then the Arabic for the media."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وكالة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وكالة — wakāla — \"an agency\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نشرت وكالة (wakāla) الأنباء الخبر صباحا. nasharat wakālat al-anbāʾ al-khabar ṣabāḥan. The news agency put out the story in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "وكالة (wakāla) سفر: a travel agency."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وكالة (wakāla) is built on the native Arabic root w-k-l (Lane), \"to entrust an affair to someone\". A wakīl acts for others; a wakāla is the office that does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakāla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakāla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wakāla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wakāla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nasharat wakālat al-anbāʾ al-khabar ṣabāḥan. — The news agency put out the story in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nasharat wakālat al-anbāʾ al-khabar ṣabāḥan.* — The news agency put out the story in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for mourning, then the Arabic for the media, then say wakāla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for mourning, then the Arabic for the media, then say *wakāla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وكالة (wakāla) mean? (\"An agency\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C320-masdar",
+      "sequence": 18400,
+      "title": "مصدر (maṣdar) — a source",
+      "headword": "مصدر",
+      "romanization": "maṣdar",
+      "gloss": "a source",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0b2dc4a41fdff00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for the media, then the Arabic for an agency."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مصدر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصدر — maṣdar — \"a source\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قال مصدر في الشرطة إن اللص هرب. qāla maṣdar fī ash-shurṭa inna al-liṣṣ haraba. A police source said the thief had escaped."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: مصادر, maṣādir."
+            },
+            {
+              "kind": "speech",
+              "text": "In grammar the مصدر (maṣdar) is the verbal noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصدر (maṣdar) is built on the native Arabic root ṣ-d-r (Lane), \"to go back from the watering place\". Maṣdar is the place a thing comes out of: a source."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṣdar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṣdar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṣdar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṣdar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qāla maṣdar fī ash-shurṭa inna al-liṣṣ haraba. — A police source said the thief had escaped.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qāla maṣdar fī ash-shurṭa inna al-liṣṣ haraba.* — A police source said the thief had escaped.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for the media, then the Arabic for an agency, then say maṣdar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for the media, then the Arabic for an agency, then say *maṣdar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مصدر (maṣdar) mean? (\"A source\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C320-afada",
+      "sequence": 18410,
+      "title": "أفاد (afāda) — to give news; to be of use",
+      "headword": "أفاد",
+      "romanization": "afāda",
+      "gloss": "to give news; to be of use",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:247f9e8f210c1e1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an agency, then the Arabic for a source."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أفاد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أفاد — afāda — \"to give news; to be of use\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أفادت الشرطة بأن الطريق مغلق. afādat ash-shurṭa bi-anna aṭ-ṭarīq mughlaq. The police reported that the road was closed."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفيد, yufīd."
+            },
+            {
+              "kind": "speech",
+              "text": "In the news: أفاد (afāda) مراسلنا بأن …, our correspondent reports that …. Elsewhere: هذا يفيد, this helps."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أفاد (afāda) is built on the native Arabic root f-y-d (Lane), where fāʾida is a gain or benefit. Form IV afāda is \"to give someone a benefit\", and so to give him information."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afādat ash-shurṭa bi-anna aṭ-ṭarīq mughlaq. — The police reported that the road was closed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afādat ash-shurṭa bi-anna aṭ-ṭarīq mughlaq.* — The police reported that the road was closed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an agency, then the Arabic for a source, then say afāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an agency, then the Arabic for a source, then say *afāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أفاد (afāda) mean? (\"To give news; to be of use\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C320-awdaha",
+      "sequence": 18420,
+      "title": "أوضح (awḍaḥa) — to clarify, to make clear",
+      "headword": "أوضح",
+      "romanization": "awḍaḥa",
+      "gloss": "to clarify, to make clear",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:474d5d41dd1a767d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a source, then the Arabic for to give news."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أوضح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أوضح — awḍaḥa — \"to clarify, to make clear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أوضح المعلم الدرس بمثال. awḍaḥa al-muʿallim ad-dars bi-mithāl. The teacher made the lesson clear with an example."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يوضح, yūḍiḥ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أوضح (awḍaḥa) is built on the native Arabic root w-ḍ-ḥ (Lane), \"to be plain, clear\", the root of wāḍiḥ, clear. It is Form IV, \"to make clear\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awḍaḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awḍaḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awḍaḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awḍaḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awḍaḥa al-muʿallim ad-dars bi-mithāl. — The teacher made the lesson clear with an example.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awḍaḥa al-muʿallim ad-dars bi-mithāl.* — The teacher made the lesson clear with an example.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a source, then the Arabic for to give news, then say awḍaḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a source, then the Arabic for to give news, then say *awḍaḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أوضح (awḍaḥa) mean? (\"To clarify, to make clear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

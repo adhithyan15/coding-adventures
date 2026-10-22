@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C379-hizb",
+    "language": "arabic",
+    "chapter": 379,
+    "sequence": 21470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bb56e6a5b38e482"
+  },
+  "findings": []
+}

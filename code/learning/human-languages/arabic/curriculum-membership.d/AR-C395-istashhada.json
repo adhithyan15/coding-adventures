@@ -1,0 +1,11 @@
+{
+  "id": "AR-C395-istashhada",
+  "pathSegment": "AR-PATH-395-MARJI395",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-395-MARJI395",
+      "order": 1
+    }
+  ]
+}

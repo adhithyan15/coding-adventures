@@ -1,0 +1,19 @@
+{
+  "chapter": 374,
+  "title": "Linking reasons",
+  "label": "ch:ar-linking-reasons",
+  "canDo": "I can link a reason to a result with consequently, for this reason, seeing that, given that and in order to.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C374-li-kay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 374: I can link a reason to a result with consequently, for this reason, seeing that, given that and in order to.",
+    "assesses": [
+      "AR-LEX-C374-RABT374-03",
+      "AR-LEX-C374-RABT374-04",
+      "AR-LEX-C374-RABT374-05"
+    ]
+  }
+}

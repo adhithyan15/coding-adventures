@@ -1,0 +1,11 @@
+{
+  "id": "AR-C361-tasaala",
+  "pathSegment": "AR-PATH-361-QADIYYA361",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-361-QADIYYA361",
+      "order": 4
+    }
+  ]
+}

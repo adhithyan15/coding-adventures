@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:7a2f4ed232969938",
+  "lessonIds": [
+    "AR-C283-yaktubu",
+    "AR-C283-katabtu",
+    "AR-C283-kana",
+    "AR-C283-kana-yaktubu",
+    "AR-R283-the-past-person-by-person"
+  ],
+  "tex": "arabic/book/chapters/ch283-the-past-person-by-person.tex"
+}

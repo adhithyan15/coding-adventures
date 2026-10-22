@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 406,
+  "title": "What it takes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6d5ce864130f95d0",
+  "lessons": [
+    {
+      "id": "AR-C406-tatallaba",
+      "sequence": 22860,
+      "title": "تطلب (taṭallaba) — to require",
+      "headword": "تطلب",
+      "romanization": "taṭallaba",
+      "gloss": "to require",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be330436e5c40fd3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to contain, then the Arabic for to concern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تطلب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تطلب — taṭallaba — \"to require\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يتطلب هذا العمل صبرا كبيرا. yataṭallabu hādhā al-ʿamal ṣabran kabīran. This work requires great patience."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتطلب, yataṭallab."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تطلب (taṭallaba) is built on the native Arabic root ṭ-l-b, \"to seek, to ask for\" (Lane). It is Form V, to seek a thing again and again: to call for, to require."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭallaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭallaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭallaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭallaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yataṭallabu hādhā al-ʿamal ṣabran kabīran. — This work requires great patience.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yataṭallabu hādhā al-ʿamal ṣabran kabīran.* — This work requires great patience.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to contain, then the Arabic for to concern, then say taṭallaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to contain, then the Arabic for to concern, then say *taṭallaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تطلب (taṭallaba) mean? (\"To require\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C406-tawaffara",
+      "sequence": 22870,
+      "title": "توفر (tawaffara) — to be available",
+      "headword": "توفر",
+      "romanization": "tawaffara",
+      "gloss": "to be available",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abc0e33e31fa51bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to concern, then the Arabic for to require."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: توفر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "توفر — tawaffara — \"to be available\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تتوفر الغرف في الفندق هذا الأسبوع. tatawaffaru al-ghuraf fī al-funduq hādhā al-usbūʿ. Rooms are available at the hotel this week."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتوفر, yatawaffar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "توفر (tawaffara) is built on the native Arabic root w-f-r, \"to be abundant, ample\" (Lane). It is Form V, to become ample: to be available. وفر, to save, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tawaffara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tawaffara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tawaffara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tawaffara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatawaffaru al-ghuraf fī al-funduq hādhā al-usbūʿ. — Rooms are available at the hotel this week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatawaffaru al-ghuraf fī al-funduq hādhā al-usbūʿ.* — Rooms are available at the hotel this week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to concern, then the Arabic for to require, then say tawaffara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to concern, then the Arabic for to require, then say *tawaffara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does توفر (tawaffara) mean? (\"To be available\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C406-kafa",
+      "sequence": 22880,
+      "title": "كفى (kafā) — to suffice",
+      "headword": "كفى",
+      "romanization": "kafā",
+      "gloss": "to suffice",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a845b2991e11594d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to require, then the Arabic for to be available."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كفى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كفى — kafā — \"to suffice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يكفي هذا الطعام لثلاثة أشخاص. yakfī hādhā aṭ-ṭaʿām li-thalāthat ashkhāṣ. This food is enough for three people."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يكفي, yakfī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كفى (kafā) is built on the native Arabic root k-f-y, usually traced to the sense \"to be enough\". Kafā is a Form I verb with a weak last letter: to be enough. Its present is yakfī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kafā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kafā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kafā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kafā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yakfī hādhā aṭ-ṭaʿām li-thalāthat ashkhāṣ. — This food is enough for three people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yakfī hādhā aṭ-ṭaʿām li-thalāthat ashkhāṣ.* — This food is enough for three people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to require, then the Arabic for to be available, then say kafā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to require, then the Arabic for to be available, then say *kafā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كفى (kafā) mean? (\"To suffice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C406-iftaqara",
+      "sequence": 22890,
+      "title": "افتقر (iftaqara) — to lack",
+      "headword": "افتقر",
+      "romanization": "iftaqara",
+      "gloss": "to lack",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d584f1adc75ea74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be available, then the Arabic for to suffice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: افتقر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افتقر — iftaqara — \"to lack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تفتقر القرية إلى طبيب. taftaqiru al-qarya ilā ṭabīb. The village lacks a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفتقر, yaftaqir."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes إلى: افتقر (iftaqara) إلى …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "افتقر (iftaqara) is built on the native Arabic root f-q-r, \"to be needy, poor\" (Lane). It is Form VIII, to become needy of a thing: to lack it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iftaqara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iftaqara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iftaqara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iftaqara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taftaqiru al-qarya ilā ṭabīb. — The village lacks a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taftaqiru al-qarya ilā ṭabīb.* — The village lacks a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be available, then the Arabic for to suffice, then say iftaqara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be available, then the Arabic for to suffice, then say *iftaqara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does افتقر (iftaqara) mean? (\"To lack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C406-ijra",
+      "sequence": 22900,
+      "title": "إجراء (ijrāʾ) — a procedure",
+      "headword": "إجراء",
+      "romanization": "ijrāʾ",
+      "gloss": "a procedure",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4f6c69166400f23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to suffice, then the Arabic for to lack."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إجراء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إجراء — ijrāʾ — \"a procedure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الإجراء بسيط ويأخذ دقيقة. al-ijrāʾ basīṭ wa-yaʾkhudhu daqīqa. The procedure is simple and takes a minute."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إجراء (ijrāʾ) is built on the native Arabic root j-r-y, \"to run, to flow\" (Lane). Ijrāʾ is the Form IV verbal noun, making a thing run: carrying out, a procedure."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijrāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijrāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijrāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijrāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-ijrāʾ basīṭ wa-yaʾkhudhu daqīqa. — The procedure is simple and takes a minute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-ijrāʾ basīṭ wa-yaʾkhudhu daqīqa.* — The procedure is simple and takes a minute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to suffice, then the Arabic for to lack, then say ijrāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to suffice, then the Arabic for to lack, then say *ijrāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إجراء (ijrāʾ) mean? (\"A procedure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

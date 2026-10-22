@@ -1,0 +1,11 @@
+{
+  "id": "AR-C509-adwa",
+  "pathSegment": "AR-PATH-509-ADWA509",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-509-ADWA509",
+      "order": 0
+    }
+  ]
+}

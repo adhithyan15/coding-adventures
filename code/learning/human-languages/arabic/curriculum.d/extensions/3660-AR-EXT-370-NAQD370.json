@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-370-NAQD370",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that someone criticized, opposed, justified, exaggerated or generalized.",
+  "prerequisites": []
+}

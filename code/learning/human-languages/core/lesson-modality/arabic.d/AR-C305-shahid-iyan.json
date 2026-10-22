@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C305-shahid-iyan",
+    "language": "arabic",
+    "chapter": 305,
+    "sequence": 17620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:140025a5f0192378"
+  },
+  "findings": []
+}

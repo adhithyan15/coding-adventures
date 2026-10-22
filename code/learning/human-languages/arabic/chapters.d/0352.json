@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Fines and quarrels",
+  "label": "ch:ar-fines-and-quarrels",
+  "canDo": "I can say an offence, a fine, a brawl, a commotion and a crowd.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C352-hashd",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say an offence, a fine, a brawl, a commotion and a crowd.",
+    "assesses": [
+      "AR-LEX-C352-MUKHALAFA352-03",
+      "AR-LEX-C352-MUKHALAFA352-04",
+      "AR-LEX-C352-MUKHALAFA352-05"
+    ]
+  }
+}

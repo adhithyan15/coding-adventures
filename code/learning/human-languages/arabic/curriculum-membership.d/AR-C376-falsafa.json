@@ -1,0 +1,11 @@
+{
+  "id": "AR-C376-falsafa",
+  "pathSegment": "AR-PATH-376-ILM376",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-376-ILM376",
+      "order": 0
+    }
+  ]
+}

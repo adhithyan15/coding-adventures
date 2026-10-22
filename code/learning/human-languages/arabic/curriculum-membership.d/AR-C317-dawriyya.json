@@ -1,0 +1,11 @@
+{
+  "id": "AR-C317-dawriyya",
+  "pathSegment": "AR-PATH-317-TAWQIF317",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-317-TAWQIF317",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C501-thiqa",
+    "language": "arabic",
+    "chapter": 501,
+    "sequence": 27900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44943de5664e230b"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "The sales",
+  "label": "ch:ar-the-sales",
+  "canDo": "I can say a price cut, a voucher, to lower, to get cheaper and to spend money.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C457-anfaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can say a price cut, a voucher, to lower, to get cheaper and to spend money.",
+    "assesses": [
+      "AR-LEX-C457-TAKHFID457-03",
+      "AR-LEX-C457-TAKHFID457-04",
+      "AR-LEX-C457-TAKHFID457-05"
+    ]
+  }
+}

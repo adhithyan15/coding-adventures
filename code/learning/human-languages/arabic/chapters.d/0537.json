@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "Hobbies indoors and out",
+  "label": "ch:ar-hobbies-indoors-and-out",
+  "canDo": "I can talk about camping, diving, photography, pottery and a crossword.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C537-kalimat-mutaqatia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can talk about camping, diving, photography, pottery and a crossword.",
+    "assesses": [
+      "AR-LEX-C537-HIWAYA537-03",
+      "AR-LEX-C537-HIWAYA537-04",
+      "AR-LEX-C537-HIWAYA537-05"
+    ]
+  }
+}

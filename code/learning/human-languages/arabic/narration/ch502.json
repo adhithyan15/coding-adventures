@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 502,
+  "title": "Talkers and the curious",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c39790eafb586e6f",
+  "lessons": [
+    {
+      "id": "AR-C502-tharthar",
+      "sequence": 27910,
+      "title": "ثرثار (tharthār) — talkative; a chatterbox",
+      "headword": "ثرثار",
+      "romanization": "tharthār",
+      "gloss": "talkative; a chatterbox",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02be4e1f0be06fc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for sensible, then the Arabic for confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ثرثار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثرثار — tharthār — \"talkative; a chatterbox\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جارنا ثرثار ويتكلم ساعات. jārunā tharthār wa-yatakallamu sāʿāt. Our neighbour is talkative and talks for hours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثرثار (tharthār) goes with the verb tharthara, \"to chatter\"; its doubled shape, thar-thar, is usually said to echo endless talk, but the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tharthār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tharthār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tharthār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tharthār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jārunā tharthār wa-yatakallamu sāʿāt. — Our neighbour is talkative and talks for hours.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jārunā tharthār wa-yatakallamu sāʿāt.* — Our neighbour is talkative and talks for hours.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for sensible, then the Arabic for confidence, then say tharthār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for sensible, then the Arabic for confidence, then say *tharthār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ثرثار (tharthār) mean? (\"Talkative; a chatterbox\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C502-mutahaffiz",
+      "sequence": 27920,
+      "title": "متحفظ (mutaḥaffiẓ) — reserved",
+      "headword": "متحفظ",
+      "romanization": "mutaḥaffiẓ",
+      "gloss": "reserved",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:583473801aec143a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for confidence, then the Arabic for talkative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: متحفظ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متحفظ — mutaḥaffiẓ — \"reserved\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زوج خالتي رجل متحفظ ولا يتكلم كثيرا. zawj khālatī rajul mutaḥaffiẓ wa-lā yatakallamu kathīran. My aunt's husband is a reserved man and does not talk much."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متحفظ (mutaḥaffiẓ) is built on the native Arabic root ḥ-f-ẓ, \"to keep, to guard\" (Lane). Ḥafiẓa, to keep, which you know, is from the same root; mutaḥaffiẓ is one who keeps himself to himself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutaḥaffiẓ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutaḥaffiẓ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutaḥaffiẓ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutaḥaffiẓ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zawj khālatī rajul mutaḥaffiẓ wa-lā yatakallamu kathīran. — My aunt's husband is a reserved man and does not talk much.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zawj khālatī rajul mutaḥaffiẓ wa-lā yatakallamu kathīran.* — My aunt's husband is a reserved man and does not talk much.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for confidence, then the Arabic for talkative, then say mutaḥaffiẓ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for confidence, then the Arabic for talkative, then say *mutaḥaffiẓ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does متحفظ (mutaḥaffiẓ) mean? (\"Reserved\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C502-fuduli",
+      "sequence": 27930,
+      "title": "فضولي (fuḍūlī) — nosy, curious",
+      "headword": "فضولي",
+      "romanization": "fuḍūlī",
+      "gloss": "nosy, curious",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af1349d65a988fc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for talkative, then the Arabic for reserved."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فضولي",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فضولي — fuḍūlī — \"nosy, curious\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سأل الجار الفضولي عن راتبي. saʾala al-jār al-fuḍūlī ʿan rātibī. The nosy neighbour asked about my salary."
+            },
+            {
+              "kind": "speech",
+              "text": "It can be mild (curious) or rude (nosy); the noun فضول is curiosity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فضولي (fuḍūlī) is built on the native Arabic root f-ḍ-l, \"to be over, to be in excess\" (Lane). Fuḍūl first meant what is more than enough; fuḍūlī is one who busies himself with what is not his."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuḍūlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuḍūlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuḍūlī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuḍūlī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʾala al-jār al-fuḍūlī ʿan rātibī. — The nosy neighbour asked about my salary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʾala al-jār al-fuḍūlī ʿan rātibī.* — The nosy neighbour asked about my salary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for talkative, then the Arabic for reserved, then say fuḍūlī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for talkative, then the Arabic for reserved, then say *fuḍūlī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فضولي (fuḍūlī) mean? (\"Nosy, curious\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C502-hanun",
+      "sequence": 27940,
+      "title": "حنون (ḥanūn) — affectionate, tender",
+      "headword": "حنون",
+      "romanization": "ḥanūn",
+      "gloss": "affectionate, tender",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:614f3735132fb709",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for reserved, then the Arabic for nosy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حنون",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حنون — ḥanūn — \"affectionate, tender\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الأم الحنون تعانق طفلها. al-umm al-ḥanūn tuʿāniqu ṭiflahā. The tender mother hugs her child."
+            },
+            {
+              "kind": "speech",
+              "text": "It often keeps one form for a man and a woman: الأم الحنون."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حنون (ḥanūn) is built on the native Arabic root ḥ-n-n, \"to yearn, to feel tenderness\" (Lane). The noun ḥanān is tenderness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥanūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥanūn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥanūn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥanūn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-umm al-ḥanūn tuʿāniqu ṭiflahā. — The tender mother hugs her child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-umm al-ḥanūn tuʿāniqu ṭiflahā.* — The tender mother hugs her child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for reserved, then the Arabic for nosy, then say ḥanūn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for reserved, then the Arabic for nosy, then say *ḥanūn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حنون (ḥanūn) mean? (\"Affectionate, tender\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C502-wadud",
+      "sequence": 27950,
+      "title": "ودود (wadūd) — friendly",
+      "headword": "ودود",
+      "romanization": "wadūd",
+      "gloss": "friendly",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f743364e9434e85b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for nosy, then the Arabic for affectionate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ودود",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ودود — wadūd — \"friendly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الناس في القرية ودودون. an-nās fī al-qarya wadūdūn. The people in the village are friendly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ودود (wadūd) is built on the native Arabic root w-d-d, \"to love, to wish\" (Lane). Wadūd is one full of affection."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wadūd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wadūd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wadūd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wadūd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an-nās fī al-qarya wadūdūn. — The people in the village are friendly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *an-nās fī al-qarya wadūdūn.* — The people in the village are friendly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for nosy, then the Arabic for affectionate, then say wadūd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for nosy, then the Arabic for affectionate, then say *wadūd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ودود (wadūd) mean? (\"Friendly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

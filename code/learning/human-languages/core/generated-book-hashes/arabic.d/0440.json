@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:eff4a5bd39d9f0dd",
+  "lessonIds": [
+    "AR-C440-nafura",
+    "AR-C440-tidhkar",
+    "AR-C440-istiraha",
+    "AR-C440-rafaqa",
+    "AR-C440-awsala"
+  ],
+  "tex": "arabic/book/chapters/ch440-breaks-and-souvenirs.tex"
+}

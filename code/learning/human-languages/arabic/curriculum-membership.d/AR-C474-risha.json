@@ -1,0 +1,11 @@
+{
+  "id": "AR-C474-risha",
+  "pathSegment": "AR-PATH-474-SAQR474",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-474-SAQR474",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:d1c8d3592ff52c05",
+  "lessonIds": [
+    "AR-C508-tafh-jildi",
+    "AR-C508-hikka",
+    "AR-C508-hakka",
+    "AR-C508-iltihab",
+    "AR-C508-tawarrama"
+  ],
+  "tex": "arabic/book/chapters/ch508-skin-trouble.tex"
+}
