@@ -376,7 +376,11 @@ style projection models `pre > code`; terminal and authoring import validate
 exact canonical fields using their existing bounded snapshot policies. Fence
 `name` and `info` are nullable strings, not legacy portable language names.
 Authoring edits retain the full info string and recompute its first-token name;
-empty fenced payload remains valid.
+empty fenced payload remains valid. Saving an unchanged fenced block must retain
+its exact metadata and payload, including decoded interior LF/CR/CRLF in info
+and the distinction between no payload (`""`) and one blank payload line
+(`"\n"`). Browser form newline normalization must not silently change an
+unchanged canonical AST value.
 
 The parser continues to accept strings under its existing resource/error
 contract. This repair introduces no arbitrary-size, hostile-input, plugin or
