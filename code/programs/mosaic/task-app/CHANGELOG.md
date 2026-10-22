@@ -4,6 +4,9 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+- Qt preserves the calendar heading's fill width and the timeline's 150/190
+  text column widths. Both themes now report 78 style drops instead of 81.
+
 Entries added after `task-app-v0.5.8` accumulate here until the next version is
 cut.
 

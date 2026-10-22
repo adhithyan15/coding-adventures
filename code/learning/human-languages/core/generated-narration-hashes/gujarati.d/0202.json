@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 202,
+  "sourceHash": "fnv1a64:c8a7dccb0d3321a9",
+  "lessonIds": [
+    "GU-C202-corvu",
+    "GU-C202-thanu",
+    "GU-C202-luntvu",
+    "GU-C202-jadvu",
+    "GU-C202-kadhvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch202.txt",
+  "json": "gujarati/narration/ch202.json",
+  "textHash": "fnv1a64:dadd8aeb9c56fe6d",
+  "jsonHash": "fnv1a64:3250173be29ce625",
+  "findings": []
+}

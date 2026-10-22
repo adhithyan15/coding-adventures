@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-217-WIND217",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that the wind will blow and that a dust storm will come.",
+  "prerequisites": []
+}

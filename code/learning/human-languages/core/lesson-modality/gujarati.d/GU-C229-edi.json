@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C229-edi",
+    "language": "gujarati",
+    "chapter": 229,
+    "sequence": 12450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10efb0175774cf5b"
+  },
+  "findings": []
+}

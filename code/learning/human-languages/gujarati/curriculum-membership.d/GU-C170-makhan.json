@@ -1,0 +1,11 @@
+{
+  "id": "GU-C170-makhan",
+  "pathSegment": "GU-PATH-170-SWEET170",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-170-SWEET170",
+      "order": 2
+    }
+  ]
+}

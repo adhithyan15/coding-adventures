@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C191-bacat",
+    "language": "gujarati",
+    "chapter": 191,
+    "sequence": 10430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4acd3caa4431a697"
+  },
+  "findings": []
+}

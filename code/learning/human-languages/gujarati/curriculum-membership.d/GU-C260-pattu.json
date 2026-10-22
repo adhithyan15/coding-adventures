@@ -1,0 +1,11 @@
+{
+  "id": "GU-C260-pattu",
+  "pathSegment": "GU-PATH-260-GAMES260",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-260-GAMES260",
+      "order": 0
+    }
+  ]
+}

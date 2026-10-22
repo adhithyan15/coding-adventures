@@ -1,0 +1,19 @@
+{
+  "chapter": 259,
+  "title": "Matches and wrestling",
+  "label": "ch:gu-matches-and-wrestling",
+  "canDo": "I can say who won the match, who ran and what exercise I did.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C259-kusti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 259: I can say who won the match, who ran and what exercise I did.",
+    "assesses": [
+      "GU-LEX-C259-MATCH259-03",
+      "GU-LEX-C259-MATCH259-04",
+      "GU-LEX-C259-MATCH259-05"
+    ]
+  }
+}

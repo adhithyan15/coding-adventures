@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:f815e066fe5ac257",
+  "lessonIds": [
+    "GU-C192-hisab",
+    "GU-C192-kul",
+    "GU-C192-rakam",
+    "GU-C192-bil",
+    "GU-C192-vedaphvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch192.txt",
+  "json": "gujarati/narration/ch192.json",
+  "textHash": "fnv1a64:a7b1f26d5d2a7aa7",
+  "jsonHash": "fnv1a64:d1556a25361c948a",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-234-MILK234",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who milked the cow and where the sheep grazed.",
+  "prerequisites": []
+}

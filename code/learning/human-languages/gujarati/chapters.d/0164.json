@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "The spice tin",
+  "label": "ch:gu-the-spice-tin",
+  "canDo": "I can name the spices in the kitchen tin.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-R164-review-159-164",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: I can name the spices in the kitchen tin.",
+    "assesses": [
+      "GU-LEX-C164-SPICE164-03",
+      "GU-LEX-C164-SPICE164-04",
+      "GU-LEX-C164-SPICE164-05"
+    ]
+  }
+}

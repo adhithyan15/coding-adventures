@@ -1,0 +1,1 @@
+| 1162-1168 | 212 | Resting on the way | `GU-C212-dharmasala` -> `GU-C212-bhomiyo` -> `GU-C212-rahdari` -> `GU-C212-surang` -> `GU-C212-musapharkhanu` -> `GU-R212-review-207-212` -> `GU-R212-review-final-212` |

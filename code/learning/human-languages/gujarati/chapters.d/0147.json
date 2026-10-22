@@ -1,0 +1,26 @@
+{
+  "chapter": 147,
+  "title": "What was and where I went",
+  "label": "ch:gu-what-was-and-where-i-went",
+  "canDo": "I can say where I was and where I went yesterday, with the past of to be, of going and coming, and of happening, and say that I came late.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C147-past-practice",
+    "kind": "task",
+    "summary": "Tell a day in the past from morning to night, then tell your own yesterday in two sentences.",
+    "assesses": [
+      "GU-GRAMMAR-C147-HATO-01",
+      "GU-GRAMMAR-C147-HATU-HATA-01",
+      "GU-GRAMMAR-C147-E-TIME-01",
+      "GU-GRAMMAR-C147-GHARE-01",
+      "GU-GRAMMAR-C147-KAALE-TENSE-01",
+      "GU-GRAMMAR-C147-GAYO-01",
+      "GU-GRAMMAR-C147-AAVYO-01",
+      "GU-GRAMMAR-C147-THAYO-01",
+      "GU-LEX-C147-PAST147-01",
+      "GU-SCRIPT-C147-DDA-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:309967236e259671",
+  "lessonIds": [
+    "GU-C233-prani",
+    "GU-C233-ghodo",
+    "GU-C233-ut",
+    "GU-C233-balad",
+    "GU-C233-khedvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch233.txt",
+  "json": "gujarati/narration/ch233.json",
+  "textHash": "fnv1a64:e393b242ae2a2579",
+  "jsonHash": "fnv1a64:c324a1faaa904381",
+  "findings": []
+}

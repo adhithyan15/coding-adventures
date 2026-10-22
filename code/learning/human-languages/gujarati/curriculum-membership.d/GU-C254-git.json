@@ -1,0 +1,11 @@
+{
+  "id": "GU-C254-git",
+  "pathSegment": "GU-PATH-254-MUSIC254",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-254-MUSIC254",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C172-vasi",
+    "language": "gujarati",
+    "chapter": 172,
+    "sequence": 9390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db89fcc04b686290"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C185-sada",
+  "pathSegment": "PA-PATH-185-A2-POSSESSIVE-AGREEMENT",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-185-A2-POSSESSIVE-AGREEMENT",
+      "order": 6
+    }
+  ]
+}

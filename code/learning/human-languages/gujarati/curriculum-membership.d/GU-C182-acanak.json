@@ -1,0 +1,11 @@
+{
+  "id": "GU-C182-acanak",
+  "pathSegment": "GU-PATH-182-NOW182",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-182-NOW182",
+      "order": 2
+    }
+  ]
+}

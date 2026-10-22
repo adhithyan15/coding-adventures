@@ -1,0 +1,11 @@
+{
+  "id": "GU-C234-ghetu",
+  "pathSegment": "GU-PATH-234-MILK234",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-234-MILK234",
+      "order": 3
+    }
+  ]
+}

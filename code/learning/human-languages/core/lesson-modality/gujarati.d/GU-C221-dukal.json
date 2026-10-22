@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C221-dukal",
+    "language": "gujarati",
+    "chapter": 221,
+    "sequence": 12010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:054ada684ac24d50"
+  },
+  "findings": []
+}

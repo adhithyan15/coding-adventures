@@ -1,0 +1,11 @@
+{
+  "id": "GU-C271-svarthi",
+  "pathSegment": "GU-PATH-271-MANNERS271",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-271-MANNERS271",
+      "order": 2
+    }
+  ]
+}

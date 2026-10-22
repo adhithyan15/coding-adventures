@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:38b9c9389e316e56",
+  "lessonIds": [
+    "GU-C248-bethak",
+    "GU-C248-arji",
+    "GU-C248-sahi-karvi",
+    "GU-C248-sopvu",
+    "GU-C248-nodhvu",
+    "GU-R248-review-243-248"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch248.txt",
+  "json": "gujarati/narration/ch248.json",
+  "textHash": "fnv1a64:f531fec2581f1d32",
+  "jsonHash": "fnv1a64:3202b0bc4d00fcdd",
+  "findings": []
+}

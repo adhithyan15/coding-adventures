@@ -1,0 +1,11 @@
+{
+  "id": "GU-C157-paddo",
+  "pathSegment": "GU-PATH-157-PLACE157",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-157-PLACE157",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:54ed4258d2b1b9cf",
+  "lessonIds": [
+    "GU-C181-utaval-karvi",
+    "GU-C181-multavi-rakhvu",
+    "GU-C181-talvu-avoid",
+    "GU-C181-rad-karvu",
+    "GU-C181-lambavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch181.txt",
+  "json": "gujarati/narration/ch181.json",
+  "textHash": "fnv1a64:d3e3c7c094afddca",
+  "jsonHash": "fnv1a64:3353c65b967fd5c3",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C260-ramakdu",
+    "language": "gujarati",
+    "chapter": 260,
+    "sequence": 14090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fa52df24ca9f767"
+  },
+  "findings": []
+}

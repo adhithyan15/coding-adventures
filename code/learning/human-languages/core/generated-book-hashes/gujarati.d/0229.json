@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:8e02117d47f188cd",
+  "lessonIds": [
+    "GU-C229-kadu",
+    "GU-C229-angutho",
+    "GU-C229-ghuti",
+    "GU-C229-edi",
+    "GU-C229-pasli"
+  ],
+  "tex": "gujarati/book/chapters/ch229-from-the-wrist-to-the-heel.tex"
+}

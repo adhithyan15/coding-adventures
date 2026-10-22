@@ -1,0 +1,11 @@
+{
+  "id": "GU-C203-chodvu",
+  "pathSegment": "GU-PATH-203-TRIP203",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-203-TRIP203",
+      "order": 3
+    }
+  ]
+}

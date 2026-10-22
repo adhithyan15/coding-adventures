@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C250-sacavvu",
+    "language": "gujarati",
+    "chapter": 250,
+    "sequence": 13590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71a3987d2e2f4601"
+  },
+  "findings": []
+}

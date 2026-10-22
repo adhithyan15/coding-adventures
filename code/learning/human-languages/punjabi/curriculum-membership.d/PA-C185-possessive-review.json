@@ -1,0 +1,11 @@
+{
+  "id": "PA-C185-possessive-review",
+  "pathSegment": "PA-PATH-185-A2-POSSESSIVE-AGREEMENT",
+  "pathOrder": 8,
+  "extensions": [
+    {
+      "id": "PA-EXT-185-A2-POSSESSIVE-AGREEMENT",
+      "order": 8
+    }
+  ]
+}

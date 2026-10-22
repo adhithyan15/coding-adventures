@@ -1,0 +1,11 @@
+{
+  "id": "GU-C268-vadhvu-scold",
+  "pathSegment": "GU-PATH-268-QUARREL268",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-268-QUARREL268",
+      "order": 1
+    }
+  ]
+}

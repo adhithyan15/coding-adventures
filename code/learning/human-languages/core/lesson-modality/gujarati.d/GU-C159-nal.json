@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C159-nal",
+    "language": "gujarati",
+    "chapter": 159,
+    "sequence": 8730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcf5d4415a4aeee5"
+  },
+  "findings": []
+}

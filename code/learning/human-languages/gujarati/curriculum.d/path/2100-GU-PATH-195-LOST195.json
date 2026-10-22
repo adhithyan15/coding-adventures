@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-195-LOST195",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "GU-EXT-195-LOST195"
+  ],
+  "after": []
+}

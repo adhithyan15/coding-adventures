@@ -1,0 +1,11 @@
+{
+  "id": "GU-C267-nirash",
+  "pathSegment": "GU-PATH-267-UPSET267",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-267-UPSET267",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-203-TRIP203",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "GU-EXT-203-TRIP203"
+  ],
+  "after": []
+}

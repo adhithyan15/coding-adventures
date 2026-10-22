@@ -1,0 +1,11 @@
+{
+  "id": "GU-C224-nadi",
+  "pathSegment": "GU-PATH-224-DOCTOR224",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-224-DOCTOR224",
+      "order": 2
+    }
+  ]
+}

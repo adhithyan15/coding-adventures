@@ -1,0 +1,11 @@
+{
+  "id": "GU-C188-mal",
+  "pathSegment": "GU-PATH-188-GOODS188",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-188-GOODS188",
+      "order": 3
+    }
+  ]
+}

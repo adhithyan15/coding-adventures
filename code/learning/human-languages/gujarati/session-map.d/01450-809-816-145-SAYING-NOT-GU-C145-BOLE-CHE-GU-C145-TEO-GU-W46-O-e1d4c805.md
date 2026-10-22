@@ -1,0 +1,1 @@
+| 809-816 | 145 | Saying not | `GU-C145-bole-che` -> `GU-C145-teo` -> `GU-W46-o` -> `GU-C145-bolie-chie` -> `GU-C145-nathi-bolto` -> `GU-C145-na-nahi` -> `GU-C145-koi-nathi` -> `GU-C145-not-practice` |

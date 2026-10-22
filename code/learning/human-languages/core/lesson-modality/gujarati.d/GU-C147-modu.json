@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C147-modu",
+    "language": "gujarati",
+    "chapter": 147,
+    "sequence": 7770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e993fc47aa12f78b"
+  },
+  "findings": []
+}

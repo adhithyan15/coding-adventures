@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C224-dardi",
+    "language": "gujarati",
+    "chapter": 224,
+    "sequence": 12170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da6d7cc0f16cc445"
+  },
+  "findings": []
+}

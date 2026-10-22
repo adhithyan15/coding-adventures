@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C186-not",
+    "language": "gujarati",
+    "chapter": 186,
+    "sequence": 10180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5048b70073fe0a95"
+  },
+  "findings": []
+}

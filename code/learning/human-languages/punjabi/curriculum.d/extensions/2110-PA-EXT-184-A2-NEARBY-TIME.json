@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-184-A2-NEARBY-TIME",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use five exact forms for nearby weeks, months, and next or last references.",
+  "prerequisites": [
+    "PA-EXT-183-A2-HABITUAL-ROUTINE"
+  ]
+}

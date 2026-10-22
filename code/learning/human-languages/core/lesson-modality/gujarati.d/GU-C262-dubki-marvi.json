@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C262-dubki-marvi",
+    "language": "gujarati",
+    "chapter": 262,
+    "sequence": 14220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83a6eca31b0212e1"
+  },
+  "findings": []
+}

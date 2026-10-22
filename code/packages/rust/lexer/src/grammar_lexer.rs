@@ -53,6 +53,9 @@
 //!   indentation levels and emits synthetic INDENT/DEDENT/NEWLINE tokens,
 //!   following the Python/Starlark whitespace rules.
 
+use crate::lexical::{
+    LexicalError, LexicalLimits, LexicalPieceKind, LexicalSnapshot, RangeRecorder, SourcePosition,
+};
 use regex::{Regex, RegexBuilder};
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
@@ -448,6 +451,11 @@ pub struct GrammarLexer<'a> {
     /// The source code as character vector for indexed access.
     chars: Vec<char>,
 
+    /// Optional source-range recorder; legacy lexing never allocates one.
+    range_recorder: Option<RangeRecorder>,
+    /// Exact capture requires a fresh lexer, including for empty-source EOF.
+    has_tokenized: bool,
+
     /// The original source string (for regex matching on slices).
     ///
     /// We preserve the original casing so identifiers and string literals
@@ -732,6 +740,8 @@ impl<'a> GrammarLexer<'a> {
 
         GrammarLexer {
             chars: source.chars().collect(),
+            range_recorder: None,
+            has_tokenized: false,
             source: Cow::Borrowed(source),
             byte_pos: 0,
             char_pos: 0,
@@ -803,6 +813,9 @@ impl<'a> GrammarLexer<'a> {
     fn advance(&mut self) {
         if self.char_pos < self.chars.len() {
             let ch = self.chars[self.char_pos];
+            if let Some(recorder) = self.range_recorder.as_mut() {
+                recorder.cursor.advance(ch);
+            }
             self.byte_pos += ch.len_utf8();
             self.char_pos += 1;
             if ch == '\n' {
@@ -1142,11 +1155,14 @@ impl<'a> GrammarLexer<'a> {
     // Main tokenization — standard mode
     // -----------------------------------------------------------------------
 
-    fn tokenize_standard(&mut self) -> Result<Vec<Token>, LexerError> {
+    fn tokenize_standard(&mut self) -> Result<Vec<Token>, LexicalError> {
         let mut tokens = Vec::new();
         let has_skip_patterns = !self.skip_patterns.is_empty();
 
         while self.char_pos < self.chars.len() {
+            // Charge the prospective descriptor before matching owns raw/value text.
+            let range_start = self.prepare_range_piece()?;
+            let byte_start = self.byte_pos;
             let ch = self.chars[self.char_pos];
 
             // --- Skip patterns (grammar-defined) ---
@@ -1155,6 +1171,10 @@ impl<'a> GrammarLexer<'a> {
             // processing for groups where whitespace is significant (CDATA).
             if has_skip_patterns {
                 if self.skip_enabled && self.try_skip() {
+                    if range_start.is_some() && self.byte_pos == byte_start {
+                        return Err(LexicalError::Invalid("zero-width skip match"));
+                    }
+                    self.finish_range_piece(range_start, LexicalPieceKind::Trivia);
                     continue;
                 }
             } else {
@@ -1163,6 +1183,7 @@ impl<'a> GrammarLexer<'a> {
                 // spaces, tabs, carriage returns silently.
                 if ch == ' ' || ch == '\t' || ch == '\r' {
                     self.advance();
+                    self.finish_range_piece(range_start, LexicalPieceKind::Trivia);
                     continue;
                 }
             }
@@ -1177,6 +1198,7 @@ impl<'a> GrammarLexer<'a> {
                     type_name: None, flags: None,
                 });
                 self.advance();
+                self.finish_range_piece(range_start, LexicalPieceKind::Token(tokens.len() - 1));
                 continue;
             }
 
@@ -1212,6 +1234,9 @@ impl<'a> GrammarLexer<'a> {
                 }
             };
             if let Some((name, alias, matched)) = self.try_match_token_in_group(&active_group) {
+                if range_start.is_some() && matched.is_empty() {
+                    return Err(LexicalError::Invalid("zero-width token match"));
+                }
                 let start_line = self.line;
                 let start_col = self.column;
 
@@ -1220,6 +1245,13 @@ impl<'a> GrammarLexer<'a> {
                     alias.as_deref(),
                     &matched,
                 )?;
+
+                // Accept the raw match and its end cursor before value processing.
+                // Quote stripping, escape decoding and case normalization never
+                // participate in source measurement.
+                let char_count = matched.chars().count();
+                self.advance_n(char_count);
+                self.finish_range_piece(range_start, LexicalPieceKind::Token(tokens.len()));
 
                 // For STRING tokens, strip quotes and process escapes.
                 //
@@ -1252,9 +1284,6 @@ impl<'a> GrammarLexer<'a> {
                 } else {
                     matched.clone()
                 };
-
-                let char_count = matched.chars().count();
-                self.advance_n(char_count);
 
                 // Compute the token's flag bits.
                 //
@@ -1397,9 +1426,11 @@ impl<'a> GrammarLexer<'a> {
                 message: format!("Unexpected sequence {:?}", ch),
                 line: self.line,
                 column: self.column,
-            });
+            }.into());
         }
 
+        let eof_start = self.prepare_range_piece()?;
+        self.finish_range_piece(eof_start, LexicalPieceKind::Eof(tokens.len()));
         tokens.push(Token { cv: None,
             type_: TokenType::Eof,
             value: String::new(),
@@ -1656,7 +1687,7 @@ impl<'a> GrammarLexer<'a> {
     }
 
     fn tokenize_layout(&mut self) -> Result<Vec<Token>, LexerError> {
-        let tokens = self.tokenize_standard()?;
+        let tokens = self.tokenize_standard().map_err(LexicalError::into_lexer_error)?;
         Ok(self.apply_layout(tokens))
     }
 
@@ -1782,11 +1813,75 @@ impl<'a> GrammarLexer<'a> {
     // Public API
     // -----------------------------------------------------------------------
 
+    /// Capture exact standard-mode intervals after admitting source ownership.
+    /// No Token field changes; the returned snapshot borrows this exact buffer.
+    pub fn tokenize_source_with_ranges(
+        source: &'a str,
+        grammar: &TokenGrammar,
+        limits: LexicalLimits,
+    ) -> Result<LexicalSnapshot<'a>, LexicalError> {
+        limits.admit_source(source.len())?;
+        Self::new(source, grammar).tokenize_with_ranges(limits)
+    }
+
+    /// Capture with an existing fresh standard lexer. Constructor-owned source
+    /// chars already exist; hooks/synthesis/reuse reject before any execution.
+    pub fn tokenize_with_ranges(
+        &mut self,
+        limits: LexicalLimits,
+    ) -> Result<LexicalSnapshot<'a>, LexicalError> {
+        if self.has_tokenized {
+            return Err(LexicalError::Unsupported("lexer reuse"));
+        }
+        if self.indent_mode || self.layout_mode {
+            return Err(LexicalError::Unsupported("indentation/layout synthesis"));
+        }
+        if self.on_token.is_some()
+            || !self.pre_tokenize_hooks.is_empty()
+            || !self.post_tokenize_hooks.is_empty()
+        {
+            return Err(LexicalError::Unsupported("callbacks or source/token hooks"));
+        }
+        let source = match self.source {
+            Cow::Borrowed(source) => source,
+            Cow::Owned(_) => return Err(LexicalError::Unsupported("transformed source")),
+        };
+        let recorder = RangeRecorder::new(source.len(), limits)?;
+        self.has_tokenized = true;
+        self.range_recorder = Some(recorder);
+        let result = self.tokenize_standard();
+        // Take/discard partial evidence even on failure. Nothing can export a
+        // partial snapshot or restart this cursor with a fresh budget.
+        let recorder = self
+            .range_recorder
+            .take()
+            .expect("capture recorder installed");
+        let tokens = result?;
+        Ok(LexicalSnapshot {
+            source,
+            tokens,
+            pieces: recorder.pieces,
+        })
+    }
+
+    fn prepare_range_piece(&mut self) -> Result<Option<SourcePosition>, LexicalError> {
+        self.range_recorder
+            .as_mut()
+            .map(RangeRecorder::prepare)
+            .transpose()
+    }
+    fn finish_range_piece(&mut self, start: Option<SourcePosition>, kind: LexicalPieceKind) {
+        if let (Some(recorder), Some(start)) = (self.range_recorder.as_mut(), start) {
+            recorder.finish(start, kind);
+        }
+    }
+
     /// Tokenize the source code according to the grammar's patterns.
     ///
     /// Dispatches to either standard or indentation mode based on the
     /// grammar's mode directive.
     pub fn tokenize(&mut self) -> Result<Vec<Token>, LexerError> {
+        self.has_tokenized = true;
         // Stage 1: Pre-tokenize hooks transform the source text.
         if !self.pre_tokenize_hooks.is_empty() {
             let mut source = self.source.clone().into_owned();
@@ -1804,7 +1899,7 @@ impl<'a> GrammarLexer<'a> {
         } else if self.layout_mode {
             self.tokenize_layout()?
         } else {
-            self.tokenize_standard()?
+            self.tokenize_standard().map_err(LexicalError::into_lexer_error)?
         };
 
         // Stage 3: Post-tokenize hooks transform the token list.

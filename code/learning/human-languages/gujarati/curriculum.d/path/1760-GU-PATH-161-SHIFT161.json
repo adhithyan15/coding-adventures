@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-161-SHIFT161",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "GU-EXT-161-SHIFT161"
+  ],
+  "after": []
+}
