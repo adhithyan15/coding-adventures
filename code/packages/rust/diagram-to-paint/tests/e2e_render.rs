@@ -3826,8 +3826,10 @@ line "Target" [35, 50, 68, 82]"##,
                 .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
             let icon_options = SwimlaneLayoutOptions { icon_glyphs: BTreeMap::from([(
                 "logos:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() },
+            )]), image_dimensions: BTreeMap::from([(
+                "https://example.com/logo.png".into(), (160.0, 80.0),
             )]) };
-            let layout = if matches!(fixture_name, "icon-glyph-node" | "icon-node-forms") {
+            let layout = if matches!(fixture_name, "icon-glyph-node" | "icon-node-forms" | "image-node") {
                 layout_swimlane_with_options(&diagram, Some(&icon_options))
             } else {
                 layout_swimlane(&diagram)
@@ -3865,9 +3867,9 @@ line "Target" [35, 50, 68, 82]"##,
                     metadata.get("swimlane.node.square.iconHeight")), Some(&"60".to_string()));
             }
             if fixture_name == "image-node" {
-                assert_eq!(layout.image_nodes["logo"].width, 96.0);
+                assert_eq!((layout.image_nodes["logo"].width, layout.image_nodes["logo"].height), (128.0, 64.0));
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-                    PaintInstruction::Image(image) if image.width == 96.0 && image.height == 64.0
+                    PaintInstruction::Image(image) if image.width == 128.0 && image.height == 64.0
                         && matches!(&image.src, paint_instructions::ImageSrc::Uri(source)
                             if source == "https://example.com/logo.png")
                 )), "image node must lower to backend-neutral URI image paint");

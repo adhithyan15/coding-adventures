@@ -8481,7 +8481,7 @@ fn parse_swimlane_shape_attributes(
         .ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require shape"))?;
     let icon_node = icon.as_ref().map(|_| SwimlaneIconNode { form, label_position, height: icon_height.max(48.0) });
     let image_node = image.map(|source| SwimlaneImageNode {
-        source, width: image_width.unwrap_or(48.0), height: icon_height,
+        source, width: image_width, height: (icon_height != 48.0).then_some(icon_height),
         preserve_aspect_ratio, label_position,
     });
     let label = label.unwrap_or_else(|| if icon.is_some() || image_node.is_some() { String::new() } else { default_label.to_string() });
