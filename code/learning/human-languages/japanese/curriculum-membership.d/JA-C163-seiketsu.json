@@ -1,0 +1,11 @@
+{
+  "id": "JA-C163-seiketsu",
+  "pathSegment": "JA-PATH-163-HOME163",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-163-HOME163",
+      "order": 4
+    }
+  ]
+}

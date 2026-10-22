@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C240-akiru",
+    "language": "japanese",
+    "chapter": 240,
+    "sequence": 14460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a007c224e273c5d"
+  },
+  "findings": []
+}

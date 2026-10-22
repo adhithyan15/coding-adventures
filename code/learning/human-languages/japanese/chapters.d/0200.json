@@ -1,0 +1,19 @@
+{
+  "chapter": 200,
+  "title": "Changing Trains and Waiting for Buses",
+  "label": "ch:ja-changing-trains-and-waiting-for-buses",
+  "canDo": "I can say where I change trains and wait for a bus.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C200-teiryuujo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 200: I can say where I change trains and wait for a bus.",
+    "assesses": [
+      "JA-LEX-C200-CHANGE200-03",
+      "JA-LEX-C200-CHANGE200-04",
+      "JA-LEX-C200-CHANGE200-05"
+    ]
+  }
+}

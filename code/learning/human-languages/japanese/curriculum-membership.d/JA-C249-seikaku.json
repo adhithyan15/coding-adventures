@@ -1,0 +1,11 @@
+{
+  "id": "JA-C249-seikaku",
+  "pathSegment": "JA-PATH-249-HEART249",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-249-HEART249",
+      "order": 2
+    }
+  ]
+}

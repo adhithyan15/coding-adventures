@@ -1,6 +1,23 @@
 # LANG80 — Ruby integer expressions on the native LANG VM
 
 **Status:** Draft, 2026-10-07. First bounded Ruby-to-IIR pilot.
+**Superseded on the IIR path by LANG84 phase 5a (2026-10-20).** The pipeline
+below (hand-written `ruby-lexer`, Ruby-named VM builtins) is what the pilot
+built. Since 5a, `ruby-iir-compiler` compiles from a release's grammar-driven
+parse tree (`ruby<release>.tokens`/`.grammar`, default `3.3.6`) and emits
+LANG83 operations, so every lang-aot backend runs it. What changed, and why:
+
+| LANG80 | LANG84 phase 5a | Why |
+|---|---|---|
+| `ruby-lexer` + unversioned `ruby.grammar` | `GrammarLexer`/`GrammarParser` over the release pair | LANG84 C2 forbids hand-written lexers |
+| `rb_int_div`, `rb_puts_*` builtins | `i64_div_floor`, `print_i64`, `putchar` | LANG84 C2 / LANG83: no language-named builtins |
+| `x / 0` refused at compile time | traps at run time with `Trap.DivZero`, after earlier output | Ruby raises `ZeroDivisionError` at run time |
+| no `%` | `%` → `i64_mod_floor` | added to `rb-int-puts` |
+| one to three arguments; bare call with one | any number, bare or parenthesised | the 3.3 grammar admits it |
+| `puts -7 / 2` accepted | refused (parse error); write `puts(-7 / 2)` | unary vs binary `-` there depends on the preceding space (LANG84 E6), which the R0 grammar does not see |
+| `main` returns `void` | `main` returns `i64` 0 | the AOT entry points read an exit status |
+
+The `i64` range proof, the budgets and the forged-tree checks carry over.
 
 ## Execution path
 

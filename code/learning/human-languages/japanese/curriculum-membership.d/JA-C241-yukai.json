@@ -1,0 +1,11 @@
+{
+  "id": "JA-C241-yukai",
+  "pathSegment": "JA-PATH-241-OUTING241",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-241-OUTING241",
+      "order": 2
+    }
+  ]
+}

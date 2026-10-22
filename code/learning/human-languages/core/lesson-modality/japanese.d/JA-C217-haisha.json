@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C217-haisha",
+    "language": "japanese",
+    "chapter": 217,
+    "sequence": 13010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bb34811c205b8d6"
+  },
+  "findings": []
+}

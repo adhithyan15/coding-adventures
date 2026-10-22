@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-193-SIGHT193",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-193-SIGHT193"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C227-omoidasu",
+  "pathSegment": "JA-PATH-227-THINK227",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-227-THINK227",
+      "order": 2
+    }
+  ]
+}

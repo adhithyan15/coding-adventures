@@ -1,0 +1,11 @@
+{
+  "id": "JA-C231-tsutaeru",
+  "pathSegment": "JA-PATH-231-PHONE231",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-231-PHONE231",
+      "order": 4
+    }
+  ]
+}

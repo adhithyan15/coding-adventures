@@ -1,0 +1,11 @@
+{
+  "id": "JA-C181-nedan",
+  "pathSegment": "JA-PATH-181-SHOP181",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-181-SHOP181",
+      "order": 1
+    }
+  ]
+}

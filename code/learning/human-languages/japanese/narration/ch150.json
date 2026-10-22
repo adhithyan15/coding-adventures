@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 150,
+  "title": "Jackets, Gloves and Rings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fe97fbc02418f6d3",
+  "lessons": [
+    {
+      "id": "JA-C150-uwagi",
+      "sequence": 9000,
+      "title": "うわぎ (uwagi) — a jacket; a coat",
+      "headword": "うわぎ",
+      "romanization": "uwagi",
+      "gloss": "a jacket; a coat",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05ec85d9495925b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for Western clothes, then the Japanese for underwear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うわぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うわぎ — uwagi — \"a jacket; a coat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふゆは うわぎを きます。 — fuyu wa uwagi o kimasu — \"In winter I wear a jacket.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うわぎ (uwagi) is native Japanese, built from uwa-, \"upper\", the joining form of ue, and ki, \"wearing\", voiced to gi; both parts are inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uwagi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uwagi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uwagi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uwagi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuyu wa uwagi o kimasu — In winter I wear a jacket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuyu wa uwagi o kimasu* — In winter I wear a jacket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for Western clothes, then the Japanese for underwear, then say uwagi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for Western clothes, then the Japanese for underwear, then say *uwagi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うわぎ (uwagi) mean? (\"A jacket; a coat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C150-uwagi-type",
+              "prompt": "Say the Japanese for 'a jacket'.",
+              "assesses": [
+                "JA-LEX-C150-GLOVES150-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うわぎ",
+                "uwagi"
+              ],
+              "feedback": {
+                "correct": "Right: うわぎ (uwagi) is 'a jacket; a coat'.",
+                "incorrect": "'A jacket' is うわぎ (uwagi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C150-tebukuro",
+      "sequence": 9010,
+      "title": "てぶくろ (tebukuro) — gloves",
+      "headword": "てぶくろ",
+      "romanization": "tebukuro",
+      "gloss": "gloves",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b5388b7f6816038",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for underwear, then the Japanese for a jacket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てぶくろ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てぶくろ — tebukuro — \"gloves\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふゆは てぶくろを つかいます。 — fuyu wa tebukuro o tsukaimasu — \"In winter I use gloves.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てぶくろ (tebukuro) is native Japanese, built from te, \"hand\", and fukuro, \"bag\", voiced to bukuro; both parts are inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tebukuro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tebukuro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tebukuro, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tebukuro*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuyu wa tebukuro o tsukaimasu — In winter I use gloves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuyu wa tebukuro o tsukaimasu* — In winter I use gloves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for underwear, then the Japanese for a jacket, then say tebukuro again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for underwear, then the Japanese for a jacket, then say *tebukuro* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てぶくろ (tebukuro) mean? (\"Gloves\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C150-tebukuro-type",
+              "prompt": "Say the Japanese for 'gloves'.",
+              "assesses": [
+                "JA-LEX-C150-GLOVES150-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てぶくろ",
+                "tebukuro"
+              ],
+              "feedback": {
+                "correct": "Right: てぶくろ (tebukuro) is 'gloves'.",
+                "incorrect": "'Gloves' is てぶくろ (tebukuro)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C150-hazusu",
+      "sequence": 9020,
+      "title": "はずす (hazusu) — to remove; to take off (glasses, a ring)",
+      "headword": "はずす",
+      "romanization": "hazusu",
+      "gloss": "to remove; to take off (glasses, a ring)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae868aebf4eddaf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a jacket, then the Japanese for gloves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はずす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はずす — hazusu — \"to remove; to take off (glasses, a ring)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うちで めがねを はずします。 — uchi de megane o hazushimasu — \"At home I take off my glasses.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はずします, hazushimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はずす (hazusu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hazusu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hazusu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hazusu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hazusu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchi de megane o hazushimasu — At home I take off my glasses.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchi de megane o hazushimasu* — At home I take off my glasses.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a jacket, then the Japanese for gloves, then say hazusu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a jacket, then the Japanese for gloves, then say *hazusu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はずす (hazusu) mean? (\"To remove; to take off (glasses, a ring)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C150-hazusu-type",
+              "prompt": "Say the Japanese for 'to remove'.",
+              "assesses": [
+                "JA-LEX-C150-GLOVES150-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はずす",
+                "hazusu"
+              ],
+              "feedback": {
+                "correct": "Right: はずす (hazusu) is 'to remove; to take off (glasses, a ring)'.",
+                "incorrect": "'To remove' is はずす (hazusu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C150-musubu",
+      "sequence": 9030,
+      "title": "むすぶ (musubu) — to tie; to knot",
+      "headword": "むすぶ",
+      "romanization": "musubu",
+      "gloss": "to tie; to knot",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35c7328e4fadeddb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for gloves, then the Japanese for to remove."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むすぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むすぶ — musubu — \"to tie; to knot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くつの ひもを むすびます。 — kutsu no himo o musubimasu — \"I tie my shoelaces.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite むすびます, musubimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むすぶ (musubu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musubu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musubu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musubu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musubu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kutsu no himo o musubimasu — I tie my shoelaces.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kutsu no himo o musubimasu* — I tie my shoelaces.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for gloves, then the Japanese for to remove, then say musubu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for gloves, then the Japanese for to remove, then say *musubu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むすぶ (musubu) mean? (\"To tie; to knot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C150-musubu-type",
+              "prompt": "Say the Japanese for 'to tie'.",
+              "assesses": [
+                "JA-LEX-C150-GLOVES150-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むすぶ",
+                "musubu"
+              ],
+              "feedback": {
+                "correct": "Right: むすぶ (musubu) is 'to tie; to knot'.",
+                "incorrect": "'To tie' is むすぶ (musubu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C150-yubiwa",
+      "sequence": 9040,
+      "title": "ゆびわ (yubiwa) — a ring (for a finger)",
+      "headword": "ゆびわ",
+      "romanization": "yubiwa",
+      "gloss": "a ring (for a finger)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d861cfb2bc7bd3b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to remove, then the Japanese for to tie."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆびわ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆびわ — yubiwa — \"a ring (for a finger)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ははの ゆびわは うつくしいです。 — haha no yubiwa wa utsukushii desu — \"My mother's ring is beautiful.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆびわ (yubiwa) is native Japanese, built from yubi, \"finger\", and wa, \"ring, circle\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yubiwa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yubiwa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yubiwa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yubiwa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haha no yubiwa wa utsukushii desu — My mother's ring is beautiful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haha no yubiwa wa utsukushii desu* — My mother's ring is beautiful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to remove, then the Japanese for to tie, then say yubiwa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to remove, then the Japanese for to tie, then say *yubiwa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆびわ (yubiwa) mean? (\"A ring (for a finger)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C150-yubiwa-type",
+              "prompt": "Say the Japanese for 'a ring'.",
+              "assesses": [
+                "JA-LEX-C150-GLOVES150-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆびわ",
+                "yubiwa"
+              ],
+              "feedback": {
+                "correct": "Right: ゆびわ (yubiwa) is 'a ring (for a finger)'.",
+                "incorrect": "'A ring' is ゆびわ (yubiwa)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

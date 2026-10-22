@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:45d080a0b9bb467b",
+  "lessonIds": [
+    "JA-C232-hanashiau",
+    "JA-C232-matomeru",
+    "JA-C232-makaseru",
+    "JA-C232-kotowaru",
+    "JA-C232-shiraseru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch232.txt",
+  "json": "japanese/narration/ch232.json",
+  "textHash": "fnv1a64:05dbc15028866520",
+  "jsonHash": "fnv1a64:5471d880adb9d94c",
+  "findings": []
+}

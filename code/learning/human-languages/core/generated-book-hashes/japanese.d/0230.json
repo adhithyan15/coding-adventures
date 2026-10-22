@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:f09f2d147aa446de",
+  "lessonIds": [
+    "JA-C230-shachou",
+    "JA-C230-joushi",
+    "JA-C230-senpai",
+    "JA-C230-kouhai",
+    "JA-C230-ganbaru"
+  ],
+  "tex": "japanese/book/chapters/ch230-bosses-seniors-and-juniors.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C192-keisatsu",
+  "pathSegment": "JA-PATH-192-POLICE192",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-192-POLICE192",
+      "order": 2
+    }
+  ]
+}

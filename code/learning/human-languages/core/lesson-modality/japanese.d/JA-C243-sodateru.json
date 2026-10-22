@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C243-sodateru",
+    "language": "japanese",
+    "chapter": 243,
+    "sequence": 14620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d34f39ec3dc8d8e"
+  },
+  "findings": []
+}

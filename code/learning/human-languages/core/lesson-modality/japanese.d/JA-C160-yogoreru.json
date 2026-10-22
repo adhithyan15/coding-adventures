@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C160-yogoreru",
+    "language": "japanese",
+    "chapter": 160,
+    "sequence": 9540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:577a5faa3e2750fe"
+  },
+  "findings": []
+}

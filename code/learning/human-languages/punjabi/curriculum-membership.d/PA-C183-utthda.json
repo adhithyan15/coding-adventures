@@ -1,0 +1,11 @@
+{
+  "id": "PA-C183-utthda",
+  "pathSegment": "PA-PATH-183-A2-HABITUAL-ROUTINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-183-A2-HABITUAL-ROUTINE",
+      "order": 3
+    }
+  ]
+}

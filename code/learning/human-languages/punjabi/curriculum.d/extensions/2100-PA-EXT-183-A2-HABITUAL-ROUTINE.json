@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-183-A2-HABITUAL-ROUTINE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use five familiar verbs in exact present-habitual routine forms.",
+  "prerequisites": [
+    "PA-EXT-182-A2-WEEKDAY-SCHEDULE"
+  ]
+}

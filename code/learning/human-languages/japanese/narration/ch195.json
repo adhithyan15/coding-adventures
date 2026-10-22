@@ -1,0 +1,942 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 195,
+  "title": "North, Opposite and Past",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:34ab4ab2fadbe0c1",
+  "lessons": [
+    {
+      "id": "JA-C195-kita",
+      "sequence": 11580,
+      "title": "きた (kita) — north",
+      "headword": "きた",
+      "romanization": "kita",
+      "gloss": "north",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b61c9a4f64b7d999",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pass through, then the Japanese for museum."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きた",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きた — kita — \"north\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきの きたに こうえんが あります。 — eki no kita ni kōen ga arimasu — \"There is a park north of the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きた (kita) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kita, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kita*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eki no kita ni kōen ga arimasu — There is a park north of the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eki no kita ni kōen ga arimasu* — There is a park north of the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pass through, then the Japanese for museum, then say kita again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pass through, then the Japanese for museum, then say *kita* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きた (kita) mean? (\"North\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C195-kita-type",
+              "prompt": "Say the Japanese for 'north'.",
+              "assesses": [
+                "JA-LEX-C195-CORNER195-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きた",
+                "kita"
+              ],
+              "feedback": {
+                "correct": "Right: きた (kita) is 'north'.",
+                "incorrect": "'North' is きた (kita)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C195-tsukiatari",
+      "sequence": 11590,
+      "title": "つきあたり (tsukiatari) — end of the street; dead end",
+      "headword": "つきあたり",
+      "romanization": "tsukiatari",
+      "gloss": "end of the street; dead end",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ba47f880147041a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for museum, then the Japanese for north."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つきあたり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つきあたり — tsukiatari — \"end of the street; dead end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この みちの つきあたりに ゆうびんきょくが あります。 — kono michi no tsukiatari ni yūbinkyoku ga arimasu — \"The post office is at the end of this road.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つきあたり (tsukiatari) is native Japanese, built from tsuki, \"thrusting\", and atari, \"hitting\", from ataru, \"to hit\": the place where a street runs into something (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukiatari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukiatari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukiatari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukiatari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono michi no tsukiatari ni yūbinkyoku ga arimasu — The post office is at the end of this road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono michi no tsukiatari ni yūbinkyoku ga arimasu* — The post office is at the end of this road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for museum, then the Japanese for north, then say tsukiatari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for museum, then the Japanese for north, then say *tsukiatari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つきあたり (tsukiatari) mean? (\"End of the street; dead end\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C195-tsukiatari-type",
+              "prompt": "Say the Japanese for 'end of the street'.",
+              "assesses": [
+                "JA-LEX-C195-CORNER195-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つきあたり",
+                "tsukiatari"
+              ],
+              "feedback": {
+                "correct": "Right: つきあたり (tsukiatari) is 'end of the street; dead end'.",
+                "incorrect": "'End of the street' is つきあたり (tsukiatari)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C195-mukai",
+      "sequence": 11600,
+      "title": "むかい (mukai) — across the street; the place opposite",
+      "headword": "むかい",
+      "romanization": "mukai",
+      "gloss": "across the street; the place opposite",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e565511d24f53ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for north, then the Japanese for end of the street."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むかい — mukai — \"across the street; the place opposite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ぎんこうの むかいに やっきょくが あります。 — ginkō no mukai ni yakkyoku ga arimasu — \"There is a pharmacy across from the bank.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むかい (mukai) is native Japanese, inherited rather than borrowed, derived from mukau, \"to face\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ginkō no mukai ni yakkyoku ga arimasu — There is a pharmacy across from the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ginkō no mukai ni yakkyoku ga arimasu* — There is a pharmacy across from the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for north, then the Japanese for end of the street, then say mukai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for north, then the Japanese for end of the street, then say *mukai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むかい (mukai) mean? (\"Across the street; the place opposite\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C195-mukai-type",
+              "prompt": "Say the Japanese for 'across the street'.",
+              "assesses": [
+                "JA-LEX-C195-CORNER195-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むかい",
+                "mukai"
+              ],
+              "feedback": {
+                "correct": "Right: むかい (mukai) is 'across the street; the place opposite'.",
+                "incorrect": "'Across the street' is むかい (mukai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C195-sugiru",
+      "sequence": 11610,
+      "title": "すぎる (sugiru) — to go past; to pass, to exceed",
+      "headword": "すぎる",
+      "romanization": "sugiru",
+      "gloss": "to go past; to pass, to exceed",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71268f416989f2e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for end of the street, then the Japanese for across the street."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すぎる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すぎる — sugiru — \"to go past; to pass, to exceed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あの しんごうを すぎます。 — ano shingō o sugimasu — \"We go past that traffic light.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite すぎます, sugimasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すぎる (sugiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi; JMdict marks at least one of its senses as usually written in kana (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ano shingō o sugimasu — We go past that traffic light.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ano shingō o sugimasu* — We go past that traffic light.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for end of the street, then the Japanese for across the street, then say sugiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for end of the street, then the Japanese for across the street, then say *sugiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すぎる (sugiru) mean? (\"To go past; to pass, to exceed\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C195-sugiru-type",
+              "prompt": "Say the Japanese for 'to go past'.",
+              "assesses": [
+                "JA-LEX-C195-CORNER195-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すぎる",
+                "sugiru"
+              ],
+              "feedback": {
+                "correct": "Right: すぎる (sugiru) is 'to go past; to pass, to exceed'.",
+                "incorrect": "'To go past' is すぎる (sugiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C195-modoru",
+      "sequence": 11620,
+      "title": "もどる (modoru) — to go back; to return",
+      "headword": "もどる",
+      "romanization": "modoru",
+      "gloss": "to go back; to return",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73f0a45905745a9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for across the street, then the Japanese for to go past."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もどる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もどる — modoru — \"to go back; to return\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちょっと えきに もどります。 — chotto eki ni modorimasu — \"I am going back to the station for a moment.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite もどります, modorimasu; a godan verb. Its transitive partner もどす is taught already."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もどる (modoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and it shares its stem with modosu, \"to put back\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *modoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chotto eki ni modorimasu — I am going back to the station for a moment.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chotto eki ni modorimasu* — I am going back to the station for a moment.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for across the street, then the Japanese for to go past, then say modoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for across the street, then the Japanese for to go past, then say *modoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もどる (modoru) mean? (\"To go back; to return\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C195-modoru-type",
+              "prompt": "Say the Japanese for 'to go back'.",
+              "assesses": [
+                "JA-LEX-C195-CORNER195-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もどる",
+                "modoru"
+              ],
+              "feedback": {
+                "correct": "Right: もどる (modoru) is 'to go back; to return'.",
+                "incorrect": "'To go back' is もどる (modoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R195-review-190-195",
+      "sequence": 11630,
+      "title": "Words from chapters 190–195 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 190-195",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9caf442cbf607193",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for building and shopping street."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "building, shopping street, department store, to enter, to be open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: building, shopping street, department store, to enter, to be open]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to close, market, liquor store, pharmacy, to find",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to close, market, liquor store, pharmacy, to find]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "police box, police officer, police, to ask, guidance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: police box, police officer, police, to ask, guidance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shrine, temple, cinema, art museum, to be visible",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: shrine, temple, cinema, art museum, to be visible]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "right, straight ahead, to turn, to pass through, museum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: right, straight ahead, to turn, to pass through, museum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "north, end of the street, across the street, to go past, to go back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: north, end of the street, across the street, to go past, to go back]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Building? (たてもの, tatemono.) Shopping street? (しょうてんがい, shōtengai.) Department store? (ひゃっかてん, hyakkaten.) To enter? (はいる, hairu.) To be open? (あく, aku.) To close? (しまる, shimaru.) Market? (いちば, ichiba.) Liquor store? (さかや, sakaya.) Pharmacy? (やっきょく, yakkyoku.) To find? (みつける, mitsukeru.) Police box? (こうばん, kōban.) Police officer? (おまわりさん, omawarisan.) Police? (けいさつ, keisatsu.) To ask? (たずねる, tazuneru.) Guidance? (あんない, annai.) Shrine? (じんじゃ, jinja.) Temple? (てら, tera.) Cinema? (えいがかん, eigakan.) Art museum? (びじゅつかん, bijutsukan.) To be visible? (みえる, mieru.) Right? (みぎ, migi.) Straight ahead? (まっすぐ, massugu.) To turn? (まがる, magaru.) To pass through? (とおる, tōru.) Museum? (はくぶつかん, hakubutsukan.) North? (きた, kita.) End of the street? (つきあたり, tsukiatari.) Across the street? (むかい, mukai.) To go past? (すぎる, sugiru.) To go back? (もどる, modoru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R195-review-190-195-type",
+              "prompt": "Say the Japanese for 'building'.",
+              "assesses": [
+                "JA-LEX-C190-TOWN190-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たてもの",
+                "tatemono"
+              ],
+              "feedback": {
+                "correct": "Right: たてもの (tatemono) is 'building'.",
+                "incorrect": "'Building' is たてもの (tatemono)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

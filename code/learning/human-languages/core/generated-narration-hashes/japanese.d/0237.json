@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:2a7e56fd5cdd9a92",
+  "lessonIds": [
+    "JA-C237-shashin",
+    "JA-C237-toru",
+    "JA-C237-atsumeru",
+    "JA-C237-atsumaru",
+    "JA-C237-ningyou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch237.txt",
+  "json": "japanese/narration/ch237.json",
+  "textHash": "fnv1a64:37e87570e17bf35a",
+  "jsonHash": "fnv1a64:93c8b0b44fcba116",
+  "findings": []
+}

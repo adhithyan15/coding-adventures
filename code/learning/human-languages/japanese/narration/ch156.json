@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 156,
+  "title": "Closets, Drawers and a Study",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c0cc320c0ac6f30c",
+  "lessons": [
+    {
+      "id": "JA-C156-oshiire",
+      "sequence": 9310,
+      "title": "おしいれ (oshiire) — a closet (for futons)",
+      "headword": "おしいれ",
+      "romanization": "oshiire",
+      "gloss": "a closet (for futons)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ecb547a8c91929e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for furniture, then the Japanese for the front entrance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おしいれ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おしいれ — oshiire — \"a closet (for futons)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふとんを おしいれに しまいます。 — futon o oshiire ni shimaimasu — \"I put the futon away in the closet.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おしいれ (oshiire) is native Japanese, built from oshi, \"pushing\", the stem of osu, and ire, \"putting in\", the stem of ireru; both parts are inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oshiire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oshiire*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oshiire, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oshiire*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "futon o oshiire ni shimaimasu — I put the futon away in the closet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *futon o oshiire ni shimaimasu* — I put the futon away in the closet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for furniture, then the Japanese for the front entrance, then say oshiire again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for furniture, then the Japanese for the front entrance, then say *oshiire* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おしいれ (oshiire) mean? (\"A closet (for futons)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C156-oshiire-type",
+              "prompt": "Say the Japanese for 'a closet'.",
+              "assesses": [
+                "JA-LEX-C156-CLOSET156-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おしいれ",
+                "oshiire"
+              ],
+              "feedback": {
+                "correct": "Right: おしいれ (oshiire) is 'a closet (for futons)'.",
+                "incorrect": "'A closet' is おしいれ (oshiire)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C156-hikidashi",
+      "sequence": 9320,
+      "title": "ひきだし (hikidashi) — a drawer",
+      "headword": "ひきだし",
+      "romanization": "hikidashi",
+      "gloss": "a drawer",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbbb9f006515cb38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the front entrance, then the Japanese for a closet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひきだし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきだし — hikidashi — \"a drawer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "つくえの ひきだしは ちいさいです。 — tsukue no hikidashi wa chiisai desu — \"The desk drawer is small.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひきだし (hikidashi) is native Japanese, built from hiki, \"pulling\", the stem of hiku, and dashi, \"taking out\", the stem of dasu; both parts are inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikidashi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikidashi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikidashi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikidashi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukue no hikidashi wa chiisai desu — The desk drawer is small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukue no hikidashi wa chiisai desu* — The desk drawer is small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the front entrance, then the Japanese for a closet, then say hikidashi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the front entrance, then the Japanese for a closet, then say *hikidashi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひきだし (hikidashi) mean? (\"A drawer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C156-hikidashi-type",
+              "prompt": "Say the Japanese for 'a drawer'.",
+              "assesses": [
+                "JA-LEX-C156-CLOSET156-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひきだし",
+                "hikidashi"
+              ],
+              "feedback": {
+                "correct": "Right: ひきだし (hikidashi) is 'a drawer'.",
+                "incorrect": "'A drawer' is ひきだし (hikidashi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C156-shosai",
+      "sequence": 9330,
+      "title": "しょさい (shosai) — a home office; a study",
+      "headword": "しょさい",
+      "romanization": "shosai",
+      "gloss": "a home office; a study",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:405d0ce9151808a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a closet, then the Japanese for a drawer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょさい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょさい — shosai — \"a home office; a study\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは しょさいで ほんを よみます。 — chichi wa shosai de hon o yomimasu — \"My father reads books in his study.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょさい (shosai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sho, \"writing, books\" (Middle Chinese syo) and sai, \"room, purification\" (tsreaj) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shosai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shosai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shosai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shosai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa shosai de hon o yomimasu — My father reads books in his study.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa shosai de hon o yomimasu* — My father reads books in his study.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a closet, then the Japanese for a drawer, then say shosai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a closet, then the Japanese for a drawer, then say *shosai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょさい (shosai) mean? (\"A home office; a study\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C156-shosai-type",
+              "prompt": "Say the Japanese for 'a home office'.",
+              "assesses": [
+                "JA-LEX-C156-CLOSET156-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょさい",
+                "shosai"
+              ],
+              "feedback": {
+                "correct": "Right: しょさい (shosai) is 'a home office; a study'.",
+                "incorrect": "'A home office' is しょさい (shosai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C156-ireru",
+      "sequence": 9340,
+      "title": "いれる (ireru) — to put in",
+      "headword": "いれる",
+      "romanization": "ireru",
+      "gloss": "to put in",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29f76427f49333fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a drawer, then the Japanese for a home office."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いれる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いれる — ireru — \"to put in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かばんに ほんを いれます。 — kaban ni hon o iremasu — \"I put a book in my bag.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite いれます, iremasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いれる (ireru) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and built on the same root as iru, \"to go in\"; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ireru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ireru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ireru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ireru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaban ni hon o iremasu — I put a book in my bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaban ni hon o iremasu* — I put a book in my bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a drawer, then the Japanese for a home office, then say ireru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a drawer, then the Japanese for a home office, then say *ireru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いれる (ireru) mean? (\"To put in\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C156-ireru-type",
+              "prompt": "Say the Japanese for 'to put in'.",
+              "assesses": [
+                "JA-LEX-C156-CLOSET156-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いれる",
+                "ireru"
+              ],
+              "feedback": {
+                "correct": "Right: いれる (ireru) is 'to put in'.",
+                "incorrect": "'To put in' is いれる (ireru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C156-naraberu",
+      "sequence": 9350,
+      "title": "ならべる (naraberu) — to arrange in a row; to line up (things)",
+      "headword": "ならべる",
+      "romanization": "naraberu",
+      "gloss": "to arrange in a row; to line up (things)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60c41e43f1875976",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a home office, then the Japanese for to put in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ならべる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ならべる — naraberu — \"to arrange in a row; to line up (things)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たなに ほんを ならべます。 — tana ni hon o narabemasu — \"I line up the books on the shelf.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ならべます, narabemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ならべる (naraberu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naraberu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naraberu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naraberu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naraberu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tana ni hon o narabemasu — I line up the books on the shelf.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tana ni hon o narabemasu* — I line up the books on the shelf.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a home office, then the Japanese for to put in, then say naraberu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a home office, then the Japanese for to put in, then say *naraberu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ならべる (naraberu) mean? (\"To arrange in a row; to line up (things)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C156-naraberu-type",
+              "prompt": "Say the Japanese for 'to arrange in a row'.",
+              "assesses": [
+                "JA-LEX-C156-CLOSET156-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ならべる",
+                "naraberu"
+              ],
+              "feedback": {
+                "correct": "Right: ならべる (naraberu) is 'to arrange in a row; to line up (things)'.",
+                "incorrect": "'To arrange in a row' is ならべる (naraberu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

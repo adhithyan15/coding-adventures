@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:baea2a0287b91858",
+  "lessonIds": [
+    "JA-C239-odoru",
+    "JA-C239-tsuru",
+    "JA-C239-sanpo",
+    "JA-C239-tejina",
+    "JA-C239-shougi"
+  ],
+  "tex": "japanese/book/chapters/ch239-weekend-pastimes.tex"
+}

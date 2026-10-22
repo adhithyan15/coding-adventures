@@ -1,0 +1,804 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 153,
+  "title": "Out, Back Home and Things Left Behind",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:100189a656dcb73f",
+  "lessons": [
+    {
+      "id": "JA-C153-gaishutsu",
+      "sequence": 9160,
+      "title": "がいしゅつ (gaishutsu) — going out; being out of the office",
+      "headword": "がいしゅつ",
+      "romanization": "gaishutsu",
+      "gloss": "going out; being out of the office",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51d9b08deed38331",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to forget, then the Japanese for to be late."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がいしゅつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がいしゅつ — gaishutsu — \"going out; being out of the office\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは いま がいしゅつちゅうです。 — chichi wa ima gaishutsuchū desu — \"My father is out right now.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がいしゅつ (gaishutsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gai, \"outside\" (Middle Chinese ngwajH) and shutsu, \"go out\" (tsyhwit) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaishutsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaishutsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaishutsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaishutsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa ima gaishutsuchū desu — My father is out right now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa ima gaishutsuchū desu* — My father is out right now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to forget, then the Japanese for to be late, then say gaishutsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to forget, then the Japanese for to be late, then say *gaishutsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がいしゅつ (gaishutsu) mean? (\"Going out; being out of the office\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C153-gaishutsu-type",
+              "prompt": "Say the Japanese for 'going out'.",
+              "assesses": [
+                "JA-LEX-C153-OUTING153-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がいしゅつ",
+                "gaishutsu"
+              ],
+              "feedback": {
+                "correct": "Right: がいしゅつ (gaishutsu) is 'going out; being out of the office'.",
+                "incorrect": "'Going out' is がいしゅつ (gaishutsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C153-kitaku",
+      "sequence": 9170,
+      "title": "きたく (kitaku) — coming home; getting home",
+      "headword": "きたく",
+      "romanization": "kitaku",
+      "gloss": "coming home; getting home",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6f199c7cc128c0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be late, then the Japanese for going out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きたく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きたく — kitaku — \"coming home; getting home\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちの きたくは ゆうがたです。 — chichi no kitaku wa yūgata desu — \"My father gets home in the evening.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きたく (kitaku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ki, \"return home\" (Middle Chinese kjw+j) and taku, \"house, home\" (draek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kitaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kitaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi no kitaku wa yūgata desu — My father gets home in the evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi no kitaku wa yūgata desu* — My father gets home in the evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be late, then the Japanese for going out, then say kitaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be late, then the Japanese for going out, then say *kitaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きたく (kitaku) mean? (\"Coming home; getting home\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C153-kitaku-type",
+              "prompt": "Say the Japanese for 'coming home'.",
+              "assesses": [
+                "JA-LEX-C153-OUTING153-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きたく",
+                "kitaku"
+              ],
+              "feedback": {
+                "correct": "Right: きたく (kitaku) is 'coming home; getting home'.",
+                "incorrect": "'Coming home' is きたく (kitaku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C153-wasuremono",
+      "sequence": 9180,
+      "title": "わすれもの (wasuremono) — something left behind",
+      "headword": "わすれもの",
+      "romanization": "wasuremono",
+      "gloss": "something left behind",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:743cccbb3336e2a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for going out, then the Japanese for coming home."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わすれもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わすれもの — wasuremono — \"something left behind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この かさは ちちの わすれものです。 — kono kasa wa chichi no wasuremono desu — \"This umbrella is something my father left behind.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わすれもの (wasuremono) is native Japanese, built from wasure, \"forgetting\", the stem of wasureru, and mono, \"thing\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wasuremono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wasuremono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wasuremono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wasuremono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono kasa wa chichi no wasuremono desu — This umbrella is something my father left behind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono kasa wa chichi no wasuremono desu* — This umbrella is something my father left behind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for going out, then the Japanese for coming home, then say wasuremono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for going out, then the Japanese for coming home, then say *wasuremono* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わすれもの (wasuremono) mean? (\"Something left behind\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C153-wasuremono-type",
+              "prompt": "Say the Japanese for 'something left behind'.",
+              "assesses": [
+                "JA-LEX-C153-OUTING153-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わすれもの",
+                "wasuremono"
+              ],
+              "feedback": {
+                "correct": "Right: わすれもの (wasuremono) is 'something left behind'.",
+                "incorrect": "'Something left behind' is わすれもの (wasuremono)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C153-nakusu",
+      "sequence": 9190,
+      "title": "なくす (nakusu) — to lose; to mislay",
+      "headword": "なくす",
+      "romanization": "nakusu",
+      "gloss": "to lose; to mislay",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d24c915a2d547728",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for coming home, then the Japanese for something left behind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なくす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なくす — nakusu — \"to lose; to mislay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いもうとは よく かさを なくします。 — imōto wa yoku kasa o nakushimasu — \"My younger sister often loses her umbrella.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite なくします, nakushimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なくす (nakusu) is a native Japanese word (wago), inherited rather than borrowed from Chinese, and its older origin is not settled. It is usually written in kana; its kanji is a later kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakusu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakusu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakusu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakusu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imōto wa yoku kasa o nakushimasu — My younger sister often loses her umbrella.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imōto wa yoku kasa o nakushimasu* — My younger sister often loses her umbrella.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for coming home, then the Japanese for something left behind, then say nakusu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for coming home, then the Japanese for something left behind, then say *nakusu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なくす (nakusu) mean? (\"To lose; to mislay\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C153-nakusu-type",
+              "prompt": "Say the Japanese for 'to lose'.",
+              "assesses": [
+                "JA-LEX-C153-OUTING153-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なくす",
+                "nakusu"
+              ],
+              "feedback": {
+                "correct": "Right: なくす (nakusu) is 'to lose; to mislay'.",
+                "incorrect": "'To lose' is なくす (nakusu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C153-maniau",
+      "sequence": 9200,
+      "title": "まにあう (maniau) — to be in time; to make it",
+      "headword": "まにあう",
+      "romanization": "maniau",
+      "gloss": "to be in time; to make it",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdea8145a26ad04c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for something left behind, then the Japanese for to lose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まにあう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まにあう — maniau — \"to be in time; to make it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいあさ でんしゃに まにあいます。 — maiasa densha ni maniaimasu — \"Every morning I make it to the train in time.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite まにあいます, maniaimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まにあう (maniau) is native Japanese, built from ma, \"interval, space\", the particle ni, and au, \"to fit\": to fit inside the time. All three parts are inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maniau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maniau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maniau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maniau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiasa densha ni maniaimasu — Every morning I make it to the train in time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiasa densha ni maniaimasu* — Every morning I make it to the train in time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for something left behind, then the Japanese for to lose, then say maniau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for something left behind, then the Japanese for to lose, then say *maniau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まにあう (maniau) mean? (\"To be in time; to make it\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C153-maniau-type",
+              "prompt": "Say the Japanese for 'to be in time'.",
+              "assesses": [
+                "JA-LEX-C153-OUTING153-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まにあう",
+                "maniau"
+              ],
+              "feedback": {
+                "correct": "Right: まにあう (maniau) is 'to be in time; to make it'.",
+                "incorrect": "'To be in time' is まにあう (maniau)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

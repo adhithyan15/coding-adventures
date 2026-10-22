@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Putting Clothes On and Taking Them Off",
+  "label": "ch:ja-putting-clothes-on-and-taking-them-off",
+  "canDo": "I can say what I put on and take off.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C149-shitagi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: I can say what I put on and take off.",
+    "assesses": [
+      "JA-LEX-C149-DRESS149-03",
+      "JA-LEX-C149-DRESS149-04",
+      "JA-LEX-C149-DRESS149-05"
+    ]
+  }
+}

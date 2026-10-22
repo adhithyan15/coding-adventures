@@ -1,0 +1,19 @@
+{
+  "chapter": 177,
+  "title": "Spicy, Sour and Burnt",
+  "label": "ch:ja-spicy-sour-and-burnt",
+  "canDo": "I can say how food tastes and when it goes bad.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-R177-review-172-177",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 177: I can say how food tastes and when it goes bad.",
+    "assesses": [
+      "JA-LEX-C177-TASTE177-03",
+      "JA-LEX-C177-TASTE177-04",
+      "JA-LEX-C177-TASTE177-05"
+    ]
+  }
+}

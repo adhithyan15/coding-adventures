@@ -1,0 +1,798 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 218,
+  "title": "A Stay in Hospital",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a7e4e6b20277a031",
+  "lessons": [
+    {
+      "id": "JA-C218-nyuuin",
+      "sequence": 13030,
+      "title": "にゅういん (nyūin) — going into hospital; a hospital stay",
+      "headword": "にゅういん",
+      "romanization": "nyūin",
+      "gloss": "going into hospital; a hospital stay",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09f4a5b583ea8eb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a dentist, then the Japanese for a cavity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にゅういん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にゅういん — nyūin — \"going into hospital; a hospital stay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "にゅういんは ながいですか。 — nyūin wa nagai desu ka — \"Is the hospital stay long?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にゅういん (nyūin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are nyū, \"to enter\" (Middle Chinese nyip) and in, \"courtyard, institution\" (hjwenH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyūin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyūin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyūin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyūin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nyūin wa nagai desu ka — Is the hospital stay long?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nyūin wa nagai desu ka* — Is the hospital stay long?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a dentist, then the Japanese for a cavity, then say nyūin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a dentist, then the Japanese for a cavity, then say *nyūin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にゅういん (nyūin) mean? (\"Going into hospital; a hospital stay\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C218-nyuuin-type",
+              "prompt": "Say the Japanese for 'going into hospital'.",
+              "assesses": [
+                "JA-LEX-C218-HOSPITAL218-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にゅういん",
+                "nyūin",
+                "nyuuin",
+                "nyuin"
+              ],
+              "feedback": {
+                "correct": "Right: にゅういん (nyūin) is 'going into hospital; a hospital stay'.",
+                "incorrect": "'Going into hospital' is にゅういん (nyūin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C218-taiin",
+      "sequence": 13040,
+      "title": "たいいん (taiin) — leaving hospital",
+      "headword": "たいいん",
+      "romanization": "taiin",
+      "gloss": "leaving hospital",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:348164729031c834",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a cavity, then the Japanese for going into hospital."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たいいん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいいん — taiin — \"leaving hospital\"."
+            },
+            {
+              "kind": "speech",
+              "text": "たいいんは あしたですか。 — taiin wa ashita desu ka — \"Do you leave hospital tomorrow?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たいいん (taiin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tai, \"to withdraw\" (Middle Chinese thwojH) and in, \"courtyard, institution\" (hjwenH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taiin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taiin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taiin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taiin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taiin wa ashita desu ka — Do you leave hospital tomorrow?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taiin wa ashita desu ka* — Do you leave hospital tomorrow?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a cavity, then the Japanese for going into hospital, then say taiin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a cavity, then the Japanese for going into hospital, then say *taiin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たいいん (taiin) mean? (\"Leaving hospital\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C218-taiin-type",
+              "prompt": "Say the Japanese for 'leaving hospital'.",
+              "assesses": [
+                "JA-LEX-C218-HOSPITAL218-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たいいん",
+                "taiin"
+              ],
+              "feedback": {
+                "correct": "Right: たいいん (taiin) is 'leaving hospital'.",
+                "incorrect": "'Leaving hospital' is たいいん (taiin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C218-shujutsu",
+      "sequence": 13050,
+      "title": "しゅじゅつ (shujutsu) — surgery; an operation",
+      "headword": "しゅじゅつ",
+      "romanization": "shujutsu",
+      "gloss": "surgery; an operation",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e2902698a9b10e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for going into hospital, then the Japanese for leaving hospital."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅじゅつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅじゅつ — shujutsu — \"surgery; an operation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゅじゅつは ひつようですか。 — shujutsu wa hitsuyō desu ka — \"Is surgery needed?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅじゅつ (shujutsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shu, \"hand\" (Middle Chinese syuwX) and jutsu, \"skill\" (zywit) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shujutsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shujutsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shujutsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shujutsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shujutsu wa hitsuyō desu ka — Is surgery needed?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shujutsu wa hitsuyō desu ka* — Is surgery needed?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for going into hospital, then the Japanese for leaving hospital, then say shujutsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for going into hospital, then the Japanese for leaving hospital, then say *shujutsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅじゅつ (shujutsu) mean? (\"Surgery; an operation\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C218-shujutsu-type",
+              "prompt": "Say the Japanese for 'surgery'.",
+              "assesses": [
+                "JA-LEX-C218-HOSPITAL218-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅじゅつ",
+                "shujutsu"
+              ],
+              "feedback": {
+                "correct": "Right: しゅじゅつ (shujutsu) is 'surgery; an operation'.",
+                "incorrect": "'Surgery' is しゅじゅつ (shujutsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C218-kizu",
+      "sequence": 13060,
+      "title": "きず (kizu) — a wound; a cut",
+      "headword": "きず",
+      "romanization": "kizu",
+      "gloss": "a wound; a cut",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a86edf18b2acee9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for leaving hospital, then the Japanese for surgery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きず",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きず — kizu — \"a wound; a cut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きずは ふかいですか。 — kizu wa fukai desu ka — \"Is the wound deep?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きず (kizu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kizu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kizu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kizu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kizu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kizu wa fukai desu ka — Is the wound deep?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kizu wa fukai desu ka* — Is the wound deep?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for leaving hospital, then the Japanese for surgery, then say kizu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for leaving hospital, then the Japanese for surgery, then say *kizu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きず (kizu) mean? (\"A wound; a cut\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C218-kizu-type",
+              "prompt": "Say the Japanese for 'a wound'.",
+              "assesses": [
+                "JA-LEX-C218-HOSPITAL218-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きず",
+                "kizu"
+              ],
+              "feedback": {
+                "correct": "Right: きず (kizu) is 'a wound; a cut'.",
+                "incorrect": "'A wound' is きず (kizu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C218-inochi",
+      "sequence": 13070,
+      "title": "いのち (inochi) — life",
+      "headword": "いのち",
+      "romanization": "inochi",
+      "gloss": "life",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e4e4a8e7cee35e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for surgery, then the Japanese for a wound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いのち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いのち — inochi — \"life\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いのちは たいせつです。 — inochi wa taisetsu desu — \"Life is precious.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いのち (inochi) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inochi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inochi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inochi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inochi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inochi wa taisetsu desu — Life is precious.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inochi wa taisetsu desu* — Life is precious.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for surgery, then the Japanese for a wound, then say inochi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for surgery, then the Japanese for a wound, then say *inochi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いのち (inochi) mean? (\"Life\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C218-inochi-type",
+              "prompt": "Say the Japanese for 'life'.",
+              "assesses": [
+                "JA-LEX-C218-HOSPITAL218-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いのち",
+                "inochi"
+              ],
+              "feedback": {
+                "correct": "Right: いのち (inochi) is 'life'.",
+                "incorrect": "'Life' is いのち (inochi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

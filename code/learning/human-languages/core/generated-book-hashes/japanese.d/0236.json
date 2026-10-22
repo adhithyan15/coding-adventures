@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:47b32990ae14b382",
+  "lessonIds": [
+    "JA-C236-eiga",
+    "JA-C236-miru",
+    "JA-C236-kiku",
+    "JA-C236-ongaku",
+    "JA-C236-ensou"
+  ],
+  "tex": "japanese/book/chapters/ch236-films-and-music.tex"
+}

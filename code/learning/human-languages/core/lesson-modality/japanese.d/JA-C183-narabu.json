@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C183-narabu",
+    "language": "japanese",
+    "chapter": 183,
+    "sequence": 11000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdadf6e82c2640dd"
+  },
+  "findings": []
+}

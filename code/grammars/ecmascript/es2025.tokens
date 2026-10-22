@@ -76,7 +76,7 @@
 # Literals
 # ============================================================================
 
-HASHBANG = /^#![^\n]*/
+HASHBANG = /^#![^\n\r]*/
 
 NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
 
@@ -114,12 +114,12 @@ STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
 
 # --- Template literals ---
 
-TEMPLATE_HEAD = /`([^`\\$]|\\.|\$[^{])*\$\{/
-TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$[^{])*`/
+TEMPLATE_HEAD = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*\$\{/
+TEMPLATE_NO_SUB = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
 
 # --- Regular expressions (with ES2024 `v` flag) ---
 
-REGEX = /\/([^\/\\\n]|\\.)+\/[dgimsuvy]*/
+REGEX = /\/([^\/\\\n\r]|\\[^\n\r])+\/[dgimsuvy]*/
 
 # ============================================================================
 # Multi-character operators (unchanged from ES2024)
@@ -290,8 +290,8 @@ context_keywords:
 # ============================================================================
 
 group template:
-  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
-  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
 
 # ============================================================================
 # Declarative lexer modes (F10): regex-vs-division disambiguation
@@ -356,8 +356,8 @@ group div:
 group template_div:
   SLASH_EQUALS    = "/="
   SLASH           = "/"
-  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$[^{])*\$\{/
-  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$[^{])*`/
+  TEMPLATE_MIDDLE = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*\$\{/
+  TEMPLATE_TAIL   = /\}([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*`/
 
 transitions:
   # ── Template substitution entry/exit (gap-044, first slice) ──────────────
@@ -407,8 +407,8 @@ transitions:
 
 skip:
   WHITESPACE    = /[ \t\r\n\v\f]+/
-  LINE_COMMENT  = /\/\/[^\n]*/
-  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+  LINE_COMMENT  = /\/\/[^\n\r]*/
+  BLOCK_COMMENT = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
 
 # ============================================================================
 # Error recovery tokens
@@ -418,4 +418,4 @@ errors:
   BAD_STRING_DQ = /"[^"]*$/
   BAD_STRING_SQ = /'[^']*$/
   BAD_REGEX = /\/([^\/\\\n]|\\.)*$/
-  BAD_TEMPLATE = /`([^`\\$]|\\.|\$[^{])*$/
+  BAD_TEMPLATE = /`([^`\\$]|\\.|\$+([^{`\\$]|\\.))*\$*$/

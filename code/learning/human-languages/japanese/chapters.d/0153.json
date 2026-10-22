@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Out, Back Home and Things Left Behind",
+  "label": "ch:ja-out-back-home-and-things-left-behind",
+  "canDo": "I can talk about going out, coming home and losing things.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C153-maniau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can talk about going out, coming home and losing things.",
+    "assesses": [
+      "JA-LEX-C153-OUTING153-03",
+      "JA-LEX-C153-OUTING153-04",
+      "JA-LEX-C153-OUTING153-05"
+    ]
+  }
+}

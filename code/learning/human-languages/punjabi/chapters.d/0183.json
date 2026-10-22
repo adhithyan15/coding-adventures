@@ -1,0 +1,22 @@
+{
+  "chapter": 183,
+  "title": "One Routine, One Familiar Engine",
+  "label": "ch:pa-a2-habitual-routine",
+  "canDo": "I can recognise and use five familiar verbs in exact present-habitual routine forms.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C183-payoff",
+    "kind": "production",
+    "summary": "Retrieve five exact present-habitual routine forms through listening, speaking, reading, and bounded copying after a slow review-led ramp.",
+    "assesses": [
+      "PA-FORM-KARDA-183",
+      "PA-FORM-KARDE-183",
+      "PA-FORM-UTTHDA-183",
+      "PA-FORM-DEKHDA-183",
+      "PA-FORM-SAUNDA-183"
+    ],
+    "note": "This sixth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

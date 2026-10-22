@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Bosses, Seniors and Juniors",
+  "label": "ch:ja-bosses-seniors-and-juniors",
+  "canDo": "I can talk about the people above and below me at work.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C230-ganbaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can talk about the people above and below me at work.",
+    "assesses": [
+      "JA-LEX-C230-BOSS230-03",
+      "JA-LEX-C230-BOSS230-04",
+      "JA-LEX-C230-BOSS230-05"
+    ]
+  }
+}

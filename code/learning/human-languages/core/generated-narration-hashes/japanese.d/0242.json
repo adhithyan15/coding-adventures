@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:0860f7fd59576962",
+  "lessonIds": [
+    "JA-C242-kare",
+    "JA-C242-kanojo",
+    "JA-C242-koibito",
+    "JA-C242-shinyuu",
+    "JA-C242-tsukiau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch242.txt",
+  "json": "japanese/narration/ch242.json",
+  "textHash": "fnv1a64:02591738c61c95ec",
+  "jsonHash": "fnv1a64:9801efa8923a92d9",
+  "findings": []
+}

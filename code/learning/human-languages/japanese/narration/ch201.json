@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 201,
+  "title": "Crossing the Road Safely",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ca1f735cc3398373",
+  "lessons": [
+    {
+      "id": "JA-C201-wataru",
+      "sequence": 12150,
+      "title": "わたる (wataru) — to cross; to go across",
+      "headword": "わたる",
+      "romanization": "wataru",
+      "gloss": "to cross; to go across",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad8e6c07699750b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a boarding point, then the Japanese for a bus stop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わたる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わたる — wataru — \"to cross; to go across\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しんごうで どうろを わたります。 — shingō de dōro o watarimasu — \"I cross the road at the traffic lights.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite わたります, watarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わたる (wataru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wataru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wataru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wataru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wataru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shingō de dōro o watarimasu — I cross the road at the traffic lights.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shingō de dōro o watarimasu* — I cross the road at the traffic lights.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a boarding point, then the Japanese for a bus stop, then say wataru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a boarding point, then the Japanese for a bus stop, then say *wataru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わたる (wataru) mean? (\"To cross; to go across\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C201-wataru-type",
+              "prompt": "Say the Japanese for 'to cross'.",
+              "assesses": [
+                "JA-LEX-C201-ROAD201-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わたる",
+                "wataru"
+              ],
+              "feedback": {
+                "correct": "Right: わたる (wataru) is 'to cross; to go across'.",
+                "incorrect": "'To cross' is わたる (wataru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C201-komu",
+      "sequence": 12160,
+      "title": "こむ (komu) — to be crowded",
+      "headword": "こむ",
+      "romanization": "komu",
+      "gloss": "to be crowded",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50dd8d3080ba70b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a bus stop, then the Japanese for to cross."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こむ — komu — \"to be crowded\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あさの でんしゃは こみます。 — asa no densha wa komimasu — \"Morning trains get crowded.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite こみます, komimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こむ (komu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "komu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *komu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "komu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *komu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa no densha wa komimasu — Morning trains get crowded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa no densha wa komimasu* — Morning trains get crowded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a bus stop, then the Japanese for to cross, then say komu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a bus stop, then the Japanese for to cross, then say *komu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こむ (komu) mean? (\"To be crowded\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C201-komu-type",
+              "prompt": "Say the Japanese for 'to be crowded'.",
+              "assesses": [
+                "JA-LEX-C201-ROAD201-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こむ",
+                "komu"
+              ],
+              "feedback": {
+                "correct": "Right: こむ (komu) is 'to be crowded'.",
+                "incorrect": "'To be crowded' is こむ (komu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C201-yokogiru",
+      "sequence": 12170,
+      "title": "よこぎる (yokogiru) — to cut across; to cross (a road)",
+      "headword": "よこぎる",
+      "romanization": "yokogiru",
+      "gloss": "to cut across; to cross (a road)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5bdb548901ae375a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to cross, then the Japanese for to be crowded."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: よこぎる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よこぎる — yokogiru — \"to cut across; to cross (a road)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもが どうろを よこぎります。 — kodomo ga dōro o yokogirimasu — \"A child cuts across the road.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite よこぎります, yokogirimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "よこぎる (yokogiru) is native Japanese (wago), built from yoko, \"side\", and kiru, \"to cut\", both inherited rather than borrowed; the k is voiced to g (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yokogiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yokogiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yokogiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yokogiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ga dōro o yokogirimasu — A child cuts across the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ga dōro o yokogirimasu* — A child cuts across the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to cross, then the Japanese for to be crowded, then say yokogiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to cross, then the Japanese for to be crowded, then say *yokogiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does よこぎる (yokogiru) mean? (\"To cut across; to cross (a road)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C201-yokogiru-type",
+              "prompt": "Say the Japanese for 'to cut across'.",
+              "assesses": [
+                "JA-LEX-C201-ROAD201-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "よこぎる",
+                "yokogiru"
+              ],
+              "feedback": {
+                "correct": "Right: よこぎる (yokogiru) is 'to cut across; to cross (a road)'.",
+                "incorrect": "'To cut across' is よこぎる (yokogiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C201-tobidasu",
+      "sequence": 12180,
+      "title": "とびだす (tobidasu) — to rush out; to jump out",
+      "headword": "とびだす",
+      "romanization": "tobidasu",
+      "gloss": "to rush out; to jump out",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a1ba27c30f9cc9d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be crowded, then the Japanese for to cut across."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とびだす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とびだす — tobidasu — \"to rush out; to jump out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こどもが みちに とびだします。 — kodomo ga michi ni tobidashimasu — \"A child rushes out into the street.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とびだします, tobidashimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とびだす (tobidasu) is native Japanese (wago), built from tobi, \"flying, leaping\", and dasu, \"to put out\", both inherited rather than borrowed (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tobidasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tobidasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tobidasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tobidasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kodomo ga michi ni tobidashimasu — A child rushes out into the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kodomo ga michi ni tobidashimasu* — A child rushes out into the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be crowded, then the Japanese for to cut across, then say tobidasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be crowded, then the Japanese for to cut across, then say *tobidasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とびだす (tobidasu) mean? (\"To rush out; to jump out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C201-tobidasu-type",
+              "prompt": "Say the Japanese for 'to rush out'.",
+              "assesses": [
+                "JA-LEX-C201-ROAD201-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とびだす",
+                "tobidasu"
+              ],
+              "feedback": {
+                "correct": "Right: とびだす (tobidasu) is 'to rush out; to jump out'.",
+                "incorrect": "'To rush out' is とびだす (tobidasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C201-butsukaru",
+      "sequence": 12190,
+      "title": "ぶつかる (butsukaru) — to bump into; to collide with",
+      "headword": "ぶつかる",
+      "romanization": "butsukaru",
+      "gloss": "to bump into; to collide with",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cc022c74dfdf771",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to cut across, then the Japanese for to rush out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぶつかる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶつかる — butsukaru — \"to bump into; to collide with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じてんしゃが くるまに ぶつかりました。 — jitensha ga kuruma ni butsukarimashita — \"A bicycle bumped into a car.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ぶつかります, butsukarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぶつかる (butsukaru) is a native Japanese word (wago), inherited rather than borrowed and usually written in kana (JMdict); its older origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "butsukaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *butsukaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "butsukaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *butsukaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jitensha ga kuruma ni butsukarimashita — A bicycle bumped into a car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jitensha ga kuruma ni butsukarimashita* — A bicycle bumped into a car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to cut across, then the Japanese for to rush out, then say butsukaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to cut across, then the Japanese for to rush out, then say *butsukaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぶつかる (butsukaru) mean? (\"To bump into; to collide with\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C201-butsukaru-type",
+              "prompt": "Say the Japanese for 'to bump into'.",
+              "assesses": [
+                "JA-LEX-C201-ROAD201-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぶつかる",
+                "butsukaru"
+              ],
+              "feedback": {
+                "correct": "Right: ぶつかる (butsukaru) is 'to bump into; to collide with'.",
+                "incorrect": "'To bump into' is ぶつかる (butsukaru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

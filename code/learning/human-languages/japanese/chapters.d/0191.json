@@ -1,0 +1,19 @@
+{
+  "chapter": 191,
+  "title": "Closing Time and Local Shops",
+  "label": "ch:ja-closing-time-and-local-shops",
+  "canDo": "I can read closing times and find local shops.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C191-mitsukeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 191: I can read closing times and find local shops.",
+    "assesses": [
+      "JA-LEX-C191-SHUT191-03",
+      "JA-LEX-C191-SHUT191-04",
+      "JA-LEX-C191-SHUT191-05"
+    ]
+  }
+}

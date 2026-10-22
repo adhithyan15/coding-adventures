@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-203-FLY203",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-203-FLY203"
+  ],
+  "after": []
+}

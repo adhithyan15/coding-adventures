@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Traffic, Passengers and Bookings",
+  "label": "ch:ja-traffic-passengers-and-bookings",
+  "canDo": "I can talk about traffic, passengers and bookings.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C206-yoyaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can talk about traffic, passengers and bookings.",
+    "assesses": [
+      "JA-LEX-C206-TRAFFIC206-03",
+      "JA-LEX-C206-TRAFFIC206-04",
+      "JA-LEX-C206-TRAFFIC206-05"
+    ]
+  }
+}

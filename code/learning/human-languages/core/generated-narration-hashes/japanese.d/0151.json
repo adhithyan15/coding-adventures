@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:d414d709ac500e49",
+  "lessonIds": [
+    "JA-C151-kimono",
+    "JA-C151-obi",
+    "JA-C151-tabi",
+    "JA-C151-sode",
+    "JA-C151-niau",
+    "JA-R151-review-146-151"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch151.txt",
+  "json": "japanese/narration/ch151.json",
+  "textHash": "fnv1a64:81b5efeea641d663",
+  "jsonHash": "fnv1a64:076d7f632d7e9fb3",
+  "findings": []
+}

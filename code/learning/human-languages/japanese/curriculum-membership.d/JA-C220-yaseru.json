@@ -1,0 +1,11 @@
+{
+  "id": "JA-C220-yaseru",
+  "pathSegment": "JA-PATH-220-WEIGHT220",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-220-WEIGHT220",
+      "order": 3
+    }
+  ]
+}

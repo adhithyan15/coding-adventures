@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:2e14ced1d8297ac8",
+  "lessonIds": [
+    "JA-C243-ryoushin",
+    "JA-C243-sofu",
+    "JA-C243-sobo",
+    "JA-C243-kyoudai",
+    "JA-C243-sodateru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch243.txt",
+  "json": "japanese/narration/ch243.json",
+  "textHash": "fnv1a64:e503400075539920",
+  "jsonHash": "fnv1a64:820c23cb74552900",
+  "findings": []
+}

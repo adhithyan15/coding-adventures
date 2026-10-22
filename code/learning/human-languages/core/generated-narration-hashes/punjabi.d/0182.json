@@ -1,0 +1,24 @@
+{
+  "language": "punjabi",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:f895f5c6ded7a96d",
+  "lessonIds": [
+    "PA-C182-somvar",
+    "PA-C182-mangalvar",
+    "PA-C182-budhvar",
+    "PA-C182-veervar",
+    "PA-C182-shukkarvar",
+    "PA-C182-shanivar",
+    "PA-C182-aitvar",
+    "PA-C182-airhaa-ai",
+    "PA-C182-weekday-review",
+    "PA-C182-payoff"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch182.txt",
+  "json": "punjabi/narration/ch182.json",
+  "textHash": "fnv1a64:562f47b714aba80c",
+  "jsonHash": "fnv1a64:8ccd3211569db229",
+  "findings": []
+}

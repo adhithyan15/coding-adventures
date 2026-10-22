@@ -1,0 +1,11 @@
+{
+  "id": "JA-C170-iwau",
+  "pathSegment": "JA-PATH-170-NEWYEAR170",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-170-NEWYEAR170",
+      "order": 3
+    }
+  ]
+}

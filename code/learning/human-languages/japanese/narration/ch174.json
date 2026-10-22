@@ -1,0 +1,807 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 174,
+  "title": "Pots, Knives and Plates",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3798c17c51b05b51",
+  "lessons": [
+    {
+      "id": "JA-C174-nabe",
+      "sequence": 10500,
+      "title": "なべ (nabe) — pot; saucepan, hot pot",
+      "headword": "なべ",
+      "romanization": "nabe",
+      "gloss": "pot; saucepan, hot pot",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50cab1c66f022d08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be left over, then the Japanese for to savour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なべ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なべ — nabe — \"pot; saucepan, hot pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ふゆは なべを よく たべます。 — fuyu wa nabe o yoku tabemasu — \"In winter we often eat hot pot.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なべ (nabe) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi; its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nabe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nabe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nabe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nabe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fuyu wa nabe o yoku tabemasu — In winter we often eat hot pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fuyu wa nabe o yoku tabemasu* — In winter we often eat hot pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be left over, then the Japanese for to savour, then say nabe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be left over, then the Japanese for to savour, then say *nabe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なべ (nabe) mean? (\"Pot; saucepan, hot pot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C174-nabe-type",
+              "prompt": "Say the Japanese for 'pot'.",
+              "assesses": [
+                "JA-LEX-C174-KITCH174-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なべ",
+                "nabe"
+              ],
+              "feedback": {
+                "correct": "Right: なべ (nabe) is 'pot; saucepan, hot pot'.",
+                "incorrect": "'Pot' is なべ (nabe)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C174-houchou",
+      "sequence": 10510,
+      "title": "ほうちょう (hōchō) — kitchen knife",
+      "headword": "ほうちょう",
+      "romanization": "hōchō",
+      "gloss": "kitchen knife",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bf44031a7477435",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to savour, then the Japanese for pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ほうちょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうちょう — hōchō — \"kitchen knife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは ほうちょうを よく つかいます。 — chichi wa hōchō o yoku tsukaimasu — \"My father often uses a kitchen knife.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ほうちょう (hōchō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. Today they are hō, \"wrap\", and chō, a character that also counts tools (Middle Chinese teng); JMdict also lists an older spelling whose first character the Guangyun glosses \"kitchen\" (baew), so the history of the pair is not settled (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōchō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōchō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōchō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōchō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa hōchō o yoku tsukaimasu — My father often uses a kitchen knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa hōchō o yoku tsukaimasu* — My father often uses a kitchen knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to savour, then the Japanese for pot, then say hōchō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to savour, then the Japanese for pot, then say *hōchō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ほうちょう (hōchō) mean? (\"Kitchen knife\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C174-houchou-type",
+              "prompt": "Say the Japanese for 'kitchen knife'.",
+              "assesses": [
+                "JA-LEX-C174-KITCH174-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ほうちょう",
+                "hōchō",
+                "houchou",
+                "hoochoo",
+                "hocho"
+              ],
+              "feedback": {
+                "correct": "Right: ほうちょう (hōchō) is 'kitchen knife'.",
+                "incorrect": "'Kitchen knife' is ほうちょう (hōchō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C174-kizamu",
+      "sequence": 10520,
+      "title": "きざむ (kizamu) — to chop; to mince, to carve",
+      "headword": "きざむ",
+      "romanization": "kizamu",
+      "gloss": "to chop; to mince, to carve",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa3ae02f003e36b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for pot, then the Japanese for kitchen knife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きざむ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きざむ — kizamu — \"to chop; to mince, to carve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ほうちょうで だいこんを きざみます。 — hōchō de daikon o kizamimasu — \"I chop a daikon with a kitchen knife.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きざみます, kizamimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きざむ (kizamu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kizamu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kizamu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kizamu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kizamu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōchō de daikon o kizamimasu — I chop a daikon with a kitchen knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōchō de daikon o kizamimasu* — I chop a daikon with a kitchen knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for pot, then the Japanese for kitchen knife, then say kizamu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for pot, then the Japanese for kitchen knife, then say *kizamu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きざむ (kizamu) mean? (\"To chop; to mince, to carve\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C174-kizamu-type",
+              "prompt": "Say the Japanese for 'to chop'.",
+              "assesses": [
+                "JA-LEX-C174-KITCH174-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きざむ",
+                "kizamu"
+              ],
+              "feedback": {
+                "correct": "Right: きざむ (kizamu) is 'to chop; to mince, to carve'.",
+                "incorrect": "'To chop' is きざむ (kizamu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C174-osara",
+      "sequence": 10530,
+      "title": "おさら (osara) — plate; dish",
+      "headword": "おさら",
+      "romanization": "osara",
+      "gloss": "plate; dish",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b885b0baa0102c95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for kitchen knife, then the Japanese for to chop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おさら",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おさら — osara — \"plate; dish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さかなを おさらに だします。 — sakana o osara ni dashimasu — \"I serve the fish on a plate.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おさら (osara) is built from polite o- and native sara, \"dish\", inherited rather than borrowed; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakana o osara ni dashimasu — I serve the fish on a plate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakana o osara ni dashimasu* — I serve the fish on a plate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for kitchen knife, then the Japanese for to chop, then say osara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for kitchen knife, then the Japanese for to chop, then say *osara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おさら (osara) mean? (\"Plate; dish\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C174-osara-type",
+              "prompt": "Say the Japanese for 'plate'.",
+              "assesses": [
+                "JA-LEX-C174-KITCH174-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おさら",
+                "osara"
+              ],
+              "feedback": {
+                "correct": "Right: おさら (osara) is 'plate; dish'.",
+                "incorrect": "'Plate' is おさら (osara)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C174-moru",
+      "sequence": 10540,
+      "title": "もる (moru) — to dish up; to serve (food), to heap",
+      "headword": "もる",
+      "romanization": "moru",
+      "gloss": "to dish up; to serve (food), to heap",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b096f5474dafe1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to chop, then the Japanese for plate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もる — moru — \"to dish up; to serve (food), to heap\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おさらに ごはんを もります。 — osara ni gohan o morimasu — \"I dish up rice onto a plate.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite もります, morimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もる (moru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osara ni gohan o morimasu — I dish up rice onto a plate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osara ni gohan o morimasu* — I dish up rice onto a plate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to chop, then the Japanese for plate, then say moru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to chop, then the Japanese for plate, then say *moru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もる (moru) mean? (\"To dish up; to serve (food), to heap\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C174-moru-type",
+              "prompt": "Say the Japanese for 'to dish up'.",
+              "assesses": [
+                "JA-LEX-C174-KITCH174-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もる",
+                "moru"
+              ],
+              "feedback": {
+                "correct": "Right: もる (moru) is 'to dish up; to serve (food), to heap'.",
+                "incorrect": "'To dish up' is もる (moru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

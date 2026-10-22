@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:bb3f3ea468183009",
+  "lessonIds": [
+    "JA-C217-kanja",
+    "JA-C217-shinsatsu",
+    "JA-C217-chuusha",
+    "JA-C217-haisha",
+    "JA-C217-mushiba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch217.txt",
+  "json": "japanese/narration/ch217.json",
+  "textHash": "fnv1a64:b379f0113436f624",
+  "jsonHash": "fnv1a64:0e4672f6f31dc3e8",
+  "findings": []
+}

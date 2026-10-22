@@ -10,7 +10,7 @@
 import { describe, it, expect } from "vitest";
 import { parseLesson } from "../src/parse.js";
 import { measureScriptClosure } from "../src/script-closure.js";
-import { loadChapterPolicy, loadEverything } from "../src/loader.js";
+import { loadChapterPolicy, loadLessons } from "../src/loader.js";
 import { measureScriptRamp } from "../src/ramp.js";
 
 // TAMIL LETTER KA, MA, NA; TAMIL SIGN VIRAMA.
@@ -188,9 +188,31 @@ describe("track rollups", () => {
   });
 });
 
+/**
+ * The real corpus and its closure report, derived at most once per file.
+ *
+ * Four places below measure the real corpus, and each used to call
+ * `loadEverything()` and `measureScriptClosure` afresh: about 4 s each on a quiet
+ * 4-core machine, most of it reading curriculum membership owners and books that
+ * the measurement never looks at; the cases that did it inside a test body are
+ * the ones that timed out at 30 s on a loaded macOS runner. The report is a pure function of
+ * the lessons, so this loads exactly those (through the loader `loadEverything`
+ * itself calls) and measures them once. Every use only reads the result.
+ */
+let realClosureOnce:
+  | { lessons: ReturnType<typeof loadLessons>; report: ReturnType<typeof measureScriptClosure> }
+  | undefined;
+function realClosure(): NonNullable<typeof realClosureOnce> {
+  if (realClosureOnce === undefined) {
+    const lessons = loadLessons();
+    realClosureOnce = { lessons, report: measureScriptClosure(lessons) };
+  }
+  return realClosureOnce;
+}
+
 describe("the real corpus", () => {
-  const { lessons } = loadEverything();
-  const report = measureScriptClosure(lessons);
+  // Still at collection time, as before: the cases below share it.
+  const { lessons, report } = realClosure();
 
   it("measures every non-Latin track and no Latin one", () => {
     expect(report.summary.tracksWithScript).toBeGreaterThanOrEqual(10);
@@ -375,7 +397,7 @@ describe("a headword without a romanization", () => {
   };
 
   it("is never added to a track that does not already carry the debt", () => {
-    const report = measureScriptClosure(loadEverything().lessons);
+    const { report } = realClosure();
     for (const track of report.tracks) {
       expect(
         track.headwordsWithoutRomanization,
@@ -385,7 +407,7 @@ describe("a headword without a romanization", () => {
   });
 
   it("names only tracks that actually carry the debt, so the ceiling cannot rot into a floor", () => {
-    const report = measureScriptClosure(loadEverything().lessons);
+    const { report } = realClosure();
     const carrying = new Set(
       report.tracks
         .filter((track) => track.headwordsWithoutRomanization > 0)
@@ -488,8 +510,7 @@ describe("an unknown script is unmeasured, not clean", () => {
   });
 
   it("reports zero unknown scripts for the real corpus", () => {
-    const { lessons } = loadEverything();
-    expect(measureScriptClosure(lessons).unknownScriptTracks).toEqual([]);
+    expect(realClosure().report.unknownScriptTracks).toEqual([]);
   });
 });
 
