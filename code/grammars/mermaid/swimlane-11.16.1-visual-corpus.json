@@ -107,6 +107,7 @@
     "markdown-string-labels",
     "multiline-markdown-string-labels",
     "cross-lane-rank-constraints",
-    "rank-crossing-optimization"
+    "rank-crossing-optimization",
+    "icon-glyph-node"
   ]
 }

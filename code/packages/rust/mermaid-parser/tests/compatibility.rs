@@ -1968,6 +1968,18 @@ fn swimlane_cloud_and_bang_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_icon_identities_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  parser@{ icon: \"logos:rust\", label: \"Parser\" }\n  output[Output]\nend\nparser --> output",
+    ).expect("Swimlane icon identities should parse");
+
+    assert_eq!(diagram.nodes[0].label, "Parser");
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::RoundedRect);
+    assert_eq!(diagram.icons.get("parser").map(String::as_str), Some("logos:rust"));
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: \"\" }\nend").is_err());
+}
+
+#[test]
 fn swimlane_classic_shape_attributes_and_aliases_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 

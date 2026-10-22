@@ -20,8 +20,8 @@ mod apple {
     use diagram_layout_graph::{GraphLayoutOptions, layout_graph_diagram};
     use diagram_layout_grid::layout_grid_diagram;
     use diagram_layout_hierarchy::{
-        layout_railroad, layout_swimlane, layout_treeview, layout_treeview_with_options, layout_treemap,
-        TreeViewLayoutOptions,
+        layout_railroad, layout_swimlane, layout_swimlane_with_options, layout_treeview,
+        layout_treeview_with_options, layout_treemap, SwimlaneLayoutOptions, TreeViewLayoutOptions,
     };
     use diagram_layout_geometric::{layout_cynefin, layout_info, layout_ishikawa, layout_venn, layout_wardley};
     use diagram_layout_packet::layout_packet_diagram;
@@ -3824,7 +3824,14 @@ line "Target" [35, 50, 68, 82]"##,
                 .unwrap_or_else(|| panic!("missing Swimlane fixture {fixture_name}"));
             let diagram = parse_swimlane(fixture["source"].as_str().expect("swimlane source"))
                 .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
-            let layout = layout_swimlane(&diagram);
+            let icon_options = SwimlaneLayoutOptions { icon_glyphs: BTreeMap::from([(
+                "logos:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() },
+            )]) };
+            let layout = if fixture_name == "icon-glyph-node" {
+                layout_swimlane_with_options(&diagram, Some(&icon_options))
+            } else {
+                layout_swimlane(&diagram)
+            };
             let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
                 background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
@@ -3835,6 +3842,17 @@ line "Target" [35, 50, 68, 82]"##,
                 resolver: &resolver,
             });
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            if fixture_name == "icon-glyph-node" {
+                assert_eq!(layout.icons.get("parser").map(String::as_str), Some("logos:rust"));
+                assert_eq!(layout.icon_glyphs.get("parser").map(|glyph| glyph.text.as_str()), Some("R"));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.parser.icon")), Some(&"logos:rust".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.parser.iconResolved")), Some(&"true".to_string()));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 24.0 && !run.glyphs.is_empty()
+                )), "resolved icon glyph must lower to backend-neutral text paint");
+            }
             if fixture_name == "default-lane-for-loose-nodes" {
                 assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
                     vec!["OwnedLane", "__swimlane_default__"]);

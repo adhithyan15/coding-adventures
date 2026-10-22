@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased — LANG84 phase 7b, slice 1: release recorded and selectable through lang-aot
+
+### Added
+- The compiled module records the release that produced it:
+  `IIRModule::release` is the resolved ID from `compile_source_at` and
+  `compile_cst` alike (`3.13.16` for `None`). lang-aot's `--lang
+  python@<release>` relies on it. Test:
+  `the_module_records_the_release_that_produced_it`.
+
+### Changed
+- `FrontendError::ReleaseNotAvailable.stage` is self-describing. A row with
+  no grammar pair now reads `no grammar pair: grammar_stage none` instead of
+  the bare `none`; python-parser's regeneration-bug phrases (`token table
+  missing (regenerate python-lexer)`) are kept as they are. Test:
+  `release_not_available_reasons_are_self_describing`.
+- `claiming_releases_form_one_iir_identity_class` checks each module's
+  `release`, then sets that (intentionally differing) field aside before
+  comparing the releases' IIR.
+
 ## 0.3.0 — 2026-10-20
 
 ### Added — LANG84 phase 7a: `py-int-print` on the release path
