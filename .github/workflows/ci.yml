@@ -637,8 +637,11 @@ jobs:
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           # LANG84 release inventories (`code/grammars/*/releases.csv`): the
-          # common header, date order, predecessor lineage and status claims.
-          python3 code/scripts/release_inventory.py check
+          # common header (every inventory, Perl's included since phase 2b),
+          # date order, predecessor lineage, status claims, `subsets.csv` and
+          # corpora. `--matrix` also fails a B(S) claim that has no
+          # `lang_matrix` row on the release or its IIR class representative.
+          python3 code/scripts/release_inventory.py check --matrix
           python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
