@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C203-saman",
+    "language": "gujarati",
+    "chapter": 203,
+    "sequence": 11040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41dc9662e2880f9f"
+  },
+  "findings": []
+}

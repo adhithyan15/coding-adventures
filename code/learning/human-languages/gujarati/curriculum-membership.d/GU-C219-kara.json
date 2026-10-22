@@ -1,0 +1,11 @@
+{
+  "id": "GU-C219-kara",
+  "pathSegment": "GU-PATH-219-THUNDER219",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-219-THUNDER219",
+      "order": 3
+    }
+  ]
+}

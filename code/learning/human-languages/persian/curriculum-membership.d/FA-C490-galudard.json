@@ -1,0 +1,11 @@
+{
+  "id": "FA-C490-galudard",
+  "pathSegment": "FA-PATH-490-COLD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-490-COLD",
+      "order": 3
+    }
+  ]
+}

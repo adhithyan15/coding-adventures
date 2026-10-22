@@ -1,0 +1,11 @@
+{
+  "id": "RU-C321-printsessa",
+  "pathSegment": "RU-PATH-321-KOROL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-321-KOROL",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-297-COMPARE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can compare two things with -tar az, name the best with -tarin, say what something is like, and say how long something has lasted or how long ago it happened.",
+  "prerequisites": []
+}

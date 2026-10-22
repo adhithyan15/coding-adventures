@@ -1,0 +1,11 @@
+{
+  "id": "FA-C482-ranjidan",
+  "pathSegment": "FA-PATH-482-HURT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-482-HURT",
+      "order": 1
+    }
+  ]
+}

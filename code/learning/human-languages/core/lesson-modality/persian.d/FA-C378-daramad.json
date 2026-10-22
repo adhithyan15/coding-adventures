@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C378-daramad",
+    "language": "persian",
+    "chapter": 378,
+    "sequence": 19330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6acb3b9f3f47201"
+  },
+  "findings": []
+}

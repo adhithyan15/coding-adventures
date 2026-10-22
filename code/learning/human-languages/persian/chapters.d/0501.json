@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "In-laws and Twins",
+  "label": "ch:fa-in-laws-and-twins",
+  "canDo": "I can talk about in-laws and twins.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C501-farzand",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about in-laws and twins.",
+    "assesses": [
+      "FA-LEX-C501-INLAWS-03",
+      "FA-LEX-C501-INLAWS-04",
+      "FA-LEX-C501-INLAWS-05"
+    ]
+  }
+}

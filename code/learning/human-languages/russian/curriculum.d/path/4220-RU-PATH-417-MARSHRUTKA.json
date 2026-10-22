@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-417-MARSHRUTKA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-417-MARSHRUTKA"
+  ],
+  "after": []
+}

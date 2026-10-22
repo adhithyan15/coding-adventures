@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "The birthday party",
+  "label": "ch:ru-the-birthday-party",
+  "canDo": "I can talk about the birthday boy and a name day, and say that someone made a wish, blew out the candles and had fun.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C317-veselitsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can talk about the birthday boy and a name day, and say that someone made a wish, blew out the candles and had fun.",
+    "assesses": [
+      "RU-LEX-C317-IMENINNIK-03",
+      "RU-LEX-C317-IMENINNIK-04",
+      "RU-LEX-C317-IMENINNIK-05"
+    ]
+  }
+}

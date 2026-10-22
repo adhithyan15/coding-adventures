@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C379-v-zavisimosti-ot",
+    "language": "russian",
+    "chapter": 379,
+    "sequence": 21990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e90cb8cc5d4a2b9"
+  },
+  "findings": []
+}

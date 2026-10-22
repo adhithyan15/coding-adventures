@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:93e5fe7ce7a80f07",
+  "lessonIds": [
+    "FA-C295-raft-o-bargasht",
+    "FA-C295-az-dast-dadan",
+    "FA-C295-masul",
+    "FA-W295-hamze",
+    "FA-R295-at-the-station"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "persian/narration/ch295.txt",
+  "json": "persian/narration/ch295.json",
+  "textHash": "fnv1a64:3c0f62d494f15c59",
+  "jsonHash": "fnv1a64:8515a858654df1ba",
+  "findings": []
+}

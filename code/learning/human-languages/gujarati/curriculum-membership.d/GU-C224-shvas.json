@@ -1,0 +1,11 @@
+{
+  "id": "GU-C224-shvas",
+  "pathSegment": "GU-PATH-224-DOCTOR224",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-224-DOCTOR224",
+      "order": 4
+    }
+  ]
+}

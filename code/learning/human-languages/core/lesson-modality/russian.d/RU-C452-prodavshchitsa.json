@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C452-prodavshchitsa",
+    "language": "russian",
+    "chapter": 452,
+    "sequence": 25740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e829ebf8f5f946d9"
+  },
+  "findings": []
+}

@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+### Fixed - keep hoisted declarations after a `return` (#17841)
+
+`fold_block_statement` dropped every statement after a `return` without a
+hoisting guard. That produced two miscompiles:
+
+- `function f(){return h();function h(){return 1}}` emitted
+  `function f(){return h()}`, which threw `ReferenceError` (the source returns
+  `1`).
+- `function g(){x=3;return x;var x}` lost `var x`, so `g` overwrote the
+  global `x`.
+
+The dead tail is now dropped only when every statement passes
+`is_droppable_dead_statement`, which is decided in linear time. It
+uses the same whitelist as `closure-pass-dce`: expression, empty, jump and
+`debugger` statements only. Any `function`, `var`, `let`, `const` or `class`
+declaration, or compound statement, keeps the whole tail. Four new unit tests
+cover this.
+
 ### Fixed - reject unrecordable deletion provenance (CV02)
 
 Use fallible tombstone recording and return a pass-specific error before accepting

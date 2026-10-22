@@ -1,0 +1,11 @@
+{
+  "id": "FA-C464-moamele-kardan",
+  "pathSegment": "FA-PATH-464-MAGHAZE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-464-MAGHAZE",
+      "order": 2
+    }
+  ]
+}

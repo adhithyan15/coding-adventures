@@ -1,0 +1,19 @@
+{
+  "chapter": 203,
+  "title": "Planes, Airports and Seats",
+  "label": "ch:ja-planes-airports-and-seats",
+  "canDo": "I can talk about flying and giving up a seat.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R203-review-198-203",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 203: I can talk about flying and giving up a seat.",
+    "assesses": [
+      "JA-LEX-C203-FLY203-03",
+      "JA-LEX-C203-FLY203-04",
+      "JA-LEX-C203-FLY203-05"
+    ]
+  }
+}

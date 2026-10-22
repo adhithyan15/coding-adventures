@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "On the platform",
+  "label": "ch:ru-on-the-platform",
+  "canDo": "I can find my train: the platform, the departures board, departure and arrival.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C414-pribytiye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can find my train: the platform, the departures board, departure and arrival.",
+    "assesses": [
+      "RU-LEX-C414-PERRON-03",
+      "RU-LEX-C414-PERRON-04",
+      "RU-LEX-C414-PERRON-05"
+    ]
+  }
+}

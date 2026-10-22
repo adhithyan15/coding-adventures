@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:1ff55caf00142112",
+  "lessonIds": [
+    "JA-C182-harau",
+    "JA-C182-otsuri",
+    "JA-C182-genkin",
+    "JA-C182-satsu",
+    "JA-C182-kozeni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch182.txt",
+  "json": "japanese/narration/ch182.json",
+  "textHash": "fnv1a64:0aaf99cb11b04dda",
+  "jsonHash": "fnv1a64:902c689bda45a7a7",
+  "findings": []
+}

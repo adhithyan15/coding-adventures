@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C506-sar-zadan",
+    "language": "persian",
+    "chapter": 506,
+    "sequence": 25950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbfdddea734df75c"
+  },
+  "findings": []
+}

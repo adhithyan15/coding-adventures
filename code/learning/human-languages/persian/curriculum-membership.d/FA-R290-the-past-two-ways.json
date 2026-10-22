@@ -1,0 +1,11 @@
+{
+  "id": "FA-R290-the-past-two-ways",
+  "pathSegment": "FA-PATH-290-PAST",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-290-PAST",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C249-nambar",
+    "language": "gujarati",
+    "chapter": 249,
+    "sequence": 13520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:186361be0a51924d"
+  },
+  "findings": []
+}

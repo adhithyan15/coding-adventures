@@ -1,0 +1,5 @@
+oracle: host CPython 3.11.17, 3.12.3, 3.13.16 (python3.11, python3.12, python3.13)
+command: {python3.11,python3.12,python3.13} -I reject_hex.py
+host-python: accepts
+result: py-int-print refuses it with a Lex error naming the release
+why: non-decimal integers are not lexed by the slice

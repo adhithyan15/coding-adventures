@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C162-shuuri",
+    "language": "japanese",
+    "chapter": 162,
+    "sequence": 9650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:327c0e9d5df36c87"
+  },
+  "findings": []
+}

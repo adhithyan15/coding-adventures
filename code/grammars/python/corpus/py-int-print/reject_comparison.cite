@@ -1,0 +1,5 @@
+oracle: host CPython 3.11.17, 3.12.3, 3.13.16 (python3.11, python3.12, python3.13)
+command: {python3.11,python3.12,python3.13} -I reject_comparison.py
+host-python: accepts
+result: py-int-print refuses it with a Parse error naming the release
+why: comparisons are not in the subset grammar

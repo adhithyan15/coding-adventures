@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-449-STRIZHKA",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-449-STRIZHKA"
+  ],
+  "after": []
+}

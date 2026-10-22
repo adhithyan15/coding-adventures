@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:11936b6f8d72e75d",
+  "lessonIds": [
+    "FA-C527-estedad",
+    "FA-C527-khallaqiyat",
+    "FA-C527-shahkar",
+    "FA-C527-raqsande",
+    "FA-C527-tahsin-kardan",
+    "FA-R527-review-520-527"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch527.txt",
+  "json": "persian/narration/ch527.json",
+  "textHash": "fnv1a64:d34ffb79784db30b",
+  "jsonHash": "fnv1a64:0dc6a21a3f9b383a",
+  "findings": []
+}

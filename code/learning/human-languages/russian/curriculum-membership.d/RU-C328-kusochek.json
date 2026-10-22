@@ -1,0 +1,11 @@
+{
+  "id": "RU-C328-kusochek",
+  "pathSegment": "RU-PATH-328-NAREZAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-328-NAREZAT",
+      "order": 1
+    }
+  ]
+}

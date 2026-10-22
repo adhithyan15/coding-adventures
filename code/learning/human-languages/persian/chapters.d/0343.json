@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Winning and losing",
+  "label": "ch:fa-winning-and-losing",
+  "canDo": "I can say who won and who lost, and talk about the spectators, cheering and a medal.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C343-medal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can say who won and who lost, and talk about the spectators, cheering and a medal.",
+    "assesses": [
+      "FA-LEX-C343-BARANDE-03",
+      "FA-LEX-C343-BARANDE-04",
+      "FA-LEX-C343-BARANDE-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Changing minds",
+  "label": "ch:ru-changing-minds",
+  "canDo": "I can try to convince someone, change their mind, speak of my convictions and my confidence, and say that I doubt something.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C339-somnevatsya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can try to convince someone, change their mind, speak of my convictions and my confidence, and say that I doubt something.",
+    "assesses": [
+      "RU-LEX-C339-UBEZHDAT-03",
+      "RU-LEX-C339-UBEZHDAT-04",
+      "RU-LEX-C339-UBEZHDAT-05"
+    ]
+  }
+}

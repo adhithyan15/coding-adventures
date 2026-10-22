@@ -1,0 +1,11 @@
+{
+  "id": "RU-C425-yakor",
+  "pathSegment": "RU-PATH-425-KACHKA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-425-KACHKA",
+      "order": 4
+    }
+  ]
+}

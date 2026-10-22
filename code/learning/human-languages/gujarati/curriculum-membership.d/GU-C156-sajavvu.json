@@ -1,0 +1,11 @@
+{
+  "id": "GU-C156-sajavvu",
+  "pathSegment": "GU-PATH-156-ADORN156",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-156-ADORN156",
+      "order": 3
+    }
+  ]
+}

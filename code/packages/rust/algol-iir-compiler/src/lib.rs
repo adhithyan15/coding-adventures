@@ -4678,9 +4678,232 @@ impl Compiler {
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
-        let operand = self.builtin_sign_operand_unchecked(node)?;
-        (self.builtin_sign_unit_offset_count(node)? <= MAX_SIGN_OFFSET_UNITS)
-            .then_some(operand)
+        if let Some(operand) = self.builtin_sign_operand_unchecked(node) {
+            if self
+                .builtin_sign_unit_offset_count(node)
+                .is_some_and(|units| units <= MAX_SIGN_OFFSET_UNITS)
+            {
+                return Some(operand);
+            }
+        }
+        self.builtin_exact_integer_sign_operand(node)
+            .map(|proof| proof.operand)
+    }
+
+    /// Recognize an exact-integer transform rooted in one built-in `sign` call
+    /// and return its worst-case magnitude. This complements the wider bounded
+    /// transform proof above with non-unit integer scaling and positive static
+    /// powers while keeping every intermediate operation exactly representable
+    /// in binary64.
+    fn builtin_exact_integer_sign_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<ExactIntegerSignProof<'n>> {
+        if let Some((_condition, then_node, else_node)) =
+            self.conditional_expression_parts(node)
+        {
+            let then_proof = self.builtin_exact_integer_sign_operand(then_node)?;
+            let else_proof = self.builtin_exact_integer_sign_operand(else_node)?;
+            if self.is_selector_call_safe_runtime_real_root(then_proof.operand)
+                && self.is_selector_call_safe_runtime_real_root(else_proof.operand)
+            {
+                return Some(ExactIntegerSignProof {
+                    operand: then_proof.operand,
+                    magnitude: then_proof.magnitude.max(else_proof.magnitude),
+                    value_gcd: integer_gcd(then_proof.value_gcd, else_proof.value_gcd),
+                });
+            }
+            return None;
+        }
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.builtin_exact_integer_sign_operand(child);
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return matches!(sign, "+" | "-")
+                .then(|| self.builtin_exact_integer_sign_operand(child))?;
+        }
+        if pieces(node)
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            let sequence = pieces(node);
+            if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+                return None;
+            }
+            let mut operands = Vec::new();
+            for (index, piece) in sequence.iter().enumerate() {
+                if index.is_multiple_of(2) {
+                    let Piece::Node(operand) = piece else {
+                        return None;
+                    };
+                    operands.push(*operand);
+                } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "^" | "**"))
+                {
+                    return None;
+                }
+            }
+            let (base, exponents) = operands.split_first()?;
+            let exponent = literal_nonnegative_integral_arithmetic_power_chain(exponents)?;
+            if exponent == 0 {
+                return None;
+            }
+            let mut proof = self.builtin_exact_integer_sign_operand(base)?;
+            proof.magnitude = proof.magnitude.checked_pow(exponent)?;
+            proof.value_gcd = proof.value_gcd.checked_pow(exponent)?;
+            return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(proof);
+        }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut rooted = None;
+                let mut static_magnitude = 0u64;
+                let mut static_offset = 0i64;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if let Some(candidate) = self.builtin_exact_integer_sign_operand(operand) {
+                            if rooted.replace(candidate).is_some() {
+                                return None;
+                            }
+                        } else {
+                            let value =
+                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            let units = exact_sign_integer_units(value)?;
+                            static_magnitude = static_magnitude.checked_add(units)?;
+                            let signed_value = value as i64;
+                            if index > 0
+                                && matches!(sequence.get(index - 1), Some(Piece::Op(op)) if op == "-")
+                            {
+                                static_offset = static_offset.checked_sub(signed_value)?;
+                            } else {
+                                static_offset = static_offset.checked_add(signed_value)?;
+                            }
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return None;
+                    }
+                }
+                let mut proof = rooted?;
+                proof.magnitude = proof.magnitude.checked_add(static_magnitude)?;
+                proof.value_gcd = integer_gcd(proof.value_gcd, static_offset.unsigned_abs());
+                return (proof.magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE)
+                    .then_some(proof);
+            }
+        }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut rooted = None;
+                let mut rooted_index = None;
+                let mut static_terms = Vec::new();
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if let Some(candidate) = self.builtin_exact_integer_sign_operand(operand) {
+                            if rooted.replace(candidate).is_some() {
+                                return None;
+                            }
+                            rooted_index = Some(index);
+                        } else {
+                            let units = exact_sign_integer_units(
+                                expr_static_real_arithmetic_value_with(operand, &|_| None)?,
+                            )?;
+                            let operator = (index > 0)
+                                .then(|| sequence.get(index - 1))
+                                .flatten()
+                                .and_then(|piece| match piece {
+                                    Piece::Op(op) => Some(op.as_str()),
+                                    Piece::Node(_) => None,
+                                });
+                            static_terms.push((index, operator, units));
+                        }
+                    } else {
+                        let Piece::Op(op) = piece else {
+                            return None;
+                        };
+                        match op.as_str() {
+                            "*" | "/" | "div" | "mod" => {}
+                            _ => return None,
+                        }
+                    }
+                }
+                let mut proof = rooted?;
+                let rooted_index = rooted_index?;
+                if rooted_index > 0
+                    && matches!(
+                        sequence.get(rooted_index - 1),
+                        Some(Piece::Op(op)) if matches!(op.as_str(), "/" | "div" | "mod")
+                    )
+                {
+                    return None;
+                }
+                for (index, operator, units) in static_terms {
+                    if operator == Some("div") {
+                        if index < rooted_index || units == 0 {
+                            return None;
+                        }
+                        proof.magnitude /= units;
+                        proof.value_gcd = if proof.value_gcd % units == 0 {
+                            proof.value_gcd / units
+                        } else {
+                            1
+                        };
+                    } else if operator == Some("mod") {
+                        if index < rooted_index || units == 0 {
+                            return None;
+                        }
+                        proof.magnitude = proof.magnitude.min(units - 1);
+                        proof.value_gcd = integer_gcd(proof.value_gcd, units);
+                    } else if operator == Some("/") {
+                        if units == 0 || proof.value_gcd % units != 0 {
+                            return None;
+                        }
+                        proof.magnitude /= units;
+                        proof.value_gcd /= units;
+                    } else {
+                        proof.magnitude = proof.magnitude.checked_mul(units)?;
+                        proof.value_gcd = proof.value_gcd.checked_mul(units)?;
+                    }
+                    if proof.magnitude > MAX_EXACT_SIGN_INTEGER_MAGNITUDE {
+                        return None;
+                    }
+                }
+                return Some(proof);
+            }
+        }
+        if node.rule_name != "proc_call" {
+            let children = direct_nodes(node);
+            if direct_tokens(node).is_empty() && children.len() == 1 {
+                return self.builtin_exact_integer_sign_operand(children[0]);
+            }
+            return None;
+        }
+        let source_name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&source_name);
+        if self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        match target_name.as_str() {
+            "sign" => Some(ExactIntegerSignProof {
+                operand: actuals[0],
+                magnitude: 1,
+                value_gcd: 1,
+            }),
+            "abs" | "entier" => self.builtin_exact_integer_sign_operand(actuals[0]),
+            _ => None,
+        }
     }
 
     fn builtin_sign_unit_offset_count(&self, node: &GrammarASTNode) -> Option<u64> {
@@ -12094,6 +12317,19 @@ const MAX_POW_UNROLL_EXPONENT: u32 = 64;
 /// ```
 const MAX_SIGN_OFFSET_UNITS: u64 = 9_007_199_254_740_991;
 
+#[derive(Clone, Copy)]
+struct ExactIntegerSignProof<'n> {
+    operand: &'n GrammarASTNode,
+    magnitude: u64,
+    /// A conservative common divisor of every possible transformed value.
+    value_gcd: u64,
+}
+
+/// Largest integer magnitude for which binary64 represents every integral
+/// value exactly. Exact sign-rooted multiplication uses this inclusive bound:
+/// unlike an additive offset, the scaled sign itself may be exactly `2^53`.
+const MAX_EXACT_SIGN_INTEGER_MAGNITUDE: u64 = 9_007_199_254_740_992;
+
 /// Units contributed by one variable-free additive term around a bounded
 /// `sign` result: its magnitude when it is a whole number within
 /// [`MAX_SIGN_OFFSET_UNITS`], otherwise `None` (fractional, non-finite, or too
@@ -12104,6 +12340,23 @@ fn exact_sign_offset_units(value: f64) -> Option<u64> {
         && magnitude.fract() == 0.0
         && magnitude <= MAX_SIGN_OFFSET_UNITS as f64)
         .then_some(magnitude as u64)
+}
+
+/// Magnitude of one variable-free exact-integer term used by the scaled sign
+/// proof. The evaluated binary64 value must be integral and within `2^53`.
+fn exact_sign_integer_units(value: f64) -> Option<u64> {
+    let magnitude = value.abs();
+    (magnitude.is_finite()
+        && magnitude.fract() == 0.0
+        && magnitude <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE as f64)
+        .then_some(magnitude as u64)
+}
+
+fn integer_gcd(mut left: u64, mut right: u64) -> u64 {
+    while right != 0 {
+        (left, right) = (right, left % right);
+    }
+    left
 }
 
 /// Bound compile-time simulation of `step` progress and scalar recurrences.
@@ -14530,6 +14783,100 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_exact_scaled_local_name_actual_branches() {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) * 2)) else relay(entier(entier(sign(right)) * 3)); output(result) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := relay(entier(if choose() then ((entier(sign(left)) * 4) + 3) else ((2 * entier(sign(right))) + 5))); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real procedure relay(x); real x; relay := x; real left, right, result; left := leftvalue(); right := rightvalue(); result := if choose() then relay(entier(entier(sign(left)) * 9007199254740992)) else relay(entier(entier(sign(right)) * 9007199254740992)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a calling selector may choose an exact-scaled local transform through real name formals for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_reject_inexact_or_oversized_scaled_local_name_actual_branches()
+    {
+        for source in [
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) * 1.5)) else relay(entier(entier(sign(right)) * 1.5)); output(result) end",
+            "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure relay(x); real x; relay := x; real left, right, result; left := pick(); right := pick(); result := if choose() then relay(entier(entier(sign(left)) * 4503599627370496 * 3)) else relay(entier(entier(sign(right)) * 4503599627370496 * 3)); output(result) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("inexact, oversized, or denominator-root scaling must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_exact_divided_local_name_actual_branches() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 6) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier(((sign(pick()) * 4) + 2) / 2))) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then (sign(left) * 6) else ((sign(right) * 9) + 6)) / 3); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "an exactly divisible sign-rooted transform remains an integer for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_commuted_exact_divided_local_name_actual_branches()
+    {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((6 * sign(pick())) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(12 / 2 * sign(pick()) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure relay(x); real x; relay := x; output(relay(entier((2 * ((sign(pick()) * 4) + 2)) / 2))) end",
+            "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier((if choose() then ((6 * sign(left)) + 6) else ((9 * sign(right)) + 6)) / 3); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "commuted numerator factors remain exactly divisible for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_reject_inexact_divided_local_name_actual_branches() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 2) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((sign(pick()) * 4) + 1) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 2; result := entier((sign(pick()) * 4) / divisor); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) * 4) / 0); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((6 / sign(pick())) / 3); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(3 / 2 * sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("inexact, dynamic, and zero divisors must fail closed");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
     fn al4_runtime_real_conditional_selector_calls_reject_unsafe_local_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := -2.25; real procedure abs(x); real x; abs := x; real x; x := pick(); output(if choose() then abs(x) else abs(x)) end",
@@ -14984,14 +15331,15 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_provenance_crosses_multiplicative_entier_sign_widening() {
+    fn al4_runtime_real_provenance_crosses_exact_multiplicative_entier_sign_widening() {
         for source in [
             "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) * (-1)); output(x) end",
             "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier((-1) * abs(sign(pick())) * 1))) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) * 2); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
-                    "exact multiplicative units preserve the bounded sign result through entier for {source:?}: {error}"
+                    "exact multiplicative factors preserve the bounded sign result through entier for {source:?}: {error}"
                 )
             });
             let main = module.get_function("main").expect("has main");
@@ -15004,13 +15352,13 @@ mod tests {
     }
 
     #[test]
-    fn al4_multiplicative_entier_sign_widening_rejects_unproven_factors() {
+    fn al4_multiplicative_entier_sign_widening_rejects_dynamic_factors() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) * 2); output(result) end",
             "begin real procedure pick; pick := -2.25; integer unit; real result; unit := -1; result := entier(sign(pick()) * unit); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) * sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test")
-                .expect_err("a non-unit or variable factor exceeds the bounded sign proof");
+                .expect_err("a variable factor or repeated root exceeds the bounded sign proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
@@ -15050,11 +15398,14 @@ mod tests {
     }
 
     #[test]
-    fn al4_runtime_real_provenance_crosses_unit_power_entier_sign_widening() {
+    fn al4_runtime_real_provenance_crosses_exact_positive_power_entier_sign_widening() {
         for source in [
             "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) ^ (2 - 1)); output(x) end",
             "begin real procedure pick; pick := 3.5; real x; x := entier((abs(sign(pick()))) ^ 1.0); output(x) end",
             "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier((abs(sign(pick()))) ^ (2 - 1)))) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 2); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((sign(pick()) + 2) ^ (1 + 1)); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((2 * sign(pick()) + 2) ^ 3); output(result) end",
         ] {
             let module = compile_source(source, "test").unwrap_or_else(|error| {
                 panic!(
@@ -15071,15 +15422,85 @@ mod tests {
     }
 
     #[test]
-    fn al4_unit_power_entier_sign_widening_rejects_unproven_exponents() {
+    fn al4_exact_power_entier_sign_widening_rejects_unproven_exponents() {
         for source in [
             "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 0); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((9007199254740992 * sign(pick())) ^ 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 1) ^ (-1)); output(result) end",
             "begin real procedure pick; pick := -2.25; integer unit; real result; unit := 1; result := entier(sign(pick()) ^ unit); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(1 ^ sign(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a non-unit, variable, or exponent-position sign exceeds the bounded proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_exact_div_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((sign(pick()) + 5) div 2); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((((6 * sign(pick())) + 6) div 4) ^ 2); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((((6 * sign(pick())) + 6) div 4) mod 2) * 2 / 2); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a static nonzero integer divisor preserves a bounded sign-rooted quotient for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_exact_div_entier_sign_widening_rejects_unproven_divisors() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) div 0); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 2; result := entier(sign(pick()) div divisor); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((sign(pick()) + 5) div 2) / 2); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a zero or dynamic integer divisor and a later inexact real quotient must remain outside the composed proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_exact_modulo_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier((sign(pick()) + 2) mod 2); output(x) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((2 * sign(pick()) + 2) mod 3) ^ 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier((((6 * sign(pick())) + 6) mod 4) / 2); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a static nonzero modulo divisor preserves an exact sign-rooted integer for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_exact_modulo_entier_sign_widening_rejects_unproven_divisors() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) mod 0); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 2; result := entier(sign(pick()) mod divisor); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a zero or dynamic modulo divisor must remain outside the composed proof",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

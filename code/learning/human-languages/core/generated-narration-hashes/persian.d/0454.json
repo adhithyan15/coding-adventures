@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:5314bf06d446c770",
+  "lessonIds": [
+    "FA-C454-tamirkar",
+    "FA-C454-kaffash",
+    "FA-C454-kelidsaz",
+    "FA-C454-arayeshgah",
+    "FA-C454-saatsaz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch454.txt",
+  "json": "persian/narration/ch454.json",
+  "textHash": "fnv1a64:be1f44811d85609f",
+  "jsonHash": "fnv1a64:d8e79e7c6728a5b5",
+  "findings": []
+}

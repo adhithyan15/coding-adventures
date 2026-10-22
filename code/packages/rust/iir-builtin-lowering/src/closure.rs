@@ -113,6 +113,7 @@ use interpreter_ir::module::IIRModule;
 ///     language: "twig".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 ///
 /// lower_closure_builtins(&mut module);
@@ -389,6 +390,7 @@ mod tests {
             language: "twig".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 

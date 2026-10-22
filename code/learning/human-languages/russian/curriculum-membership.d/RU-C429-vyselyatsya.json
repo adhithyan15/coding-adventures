@@ -1,0 +1,11 @@
+{
+  "id": "RU-C429-vyselyatsya",
+  "pathSegment": "RU-PATH-429-ZASELENIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-429-ZASELENIYE",
+      "order": 2
+    }
+  ]
+}

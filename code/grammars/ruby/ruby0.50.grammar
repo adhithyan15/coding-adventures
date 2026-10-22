@@ -1,0 +1,48 @@
+# Ruby 0.50 (1994-08-10?) grammar: rb-int-puts subset over the R0 tokens.
+# @version 1
+# PARTIAL: parses only the rb-int-puts subset below; everything else is a parse error.
+# source_ref: https://github.com/ruby/ruby/tree/v0_50
+# source_sha: 6e3090413652b6592346556149fed1e9aec5495d
+# evidence: parse.y blob ff1a7f669d3eb9c8c4630442422e647d30ed3828; keywords blob -; defs/keywords blob -; prism/config.yml blob -
+# basis: reviewed against the tag's own syntax files. yylex delta from 0.49 is outside R0 except that a backtick now opens an xstring (no longer a token); kwtable adds __FILE__ and __LINE__ and drops func; the subset's yacc rules are unchanged.
+
+# ---------------------------------------------------------------------------
+# rb-int-puts subset (LANG80) as this release's yacc grammar admits it:
+#
+#   compexpr : exprs opt_term ;  exprs : /*none*/ | expr | exprs term expr
+#   primary  : IDENTIFIER '(' call_args rparen | '(' compexpr rparen | literal
+#   expr2    : expr2 '+' expr2 | expr2 '-' expr2 | expr2 '*' expr2
+#            | expr2 '/' expr2 | expr2 '%' expr2
+#            | '-' expr2 %prec UMINUS | primary
+#   (`%left '*' '/' '%'` at parse.y line 168 and `expr2 '%' expr2` at line
+#   699: `%` binds like `*` and `/`. LANG84 phase 5 added it to rb-int-puts.)
+#
+# There is no paren-less command call in this release: `puts 1 + 2` is a
+# syntax error, and so is `puts(1\n)` (rparen is a bare ')'). The lexer drops
+# a newline whenever it is in EXPR_BEG (after an operator, `(`, `,`, `;` or
+# another newline), so NEWLINE is accepted in exactly those places.
+#
+# Rule names follow code/grammars/ruby/ruby.grammar so the CST keeps the
+# shape the Ruby IIR compiler walks (LANG84 C8). This release has no
+# ternary, range, logical or comparison operators inside the subset; those
+# rules are single-child links kept only for that contract.
+# ---------------------------------------------------------------------------
+
+program     = { NEWLINE } [ statement ] { terms statement } [ terms ] ;
+terms       = ( SEMICOLON | NEWLINE ) { NEWLINE } ;
+statement   = method_call ;
+method_call = NAME LPAREN { NEWLINE } [ call_arg { COMMA { NEWLINE } call_arg } ] RPAREN ;
+call_arg    = expression ;
+
+expression  = ternary ;
+ternary     = range ;
+range       = logical_or ;
+logical_or  = logical_and ;
+logical_and = logical_not ;
+logical_not = comparison ;
+comparison  = shift ;
+shift       = sum ;
+sum         = term { ( PLUS | MINUS ) { NEWLINE } term } ;
+term        = factor { ( STAR | SLASH | PERCENT ) { NEWLINE } factor } ;
+factor      = NUMBER | LPAREN { NEWLINE } expression RPAREN | unary_minus ;
+unary_minus = MINUS { NEWLINE } factor ;

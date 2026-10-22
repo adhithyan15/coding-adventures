@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:b50d1954d2ff26bc",
+  "lessonIds": [
+    "GU-C163-nasto",
+    "GU-C163-bhojan",
+    "GU-C163-jamvu",
+    "GU-C163-pirasvu",
+    "GU-C163-vahecvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch163.txt",
+  "json": "gujarati/narration/ch163.json",
+  "textHash": "fnv1a64:fdde17e065647b04",
+  "jsonHash": "fnv1a64:2354dfa80a733bcb",
+  "findings": []
+}

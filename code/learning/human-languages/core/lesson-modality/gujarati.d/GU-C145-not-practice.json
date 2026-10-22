@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C145-not-practice",
+    "language": "gujarati",
+    "chapter": 145,
+    "sequence": 7660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8df7e8d1d360fd21"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:ed43c3da61dad313",
+  "lessonIds": [
+    "RU-C346-preimushchestvo",
+    "RU-C346-nedostatok",
+    "RU-C346-polza",
+    "RU-C346-vred",
+    "RU-C346-ocenivat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch346.txt",
+  "json": "russian/narration/ch346.json",
+  "textHash": "fnv1a64:3a6007485c941145",
+  "jsonHash": "fnv1a64:e4c66603738f8a00",
+  "findings": []
+}

@@ -108,12 +108,18 @@ const INFO_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../
 const ZENUML_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"));
 
 #[test]
-fn pinned_zenuml_subset_corpus_lowers_to_sequence_ir() {
+fn zenuml_full_status_is_backed_by_the_complete_documented_corpus() {
     let corpus: Value = serde_json::from_str(ZENUML_CORPUS).expect("zenuml corpus must be JSON");
     assert_eq!(corpus["upstream_version"].as_str(), Some("11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let result = parse_zenuml(fixture["source"].as_str().expect("fixture source"));
-        assert_eq!(result.is_ok(), fixture["compatible"].as_bool().unwrap(), "fixture {:?}", fixture["name"]);
+    assert_eq!(
+        corpus["scope"].as_str(),
+        Some("complete documented mermaid@11.16.1 ZenUML syntax corpus")
+    );
+    let valid = corpus["valid"].as_array().expect("valid fixture array");
+    assert_eq!(valid.len(), 16, "every upstream documentation example must stay pinned");
+    for fixture in valid.iter().chain(corpus["extensions"].as_array().expect("extension fixture array")) {
+        parse_zenuml(fixture["source"].as_str().expect("fixture source"))
+            .unwrap_or_else(|error| panic!("fixture {:?} failed: {error}", fixture["id"]));
     }
 }
 
@@ -1242,7 +1248,7 @@ fn pinned_sequence_corpus_matches_upstream_acceptance() {
 }
 
 #[test]
-fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
+fn sequence_full_status_is_backed_by_complete_syntax_and_visual_corpora() {
     let syntax: Value = serde_json::from_str(SEQUENCE_CORPUS).expect("sequence corpus must be JSON");
     let visual: Value =
         serde_json::from_str(SEQUENCE_VISUAL_CORPUS).expect("sequence visual corpus must be JSON");
@@ -1260,7 +1266,7 @@ fn pinned_sequence_visual_corpus_references_valid_syntax_fixtures() {
         .iter()
         .map(|id| id.as_str().expect("visual fixture id"))
         .collect::<BTreeSet<_>>();
-    assert!(fixtures.is_subset(&valid));
+    assert_eq!(fixtures, valid, "visual corpus must cover every valid syntax fixture");
     assert_eq!(
         fixtures.len(),
         visual["fixtures"].as_array().expect("visual fixture array").len(),
@@ -1852,6 +1858,48 @@ fn pinned_swimlane_visual_corpus_references_syntax_fixtures() {
 }
 
 #[test]
+fn swimlane_markdown_labels_preserve_rich_text_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph \"`**Intake**`\"\n  request[\"`Review **carefully**\\n_then act_`\"] -- \"`**Approved**`\" --> done[Done]\n  subgraph queue [\"`_Queue_`\"]\n    wait[\"`Wait *briefly*`\"]\n  end\nend",
+    ).expect("Swimlane Markdown strings should parse");
+
+    assert_eq!(diagram.lanes[0].label.text, "Intake");
+    assert!(diagram.lanes[0].label.markdown.is_some());
+    assert!(diagram.lanes[0].label.spans.iter().any(|span| span.bold));
+    assert_eq!(diagram.groups[0].label.text, "Queue");
+    assert!(diagram.groups[0].label.spans.iter().any(|span| span.italic));
+    let request = diagram.nodes.iter().find(|node| node.id == "request").unwrap();
+    assert_eq!(request.label.text, "Review carefully\nthen act");
+    assert!(request.label.spans.iter().any(|span| span.bold));
+    assert!(request.label.spans.iter().any(|span| span.italic));
+    let edge = diagram.edges.iter().find(|edge| edge.label.is_some()).unwrap();
+    assert_eq!(edge.label.as_ref().unwrap().text, "Approved");
+    assert!(edge.label.as_ref().unwrap().spans.iter().any(|span| span.bold));
+}
+
+#[test]
+fn swimlane_markdown_labels_accept_authored_line_breaks() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph \"`Customer\n**Care**`\"\n  request[\"`Review **carefully**\n_then act_`\"]\n  done[Done]\n  request -- \"`Needs\n**approval**`\" --> done\n  subgraph queue [\"`Review\n_queue_`\"]\n    wait[Wait]\n  end\nend",
+    ).expect("authored Swimlane Markdown line breaks should parse");
+
+    assert_eq!(diagram.lanes[0].label.text, "Customer\nCare");
+    assert_eq!(diagram.groups[0].label.text, "Review\nqueue");
+    assert_eq!(diagram.nodes.iter().find(|node| node.id == "request").unwrap().label.text,
+        "Review carefully\nthen act");
+    assert_eq!(diagram.edges[0].label.as_ref().unwrap().text, "Needs\napproval");
+}
+
+#[test]
+fn swimlane_rejects_unterminated_multiline_markdown_labels() {
+    let error = parse_swimlane("swimlane-beta\nsubgraph A\n  task[\"`unfinished\nend")
+        .expect_err("unterminated Swimlane Markdown should fail");
+
+    assert_eq!(error.line, 3);
+    assert!(error.message.contains("unterminated Swimlane Markdown string"));
+}
+
+#[test]
 fn swimlane_parallel_endpoints_lower_to_individual_handoffs() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Review\n  decide{Approved?}\n  revise[Revise]\nend\nsubgraph Delivery\n  ship[Ship]\n  notify[Notify]\nend\ndecide --> ship & notify\nship & notify --> revise",
@@ -1917,6 +1965,55 @@ fn swimlane_cloud_and_bang_attributes_reach_semantic_ir() {
     assert_eq!(diagram.nodes[1].label, "Failure alert");
     assert_eq!(diagram.nodes[1].shape, diagram_ir::DiagramShape::Bang);
     assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ shape: browser }\nend").is_err());
+}
+
+#[test]
+fn swimlane_icon_identities_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  parser@{ icon: \"logos:rust\", label: \"Parser\" }\n  output[Output]\nend\nparser --> output",
+    ).expect("Swimlane icon identities should parse");
+
+    assert_eq!(diagram.nodes[0].label, "Parser");
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::RoundedRect);
+    assert_eq!(diagram.icons.get("parser").map(String::as_str), Some("logos:rust"));
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: \"\" }\nend").is_err());
+}
+
+#[test]
+fn swimlane_icon_node_options_reach_semantic_ir() {
+    use diagram_ir::{SwimlaneIconForm, SwimlaneLabelPosition};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  plain@{ icon: \"logos:rust\" }\n  user@{ icon: \"fa:user\", form: circle, label: \"User\", pos: t, h: 60 }\nend",
+    ).expect("Swimlane icon node options should parse");
+
+    assert_eq!(diagram.nodes[0].label.text, "");
+    assert_eq!(diagram.icon_nodes["plain"].form, None);
+    assert_eq!(diagram.icon_nodes["plain"].height, 48.0);
+    assert_eq!(diagram.icon_nodes["user"].form, Some(SwimlaneIconForm::Circle));
+    assert_eq!(diagram.icon_nodes["user"].label_position, SwimlaneLabelPosition::Top);
+    assert_eq!(diagram.icon_nodes["user"].height, 60.0);
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, form: hexagon }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, pos: left }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, h: nope }\nend").is_err());
+}
+
+#[test]
+fn swimlane_image_node_options_reach_semantic_ir() {
+    use diagram_ir::SwimlaneLabelPosition;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  logo@{ img: \"https://example.com/logo.png\", label: \"Logo\", pos: t, w: 96, h: 64, constraint: on }\nend",
+    ).expect("Swimlane image node options should parse");
+
+    let image = &diagram.image_nodes["logo"];
+    assert_eq!(image.source, "https://example.com/logo.png");
+    assert_eq!((image.width, image.height), (Some(96.0), Some(64.0)));
+    assert!(image.preserve_aspect_ratio);
+    assert_eq!(image.label_position, SwimlaneLabelPosition::Top);
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, constraint: maybe }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, w: 0 }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, icon: y }\nend").is_err());
 }
 
 #[test]
@@ -2623,14 +2720,36 @@ fn swimlane_styled_endpoint_markers_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_long_endpoint_markers_preserve_minimum_lengths() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o----> b\nb x-----o c\nc <====> d\nd o=====x e\ne <-...-> f\nf x-....-o g",
+    ).expect("long endpoint-marked links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(),
+        vec![3, 4, 3, 4, 3, 4]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Undirected,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    assert_eq!((diagram.edges[0].start_marker, diagram.edges[0].end_marker),
+        (EdgeMarker::Circle, EdgeMarker::Point));
+    assert_eq!((diagram.edges[5].start_marker, diagram.edges[5].end_marker),
+        (EdgeMarker::Cross, EdgeMarker::Circle));
+}
+
+#[test]
 fn swimlane_minimum_link_lengths_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
-        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g",
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g\na -----> b ------ c =====> d ====== e -....-> f -....- g",
     ).expect("minimum-length Flowchart links should parse");
 
-    assert_eq!(diagram.edges.len(), 12);
+    assert_eq!(diagram.edges.len(), 18);
     assert!(diagram.edges[..6].iter().all(|edge| edge.min_length == 2));
-    assert!(diagram.edges[6..].iter().all(|edge| edge.min_length == 3));
+    assert!(diagram.edges[6..12].iter().all(|edge| edge.min_length == 3));
+    assert!(diagram.edges[12..].iter().all(|edge| edge.min_length == 4));
     assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Directed);
     assert_eq!(diagram.edges[2].kind, diagram_ir::SwimlaneEdgeKind::Thick);
     assert_eq!(diagram.edges[4].kind, diagram_ir::SwimlaneEdgeKind::Dotted);

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C242-cutvu",
+    "language": "gujarati",
+    "chapter": 242,
+    "sequence": 13110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c147b1d0b6c6bdeb"
+  },
+  "findings": []
+}

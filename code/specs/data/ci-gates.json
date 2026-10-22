@@ -178,22 +178,32 @@
     },
     "rust-grammar-regen-check": {
       "scope": "job",
-      "description": "Regenerates reconciled MacroOct and Nib Rust _grammar.rs artifacts from canonical sources and rejects stale committed output (#14202).",
+      "description": "Regenerates reconciled MacroOct, Nib, Ruby and Python (LANG84 release families) Rust _grammar.rs artifacts from canonical sources and rejects stale committed output (#14202).",
       "packages": [
         "rust/grammar-tools",
         "rust/programs/grammar-tools",
         "rust/macrooct-lexer",
         "rust/nib-lexer",
-        "rust/nib-parser"
+        "rust/nib-parser",
+        "rust/ruby-lexer",
+        "rust/ruby-parser",
+        "rust/python-lexer",
+        "rust/python-parser"
       ],
       "paths": [
         "code/grammars/macrooct/**",
         "code/grammars/nib/**",
+        "code/grammars/ruby/**",
+        "code/grammars/python/**",
         "code/packages/rust/grammar-tools/**",
         "code/programs/rust/grammar-tools/**",
         "code/packages/rust/macrooct-lexer/src/_grammar.rs",
         "code/packages/rust/nib-lexer/src/_grammar.rs",
-        "code/packages/rust/nib-parser/src/_grammar.rs"
+        "code/packages/rust/nib-parser/src/_grammar.rs",
+        "code/packages/rust/ruby-lexer/src/_grammar.rs",
+        "code/packages/rust/ruby-parser/src/_grammar.rs",
+        "code/packages/rust/python-lexer/src/_grammar.rs",
+        "code/packages/rust/python-parser/src/_grammar.rs"
       ]
     },
     "unicode17-elixir-conformance": {
@@ -483,7 +493,8 @@
         "rust/chief-of-staff-windows-sandbox",
         "rust/programs/closurec",
         "typescript/forme-sandbox-core",
-        "typescript/forme-sandbox-windows"
+        "typescript/forme-sandbox-windows",
+        "typescript/ir-to-jvm-class-file"
       ],
       "paths": [
         "code/scripts/adj_stdlib_provenance.py",

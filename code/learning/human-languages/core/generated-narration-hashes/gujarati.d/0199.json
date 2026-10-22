@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:9771ff79a2247b78",
+  "lessonIds": [
+    "GU-C199-bhid",
+    "GU-C199-katar",
+    "GU-C199-niyam",
+    "GU-C199-ghusvu",
+    "GU-C199-khasvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch199.txt",
+  "json": "gujarati/narration/ch199.json",
+  "textHash": "fnv1a64:fbd8335a5ee9d0d9",
+  "jsonHash": "fnv1a64:214c80ca59ae5433",
+  "findings": []
+}

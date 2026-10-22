@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:121e32df7f72e9b1",
+  "lessonIds": [
+    "GU-C217-hava",
+    "GU-C217-phukavu",
+    "GU-C217-adhi",
+    "GU-C217-vantol",
+    "GU-C217-phelavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch217.txt",
+  "json": "gujarati/narration/ch217.json",
+  "textHash": "fnv1a64:aee3ab9666ab0933",
+  "jsonHash": "fnv1a64:6ced65c075b4f71b",
+  "findings": []
+}

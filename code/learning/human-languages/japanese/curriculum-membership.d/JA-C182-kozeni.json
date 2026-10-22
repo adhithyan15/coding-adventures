@@ -1,0 +1,11 @@
+{
+  "id": "JA-C182-kozeni",
+  "pathSegment": "JA-PATH-182-PAY182",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-182-PAY182",
+      "order": 4
+    }
+  ]
+}

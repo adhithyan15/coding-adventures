@@ -1,0 +1,11 @@
+{
+  "id": "JA-C225-shiraberu",
+  "pathSegment": "JA-PATH-225-STUDY225",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-225-STUDY225",
+      "order": 3
+    }
+  ]
+}

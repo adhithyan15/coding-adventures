@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Sometimes, Rarely and Every Month",
+  "label": "ch:ja-sometimes-rarely-and-every-month",
+  "canDo": "I can say how often I will do things.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-R169-review-164-169",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can say how often I will do things.",
+    "assesses": [
+      "JA-LEX-C169-OFTEN169-03",
+      "JA-LEX-C169-OFTEN169-04",
+      "JA-LEX-C169-OFTEN169-05"
+    ]
+  }
+}

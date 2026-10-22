@@ -1,0 +1,20 @@
+{
+  "language": "russian",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:3a70b5d7f970f687",
+  "lessonIds": [
+    "RU-C286-translirovat",
+    "RU-C286-osveshchat",
+    "RU-C286-raskryvat",
+    "RU-C286-publikatsiya",
+    "RU-C286-tirazh",
+    "RU-R286-review-279-286"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "russian/narration/ch286.txt",
+  "json": "russian/narration/ch286.json",
+  "textHash": "fnv1a64:801c5e1b841107ee",
+  "jsonHash": "fnv1a64:0c194cd904605a98",
+  "findings": []
+}

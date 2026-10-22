@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C429-rah-ahan",
+    "language": "persian",
+    "chapter": 429,
+    "sequence": 21960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bfcb3c6b35a1fc0"
+  },
+  "findings": []
+}

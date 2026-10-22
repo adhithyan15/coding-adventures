@@ -1,0 +1,11 @@
+{
+  "id": "FA-C507-akkasi",
+  "pathSegment": "FA-PATH-507-HOBBIES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-507-HOBBIES",
+      "order": 1
+    }
+  ]
+}

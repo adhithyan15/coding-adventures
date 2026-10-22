@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:b381470df1e1a476",
+  "lessonIds": [
+    "RU-C350-posledstvie",
+    "RU-C350-sledstvie",
+    "RU-C350-otrazhatsya",
+    "RU-C350-effekt",
+    "RU-C350-v-rezultate"
+  ],
+  "tex": "russian/book/chapters/ch350-consequences.tex"
+}

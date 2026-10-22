@@ -183,17 +183,12 @@ const LXOR: u8 = 0x83;  // long bitwise XOR
 // we first call `java/lang/Math.floor(D)D` (which rounds toward −∞, returning
 // a double) and *then* `d2l`/`d2i` to land in the integer model.
 //
-// ⚠️ Trap divergence (documented — diverges from
-// `lang-full-e8-numeric-conversions.md` §7's uniform-trap recommendation,
-// recorded in that spec's footnote ²): the VM / LLVM / WASM backends
-// *trap* on NaN / ±∞ / out-of-i64-range inputs to `real_to_int_*`.  The JVM's
-// `d2i`/`d2l` instead **saturate** (NaN→0, +∞→MAX, −∞→MIN) and never throw.
-// For every *finite, in-range* value — which is all the `entier`/coercion
-// use case ever produces — the two agree bit-for-bit, so the matrix cells
-// (which exercise only such values) match.  The divergence is confined to
-// pathological inputs the matrix never feeds; emitting a JVM range-check +
-// `athrow` would require from-scratch exception bytecode with no reusable
-// precedent in this backend, so we take the documented-divergence path.
+// Out-of-range narrowing fails closed, like the VM, LLVM, WASM and CLR
+// backends: `d2i`/`d2l` alone would *saturate* (NaN→0, +∞→MAX, −∞→MIN)
+// and hand the program a wrong integer. ALGOL proofs do admit runtime reals
+// that overflow (`entier(exp(exp(x)))`), so each narrowing is preceded by
+// [`emit_real_to_int_range_check`], which throws `ArithmeticException` for
+// NaN, ±∞ and values outside the destination's integer range.
 const I2D: u8 = 0x87;  // int → double (widen, exact)
 const L2D: u8 = 0x8A;  // long → double (widen)
 const D2I: u8 = 0x8E;  // double → int (truncate toward zero, saturating)
@@ -368,6 +363,18 @@ const L2I: u8 = 0x88;
 ///
 /// Used to box i32/bool captured values into the `long[]` closure array.
 const I2L: u8 = 0x85;
+
+/// `dup2` (0x5C) — duplicate the top two stack words (one `long`/`double`).
+const DUP2: u8 = 0x5C;
+
+/// `new` (0xBB) — allocate an uninitialised object of a constant-pool class.
+const NEW: u8 = 0xBB;
+
+/// `invokespecial` (0xB7) — call a constructor (`<init>`) on a new object.
+const INVOKESPECIAL: u8 = 0xB7;
+
+/// `athrow` (0xBF) — throw the exception reference on top of the stack.
+const ATHROW: u8 = 0xBF;
 
 /// `areturn` (0xB0) — return an object reference (e.g. a `LispyPair`).
 ///
@@ -577,8 +584,12 @@ fn decode_stack_effect(
         BASTORE | IASTORE | FASTORE | AASTORE => simple(1, 3, 0),
         LASTORE | DASTORE => simple(1, 4, 0),
         DUP => simple(1, 1, 2),
-        // LANG83 PR1b `trap`: `new RuntimeException; dup; ldc_w kind;
-        // invokespecial <init>(String); athrow`.
+        DUP2 => simple(1, 2, 4),
+        // `new`/`invokespecial`/`athrow` appear in two shapes: the
+        // fail-closed narrowing (`new ArithmeticException; dup;
+        // invokespecial <init>(); athrow`) and LANG83 PR1b `trap`
+        // (`new RuntimeException; dup; ldc_w kind; invokespecial
+        // <init>(String); athrow`).
         NEW => simple(3, 0, 1),
         INVOKESPECIAL => {
             let index = u16_at(pc + 1)?;
@@ -1196,6 +1207,62 @@ fn emit_aload(code: &mut Vec<u8>, idx: u16) {
 }
 
 /// Emit the appropriate typed load instruction for a slot and JVM type.
+/// Guard a `d2i`/`d2l` narrowing so it traps instead of saturating.
+///
+/// Expects the `double` about to be narrowed on the stack, already floored
+/// for `real_to_int_floor`, and leaves it there when it is in range. The test
+/// is written so one shape serves both truncation and floor, and so NaN lands
+/// on the throwing path through the choice of `dcmpl` (NaN → −1) and
+/// `dcmpg` (NaN → +1):
+///
+/// ```text
+///              lower bound (trap unless …)    upper bound (ok if …)
+///   i64 dest   v >= -2^63    dcmpl; iflt T   v < 2^63   dcmpg; iflt OK
+///   i32 dest   v > -2^31-1   dcmpl; ifle T   v < 2^31   dcmpg; iflt OK
+///
+///         dup2; ldc2_w lo; dcmpl; if<lo> T        ; 8 bytes
+///         dup2; ldc2_w hi; dcmpg; iflt OK         ; 8 bytes
+///   T:    new ArithmeticException; dup; ldc_w msg
+///         invokespecial <init>(String); athrow   ; 11 bytes
+///   OK:   (caller emits d2l / d2i)
+/// ```
+///
+/// i64's lower bound is inclusive because `-2^63 - 1` is not a `double`
+/// (it rounds to `-2^63`). For a truncating `v` in `(-2^63 - 1, -2^63)`,
+/// no such double exists either, since doubles that large are 2048 apart.
+fn emit_real_to_int_range_check(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, dest: JvmType) {
+    let (lo, lo_branch, hi) = match dest {
+        JvmType::Long => (-9_223_372_036_854_775_808.0, IFLT, 9_223_372_036_854_775_808.0),
+        _ => (-2_147_483_649.0, IFLE, 2_147_483_648.0),
+    };
+    let lo_idx = cp.add_double(lo);
+    let hi_idx = cp.add_double(hi);
+    let exception = cp.add_class("java/lang/ArithmeticException");
+    let init = cp.add_methodref("java/lang/ArithmeticException", "<init>", "(Ljava/lang/String;)V");
+    let message = cp.add_string("real_to_int: operand is not finite or is outside the integer range");
+
+    code.push(DUP2);
+    code.push(LDC2_W);
+    code.extend_from_slice(&lo_idx.to_be_bytes());
+    code.push(DCMPL);
+    code.push(lo_branch);
+    code.extend_from_slice(&11i16.to_be_bytes()); // over the upper check → T
+    code.push(DUP2);
+    code.push(LDC2_W);
+    code.extend_from_slice(&hi_idx.to_be_bytes());
+    code.push(DCMPG);
+    code.push(IFLT);
+    code.extend_from_slice(&14i16.to_be_bytes()); // over the 11-byte throw → OK
+    code.push(NEW);
+    code.extend_from_slice(&exception.to_be_bytes());
+    code.push(DUP);
+    code.push(LDC_W);
+    code.extend_from_slice(&message.to_be_bytes());
+    code.push(INVOKESPECIAL);
+    code.extend_from_slice(&init.to_be_bytes());
+    code.push(ATHROW);
+}
+
 fn emit_typed_load(code: &mut Vec<u8>, idx: u16, jvm_type: JvmType) {
     match jvm_type {
         JvmType::Int => emit_iload(code, idx),
@@ -2919,6 +2986,7 @@ fn lower_function(
                 emit_typed_load(&mut code, src.0, src.1);
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_real_to_int_range_check(&mut code, cp, dest_jtype);
                     code.push(match dest_jtype {
                         JvmType::Long => D2L,
                         _ => D2I,
@@ -2943,6 +3011,7 @@ fn lower_function(
                 code.extend_from_slice(&mref.to_be_bytes());
                 if let Some(dest) = &instr.dest {
                     let (dest_slot, dest_jtype) = lookup_var(dest)?;
+                    emit_real_to_int_range_check(&mut code, cp, dest_jtype);
                     code.push(match dest_jtype {
                         JvmType::Long => D2L,
                         _ => D2I,
@@ -3799,6 +3868,30 @@ fn lower_function(
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
                         emit_istore(&mut code, dest_slot);
+                    }
+                    "write_f64_py" | "write_f64_js" => {
+                        // LANG83 PR6a — `dload x; iconst_<layout>;
+                        // invokestatic __iir_write_f64(DI)V`, the class's own
+                        // synthetic float writer (see `build_write_f64_method`).
+                        let val_name = match instr.srcs.get(1) {
+                            Some(Operand::Var(s)) => s.clone(),
+                            _ => return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: format!("call_builtin \"{builtin_name}\" requires srcs[1] = Operand::Var(val:f64)"),
+                            }),
+                        };
+                        let (val_slot, val_type) = lookup_var(&val_name)?;
+                        if val_type != JvmType::Double {
+                            return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: format!("call_builtin \"{builtin_name}\" requires an f64 operand, got {val_type:?}"),
+                            });
+                        }
+                        emit_typed_load(&mut code, val_slot, val_type);
+                        code.push(if builtin_name == "write_f64_js" { ICONST_1 } else { ICONST_0 });
+                        let mref = cp.add_methodref(class_name, WRITE_F64_METHOD, WRITE_F64_DESCRIPTOR);
+                        code.push(INVOKESTATIC);
+                        code.extend_from_slice(&mref.to_be_bytes());
                     }
                     "write_i64" => {
                         // LANG83 PR1b — decimal, NO newline, straight to
@@ -4905,6 +4998,133 @@ fn lower_function(
                 emit_lstore(&mut code, dest_slot);
             }
 
+            // ── LANG83 PR4: overflow-checked arithmetic ─────────────────────
+            //
+            // `Math.addExact` & co. would detect the overflow, but they throw
+            // `ArithmeticException` — no LANG83 kind, and no `System.out`
+            // flush — and catching it needs an exception-table entry this
+            // class writer never emits. So, like PR1b's floor division, the
+            // condition is tested *before* the plain wrapping instruction and
+            // a failing test runs the 17-byte trap sequence
+            // (`Trap.Overflow`):
+            //
+            //   add: ((a ^ (a+b)) & (b ^ (a+b))) < 0  → trap
+            //   sub: ((a ^ b) & (a ^ (a-b))) < 0      → trap
+            //   neg: a == MIN                          → trap
+            //   mul: a == -1 && b == MIN               → trap
+            //        a != 0 && (a*b) / a != b          → trap
+            //   lload a; [lload b]; ladd|lsub|lmul|lneg; lstore dest
+            //
+            // The mul guard is exact (a wrapped product differs from a*b by a
+            // non-zero multiple of 2^64, which is larger than |a|), and needs
+            // no JDK 9+ `Math.multiplyHigh`. The destination is stored last,
+            // so a dest that aliases an operand is still correct.
+            "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => {
+                use interpreter_ir::exception_kind::TRAP_OVERFLOW;
+                let unary = instr.op == "i64_neg_ovf";
+                let (a, b) = if unary {
+                    let a = one_src(func, instr, &slots)?;
+                    (a, a)
+                } else {
+                    two_srcs(func, instr, &slots)?
+                };
+                let dest = instr.dest.as_ref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let (dest_slot, dest_type) = lookup_var(dest)?;
+                if a.1 != JvmType::Long || b.1 != JvmType::Long || dest_type != JvmType::Long {
+                    return Err(IIRJvmError::UnsupportedType {
+                        function: fname.clone(),
+                        type_hint: instr.type_hint.clone(),
+                    });
+                }
+                let trap = lang83_trap_bytes(cp, TRAP_OVERFLOW);
+                let (a, b) = (a.0, b.0);
+                match instr.op.as_str() {
+                    "i64_add_ovf" | "i64_sub_ovf" => {
+                        let arith = if instr.op == "i64_add_ovf" { LADD } else { LSUB };
+                        if arith == LADD {
+                            // (a ^ r) & (b ^ r)
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LADD);
+                            code.push(LXOR);
+                            emit_lload(&mut code, b);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LADD);
+                            code.push(LXOR);
+                        } else {
+                            // (a ^ b) & (a ^ r)
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LXOR);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, a);
+                            emit_lload(&mut code, b);
+                            code.push(LSUB);
+                            code.push(LXOR);
+                        }
+                        code.push(LAND);
+                        code.push(LCONST_0);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFGE, trap.len());
+                        code.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        emit_lload(&mut code, b);
+                        code.push(arith);
+                    }
+                    "i64_neg_ovf" => {
+                        emit_lload(&mut code, a);
+                        code.push(LDC2_W);
+                        code.extend_from_slice(&cp.add_long(i64::MIN).to_be_bytes());
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFNE, trap.len());
+                        code.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(LNEG);
+                    }
+                    _ => {
+                        // Guard 1: a == -1 && b == MIN.
+                        let mut b_is_min: Vec<u8> = Vec::new();
+                        emit_lload(&mut b_is_min, b);
+                        b_is_min.push(LDC2_W);
+                        b_is_min.extend_from_slice(&cp.add_long(i64::MIN).to_be_bytes());
+                        b_is_min.push(LCMP);
+                        emit_skip_if(&mut b_is_min, IFNE, trap.len());
+                        b_is_min.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(ICONST_M1);
+                        code.push(I2L);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFNE, b_is_min.len());
+                        code.extend_from_slice(&b_is_min);
+                        // Guard 2: a != 0 && (a * b) / a != b.
+                        let mut quotient: Vec<u8> = Vec::new();
+                        emit_lload(&mut quotient, a);
+                        emit_lload(&mut quotient, b);
+                        quotient.push(LMUL);
+                        emit_lload(&mut quotient, a);
+                        quotient.push(LDIV);
+                        emit_lload(&mut quotient, b);
+                        quotient.push(LCMP);
+                        emit_skip_if(&mut quotient, IFEQ, trap.len());
+                        quotient.extend_from_slice(&trap);
+                        emit_lload(&mut code, a);
+                        code.push(LCONST_0);
+                        code.push(LCMP);
+                        emit_skip_if(&mut code, IFEQ, quotient.len());
+                        code.extend_from_slice(&quotient);
+                        emit_lload(&mut code, a);
+                        emit_lload(&mut code, b);
+                        code.push(LMUL);
+                    }
+                }
+                emit_lstore(&mut code, dest_slot);
+            }
+
             // ── LANG83 PR1b: `trap "<kind>"` ─────────────────────────────────
             //
             //   getstatic System.out; invokevirtual PrintStream.flush()V
@@ -5049,9 +5269,9 @@ fn one_src(
 
 // ── LANG83 PR1b helpers ──────────────────────────────────────────────────────
 
-const NEW: u8 = 0xBB;           // new <class>           (2-byte CP index)
-const INVOKESPECIAL: u8 = 0xB7; // invokespecial <method> (2-byte CP index)
-const ATHROW: u8 = 0xBF;        // throw the Throwable on TOS
+// `NEW`, `INVOKESPECIAL` and `ATHROW` are declared with the other opcode
+// constants near the top of this file (shared with the fail-closed
+// real-to-integer narrowing).
 
 /// The self-contained trap sequence for `kind` (LANG83): flush `System.out`,
 /// then throw `new RuntimeException(kind)`. A fixed 17 bytes (`ldc_w`, never
@@ -5081,8 +5301,14 @@ fn lang83_trap_bytes(cp: &mut ConstantPoolBuilder, kind: &str) -> Vec<u8> {
 
 /// `ifne +(3 + skip)` — jump over the next `skip` bytes when TOS int != 0.
 fn emit_skip_if_ne(code: &mut Vec<u8>, skip: usize) {
+    emit_skip_if(code, IFNE, skip);
+}
+
+/// `<if_op> +(3 + skip)` — a one-operand `if<cond>` (`ifeq`, `ifne`, `ifge`, …)
+/// that jumps over the next `skip` bytes when its condition holds.
+fn emit_skip_if(code: &mut Vec<u8>, if_op: u8, skip: usize) {
     let offset = i16::try_from(3 + skip).expect("LANG83 trap sequences are short");
-    code.push(IFNE);
+    code.push(if_op);
     code.extend_from_slice(&offset.to_be_bytes());
 }
 
@@ -5339,6 +5565,393 @@ fn generate_call_closure_dispatch(
         name: "__callClosure".to_string(),
         descriptor,
         attributes: vec![JvmMethodAttribute::Code(code_attribute)],
+    })
+}
+
+// ---------------------------------------------------------------------------
+// LANG83 PR6a — the synthetic float writer `__iir_write_f64(DI)V`
+// ---------------------------------------------------------------------------
+//
+// `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
+//
+// ```text
+// dload x;  iconst_0 | iconst_1;  invokestatic <this class>.__iir_write_f64(DI)V
+// ```
+//
+// and this section builds that one extra static method, emitted into the class
+// only when the module prints a float. The hard part is the DIGITS: Python's
+// `repr` and JavaScript's `String(x)` both print the SHORTEST decimal that
+// reads back as the double, the closest one on a length tie, and the one with
+// an even last digit on an exact tie. `Double.toString` only does that since
+// JDK 19 (JDK-4511638); on JDK 8 or 17 it prints `1.9999999999999998E23`
+// where Python and JavaScript print `2e+23`. The class file is version 49, so
+// ANY JVM from Java 5 on may run it, and its output must not depend on which.
+// So the method finds the digits itself with a short search over
+// `java.math.BigDecimal` roundings of the double's exact value (Java 5 APIs
+// only; the argument is at its code), then moves the decimal point the way
+// Python or JavaScript would:
+//
+// ```java
+// private static void __iir_write_f64(double x, int js) {
+//     StringBuilder sb = new StringBuilder();
+//     if (x != x) { sb.append(js != 0 ? "NaN" : "nan"); }               // NaN
+//     else {
+//         if (Double.doubleToRawLongBits(x) < 0 && !(js != 0 && x == 0)) sb.append("-");
+//         if (Double.isInfinite(x)) sb.append(js != 0 ? "Infinity" : "inf");
+//         else if (x == 0) sb.append(js != 0 ? "0" : "0.0");
+//         else {
+//             BigDecimal b = shortest(Math.abs(x)).stripTrailingZeros();  // see below
+//             String d = b.unscaledValue().toString();          // the digits, D
+//             int n = d.length(), e = n - 1 - b.scale();        // e: exponent of D[0]
+//             if (js != 0 ? (e >= -6 && e < 21) : (e >= -4 && e < 16)) {
+//                 sb.append(b.toPlainString());                 // 0.0001, 100, 123.456
+//                 if (js == 0 && b.scale() <= 0) sb.append(".0");
+//             } else {
+//                 sb.append(d.charAt(0));
+//                 if (n > 1) sb.append(".").append(d.substring(1));
+//                 sb.append("e").append(e < 0 ? "-" : "+");
+//                 int a = Math.abs(e);
+//                 if (js == 0 && a < 10) sb.append("0");      // Python: 1e-05
+//                 sb.append(a);
+//             }
+//         }
+//     }
+//     System.out.print(sb.toString());
+// }
+// ```
+//
+// Every branch target is reached with an EMPTY operand stack (each `append`
+// chain is stored straight back into the `sb` local), so the class-file
+// verifier sees one consistent stack shape at every join. `max_stack` is
+// measured from the bytecode by `compute_max_stack`, like every method here.
+
+/// The synthetic method's name and descriptor.
+const WRITE_F64_METHOD: &str = "__iir_write_f64";
+const WRITE_F64_DESCRIPTOR: &str = "(DI)V";
+
+/// `ACC_PRIVATE` (JVMS §4.6): the helper is only ever called from this class.
+const ACC_PRIVATE: u16 = 0x0002;
+
+/// A forward-patching bytecode buffer: `branch(op, label)` leaves a 2-byte
+/// hole that `bind(label)` fills with the offset from the branch opcode.
+struct Bytecode {
+    code: Vec<u8>,
+    labels: HashMap<&'static str, usize>,
+    fixups: Vec<(usize, &'static str)>,
+}
+
+impl Bytecode {
+    fn new() -> Self {
+        Bytecode { code: Vec::new(), labels: HashMap::new(), fixups: Vec::new() }
+    }
+    fn op(&mut self, byte: u8) -> &mut Self {
+        self.code.push(byte);
+        self
+    }
+    fn op_u8(&mut self, byte: u8, operand: u8) -> &mut Self {
+        self.code.extend_from_slice(&[byte, operand]);
+        self
+    }
+    fn op_u16(&mut self, byte: u8, operand: u16) -> &mut Self {
+        self.code.push(byte);
+        self.code.extend_from_slice(&operand.to_be_bytes());
+        self
+    }
+    fn branch(&mut self, byte: u8, label: &'static str) -> &mut Self {
+        self.fixups.push((self.code.len(), label));
+        self.code.extend_from_slice(&[byte, 0, 0]);
+        self
+    }
+    fn bind(&mut self, label: &'static str) -> &mut Self {
+        self.labels.insert(label, self.code.len());
+        self
+    }
+    fn finish(mut self) -> Result<Vec<u8>, String> {
+        for (at, label) in &self.fixups {
+            let target = *self.labels.get(label).ok_or_else(|| format!("unbound label {label}"))?;
+            let offset = i16::try_from(target as i64 - *at as i64).map_err(|_| "branch too far".to_string())?;
+            self.code[at + 1..at + 3].copy_from_slice(&offset.to_be_bytes());
+        }
+        Ok(self.code)
+    }
+}
+
+/// Build `private static void __iir_write_f64(double x, int js)`.
+fn build_write_f64_method(cp: &mut ConstantPoolBuilder) -> Result<JvmMethodInfo, IIRJvmError> {
+    // Locals: x = 0..1 (double), js = 2, b = 3 (BigDecimal), d = 4 (String),
+    // n = 5, e = 6, sb = 7 (StringBuilder), a = 8; the digit search's exact =
+    // 9 (BigDecimal), ax = 10..11 (double), p = 12, lo = 13, hi = 14 (both
+    // BigDecimal), lo_miss = 15, hi_miss = 16, c = 17. Each slot holds ONE
+    // type throughout, so the version-49 type-inferring verifier never has
+    // to merge conflicting types at a join.
+    const X: u8 = 0;
+    const JS: u8 = 2;
+    const BD: u8 = 3;
+    const DIGITS: u8 = 4;
+    const N: u8 = 5;
+    const E: u8 = 6;
+    const SB: u8 = 7;
+    const A: u8 = 8;
+    const EXACT: u8 = 9;
+    const AX: u8 = 10;
+    const P: u8 = 12;
+    const LO: u8 = 13;
+    const HI: u8 = 14;
+    const LO_MISS: u8 = 15;
+    const HI_MISS: u8 = 16;
+    const C: u8 = 17;
+    /// One past the highest slot above.
+    const MAX_LOCALS: u16 = 18;
+    const SBC: &str = "java/lang/StringBuilder";
+    const BDC: &str = "java/math/BigDecimal";
+    let append_str = cp.add_methodref(SBC, "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
+    let append_char = cp.add_methodref(SBC, "append", "(C)Ljava/lang/StringBuilder;");
+    let append_int = cp.add_methodref(SBC, "append", "(I)Ljava/lang/StringBuilder;");
+    let mut b = Bytecode::new();
+    // sb.append(<literal>) stored back into sb: leaves the stack empty.
+    let lit = |b: &mut Bytecode, cp: &mut ConstantPoolBuilder, s: &str| {
+        let idx = cp.add_string(s);
+        b.op_u8(ALOAD, SB).op_u16(LDC_W, idx).op_u16(INVOKEVIRTUAL, append_str).op_u8(ASTORE, SB);
+    };
+
+    let sb_class = cp.add_class(SBC);
+    let sb_init = cp.add_methodref(SBC, "<init>", "()V");
+    b.op_u16(NEW, sb_class).op(DUP).op_u16(INVOKESPECIAL, sb_init).op_u8(ASTORE, SB);
+
+    // ── NaN: x != x (dcmpl of NaN with anything is -1, never 0) ──────────────
+    b.op_u8(DLOAD, X).op_u8(DLOAD, X).op(DCMPL).branch(IFEQ, "not_nan");
+    b.op_u8(ILOAD, JS).branch(IFEQ, "nan_py");
+    lit(&mut b, cp, "NaN");
+    b.branch(GOTO, "print");
+    b.bind("nan_py");
+    lit(&mut b, cp, "nan");
+    b.branch(GOTO, "print");
+
+    // ── Sign: every negative value except JavaScript's -0 ────────────────────
+    b.bind("not_nan");
+    let raw_bits = cp.add_methodref("java/lang/Double", "doubleToRawLongBits", "(D)J");
+    b.op_u8(DLOAD, X).op_u16(INVOKESTATIC, raw_bits).op(LCONST_0).op(LCMP).branch(IFGE, "no_sign");
+    b.op_u8(ILOAD, JS).branch(IFEQ, "minus");
+    b.op_u8(DLOAD, X).op(DCONST_0).op(DCMPL).branch(IFEQ, "no_sign");
+    b.bind("minus");
+    lit(&mut b, cp, "-");
+    b.bind("no_sign");
+
+    // ── Infinities ───────────────────────────────────────────────────────────
+    let is_infinite = cp.add_methodref("java/lang/Double", "isInfinite", "(D)Z");
+    b.op_u8(DLOAD, X).op_u16(INVOKESTATIC, is_infinite).branch(IFEQ, "finite");
+    b.op_u8(ILOAD, JS).branch(IFEQ, "inf_py");
+    lit(&mut b, cp, "Infinity");
+    b.branch(GOTO, "print");
+    b.bind("inf_py");
+    lit(&mut b, cp, "inf");
+    b.branch(GOTO, "print");
+
+    // ── Zeros (dcmpl treats -0.0 == 0.0) ─────────────────────────────────────
+    b.bind("finite");
+    b.op_u8(DLOAD, X).op(DCONST_0).op(DCMPL).branch(IFNE, "digits");
+    b.op_u8(ILOAD, JS).branch(IFEQ, "zero_py");
+    lit(&mut b, cp, "0");
+    b.branch(GOTO, "print");
+    b.bind("zero_py");
+    lit(&mut b, cp, "0.0");
+    b.branch(GOTO, "print");
+
+    // ── The shortest digits, searched for with BigDecimal ────────────────────
+    // `Double.toString` cannot supply them: only since JDK 19 (JDK-4511638)
+    // is its output the SHORTEST round-trip decimal. Older JVMs — and the
+    // class file is version 49, so any JVM from Java 5 on may run it — print
+    // `1.9999999999999998E23` for the double nearest 2e23, although `2e23`
+    // reads back as the very same double. So the method finds the digits
+    // itself, from first principles, with Java 5 APIs only:
+    //
+    // ```java
+    // double ax = Math.abs(x);
+    // BigDecimal exact = new BigDecimal(ax);   // the double's EXACT value
+    // for (int p = 1; ; p++) {
+    //     BigDecimal lo = exact.round(new MathContext(p, RoundingMode.FLOOR));
+    //     BigDecimal hi = exact.round(new MathContext(p, RoundingMode.CEILING));
+    //     int loMiss = dcmpl(lo.doubleValue(), ax);     // 0: lo reads back as ax
+    //     int hiMiss = dcmpl(hi.doubleValue(), ax);
+    //     if (loMiss == 0 || hiMiss == 0 || p >= 17) break;
+    // }
+    // pick: only lo reads back -> lo; only hi -> hi; otherwise the one closer
+    //       to exact, and on an exact tie the one whose last digit is even.
+    // b = picked.stripTrailingZeros();
+    // ```
+    //
+    // Why this is the answer Python's `repr` and JavaScript's `String(x)`
+    // give — "the fewest digits that read back, then the closest, then even":
+    //
+    // - The decimals that read back as x form one interval around `exact`
+    //   (the round-to-nearest-even interval of x). If ANY p-digit decimal
+    //   lies in it, then so does the p-digit decimal just below `exact`
+    //   (FLOOR) or just above it (CEILING): both sit between that decimal and
+    //   `exact`. So trying p = 1, 2, 3, … and stopping at the first p where
+    //   lo or hi reads back finds the shortest length.
+    // - Among the p-digit decimals inside the interval, lo and hi are the two
+    //   closest to `exact`, so "closest, then even" chooses between them.
+    // - Both neighbours are needed, not just the HALF_EVEN rounding: at a
+    //   power of two the interval is lopsided (the gap below x is half the gap
+    //   above), so the nearest p-digit decimal can miss while the other one
+    //   reads back.
+    // - 17 significant digits always identify a double, so the loop stops by
+    //   p = 17. The `p >= 17` exit is a belt-and-braces bound: should a JVM's
+    //   `doubleValue` ever misround, the method still terminates, printing
+    //   the nearest 17-digit decimal.
+    // - `BigDecimal.doubleValue` is the JVM's correctly rounded decimal → double
+    //   conversion, and `dcmpl` compares the two doubles numerically (it sees
+    //   no NaN here: `ax` is finite and nonzero, and so is any decimal near it).
+    //
+    // The same search covers the deepest subnormals (`5e-324` has one digit;
+    // the old `Double.toString` path printed `4.9E-324` and needed a special
+    // one-digit fix-up, which this search makes unnecessary).
+    b.bind("digits");
+    let bd_class = cp.add_class(BDC);
+    let mc_class = cp.add_class("java/math/MathContext");
+    let math_abs = cp.add_methodref("java/lang/Math", "abs", "(D)D");
+    let bd_exact = cp.add_methodref(BDC, "<init>", "(D)V");
+    let mc_init = cp.add_methodref("java/math/MathContext", "<init>", "(ILjava/math/RoundingMode;)V");
+    let floor = cp.add_fieldref("java/math/RoundingMode", "FLOOR", "Ljava/math/RoundingMode;");
+    let ceiling = cp.add_fieldref("java/math/RoundingMode", "CEILING", "Ljava/math/RoundingMode;");
+    let bd_round = cp.add_methodref(BDC, "round", "(Ljava/math/MathContext;)Ljava/math/BigDecimal;");
+    let bd_double = cp.add_methodref(BDC, "doubleValue", "()D");
+    let bd_sub = cp.add_methodref(BDC, "subtract", "(Ljava/math/BigDecimal;)Ljava/math/BigDecimal;");
+    let bd_cmp = cp.add_methodref(BDC, "compareTo", "(Ljava/math/BigDecimal;)I");
+    let strip = cp.add_methodref(BDC, "stripTrailingZeros", "()Ljava/math/BigDecimal;");
+    let unscaled = cp.add_methodref(BDC, "unscaledValue", "()Ljava/math/BigInteger;");
+    let test_bit = cp.add_methodref("java/math/BigInteger", "testBit", "(I)Z");
+    // ax = |x|; exact = new BigDecimal(ax); p = 0
+    b.op_u8(DLOAD, X).op_u16(INVOKESTATIC, math_abs).op_u8(DSTORE, AX);
+    b.op_u16(NEW, bd_class).op(DUP).op_u8(DLOAD, AX).op_u16(INVOKESPECIAL, bd_exact).op_u8(ASTORE, EXACT);
+    b.op(ICONST_0).op_u8(ISTORE, P);
+    b.bind("search");
+    // p = p + 1 (there is no `iinc` in this crate's stack-effect table)
+    b.op_u8(ILOAD, P).op(ICONST_1).op(IADD).op_u8(ISTORE, P);
+    // lo = exact.round(new MathContext(p, FLOOR)); hi likewise with CEILING
+    for (mode, slot) in [(floor, LO), (ceiling, HI)] {
+        b.op_u8(ALOAD, EXACT).op_u16(NEW, mc_class).op(DUP).op_u8(ILOAD, P).op_u16(GETSTATIC, mode);
+        b.op_u16(INVOKESPECIAL, mc_init).op_u16(INVOKEVIRTUAL, bd_round).op_u8(ASTORE, slot);
+    }
+    // lo_miss / hi_miss = dcmpl(candidate.doubleValue(), ax): 0 when it reads back
+    b.op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, bd_double).op_u8(DLOAD, AX).op(DCMPL).op_u8(ISTORE, LO_MISS);
+    b.op_u8(ALOAD, HI).op_u16(INVOKEVIRTUAL, bd_double).op_u8(DLOAD, AX).op(DCMPL).op_u8(ISTORE, HI_MISS);
+    b.op_u8(ILOAD, LO_MISS).branch(IFEQ, "found");
+    b.op_u8(ILOAD, HI_MISS).branch(IFEQ, "found");
+    b.op_u8(ILOAD, P).op_u8(BIPUSH, 17).branch(IF_ICMPLT, "search");
+    // ── Choose: the one that reads back, else the closer, else the even ──────
+    b.bind("found");
+    b.op_u8(ILOAD, LO_MISS).branch(IFNE, "lo_missed");
+    b.op_u8(ILOAD, HI_MISS).branch(IFNE, "pick_lo"); // only lo reads back
+    b.branch(GOTO, "closer"); // both read back
+    b.bind("lo_missed");
+    b.op_u8(ILOAD, HI_MISS).branch(IFEQ, "pick_hi"); // only hi reads back
+    // (neither: only at the p = 17 bound — take the closer, as below)
+    b.bind("closer");
+    // c = (exact - lo) compareTo (hi - exact). When `exact` itself has p
+    // digits, lo == hi == exact and either pick is the same number.
+    b.op_u8(ALOAD, EXACT).op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, bd_sub);
+    b.op_u8(ALOAD, HI).op_u8(ALOAD, EXACT).op_u16(INVOKEVIRTUAL, bd_sub);
+    b.op_u16(INVOKEVIRTUAL, bd_cmp).op_u8(ISTORE, C);
+    b.op_u8(ILOAD, C).branch(IFLT, "pick_lo");
+    b.op_u8(ILOAD, C).branch(IFGT, "pick_hi");
+    // An exact tie: the even last digit. A number's last decimal digit has
+    // the number's parity, so bit 0 of lo's unscaled value decides; hi's
+    // last digit is then lo's plus one (or 0 after a carry), i.e. even.
+    b.op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, unscaled).op(ICONST_0).op_u16(INVOKEVIRTUAL, test_bit);
+    b.branch(IFEQ, "pick_lo");
+    b.bind("pick_hi");
+    b.op_u8(ALOAD, HI).op_u16(INVOKEVIRTUAL, strip).op_u8(ASTORE, BD).branch(GOTO, "derive");
+    b.bind("pick_lo");
+    b.op_u8(ALOAD, LO).op_u16(INVOKEVIRTUAL, strip).op_u8(ASTORE, BD);
+
+    // ── D, n and e from b: digits 1234, scale 2 -> 12.34, e = 1 ──────────────
+    b.bind("derive");
+    let bigint_to_string = cp.add_methodref("java/math/BigInteger", "toString", "()Ljava/lang/String;");
+    let length = cp.add_methodref("java/lang/String", "length", "()I");
+    let scale = cp.add_methodref(BDC, "scale", "()I");
+    b.op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, unscaled).op_u16(INVOKEVIRTUAL, bigint_to_string).op_u8(ASTORE, DIGITS);
+    b.op_u8(ALOAD, DIGITS).op_u16(INVOKEVIRTUAL, length).op_u8(ISTORE, N);
+    // e = n - 1 - scale
+    b.op_u8(ILOAD, N).op(ICONST_1).op(ISUB).op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, scale).op(ISUB).op_u8(ISTORE, E);
+
+    // ── Fixed or scientific? JS: -6 <= e < 21; Python: -4 <= e < 16 ──────────
+    b.op_u8(ILOAD, JS).branch(IFEQ, "py_range");
+    b.op_u8(ILOAD, E).op_u8(BIPUSH, (-6i8) as u8).branch(IF_ICMPLT, "sci");
+    b.op_u8(ILOAD, E).op_u8(BIPUSH, 21).branch(IF_ICMPGE, "sci");
+    b.branch(GOTO, "fixed");
+    b.bind("py_range");
+    b.op_u8(ILOAD, E).op_u8(BIPUSH, (-4i8) as u8).branch(IF_ICMPLT, "sci");
+    b.op_u8(ILOAD, E).op_u8(BIPUSH, 16).branch(IF_ICMPGE, "sci");
+
+    // Fixed: BigDecimal's plain string IS the layout; Python adds ".0" to an
+    // integral value (scale <= 0 after stripping zeros).
+    b.bind("fixed");
+    let plain = cp.add_methodref(BDC, "toPlainString", "()Ljava/lang/String;");
+    b.op_u8(ALOAD, SB).op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, plain).op_u16(INVOKEVIRTUAL, append_str).op_u8(ASTORE, SB);
+    b.op_u8(ILOAD, JS).branch(IFNE, "print");
+    b.op_u8(ALOAD, BD).op_u16(INVOKEVIRTUAL, scale).branch(IFGT, "print");
+    lit(&mut b, cp, ".0");
+    b.branch(GOTO, "print");
+
+    // Scientific: d[.ddd]e±X.
+    b.bind("sci");
+    let char_at = cp.add_methodref("java/lang/String", "charAt", "(I)C");
+    let substring = cp.add_methodref("java/lang/String", "substring", "(I)Ljava/lang/String;");
+    b.op_u8(ALOAD, SB).op_u8(ALOAD, DIGITS).op(ICONST_0).op_u16(INVOKEVIRTUAL, char_at);
+    b.op_u16(INVOKEVIRTUAL, append_char).op_u8(ASTORE, SB);
+    b.op_u8(ILOAD, N).op(ICONST_1).branch(IF_ICMPLE, "exponent");
+    lit(&mut b, cp, ".");
+    b.op_u8(ALOAD, SB).op_u8(ALOAD, DIGITS).op(ICONST_1).op_u16(INVOKEVIRTUAL, substring);
+    b.op_u16(INVOKEVIRTUAL, append_str).op_u8(ASTORE, SB);
+    b.bind("exponent");
+    lit(&mut b, cp, "e");
+    b.op_u8(ILOAD, E).branch(IFGE, "e_positive");
+    lit(&mut b, cp, "-");
+    b.op_u8(ILOAD, E).op(INEG).op_u8(ISTORE, A).branch(GOTO, "e_abs");
+    b.bind("e_positive");
+    lit(&mut b, cp, "+");
+    b.op_u8(ILOAD, E).op_u8(ISTORE, A);
+    b.bind("e_abs");
+    // Python pads the exponent to two digits (1e-05); JavaScript does not.
+    b.op_u8(ILOAD, JS).branch(IFNE, "e_digits");
+    b.op_u8(ILOAD, A).op_u8(BIPUSH, 10).branch(IF_ICMPGE, "e_digits");
+    lit(&mut b, cp, "0");
+    b.bind("e_digits");
+    b.op_u8(ALOAD, SB).op_u8(ILOAD, A).op_u16(INVOKEVIRTUAL, append_int).op_u8(ASTORE, SB);
+
+    // ── One print of the whole text, through the same System.out ────────────
+    b.bind("print");
+    let out = cp.add_fieldref("java/lang/System", "out", "Ljava/io/PrintStream;");
+    let to_string = cp.add_methodref(SBC, "toString", "()Ljava/lang/String;");
+    let print = cp.add_methodref("java/io/PrintStream", "print", "(Ljava/lang/String;)V");
+    b.op_u16(GETSTATIC, out).op_u8(ALOAD, SB).op_u16(INVOKEVIRTUAL, to_string).op_u16(INVOKEVIRTUAL, print);
+    b.op(RETURN);
+
+    let internal = |detail: String| IIRJvmError::StackDepthAnalysis { function: WRITE_F64_METHOD.to_string(), detail };
+    let code = b.finish().map_err(internal)?;
+    let max_stack = compute_max_stack(&code, &cp.entries).map_err(internal)?;
+    cp.add_utf8(WRITE_F64_METHOD);
+    cp.add_utf8(WRITE_F64_DESCRIPTOR);
+    Ok(JvmMethodInfo {
+        access_flags: ACC_PRIVATE | ACC_STATIC,
+        name: WRITE_F64_METHOD.to_string(),
+        descriptor: WRITE_F64_DESCRIPTOR.to_string(),
+        attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
+            name: "Code".to_string(),
+            max_stack,
+            max_locals: MAX_LOCALS,
+            code,
+            nested_attributes: vec![],
+        })],
+    })
+}
+
+/// `true` if the module calls either PR6a float writer.
+fn module_uses_write_f64(module: &IIRModule) -> bool {
+    module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
+        i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
     })
 }
 
@@ -5633,6 +6246,7 @@ fn serialize_method_attribute(
 ///     language: "test".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 /// let cfg = IIRJvmConfig::new("MyClass");
 /// let class_file = lower_iir_to_jvm(&module, &cfg).unwrap();
@@ -5710,6 +6324,17 @@ pub fn lower_iir_to_jvm(
         let dispatch_method =
             generate_call_closure_dispatch(&config.class_name, &sorted, &mut cp)?;
         methods.push(dispatch_method);
+    }
+
+    // ── Step 3c: LANG83 PR6a float writer (if needed) ─────────────────────────
+    if module_uses_write_f64(module) {
+        if module.functions.iter().any(|f| f.name == WRITE_F64_METHOD) {
+            return Err(IIRJvmError::InvalidOperand {
+                function: WRITE_F64_METHOD.to_string(),
+                detail: "a module function may not take the synthetic float writer's name".to_string(),
+            });
+        }
+        methods.push(build_write_f64_method(&mut cp)?);
     }
 
     // ── Step 4: assemble JvmClassFile ─────────────────────────────────────────
@@ -5801,6 +6426,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -6175,6 +6801,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let result = lower_iir_to_jvm(&module, &make_cfg());
         assert!(matches!(result, Err(IIRJvmError::ValidationFailed(_))));

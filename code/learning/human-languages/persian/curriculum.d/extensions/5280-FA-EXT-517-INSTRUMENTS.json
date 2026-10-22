@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-517-INSTRUMENTS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name some musical instruments.",
+  "prerequisites": []
+}

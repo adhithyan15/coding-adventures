@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C195-antar",
+    "language": "gujarati",
+    "chapter": 195,
+    "sequence": 10660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2f86f4fd486b744"
+  },
+  "findings": []
+}

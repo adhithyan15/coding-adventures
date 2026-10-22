@@ -1,0 +1,11 @@
+{
+  "id": "RU-C480-khikhikat",
+  "pathSegment": "RU-PATH-480-LAUGHTER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-480-LAUGHTER",
+      "order": 1
+    }
+  ]
+}

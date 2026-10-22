@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:23615d3da3c23761",
+  "lessonIds": [
+    "RU-C351-poskolku",
+    "RU-C351-ved",
+    "RU-C351-blagodarya",
+    "RU-C351-vsledstvie",
+    "RU-C351-sledovatelno"
+  ],
+  "tex": "russian/book/chapters/ch351-since-and-thanks-to.tex"
+}

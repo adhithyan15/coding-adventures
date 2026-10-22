@@ -320,4 +320,12 @@ FLOW-MATIC input/EOF cases, including a zero-filled partial record.
 module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64`
 (`System.out.print(J)V`), `i64_div_floor`/`i64_mod_floor` (explicit zero and
 `MIN / -1` checks, then `Math.floorDiv`/`floorMod`) and `trap`
-(`System.out.flush()` then `throw new RuntimeException(kind)`).
+(`System.out.flush()` then `throw new RuntimeException(kind)`). LANG83 PR4 adds
+`i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`: the overflow condition is
+tested before the plain `ladd`/`lsub`/`lmul`/`lneg` (sign tests for add/sub,
+`lcmp` against `MIN` for negation, a `-1 × MIN` guard then `(a*b)/a != b` for
+multiplication), and a failing test runs the same flush-then-throw sequence with
+`Trap.Overflow`. `Math.*Exact` is not used: its `ArithmeticException` carries no
+kind and does not flush.
+
+LANG83 PR6a adds `write_f64_py` / `write_f64_js` → the class's private static `__iir_write_f64(DI)V`. It finds the shortest round-trip digits itself, by rounding the double's exact `BigDecimal` value to 1, 2, … 17 significant digits (`FLOOR` and `CEILING`) until one reads back, and prints Python's `repr` or JavaScript's `toString` layout. It uses Java 5 APIs only, so the output is the same on every JVM that loads a version-49 class (it does not use `Double.toString`, which is shortest only on JDK 19+).

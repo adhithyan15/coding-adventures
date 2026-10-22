@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C324-voyevat",
+    "language": "russian",
+    "chapter": 324,
+    "sequence": 19130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ca54ba29a5c633c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C168-kimaru",
+    "language": "japanese",
+    "chapter": 168,
+    "sequence": 9930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8e25c4b99fde94b"
+  },
+  "findings": []
+}

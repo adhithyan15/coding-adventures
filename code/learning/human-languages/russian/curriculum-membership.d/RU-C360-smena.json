@@ -1,0 +1,11 @@
+{
+  "id": "RU-C360-smena",
+  "pathSegment": "RU-PATH-360-SOVESHCHANIYE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-360-SOVESHCHANIYE",
+      "order": 3
+    }
+  ]
+}

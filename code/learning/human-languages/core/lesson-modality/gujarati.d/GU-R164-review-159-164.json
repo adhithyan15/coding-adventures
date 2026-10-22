@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R164-review-159-164",
+    "language": "gujarati",
+    "chapter": 164,
+    "sequence": 9010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a82d347d8cf3cc28"
+  },
+  "findings": []
+}

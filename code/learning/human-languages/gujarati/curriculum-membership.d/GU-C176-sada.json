@@ -1,0 +1,11 @@
+{
+  "id": "GU-C176-sada",
+  "pathSegment": "GU-PATH-176-CLOCK176",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-176-CLOCK176",
+      "order": 1
+    }
+  ]
+}

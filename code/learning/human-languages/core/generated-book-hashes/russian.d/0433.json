@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:069e6063a2b107b4",
+  "lessonIds": [
+    "RU-C433-shum",
+    "RU-C433-meshat",
+    "RU-C433-tarakan",
+    "RU-C433-seyf",
+    "RU-C433-nepoladka"
+  ],
+  "tex": "russian/book/chapters/ch433-noisy-neighbours.tex"
+}

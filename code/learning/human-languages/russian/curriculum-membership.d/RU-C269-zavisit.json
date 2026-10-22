@@ -1,0 +1,11 @@
+{
+  "id": "RU-C269-zavisit",
+  "pathSegment": "RU-PATH-269-IF",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-269-IF",
+      "order": 2
+    }
+  ]
+}

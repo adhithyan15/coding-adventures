@@ -1,0 +1,11 @@
+{
+  "id": "FA-C356-taft-dadan",
+  "pathSegment": "FA-PATH-356-RIZKARDAN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-356-RIZKARDAN",
+      "order": 3
+    }
+  ]
+}

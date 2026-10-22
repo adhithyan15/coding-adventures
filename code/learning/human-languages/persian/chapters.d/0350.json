@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Kings and castles",
+  "label": "ch:fa-kings-and-castles",
+  "canDo": "I can talk about a king, a queen, a palace, a castle and a crown.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C350-taj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can talk about a king, a queen, a palace, a castle and a crown.",
+    "assesses": [
+      "FA-LEX-C350-PADESHAH-03",
+      "FA-LEX-C350-PADESHAH-04",
+      "FA-LEX-C350-PADESHAH-05"
+    ]
+  }
+}

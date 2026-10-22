@@ -1,0 +1,11 @@
+{
+  "id": "RU-C312-zhelat",
+  "pathSegment": "RU-PATH-312-POZDRAVLYAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-312-POZDRAVLYAT",
+      "order": 3
+    }
+  ]
+}

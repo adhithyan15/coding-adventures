@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:17c4bef2ee04998c",
+  "lessonIds": [
+    "FA-C374-behbud",
+    "FA-C374-behbud-yaftan",
+    "FA-C374-pishraft",
+    "FA-C374-pishraft-kardan",
+    "FA-C374-aqab-mandan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch374.txt",
+  "json": "persian/narration/ch374.json",
+  "textHash": "fnv1a64:a08ba03d3cef277f",
+  "jsonHash": "fnv1a64:b12b9330bdf56568",
+  "findings": []
+}

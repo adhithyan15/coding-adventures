@@ -1,0 +1,11 @@
+{
+  "id": "RU-C321-korol",
+  "pathSegment": "RU-PATH-321-KOROL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-321-KOROL",
+      "order": 0
+    }
+  ]
+}

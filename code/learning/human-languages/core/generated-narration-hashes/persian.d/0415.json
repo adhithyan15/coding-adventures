@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:cfe940546449f606",
+  "lessonIds": [
+    "FA-C415-makharej",
+    "FA-C415-surathesab",
+    "FA-C415-karmozd",
+    "FA-C415-darsad",
+    "FA-C415-velkharj",
+    "FA-R415-review-408-415"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch415.txt",
+  "json": "persian/narration/ch415.json",
+  "textHash": "fnv1a64:ebac8609fe325643",
+  "jsonHash": "fnv1a64:e69a7e98ed0a9ae3",
+  "findings": []
+}

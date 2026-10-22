@@ -1,0 +1,11 @@
+{
+  "id": "RU-C391-ogranichenie",
+  "pathSegment": "RU-PATH-391-ZAKONODATELSTVO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-391-ZAKONODATELSTVO",
+      "order": 4
+    }
+  ]
+}

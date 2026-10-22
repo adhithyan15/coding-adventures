@@ -1,0 +1,11 @@
+{
+  "id": "RU-C514-figurist",
+  "pathSegment": "RU-PATH-514-ICE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-514-ICE",
+      "order": 1
+    }
+  ]
+}

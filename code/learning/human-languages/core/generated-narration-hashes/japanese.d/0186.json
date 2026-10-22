@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:ce9aeb3cc5984ff7",
+  "lessonIds": [
+    "JA-C186-amaru",
+    "JA-C186-chokin",
+    "JA-C186-tameru",
+    "JA-C186-ryoukin",
+    "JA-C186-zeikin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch186.txt",
+  "json": "japanese/narration/ch186.json",
+  "textHash": "fnv1a64:e1e9d3c67b7b4219",
+  "jsonHash": "fnv1a64:0c98a17d2f609d92",
+  "findings": []
+}

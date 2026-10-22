@@ -1,0 +1,11 @@
+{
+  "id": "JA-C205-oufuku",
+  "pathSegment": "JA-PATH-205-TICKET205",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-205-TICKET205",
+      "order": 4
+    }
+  ]
+}

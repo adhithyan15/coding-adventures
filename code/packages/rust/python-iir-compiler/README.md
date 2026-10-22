@@ -1,6 +1,75 @@
 # Python IIR compiler
 
-This crate lowers a bounded Python 3.12 float-expression, module-level
+This crate holds two Python frontends that share nothing but the crate:
+
+| Path | Entry points | Subset | Grammar |
+|------|--------------|--------|---------|
+| LANG84 release path (phase 7a) | `compile_source_at`, `compile_cst`, `run_source_at` | `py-int-print`: `print` of integer arithmetic, on all nine backends | one tagged CPython release's `python<release>.*` pair |
+| LANG79 float pilot | `compile_source`, `compile_ast`, `run_source` | float expressions and bindings, on `vm-core` | the legacy minor line `"3.12"` |
+
+## The release path: `py-int-print` (LANG84 phase 7a)
+
+```rust
+use python_iir_compiler::{compile_source_at, run_source_at, FrontendBudgets};
+
+// None = DEFAULT_RELEASE ("3.13.16", the host python3); or an exact
+// releases.csv ID such as Some("3.0a1").
+let module = compile_source_at("print(-7 // 2)\n", None, "demo", &FrontendBudgets::default()).unwrap();
+assert_eq!(module.functions[0].return_type, "i64");
+
+let ran = run_source_at("print(1)\nprint(9223372036854775807 + 1)\n", Some("3.12.3")).unwrap();
+assert_eq!(ran.stdout, "1\n");
+assert_eq!(ran.trap.as_deref(), Some("Trap.Overflow"));
+```
+
+The pipeline is LANG84's:
+
+```text
+source ─► python-parser::parse_python_at (GrammarLexer + GrammarParser over
+          python<release>.tokens/.grammar) ─► GrammarASTNode ─► int_lower.rs
+       ─► IIRModule of LANG83 registry ops ─► x86_64 | aarch64 | LLVM | WASM |
+          JVM | CLR | BEAM | vm-core | JIT
+```
+
+What `py-int-print` accepts: statements `print(<expr>)` (one positional
+argument, optional trailing comma) and `print()`, separated by newlines or
+`;`. Expressions are decimal `int` literals (with `_` separators where the
+release lexes them), parentheses, unary `+`/`-`, and `+ - * // %` at Python's
+precedence. The lowering:
+
+| Python | IIR |
+|--------|-----|
+| `a + b`, `a - b`, `a * b`, `-a` | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf` |
+| `a // b`, `a % b` | `i64_div_floor`, `i64_mod_floor` |
+| `a // -1`, `a % -1` (divisor known) | `i64_neg_ovf a`, `const 0` |
+| `+a` | nothing |
+| `print(a)` / `print()` | `print_i64` / `putchar 10` |
+| end of module | `const 0`, `ret` (`main` returns `i64`) |
+
+Python ints are unbounded and this subset's are `i64`. Where CPython would
+produce an `int` outside `i64`, the program stops with `Trap.Overflow` after
+the output so far. This is a stated divergence; bignum promotion is later
+work. A zero divisor stops with `Trap.DivZero`, like `ZeroDivisionError`.
+Everything else is a typed `FrontendError` (`Lex`, `Parse`, `Unsupported`,
+`Budget`, `UnknownRelease`, `ReleaseNotAvailable`) that names the release and
+a 1-based position. Refused examples: `/` (true division gives a float),
+names, another callee, two arguments, and a literal outside `i64`.
+
+Releases: 3.0a1, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1. All use the `py3`
+profile in `src/profiles.rs`, which cites the CPython sources it rests on.
+They emit byte-identical IIR for every corpus case they all accept. Tests:
+
+| Test | Proves |
+|------|--------|
+| `tests/release_subsets.rs` | LANG84 stage I: every case of `code/grammars/python/corpus/py-int-print` on every claiming release (vm-core output and trap kind), C7 op checks, IIR identity, and the host CPython 3.11/3.12/3.13 oracle |
+| `tests/release_lowering.rs` | which op each construct becomes, the `-1` fold, `main: i64`, located refusals, forged trees |
+| `tests/cst_contract.rs` | LANG84 C8: every dispatched rule and token exists in each release |
+| `tests/hostile_release.rs` | LANG84 C5 hostile probes, in a child process |
+| `tests/iir_path.rs` | the release path never touches a legacy grammar or compares release IDs |
+
+## LANG79's float pilot
+
+This part of the crate lowers a bounded Python 3.12 float-expression, module-level
 binding and `print` subset directly from `python-parser`'s grammar tree to
 `interpreter-ir`, then runs it on the Rust `vm-core` interpreter. Semantic IR
 is not in this execution path.

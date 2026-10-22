@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C182-weekday-review",
+    "language": "punjabi",
+    "chapter": 182,
+    "sequence": 9630,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f78064431b3fed67"
+  },
+  "findings": []
+}

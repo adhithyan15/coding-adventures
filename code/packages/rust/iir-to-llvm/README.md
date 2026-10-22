@@ -247,4 +247,9 @@ input and repeated EOF reads; this does not change existing integer parsing.
 module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b this backend also lowers `write_i64`, `i64_div_floor`,
 `i64_mod_floor` and `trap`; the module carries its own `linkonce_odr`
 `@__iir_write_i64` / `@__iir_trap` definitions (libc only), and `@__iir_trap`
-flushes stdout before reporting the kind on stderr and aborting.
+flushes stdout before reporting the kind on stderr and aborting. LANG83 PR4 adds
+`i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`, lowered to
+`@llvm.s{add,sub,mul}.with.overflow.i64` (negation is `ssub(0, a)`) with a branch
+on the overflow bit to `@__iir_trap(Trap.Overflow)`.
+
+LANG83 PR6a adds `write_f64_py` / `write_f64_js` → `call @__iir_write_f64(double, i32 layout)`. That module-local `linkonce_odr` IR carries a Burger–Dybvig shortest-round-trip digit core over stack big integers, and prints Python's `repr` or JavaScript's `toString` layout with libc `putchar` (see `src/lang83_f64.rs`).

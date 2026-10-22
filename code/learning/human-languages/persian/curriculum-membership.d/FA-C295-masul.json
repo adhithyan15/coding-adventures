@@ -1,0 +1,11 @@
+{
+  "id": "FA-C295-masul",
+  "pathSegment": "FA-PATH-295-TICKET",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-295-TICKET",
+      "order": 2
+    }
+  ]
+}

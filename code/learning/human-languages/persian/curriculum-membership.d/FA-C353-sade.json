@@ -1,0 +1,11 @@
+{
+  "id": "FA-C353-sade",
+  "pathSegment": "FA-PATH-353-DOWRAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-353-DOWRAN",
+      "order": 1
+    }
+  ]
+}

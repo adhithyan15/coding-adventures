@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-266-TICKET",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a ticket, туда и обратно, at the station, follow an announcement, and report a problem: я опоздал на поезд, я потерял билет.",
+  "prerequisites": []
+}

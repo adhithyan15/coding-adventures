@@ -1,0 +1,950 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 189,
+  "title": "Weighing and Handing Over",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3c88834204ea3683",
+  "lessons": [
+    {
+      "id": "JA-C189-hakaru",
+      "sequence": 11270,
+      "title": "はかる (hakaru) — to weigh; to measure",
+      "headword": "はかる",
+      "romanization": "hakaru",
+      "gloss": "to weigh; to measure",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cdb576e9ba4db96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to send, then the Japanese for registered mail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はかる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はかる — hakaru — \"to weigh; to measure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ゆうびんきょくで にもつを はかります。 — yūbinkyoku de nimotsu o hakarimasu — \"They weigh the package at the post office.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はかります, hakarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はかる (hakaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hakaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hakaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yūbinkyoku de nimotsu o hakarimasu — They weigh the package at the post office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yūbinkyoku de nimotsu o hakarimasu* — They weigh the package at the post office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to send, then the Japanese for registered mail, then say hakaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to send, then the Japanese for registered mail, then say *hakaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はかる (hakaru) mean? (\"To weigh; to measure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C189-hakaru-type",
+              "prompt": "Say the Japanese for 'to weigh'.",
+              "assesses": [
+                "JA-LEX-C189-PARCEL189-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はかる",
+                "hakaru"
+              ],
+              "feedback": {
+                "correct": "Right: はかる (hakaru) is 'to weigh; to measure'.",
+                "incorrect": "'To weigh' is はかる (hakaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C189-todokeru",
+      "sequence": 11280,
+      "title": "とどける (todokeru) — to deliver; to report",
+      "headword": "とどける",
+      "romanization": "todokeru",
+      "gloss": "to deliver; to report",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab681556c37bec94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for registered mail, then the Japanese for to weigh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とどける",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とどける — todokeru — \"to deliver; to report\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あした にもつを とどけます。 — ashita nimotsu o todokemasu — \"I will deliver the package tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とどけます, todokemasu; an ichidan verb. Its intransitive partner とどく is taught already."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とどける (todokeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and it shares its stem with todoku, \"to reach, to arrive\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "todokeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *todokeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "todokeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *todokeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita nimotsu o todokemasu — I will deliver the package tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita nimotsu o todokemasu* — I will deliver the package tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for registered mail, then the Japanese for to weigh, then say todokeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for registered mail, then the Japanese for to weigh, then say *todokeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とどける (todokeru) mean? (\"To deliver; to report\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C189-todokeru-type",
+              "prompt": "Say the Japanese for 'to deliver'.",
+              "assesses": [
+                "JA-LEX-C189-PARCEL189-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とどける",
+                "todokeru"
+              ],
+              "feedback": {
+                "correct": "Right: とどける (todokeru) is 'to deliver; to report'.",
+                "incorrect": "'To deliver' is とどける (todokeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C189-uketoru",
+      "sequence": 11290,
+      "title": "うけとる (uketoru) — to accept; to receive, to take delivery of",
+      "headword": "うけとる",
+      "romanization": "uketoru",
+      "gloss": "to accept; to receive, to take delivery of",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c486a85540937ffb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to weigh, then the Japanese for to deliver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うけとる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うけとる — uketoru — \"to accept; to receive, to take delivery of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うけつけで にもつを うけとります。 — uketsuke de nimotsu o uketorimasu — \"I collect the package at reception.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite うけとります, uketorimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うけとる (uketoru) is native Japanese, built from uke, the stem of ukeru, \"to receive\", and toru, \"to take\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uketoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uketoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uketoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uketoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uketsuke de nimotsu o uketorimasu — I collect the package at reception.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uketsuke de nimotsu o uketorimasu* — I collect the package at reception.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to weigh, then the Japanese for to deliver, then say uketoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to weigh, then the Japanese for to deliver, then say *uketoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うけとる (uketoru) mean? (\"To accept; to receive, to take delivery of\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C189-uketoru-type",
+              "prompt": "Say the Japanese for 'to accept'.",
+              "assesses": [
+                "JA-LEX-C189-PARCEL189-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うけとる",
+                "uketoru"
+              ],
+              "feedback": {
+                "correct": "Right: うけとる (uketoru) is 'to accept; to receive, to take delivery of'.",
+                "incorrect": "'To accept' is うけとる (uketoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C189-watasu",
+      "sequence": 11300,
+      "title": "わたす (watasu) — to hand over; to pass, to give",
+      "headword": "わたす",
+      "romanization": "watasu",
+      "gloss": "to hand over; to pass, to give",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1dfcd0d47eff250c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to deliver, then the Japanese for to accept."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わたす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わたす — watasu — \"to hand over; to pass, to give\"."
+            },
+            {
+              "kind": "speech",
+              "text": "てんいんに おかねを わたします。 — ten'in ni okane o watashimasu — \"I hand the money to the shop assistant.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite わたします, watashimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わたす (watasu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "watasu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *watasu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "watasu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *watasu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ten'in ni okane o watashimasu — I hand the money to the shop assistant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ten'in ni okane o watashimasu* — I hand the money to the shop assistant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to deliver, then the Japanese for to accept, then say watasu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to deliver, then the Japanese for to accept, then say *watasu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does わたす (watasu) mean? (\"To hand over; to pass, to give\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C189-watasu-type",
+              "prompt": "Say the Japanese for 'to hand over'.",
+              "assesses": [
+                "JA-LEX-C189-PARCEL189-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "わたす",
+                "watasu"
+              ],
+              "feedback": {
+                "correct": "Right: わたす (watasu) is 'to hand over; to pass, to give'.",
+                "incorrect": "'To hand over' is わたす (watasu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C189-omiyage",
+      "sequence": 11310,
+      "title": "おみやげ (omiyage) — souvenir; gift brought back from a trip",
+      "headword": "おみやげ",
+      "romanization": "omiyage",
+      "gloss": "souvenir; gift brought back from a trip",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fc1a9a51f22fb32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to accept, then the Japanese for to hand over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おみやげ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おみやげ — omiyage — \"souvenir; gift brought back from a trip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ともだちに おみやげを かいます。 — tomodachi ni omiyage o kaimasu — \"I buy a souvenir for a friend.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おみやげ (omiyage) is built from polite o- and native miyage, written with two kanji for \"local product\" that are read as a whole; the older origin of miyage is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omiyage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omiyage*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "omiyage, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *omiyage*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomodachi ni omiyage o kaimasu — I buy a souvenir for a friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomodachi ni omiyage o kaimasu* — I buy a souvenir for a friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to accept, then the Japanese for to hand over, then say omiyage again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to accept, then the Japanese for to hand over, then say *omiyage* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おみやげ (omiyage) mean? (\"Souvenir; gift brought back from a trip\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C189-omiyage-type",
+              "prompt": "Say the Japanese for 'souvenir'.",
+              "assesses": [
+                "JA-LEX-C189-PARCEL189-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おみやげ",
+                "omiyage"
+              ],
+              "feedback": {
+                "correct": "Right: おみやげ (omiyage) is 'souvenir; gift brought back from a trip'.",
+                "incorrect": "'Souvenir' is おみやげ (omiyage)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R189-review-184-189",
+      "sequence": 11320,
+      "title": "Words from chapters 184–189 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 184-189",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a7b171c036f2fd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for goods and queue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goods, queue, to exchange, all of it, exactly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: goods, queue, to exchange, all of it, exactly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discount, bargain sale, sold out, to cost, to be enough",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: discount, bargain sale, sold out, to cost, to be enough]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be in surplus, savings, to save up, fee, tax",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be in surplus, savings, to save up, fee, tax]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to deposit, to withdraw, bankbook, to borrow, money exchange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to deposit, to withdraw, bankbook, to borrow, money exchange]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "post office, stamp, postcard, to send, registered mail",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: post office, stamp, postcard, to send, registered mail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to weigh, to deliver, to accept, to hand over, souvenir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to weigh, to deliver, to accept, to hand over, souvenir]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Goods? (しなもの, shinamono.) Queue? (れつ, retsu.) To exchange? (とりかえる, torikaeru.) All of it? (ぜんぶ, zenbu.) Exactly? (ちょうど, chōdo.) Discount? (わりびき, waribiki.) Bargain sale? (やすうり, yasuuri.) Sold out? (うりきれ, urikire.) To cost? (かかる, kakaru.) To be enough? (たりる, tariru.) To be in surplus? (あまる, amaru.) Savings? (ちょきん, chokin.) To save up? (ためる, tameru.) Fee? (りょうきん, ryōkin.) Tax? (ぜいきん, zeikin.) To deposit? (あずける, azukeru.) To withdraw? (おろす, orosu.) Bankbook? (つうちょう, tsūchō.) To borrow? (かりる, kariru.) Money exchange? (りょうがえ, ryōgae.) Post office? (ゆうびんきょく, yūbinkyoku.) Stamp? (きって, kitte.) Postcard? (はがき, hagaki.) To send? (おくる, okuru.) Registered mail? (かきとめ, kakitome.) To weigh? (はかる, hakaru.) To deliver? (とどける, todokeru.) To accept? (うけとる, uketoru.) To hand over? (わたす, watasu.) Souvenir? (おみやげ, omiyage.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R189-review-184-189-type",
+              "prompt": "Say the Japanese for 'goods'.",
+              "assesses": [
+                "JA-LEX-C184-GOODS184-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しなもの",
+                "shinamono"
+              ],
+              "feedback": {
+                "correct": "Right: しなもの (shinamono) is 'goods; article, item'.",
+                "incorrect": "'Goods' is しなもの (shinamono)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

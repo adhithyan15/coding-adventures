@@ -1,0 +1,19 @@
+{
+  "chapter": 170,
+  "title": "Laddoos and butter",
+  "label": "ch:gu-laddoos-and-butter",
+  "canDo": "I can talk about sweets, butter and sifting flour.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-R170-review-165-170",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 170: I can talk about sweets, butter and sifting flour.",
+    "assesses": [
+      "GU-LEX-C170-SWEET170-03",
+      "GU-LEX-C170-SWEET170-04",
+      "GU-LEX-C170-SWEET170-05"
+    ]
+  }
+}

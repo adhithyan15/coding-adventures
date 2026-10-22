@@ -1,0 +1,11 @@
+{
+  "id": "FA-C376-eteraf-kardan",
+  "pathSegment": "FA-PATH-376-TAQSIR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-376-TAQSIR",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-W270-pismo",
+  "pathSegment": "RU-PATH-270-WOULD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-270-WOULD",
+      "order": 3
+    }
+  ]
+}

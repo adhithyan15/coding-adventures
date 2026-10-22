@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C360-otchityvatsya",
+    "language": "russian",
+    "chapter": 360,
+    "sequence": 21010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a8f7ac64bc0ac9a"
+  },
+  "findings": []
+}

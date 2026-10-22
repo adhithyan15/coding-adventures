@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 149,
+  "title": "Putting Clothes On and Taking Them Off",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d73b2b1f75eb9cb0",
+  "lessons": [
+    {
+      "id": "JA-C149-kiru",
+      "sequence": 8950,
+      "title": "きる (kiru) — to wear; to put on (clothes)",
+      "headword": "きる",
+      "romanization": "kiru",
+      "gloss": "to wear; to put on (clothes)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27c2a9e4646982e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to grow a beard, then the Japanese for make-up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: きる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きる — kiru — \"to wear; to put on (clothes)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あさ ふくを きます。 — asa fuku o kimasu — \"I put on my clothes in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite きます, kimasu; an ichidan verb. Shoes and trousers go on with はく, haku."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "きる (kiru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa fuku o kimasu — I put on my clothes in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa fuku o kimasu* — I put on my clothes in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to grow a beard, then the Japanese for make-up, then say kiru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to grow a beard, then the Japanese for make-up, then say *kiru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does きる (kiru) mean? (\"To wear; to put on (clothes)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C149-kiru-type",
+              "prompt": "Say the Japanese for 'to wear'.",
+              "assesses": [
+                "JA-LEX-C149-DRESS149-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "きる",
+                "kiru"
+              ],
+              "feedback": {
+                "correct": "Right: きる (kiru) is 'to wear; to put on (clothes)'.",
+                "incorrect": "'To wear' is きる (kiru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C149-nugu",
+      "sequence": 8960,
+      "title": "ぬぐ (nugu) — to take off (clothes, shoes)",
+      "headword": "ぬぐ",
+      "romanization": "nugu",
+      "gloss": "to take off (clothes, shoes)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9272e88ae4f11e31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for make-up, then the Japanese for to wear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ぬぐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬぐ — nugu — \"to take off (clothes, shoes)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うちで くつを ぬぎます。 — uchi de kutsu o nugimasu — \"I take off my shoes at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ぬぎます, nugimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ぬぐ (nugu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nugu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nugu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nugu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nugu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchi de kutsu o nugimasu — I take off my shoes at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchi de kutsu o nugimasu* — I take off my shoes at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for make-up, then the Japanese for to wear, then say nugu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for make-up, then the Japanese for to wear, then say *nugu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ぬぐ (nugu) mean? (\"To take off (clothes, shoes)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C149-nugu-type",
+              "prompt": "Say the Japanese for 'to take off'.",
+              "assesses": [
+                "JA-LEX-C149-DRESS149-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ぬぐ",
+                "nugu"
+              ],
+              "feedback": {
+                "correct": "Right: ぬぐ (nugu) is 'to take off (clothes, shoes)'.",
+                "incorrect": "'To take off' is ぬぐ (nugu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C149-kaburu",
+      "sequence": 8970,
+      "title": "かぶる (kaburu) — to wear on the head; to put on (a hat)",
+      "headword": "かぶる",
+      "romanization": "kaburu",
+      "gloss": "to wear on the head; to put on (a hat)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed1f5c550d864624",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wear, then the Japanese for to take off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かぶる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かぶる — kaburu — \"to wear on the head; to put on (a hat)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "なつは ぼうしを かぶります。 — natsu wa bōshi o kaburimasu — \"In summer I wear a hat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite かぶります, kaburimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かぶる (kaburu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaburu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaburu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaburu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaburu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "natsu wa bōshi o kaburimasu — In summer I wear a hat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *natsu wa bōshi o kaburimasu* — In summer I wear a hat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wear, then the Japanese for to take off, then say kaburu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wear, then the Japanese for to take off, then say *kaburu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かぶる (kaburu) mean? (\"To wear on the head; to put on (a hat)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C149-kaburu-type",
+              "prompt": "Say the Japanese for 'to wear on the head'.",
+              "assesses": [
+                "JA-LEX-C149-DRESS149-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かぶる",
+                "kaburu"
+              ],
+              "feedback": {
+                "correct": "Right: かぶる (kaburu) is 'to wear on the head; to put on (a hat)'.",
+                "incorrect": "'To wear on the head' is かぶる (kaburu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C149-youfuku",
+      "sequence": 8980,
+      "title": "ようふく (yōfuku) — Western clothes; clothes",
+      "headword": "ようふく",
+      "romanization": "yōfuku",
+      "gloss": "Western clothes; clothes",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a6c66802ccfb468",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to take off, then the Japanese for to wear on the head."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ようふく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようふく — yōfuku — \"Western clothes; clothes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは まいにち ようふくを きます。 — chichi wa mainichi yōfuku o kimasu — \"My father wears Western clothes every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようふく (yōfuku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are yō, \"ocean, Western\" (Middle Chinese yang) and fuku, \"clothing\" (bjuwk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōfuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōfuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōfuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōfuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa mainichi yōfuku o kimasu — My father wears Western clothes every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa mainichi yōfuku o kimasu* — My father wears Western clothes every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to take off, then the Japanese for to wear on the head, then say yōfuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to take off, then the Japanese for to wear on the head, then say *yōfuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ようふく (yōfuku) mean? (\"Western clothes; clothes\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C149-youfuku-type",
+              "prompt": "Say the Japanese for 'Western clothes'.",
+              "assesses": [
+                "JA-LEX-C149-DRESS149-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ようふく",
+                "yōfuku",
+                "youfuku",
+                "yoofuku",
+                "yofuku"
+              ],
+              "feedback": {
+                "correct": "Right: ようふく (yōfuku) is 'Western clothes; clothes'.",
+                "incorrect": "'Western clothes' is ようふく (yōfuku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C149-shitagi",
+      "sequence": 8990,
+      "title": "したぎ (shitagi) — underwear",
+      "headword": "したぎ",
+      "romanization": "shitagi",
+      "gloss": "underwear",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e576f10c65b1fc7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to wear on the head, then the Japanese for Western clothes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: したぎ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "したぎ — shitagi — \"underwear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まいにち したぎを あらいます。 — mainichi shitagi o araimasu — \"I wash my underwear every day.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "したぎ (shitagi) is native Japanese, built from shita, \"under\", and ki, \"wearing\", from kiru, voiced to gi; both parts are inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitagi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitagi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shitagi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shitagi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainichi shitagi o araimasu — I wash my underwear every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainichi shitagi o araimasu* — I wash my underwear every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to wear on the head, then the Japanese for Western clothes, then say shitagi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to wear on the head, then the Japanese for Western clothes, then say *shitagi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does したぎ (shitagi) mean? (\"Underwear\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C149-shitagi-type",
+              "prompt": "Say the Japanese for 'underwear'.",
+              "assesses": [
+                "JA-LEX-C149-DRESS149-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "したぎ",
+                "shitagi"
+              ],
+              "feedback": {
+                "correct": "Right: したぎ (shitagi) is 'underwear'.",
+                "incorrect": "'Underwear' is したぎ (shitagi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

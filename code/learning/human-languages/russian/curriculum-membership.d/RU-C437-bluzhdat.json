@@ -1,0 +1,11 @@
+{
+  "id": "RU-C437-bluzhdat",
+  "pathSegment": "RU-PATH-437-ZABLUDITSYA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-437-ZABLUDITSYA",
+      "order": 2
+    }
+  ]
+}

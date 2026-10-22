@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:a1ae550f40027e86",
+  "lessonIds": [
+    "GU-C258-kriket",
+    "GU-C258-dado",
+    "GU-C258-bet",
+    "GU-C258-maarvu",
+    "GU-C258-uchalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch258.txt",
+  "json": "gujarati/narration/ch258.json",
+  "textHash": "fnv1a64:a17a0b8172809df3",
+  "jsonHash": "fnv1a64:cdfae88d4022821b",
+  "findings": []
+}

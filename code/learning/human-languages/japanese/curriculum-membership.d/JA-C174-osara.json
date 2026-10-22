@@ -1,0 +1,11 @@
+{
+  "id": "JA-C174-osara",
+  "pathSegment": "JA-PATH-174-KITCH174",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-174-KITCH174",
+      "order": 3
+    }
+  ]
+}

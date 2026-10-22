@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 204,
+  "sourceHash": "fnv1a64:357fe31375a781d8",
+  "lessonIds": [
+    "GU-C204-samaypatrak",
+    "GU-C204-puchparach",
+    "GU-C204-pletphorm",
+    "GU-C204-upadvu",
+    "GU-C204-chutvu"
+  ],
+  "tex": "gujarati/book/chapters/ch204-reading-the-timetable.tex"
+}

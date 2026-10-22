@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C497-neposlushnyy",
+    "language": "russian",
+    "chapter": 497,
+    "sequence": 28070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbc28a98dbf4b4b4"
+  },
+  "findings": []
+}

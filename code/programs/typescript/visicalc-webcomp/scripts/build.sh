@@ -1,31 +1,17 @@
 #!/usr/bin/env bash
 #
-# build.sh — regenerate the FormulaBar WebComponent bundle from the
-# Mosaic pipeline (mosaic-compile --backend webcomponent).
+# build.sh — compile VisiCalc's FormulaBar and Grid to Web Components and
+# write them into vendor/.
 #
-# Per the VisiCalc cross-backend demo plan (Phase 2 — VC2-webcomp):
-# this is the second cross-backend demo. The output is a JS file that
-# defines `<mos-formula-bar>` as a custom element with shadow-DOM
-# styling; index.html imports the bundle and mounts the element with
-# HTML attributes.
-#
-# Today we only compile FormulaBar through the pipeline. The Grid
-# fragment in index.html is hand-written (same gap as VC2-html — the
-# `Grid` built-in primitive isn't supported by the
-# mosaic-emit-webcomponent pipeline yet, only the React emitter knows
-# how to lower it). When the WebComponent Grid emitter lands, this
-# script gains a second `mosaic-compile --backend webcomponent ...`
-# line for Grid and index.html switches to `<mos-grid>` instead of
-# the hand-written `<table>` placeholder.
+# Per the VisiCalc cross-backend demo plan (Phase 2 — VC2-webcomp): the page
+# imports `vendor/{FormulaBar,Grid}.js` and opens from file://, so the
+# compiled elements are committed. They used to be compiled into build/ and
+# copied into vendor/ by hand; this writes them in place instead.
 #
 # Usage:
 #   cd code/programs/typescript/visicalc-webcomp
-#   bash scripts/build.sh
-#
-# Output:
-#   code/programs/typescript/visicalc-webcomp/build/FormulaBar.js
-#
-# Open `code/programs/typescript/visicalc-webcomp/index.html` in any browser to view.
+#   bash scripts/build.sh           # regenerate vendor/FormulaBar.js, vendor/Grid.js
+#   bash scripts/build.sh --check   # fail if vendor/ is stale (CI: BUILD_mac_and_linux)
 
 set -euo pipefail
 
@@ -44,7 +30,14 @@ echo "Building mosaic-compile..."
 (cd "$REPO_ROOT/code/packages/rust" && cargo build -p mosaic-compile)
 
 SRC="$REPO_ROOT/code/programs/mosaic/visicalc"
-OUT_DIR="$DEMO_DIR/build"
+CHECK=0
+if [ "${1:-}" = "--check" ]; then
+  CHECK=1
+  OUT_DIR="$(mktemp -d)"
+  trap 'rm -rf "$OUT_DIR"' EXIT
+else
+  OUT_DIR="$DEMO_DIR/vendor"
+fi
 mkdir -p "$OUT_DIR"
 
 echo "Compiling FormulaBar (WebComponent)..."
@@ -71,7 +64,23 @@ echo "Compiling Grid (WebComponent)..."
   --package-search-path "$REPO_ROOT/code/packages:$REPO_ROOT/code/packages/mosaic" \
   -o "$OUT_DIR/Grid.js"
 
-echo "Done. Generated:"
+if ((CHECK)); then
+  stale=0
+  for element in FormulaBar Grid; do
+    if ! cmp -s "$OUT_DIR/$element.js" "$DEMO_DIR/vendor/$element.js"; then
+      echo "error: vendor/$element.js is stale: the emitter's output changed." >&2
+      stale=1
+    fi
+  done
+  if ((stale)); then
+    echo "       Regenerate with: bash code/programs/typescript/visicalc-webcomp/scripts/build.sh" >&2
+    exit 1
+  fi
+  echo "vendor/FormulaBar.js and vendor/Grid.js are current"
+  exit 0
+fi
+
+echo "Done. Regenerated:"
 ls -la "$OUT_DIR"
 echo
 echo "Open $DEMO_DIR/index.html in a browser to view."

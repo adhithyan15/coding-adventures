@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-295-TICKET",
+  "stage": "B1",
+  "kind": "required",
+  "category": "communication",
+  "canDo": "I can ask for a return ticket, say that I missed the train or lost something, and ask for the person in charge.",
+  "prerequisites": []
+}

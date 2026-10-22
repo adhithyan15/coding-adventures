@@ -1,0 +1,11 @@
+{
+  "id": "FA-C395-ta-zamani-ke",
+  "pathSegment": "FA-PATH-395-BASTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-395-BASTE",
+      "order": 4
+    }
+  ]
+}

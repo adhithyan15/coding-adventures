@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Colds and Flu",
+  "label": "ch:fa-colds-and-flu",
+  "canDo": "I can say I have a cold or the flu.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C490-tab-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can say I have a cold or the flu.",
+    "assesses": [
+      "FA-LEX-C490-COLD-03",
+      "FA-LEX-C490-COLD-04",
+      "FA-LEX-C490-COLD-05"
+    ]
+  }
+}

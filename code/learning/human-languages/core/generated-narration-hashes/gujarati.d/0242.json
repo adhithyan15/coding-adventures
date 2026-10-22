@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:018f3597d07ffc6c",
+  "lessonIds": [
+    "GU-C242-pakvu",
+    "GU-C242-lanvu",
+    "GU-C242-cutvu",
+    "GU-C242-khodvu",
+    "GU-C242-gadhedo",
+    "GU-R242-review-237-242",
+    "GU-R242-review-final-242"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch242.txt",
+  "json": "gujarati/narration/ch242.json",
+  "textHash": "fnv1a64:ac72f798edc88e67",
+  "jsonHash": "fnv1a64:9e86baf3770a8049",
+  "findings": []
+}

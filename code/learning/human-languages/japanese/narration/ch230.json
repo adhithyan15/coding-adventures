@@ -1,0 +1,809 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 230,
+  "title": "Bosses, Seniors and Juniors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:472ad2f1828c01ca",
+  "lessons": [
+    {
+      "id": "JA-C230-shachou",
+      "sequence": 13910,
+      "title": "しゃちょう (shachō) — a company president",
+      "headword": "しゃちょう",
+      "romanization": "shachō",
+      "gloss": "a company president",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8340746068e77ab6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to be employed, then the Japanese for a colleague."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゃちょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃちょう — shachō — \"a company president\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しゃちょうは いつも かいぎで はなします。 — shachō wa itsumo kaigi de hanashimasu — \"The company president always speaks at meetings.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゃちょう (shachō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sha, \"company, association\" (Middle Chinese dzyaeX) and chō, \"leader, senior\" (trjangX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shachō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shachō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shachō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shachō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shachō wa itsumo kaigi de hanashimasu — The company president always speaks at meetings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shachō wa itsumo kaigi de hanashimasu* — The company president always speaks at meetings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to be employed, then the Japanese for a colleague, then say shachō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to be employed, then the Japanese for a colleague, then say *shachō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゃちょう (shachō) mean? (\"A company president\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C230-shachou-type",
+              "prompt": "Say the Japanese for 'a company president'.",
+              "assesses": [
+                "JA-LEX-C230-BOSS230-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゃちょう",
+                "shachō",
+                "shachou",
+                "shachoo",
+                "shacho"
+              ],
+              "feedback": {
+                "correct": "Right: しゃちょう (shachō) is 'a company president'.",
+                "incorrect": "'A company president' is しゃちょう (shachō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C230-joushi",
+      "sequence": 13920,
+      "title": "じょうし (jōshi) — a boss; one's superior",
+      "headword": "じょうし",
+      "romanization": "jōshi",
+      "gloss": "a boss; one's superior",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2aca21bd05dfcc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a colleague, then the Japanese for a company president."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じょうし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょうし — jōshi — \"a boss; one's superior\"."
+            },
+            {
+              "kind": "speech",
+              "text": "じょうしは いつも ていねいに おしえます。 — jōshi wa itsumo teinei ni oshiemasu — \"My boss always explains things carefully.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じょうし (jōshi) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are jō, \"above\" (Middle Chinese dzyangH) and shi, \"official\" (si) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōshi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōshi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōshi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōshi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōshi wa itsumo teinei ni oshiemasu — My boss always explains things carefully.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōshi wa itsumo teinei ni oshiemasu* — My boss always explains things carefully.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a colleague, then the Japanese for a company president, then say jōshi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a colleague, then the Japanese for a company president, then say *jōshi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じょうし (jōshi) mean? (\"A boss; one's superior\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C230-joushi-type",
+              "prompt": "Say the Japanese for 'a boss'.",
+              "assesses": [
+                "JA-LEX-C230-BOSS230-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じょうし",
+                "jōshi",
+                "joushi",
+                "jooshi",
+                "joshi"
+              ],
+              "feedback": {
+                "correct": "Right: じょうし (jōshi) is 'a boss; one's superior'.",
+                "incorrect": "'A boss' is じょうし (jōshi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C230-senpai",
+      "sequence": 13930,
+      "title": "せんぱい (senpai) — a senior; an older schoolmate or colleague",
+      "headword": "せんぱい",
+      "romanization": "senpai",
+      "gloss": "a senior; an older schoolmate or colleague",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47135b1af5ae5e9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a company president, then the Japanese for a boss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: せんぱい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんぱい — senpai — \"a senior; an older schoolmate or colleague\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんぱいは よく しゅくだいを てつだいます。 — senpai wa yoku shukudai o tetsudaimasu — \"My senior often helps with my homework.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "せんぱい (senpai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sen, \"before\" (Middle Chinese sen) and pai, \"fellows\" (pwojH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senpai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senpai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senpai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senpai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "senpai wa yoku shukudai o tetsudaimasu — My senior often helps with my homework.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *senpai wa yoku shukudai o tetsudaimasu* — My senior often helps with my homework.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a company president, then the Japanese for a boss, then say senpai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a company president, then the Japanese for a boss, then say *senpai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does せんぱい (senpai) mean? (\"A senior; an older schoolmate or colleague\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C230-senpai-type",
+              "prompt": "Say the Japanese for 'a senior'.",
+              "assesses": [
+                "JA-LEX-C230-BOSS230-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "せんぱい",
+                "senpai"
+              ],
+              "feedback": {
+                "correct": "Right: せんぱい (senpai) is 'a senior; an older schoolmate or colleague'.",
+                "incorrect": "'A senior' is せんぱい (senpai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C230-kouhai",
+      "sequence": 13940,
+      "title": "こうはい (kōhai) — a junior; a younger schoolmate or colleague",
+      "headword": "こうはい",
+      "romanization": "kōhai",
+      "gloss": "a junior; a younger schoolmate or colleague",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2898b4faf520c4ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a boss, then the Japanese for a senior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こうはい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうはい — kōhai — \"a junior; a younger schoolmate or colleague\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうはいは よく せんぱいに しつもんを します。 — kōhai wa yoku senpai ni shitsumon o shimasu — \"The juniors often ask their seniors questions.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こうはい (kōhai) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kō, \"after, behind\" (Middle Chinese huwX) and hai, \"fellows\" (pwojH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōhai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōhai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōhai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōhai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōhai wa yoku senpai ni shitsumon o shimasu — The juniors often ask their seniors questions.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōhai wa yoku senpai ni shitsumon o shimasu* — The juniors often ask their seniors questions.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a boss, then the Japanese for a senior, then say kōhai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a boss, then the Japanese for a senior, then say *kōhai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こうはい (kōhai) mean? (\"A junior; a younger schoolmate or colleague\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C230-kouhai-type",
+              "prompt": "Say the Japanese for 'a junior'.",
+              "assesses": [
+                "JA-LEX-C230-BOSS230-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こうはい",
+                "kōhai",
+                "kouhai",
+                "koohai",
+                "kohai"
+              ],
+              "feedback": {
+                "correct": "Right: こうはい (kōhai) is 'a junior; a younger schoolmate or colleague'.",
+                "incorrect": "'A junior' is こうはい (kōhai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C230-ganbaru",
+      "sequence": 13950,
+      "title": "がんばる (ganbaru) — to do one's best; to keep at it",
+      "headword": "がんばる",
+      "romanization": "ganbaru",
+      "gloss": "to do one's best; to keep at it",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:425fabfe045c59eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a senior, then the Japanese for a junior."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がんばる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がんばる — ganbaru — \"to do one's best; to keep at it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こうはいは まいにち しごとを がんばります。 — kōhai wa mainichi shigoto o ganbarimasu — \"The junior does his best at work every day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite がんばります, ganbarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がんばる (ganbaru) is written with two characters meaning \"stubborn\" and \"stretch\", read as one verb in -ru; its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ganbaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ganbaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ganbaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ganbaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōhai wa mainichi shigoto o ganbarimasu — The junior does his best at work every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōhai wa mainichi shigoto o ganbarimasu* — The junior does his best at work every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a senior, then the Japanese for a junior, then say ganbaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a senior, then the Japanese for a junior, then say *ganbaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がんばる (ganbaru) mean? (\"To do one's best; to keep at it\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C230-ganbaru-type",
+              "prompt": "Say the Japanese for 'to do one's best'.",
+              "assesses": [
+                "JA-LEX-C230-BOSS230-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がんばる",
+                "ganbaru"
+              ],
+              "feedback": {
+                "correct": "Right: がんばる (ganbaru) is 'to do one's best; to keep at it'.",
+                "incorrect": "'To do one's best' is がんばる (ganbaru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C208-sora",
+  "pathSegment": "JA-PATH-208-FORECAST208",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-208-FORECAST208",
+      "order": 3
+    }
+  ]
+}

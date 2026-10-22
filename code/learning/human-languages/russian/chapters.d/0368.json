@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Helping people in need",
+  "label": "ch:ru-helping-people-in-need",
+  "canDo": "I can talk about charity and volunteers, a state benefit, giving money and people who are in need.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-R368-review-361-368",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can talk about charity and volunteers, a state benefit, giving money and people who are in need.",
+    "assesses": [
+      "RU-LEX-C368-POMOSHCH-03",
+      "RU-LEX-C368-POMOSHCH-04",
+      "RU-LEX-C368-POMOSHCH-05"
+    ]
+  }
+}

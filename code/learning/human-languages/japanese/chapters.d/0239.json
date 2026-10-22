@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Weekend Pastimes",
+  "label": "ch:ja-weekend-pastimes",
+  "canDo": "I can say how I spent a free weekend.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-C239-shougi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can say how I spent a free weekend.",
+    "assesses": [
+      "JA-LEX-C239-PASTIME239-03",
+      "JA-LEX-C239-PASTIME239-04",
+      "JA-LEX-C239-PASTIME239-05"
+    ]
+  }
+}

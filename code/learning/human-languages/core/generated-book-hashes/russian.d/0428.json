@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:aaeed9946ce6ee06",
+  "lessonIds": [
+    "RU-C428-khostel",
+    "RU-C428-turbaza",
+    "RU-C428-nochleg",
+    "RU-C428-nochevat",
+    "RU-C428-bron"
+  ],
+  "tex": "russian/book/chapters/ch428-a-bed-for-the-night.tex"
+}

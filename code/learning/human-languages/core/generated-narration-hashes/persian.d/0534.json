@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:759855b02c92d088",
+  "lessonIds": [
+    "FA-C534-mobleman",
+    "FA-C534-abazhur",
+    "FA-C534-qaliche",
+    "FA-C534-kusan",
+    "FA-C534-lahaf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch534.txt",
+  "json": "persian/narration/ch534.json",
+  "textHash": "fnv1a64:a160fbd4df9eb384",
+  "jsonHash": "fnv1a64:e2b6787d09122ec5",
+  "findings": []
+}

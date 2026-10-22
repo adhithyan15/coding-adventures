@@ -1,0 +1,34 @@
+# Perl 5.38.0 (2023-07-02) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.38.0 syntax is rejected by this grammar.
+# Evidence: https://github.com/Perl/perl5/tree/v5.38.0
+# Tag object f47267bec5921b10a8cc16545c9fdf11972c5f2d, commit 76298ae68aa7796f0ffc05095b127d23f4b2de8f.
+# Own blobs: perly.y c0c09092c5e9305af5638535effebf18ea62cfe3,
+# toke.c 1f81b3614c9a186468098cb15216c1dfe7ab3f2c,
+# keywords.h feae6f6dce7ac861ac1ca207c097e51209a2191b,
+# parser.h 46d6a19c7b1e8638c26ceaa8b30dfa3e75b8f62c (read 2026-10-20).
+# print: keywords.h KEY_print; toke.c LOP(OP_PRINT) yields FUNC before "(",
+# so perly.y "FUNC ( optexpr )" is the only accepted form, with one expr.
+# Operators: perly.y ADDOP, MULOP and "PERLY_MINUS term %prec UMINUS".
+# yyl_hyphen lexes adjacent "--" as PREDEC/POSTDEC; the grammar refuses it.
+# Retain 250 decimal digits: scan_num copies into parser.h tokenbuf[256]
+# with six bytes reserved and croaks "Number too long" before the 251st.
+# A leading 0 enters scan_num's octal path; "_", ".", exponents and
+# 0x/0b/0o forms are outside the subset and refused.
+# CR is whitespace (yylex, PERL_STRICT_CR unset); FF and VT are whitespace
+# upstream but outside this subset, as are comments, POD and __END__.
+# Standalone subset: no pragmas, BEGIN, imports, hint mutation or overrides.
+# No full syntax, execution-version or platform-wide parity claim.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n\r]+/

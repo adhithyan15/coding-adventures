@@ -1,0 +1,19 @@
+{
+  "chapter": 435,
+  "title": "Taxis and porters",
+  "label": "ch:fa-taxis-and-porters",
+  "canDo": "I can get a ride: a private taxi, a car service, the coach company, a porter and giving someone a lift.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R435-review-428-435",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can get a ride: a private taxi, a car service, the coach company, a porter and giving someone a lift.",
+    "assesses": [
+      "FA-LEX-C435-DARBAST-03",
+      "FA-LEX-C435-DARBAST-04",
+      "FA-LEX-C435-DARBAST-05"
+    ]
+  }
+}

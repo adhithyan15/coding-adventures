@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-216-UNWELL216",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask someone how they feel and say I am not well.",
+  "prerequisites": []
+}

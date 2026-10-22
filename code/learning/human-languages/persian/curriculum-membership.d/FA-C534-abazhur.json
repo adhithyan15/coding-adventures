@@ -1,0 +1,11 @@
+{
+  "id": "FA-C534-abazhur",
+  "pathSegment": "FA-PATH-534-FURNISH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-534-FURNISH",
+      "order": 1
+    }
+  ]
+}

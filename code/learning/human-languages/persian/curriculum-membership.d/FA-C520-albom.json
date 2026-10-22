@@ -1,0 +1,11 @@
+{
+  "id": "FA-C520-albom",
+  "pathSegment": "FA-PATH-520-MUSICIANS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-520-MUSICIANS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 333,
+  "output": "russian/book/chapters/ch333-seasoning.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

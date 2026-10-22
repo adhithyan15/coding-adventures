@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:fa0790fa4760b246",
+  "lessonIds": [
+    "JA-C221-taion",
+    "JA-C221-sagaru",
+    "JA-C221-itamu",
+    "JA-C221-chiryou",
+    "JA-C221-yobou",
+    "JA-R221-review-216-221"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch221.txt",
+  "json": "japanese/narration/ch221.json",
+  "textHash": "fnv1a64:cb5d6d87ea20bb62",
+  "jsonHash": "fnv1a64:7e969de1f88bbb28",
+  "findings": []
+}

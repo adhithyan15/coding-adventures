@@ -1,0 +1,11 @@
+{
+  "id": "FA-C468-ghar",
+  "pathSegment": "FA-PATH-468-GHAR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-468-GHAR",
+      "order": 0
+    }
+  ]
+}

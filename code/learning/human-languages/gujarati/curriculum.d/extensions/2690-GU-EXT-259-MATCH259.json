@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-259-MATCH259",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who won the match, who ran and what exercise I did.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C421-illyuminator",
+  "pathSegment": "RU-PATH-421-VZLYOT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-421-VZLYOT",
+      "order": 3
+    }
+  ]
+}

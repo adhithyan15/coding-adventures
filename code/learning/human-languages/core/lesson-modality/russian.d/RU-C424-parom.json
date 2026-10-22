@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C424-parom",
+    "language": "russian",
+    "chapter": 424,
+    "sequence": 24270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e2df71529732d10b"
+  },
+  "findings": []
+}

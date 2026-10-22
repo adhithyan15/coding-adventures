@@ -1,0 +1,799 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 205,
+  "title": "At the Ticket Window",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c66547172e779476",
+  "lessons": [
+    {
+      "id": "JA-C205-madoguchi",
+      "sequence": 12360,
+      "title": "まどぐち (madoguchi) — a ticket window; a service counter",
+      "headword": "まどぐち",
+      "romanization": "madoguchi",
+      "gloss": "a ticket window; a service counter",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f972de7cade2c245",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to drop in, then the Japanese for lodging."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まどぐち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まどぐち — madoguchi — \"a ticket window; a service counter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "まどぐちで きっぷを かいます。 — madoguchi de kippu o kaimasu — \"I buy a ticket at the ticket window.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まどぐち (madoguchi) is native Japanese (wago), built from mado, \"window\", and kuchi, \"mouth, opening\", both inherited rather than borrowed; kuchi is voiced to guchi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madoguchi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madoguchi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madoguchi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madoguchi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madoguchi de kippu o kaimasu — I buy a ticket at the ticket window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madoguchi de kippu o kaimasu* — I buy a ticket at the ticket window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to drop in, then the Japanese for lodging, then say madoguchi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to drop in, then the Japanese for lodging, then say *madoguchi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まどぐち (madoguchi) mean? (\"A ticket window; a service counter\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C205-madoguchi-type",
+              "prompt": "Say the Japanese for 'a ticket window'.",
+              "assesses": [
+                "JA-LEX-C205-TICKET205-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まどぐち",
+                "madoguchi"
+              ],
+              "feedback": {
+                "correct": "Right: まどぐち (madoguchi) is 'a ticket window; a service counter'.",
+                "incorrect": "'A ticket window' is まどぐち (madoguchi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C205-ekiin",
+      "sequence": 12370,
+      "title": "えきいん (ekiin) — a station attendant",
+      "headword": "えきいん",
+      "romanization": "ekiin",
+      "gloss": "a station attendant",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56edc207d3fb0006",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for lodging, then the Japanese for a ticket window."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: えきいん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えきいん — ekiin — \"a station attendant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "えきいんが まどぐちに います。 — ekiin ga madoguchi ni imasu — \"A station attendant is at the ticket window.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "えきいん (ekiin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are eki, \"relay station\" (Middle Chinese yek) and in, \"member\" (hjwen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekiin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekiin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekiin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekiin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekiin ga madoguchi ni imasu — A station attendant is at the ticket window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekiin ga madoguchi ni imasu* — A station attendant is at the ticket window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for lodging, then the Japanese for a ticket window, then say ekiin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for lodging, then the Japanese for a ticket window, then say *ekiin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does えきいん (ekiin) mean? (\"A station attendant\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C205-ekiin-type",
+              "prompt": "Say the Japanese for 'a station attendant'.",
+              "assesses": [
+                "JA-LEX-C205-TICKET205-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "えきいん",
+                "ekiin"
+              ],
+              "feedback": {
+                "correct": "Right: えきいん (ekiin) is 'a station attendant'.",
+                "incorrect": "'A station attendant' is えきいん (ekiin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C205-kaisatsuguchi",
+      "sequence": 12380,
+      "title": "かいさつぐち (kaisatsuguchi) — a ticket gate",
+      "headword": "かいさつぐち",
+      "romanization": "kaisatsuguchi",
+      "gloss": "a ticket gate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cae5e649ebb9495",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a ticket window, then the Japanese for a station attendant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かいさつぐち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいさつぐち — kaisatsuguchi — \"a ticket gate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かいさつぐちは ひだりです。 — kaisatsuguchi wa hidari desu — \"The ticket gate is on the left.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かいさつぐち (kaisatsuguchi) is built from Sino-Japanese kaisatsu, \"checking tickets\", read with on'yomi borrowed from Chinese, and native kuchi, \"opening\", voiced to guchi (JMdict, KANJIDIC2). The Chinese parts are kai, \"to change, check\" (Middle Chinese kojX), and satsu, \"tag, tablet\" (tsreat) (Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisatsuguchi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisatsuguchi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisatsuguchi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisatsuguchi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaisatsuguchi wa hidari desu — The ticket gate is on the left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaisatsuguchi wa hidari desu* — The ticket gate is on the left.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a ticket window, then the Japanese for a station attendant, then say kaisatsuguchi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a ticket window, then the Japanese for a station attendant, then say *kaisatsuguchi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かいさつぐち (kaisatsuguchi) mean? (\"A ticket gate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C205-kaisatsuguchi-type",
+              "prompt": "Say the Japanese for 'a ticket gate'.",
+              "assesses": [
+                "JA-LEX-C205-TICKET205-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かいさつぐち",
+                "kaisatsuguchi"
+              ],
+              "feedback": {
+                "correct": "Right: かいさつぐち (kaisatsuguchi) is 'a ticket gate'.",
+                "incorrect": "'A ticket gate' is かいさつぐち (kaisatsuguchi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C205-katamichi",
+      "sequence": 12390,
+      "title": "かたみち (katamichi) — one way; a single ticket",
+      "headword": "かたみち",
+      "romanization": "katamichi",
+      "gloss": "one way; a single ticket",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7b0cab950419101",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a station attendant, then the Japanese for a ticket gate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かたみち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かたみち — katamichi — \"one way; a single ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かたみちの きっぷを ください。 — katamichi no kippu o kudasai — \"A one-way ticket, please.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かたみち (katamichi) is native Japanese (wago), built from kata, \"one side, one of a pair\", and michi, \"road\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katamichi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katamichi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katamichi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katamichi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katamichi no kippu o kudasai — A one-way ticket, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katamichi no kippu o kudasai* — A one-way ticket, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a station attendant, then the Japanese for a ticket gate, then say katamichi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a station attendant, then the Japanese for a ticket gate, then say *katamichi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かたみち (katamichi) mean? (\"One way; a single ticket\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C205-katamichi-type",
+              "prompt": "Say the Japanese for 'one way'.",
+              "assesses": [
+                "JA-LEX-C205-TICKET205-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かたみち",
+                "katamichi"
+              ],
+              "feedback": {
+                "correct": "Right: かたみち (katamichi) is 'one way; a single ticket'.",
+                "incorrect": "'One way' is かたみち (katamichi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C205-oufuku",
+      "sequence": 12400,
+      "title": "おうふく (ōfuku) — a round trip; a return ticket",
+      "headword": "おうふく",
+      "romanization": "ōfuku",
+      "gloss": "a round trip; a return ticket",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3741c8b110fce89f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a ticket gate, then the Japanese for one way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おうふく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おうふく — ōfuku — \"a round trip; a return ticket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おうふくの きっぷは やすいです。 — ōfuku no kippu wa yasui desu — \"A return ticket is cheap.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おうふく (ōfuku) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ō, \"to go\" (Middle Chinese hjwangX) and fuku, \"to return\" (bjuwk) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōfuku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōfuku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōfuku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōfuku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōfuku no kippu wa yasui desu — A return ticket is cheap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōfuku no kippu wa yasui desu* — A return ticket is cheap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a ticket gate, then the Japanese for one way, then say ōfuku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a ticket gate, then the Japanese for one way, then say *ōfuku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おうふく (ōfuku) mean? (\"A round trip; a return ticket\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C205-oufuku-type",
+              "prompt": "Say the Japanese for 'a round trip'.",
+              "assesses": [
+                "JA-LEX-C205-TICKET205-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おうふく",
+                "ōfuku",
+                "oufuku",
+                "oofuku",
+                "ofuku"
+              ],
+              "feedback": {
+                "correct": "Right: おうふく (ōfuku) is 'a round trip; a return ticket'.",
+                "incorrect": "'A round trip' is おうふく (ōfuku)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

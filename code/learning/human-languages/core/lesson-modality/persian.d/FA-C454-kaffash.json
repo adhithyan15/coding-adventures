@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C454-kaffash",
+    "language": "persian",
+    "chapter": 454,
+    "sequence": 23250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b7c9a41b7ced3bed"
+  },
+  "findings": []
+}

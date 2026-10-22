@@ -20,8 +20,8 @@ mod apple {
     use diagram_layout_graph::{GraphLayoutOptions, layout_graph_diagram};
     use diagram_layout_grid::layout_grid_diagram;
     use diagram_layout_hierarchy::{
-        layout_railroad, layout_swimlane, layout_treeview, layout_treeview_with_options, layout_treemap,
-        TreeViewLayoutOptions,
+        layout_railroad, layout_swimlane, layout_swimlane_with_options, layout_treeview,
+        layout_treeview_with_options, layout_treemap, SwimlaneLayoutOptions, TreeViewLayoutOptions,
     };
     use diagram_layout_geometric::{layout_cynefin, layout_info, layout_ishikawa, layout_venn, layout_wardley};
     use diagram_layout_packet::layout_packet_diagram;
@@ -168,6 +168,14 @@ mod apple {
     const RAILROAD_VISUAL_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/railroad-11.16.1-visual-corpus.json"
+    ));
+    const ZENUML_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/zenuml-11.16.1-corpus.json"
+    ));
+    const ZENUML_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/zenuml-11.16.1-visual-corpus.json"
     ));
 
     #[test]
@@ -3816,7 +3824,16 @@ line "Target" [35, 50, 68, 82]"##,
                 .unwrap_or_else(|| panic!("missing Swimlane fixture {fixture_name}"));
             let diagram = parse_swimlane(fixture["source"].as_str().expect("swimlane source"))
                 .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
-            let layout = layout_swimlane(&diagram);
+            let icon_options = SwimlaneLayoutOptions { icon_glyphs: BTreeMap::from([(
+                "logos:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() },
+            )]), image_dimensions: BTreeMap::from([(
+                "https://example.com/logo.png".into(), (160.0, 80.0),
+            )]) };
+            let layout = if matches!(fixture_name, "icon-glyph-node" | "icon-node-forms" | "image-node") {
+                layout_swimlane_with_options(&diagram, Some(&icon_options))
+            } else {
+                layout_swimlane(&diagram)
+            };
             let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
                 background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
@@ -3827,6 +3844,38 @@ line "Target" [35, 50, 68, 82]"##,
                 resolver: &resolver,
             });
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            if fixture_name == "icon-glyph-node" {
+                assert_eq!(layout.icons.get("parser").map(String::as_str), Some("logos:rust"));
+                assert_eq!(layout.icon_glyphs.get("parser").map(|glyph| glyph.text.as_str()), Some("R"));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.parser.icon")), Some(&"logos:rust".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.parser.iconResolved")), Some(&"true".to_string()));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 24.0 && !run.glyphs.is_empty()
+                )), "resolved icon glyph must lower to backend-neutral text paint");
+            }
+            if fixture_name == "icon-node-forms" {
+                assert_eq!(layout.nodes.iter().find(|node| node.id == "plain").unwrap().label.text, "");
+                assert_eq!(layout.icon_nodes["square"].height, 60.0);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(ellipse) if ellipse.rx == 32.0 && ellipse.ry == 32.0
+                )), "circle icon form must lower to backend-neutral ellipse paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.circle.iconPosition")), Some(&"t".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.square.iconHeight")), Some(&"60".to_string()));
+            }
+            if fixture_name == "image-node" {
+                assert_eq!((layout.image_nodes["logo"].width, layout.image_nodes["logo"].height), (128.0, 64.0));
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Image(image) if image.width == 128.0 && image.height == 64.0
+                        && matches!(&image.src, paint_instructions::ImageSrc::Uri(source)
+                            if source == "https://example.com/logo.png")
+                )), "image node must lower to backend-neutral URI image paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.logo.imageConstraint")), Some(&"on".to_string()));
+            }
             if fixture_name == "default-lane-for-loose-nodes" {
                 assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
                     vec!["OwnedLane", "__swimlane_default__"]);
@@ -3836,6 +3885,28 @@ line "Target" [35, 50, 68, 82]"##,
                 assert!(scene.instructions.iter().filter(|instruction|
                     matches!(instruction, PaintInstruction::Rect(_))
                 ).count() >= 4, "the default lane and both nodes must lower to paint rectangles");
+            }
+            if matches!(fixture_name, "markdown-string-labels" | "multiline-markdown-string-labels") {
+                assert!(layout.lanes[0].label.markdown.is_some());
+                assert!(layout.groups[0].label.markdown.is_some());
+                assert!(layout.nodes.iter().find(|node| node.id == "request").unwrap().label.markdown.is_some());
+                assert!(layout.edges.iter().find(|edge| edge.label.is_some()).unwrap()
+                    .label.as_ref().unwrap().markdown.is_some());
+                assert!(scene.instructions.iter().filter(|instruction| matches!(
+                    instruction, PaintInstruction::GlyphRun(run) if !run.glyphs.is_empty()
+                )).count() >= 9, "Markdown spans must lower to separate backend-neutral glyph runs");
+                if fixture_name == "multiline-markdown-string-labels" {
+                    let edge = layout.edges.iter().find(|edge| edge.label.is_some()).unwrap();
+                    let request = layout.nodes.iter().find(|node| node.id == "request").unwrap();
+                    let done = layout.nodes.iter().find(|node| node.id == "done").unwrap();
+                    assert!(edge.label_height > 22.0,
+                        "authored edge-label lines must expand backend-neutral label geometry");
+                    assert!(done.x - (request.x + request.width) >= edge.label_width + 12.0,
+                        "layout must reserve the multiline edge-label width between adjacent nodes");
+                    let position = edge.label_position.as_ref().unwrap();
+                    assert!(position.x - edge.label_width / 2.0 >= request.x + request.width);
+                    assert!(position.x + edge.label_width / 2.0 <= done.x);
+                }
             }
             if fixture_name == "theme-variables" {
                 assert_eq!(layout.theme.main_background, "#ffe1ef");
@@ -3864,9 +3935,11 @@ line "Target" [35, 50, 68, 82]"##,
                     Some(&"Helvetica Neue".to_string()));
             }
             if fixture_name == "theme-edge-label-variables" {
+                let edge = layout.edges.iter().find(|edge| edge.label.is_some()).unwrap();
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dbeafe")
-                        && rect.stroke.is_none() && rect.width == 104.0 && rect.height == 22.0
+                        && rect.stroke.is_none() && rect.width == edge.label_width
+                        && rect.height == edge.label_height
                 )), "edgeLabelBackground must lower behind the edge label");
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::GlyphRun(run) if run.fill.as_deref() == Some("rgb(23, 37, 84)")
@@ -4264,14 +4337,23 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
                 )).count() >= 6, "styled cross markers must lower to paired path instructions");
             }
+            if fixture_name == "long-endpoint-markers" {
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![3, 4, 4]);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )), "long circle markers must lower to ellipse instructions");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 2 && path.fill.as_deref() == Some("none")
+                )), "long cross markers must lower to paired path instructions");
+            }
             if fixture_name == "minimum-link-lengths" {
-                assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3]);
-                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3],
+                assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3, 5]);
+                assert_eq!(layout.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(), vec![1, 2, 3, 5],
                     "minimum link lengths must survive layout lowering");
                 let gaps = layout.nodes.windows(2).map(|nodes|
                     nodes[1].x - (nodes[0].x + nodes[0].width)
                 ).collect::<Vec<_>>();
-                assert!(gaps[1] > gaps[0] && gaps[2] > gaps[1],
+                assert!(gaps.windows(2).all(|pair| pair[1] > pair[0]),
                     "minimum link lengths must reserve progressively wider rank gaps");
             }
             if fixture_name == "styled-inline-link-labels" {
@@ -4380,6 +4462,24 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::GlyphRun(run) if run.font_size == 18.0
                         && run.fill.as_deref() == Some("rgb(20, 83, 45)")
                 )), "direct edge typography must lower to styled glyph runs");
+            }
+            if fixture_name == "edge-label-typography-layout" {
+                let edge = &layout.edges[0];
+                let request = layout.nodes.iter().find(|node| node.id == "request").unwrap();
+                let done = layout.nodes.iter().find(|node| node.id == "done").unwrap();
+                assert_eq!(edge.style.font_size, Some(20.0));
+                assert_eq!(edge.style.font_weight, Some(500));
+                assert_eq!(edge.style.font_italic, Some(false));
+                assert!(edge.label.as_ref().unwrap().spans.iter().any(|span| span.bold));
+                assert!(edge.label.as_ref().unwrap().spans.iter().any(|span| span.italic));
+                assert!(edge.label_width > 280.0,
+                    "styled Markdown spans must participate in deterministic edge-label measurement");
+                assert!(done.x - (request.x + request.width) >= edge.label_width + 12.0,
+                    "styled edge-label width must reserve rank clearance");
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::GlyphRun(run) if run.font_size == 20.0
+                        && run.fill.as_deref() == Some("#7c2d12")
+                )), "styled Markdown content must lower to backend-neutral glyph runs");
             }
             if fixture_name == "positional-link-styles" {
                 assert_eq!(layout.edges[0].style.stroke.as_deref(), Some("#dc2626"));
@@ -4866,6 +4966,43 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_zenuml_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_complete_pinned_zenuml_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(ZENUML_CORPUS)
+            .expect("ZenUML syntax corpus must be JSON");
+        let visual: Value = serde_json::from_str(ZENUML_VISUAL_CORPUS)
+            .expect("ZenUML visual corpus must be JSON");
+        let valid = syntax["valid"].as_array().expect("valid fixture array");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture array");
+        assert_eq!(fixture_ids.len(), valid.len(), "visual corpus must cover every upstream fixture");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for id in fixture_ids {
+            let id = id.as_str().expect("visual fixture id");
+            let fixture = valid.iter().find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} missing from syntax corpus"));
+            let diagram = parse_zenuml(fixture["source"].as_str().expect("fixture source"))
+                .unwrap_or_else(|error| panic!("ZenUML visual fixture {id} failed: {error}"));
+            let layout = layout_sequence_diagram(&diagram);
+            let scene = diagram_to_paint_sequence(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_zenuml_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
     }
 
     #[test]

@@ -1,0 +1,22 @@
+{
+  "language": "gujarati",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:8d25996f0a8c5efd",
+  "lessonIds": [
+    "GU-C145-bole-che",
+    "GU-C145-teo",
+    "GU-W46-o",
+    "GU-C145-bolie-chie",
+    "GU-C145-nathi-bolto",
+    "GU-C145-na-nahi",
+    "GU-C145-koi-nathi",
+    "GU-C145-not-practice"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 2,
+  "text": "gujarati/narration/ch145.txt",
+  "json": "gujarati/narration/ch145.json",
+  "textHash": "fnv1a64:4a47fc579d244769",
+  "jsonHash": "fnv1a64:e42904689dbcc046",
+  "findings": []
+}

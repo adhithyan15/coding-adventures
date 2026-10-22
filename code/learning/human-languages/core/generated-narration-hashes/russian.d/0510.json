@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:d15d0fce5bfc068e",
+  "lessonIds": [
+    "RU-C510-porazheniye",
+    "RU-C510-nichya",
+    "RU-C510-sopernik",
+    "RU-C510-proigrysh",
+    "RU-C510-lidirovat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch510.txt",
+  "json": "russian/narration/ch510.json",
+  "textHash": "fnv1a64:8cbd4ce31a199784",
+  "jsonHash": "fnv1a64:d0aeb4394f736796",
+  "findings": []
+}

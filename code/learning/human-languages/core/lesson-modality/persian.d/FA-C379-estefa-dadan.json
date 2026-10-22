@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C379-estefa-dadan",
+    "language": "persian",
+    "chapter": 379,
+    "sequence": 19370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b18d17f40a4d4da5"
+  },
+  "findings": []
+}

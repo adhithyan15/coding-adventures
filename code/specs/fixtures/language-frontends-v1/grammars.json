@@ -350,161 +350,161 @@
       "version": "es1",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es1.tokens",
-      "sha256": "8688c258bfd7268a2b475f4b4f1e99a06f6c3e4a0e2b75192300f85048f4c805"
+      "sha256": "1a5871c1e7b89ce9ca6f8c2c6c72e513cbb8cb7621f317512e6ffaf96c746921"
     },
     {
       "family": "javascript",
       "version": "es2015",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2015.grammar",
-      "sha256": "837db586f4966d674e7e4db3b3fb00d935c56901bdeaf0e98388ae4a7bb59263"
+      "sha256": "37c4a904da376d66a881f64bc7d84678d56cd2e3b63242de8ecadbc02cadf2d4"
     },
     {
       "family": "javascript",
       "version": "es2015",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2015.tokens",
-      "sha256": "f2cdbd9e94a638eee73b0158216a34a9e91f6466ba3ed8f5ae8a2e767418ee6a"
+      "sha256": "7632963d36fbeb019464086111aec5c4e82bbd97b3c071a99f4f3fc316294a57"
     },
     {
       "family": "javascript",
       "version": "es2016",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2016.grammar",
-      "sha256": "dfd97a780de15ffee04c325438eea084e93f7f257678bf92e9a328f3cfdc855d"
+      "sha256": "92af60abd9daf4a446f86dbdfccbbf18b3f99c6fee365cb60479f8c8f775638d"
     },
     {
       "family": "javascript",
       "version": "es2016",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2016.tokens",
-      "sha256": "5b1861ff039dc79461f0889ae3906ffbb139d3e12a21bc96cd0a8ab9af4fe772"
+      "sha256": "26855f33105cab1d60fcde3e9099407d08744c08060f2c60b31184f7e5756682"
     },
     {
       "family": "javascript",
       "version": "es2017",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2017.grammar",
-      "sha256": "72f3d97acf085fd4c76be61ca97ee6ce22f408b78adbb8810627b4541e290d36"
+      "sha256": "015a30600b99b2e31e414ebb00652ea5c4796d3d53593c963ddad11c3aebf0dd"
     },
     {
       "family": "javascript",
       "version": "es2017",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2017.tokens",
-      "sha256": "a53596eb593ca7414a4a6da636cad6e1b9f1835cd13d3ff74ab075821a7326e8"
+      "sha256": "7d99f178937af64ba2c1c460b0a5115a00a86b090e2ff7c18f82e5001e56865b"
     },
     {
       "family": "javascript",
       "version": "es2018",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2018.grammar",
-      "sha256": "398276918e6193aafb19d24209a9d806c41cedb24fbd645ae688cd7b2470a5a9"
+      "sha256": "72bc0b6257fb434490d984d1b5f33d6d2c15a0e52f4d6d86d0e1212b8169e967"
     },
     {
       "family": "javascript",
       "version": "es2018",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2018.tokens",
-      "sha256": "6eaa4b58ec5575d7dbca8afc9e5f26a27455911881599a48ee8a0f78d1512a6b"
+      "sha256": "9ae4c32c912a0731682497d542c088a5ea7e1d161a4c856d330bd0ddcf8caddf"
     },
     {
       "family": "javascript",
       "version": "es2019",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2019.grammar",
-      "sha256": "4935002fed220204819bc6f7615c82034cd354f2c9678e5d0bd434f8c7ead8c1"
+      "sha256": "8c05a6e7936f70774f3b4909cbd1fc12a5a5e0bd752e55c8d6a4df29dd1f3923"
     },
     {
       "family": "javascript",
       "version": "es2019",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2019.tokens",
-      "sha256": "8c92a0297ac91065e1dc86ad1eb23c49ef44947d7e3ec22f86cd114c5d05e4ce"
+      "sha256": "b7e3afafeaadbf151a9cfe51ca6f5efea84f60ddd20e95d4b5f15ef86d50e5d0"
     },
     {
       "family": "javascript",
       "version": "es2020",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2020.grammar",
-      "sha256": "d98d5ee5d1c3352b09962550777f78bad4f0e5d57b167a0a7259cfb9280ecdd6"
+      "sha256": "e6171a2c08d36a5751e1293bdbca8e7461e3c3dacfa25c7fdeee20e8a4c3cc05"
     },
     {
       "family": "javascript",
       "version": "es2020",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2020.tokens",
-      "sha256": "8999f7c7d4addd770e4111f67a4039f1ec60664082d3098c26d98122e75ba255"
+      "sha256": "90cbc13b0208c6562e2f0ac41bcd0321131015a5e97b73b75563e270ba4e068c"
     },
     {
       "family": "javascript",
       "version": "es2021",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2021.grammar",
-      "sha256": "d4557daa3f436ae6fdbf434973c6ade1f348d9c9b1a166816984be5b1b1df900"
+      "sha256": "297dfb19622bbaeff85ebbf36270eeaeed8878f4b32d52764939fb7c609f3198"
     },
     {
       "family": "javascript",
       "version": "es2021",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2021.tokens",
-      "sha256": "3595b952c344b38dadae6a3c742040c4b5f94f8f50abcbe318babb65d37a767b"
+      "sha256": "3f80155ade66e712813da6a755d3304d15da7dfad17799b117cd4dcec050e1c1"
     },
     {
       "family": "javascript",
       "version": "es2022",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2022.grammar",
-      "sha256": "0067ecc64ba4cbbc9a0487257147e18352f7b2bc761a8c6a7a0a2d5da6554c28"
+      "sha256": "a78e33f075be18b37299212a905795bf6b9a93289ccaea22d8f2d9f8c0729470"
     },
     {
       "family": "javascript",
       "version": "es2022",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2022.tokens",
-      "sha256": "e4054fd680ae8fb2e735ca5c13dba5d8530e43744fe4051422b9c838d6207d0e"
+      "sha256": "756d7c0c7188d74e8f089d288e65011d22b5b19d00c2189ea485f8b1e75fde2b"
     },
     {
       "family": "javascript",
       "version": "es2023",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2023.grammar",
-      "sha256": "1d0a144d72d3b1b0c2245d659ec2a11a3510ea2b5608a4de4e759c8e75e366e3"
+      "sha256": "e488aee1bd37c96229bd44e2be233cd690bb30bd6f67722e9bafef97b7d94df0"
     },
     {
       "family": "javascript",
       "version": "es2023",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2023.tokens",
-      "sha256": "9eb936f04404e817e992c4185737e8e6ee060b470789a35bda4adc392efbe6f6"
+      "sha256": "3ba6c26d5ef504165b8746640551fc35ba81d0518f5eae34b631353a52570a33"
     },
     {
       "family": "javascript",
       "version": "es2024",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2024.grammar",
-      "sha256": "e2288174a4e5875dad9fe9b090d328b75b39e719b405ab6e3dfed4ad10ab8fde"
+      "sha256": "f753951e094807e056149992360a51a569de87359389aabaed403bb825cf2de8"
     },
     {
       "family": "javascript",
       "version": "es2024",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2024.tokens",
-      "sha256": "3d4739bf54655efe76fdcd1dca9f06b8a6c24a52fdc82de62d770ca0224c14ac"
+      "sha256": "4f871de277f1172f8b3292ee82bb31d23f276ba6dc8f01a0a2b16ab352276e91"
     },
     {
       "family": "javascript",
       "version": "es2025",
       "kind": "grammar",
       "path": "code/grammars/ecmascript/es2025.grammar",
-      "sha256": "8fd98c4eb0224430fd7296ff7b8ffa84ff47b5b122b3941a354bf3802bf61547"
+      "sha256": "c87ed868f4abc1db0afa7ccc9729a327ca2e99987b1c85f6fc8592264fa329d4"
     },
     {
       "family": "javascript",
       "version": "es2025",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es2025.tokens",
-      "sha256": "3bcd2623768c4c2fe81cdb573d4a6f3fbf317e62e0bf620116cc81f598a36e0e"
+      "sha256": "5288d649762e0bad6506c3bf25c05e577b7f8b24144c1e442da3b01870f27652"
     },
     {
       "family": "javascript",
@@ -518,7 +518,7 @@
       "version": "es3",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es3.tokens",
-      "sha256": "6a30d2a80155e3b4648a4e46bece1c4038c43f59d41d88c9a0b29f9c1614f19c"
+      "sha256": "210a74483f0e5d544f0bfbfd3e9cbfdf8d8821f9ede9cae0915226ee99eff25e"
     },
     {
       "family": "javascript",
@@ -532,7 +532,7 @@
       "version": "es5",
       "kind": "tokens",
       "path": "code/grammars/ecmascript/es5.tokens",
-      "sha256": "bde22838db093e2de2a98284e0cc9c2f4c6e9986c3e24a394d3cd15889d856a6"
+      "sha256": "ec2f653a9370111e8298e336e14787e4f1a98b188724d4739140c2c1df6e9fb2"
     },
     {
       "family": "lattice",
@@ -592,6 +592,20 @@
     },
     {
       "family": "python",
+      "version": "python3.0a1",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.0a1.grammar",
+      "sha256": "60ed766694dc4e59b777dd346df242785f0e6bca01f81e5e6ac83ad7bb70be2f"
+    },
+    {
+      "family": "python",
+      "version": "python3.0a1",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.0a1.tokens",
+      "sha256": "3277c316fdcca2a773d33e06b4cebf181bb20e8e5ca3a526f575aee5d04319c4"
+    },
+    {
+      "family": "python",
       "version": "python3.10",
       "kind": "grammar",
       "path": "code/grammars/python/python3.10.grammar",
@@ -606,6 +620,20 @@
     },
     {
       "family": "python",
+      "version": "python3.11.17",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.11.17.grammar",
+      "sha256": "9f86f290edd0233b3a992dda65963092b886291d637a8784e880ce2fe9bc7c4f"
+    },
+    {
+      "family": "python",
+      "version": "python3.11.17",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.11.17.tokens",
+      "sha256": "9be8cefb1631cd31b36ad70d4d256d051cde6e376fba1f746cf9413ab08b8d16"
+    },
+    {
+      "family": "python",
       "version": "python3.12",
       "kind": "grammar",
       "path": "code/grammars/python/python3.12.grammar",
@@ -617,6 +645,48 @@
       "kind": "tokens",
       "path": "code/grammars/python/python3.12.tokens",
       "sha256": "80b0f83691b1c34106577fa82cb17be69e21106796d304ba1a752f9867677cbf"
+    },
+    {
+      "family": "python",
+      "version": "python3.12.3",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.12.3.grammar",
+      "sha256": "dee886da9e3097234953dd3676a019e3173e42dcee31f36630107b984c5c1086"
+    },
+    {
+      "family": "python",
+      "version": "python3.12.3",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.12.3.tokens",
+      "sha256": "e20d480315b14aba967a672b02b18bc17ce0792f28dc9f5554d325dc57dd6fab"
+    },
+    {
+      "family": "python",
+      "version": "python3.13.16",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.13.16.grammar",
+      "sha256": "2f32c189dcf45dc6017ea411a4140ac3abdb91ef0e1b2adb34129bf6786806ab"
+    },
+    {
+      "family": "python",
+      "version": "python3.13.16",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.13.16.tokens",
+      "sha256": "1dab4cb8fbc3480de95e19df2c0ba0c199a140e6656c3722b429c47b01627bbc"
+    },
+    {
+      "family": "python",
+      "version": "python3.16.0a1",
+      "kind": "grammar",
+      "path": "code/grammars/python/python3.16.0a1.grammar",
+      "sha256": "e3be92c01facba16ad6a2ecd5883d1754f3373e69c49921d780c9ce67465361d"
+    },
+    {
+      "family": "python",
+      "version": "python3.16.0a1",
+      "kind": "tokens",
+      "path": "code/grammars/python/python3.16.0a1.tokens",
+      "sha256": "12c7529c8d1377fff1df5a8fcb06d3c006e8b5a36fe97dae2826d264d5d39dc7"
     },
     {
       "family": "python",
@@ -659,6 +729,76 @@
       "kind": "tokens",
       "path": "code/grammars/ruby/ruby.tokens",
       "sha256": "b7221aebe863c4fd3177a3174dbb547dd66e67c9fe7c77c4f9496c73efdf1f7d"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby0.49",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby0.49.grammar",
+      "sha256": "d6f854aaa91c1686e151d74385c3b67104b4f69eb35ae92042a3901052afc027"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby0.49",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby0.49.tokens",
+      "sha256": "992187c7bd54b5ad59e535987ba52e6ef2d4b0509b25185ebf2d0044bb213850"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby0.50",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby0.50.grammar",
+      "sha256": "3a738f13841f08087a17aa91311decefb6416345b4e1f8407e494a6e10630d9c"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby0.50",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby0.50.tokens",
+      "sha256": "ccea3f4880eb70a4045563f297c204d338c33f58e908bd2c389923e12a19dbf4"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.5",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby3.3.5.grammar",
+      "sha256": "6e8ce78960df4a7ecf8f56c9aa98f6641160e1789add507f44240426941e98dd"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.5",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby3.3.5.tokens",
+      "sha256": "59ffca2a7f1a5586ee5cc63f107e1a684f91901f43a13cd67035dd33e2039666"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.6",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby3.3.6.grammar",
+      "sha256": "b550039253be965ba49a952048ba60d69d9899cff5f32727771c617ac86f19d8"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.6",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby3.3.6.tokens",
+      "sha256": "6b981074af7fb2e789a7d5ae6ff0c4efcb16869d8498657cd0262dd0b04b7544"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.7",
+      "kind": "grammar",
+      "path": "code/grammars/ruby/ruby3.3.7.grammar",
+      "sha256": "46c0d3bbad8260a011b0be7cd7585f86abcd52a6e252861f2da80ca8d219260a"
+    },
+    {
+      "family": "ruby",
+      "version": "ruby3.3.7",
+      "kind": "tokens",
+      "path": "code/grammars/ruby/ruby3.3.7.tokens",
+      "sha256": "b605886404df95dba61cac50153e45eed8a267ee263c6740e989f9c6f2a0d3bb"
     },
     {
       "family": "sql",

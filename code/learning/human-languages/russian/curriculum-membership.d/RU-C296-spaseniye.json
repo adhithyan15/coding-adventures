@@ -1,0 +1,11 @@
+{
+  "id": "RU-C296-spaseniye",
+  "pathSegment": "RU-PATH-296-SPASATEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-296-SPASATEL",
+      "order": 2
+    }
+  ]
+}

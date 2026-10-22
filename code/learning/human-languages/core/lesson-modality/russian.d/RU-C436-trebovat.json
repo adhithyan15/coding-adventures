@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C436-trebovat",
+    "language": "russian",
+    "chapter": 436,
+    "sequence": 24900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a97d4ca9b46e96c"
+  },
+  "findings": []
+}

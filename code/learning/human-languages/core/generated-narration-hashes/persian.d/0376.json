@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:7e30a0e1e5d90f70",
+  "lessonIds": [
+    "FA-C376-taqsir",
+    "FA-C376-gonah",
+    "FA-C376-noqte-ye-zaf",
+    "FA-C376-rokh-dadan",
+    "FA-C376-eteraf-kardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch376.txt",
+  "json": "persian/narration/ch376.json",
+  "textHash": "fnv1a64:c0cce8325d24d1c8",
+  "jsonHash": "fnv1a64:6cbb3710b63ad9cc",
+  "findings": []
+}

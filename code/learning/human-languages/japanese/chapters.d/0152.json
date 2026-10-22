@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Hurrying to Get Out of the House",
+  "label": "ch:ja-hurrying-to-get-out-of-the-house",
+  "canDo": "I can say how I get ready and leave the house.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C152-okureru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: I can say how I get ready and leave the house.",
+    "assesses": [
+      "JA-LEX-C152-READY152-03",
+      "JA-LEX-C152-READY152-04",
+      "JA-LEX-C152-READY152-05"
+    ]
+  }
+}

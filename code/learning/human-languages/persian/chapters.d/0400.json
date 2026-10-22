@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Getting into university",
+  "label": "ch:fa-getting-into-university",
+  "canDo": "I can talk about faculties and tuition fees, say that someone was admitted or won a scholarship, and count course credits.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C400-vahed",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can talk about faculties and tuition fees, say that someone was admitted or won a scholarship, and count course credits.",
+    "assesses": [
+      "FA-LEX-C400-DANESHKADE-03",
+      "FA-LEX-C400-DANESHKADE-04",
+      "FA-LEX-C400-DANESHKADE-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C300-bi-derang",
+    "language": "persian",
+    "chapter": 300,
+    "sequence": 15320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1b2af9243f3ecc8"
+  },
+  "findings": []
+}

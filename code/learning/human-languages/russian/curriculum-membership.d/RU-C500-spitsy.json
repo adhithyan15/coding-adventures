@@ -1,0 +1,11 @@
+{
+  "id": "RU-C500-spitsy",
+  "pathSegment": "RU-PATH-500-KNITTING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-500-KNITTING",
+      "order": 1
+    }
+  ]
+}

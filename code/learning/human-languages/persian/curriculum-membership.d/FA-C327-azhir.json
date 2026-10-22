@@ -1,0 +1,11 @@
+{
+  "id": "FA-C327-azhir",
+  "pathSegment": "FA-PATH-327-EMDADGAR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-327-EMDADGAR",
+      "order": 2
+    }
+  ]
+}

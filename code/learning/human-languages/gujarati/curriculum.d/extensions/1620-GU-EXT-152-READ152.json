@@ -1,0 +1,10 @@
+{
+  "id": "GU-EXT-152-READ152",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a short note about a repair and the rent, find what it asks of me, and answer it.",
+  "prerequisites": [
+    "GU-EXT-151-READ151"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 441,
+  "title": "Making a complaint",
+  "label": "ch:fa-making-a-complaint",
+  "canDo": "I can complain: asking for something, getting a problem looked into, finding fault, backing down and being dissatisfied.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C441-narazi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can complain: asking for something, getting a problem looked into, finding fault, backing down and being dissatisfied.",
+    "assesses": [
+      "FA-LEX-C441-DARKHAST-03",
+      "FA-LEX-C441-DARKHAST-04",
+      "FA-LEX-C441-DARKHAST-05"
+    ]
+  }
+}

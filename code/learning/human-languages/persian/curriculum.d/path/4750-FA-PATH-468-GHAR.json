@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-468-GHAR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-468-GHAR"
+  ],
+  "after": []
+}

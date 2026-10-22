@@ -2,14 +2,14 @@
   "chapter": 25,
   "title": "A Six-Field Profile",
   "label": "ch:mr-a1-practical-form",
-  "canDo": "I can independently choose and write six requested Marathi profile values in Devanagari without a value bank or completed model.",
+  "canDo": "I can independently choose and write six requested Marathi profile values without a model, then repeat the familiar task under a two-minute timer.",
   "spineNodes": [
     "SPINE-NAME-EVERYDAY-THINGS"
   ],
   "payoff": {
-    "lesson": "MR-A1F13-six-field-independent",
+    "lesson": "MR-A1F15-timed-form",
     "kind": "task",
-    "summary": "Complete a new six-field Marathi profile from support-language meanings alone, with printed labels but no copyable answers.",
+    "summary": "After an untimed independent form and a partial timer, complete a six-field Marathi profile within two minutes from meanings alone.",
     "assesses": [
       "MR-A1-FORM-LABEL-NAAV",
       "MR-A1-FORM-LABEL-SHAHAR",
@@ -21,6 +21,6 @@
       "MR-A1-FORM-LABEL-MITRACHE-NAAV",
       "MR-A1-FORM-POSSESSIVE-NEUTER"
     ],
-    "note": "This is untimed practical-form evidence, not timed integration, a scored mock, or full A1 readiness."
+    "note": "This is timed practical-form task evidence only, not a 20-minute whole-paper mock or full A1 readiness."
   }
 }

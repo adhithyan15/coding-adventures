@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:037234d9865094a0",
+  "lessonIds": [
+    "FA-C464-maghaze",
+    "FA-C464-maghazedar",
+    "FA-C464-moamele-kardan",
+    "FA-C464-beyane",
+    "FA-C464-geran-forukhtan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch464.txt",
+  "json": "persian/narration/ch464.json",
+  "textHash": "fnv1a64:e79be3543106b96d",
+  "jsonHash": "fnv1a64:285b8242ed6250ba",
+  "findings": []
+}

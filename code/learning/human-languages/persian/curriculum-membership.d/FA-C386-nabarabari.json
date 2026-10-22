@@ -1,0 +1,11 @@
+{
+  "id": "FA-C386-nabarabari",
+  "pathSegment": "FA-PATH-386-BARABARI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-386-BARABARI",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C230-jadbu",
+    "language": "gujarati",
+    "chapter": 230,
+    "sequence": 12480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9659bd01cccc310a"
+  },
+  "findings": []
+}

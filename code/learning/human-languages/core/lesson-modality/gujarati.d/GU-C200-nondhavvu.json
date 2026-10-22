@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C200-nondhavvu",
+    "language": "gujarati",
+    "chapter": 200,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd323ee8fadf2d39"
+  },
+  "findings": []
+}

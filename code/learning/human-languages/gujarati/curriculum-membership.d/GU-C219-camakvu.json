@@ -1,0 +1,11 @@
+{
+  "id": "GU-C219-camakvu",
+  "pathSegment": "GU-PATH-219-THUNDER219",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-219-THUNDER219",
+      "order": 1
+    }
+  ]
+}

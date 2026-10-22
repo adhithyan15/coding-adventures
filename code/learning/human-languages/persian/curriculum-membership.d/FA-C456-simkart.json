@@ -1,0 +1,11 @@
+{
+  "id": "FA-C456-simkart",
+  "pathSegment": "FA-PATH-456-PEYK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-456-PEYK",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:f92c4916ec153153",
+  "lessonIds": [
+    "GU-C248-bethak",
+    "GU-C248-arji",
+    "GU-C248-sahi-karvi",
+    "GU-C248-sopvu",
+    "GU-C248-nodhvu",
+    "GU-R248-review-243-248"
+  ],
+  "tex": "gujarati/book/chapters/ch248-meetings-and-applications.tex"
+}

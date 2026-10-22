@@ -467,6 +467,309 @@ impl FnRegs {
     }
 }
 
+// ---------------------------------------------------------------------------
+// LANG83 PR6a — the float writer `__iir_write_f64(float64, int32)`
+// ---------------------------------------------------------------------------
+//
+// `call_builtin "write_f64_py", x` / `"write_f64_js", x` lower to
+//
+// ```text
+// ldloc x;  ldc.i4.0 | ldc.i4.1;  call void <Asm>Program::__iir_write_f64(float64, int32)
+// ```
+//
+// and the module gets this one extra static method when it prints a float.
+// Since .NET Core 3.0, `double.ToString("R", CultureInfo.InvariantCulture)`
+// prints the SHORTEST decimal that reads back as the value. The method re-reads
+// that string's digits `D` and decimal exponent `e`, because .NET's own layout
+// (`1E+16`, `1E-05`, `123.456`) is neither Python's nor JavaScript's. It then
+// writes the LANG83 layout piece by piece with `Console.Write(string)`, on the
+// same writer as every other output builtin:
+//
+// ```text
+// s    = Math.Abs(x).ToString("R", Invariant)       "1.5E-05" | "123.456" | "100"
+// idx  = s.IndexOf('E')                             exponent part, if any
+// exp  = idx < 0 ? 0 : Int32.Parse(s.Substring(idx + 1), Invariant)
+// m    = idx < 0 ? s : s.Substring(0, idx)          the mantissa
+// dot  = m.IndexOf('.')
+// ilen = dot < 0 ? m.Length : dot                   digits before the point
+// all  = dot < 0 ? m : m.Remove(dot, 1)
+// d1   = all.TrimStart('0');  lz = all.Length - d1.Length
+// D    = d1.TrimEnd('0');     n  = D.Length
+// e    = ilen - 1 - lz + exp                        exponent of D[0]
+// ```
+//
+// The stack is EMPTY at every label and every branch: each value goes
+// straight to a local or to `Console.Write`. CoreCLR rejects IL whose stack
+// shape differs between the edges into a label, even when `ilasm` assembles
+// it (lesson from Perl 4a). The unit tests run a stack-depth model over this
+// method to hold that rule and to check `.maxstack 8`.
+
+/// The helper's CIL name; a module function with this name is refused.
+const WRITE_F64_METHOD: &str = "__iir_write_f64";
+
+/// `true` if the module calls either PR6a float writer.
+fn module_uses_write_f64(module: &IIRModule) -> bool {
+    module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
+        i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
+    })
+}
+
+/// The helper's IL. Labels are `F64_*`, unique within the method.
+const WRITE_F64_IL: &str = r#"  .method private static void __iir_write_f64(float64 x, int32 js) cil managed {
+    .maxstack 8
+    .locals init (float64 ax, string s, int32 idx, int32 exp, string m, int32 dot, int32 ilen, string all, string d1, int32 lz, string d, int32 n, int32 e, int32 a)
+    ldarg 0
+    ldarg 0
+    beq F64_NOT_NAN
+    ldarg 1
+    brfalse F64_NAN_PY
+    ldstr "NaN"
+    call void [System.Console]System.Console::Write(string)
+    ret
+  F64_NAN_PY:
+    ldstr "nan"
+    call void [System.Console]System.Console::Write(string)
+    ret
+  F64_NOT_NAN:
+    ldarg 0
+    call bool [System.Runtime]System.Double::IsNegative(float64)
+    brfalse F64_NO_SIGN
+    ldarg 1
+    brfalse F64_MINUS
+    ldarg 0
+    ldc.r8 0.0
+    beq F64_NO_SIGN
+  F64_MINUS:
+    ldstr "-"
+    call void [System.Console]System.Console::Write(string)
+  F64_NO_SIGN:
+    ldarg 0
+    call bool [System.Runtime]System.Double::IsInfinity(float64)
+    brfalse F64_FINITE
+    ldarg 1
+    brfalse F64_INF_PY
+    ldstr "Infinity"
+    call void [System.Console]System.Console::Write(string)
+    ret
+  F64_INF_PY:
+    ldstr "inf"
+    call void [System.Console]System.Console::Write(string)
+    ret
+  F64_FINITE:
+    ldarg 0
+    ldc.r8 0.0
+    bne.un F64_DIGITS
+    ldarg 1
+    brfalse F64_ZERO_PY
+    ldstr "0"
+    call void [System.Console]System.Console::Write(string)
+    ret
+  F64_ZERO_PY:
+    ldstr "0.0"
+    call void [System.Console]System.Console::Write(string)
+    ret
+  F64_DIGITS:
+    ldarg 0
+    call float64 [System.Runtime]System.Math::Abs(float64)
+    stloc ax
+    ldloca ax
+    ldstr "R"
+    call class [System.Runtime]System.Globalization.CultureInfo [System.Runtime]System.Globalization.CultureInfo::get_InvariantCulture()
+    call instance string [System.Runtime]System.Double::ToString(string, class [System.Runtime]System.IFormatProvider)
+    stloc s
+    ldloc s
+    ldc.i4 69
+    callvirt instance int32 [System.Runtime]System.String::IndexOf(char)
+    stloc idx
+    ldloc idx
+    ldc.i4.0
+    blt F64_NO_EXP
+    ldloc s
+    ldloc idx
+    ldc.i4.1
+    add
+    callvirt instance string [System.Runtime]System.String::Substring(int32)
+    call class [System.Runtime]System.Globalization.CultureInfo [System.Runtime]System.Globalization.CultureInfo::get_InvariantCulture()
+    call int32 [System.Runtime]System.Int32::Parse(string, class [System.Runtime]System.IFormatProvider)
+    stloc exp
+    ldloc s
+    ldc.i4.0
+    ldloc idx
+    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)
+    stloc m
+    br F64_MANTISSA
+  F64_NO_EXP:
+    ldc.i4.0
+    stloc exp
+    ldloc s
+    stloc m
+  F64_MANTISSA:
+    ldloc m
+    ldc.i4 46
+    callvirt instance int32 [System.Runtime]System.String::IndexOf(char)
+    stloc dot
+    ldloc dot
+    ldc.i4.0
+    blt F64_NO_DOT
+    ldloc dot
+    stloc ilen
+    ldloc m
+    ldloc dot
+    ldc.i4.1
+    callvirt instance string [System.Runtime]System.String::Remove(int32, int32)
+    stloc all
+    br F64_ALL
+  F64_NO_DOT:
+    ldloc m
+    callvirt instance int32 [System.Runtime]System.String::get_Length()
+    stloc ilen
+    ldloc m
+    stloc all
+  F64_ALL:
+    ldloc all
+    ldc.i4 48
+    callvirt instance string [System.Runtime]System.String::TrimStart(char)
+    stloc d1
+    ldloc all
+    callvirt instance int32 [System.Runtime]System.String::get_Length()
+    ldloc d1
+    callvirt instance int32 [System.Runtime]System.String::get_Length()
+    sub
+    stloc lz
+    ldloc d1
+    ldc.i4 48
+    callvirt instance string [System.Runtime]System.String::TrimEnd(char)
+    stloc d
+    ldloc d
+    callvirt instance int32 [System.Runtime]System.String::get_Length()
+    stloc n
+    ldloc ilen
+    ldc.i4.1
+    sub
+    ldloc lz
+    sub
+    ldloc exp
+    add
+    stloc e
+    ldarg 1
+    brfalse F64_PY_RANGE
+    ldloc e
+    ldc.i4 -6
+    blt F64_SCI
+    ldloc e
+    ldc.i4 21
+    bge F64_SCI
+    br F64_FIXED
+  F64_PY_RANGE:
+    ldloc e
+    ldc.i4 -4
+    blt F64_SCI
+    ldloc e
+    ldc.i4 16
+    bge F64_SCI
+  F64_FIXED:
+    ldloc e
+    ldc.i4.0
+    bge F64_AT_LEAST_ONE
+    ldstr "0."
+    call void [System.Console]System.Console::Write(string)
+    ldc.i4 48
+    ldc.i4.m1
+    ldloc e
+    sub
+    newobj instance void [System.Runtime]System.String::.ctor(char, int32)
+    call void [System.Console]System.Console::Write(string)
+    ldloc d
+    call void [System.Console]System.Console::Write(string)
+    ret
+  F64_AT_LEAST_ONE:
+    ldloc n
+    ldloc e
+    ldc.i4.1
+    add
+    bgt F64_FRACTION
+    ldloc d
+    call void [System.Console]System.Console::Write(string)
+    ldc.i4 48
+    ldloc e
+    ldc.i4.1
+    add
+    ldloc n
+    sub
+    newobj instance void [System.Runtime]System.String::.ctor(char, int32)
+    call void [System.Console]System.Console::Write(string)
+    ldarg 1
+    brtrue F64_DONE
+    ldstr ".0"
+    call void [System.Console]System.Console::Write(string)
+  F64_DONE:
+    ret
+  F64_FRACTION:
+    ldloc d
+    ldc.i4.0
+    ldloc e
+    ldc.i4.1
+    add
+    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)
+    call void [System.Console]System.Console::Write(string)
+    ldstr "."
+    call void [System.Console]System.Console::Write(string)
+    ldloc d
+    ldloc e
+    ldc.i4.1
+    add
+    callvirt instance string [System.Runtime]System.String::Substring(int32)
+    call void [System.Console]System.Console::Write(string)
+    ret
+  F64_SCI:
+    ldloc d
+    ldc.i4.0
+    ldc.i4.1
+    callvirt instance string [System.Runtime]System.String::Substring(int32, int32)
+    call void [System.Console]System.Console::Write(string)
+    ldloc n
+    ldc.i4.1
+    ble F64_EXPONENT
+    ldstr "."
+    call void [System.Console]System.Console::Write(string)
+    ldloc d
+    ldc.i4.1
+    callvirt instance string [System.Runtime]System.String::Substring(int32)
+    call void [System.Console]System.Console::Write(string)
+  F64_EXPONENT:
+    ldstr "e"
+    call void [System.Console]System.Console::Write(string)
+    ldloc e
+    ldc.i4.0
+    bge F64_E_POSITIVE
+    ldstr "-"
+    call void [System.Console]System.Console::Write(string)
+    ldc.i4.0
+    ldloc e
+    sub
+    stloc a
+    br F64_E_ABS
+  F64_E_POSITIVE:
+    ldstr "+"
+    call void [System.Console]System.Console::Write(string)
+    ldloc e
+    stloc a
+  F64_E_ABS:
+    ldarg 1
+    brtrue F64_E_DIGITS
+    ldloc a
+    ldc.i4 10
+    bge F64_E_DIGITS
+    ldstr "0"
+    call void [System.Console]System.Console::Write(string)
+  F64_E_DIGITS:
+    ldloc a
+    call void [System.Console]System.Console::Write(int32)
+    ret
+  }
+"#;
+
 /// The LANG83 trap sequence (PR1b): flush `Console.Out`, then throw a
 /// `System.Exception` whose message is the trap kind. Never falls through.
 fn emit_lang83_trap(il: &mut String, fn_name: &str, kind: &str) -> Result<(), IIRClrError> {
@@ -728,6 +1031,17 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     // self-recursion just work.
     for f in &module.functions {
         emit_method(&mut il, module, f, asm, &globals)?;
+    }
+
+    // LANG83 PR6a: the float writer, once, when any function prints a float.
+    if module_uses_write_f64(module) {
+        if module.functions.iter().any(|f| f.name == WRITE_F64_METHOD) {
+            return Err(IIRClrError::InvalidOperand {
+                function: WRITE_F64_METHOD.to_string(),
+                detail: "a module function may not take the synthetic float writer's name".to_string(),
+            });
+        }
+        il.push_str(WRITE_F64_IL);
     }
 
     // Launcher. For an **expression** program the result is the program — so we
@@ -1047,6 +1361,114 @@ fn emit_method(
                 }
                 store_var_from(il, &regs, dest, "int64")?;
                 let _ = writeln!(il, "  {done}:");
+            }
+            // ── LANG83 PR4: overflow-checked arithmetic ──────────────────────
+            //
+            // CIL's `add.ovf`/`sub.ovf`/`mul.ovf` throw `OverflowException`,
+            // which is not a LANG83 trap (no kind, no `Console.Out` flush);
+            // turning it into one needs a `.try`/`catch` region, which this
+            // path has never emitted and CoreCLR checks more strictly than
+            // `ilasm`. So, like the floor ops above, the overflow condition is
+            // branched around first, with the evaluation stack empty at every
+            // branch and label, and the plain wrapping instruction runs last:
+            //
+            //   add:  ((a ^ (a+b)) & (b ^ (a+b))) >= 0 → OK    else trap
+            //   sub:  ((a ^ b) & (a ^ (a-b))) >= 0     → OK    else trap
+            //   neg:  a != MIN                          → OK    else trap
+            //   mul:  a != -1 || b != MIN               → CHK   else trap
+            //   CHK:  a == 0 || (a*b) / a == b           → OK    else trap
+            //   OK:   ld a; [ld b]; add|sub|mul|neg; st dest
+            //
+            // The `-1 × MIN` guard also keeps the check's own `div` from ever
+            // seeing `MIN / -1`, which would throw.
+            "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => {
+                use interpreter_ir::exception_kind::TRAP_OVERFLOW;
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let unary = instr.op == "i64_neg_ovf";
+                let a = var_src(f, instr, 0, instr.op.as_str())?;
+                let b = if unary { a } else { var_src(f, instr, 1, instr.op.as_str())? };
+                if regs.home(dest)?.ty != "int64" {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: format!("{} needs an int64 dest (it is defined on i64)", instr.op),
+                    });
+                }
+                let ok = lang83_label();
+                match instr.op.as_str() {
+                    "i64_add_ovf" | "i64_sub_ovf" => {
+                        let arith = if instr.op == "i64_add_ovf" { "add" } else { "sub" };
+                        if arith == "add" {
+                            // (a ^ r) & (b ^ r)
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, b, "int64")?;
+                            let _ = writeln!(il, "    add");
+                            let _ = writeln!(il, "    xor");
+                            load_var_as(il, &regs, b, "int64")?;
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, b, "int64")?;
+                            let _ = writeln!(il, "    add");
+                            let _ = writeln!(il, "    xor");
+                        } else {
+                            // (a ^ b) & (a ^ r)
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, b, "int64")?;
+                            let _ = writeln!(il, "    xor");
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, a, "int64")?;
+                            load_var_as(il, &regs, b, "int64")?;
+                            let _ = writeln!(il, "    sub");
+                            let _ = writeln!(il, "    xor");
+                        }
+                        let _ = writeln!(il, "    and");
+                        let _ = writeln!(il, "    ldc.i8 0");
+                        let _ = writeln!(il, "    bge {ok}");
+                        emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                        let _ = writeln!(il, "  {ok}:");
+                        load_var_as(il, &regs, a, "int64")?;
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    {arith}");
+                    }
+                    "i64_neg_ovf" => {
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    ldc.i8 {}", i64::MIN);
+                        let _ = writeln!(il, "    bne.un {ok}");
+                        emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                        let _ = writeln!(il, "  {ok}:");
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    neg");
+                    }
+                    _ => {
+                        let chk = lang83_label();
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    ldc.i8 -1");
+                        let _ = writeln!(il, "    bne.un {chk}");
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    ldc.i8 {}", i64::MIN);
+                        let _ = writeln!(il, "    bne.un {chk}");
+                        emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                        let _ = writeln!(il, "  {chk}:");
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    ldc.i8 0");
+                        let _ = writeln!(il, "    beq {ok}");
+                        load_var_as(il, &regs, a, "int64")?;
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    mul");
+                        load_var_as(il, &regs, a, "int64")?;
+                        let _ = writeln!(il, "    div");
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    beq {ok}");
+                        emit_lang83_trap(il, &f.name, TRAP_OVERFLOW)?;
+                        let _ = writeln!(il, "  {ok}:");
+                        load_var_as(il, &regs, a, "int64")?;
+                        load_var_as(il, &regs, b, "int64")?;
+                        let _ = writeln!(il, "    mul");
+                    }
+                }
+                store_var_from(il, &regs, dest, "int64")?;
             }
             // str_const <dest> = Str(s)  ->  ldstr "..."; st<dest>
             //
@@ -1423,7 +1845,28 @@ fn emit_method(
             // ret_void → a bare `ret` with nothing on the stack (the method's
             // CIL signature is `void`, see `cil_ret_type`).  Oct's void
             // functions (`fn bump() { … }`) end here.
+            //
+            // The one exception is the **entry**. Whatever the IIR `main`
+            // declares, `cil_ret_type` gives `MccarthyEntry` the fixed `int32`
+            // signature the launcher (`Run`) calls and prints. A void `main`
+            // (Perl's `print` program: a statement list ending in `ret_void`)
+            // must therefore still leave one `int32` on the stack, or the CLR
+            // verifier rejects the method outright:
+            //
+            // | method's CIL return | `ret_void` lowers to | stack at `ret` |
+            // |---------------------|----------------------|----------------|
+            // | `void` (helper)     | `ret`                | empty — valid  |
+            // | `int32` (entry)     | `ldc.i4.0; ret`      | one `int32`    |
+            //
+            // A bare `ret` in an `int32` method is "Common Language Runtime
+            // detected an invalid program" (`InvalidProgramException`) at JIT
+            // time — `ilasm` assembles it without complaint, so only a real
+            // `dotnet` run notices. `0` is the natural result: a statement
+            // program that falls off its end succeeded, like `exit(0)`.
             "ret_void" => {
+                if ret_ty == "int32" {
+                    let _ = writeln!(il, "    ldc.i4.0");
+                }
                 let _ = writeln!(il, "    ret");
             }
             // alloc <dest> : ref<LispyPair>  →  a fresh 2-element System.Object[]
@@ -1907,6 +2350,23 @@ fn emit_method(
                 // `write_i64` (LANG83 PR1b) — decimal, NO newline:
                 // `Console.Write(int64)`, the same `Console.Out` writer as
                 // `print_i64`/`putchar`/`print_str`, so the stream stays ordered.
+                // `write_f64_py` / `write_f64_js` (LANG83 PR6a): the module's own
+                // `__iir_write_f64(float64, int32 layout)` — 0 = Python repr,
+                // 1 = JavaScript toString. The operand must be a float64.
+                if builtin == "write_f64_py" || builtin == "write_f64_js" {
+                    let val = var_src(f, instr, 1, builtin)?;
+                    if regs.home(val)?.ty != "float64" {
+                        return Err(IIRClrError::InvalidOperand {
+                            function: f.name.clone(),
+                            detail: format!("call_builtin \"{builtin}\" requires an f64 operand"),
+                        });
+                    }
+                    load_var(il, &regs, val)?;
+                    let layout = u8::from(builtin == "write_f64_js");
+                    let _ = writeln!(il, "    ldc.i4.{layout}");
+                    let _ = writeln!(il, "    call void {asm}Program::{WRITE_F64_METHOD}(float64, int32)");
+                    continue;
+                }
                 if builtin == "write_i64" {
                     let val = var_src(f, instr, 1, "write_i64")?;
                     load_var_as(il, &regs, val, "int64")?;
@@ -2497,6 +2957,71 @@ mod tests {
         assert!(il.lines().any(|l| l.trim_start().starts_with("call void")
             && l.contains("Program::'bump'()")),
             "void call must be `call void …bump()`; got:\n{il}");
+    }
+
+    /// The lines of one emitted method's body, from its `.method` header up to
+    /// its closing `}` — so an assertion about "the instruction before `ret`"
+    /// looks only inside that method.
+    fn method_body<'a>(il: &'a str, header_fragment: &str) -> Vec<&'a str> {
+        il.lines()
+            .skip_while(|l| !(l.contains(".method") && l.contains(header_fragment)))
+            .take_while(|l| l.trim() != "}")
+            .map(str::trim)
+            .collect()
+    }
+
+    /// A **void entry** — Perl's `print` program shape: `main` is declared
+    /// `void`, its body is statements (`call_builtin write_i64 …`) and it ends
+    /// in `ret_void`. The entry's CIL signature is nonetheless the launcher's
+    /// fixed `int32 MccarthyEntry()`, so `ret_void` must push an `int32` before
+    /// `ret`. A bare `ret` assembles fine under `ilasm` but real CoreCLR
+    /// rejects it with `InvalidProgramException` (PR #17850's macOS failure);
+    /// this structural check catches that with no `dotnet` on the host. A void
+    /// *helper* keeps its bare `ret` (an `int32` there would be just as
+    /// invalid, in the other direction).
+    #[test]
+    fn void_entry_ret_void_still_returns_an_int32() {
+        let helper = IIRFunction::new(
+            "helper",
+            vec![],
+            "void",
+            vec![IIRInstr::new("ret_void", None, vec![], "void")],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "void",
+            vec![
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(3)], "i64"),
+                IIRInstr::new(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("write_i64".into()), Operand::Var("n".into())],
+                    "void",
+                ),
+                IIRInstr::new("call", None, vec![Operand::Var("helper".into())], "void"),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ],
+        );
+        let mut m = IIRModule::new("Main", "perl");
+        m.functions.push(helper);
+        m.functions.push(main);
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+
+        let entry = method_body(&il, "int32 MccarthyEntry()");
+        let ret_at = entry.iter().rposition(|l| *l == "ret").expect("entry ends in ret");
+        assert_eq!(
+            entry[ret_at - 1], "ldc.i4.0",
+            "a void entry's ret_void must push an int32 result; got:\n{il}"
+        );
+
+        let helper_body = method_body(&il, "void 'helper'()");
+        let ret_at = helper_body.iter().rposition(|l| *l == "ret").expect("helper ends in ret");
+        assert_ne!(
+            helper_body[ret_at - 1], "ldc.i4.0",
+            "a void helper's ret_void stays a bare ret; got:\n{il}"
+        );
     }
 
     /// Build a one-function module `c = <op>(a, b); ret c` over two `i32` constants.

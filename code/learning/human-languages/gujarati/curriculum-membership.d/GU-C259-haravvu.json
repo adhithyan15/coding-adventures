@@ -1,0 +1,11 @@
+{
+  "id": "GU-C259-haravvu",
+  "pathSegment": "GU-PATH-259-MATCH259",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-259-MATCH259",
+      "order": 1
+    }
+  ]
+}

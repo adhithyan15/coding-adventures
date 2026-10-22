@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:341de6725f7cd9a8",
+  "lessonIds": [
+    "GU-C232-rog",
+    "GU-C232-cep",
+    "GU-C232-tandurast",
+    "GU-C232-kalji-levi",
+    "GU-C232-saju-thavu"
+  ],
+  "tex": "gujarati/book/chapters/ch232-staying-healthy.tex"
+}

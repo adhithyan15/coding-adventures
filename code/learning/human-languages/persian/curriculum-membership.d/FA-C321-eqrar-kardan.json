@@ -1,0 +1,11 @@
+{
+  "id": "FA-C321-eqrar-kardan",
+  "pathSegment": "FA-PATH-321-QASAM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-321-QASAM",
+      "order": 2
+    }
+  ]
+}

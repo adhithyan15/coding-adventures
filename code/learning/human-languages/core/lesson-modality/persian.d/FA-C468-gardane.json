@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C468-gardane",
+    "language": "persian",
+    "chapter": 468,
+    "sequence": 23980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af25c7a8a1490012"
+  },
+  "findings": []
+}

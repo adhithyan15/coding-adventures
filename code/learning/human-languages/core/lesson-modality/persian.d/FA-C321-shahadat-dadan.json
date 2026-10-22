@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C321-shahadat-dadan",
+    "language": "persian",
+    "chapter": 321,
+    "sequence": 16380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1522234609f8df76"
+  },
+  "findings": []
+}

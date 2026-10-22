@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-488-NIGHT",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-488-NIGHT"
+  ],
+  "after": []
+}

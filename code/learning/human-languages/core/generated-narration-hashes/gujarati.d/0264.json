@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:c4455f96290c514a",
+  "lessonIds": [
+    "GU-C264-padoshi",
+    "GU-C264-dost",
+    "GU-C264-bahenpani",
+    "GU-C264-olakhvu",
+    "GU-C264-bhetvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch264.txt",
+  "json": "gujarati/narration/ch264.json",
+  "textHash": "fnv1a64:169a920495bb78be",
+  "jsonHash": "fnv1a64:2329a45b1c0a331b",
+  "findings": []
+}

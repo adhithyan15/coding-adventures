@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C343-odobryat",
+    "language": "russian",
+    "chapter": 343,
+    "sequence": 20120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f0010464fa1d6fa"
+  },
+  "findings": []
+}

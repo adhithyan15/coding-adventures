@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-360-SOVESHCHANIYE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "RU-EXT-360-SOVESHCHANIYE"
+  ],
+  "after": []
+}

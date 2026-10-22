@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Accidents",
+  "label": "ch:fa-accidents",
+  "canDo": "I can describe an accident: an incident, a crash, two vehicles colliding and a vehicle overturning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C324-vazhgun-shodan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can describe an accident: an incident, a crash, two vehicles colliding and a vehicle overturning.",
+    "assesses": [
+      "FA-LEX-C324-HADESE-03",
+      "FA-LEX-C324-HADESE-04",
+      "FA-LEX-C324-HADESE-05"
+    ]
+  }
+}

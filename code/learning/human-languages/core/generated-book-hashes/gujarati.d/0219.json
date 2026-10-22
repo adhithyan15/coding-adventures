@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:173ad8e0c634408c",
+  "lessonIds": [
+    "GU-C219-gajvu",
+    "GU-C219-camakvu",
+    "GU-C219-chavavu",
+    "GU-C219-kara",
+    "GU-C219-mavthu"
+  ],
+  "tex": "gujarati/book/chapters/ch219-thunder-and-hail.tex"
+}

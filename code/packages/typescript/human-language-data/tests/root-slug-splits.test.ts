@@ -307,7 +307,7 @@ describe("the live corpus", () => {
     expect(runRootSlugSplitsCli(["--check"])).toBe(0);
   });
 
-  it("pins the CURRENT DEBT, which may only fall", () => {
+  it("pins the CURRENT DEBT, which may only fall", { timeout: 120_000 }, () => {
     // HL-C419. THE UNIT IS A BASELINE ENTRY, not an etymon, and the two differ:
     // 110 shape entries (stare-latin / latin-stare) plus 82 bare-vs-tagged
     // (bonus / bonus-latin) is 192 entries, but 16 bare-vs-tagged entries

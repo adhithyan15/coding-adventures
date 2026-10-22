@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:10d0c4f56c01f3e7",
+  "lessonIds": [
+    "FA-C452-nobat",
+    "FA-C452-nobat-gereftan",
+    "FA-C452-moattal-shodan",
+    "FA-C452-fish",
+    "FA-C452-maliyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch452.txt",
+  "json": "persian/narration/ch452.json",
+  "textHash": "fnv1a64:7c3ebf7947cbaa1e",
+  "jsonHash": "fnv1a64:6dabe4c561b7bf4e",
+  "findings": []
+}

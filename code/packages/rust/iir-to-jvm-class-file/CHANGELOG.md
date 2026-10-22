@@ -1,5 +1,77 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
+## Unreleased — LANG83 PR6a — shortest round-trip float output
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `dload x;
+  iconst_0|1; invokestatic <class>.__iir_write_f64(DI)V`. The class gets one
+  private static helper. It finds the shortest round-trip digits itself: for
+  p = 1, 2, … it rounds `new BigDecimal(|x|)` (the exact value) to p digits
+  with `MathContext(p, FLOOR)` and `MathContext(p, CEILING)`, and stops at the
+  first p where either reads back as `|x|` (`BigDecimal.doubleValue`). If both
+  do, it keeps the closer, and on an exact tie the even last digit. Both
+  neighbours are tried because the round-trip interval is lopsided at a power
+  of two. The loop is bounded at p = 17. The result goes through
+  `stripTrailingZeros()` and is laid out with `toPlainString` or a
+  `StringBuilder`, then printed with one `System.out.print`.
+- **Fixed before merge: the digits no longer come from `Double.toString`.**
+  The first version of this helper used it, which is the shortest round-trip
+  decimal only on JDK 19+ (JDK-4511638). CI's Windows job runs the runner's
+  preinstalled pre-19 `java`, which printed `1.9999999999999998e+23` where
+  Python and JS print `2e+23`. On a 775 126-value corpus the old helper was
+  wrong on 13 values under JDK 8 (and on none under JDK 21). The class is
+  version 49, so any JVM may run it, and its output must not depend on which.
+  The search uses Java 5 APIs only (`BigDecimal`, `MathContext`,
+  `RoundingMode`). It also covers one-digit results such as `5e-324`, so the
+  old one-digit-neighbour fix-up for `Double.toString`'s two-digit minimum is
+  gone.
+- Version 49, no StackMapTable. Every branch target is reached with an empty
+  operand stack, and `max_stack` is measured. A non-float operand and a user
+  function named `__iir_write_f64` are refused.
+- Checked with `-Xverify:all` on Temurin JDK 8u422 and 17.0.12 and on
+  OpenJDK 21, against host `python3` `repr` and `node` `String(x)` on 775 126
+  values: the PR's earlier corpus, every binade boundary `2^k` and its
+  neighbours, random bit patterns, random subnormals and random short
+  decimals. No mismatch on any JDK, in either layout.
+
+## Unreleased — LANG83 PR4 — overflow-checked arithmetic
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4),
+  on `long` operands only (an `int` operand is `UnsupportedType`). The
+  overflow condition is tested *before* the wrapping instruction, as PR1b's
+  floor division does, and a failing test runs the 17-byte flush-then-throw
+  trap with `Trap.Overflow`:
+  - add: `((a ^ (a+b)) & (b ^ (a+b))) < 0`; sub: `((a ^ b) & (a ^ (a-b))) < 0`
+    (`land; lconst_0; lcmp; ifge` over the trap);
+  - neg: `lcmp` against `MIN`, `ifne` over the trap;
+  - mul: `a == -1 && b == MIN`, then `a != 0 && (a*b)/a != b`.
+
+  `Math.addExact` & co. are deliberately not used: their
+  `ArithmeticException` has no LANG83 kind and skips the `System.out` flush,
+  and catching it would need an exception table this writer does not emit.
+  The mul check needs no JDK 9+ `Math.multiplyHigh`. The destination is
+  stored last, so a dest that aliases an operand is correct.
+- New helper `emit_skip_if(code, if_op, skip)` (`emit_skip_if_ne` now
+  delegates to it).
+- `op_support`: all four `Lowered`. `tests/lang83_pr1b.rs` pins each guard,
+  each trap and the tail; `lang-aot`'s `op_conformance` runs them on real
+  `java` with the verifier on.
+
+## 0.37.0 - 2026-10-19 - fail-closed real-to-integer narrowing
+
+Each `d2i`/`d2l` narrowing of `real_to_int_trunc` and `real_to_int_floor` is
+now preceded by a range check. The check throws `java.lang.ArithmeticException`
+for NaN, ±∞ and values outside the destination's integer range, where the JVM
+would otherwise saturate (NaN→0, +∞→MAX, −∞→MIN). This replaces the saturating
+lowering 0.18.0 documented as a divergence. The stack-depth analysis now
+models `dup2`, `new`, `invokespecial` and `athrow`.
+
 ## Unreleased — LANG83 PR1b — floor division, `trap`, `write_i64`
 
 - **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)) →

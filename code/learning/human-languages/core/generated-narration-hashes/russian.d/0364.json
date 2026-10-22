@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:c8e86a0c60975e1f",
+  "lessonIds": [
+    "RU-C364-obshchestvo",
+    "RU-C364-naselenie",
+    "RU-C364-obshchestvennyy",
+    "RU-C364-socialnyy",
+    "RU-C364-zhitel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch364.txt",
+  "json": "russian/narration/ch364.json",
+  "textHash": "fnv1a64:78c220d1101aa78b",
+  "jsonHash": "fnv1a64:90d2546adb41dd92",
+  "findings": []
+}

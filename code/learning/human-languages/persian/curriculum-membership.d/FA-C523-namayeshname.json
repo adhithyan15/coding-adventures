@@ -1,0 +1,11 @@
+{
+  "id": "FA-C523-namayeshname",
+  "pathSegment": "FA-PATH-523-THEATRE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-523-THEATRE",
+      "order": 2
+    }
+  ]
+}

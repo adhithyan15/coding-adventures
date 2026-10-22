@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:3fe406bcd1b89269",
+  "lessonIds": [
+    "FA-C311-manba",
+    "FA-C311-be-gofte",
+    "FA-C311-be-naql-az",
+    "FA-C311-joziyat",
+    "FA-C311-khabargozari"
+  ],
+  "tex": "persian/book/chapters/ch311-sources-and-details.tex"
+}

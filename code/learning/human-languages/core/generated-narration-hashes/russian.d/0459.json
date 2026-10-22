@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:7e95336c5a809f85",
+  "lessonIds": [
+    "RU-C459-pokhod",
+    "RU-C459-tropa",
+    "RU-C459-prival",
+    "RU-C459-karabkatsya",
+    "RU-C459-spotykatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch459.txt",
+  "json": "russian/narration/ch459.json",
+  "textHash": "fnv1a64:d95523199d158a25",
+  "jsonHash": "fnv1a64:a28c6732d7ad54a3",
+  "findings": []
+}

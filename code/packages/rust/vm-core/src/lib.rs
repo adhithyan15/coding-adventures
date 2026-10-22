@@ -44,6 +44,7 @@ pub mod builtins;
 pub mod core;
 pub mod dispatch;
 pub mod errors;
+pub mod float_format;
 pub mod frame;
 pub mod op_support;
 pub mod profiler;

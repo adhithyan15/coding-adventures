@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Results and consequences",
+  "label": "ch:fa-results-and-consequences",
+  "canDo": "I can talk about the consequences of a decision, say what something led to, link a result with as a result and draw a conclusion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C370-natije-gereftan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can talk about the consequences of a decision, say what something led to, link a result with as a result and draw a conclusion.",
+    "assesses": [
+      "FA-LEX-C370-PAYAMAD-03",
+      "FA-LEX-C370-PAYAMAD-04",
+      "FA-LEX-C370-PAYAMAD-05"
+    ]
+  }
+}

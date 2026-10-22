@@ -1,0 +1,11 @@
+{
+  "id": "JA-C231-renraku",
+  "pathSegment": "JA-PATH-231-PHONE231",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-231-PHONE231",
+      "order": 2
+    }
+  ]
+}

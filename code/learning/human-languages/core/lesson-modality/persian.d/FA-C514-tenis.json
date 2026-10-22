@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C514-tenis",
+    "language": "persian",
+    "chapter": 514,
+    "sequence": 26360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c66324bced6a0e6e"
+  },
+  "findings": []
+}

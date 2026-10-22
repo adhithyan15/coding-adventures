@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:676e5584958c6a4c",
+  "lessonIds": [
+    "FA-C528-ketabforushi",
+    "FA-C528-onvan",
+    "FA-C528-jeld",
+    "FA-C528-nasher",
+    "FA-C528-motarjem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch528.txt",
+  "json": "persian/narration/ch528.json",
+  "textHash": "fnv1a64:fb0a03b6ac9230ee",
+  "jsonHash": "fnv1a64:52d6b7f1da20f917",
+  "findings": []
+}

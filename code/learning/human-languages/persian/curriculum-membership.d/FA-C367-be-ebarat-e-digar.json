@@ -1,0 +1,11 @@
+{
+  "id": "FA-C367-be-ebarat-e-digar",
+  "pathSegment": "FA-PATH-367-AMMA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-367-AMMA",
+      "order": 1
+    }
+  ]
+}

@@ -1,5 +1,39 @@
 # Changelog — vm-core
 
+## [0.30.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **New module `float_format`**: `python_repr`, `js_to_string`,
+  `format_f64(x, FloatLayout)` and `shortest_digits`. The digits are the
+  shortest decimal that reads back as exactly `x`, closest to `x`, and on an
+  exact tie the even one; the layouts are Python `repr` (`1e+16`, `1.0`,
+  `-0.0`, `inf`, `nan`) and JavaScript `Number#toString` (`10000000000000000`,
+  `1`, `0`, `Infinity`, `NaN`).
+- The digits come from Rust's own formatting: `{:e}` for the shortest digits,
+  then Rust's exact `{:.1100e}` expansion to apply round-half-even. Rust's
+  shortest mode rounds an exact tie **up** (`2^-25` → `…313e-8`, where Python
+  and JavaScript print `…312e-08`). Against host `python3` that was 94 of
+  535 432 values, every one a tie. With the correction the module agrees with
+  `python3` on all 535 432 and with `node` on all 402 112.
+- **Default builtins `write_f64_py` / `write_f64_js`** (LANG83 PR6a): they
+  write through the same `stdout` handle as `write_i64`, with no newline. A
+  non-float argument is a `TypeError`. `op_support` derives `Lowered` for both
+  from the registry, so the VM column needs no table edit.
+
+## [0.29.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf` handlers**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4):
+  Rust's `checked_add` / `checked_sub` / `checked_mul` / `checked_neg`; a
+  `None` (the exact result does not fit in i64) returns
+  `VMError::Trap { kind: "Trap.Overflow" }`. Defined on i64 only, so no
+  narrow-width masking.
+- `op_support` is derived from the dispatch table, so all four flip to
+  `Lowered` with no edit there.
+- Tests pin the exact results at the range edges (`MAX + 0`, `MIN - 0`,
+  `-2^32 * 2^31 = MIN`, `3_037_000_499²`, `-MAX`) and the trap one step past
+  them (`MAX + 1`, `MIN - 1`, `0 - MIN`, `MIN * -1`, `-1 * MIN`, `2^32 * 2^31`,
+  `3_037_000_500²`, `-MIN`).
+
 ## [0.28.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **`i64_div_floor` / `i64_mod_floor` handlers** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)):

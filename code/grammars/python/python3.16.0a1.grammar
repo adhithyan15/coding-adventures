@@ -1,0 +1,53 @@
+# Python 3.16.0a1 (2026-10-13) grammar: py-int-print subset over the slice's tokens.
+# @version 1
+# PARTIAL: parses only the py-int-print subset below; everything else is a parse error.
+# source_ref: https://github.com/python/cpython/tree/v3.16.0a1
+# source_sha: 22d79d9840a275ed6ed36cd590dc74edc61765fb
+# evidence: Grammar/python.gram blob f2c9993aa4f80a78765d225d1b492db235c1378c; Grammar/Tokens blob 0547e6ed08f79ae397836c1b426af7760f7199ce;
+#   Parser/lexer/lexer.c blob 83071e9e0b8ddf0e26fc81b54e4d10f7f12c52b7; Lib/keyword.py blob 98ffe2de28b1a1b9c04f298e4b6d833520e0ac77
+# basis: reviewed against the tag's own syntax files (LANG84 phase 7a). Grammar/Tokens and keyword.py are blob-identical to 3.15.0's. Numbers moved to Parser/lexer/number.c (blob 220952a69cd69e869bb9a6e498b9cbad83d72859) with 3.13.16's rules (tok_decimal_tail, the leading-zeros error). The python.gram rules this subset uses (file, simple_stmts, sum, term, factor, primary, args) differ from 3.13.16's only in invalid_* error-reporting alternatives.
+
+# ---------------------------------------------------------------------------
+# py-int-print (LANG84 phase 7a) as this release's grammar admits it. The
+# release's own rules, from the tag's grammar file:
+#
+#   file_input : (NEWLINE | stmt)* ENDMARKER
+#   simple_stmt: small_stmt (';' small_stmt)* [';'] NEWLINE
+#   arith_expr : term (('+'|'-') term)*          (python.gram: sum)
+#   term       : factor (('*'|'/'|'%'|'//') factor)*
+#   factor     : ('+'|'-'|'~') factor | power
+#   power      : atom trailer* ['**' factor]     (python.gram: primary)
+#   trailer    : '(' [arglist] ')' | ...
+#   arglist    : argument (',' argument)* [',']  (python.gram: args)
+#   atom       : '(' [testlist_comp] ')' | NAME | NUMBER | ...
+#
+# Rule names follow code/grammars/python/python3.12.grammar (LANG84 C8), so a
+# later subset adds the levels this one never reaches (or_expr ... shift,
+# power, await_expr) without renaming anything. Without them one parenthesis
+# costs 8 parser levels instead of about 18.
+#
+# Narrower than Python on purpose (parse errors here, valid there): every
+# statement other than an expression statement, `**`, `~`, comparisons and
+# boolean operators, subscripts and attributes, tuples and `()`, keyword and
+# starred arguments, and every compound statement.
+# Admitted here and refused by the compiler (`Unsupported`): `/` (true
+# division gives a float), a callee other than `print`, more than one
+# argument, a call used as a value, a bare expression statement.
+# ---------------------------------------------------------------------------
+
+file        = { NEWLINE | statement } ;
+statement   = simple_stmt ;
+simple_stmt = small_stmt { SEMICOLON small_stmt } [ SEMICOLON ] NEWLINE ;
+small_stmt  = expression ;
+
+expression  = arith ;
+arith       = term { ( PLUS | MINUS ) term } ;
+term        = factor { ( STAR | SLASH | FLOOR_DIV | PERCENT ) factor } ;
+factor      = ( PLUS | MINUS ) factor | primary ;
+primary     = atom { suffix } ;
+suffix      = LPAREN [ arguments ] RPAREN ;
+arguments   = argument { COMMA argument } [ COMMA ] ;
+argument    = expression ;
+atom        = INT | NAME | paren_expr ;
+paren_expr  = LPAREN paren_body RPAREN ;
+paren_body  = expression ;

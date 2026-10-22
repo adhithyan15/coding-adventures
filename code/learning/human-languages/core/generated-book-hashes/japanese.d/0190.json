@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:ff6084f8c6402747",
+  "lessonIds": [
+    "JA-C190-tatemono",
+    "JA-C190-shoutengai",
+    "JA-C190-hyakkaten",
+    "JA-C190-hairu",
+    "JA-C190-aku"
+  ],
+  "tex": "japanese/book/chapters/ch190-buildings-and-shopping-streets.tex"
+}

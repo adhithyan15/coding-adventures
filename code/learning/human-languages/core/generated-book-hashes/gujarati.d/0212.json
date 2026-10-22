@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:8fa148b870f8d906",
+  "lessonIds": [
+    "GU-C212-dharmasala",
+    "GU-C212-bhomiyo",
+    "GU-C212-rahdari",
+    "GU-C212-surang",
+    "GU-C212-musapharkhanu",
+    "GU-R212-review-207-212",
+    "GU-R212-review-final-212"
+  ],
+  "tex": "gujarati/book/chapters/ch212-resting-on-the-way.tex"
+}

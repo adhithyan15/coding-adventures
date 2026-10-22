@@ -1,0 +1,11 @@
+{
+  "id": "RU-C341-protivorechit",
+  "pathSegment": "RU-PATH-341-KOMPROMISS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-341-KOMPROMISS",
+      "order": 0
+    }
+  ]
+}

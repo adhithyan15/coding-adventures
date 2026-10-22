@@ -1,0 +1,11 @@
+{
+  "id": "RU-C495-dekret",
+  "pathSegment": "RU-PATH-495-EXPECTING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-495-EXPECTING",
+      "order": 2
+    }
+  ]
+}

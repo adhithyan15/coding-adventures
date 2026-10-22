@@ -3,12 +3,17 @@
 Coding Adventures is a learning-first monorepo for understanding computers by
 building the layers ourselves: logic gates and processors, parsers and virtual
 machines, compilers and runtimes, storage engines, UI systems, and complete
-applications.
+applications. Alongside that computing work, a human-language curriculum builds
+cumulative books and short practice lessons from shared content.
 
 It is part computing-stack curriculum, part polyglot package laboratory, part
 language-platform project, and part application sandbox. The point is not merely
 to collect implementations. The point is to make each idea inspectable,
 testable, comparable across languages, and teachable.
+
+Start with the [live labs](https://adhithyan15.github.io/coding-adventures/)
+to explore in a browser, the [learning index](./code/learning/README.md) to
+read, or the [project tracks](#major-project-tracks) below to find the source.
 
 ## The Big Picture
 
@@ -30,23 +35,32 @@ and current direction; it deliberately avoids a hand-maintained package
 inventory. Run the [package parity report](./code/scripts/package_parity_report.py)
 for a live cross-language view.
 
-### Repository snapshot — August 28, 2026
+### Repository snapshot — October 20, 2026
 
 | Surface | Current scale |
 |---|---:|
-| Reusable package directories | 5,003 |
-| Runnable programs and applications | 211 |
-| Grammar families | 54 |
-| Architecture and roadmap specifications | 1,498 |
-| Learning documents | 4,963 |
-| Forme packages | 67 |
-| CI, release, and deployment workflows | 36 |
+| Package implementation directories | 5,209 |
+| Program and application directories | 217 |
+| Grammar families | 57 |
+| Top-level Markdown specifications and roadmaps | 1,778 |
+| Human-language curriculum tracks | 23 |
+| TypeScript Forme packages | 81 |
+| CI, release, and deployment workflows | 46 |
 
-These counts are a dated orientation point, not release promises. The generated
-reports and the repository tree remain authoritative as the monorepo changes.
-The busiest current integration threads are Mosaic's native UI emitters,
-task-app's structured project surfaces, HTML parser conformance, and the
-human-language curriculum and book pipeline.
+Measured from tracked paths at `96d45dfff5` on `main`: packages and programs
+count distinct `code/{packages,programs}/<ecosystem>/<name>` directories;
+grammars count `code/grammars/<family>` directories; specifications count
+`code/specs/*.md`; Forme counts TypeScript `forme-*` directories; workflows
+count `.github/workflows/*.yml`. Curriculum tracks come from the active entries
+in [`core/languages.json`](./code/learning/human-languages/core/languages.json).
+Language mirrors count separately, and directory counts do not imply feature
+completion. Learning documents are increasingly sharded, so file count is no
+longer a useful measure of lesson coverage.
+
+Current integration threads include Mosaic's native fidelity, Trestle's shared
+task engine, Forme's authoring product, language execution and conformance,
+circuit simulation, and the human-language books. The generated reports and
+project acceptance ledgers remain authoritative as those tracks grow.
 
 ## What Makes This Repo Different
 
@@ -82,6 +96,10 @@ source
 
 The execution matrix runs real programs across backends and compares results,
 so a backend is not considered supported merely because it accepts the IR.
+Coverage varies by frontend, feature, and backend; the
+[execution matrix](./code/specs/LANG-PLATFORM-MATRIX.md) and
+[non-ALGOL completion backlog](./code/specs/LANG-VM-NON-ALGOL-BACKLOG.md)
+separate working routes from the platform vision.
 See the [LANG-VM platform vision](./code/specs/LANG-PLATFORM-VISION.md),
 [generic language pipeline](./code/specs/LANG00-generic-language-pipeline.md),
 [IIR](./code/specs/LANG01-interpreter-ir.md), and
@@ -104,6 +122,13 @@ make those layers interactive.
 Start with the [architecture overview](./code/specs/00-architecture.md),
 [deep CPU architecture](./code/specs/D00-deep-cpu-architecture.md), and
 [computing-stack learning guide](./code/learning/computer-architecture/computing-stack.md).
+
+The hardware-design track also explores HDL elaboration, simulation, synthesis,
+technology mapping, FPGA export, ASIC layout, and verification. SPICE adds
+analog DC, AC, transient, noise, and mixed-signal analysis. Follow the
+[silicon-stack index](./code/specs/silicon-stack.md) and the implemented
+[SPICE engine](./code/packages/rust/spice-engine/); each package's tests and
+compatibility notes define its supported subset.
 
 ### Reference implementations and language mirrors
 
@@ -245,61 +270,69 @@ multiple native and web hosts without duplicating product behavior.
 See the [Mosaic overview](./code/specs/UI00-mosaic.md) and
 [Mosaic compiler pipeline](./code/specs/UI16-mosaic-compiler-pipeline.md).
 
-### Forme: authoring and static-site compilation
+### Forme: authoring, preview, and publishing
 
-Forme is the repository's universal authoring pipeline: typed, capability-aware
-stages turn content into web pages, documentation sites, feeds, search indexes,
-and deployment artifacts. Its 67 TypeScript packages now cover the kernel and
-orchestrator, filesystem and Markdown sources, routing and collection,
-transformations, Style IR, HTML/AOT emitters, metadata, sitemaps, feeds,
-fingerprinted assets, an in-memory live-preview server, and a complete
-searchable documentation-site cluster.
+Forme composes typed, capability-aware stages into authoring pipelines. Its 81
+TypeScript packages cover content sources, document transforms, collections,
+routing, Style IR, static and terminal rendering, interactivity, feeds, search,
+asset fingerprints, and deployment. Python and Rust SDKs extend the plugin
+boundary beyond TypeScript.
 
-Product sites and focused demos prove the composition model:
+The [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md) records
+the Headless v0, Extensible v1, and Authoring v1 milestones as complete, with
+their acceptance evidence. The CLI builds, checks, previews, watches, and
+deploys; installed plugins run with mediated capabilities and native sandboxes;
+the desktop authoring host adds editing, live preview, recovery, and local
+publication. Future operational work is tracked against those contracts.
 
-- [`code/sites/landing-page`](./code/sites/landing-page/) generates this
-  repository's root Pages surface from declarative content through a seven-stage
-  routed Style IR and asset pipeline;
-- [`code/sites/blog`](./code/sites/blog/) runs a ten-stage routed DAG that emits
-  articles, a themed index, RSS, Atom, sitemap, and fingerprinted local assets;
-- [`forme-hello-world`](./code/programs/typescript/forme-hello-world/) runs the
-  smallest source → parse → render → emit pipeline;
-- [`forme-doc-demo`](./code/programs/typescript/forme-doc-demo/) builds a
-  multi-page documentation site with navigation, a table of contents, syntax
-  highlighting, and browser search.
-
-The headless build path and general build/check/clean/watch CLI work, including
-loopback preview, live reload, last-good-output behavior, deterministic
-cross-process affected-stage scheduling, and bounded concurrent streaming
-through one pipeline-wide permit budget. Filesystem emitters can replay
-validated artifacts to reconstruct a deleted output tree without rerunning
-unrelated pure stages. The capability-free deploy core now validates complete
-manifests, plans owned creates/updates/skips/deletes, verifies content hashes,
-and emits reproducible reports. Its filesystem adapter stages and reversibly
-swaps complete output trees. The GitHub Pages adapter preserves independently
-owned prefixes of a shared source branch and publishes each site through one
-atomic non-forced ref update. Both live sites now build, inspect, and publish
-through `forme deploy`, completing the turnkey headless v0 path. The plugin
-host now adds deterministic discovery, manifest-authored stage proxies, a
-bounded JSON-RPC wire contract, typed streams, mediated capabilities,
-cancellation, and crash isolation without an unsandboxed fallback. Persistent
-trust and grants, atomic installation, TypeScript/Python/Rust runners, native
-Linux/macOS/Windows sandboxes, mixed first-/third-party orchestration, and
-bounded live storage watches complete the Extensible v1 path. Interactivity
-and the authoring shell remain. Its canonical specification map now
-runs collision-free from FM01 through FM08, with an implementation ledger in
-every Forme specification and an always-on CI contract guarding the map.
-The checked-in [completion roadmap](./code/specs/FM00-forme-completion-roadmap.md)
-tracks that path and the gaps discovered while dogfooding both live sites.
+This repository uses Forme for its own
+[landing page](./code/sites/landing-page/) and [blog](./code/sites/blog/).
+The landing page is a seven-stage pipeline; the blog composes HTML and terminal
+outputs, a themed index, feeds, a sitemap, and progressive enhancement.
+[`forme-hello-world`](./code/programs/typescript/forme-hello-world/) and
+[`forme-doc-demo`](./code/programs/typescript/forme-doc-demo/) provide smaller
+examples to study.
 
 Start with the [Forme vision](./code/specs/FM00-forme-vision.md),
-[kernel](./code/specs/FM01-forme-kernel.md),
-[orchestrator](./code/specs/FM03-forme-orchestrator.md), and
-[Style IR](./code/specs/FM04-forme-style-ir.md). The remaining canonical map is
-[Interactivity IR](./code/specs/FM05-forme-interactivity-ir.md),
-[AOT compiler](./code/specs/FM06-forme-aot-compiler.md),
-[CLI and development server](./code/specs/FM07-forme-cli-dev-server.md), and
-[deploy runner](./code/specs/FM08-forme-deploy-runner.md).
+[CLI and development server](./code/specs/FM07-forme-cli-dev-server.md),
+[deploy runner](./code/specs/FM08-forme-deploy-runner.md), and
+[authoring shell](./code/specs/FM09-forme-authoring-shell.md).
+
+### Human languages: books, scripts, and cumulative practice
+
+The learning tree now includes 23 active human-language tracks. Shared content
+feeds chapter-sized books, short practice units, narration exports, and the
+Language Ladder app. Lessons connect vocabulary to etymology and related
+languages, introduce grammar gradually, and teach unfamiliar scripts one
+letter at a time. Reading, writing, listening, and speaking develop through
+cumulative tasks with explicit chapter payoffs.
+
+Spanish leads the shared course spine and Tamil leads the script addendum;
+other tracks adapt that structure to their own sounds, grammar, and writing
+systems. Pre-A1 through C2 is the course design target. The strict level gate
+certifies a level only when every criterion holds there and at every level
+below it. It currently places Spanish, Italian, Portuguese, French, German, and
+Latin at B1, twelve tracks at A2, and four at A1; Chinese has not yet closed
+pre-A1. Chapter and assessment ledgers track the remaining coverage.
+
+Start with the [human-language index](./code/learning/human-languages/README.md),
+[curriculum framework](./code/specs/HL00-human-language-curriculum-framework.md),
+[replication method](./code/specs/HL13-spine-layout-and-replication.md), or the
+[published book catalog](https://adhithyan15.github.io/coding-adventures/human-languages/books/).
+
+### Machine learning from individual updates to neural graphs
+
+The ML packages cover losses, gradient descent, matrix operations, activations,
+normalization, and neural-network execution. The
+[neural graph VM](./code/specs/NN00-neural-graph-vm.md) connects models to a
+shared execution representation and backend implementations.
+
+The [ML Learning Lab](./code/programs/typescript/ml-learning-visualizer/) has
+23 workbenches, including training and optimization microscopes, hidden layers,
+convolution, recurrent state, and small decoder training. Intermediate values,
+gradients, and parameter updates remain visible. See the
+[machine-learning learning material](./code/learning/machine-learning/) and
+[live lab](https://adhithyan15.github.io/coding-adventures/ml-learning/).
 
 ### Applications and product experiments
 
@@ -307,20 +340,23 @@ Programs are integration surfaces, not just toy examples:
 
 - **Engram** combines a shared Rust core, native/WASM bridges, Mosaic UI work,
   Electron/browser hosts, and Anki compatibility.
-- **task-app** is applying the same architecture to a general task/project
-  engine. Its pure `task-core` model, operations/formula API, project switching,
-  and structured task UI are landing toward one model exposed as checklist,
-  todo, kanban, Gantt, flowchart, and table views with scheduling.
+- **Trestle / task-app** uses a pure Rust task/project engine for automatic
+  scheduling, persistent tasks, and shared projections. Mosaic authors its UI
+  once for the web and native hosts. The
+  [product acceptance ledger](./code/specs/task-app-platform-completion-v1.md)
+  distinguishes interactive release targets from HTML, Web Components, and
+  Paint verification outputs; native style gaps remain explicitly tracked.
 - **Venture** composes the repository's URL, HTTP, HTML, layout, paint, image,
   windowing, and platform bridges into a native educational web browser. The
-  macOS host now supports navigation, links, and keyboard and wheel scrolling.
+  shared Mosaic chrome and host controller handle navigation, bookmarks,
+  history, page utilities, and scrolling across native host integrations.
 - **smart-home** provides a local-first supervised runtime for normalized device
   state, commands, automations, policy, and audit. Hue, Zigbee, and Z-Wave work
   exercise the adapter boundary without making one vendor protocol the core.
 - **language-ladder** turns the human-language curriculum into an interactive
   browser for concepts, scripts, syllabaries, lessons, and review progress.
 - **VisiCalc** exercises spreadsheet, UI, and multi-host compilation paths.
-- Journal, checklist, browser-extension, language-tooling, IRC, ML, document,
+- Journal, browser-extension, language-tooling, IRC, ML, document,
   and hardware visualizer programs test other package families end to end.
 
 See [Engram](./code/specs/engram-app.md) and the
@@ -447,10 +483,9 @@ do not create missing slots until the explicit promotion contract is completed.
 
 The main CI workflow uses the same build planner:
 
-- branch pushes build affected packages;
-- pull requests validate affected work across Linux, macOS, and Windows when
+- pull requests build affected packages across Linux, macOS, and Windows when
   the selected languages require those runners;
-- pushes to `main` create a forced five-shard full-build plan;
+- pushes to `main` create a forced sharded full-build plan;
 - Rust packages run per-package Clippy with warnings denied;
 - CodeQL covers JavaScript/TypeScript, Python, Ruby, Go, and Swift;
 - Miri blocks on unsafe-bearing runtime crates, with deeper integration checks
@@ -458,8 +493,8 @@ The main CI workflow uses the same build planner:
 - dedicated workflows test Rust-to-Node and Rust-to-Python native matrices;
 - publish, release, and GitHub Pages workflows ship selected artifacts.
 
-Packages are expected to carry tests, a README, a changelog, and publishable
-ecosystem metadata. Libraries target at least 80% coverage, with 95% preferred
+Packages are expected to carry tests, a README, a changelog (often sharded),
+and publishable ecosystem metadata. Libraries target at least 80% coverage, with 95% preferred
 for most package code.
 
 ## Working in the Repository
@@ -507,7 +542,10 @@ Choose a path based on what you want to understand:
 | SQL and SQLite | [Mini-SQLite conformance roadmap](./code/specs/mini-sqlite-full-conformance.md) |
 | UI compilation | [Mosaic](./code/specs/UI00-mosaic.md) |
 | Authoring and static sites | [Forme vision](./code/specs/FM00-forme-vision.md) and [documentation-site vision](./code/specs/DOC00-docs-vision.md) |
-| Task/project engine | [task-app overview](./code/specs/task-app-overview.md) |
+| Task/project engine | [Trestle / task-app](./code/programs/mosaic/task-app/) and [platform acceptance](./code/specs/task-app-platform-completion-v1.md) |
+| Human-language books and practice | [Curriculum index](./code/learning/human-languages/README.md) |
+| Circuit simulation and hardware design | [SPICE engine](./code/packages/rust/spice-engine/) and [silicon stack](./code/specs/silicon-stack.md) |
+| Neural networks and training | [ML Learning Lab](./code/programs/typescript/ml-learning-visualizer/) |
 | Native browser pipeline | [Venture browser](./code/specs/BR01-venture-browser.md) |
 | Smart-home runtime | [Smart-home runtime](./code/specs/D23-smart-home-runtime.md) |
 | Learning-content backlog | [Learning coverage roadmap](./code/learning/ROADMAP.md) |
@@ -543,16 +581,19 @@ Selected programs are deployed to
 - [Engram](https://adhithyan15.github.io/coding-adventures/engram/) and
   [Engram Docs](https://adhithyan15.github.io/coding-adventures/engram-docs/) —
   a spaced-repetition application and its documentation;
+- [Journal](https://adhithyan15.github.io/coding-adventures/journal/) —
+  local-first journaling with Markdown editing and browser persistence;
 - [ML Learning Lab](https://adhithyan15.github.io/coding-adventures/ml-learning/)
-  — browser-runnable machine-learning demonstrations;
+  — training microscopes, neural-network workbenches, and visible gradients;
 - [Language Ladder](https://adhithyan15.github.io/coding-adventures/language-ladder/)
   and the [human-language book catalog](https://adhithyan15.github.io/coding-adventures/human-languages/books/)
   — interactive lessons and generated books;
 - [Forme notes](https://adhithyan15.github.io/coding-adventures/blog/2026-05-15-hello-forme.html)
   — articles produced by the repository's own authoring pipeline.
 
-The Journal application remains active in the repository, but its Pages route
-is currently unavailable and is intentionally not linked as a live surface.
+The root page is generated from [the Forme landing-page source](./code/sites/landing-page/).
+Its Pages workflow builds changes on pull requests and publishes after they
+land on `main`.
 
 ## Copyright
 

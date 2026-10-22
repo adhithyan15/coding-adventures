@@ -22,7 +22,7 @@ public static class MosaicRuntimeHost
     private static readonly string? ProfilePath = Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH");
     private static readonly System.Collections.Concurrent.ConcurrentQueue<string> ProfileSamples = new();
     private static int ProfileSampleCount;
-    public static IDisposable? BeginProfile(string phase)
+    public static IDisposable? BeginProfile(string phase, object? component = null)
     {
         if (string.IsNullOrWhiteSpace(ProfilePath)) return null;
         // Reserve before registering frame callbacks: a minimized window may
@@ -32,7 +32,7 @@ public static class MosaicRuntimeHost
             var count = System.Threading.Volatile.Read(ref ProfileSampleCount);
             if (count >= 4096) return null;
             if (System.Threading.Interlocked.CompareExchange(ref ProfileSampleCount, count + 1, count) == count)
-                return new ProfileScope(phase);
+                return new ProfileScope(phase, component);
         }
     }
 
@@ -42,13 +42,49 @@ public static class MosaicRuntimeHost
         private readonly long started = Stopwatch.GetTimestamp();
         private readonly long allocated = GC.GetAllocatedBytesForCurrentThread();
         private int disposed;
-        internal ProfileScope(string phase) => this.phase = phase;
+        private readonly object? component;
+        private readonly PropertyInfo? projectionProperty;
+        private readonly (long, long, long, long)? projectionStart;
+        internal ProfileScope(string phase, object? component)
+        {
+            this.phase = phase;
+            this.component = component;
+            // The optional diagnostic contract keeps standalone controls independent
+            // of this host. Never inspect application properties or enumerate rows.
+            try
+            {
+                var property = component?.GetType().GetProperty("MosaicProjectionCounts");
+                if (property?.PropertyType == typeof(ValueTuple<long, long, long, long>)
+                    && property.GetIndexParameters().Length == 0)
+                    projectionProperty = property;
+            }
+            catch { /* Diagnostics must not affect application success. */ }
+            projectionStart = ReadProjection();
+        }
+        private (long, long, long, long)? ReadProjection()
+        {
+            try { return projectionProperty?.GetValue(component) as ValueTuple<long, long, long, long>?; }
+            catch { return null; }
+        }
         public void Dispose()
         {
             if (System.Threading.Interlocked.Exchange(ref disposed, 1) != 0) return;
             var milliseconds = (Stopwatch.GetTimestamp() - started) * 1000.0 / Stopwatch.Frequency;
             var bytes = GC.GetAllocatedBytesForCurrentThread() - allocated;
-            ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes }));
+            // Intervals may overlap: these deltas describe work during this scope,
+            // not exclusive attribution to an event or native element realization.
+            var end = ReadProjection();
+            if (projectionStart is { } start && end is { } finish)
+            {
+                var projection = new {
+                    reads = finish.Item1 - start.Item1,
+                    created = finish.Item2 - start.Item2,
+                    reused = finish.Item3 - start.Item3,
+                    removed = finish.Item4 - start.Item4
+                };
+                ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes, projection }));
+            }
+            else ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes }));
         }
     }
 

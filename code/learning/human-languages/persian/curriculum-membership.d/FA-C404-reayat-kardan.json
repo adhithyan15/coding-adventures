@@ -1,0 +1,11 @@
+{
+  "id": "FA-C404-reayat-kardan",
+  "pathSegment": "FA-PATH-404-MOQARRARAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-404-MOQARRARAT",
+      "order": 3
+    }
+  ]
+}

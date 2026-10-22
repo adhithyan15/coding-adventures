@@ -30,6 +30,7 @@ pub const DEFAULT_ES_VERSION: EsVersion = EsVersion::Es2025;
 mod _grammar;
 pub mod asi;
 pub mod bridge;
+pub mod early_errors;
 
 /// Parse JavaScript source and return a fully typed [`Program`] AST
 /// (CLOC12.136 bridge).
@@ -130,6 +131,69 @@ pub fn parse_javascript_cst_division_only(
 // maximum child height, so unrelated statements do not consume spine depth.
 fn check_division_only_spines(root: &GrammarASTNode) -> Result<(), String> {
     const MAX_SPINE: usize = 512;
+    check_chain_spine(root, MAX_SPINE).map_err(|_| {
+        "JavaScript typed AST construction exceeds the division-only spine limit".to_string()
+    })
+}
+
+/// A CST whose operator / member / call chains would fold into a typed AST
+/// deeper than the caller's limit. Returned by [`check_chain_spine`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ChainSpineError {
+    /// The limit the caller passed.
+    pub max_spine: usize,
+    /// 1-based line of the CST node at which the measure first crossed the
+    /// limit — for a single long chain, the chain's first token.
+    pub line: Option<usize>,
+    /// 1-based column of that node.
+    pub column: Option<usize>,
+}
+
+impl std::fmt::Display for ChainSpineError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match (self.line, self.column) {
+            (Some(line), Some(column)) => write!(
+                f,
+                "JavaScript expression chain at {line}:{column} is nested too deeply to compile (spine limit {})",
+                self.max_spine
+            ),
+            _ => write!(
+                f,
+                "JavaScript expression chain is nested too deeply to compile (spine limit {})",
+                self.max_spine
+            ),
+        }
+    }
+}
+
+impl std::error::Error for ChainSpineError {}
+
+/// Bound the depth of the typed AST the bridge would build from `root`
+/// (CLOC42, #16009), without building it.
+///
+/// The grammar parses `a + b + … + z` as ONE flat CST node with N operands, so
+/// the parser's rule-depth guard never sees it. The bridge then folds it into a
+/// left-nested typed AST N levels deep, and every recursive pass or emitter
+/// walk over that AST recurses N times. This measure predicts that depth:
+///
+/// ```text
+/// height(node) = max(height(child)) + width(node) + 1
+/// width(node)  = operands − 1   for a chain rule (`additive_expression`,
+///                               `logical_and_expression`, `member_expression`,
+///                               `call_expression`, …)
+///              = 0              otherwise
+/// ```
+///
+/// | input                 | width of the chain node | why                     |
+/// |-----------------------|-------------------------|-------------------------|
+/// | `x + x + x`           | 2                       | two folds               |
+/// | `a.b.c`               | 2                       | two member nodes        |
+/// | `f(1); g(2); h(3);`   | 0 for the statement list| siblings don't nest     |
+///
+/// The input is accepted iff every `height ≤ max_spine`. The walk keeps its own
+/// explicit stack, so measuring a hostile input cannot overflow either.
+pub fn check_chain_spine(root: &GrammarASTNode, max_spine: usize) -> Result<(), ChainSpineError> {
+    // Each frame: (node, index of the next child to visit, max child height so far).
     let mut pending = vec![(root, 0, 0_usize)];
     while let Some((node, next_child, max_child_height)) = pending.pop() {
         if next_child < node.children.len() {
@@ -165,11 +229,12 @@ fn check_division_only_spines(root: &GrammarASTNode) -> Result<(), String> {
         };
         // Each child height has already been bounded. Avoid unchecked addition
         // for a public entry whose callers choose their own source limits.
-        if width >= MAX_SPINE || max_child_height >= MAX_SPINE - width {
-            return Err(
-                "JavaScript typed AST construction exceeds the division-only spine limit"
-                    .to_string(),
-            );
+        if width >= max_spine || max_child_height >= max_spine - width {
+            return Err(ChainSpineError {
+                max_spine,
+                line: node.start_line,
+                column: node.start_column,
+            });
         }
         let height = max_child_height + width + 1;
         if let Some(parent) = pending.last_mut() {
@@ -244,7 +309,11 @@ pub fn parse_javascript_typed(
     // only inserts a `;` before a `}`/EOF when parsing genuinely failed for lack
     // of one, so it is a no-op on any input that already parses. See [`asi`].
     let tokens = tokenize_javascript_typed(source, version)?;
-    asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
+    let ast =
+        asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    // Redeclarations in a block are early errors (#17877).
+    early_errors::check(&ast).map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    Ok(ast)
 }
 
 /// CV-carrying twin of [`parse_javascript_typed`] (CLOC27 D3).
@@ -282,7 +351,10 @@ pub fn parse_javascript_typed_with_cv(
         .collect();
     // Identical Phase-1 ASI parse to `parse_javascript_typed` — only the token
     // source differs (CV-stamped). See [`asi`].
-    asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))
+    let ast =
+        asi::parse_with_asi(tokens, version).map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    early_errors::check(&ast).map_err(|e| format!("JavaScript parse failed: {e}"))?;
+    Ok(ast)
 }
 
 /// A parsed program paired with the correlation-vector ID assigned to its
@@ -460,6 +532,95 @@ mod tests {
         let source = "console.log(1);".repeat(1_000);
         let ast = parse_javascript_program_division_only(&source, EsVersion::Es2020).unwrap();
         assert_eq!(ast.body.len(), 1_000);
+    }
+
+    // ---------------------------------------------------------------
+    // CLOC42 (#16009) — the public chain-spine measure.
+    // ---------------------------------------------------------------
+
+    /// The CST for `source`, from the same typed parse closurec uses.
+    fn typed_cst(source: &str) -> GrammarASTNode {
+        parse_javascript_typed(source, EsVersion::Es2020).expect("parses")
+    }
+
+    /// The smallest limit `check_chain_spine` accepts `source` under.
+    fn spine_height(source: &str) -> usize {
+        let cst = typed_cst(source);
+        (1..100_000)
+            .find(|&limit| check_chain_spine(&cst, limit).is_ok())
+            .expect("height under 100k")
+    }
+
+    #[test]
+    fn chain_spine_charges_each_link_by_its_cst_children() {
+        // Each extra `+ x` adds exactly one level, whatever the CST overhead.
+        // A binary link is two CST children (the operator token and the
+        // operand), so each extra `+ x` costs two units of height.
+        let base = spine_height("x+x;");
+        for extra in [1, 10, 100] {
+            let source = format!("x{};", "+x".repeat(1 + extra));
+            assert_eq!(spine_height(&source), base + 2 * extra, "{source}");
+        }
+        // A call link is one child (its argument list), so it costs one.
+        let base = spine_height("f();");
+        assert_eq!(spine_height(&format!("f{};", "()".repeat(101))), base + 100);
+    }
+
+    #[test]
+    fn chain_spine_accepts_at_the_limit_and_rejects_one_past() {
+        let source = format!("x{};", "&&x".repeat(300));
+        let height = spine_height(&source);
+        let cst = typed_cst(&source);
+        assert!(check_chain_spine(&cst, height).is_ok());
+        let error = check_chain_spine(&cst, height - 1).unwrap_err();
+        assert_eq!(error.max_spine, height - 1);
+    }
+
+    #[test]
+    fn chain_spine_error_points_at_the_chain() {
+        // The chain starts on line 2, column 13.
+        let source = format!("var x = 1;\nconsole.log(x{});", "+x".repeat(600));
+        let error = check_chain_spine(&typed_cst(&source), 512).unwrap_err();
+        assert_eq!((error.line, error.column), (Some(2), Some(13)));
+        assert_eq!(
+            error.to_string(),
+            "JavaScript expression chain at 2:13 is nested too deeply to compile (spine limit 512)"
+        );
+    }
+
+    #[test]
+    fn chain_spine_charges_every_chain_rule() {
+        // Binary, logical, nullish, member, optional, call and `new` chains all
+        // fold into nested nodes, so 2,000 links of any of them exceed 1,000.
+        for source in [
+            format!("x{};", "*x".repeat(2_000)),
+            format!("x{};", "||x".repeat(2_000)),
+            format!("x{};", "??x".repeat(2_000)),
+            format!("x{};", "<<x".repeat(2_000)),
+            format!("x{};", ".a".repeat(2_000)),
+            format!("x{};", "?.a".repeat(2_000)),
+            format!("x{};", "()".repeat(2_000)),
+            format!("x{};", "[0]".repeat(2_000)),
+        ] {
+            assert!(check_chain_spine(&typed_cst(&source), 1_000).is_err(), "{source}");
+        }
+    }
+
+    #[test]
+    fn chain_spine_counts_nested_chains_together() {
+        // `(x+…+x) + (x+…+x)`: the outer chain sits on top of an inner one, so
+        // its height includes the inner chain's height.
+        let inner = format!("x{}", "+x".repeat(400));
+        let flat = spine_height(&format!("{inner};"));
+        let nested = spine_height(&format!("({inner})+x;"));
+        assert!(nested > flat, "nested {nested} vs flat {flat}");
+    }
+
+    #[test]
+    fn chain_spine_ignores_statement_list_breadth() {
+        // 5,000 sibling statements are a wide list, not a deep chain.
+        let source = "f(x+x);".repeat(5_000);
+        assert!(check_chain_spine(&typed_cst(&source), 64).is_ok());
     }
 
     #[test]

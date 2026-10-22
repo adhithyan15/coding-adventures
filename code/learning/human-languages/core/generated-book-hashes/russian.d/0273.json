@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:e4f39c824824667d",
+  "lessonIds": [
+    "RU-C273-proiskhodit",
+    "RU-C273-prodolzhatsya",
+    "RU-C273-dlitsya",
+    "RU-C273-prekrashchatsya",
+    "RU-C273-nastupat"
+  ],
+  "tex": "russian/book/chapters/ch273-happening-and-going-on.tex"
+}

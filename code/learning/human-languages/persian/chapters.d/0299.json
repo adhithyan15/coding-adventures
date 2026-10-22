@@ -1,0 +1,20 @@
+{
+  "chapter": 299,
+  "title": "Would, And Six Lines About A Trip",
+  "label": "ch:fa-would-and-six-lines",
+  "canDo": "I can say what I would do if things were different, say what I would like, and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-W299-shesh-khat",
+    "kind": "task",
+    "summary": "Complete FA-W299-shesh-khat: six connected lines to one reader about a trip, with a scene, events in order, a reason and a condition.",
+    "assesses": [
+      "FA-GRAMMAR-UNREAL-CONDITION-01",
+      "FA-GRAMMAR-WOULD-MI-PAST-01",
+      "FA-GRAMMAR-DUST-DASHTAM-01",
+      "FA-GRAMMAR-KASH-01"
+    ]
+  }
+}

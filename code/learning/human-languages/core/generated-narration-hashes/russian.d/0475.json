@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:4a34c5f721706f01",
+  "lessonIds": [
+    "RU-C475-vostorg",
+    "RU-C475-voskhishchatsya",
+    "RU-C475-gorditsya",
+    "RU-C475-gordost",
+    "RU-C475-khvastatsya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch475.txt",
+  "json": "russian/narration/ch475.json",
+  "textHash": "fnv1a64:17f85cb765596131",
+  "jsonHash": "fnv1a64:77c6abff221e62f5",
+  "findings": []
+}

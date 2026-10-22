@@ -1,5 +1,46 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
+## [0.52.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `local.get x; i32.const
+  layout; call $__iir_write_f64`. Eleven in-module functions
+  (`src/lang83_f64.rs`) carry the Burger–Dybvig shortest-digits core (40-limb
+  big integers in a 1 664-byte scratch region reserved at the end of the
+  static data, before the bump allocator) and the Python / JavaScript layout.
+  They print through `env.putchar`, the only import they need. A non-`f64`
+  operand is a compile error.
+- Checked on the in-process runtime against host `python3` / `node` (90-value
+  table), and on V8 (`node`, the emitted module) against 535 432 + 402 112
+  oracle values: no mismatch.
+
+## [0.51.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4).
+  WASM has no overflow flag and no `i64` high multiply, so overflow is
+  computed from the operands, with no scratch locals (the result is
+  recomputed when it is needed twice):
+  - add: `((a ^ r) & (b ^ r)) < 0`; sub: `((a ^ b) & (a ^ r)) < 0`;
+  - neg: `a == MIN`;
+  - mul: `a == -1 && b == MIN` (tested first, because the next check would
+    compute `MIN / -1`, which WASM traps on), then
+    `a != 0 && (a * b) / a != b`.
+
+  A failing test calls `env.__trap(5)` (`Trap.Overflow`), then
+  `unreachable`; the destination is written only after every test passed.
+  A module using any checked op imports `env.__trap`.
+- `op_support`: all four `Lowered`.
+- `tests/lang83_pr1b.rs` runs them on the in-process runtime: exact results at
+  the range edges, `Trap.Overflow` one step past them (11 edge cases,
+  including `MIN * -1`, `-1 * MIN`, `2^32 * 2^31` and `3_037_000_500²`),
+  output before the trap kept, and a destination that aliases an operand.
+
 ## [0.50.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **New host imports** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)), appended after every older

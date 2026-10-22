@@ -1,0 +1,19 @@
+{
+  "chapter": 223,
+  "title": "How are you feeling",
+  "label": "ch:gu-how-are-you-feeling",
+  "canDo": "I can ask about someone's health and say where it hurts.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C223-chikvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 223: I can ask about someone's health and say where it hurts.",
+    "assesses": [
+      "GU-LEX-C223-FEEL223-03",
+      "GU-LEX-C223-FEEL223-04",
+      "GU-LEX-C223-FEEL223-05"
+    ]
+  }
+}

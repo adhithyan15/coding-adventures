@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-398-AMALI",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "FA-EXT-398-AMALI"
+  ],
+  "after": []
+}

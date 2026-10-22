@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-325-IMPERIYA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-325-IMPERIYA"
+  ],
+  "after": []
+}

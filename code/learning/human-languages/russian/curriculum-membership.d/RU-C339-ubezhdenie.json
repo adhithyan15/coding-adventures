@@ -1,0 +1,11 @@
+{
+  "id": "RU-C339-ubezhdenie",
+  "pathSegment": "RU-PATH-339-UBEZHDAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-339-UBEZHDAT",
+      "order": 2
+    }
+  ]
+}

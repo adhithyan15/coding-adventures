@@ -240,3 +240,56 @@ fn direct_execute_fails_closed_and_slot_does_not_go_stale() {
     let fine = jit.execute(&mut vm, &mut module, "ok", &[]).expect("ok must succeed");
     assert_eq!(fine, Some(Value::Int(5)));
 }
+
+/// LANG83 PR4: a JIT-compiled overflow-checked op fails closed from an
+/// interpreted caller, exactly like the floor ops. Each of the four
+/// `i64_*_ovf` ops is compiled into its own fully typed callee; the
+/// interpreted `main` calls it with an overflowing argument and then runs a
+/// `mark` builtin that must never execute.
+#[test]
+fn checked_op_overflow_in_jit_callee_stops_the_interpreted_caller() {
+    for (op, a, b) in [
+        ("i64_add_ovf", i64::MAX, 1),
+        ("i64_sub_ovf", i64::MIN, 1),
+        ("i64_mul_ovf", i64::MIN, -1),
+        ("i64_neg_ovf", i64::MIN, 0),
+    ] {
+        let srcs = if op == "i64_neg_ovf" { vec![v("a")] } else { vec![v("a"), v("b")] };
+        let callee = IIRFunction::new(
+            "g",
+            vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+            "i64",
+            vec![
+                IIRInstr::new(op, Some("r".into()), srcs, "i64"),
+                IIRInstr::new("ret", None, vec![v("r")], "i64"),
+            ],
+        );
+        let main_fn = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                IIRInstr::new("const", Some("x".into()), vec![Operand::Int(a)], "any"),
+                IIRInstr::new("const", Some("y".into()), vec![Operand::Int(b)], "any"),
+                IIRInstr::new("call", Some("r".into()), vec![v("g"), v("x"), v("y")], "any"),
+                IIRInstr::new("call_builtin", None, vec![v("mark")], "any"),
+                IIRInstr::new("ret", None, vec![v("r")], "any"),
+            ],
+        );
+        let mut module = IIRModule::new("probe", "test");
+        module.add_or_replace(callee);
+        module.add_or_replace(main_fn);
+        module.entry_point = Some("main".into());
+
+        let (mut vm, marks) = vm_with_marks();
+        let backend = GenericCirJit::new();
+        let slot = backend.error_handle();
+        let mut jit = JITCore::new(&mut vm, Box::new(backend));
+        let result = jit.execute_with_jit(&mut vm, &mut module, "main", &[]);
+
+        assert!(vm.is_jit_compiled("g"), "{op}: the callee must really be JIT-compiled");
+        assert_trap(result, "Trap.Overflow");
+        assert_eq!(marks.load(Ordering::SeqCst), 0, "{op}: the caller ran past a trapping JIT call");
+        assert!(slot.lock().unwrap().is_none(), "{op}: JITCore must drain the error slot");
+    }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:88fcefc4bedea200",
+  "lessonIds": [
+    "FA-C434-pelle-barqi",
+    "FA-C434-masir",
+    "FA-C434-keraye",
+    "FA-C434-ja-gereftan",
+    "FA-C434-ja-mandan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch434.txt",
+  "json": "persian/narration/ch434.json",
+  "textHash": "fnv1a64:a741b1bef3f45a96",
+  "jsonHash": "fnv1a64:aee281feb6ae89f3",
+  "findings": []
+}

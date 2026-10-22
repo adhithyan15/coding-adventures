@@ -19,8 +19,8 @@
 # untagged: releases before tag v0_49 (1994-07-18) and any pre-1.6.7 tarball without a tag;
 #   the tarball index (cache.ruby-lang.org/pub/ruby/index.txt) was unreachable for this audit.
 release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_stage,grammar_subset,iir_status,backend_status,profile,date_source,lineage
-0.49,1994-07-18?,dev,https://github.com/ruby/ruby/tree/v0_49,200e0ee2fd3c1c006c528874a88f684447215524,,pending,none,-,-,-,-,tag-commit,first
-0.50,1994-08-10?,dev,https://github.com/ruby/ruby/tree/v0_50,6e3090413652b6592346556149fed1e9aec5495d,0.49,pending,none,-,-,-,-,tag-commit,git-ancestor
+0.49,1994-07-18?,dev,https://github.com/ruby/ruby/tree/v0_49,200e0ee2fd3c1c006c528874a88f684447215524,,partial,P,rb-int-puts,-,-,-,tag-commit,first
+0.50,1994-08-10?,dev,https://github.com/ruby/ruby/tree/v0_50,6e3090413652b6592346556149fed1e9aec5495d,0.49,partial,P,rb-int-puts,-,-,-,tag-commit,git-ancestor
 0.51,1994-10-13?,dev,https://github.com/ruby/ruby/tree/v0_51,eed5c920dd5429bac6075e9bc98d82360392b424,0.50,pending,none,-,-,-,-,tag-commit,git-ancestor
 0.54,1994-10-14?,dev,https://github.com/ruby/ruby/tree/v0_54,29f237a8b1df650089b54447f070726c75706b6f,0.51,pending,none,-,-,-,-,tag-commit,git-ancestor
 0.52,1994-10-14?,dev,https://github.com/ruby/ruby/tree/v0_52,173976c97c9426aa8d96e53aef6c0e570c5fdfda,0.51,pending,none,-,-,-,-,tag-commit,git-ancestor
@@ -1167,14 +1167,14 @@ release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_st
 3.3.3,2024-06-12,final,https://github.com/ruby/ruby/tree/v3_3_3,f1c7b6f435f1167a0514b39a5f72f55cec4d1426,3.3.2,pending,none,-,-,-,-,ruby-lang.org,line
 3.3.4,2024-07-09,final,https://github.com/ruby/ruby/tree/v3_3_4,be1089c8ec5ba40e09b1553e36b3174bf4014d9d,3.3.3,pending,none,-,-,-,-,ruby-lang.org,line
 3.2.5,2024-07-26,final,https://github.com/ruby/ruby/tree/v3_2_5,31d0f1a2e7dbfb60731d1f05b868e1d578cda493,3.2.4,pending,none,-,-,-,-,ruby-lang.org,line
-3.3.5,2024-09-03,final,https://github.com/ruby/ruby/tree/v3_3_5,ef084cc8f4958c1b6e4ead99136631bef6d8ddba,3.3.4,pending,none,-,-,-,-,ruby-lang.org,line
+3.3.5,2024-09-03,final,https://github.com/ruby/ruby/tree/v3_3_5,ef084cc8f4958c1b6e4ead99136631bef6d8ddba,3.3.4,partial,P,rb-int-puts,rb-int-puts,-,ruby33,ruby-lang.org,line
 3.4.0-preview2,2024-10-07,preview,https://github.com/ruby/ruby/tree/v3_4_0_preview2,32c733f57bb91e22972319ee63eac9521d954ebc,3.4.0-preview1,pending,none,-,-,-,-,ruby-lang.org,line
 3.2.6,2024-10-30,final,https://github.com/ruby/ruby/tree/v3_2_6,63aeb018eb1cc0f7b00f955980711fd1bd94af7f,3.2.5,pending,none,-,-,-,-,ruby-lang.org,line
-3.3.6,2024-11-05,final,https://github.com/ruby/ruby/tree/v3_3_6,75015d4c1f6965b5e85e96fb309f1f2129f933c0,3.3.5,pending,none,-,-,-,-,ruby-lang.org,line
+3.3.6,2024-11-05,final,https://github.com/ruby/ruby/tree/v3_3_6,75015d4c1f6965b5e85e96fb309f1f2129f933c0,3.3.5,partial,P,rb-int-puts,rb-int-puts,rb-int-puts,ruby33,ruby-lang.org,line
 3.4.0-rc1,2024-12-12,rc,https://github.com/ruby/ruby/tree/v3_4_0_rc1,29caae9991f08fb386c414f4c6270c68cdf69c30,3.4.0-preview2,pending,none,-,-,-,-,ruby-lang.org,line
 3.4.0,2024-12-25,final,https://github.com/ruby/ruby/tree/v3_4_0,f45010833071b953744658842369e3496dfacb48,3.4.0-rc1,pending,none,-,-,-,-,ruby-lang.org,line
 3.4.1,2024-12-25,final,https://github.com/ruby/ruby/tree/v3_4_1,48d4efcb85000e1ebae42004e963b5d0cedddcf2,3.4.0,pending,none,-,-,-,-,ruby-lang.org,line
-3.3.7,2025-01-15,final,https://github.com/ruby/ruby/tree/v3_3_7,be31f993d7fa0219d85f7b3c694d454da4ecc10b,3.3.6,pending,none,-,-,-,-,ruby-lang.org,line
+3.3.7,2025-01-15,final,https://github.com/ruby/ruby/tree/v3_3_7,be31f993d7fa0219d85f7b3c694d454da4ecc10b,3.3.6,partial,P,rb-int-puts,rb-int-puts,-,ruby33,ruby-lang.org,line
 3.2.7,2025-02-04,final,https://github.com/ruby/ruby/tree/v3_2_7,02ec31524440656c4e1d3f2d84dfbd15d2c63658,3.2.6,pending,none,-,-,-,-,ruby-lang.org,line
 3.4.2,2025-02-14,final,https://github.com/ruby/ruby/tree/v3_4_2,d2930f8e7a5db8a7337fa43370940381b420cc3e,3.4.1,pending,none,-,-,-,-,ruby-lang.org,line
 3.2.8,2025-03-26,final,https://github.com/ruby/ruby/tree/v3_2_8,13f495dc2c98d0762d9af37e7143d2e2a07d9926,3.2.7,pending,none,-,-,-,-,ruby-lang.org,line

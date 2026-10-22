@@ -1,0 +1,11 @@
+{
+  "id": "GU-C147-modu",
+  "pathSegment": "GU-PATH-147-PAST147",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-147-PAST147",
+      "order": 4
+    }
+  ]
+}

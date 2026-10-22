@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 210,
+  "sourceHash": "fnv1a64:31844d565a611403",
+  "lessonIds": [
+    "JA-C210-ki-tree",
+    "JA-C210-ueru",
+    "JA-C210-shokubutsu",
+    "JA-C210-sodatsu",
+    "JA-C210-kareru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch210.txt",
+  "json": "japanese/narration/ch210.json",
+  "textHash": "fnv1a64:7f40533386c04a8b",
+  "jsonHash": "fnv1a64:03236b8c2447a33a",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-487-RASH",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-487-RASH"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:a38925d6c6d5b8bd",
+  "lessonIds": [
+    "GU-C170-mithai",
+    "GU-C170-ladu",
+    "GU-C170-makhan",
+    "GU-C170-calvu",
+    "GU-C170-cotvu",
+    "GU-R170-review-165-170"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch170.txt",
+  "json": "gujarati/narration/ch170.json",
+  "textHash": "fnv1a64:19333c38759891da",
+  "jsonHash": "fnv1a64:7462014ed870e672",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C360-otchyot",
+  "pathSegment": "RU-PATH-360-SOVESHCHANIYE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-360-SOVESHCHANIYE",
+      "order": 1
+    }
+  ]
+}

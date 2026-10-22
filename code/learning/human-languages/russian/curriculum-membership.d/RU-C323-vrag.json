@@ -1,0 +1,11 @@
+{
+  "id": "RU-C323-vrag",
+  "pathSegment": "RU-PATH-323-VOYNA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-323-VOYNA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-270-NATURE270",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "GU-EXT-270-NATURE270"
+  ],
+  "after": []
+}

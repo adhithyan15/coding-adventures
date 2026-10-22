@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:d266f55b7a0ac980",
+  "lessonIds": [
+    "FA-C427-tamirgah",
+    "FA-C427-tamir-kardan",
+    "FA-C427-jush-avardan",
+    "FA-C427-yadakkesh",
+    "FA-C427-boksel-kardan",
+    "FA-R427-review-420-427"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch427.txt",
+  "json": "persian/narration/ch427.json",
+  "textHash": "fnv1a64:2430341cbb9e04b0",
+  "jsonHash": "fnv1a64:f0c6fc0cf7f8300d",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:0802d4df9cd83399",
+  "lessonIds": [
+    "GU-C217-hava",
+    "GU-C217-phukavu",
+    "GU-C217-adhi",
+    "GU-C217-vantol",
+    "GU-C217-phelavu"
+  ],
+  "tex": "gujarati/book/chapters/ch217-wind-and-dust.tex"
+}

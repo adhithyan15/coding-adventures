@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:1074d837bdac366b",
+  "lessonIds": [
+    "FA-C466-galle",
+    "FA-C466-chupan",
+    "FA-C466-tavile",
+    "FA-C466-marta",
+    "FA-C466-charidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch466.txt",
+  "json": "persian/narration/ch466.json",
+  "textHash": "fnv1a64:2f1fc1c517c56b73",
+  "jsonHash": "fnv1a64:0696e6be33775e13",
+  "findings": []
+}

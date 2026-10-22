@@ -72,6 +72,7 @@
 //!     language: "test".into(),
 //!     exports: vec![],
 //!     imports: vec![],
+//!     release: None,
 //! };
 //!
 //! let ll = lower_iir_to_llvm(&module, &IIRLlvmConfig::default())
@@ -89,6 +90,7 @@ use std::fmt;
 /// LANG83: this backend's declaration for every standard operation (see the
 /// module docs and `code/specs/LANG83-iir-standard-operation-registry.md`).
 pub mod op_support;
+mod lang83_f64;
 pub use op_support::{op_support, OP_SUPPORT};
 
 // ===========================================================================
@@ -313,6 +315,10 @@ const SUPPORTED_OPS: &[&str] = &[
     // lower to code that calls the module's own `@__iir_trap` definition (see
     // `emit_lang83_runtime`), so no harness C runtime is needed.
     "i64_div_floor", "i64_mod_floor", "trap",
+    // LANG83 PR4 — overflow-checked arithmetic via the
+    // `@llvm.s{add,sub,mul}.with.overflow.i64` intrinsics; overflow branches
+    // to the same module-local `@__iir_trap` with `Trap.Overflow`.
+    "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -365,6 +371,12 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // `linkonce_odr` `@__iir_write_i64` (libc `printf("%lld")`), so it needs no
     // host shim and shares libc's `stdout` with `putchar`.
     "write_i64",
+    // LANG83 PR6a — shortest round-trip float output, Python `repr` / JS
+    // `Number#toString` layout, no newline. Both lower to the module's own
+    // `linkonce_odr` `@__iir_write_f64(double, i32 layout)` (see
+    // `lang83_f64.rs`), which writes with libc `putchar`.
+    "write_f64_py",
+    "write_f64_js",
     "putchar",
     "getchar",
     "input_i64",
@@ -855,7 +867,13 @@ pub fn lower_iir_to_llvm(
     // explicit `trap`, or the defined traps of the floor-division ops) — each
     // gets one self-contained definition / message constant.
     let mut used_write_i64 = false;
+    // LANG83 PR6a: either float writer pulls in the module-local
+    // `@__iir_write_f64` definitions (and `putchar`, which they write with).
+    let mut used_write_f64 = false;
     let mut trap_kinds: std::collections::BTreeSet<u32> = std::collections::BTreeSet::new();
+    // LANG83 PR4: the `*.with.overflow` intrinsics the checked ops call, each
+    // declared once.
+    let mut used_ovf_intrinsics: std::collections::BTreeSet<&'static str> = std::collections::BTreeSet::new();
     for f in &module.functions {
         for i in &f.instructions {
             match i.op.as_str() {
@@ -868,6 +886,12 @@ pub fn lower_iir_to_llvm(
                     for kind in floor_trap_kinds(&i.op) {
                         trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(kind));
                     }
+                }
+                op if overflow_intrinsic(op).is_some() => {
+                    trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(
+                        interpreter_ir::exception_kind::TRAP_OVERFLOW,
+                    ));
+                    used_ovf_intrinsics.extend(overflow_intrinsic(op));
                 }
                 _ => {}
             }
@@ -931,6 +955,10 @@ pub fn lower_iir_to_llvm(
                     match name.as_str() {
                         "print_i64" => used_print_i64 = true,
                         "write_i64" => used_write_i64 = true,
+                        "write_f64_py" | "write_f64_js" => {
+                            used_write_f64 = true;
+                            used_putchar = true;
+                        }
                         "putchar" => used_putchar = true,
                         "getchar" => used_getchar = true,
                         "input_i64" => used_input_i64 = true,
@@ -952,11 +980,33 @@ pub fn lower_iir_to_llvm(
             }
         }
     }
+    // LANG83 PR6a: the float writer's module-local definitions are all named
+    // `@__iir_*`; a module function with such a name would be a duplicate
+    // definition that clang rejects with a confusing error. Refuse it here.
+    if used_write_f64 {
+        if let Some(f) = module.functions.iter().find(|f| f.name.starts_with("__iir_")) {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: f.name.clone(),
+                detail: "a module function may not use the reserved `__iir_` prefix of the \
+                         float writer's module-local definitions"
+                    .into(),
+            });
+        }
+    }
     if used_print_i64 {
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");
     }
     emit_lang83_runtime(&mut out, used_write_i64, &trap_kinds);
+    if used_write_f64 {
+        out.push_str(lang83_f64::LANG83_F64_RUNTIME_LL);
+    }
+    if !used_ovf_intrinsics.is_empty() {
+        out.push('\n');
+        for name in &used_ovf_intrinsics {
+            out.push_str(&format!("declare {{ i64, i1 }} {name}(i64, i64)\n"));
+        }
+    }
     if used_print_str {
         out.push('\n');
         out.push_str("declare void @__print_str(ptr, i64)\n");
@@ -2175,6 +2225,8 @@ fn lower_instr(
         "i64_div_floor" => lower_floor_divmod(instr, state, out, /*want_mod=*/ false),
         "i64_mod_floor" => lower_floor_divmod(instr, state, out, /*want_mod=*/ true),
         "trap" => lower_trap(instr, state, out),
+        // LANG83 PR4.
+        "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => lower_checked_arith(instr, state, out),
         // AL8 sqrt + transcendentals — via LLVM intrinsics.
         "f64_sqrt" => lower_f64_sqrt(instr, state, out),
         "f64_sin"  => lower_f64_intrinsic(instr, state, out, "f64_sin",  "@llvm.sin.f64"),
@@ -2962,6 +3014,71 @@ fn lower_floor_divmod(
         out.push_str(&format!("  {fixed} = sub i64 {q}, 1\n"));
         out.push_str(&format!("  %{dest} = select i1 {adj}, i64 {fixed}, i64 {q}\n"));
     }
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG83 PR4 — overflow-checked arithmetic
+// ---------------------------------------------------------------------------
+
+/// The `*.with.overflow` intrinsic a checked op calls (`neg` is `0 - a`).
+fn overflow_intrinsic(op: &str) -> Option<&'static str> {
+    match op {
+        "i64_add_ovf" => Some("@llvm.sadd.with.overflow.i64"),
+        "i64_sub_ovf" | "i64_neg_ovf" => Some("@llvm.ssub.with.overflow.i64"),
+        "i64_mul_ovf" => Some("@llvm.smul.with.overflow.i64"),
+        _ => None,
+    }
+}
+
+/// Lower `i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`
+/// (LANG83 PR4): the exact result, or `Trap.Overflow`.
+///
+/// LLVM's signed `*.with.overflow` intrinsics return the wrapped result
+/// together with an `i1` that is set exactly when the true result does not fit
+/// — the portable form of the CPU's overflow flag, which `llc` lowers to
+/// `add`+`jo` on x86-64 and `adds`+`b.vs` on AArch64:
+///
+/// ```llvm
+///   %t = call { i64, i1 } @llvm.sadd.with.overflow.i64(i64 %a, i64 %b)
+///   %o = extractvalue { i64, i1 } %t, 1
+///   br i1 %o, label %otrap, label %ook
+/// otrap:  call @__iir_trap(Trap.Overflow) ; unreachable
+/// ook:
+///   %dest = extractvalue { i64, i1 } %t, 0
+/// ```
+///
+/// `i64_neg_ovf a` is `ssub.with.overflow(0, a)`, which overflows only for
+/// `a = MIN`. The destination is defined only on the non-trapping edge, so a
+/// wrapped value can never be observed.
+fn lower_checked_arith(instr: &IIRInstr, state: &mut FnState, out: &mut String) -> Result<(), IIRLlvmError> {
+    use interpreter_ir::exception_kind::{trap_kind_id, TRAP_OVERFLOW};
+    let opname = instr.op.as_str();
+    let intrinsic = overflow_intrinsic(opname).ok_or_else(|| IIRLlvmError::InvalidOperand {
+        function: state.fn_name.into(),
+        detail: format!("{opname} is not an overflow-checked op"),
+    })?;
+    let dest = require_dest(instr, opname, state.fn_name)?.to_string();
+    let (a, b) = if opname == "i64_neg_ovf" {
+        ("0".to_string(), resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?)
+    } else {
+        (
+            resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?,
+            resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?,
+        )
+    };
+    let pair = state.fresh("ovt");
+    let flag = state.fresh("ovf");
+    let trap_block = state.fresh_bare("ovtrap");
+    let ok_block = state.fresh_bare("ovok");
+    out.push_str(&format!("  {pair} = call {{ i64, i1 }} {intrinsic}(i64 {a}, i64 {b})\n"));
+    out.push_str(&format!("  {flag} = extractvalue {{ i64, i1 }} {pair}, 1\n"));
+    out.push_str(&format!("  br i1 {flag}, label %{trap_block}, label %{ok_block}\n"));
+    out.push_str(&format!("{trap_block}:\n"));
+    emit_trap_call(trap_kind_id(TRAP_OVERFLOW).expect("built-in kind"), out);
+    out.push_str(&format!("{ok_block}:\n"));
+    out.push_str(&format!("  %{dest} = extractvalue {{ i64, i1 }} {pair}, 0\n"));
     state.env.insert(dest.clone(), format!("%{dest}"));
     Ok(())
 }
@@ -4437,6 +4554,15 @@ fn lower_call_builtin(
         "write_i64" => {
             let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
             out.push_str(&format!("  call void @__iir_write_i64(i64 {val})\n"));
+            Ok(())
+        }
+        // ── write_f64_py / write_f64_js — LANG83 PR6a ───────────────────
+        // One module-local routine; the second argument picks the layout
+        // (0 = Python repr, 1 = JavaScript toString).
+        "write_f64_py" | "write_f64_js" => {
+            let val = resolve_operand(instr.srcs.get(1), &state.env, "double", state.fn_name)?;
+            let layout = i32::from(name == "write_f64_js");
+            out.push_str(&format!("  call void @__iir_write_f64(double {val}, i32 {layout})\n"));
             Ok(())
         }
         "print_i64" => {

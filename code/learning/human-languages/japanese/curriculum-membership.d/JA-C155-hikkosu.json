@@ -1,0 +1,11 @@
+{
+  "id": "JA-C155-hikkosu",
+  "pathSegment": "JA-PATH-155-MOVE155",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-155-MOVE155",
+      "order": 0
+    }
+  ]
+}

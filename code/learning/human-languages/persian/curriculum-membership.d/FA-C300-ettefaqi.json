@@ -1,0 +1,11 @@
+{
+  "id": "FA-C300-ettefaqi",
+  "pathSegment": "FA-PATH-300-NAGAHAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-300-NAGAHAN",
+      "order": 4
+    }
+  ]
+}

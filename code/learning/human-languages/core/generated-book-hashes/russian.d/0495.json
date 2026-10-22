@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:a3b8190660a8bb69",
+  "lessonIds": [
+    "RU-C495-beremennost",
+    "RU-C495-roddom",
+    "RU-C495-dekret",
+    "RU-C495-kolyaska",
+    "RU-C495-polzat"
+  ],
+  "tex": "russian/book/chapters/ch495-expecting-a-baby.tex"
+}

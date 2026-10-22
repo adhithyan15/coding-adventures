@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R500-review-493-500",
+    "language": "russian",
+    "chapter": 500,
+    "sequence": 28230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:274606f3cd05336e"
+  },
+  "findings": []
+}

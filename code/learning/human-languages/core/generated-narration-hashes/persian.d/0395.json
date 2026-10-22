@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:61f4b6a1ababed9e",
+  "lessonIds": [
+    "FA-C395-baste-be",
+    "FA-C395-vabaste",
+    "FA-C395-sharayet",
+    "FA-C395-be-mahz-e-inke",
+    "FA-C395-ta-zamani-ke"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch395.txt",
+  "json": "persian/narration/ch395.json",
+  "textHash": "fnv1a64:053f4e0196f33940",
+  "jsonHash": "fnv1a64:4f122b0ced95bcdf",
+  "findings": []
+}

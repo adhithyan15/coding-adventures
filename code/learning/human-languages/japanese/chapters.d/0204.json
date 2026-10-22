@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Trips, Inns and Sights",
+  "label": "ch:ja-trips-inns-and-sights",
+  "canDo": "I can talk about a trip and where I will stay.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C204-yado",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can talk about a trip and where I will stay.",
+    "assesses": [
+      "JA-LEX-C204-TRIP204-03",
+      "JA-LEX-C204-TRIP204-04",
+      "JA-LEX-C204-TRIP204-05"
+    ]
+  }
+}

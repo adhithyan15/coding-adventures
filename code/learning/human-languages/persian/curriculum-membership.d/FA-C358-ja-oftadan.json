@@ -1,0 +1,11 @@
+{
+  "id": "FA-C358-ja-oftadan",
+  "pathSegment": "FA-PATH-358-QABLAME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-358-QABLAME",
+      "order": 3
+    }
+  ]
+}

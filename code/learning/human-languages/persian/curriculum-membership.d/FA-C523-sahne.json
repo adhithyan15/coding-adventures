@@ -1,0 +1,11 @@
+{
+  "id": "FA-C523-sahne",
+  "pathSegment": "FA-PATH-523-THEATRE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-523-THEATRE",
+      "order": 1
+    }
+  ]
+}

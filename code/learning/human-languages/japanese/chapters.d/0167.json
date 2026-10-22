@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Starting, Finishing and Calling Off",
+  "label": "ch:ja-starting-finishing-and-calling-off",
+  "canDo": "I can say what will start, finish, change or be called off.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C167-chuushi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can say what will start, finish, change or be called off.",
+    "assesses": [
+      "JA-LEX-C167-DONE167-03",
+      "JA-LEX-C167-DONE167-04",
+      "JA-LEX-C167-DONE167-05"
+    ]
+  }
+}

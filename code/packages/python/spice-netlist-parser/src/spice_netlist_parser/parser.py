@@ -24,6 +24,7 @@ from spice_engine import (
     CurrentSource,
     DcResult,
     DcSweepResult,
+    DeckAnalysisExecution,
     Diode,
     ExpWaveform,
     Inductor,
@@ -41,6 +42,7 @@ from spice_engine import (
     VoltageSource,
     Waveform,
     ac_sweep,
+    circuit_at_temperature,
     dc_op,
     dc_sweep,
     dc_sweep_2d,
@@ -283,6 +285,7 @@ class AnalysisExecutionResult:
     kind: AnalysisKind
     analysis: RunnableAnalysis
     result: AnalysisResult
+    temperature_kelvin: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -305,6 +308,7 @@ class SelectedAnalysisOutput:
     kind: AnalysisKind
     probes: tuple[OutputProbe, ...]
     rows: tuple[SelectedOutputRow, ...]
+    temperature_kelvin: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -317,6 +321,7 @@ class MeasureResult:
     operation: MeasureOperation
     probe: OutputProbe
     value: float
+    temperature_kelvin: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -525,6 +530,22 @@ class ParsedNetlist:
             default=default,
         )
 
+    def analysis_temperatures_kelvin(self) -> tuple[float | None, ...]:
+        """Return explicit deck temperatures, or one unmodified nominal run."""
+
+        temperatures = tuple(
+            celsius + 273.15
+            for card in self.temp_cards()
+            for celsius in card.temperatures_celsius
+        )
+        if not temperatures:
+            return (None,)
+        if any(not math.isfinite(value) or value <= 0.0 for value in temperatures):
+            raise NetlistParseError(
+                ".temp values must convert to finite positive Kelvin temperatures"
+            )
+        return temperatures
+
     def analysis_plan(self) -> list[AnalysisPlanStep]:
         """Return runnable `.op`, `.dc`, `.ac`, and `.tran` cards in deck order."""
 
@@ -608,7 +629,7 @@ def parse_netlist(text: str) -> ParsedNetlist:
     statements: list[_Statement] = []
     subckts: dict[str, _SubcktDefinition] = {}
     current_subckt: _SubcktDefinition | None = None
-    parsed.title, logical_cards = _berkeley_logical_cards(text)
+    parsed.title, logical_cards = _berkeley_logical_cards(_without_control_blocks(text))
     for line_number, logical_card in logical_cards:
         fields = _split_fields(logical_card)
         if not fields:
@@ -676,6 +697,26 @@ def parse_netlist(text: str) -> ParsedNetlist:
     return parsed
 
 
+def _without_control_blocks(text: str) -> str:
+    """Leave selected engine-owned control blocks out of parser card lowering."""
+
+    lines: list[str] = []
+    in_control = False
+    for line in text.splitlines(keepends=True):
+        head = line.strip().lower()
+        if in_control:
+            lines.append("\r\n" if line.endswith("\r\n") else "\n" if line.endswith("\n") else "")
+            if head == ".endc":
+                in_control = False
+            continue
+        if head == ".control":
+            in_control = True
+            lines.append("\r\n" if line.endswith("\r\n") else "\n" if line.endswith("\n") else "")
+            continue
+        lines.append(line)
+    return "".join(lines)
+
+
 def build_analysis_plan(parsed: ParsedNetlist) -> list[AnalysisPlanStep]:
     """Build the executable `.op`, `.dc`, `.ac`, `.tran`, and `.tf` plan for a deck."""
 
@@ -693,15 +734,25 @@ def run_analysis_plan(
 ) -> list[AnalysisExecutionResult]:
     """Execute the runnable plan for a parsed netlist."""
 
-    return [
-        AnalysisExecutionResult(
-            index=step.index,
-            kind=step.kind,
-            analysis=step.analysis,
-            result=_execute_analysis_step(parsed, step),
+    executable_plan = build_analysis_plan(parsed) if plan is None else plan
+    results: list[AnalysisExecutionResult] = []
+    for temperature_kelvin in parsed.analysis_temperatures_kelvin():
+        circuit = (
+            parsed.circuit
+            if temperature_kelvin is None
+            else circuit_at_temperature(parsed.circuit, temperature_kelvin)
         )
-        for step in (build_analysis_plan(parsed) if plan is None else plan)
-    ]
+        for step in executable_plan:
+            results.append(
+                AnalysisExecutionResult(
+                    index=step.index,
+                    kind=step.kind,
+                    analysis=step.analysis,
+                    result=_execute_analysis_step(parsed, step, circuit, temperature_kelvin),
+                    temperature_kelvin=temperature_kelvin,
+                )
+            )
+    return results
 
 
 def run_netlist(text: str) -> list[AnalysisExecutionResult]:
@@ -710,7 +761,7 @@ def run_netlist(text: str) -> list[AnalysisExecutionResult]:
     return run_analysis_plan(parse_netlist(text))
 
 
-CLI_RESULT_SCHEMA_VERSION = 1
+CLI_RESULT_SCHEMA_VERSION = 3
 CLI_INSPECTION_SCHEMA_VERSION = 1
 CLI_ERROR_CODE = "SPICE_CLI_ERROR"
 
@@ -719,21 +770,37 @@ def run_netlist_json(text: str) -> str:
     """Run a deck and return the cross-language CLI JSON result envelope."""
 
     parsed = parse_netlist(text)
-    execution = run_deck(parsed.circuit, text)
     parser_results = run_analysis_plan(parsed)
+    plan = build_analysis_plan(parsed)
+    analyses: list[dict[str, object]] = []
+    rawfiles: list[dict[str, object]] = []
+    wrdata: list[dict[str, object]] = []
+    for temperature_kelvin in parsed.analysis_temperatures_kelvin():
+        circuit = (
+            parsed.circuit
+            if temperature_kelvin is None
+            else circuit_at_temperature(parsed.circuit, temperature_kelvin)
+        )
+        execution = run_deck(circuit, text)
+        for step, item in zip(plan, execution.executions, strict=True):
+            analyses.append(
+                {
+                    "index": step.index,
+                    "kind": step.kind,
+                    "temperatureKelvin": temperature_kelvin,
+                    "records": _cli_table_records(item.plan.analysis, item.table),
+                }
+            )
+            rawfiles.extend(_cli_rawfile_artifacts(step, item, temperature_kelvin))
+            wrdata.extend(_cli_wrdata_artifacts(step, item, temperature_kelvin))
     payload = {
         "schemaVersion": CLI_RESULT_SCHEMA_VERSION,
         "title": parsed.title,
-        "analyses": [
-            {
-                "index": index,
-                "kind": item.plan.analysis,
-                "records": _cli_table_records(item.plan.analysis, item.table),
-            }
-            for index, item in enumerate(execution.executions)
-        ],
+        "analyses": analyses,
         "outputs": _cli_output_artifacts(parsed, parser_results),
         "measures": _cli_measure_artifacts(parsed, parser_results),
+        "rawfiles": rawfiles,
+        "wrdata": wrdata,
     }
     return json.dumps(payload, separators=(",", ":"), allow_nan=False, sort_keys=True) + "\n"
 
@@ -772,6 +839,7 @@ def _cli_output_artifacts(
         {
             "analysisIndex": output.index,
             "analysis": output.kind,
+            "temperatureKelvin": output.temperature_kelvin,
             "probes": [_cli_probe_text(probe) for probe in output.probes],
             "records": [
                 {
@@ -792,6 +860,50 @@ def _cli_output_artifacts(
     ]
 
 
+def _cli_rawfile_artifacts(
+    step: AnalysisPlanStep,
+    execution: DeckAnalysisExecution,
+    temperature_kelvin: float | None,
+) -> list[dict[str, object]]:
+    return [
+        {
+            "analysisIndex": step.index,
+            "analysis": step.kind,
+            "temperatureKelvin": temperature_kelvin,
+            "target": artifact.target,
+            "marker": artifact.marker,
+            "probes": artifact.probes,
+            "matchedProbes": artifact.matched_probes,
+            "unmatchedProbes": artifact.unmatched_probes,
+            "options": artifact.options,
+            "content": artifact.rawfile,
+        }
+        for artifact in execution.rawfile_artifacts
+    ]
+
+
+def _cli_wrdata_artifacts(
+    step: AnalysisPlanStep,
+    execution: DeckAnalysisExecution,
+    temperature_kelvin: float | None,
+) -> list[dict[str, object]]:
+    return [
+        {
+            "analysisIndex": step.index,
+            "analysis": step.kind,
+            "temperatureKelvin": temperature_kelvin,
+            "target": artifact.target,
+            "marker": artifact.marker,
+            "probes": artifact.probes,
+            "matchedProbes": artifact.matched_probes,
+            "unmatchedProbes": artifact.unmatched_probes,
+            "options": artifact.options,
+            "content": artifact.datafile,
+        }
+        for artifact in execution.wrdata_artifacts
+    ]
+
+
 def _cli_measure_artifacts(
     parsed: ParsedNetlist,
     results: list[AnalysisExecutionResult],
@@ -804,6 +916,7 @@ def _cli_measure_artifacts(
             "operation": measure.operation,
             "probe": _cli_probe_text(measure.probe),
             "value": measure.value,
+            "temperatureKelvin": measure.temperature_kelvin,
         }
         for measure in measure_results(parsed, results)
     ]
@@ -843,6 +956,7 @@ def select_outputs(
                 kind=result.kind,
                 probes=tuple(probes),
                 rows=tuple(_selected_output_rows(result, probes)),
+                temperature_kelvin=result.temperature_kelvin,
             )
         )
     return selected
@@ -857,18 +971,29 @@ def measure_results(
     execution_results = run_analysis_plan(parsed) if results is None else results
     measured: list[MeasureResult] = []
     for card in parsed.measure_cards():
-        execution_result = _find_measure_execution_result(card, execution_results)
-        value = _evaluate_measure(card, execution_result)
-        measured.append(
-            MeasureResult(
-                analysis_index=execution_result.index,
-                analysis=card.analysis,
-                name=card.name,
-                operation=card.operation,
-                probe=card.probe,
-                value=value,
+        temperatures: set[float | None] = set()
+        matching_results = []
+        for result in execution_results:
+            if not _analysis_name_matches(card.analysis, result.kind):
+                continue
+            if result.temperature_kelvin in temperatures:
+                continue
+            temperatures.add(result.temperature_kelvin)
+            matching_results.append(result)
+        if not matching_results:
+            _find_measure_execution_result(card, execution_results)
+        for execution_result in matching_results:
+            measured.append(
+                MeasureResult(
+                    analysis_index=execution_result.index,
+                    analysis=card.analysis,
+                    name=card.name,
+                    operation=card.operation,
+                    probe=card.probe,
+                    value=_evaluate_measure(card, execution_result),
+                    temperature_kelvin=execution_result.temperature_kelvin,
+                )
             )
-        )
     return measured
 
 
@@ -902,10 +1027,15 @@ def _analysis_plan_step(index: int, analysis: Analysis) -> AnalysisPlanStep | No
     return None
 
 
-def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> AnalysisResult:
+def _execute_analysis_step(
+    parsed: ParsedNetlist,
+    step: AnalysisPlanStep,
+    circuit: Circuit,
+    temperature_kelvin: float | None,
+) -> AnalysisResult:
     analysis = step.analysis
     if isinstance(analysis, OpAnalysis):
-        return dc_op(parsed.circuit, **parsed.dc_op_kwargs())
+        return dc_op(circuit, **parsed.dc_op_kwargs())
     if isinstance(analysis, DcAnalysis):
         dc_kwargs = parsed.dc_op_kwargs()
         sweep_kwargs = {
@@ -919,7 +1049,7 @@ def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> Ana
             ):
                 raise ValueError("nested .dc analysis requires complete secondary sweep bounds")
             return dc_sweep_2d(
-                parsed.circuit,
+                circuit,
                 analysis.source_name,
                 analysis.start,
                 analysis.stop,
@@ -931,7 +1061,7 @@ def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> Ana
                 **sweep_kwargs,
             )
         return dc_sweep(
-            parsed.circuit,
+            circuit,
             analysis.source_name,
             analysis.start,
             analysis.stop,
@@ -940,7 +1070,7 @@ def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> Ana
         )
     if isinstance(analysis, AcAnalysis):
         return ac_sweep(
-            parsed.circuit,
+            circuit,
             f_start=analysis.start_hz,
             f_stop=analysis.stop_hz,
             n_points=analysis.points,
@@ -950,26 +1080,30 @@ def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> Ana
         transient_kwargs = parsed.transient_kwargs(analysis)
         transient_kwargs.setdefault("method", "euler")
         return transient(
-            parsed.circuit,
+            circuit,
             t_step=analysis.t_step,
             t_stop=analysis.t_stop,
             **transient_kwargs,
         )
     if isinstance(analysis, TfAnalysis):
         return tf(
-            parsed.circuit,
+            circuit,
             output_node=analysis.output_node,
             input_source=analysis.input_source,
         )
     if isinstance(analysis, SensAnalysis):
-        return sens_dc(parsed.circuit, output_node=analysis.output_node)
+        return sens_dc(circuit, output_node=analysis.output_node)
     if isinstance(analysis, NoiseAnalysis):
         return noise_ac(
-            parsed.circuit,
+            circuit,
             output_node=analysis.output_node,
             input_source=analysis.input_source,
             freqs=None if not analysis.freqs else list(analysis.freqs),
-            temperature=analysis.temperature,
+            temperature=(
+                analysis.temperature
+                if analysis.temperature_is_explicit
+                else temperature_kelvin if temperature_kelvin is not None else analysis.temperature
+            ),
         )
     raise NetlistParseError(f"analysis card at index {step.index} is not executable")
 
@@ -1118,9 +1252,13 @@ def _evaluate_measure(card: MeasureAnalysis, result: AnalysisExecutionResult) ->
     samples = _measure_samples(card, result)
     if not samples:
         raise NetlistParseError(f".measure {card.name!r} has no samples")
+    if result.kind == "op" and card.operation == "find":
+        if card.at is not None and card.at != 0.0:
+            raise NetlistParseError(
+                f".measure {card.name!r} operating-point FIND AT must be 0"
+            )
+        return _measure_numeric_value(samples[0][1])
     if card.operation == "find":
-        if result.kind == "op" and card.at is None:
-            return _measure_numeric_value(samples[0][1])
         if card.at is None:
             raise NetlistParseError(f".measure {card.name!r} FIND requires AT=<value>")
         return _measure_numeric_value(_interpolate_measure_value(samples, card.at, card))

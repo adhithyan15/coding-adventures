@@ -1,0 +1,11 @@
+{
+  "id": "JA-C240-heta",
+  "pathSegment": "JA-PATH-240-LIKES240",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-240-LIKES240",
+      "order": 1
+    }
+  ]
+}

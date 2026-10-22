@@ -1,5 +1,46 @@
 # Changelog — interpreter-ir
 
+## Unreleased (LANG84 phase 4b — module release provenance)
+
+- **`IIRModule::release: Option<String>`** (LANG84 C4.1): the exact
+  `releases.csv` ID a release-versioned frontend compiled against, such as
+  `Some("5.38.0")` for Perl; `None` for frontends without an inventory and
+  for `IIRModule::new`. Backends never read it. It is not part of the binary
+  format: `serialise` output is unchanged (still 1.1) and `deserialise`
+  returns `None`, which consumers must read as "unknown", never as a
+  language's default release.
+- Breaking for struct literals: every `IIRModule { .. }` literal in the
+  repository now names `release: None`.
+
+## [0.14.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **Registry:** two new output Builtins, `introduced_by: "LANG83 PR6a"`
+  (`LANG83_PR6A`, `OpSpec::is_pr6a`): `write_f64_py` (Python `repr(float)`
+  layout) and `write_f64_js` (JavaScript `Number#toString` layout). Each takes
+  one `f64`, writes the shortest decimal that reads back as exactly that value
+  (closest on a length tie, round-half-even on an exact tie) with no newline,
+  and never traps. One builtin per layout, not a flags operand. Every backend
+  lowers both in the same slice.
+- **New test `pr6a_set_is_exactly_the_two_float_writers`.**
+
+## [0.13.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **Registry:** four new type-first Ops, `introduced_by: "LANG83 PR4"`
+  (`LANG83_PR4`, `OpSpec::is_pr4`): `i64_add_ovf`, `i64_sub_ovf`,
+  `i64_mul_ovf` (arity 2) and `i64_neg_ovf` (arity 1). Each yields the exact
+  result or traps `Trap.Overflow` when it does not fit in i64 (`may_trap:
+  [Trap.Overflow]`). Every backend lowers them in the same slice, so there is
+  no "not yet lowered" phase. The names avoid the `add_`/`sub_`/`mul_`/`neg_`
+  dispatch prefixes the native backends and the generic JIT match on.
+- **`opcodes::has_side_effects`** includes the four ops, so dead-code
+  elimination keeps an unused checked add (its trap is observable).
+  `is_known_op`, `is_value_producing` and `trap_kinds` pick them up from the
+  registry with no edit.
+- **New test `every_trapping_lang83_op_has_side_effects`**, derived from the
+  registry: a future LANG83 op that may trap cannot be registered without its
+  `has_side_effects` entry.
+- `exception_kind` docs: `Trap.Overflow` is now raised by the PR4 family.
+
 ## [0.12.0] — 2026-10-19 (LANG83 PR1a — standard operation registry)
 
 Adds the contract half of [LANG83](../../../specs/LANG83-iir-standard-operation-registry.md):

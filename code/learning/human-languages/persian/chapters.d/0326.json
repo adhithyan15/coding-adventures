@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "The injured",
+  "label": "ch:fa-the-injured",
+  "canDo": "I can talk about the injured: a wound, bleeding, fainting and coming round.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C326-be-hush-amadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can talk about the injured: a wound, bleeding, fainting and coming round.",
+    "assesses": [
+      "FA-LEX-C326-MASDUM-03",
+      "FA-LEX-C326-MASDUM-04",
+      "FA-LEX-C326-MASDUM-05"
+    ]
+  }
+}

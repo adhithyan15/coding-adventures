@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-521-POETRY",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-521-POETRY"
+  ],
+  "after": []
+}

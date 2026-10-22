@@ -1,0 +1,11 @@
+{
+  "id": "GU-C252-acarya",
+  "pathSegment": "GU-PATH-252-DUTY252",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-252-DUTY252",
+      "order": 2
+    }
+  ]
+}

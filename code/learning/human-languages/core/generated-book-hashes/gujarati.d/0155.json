@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:a5abb248a5f28bdc",
+  "lessonIds": [
+    "GU-C155-uthadvu",
+    "GU-C155-taiyar-thavu",
+    "GU-C155-olvu",
+    "GU-C155-attar",
+    "GU-C155-lagadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch155-getting-ready-in-the-morning.tex"
+}

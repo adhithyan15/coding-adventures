@@ -1,0 +1,11 @@
+{
+  "id": "RU-C327-klad",
+  "pathSegment": "RU-PATH-327-KLAD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-327-KLAD",
+      "order": 4
+    }
+  ]
+}

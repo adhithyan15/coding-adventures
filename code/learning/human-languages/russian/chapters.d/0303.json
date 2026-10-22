@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Birth",
+  "label": "ch:ru-birth",
+  "canDo": "I can talk about a birth, being born, a baby, being pregnant and giving birth.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C303-rozhat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can talk about a birth, being born, a baby, being pregnant and giving birth.",
+    "assesses": [
+      "RU-LEX-C303-ROZHDENIYE-03",
+      "RU-LEX-C303-ROZHDENIYE-04",
+      "RU-LEX-C303-ROZHDENIYE-05"
+    ]
+  }
+}

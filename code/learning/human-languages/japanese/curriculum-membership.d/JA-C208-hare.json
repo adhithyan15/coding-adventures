@@ -1,0 +1,11 @@
+{
+  "id": "JA-C208-hare",
+  "pathSegment": "JA-PATH-208-FORECAST208",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-208-FORECAST208",
+      "order": 0
+    }
+  ]
+}

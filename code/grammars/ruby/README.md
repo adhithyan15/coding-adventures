@@ -1,7 +1,8 @@
 # Ruby grammars
 
-`ruby.tokens` and `ruby.grammar` are the unversioned pair used by the current
-Ruby frontend. `releases.csv` is the LANG84 release inventory: one row per
+`ruby.tokens` and `ruby.grammar` are the unversioned pair used by the legacy
+Ruby frontend (`ruby.tokens` is stale: the hand-written `ruby-lexer` does not
+read it). `releases.csv` is the LANG84 release inventory: one row per
 upstream tagged Ruby release, the list that per-release pairs
 (`ruby<release>.tokens` / `ruby<release>.grammar`) will be built against,
 earliest first. See
@@ -99,7 +100,73 @@ No row has an empty date.
   - any pre-1.6.7 tarball without a tag. The tarball index
     (`cache.ruby-lang.org/pub/ruby/index.txt`) could not be reached during the
     audit, so this has not been cross-checked.
-- Every row is `pending`, stage `none`. No per-release pair exists yet. The
-  first ones are the LANG84 phase 3.2 `rb-int-puts` partial pairs.
+- Most rows are still `pending`, stage `none`; see the next section for the
+  first pairs.
 
-`python3 code/scripts/release_inventory.py check` validates this file.
+## Release pairs (LANG84 phase 3.2, slice R0)
+
+Five rows have a materialized pair and claim `partial`, stage `P`, subset
+`rb-int-puts` (declared in `subsets.csv`; `%` joined the subset in phase 5a):
+
+| Release | Basis | Token class | Grammar class |
+| --- | --- | --- | --- |
+| `0.49` | reviewed: `parse.y` `yylex()`, `kwtable` and the yacc rules of the tag | 0.49 | 1994 |
+| `0.50` | reviewed: delta from 0.49 (backtick opens an xstring; kwtable adds `__FILE__`/`__LINE__`, drops `func`) | 0.50 | 1994 |
+| `3.3.5` | reviewed: token streams match `Ripper.lex` of the host ruby 3.3.6, whose syntax blobs are identical | 3.3 | 3.3 |
+| `3.3.6` | mechanical copy of 3.3.5 (identical `parse.y`, `defs/keywords`, `prism/config.yml`) | 3.3 | 3.3 |
+| `3.3.7` | mechanical copy of 3.3.6 (identical blobs) | 3.3 | 3.3 |
+
+So R0 covers the contiguous range at the start of the inventory (`0.49`,
+`0.50`) plus the current release line around the default release `3.3.6`.
+`0.51` is next: its `yylex()` splits unary `+`/`-` into UPLUS/UMINUS tokens
+and adds EXPR_FNAME, so it needs a new reviewed pair rather than a copy.
+
+`pair-evidence.csv` records, for each paired release, the blob IDs of the
+syntax files (`git ls-tree <source_sha> parse.y keywords defs/keywords
+prism/config.yml` against https://github.com/ruby/ruby) and its basis.
+`python3 code/scripts/ruby_release_pairs.py write` regenerates every pair
+header from that file and `releases.csv`, and rewrites mechanical copies;
+`check` fails if anything is stale or if a `copy:` row's blobs differ from its
+source's. Reviewed pairs are hand-written below their header.
+
+What R0 lexes, what it leaves to later slices (R1 strings, R3 percent
+literals, R4 regexps, R5 heredocs, R6 local-variable-sensitive forms), and
+each known divergence from the release's own lexer is listed at the top of
+every `.tokens` file and pinned by tests in `code/packages/rust/ruby-parser`
+(`tests/r0_differential.rs`, `tests/r0_releases.rs`,
+`tests/release_probes.rs`).
+
+## IIR status (LANG84 phase 5a)
+
+`corpus/rb-int-puts/` is the subset's corpus. Each case is `<name>.rb` plus
+
+- `<name>.expect`: the exact stdout, followed — if the program stops on a
+  LANG83 trap — by one final line `trap:<kind>` (Ruby's `ZeroDivisionError`
+  is `trap:Trap.DivZero`); or
+- `<name>.reject`: one line naming the LANG84 C6 error category the compile
+  must fail with (`Parse`, `Lex`, `Unsupported`), for programs Ruby runs but
+  the subset refuses (Bignums, `puts -7`, strings, …);
+
+and always `<name>.cite`, the oracle record: the interpreter (host ruby 3.3.6
+for every case today), the command, and the observed result.
+
+`ruby-iir-compiler`'s `tests/release_subsets.rs` runs the corpus on every row
+whose `iir_status` lists `rb-int-puts` — today 3.3.5, 3.3.6 and 3.3.7, which
+name profile `ruby33` and compile to identical IIR — and re-checks every case
+against a host ruby 3.3. 3.3.6, the default release, also claims
+`backend_status`: `lang-aot`'s matrix runs thirteen corpus cases on every
+backend there. 0.49 and 0.50 stay at stage P with no profile: their grammars
+parse the subset, but in those releases `puts` is only `IO#puts` and
+`Fixnum#/` truncates, so the programs do not run as written (see
+`code/packages/rust/ruby-iir-compiler/src/profiles.rs`).
+
+`python3 code/scripts/release_inventory.py check --matrix` validates this
+file and `subsets.csv`.
+
+## Subsets (`subsets.csv`)
+
+`subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
+`iir_status` and `backend_status` may name. It has one entry, `rb-int-puts`:
+LANG80's integer `puts` subset (phase 5 brings it to stage I and B on the R0
+pairs), defined in LANG80. Its corpus goes in `corpus/rb-int-puts/` when a
+release first claims stage I. No row names it yet.

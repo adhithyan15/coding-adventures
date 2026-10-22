@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:743c20048339b9d6",
+  "lessonIds": [
+    "RU-C499-naveshchat",
+    "RU-C499-gostepriimnyy",
+    "RU-C499-gostepriimstvo",
+    "RU-C499-chayepitiye",
+    "RU-C499-gostit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch499.txt",
+  "json": "russian/narration/ch499.json",
+  "textHash": "fnv1a64:d42b0367b7e8bfac",
+  "jsonHash": "fnv1a64:a2043604cc154c27",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:5cd03835c0ce2422",
+  "lessonIds": [
+    "RU-C371-gipoteza",
+    "RU-C371-predpolagat",
+    "RU-C371-predpolozhim",
+    "RU-C371-dopustim",
+    "RU-C371-predpolozhenie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch371.txt",
+  "json": "russian/narration/ch371.json",
+  "textHash": "fnv1a64:35aff3b56bc692bc",
+  "jsonHash": "fnv1a64:b5b3f4d3cfb85659",
+  "findings": []
+}

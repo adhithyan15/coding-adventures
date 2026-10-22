@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-200-CHANGE200",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "JA-EXT-200-CHANGE200"
+  ],
+  "after": []
+}

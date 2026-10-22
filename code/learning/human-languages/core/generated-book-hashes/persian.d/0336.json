@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:3f8abd3b74b63117",
+  "lessonIds": [
+    "FA-C336-talaq",
+    "FA-C336-talaq-gereftan",
+    "FA-C336-bive",
+    "FA-C336-yatim",
+    "FA-C336-sarparasti"
+  ],
+  "tex": "persian/book/chapters/ch336-divorce-and-loss.tex"
+}

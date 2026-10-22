@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C211-hodi",
+    "language": "gujarati",
+    "chapter": 211,
+    "sequence": 11440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb98dfdf99da8774"
+  },
+  "findings": []
+}

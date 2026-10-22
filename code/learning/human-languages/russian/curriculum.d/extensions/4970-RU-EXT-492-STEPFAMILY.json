@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-492-STEPFAMILY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a family with step-parents, twins and cousins.",
+  "prerequisites": []
+}

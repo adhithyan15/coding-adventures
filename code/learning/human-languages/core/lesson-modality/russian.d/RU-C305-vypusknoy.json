@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C305-vypusknoy",
+    "language": "russian",
+    "chapter": 305,
+    "sequence": 18170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c705d86bf004dede"
+  },
+  "findings": []
+}

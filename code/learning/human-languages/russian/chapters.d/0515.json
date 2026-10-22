@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Piano, Cello and Flute",
+  "label": "ch:ru-piano-cello-and-flute",
+  "canDo": "I can talk about the instruments people play.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C515-nastraivat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about the instruments people play.",
+    "assesses": [
+      "RU-LEX-C515-INSTRUMENTS-03",
+      "RU-LEX-C515-INSTRUMENTS-04",
+      "RU-LEX-C515-INSTRUMENTS-05"
+    ]
+  }
+}

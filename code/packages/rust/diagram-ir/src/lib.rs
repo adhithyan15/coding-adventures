@@ -1,5 +1,7 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
+use std::collections::BTreeMap;
+
 pub const VERSION: &str = "0.85.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -77,18 +79,50 @@ pub enum DiagramShape {
     Note,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct DiagramTextSpan {
     pub text: String,
     pub bold: bool,
     pub italic: bool,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct DiagramLabel {
     pub text: String,
     pub markdown: Option<String>,
     pub spans: Vec<DiagramTextSpan>,
+}
+
+impl From<String> for DiagramLabel {
+    fn from(text: String) -> Self {
+        Self::new(text)
+    }
+}
+
+impl From<&str> for DiagramLabel {
+    fn from(text: &str) -> Self {
+        Self::new(text)
+    }
+}
+
+impl std::ops::Deref for DiagramLabel {
+    type Target = str;
+
+    fn deref(&self) -> &Self::Target {
+        &self.text
+    }
+}
+
+impl PartialEq<&str> for DiagramLabel {
+    fn eq(&self, other: &&str) -> bool {
+        self.text == *other
+    }
+}
+
+impl PartialEq<str> for DiagramLabel {
+    fn eq(&self, other: &str) -> bool {
+        self.text == other
+    }
 }
 impl DiagramLabel {
     pub fn new(text: impl Into<String>) -> Self {
@@ -2025,16 +2059,42 @@ pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: 
 // PROCESS OWNERSHIP FAMILY
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneNode {
-    pub id: String, pub label: String, pub lane_id: Option<String>, pub shape: DiagramShape,
+    pub id: String, pub label: DiagramLabel, pub lane_id: Option<String>, pub shape: DiagramShape,
     pub classes: Vec<String>, pub style: DiagramStyle,
+}
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SwimlaneIconForm { Square, Circle, Rounded }
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub enum SwimlaneLabelPosition { Top, #[default] Bottom }
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneIconNode {
+    pub form: Option<SwimlaneIconForm>,
+    pub label_position: SwimlaneLabelPosition,
+    pub height: f64,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneImageNode {
+    pub source: String,
+    pub width: Option<f64>,
+    pub height: Option<f64>,
+    pub preserve_aspect_ratio: bool,
+    pub label_position: SwimlaneLabelPosition,
+}
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedSwimlaneImageNode {
+    pub source: String,
+    pub width: f64,
+    pub height: f64,
+    pub preserve_aspect_ratio: bool,
+    pub label_position: SwimlaneLabelPosition,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane {
-    pub id: String, pub label: String, pub node_ids: Vec<String>, pub classes: Vec<String>, pub style: DiagramStyle,
+    pub id: String, pub label: DiagramLabel, pub node_ids: Vec<String>, pub classes: Vec<String>, pub style: DiagramStyle,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneGroup {
-    pub id: String, pub label: String, pub lane_id: String, pub parent_id: Option<String>, pub node_ids: Vec<String>,
+    pub id: String, pub label: DiagramLabel, pub lane_id: String, pub parent_id: Option<String>, pub node_ids: Vec<String>,
     pub classes: Vec<String>, pub style: DiagramStyle,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -2050,7 +2110,7 @@ pub enum SwimlaneEdgeCurve {
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneEdge {
-    pub id: Option<String>, pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub id: Option<String>, pub from: String, pub to: String, pub label: Option<DiagramLabel>, pub kind: SwimlaneEdgeKind,
     pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
     pub classes: Vec<String>, pub style: DiagramStyle,
     pub animate: bool, pub animation: Option<SwimlaneEdgeAnimation>,
@@ -2103,26 +2163,30 @@ pub struct SwimlaneDiagram {
     pub ignore_cross_lane_edges: bool, pub optimize_ranks_by_crossings: bool,
     pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
+    pub icons: BTreeMap<String, String>,
+    pub icon_nodes: BTreeMap<String, SwimlaneIconNode>,
+    pub image_nodes: BTreeMap<String, SwimlaneImageNode>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane {
-    pub id: String, pub label: String, pub classes: Vec<String>, pub style: DiagramStyle,
+    pub id: String, pub label: DiagramLabel, pub classes: Vec<String>, pub style: DiagramStyle,
     pub x: f64, pub y: f64, pub width: f64, pub height: f64,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneGroup {
-    pub id: String, pub label: String, pub lane_id: String, pub parent_id: Option<String>,
+    pub id: String, pub label: DiagramLabel, pub lane_id: String, pub parent_id: Option<String>,
     pub classes: Vec<String>, pub style: DiagramStyle,
     pub x: f64, pub y: f64, pub width: f64, pub height: f64,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneNode {
-    pub id: String, pub label: String, pub shape: DiagramShape, pub classes: Vec<String>, pub style: DiagramStyle,
+    pub id: String, pub label: DiagramLabel, pub shape: DiagramShape, pub classes: Vec<String>, pub style: DiagramStyle,
     pub x: f64, pub y: f64, pub width: f64, pub height: f64,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneEdge {
-    pub id: Option<String>, pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub id: Option<String>, pub from: Point, pub to: Point, pub label: Option<DiagramLabel>, pub kind: SwimlaneEdgeKind,
+    pub label_position: Option<Point>, pub label_width: f64, pub label_height: f64,
     pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
     pub classes: Vec<String>, pub style: DiagramStyle,
     pub animate: bool, pub animation: Option<SwimlaneEdgeAnimation>,
@@ -2139,6 +2203,10 @@ pub struct LayoutedSwimlaneDiagram {
     pub optimize_ranks_by_crossings: bool,
     pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
+    pub icons: BTreeMap<String, String>,
+    pub icon_nodes: BTreeMap<String, SwimlaneIconNode>,
+    pub image_nodes: BTreeMap<String, LayoutedSwimlaneImageNode>,
+    pub icon_glyphs: BTreeMap<String, DiagramIconGlyph>,
 }
 
 // GRAMMAR VISUALIZATION FAMILY

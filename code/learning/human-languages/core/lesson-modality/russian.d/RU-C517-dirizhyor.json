@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C517-dirizhyor",
+    "language": "russian",
+    "chapter": 517,
+    "sequence": 29080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9950f5682d8c2f21"
+  },
+  "findings": []
+}

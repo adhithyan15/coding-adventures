@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:e3d38fd2397ce81a",
+  "lessonIds": [
+    "GU-C265-prem-karvo",
+    "GU-C265-paranvu",
+    "GU-C265-sagai",
+    "GU-C265-vahu",
+    "GU-C265-vishvas"
+  ],
+  "tex": "gujarati/book/chapters/ch265-love-and-marriage.tex"
+}

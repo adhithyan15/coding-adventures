@@ -1,0 +1,11 @@
+{
+  "id": "RU-R450-review-443-450",
+  "pathSegment": "RU-PATH-450-SPRAVKA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-450-SPRAVKA",
+      "order": 5
+    }
+  ]
+}

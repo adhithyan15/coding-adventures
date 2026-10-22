@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Furnishing a Home",
+  "label": "ch:fa-furnishing-a-home",
+  "canDo": "I can talk about furniture and soft furnishings.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C534-lahaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about furniture and soft furnishings.",
+    "assesses": [
+      "FA-LEX-C534-FURNISH-03",
+      "FA-LEX-C534-FURNISH-04",
+      "FA-LEX-C534-FURNISH-05"
+    ]
+  }
+}

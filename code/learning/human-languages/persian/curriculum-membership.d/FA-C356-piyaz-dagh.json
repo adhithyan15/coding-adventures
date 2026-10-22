@@ -1,0 +1,11 @@
+{
+  "id": "FA-C356-piyaz-dagh",
+  "pathSegment": "FA-PATH-356-RIZKARDAN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-356-RIZKARDAN",
+      "order": 4
+    }
+  ]
+}

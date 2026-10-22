@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C199-niyam",
+    "language": "gujarati",
+    "chapter": 199,
+    "sequence": 10840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b77eb5d472e550a"
+  },
+  "findings": []
+}

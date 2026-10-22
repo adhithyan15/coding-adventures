@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Grandparents and Siblings",
+  "label": "ch:ja-grandparents-and-siblings",
+  "canDo": "I can ask and answer questions about my parents, grandparents and siblings.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C243-sodateru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can ask and answer questions about my parents, grandparents and siblings.",
+    "assesses": [
+      "JA-LEX-C243-KIN243-03",
+      "JA-LEX-C243-KIN243-04",
+      "JA-LEX-C243-KIN243-05"
+    ]
+  }
+}

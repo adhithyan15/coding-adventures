@@ -1,0 +1,11 @@
+{
+  "id": "FA-C512-havadar",
+  "pathSegment": "FA-PATH-512-FANS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-512-FANS",
+      "order": 0
+    }
+  ]
+}

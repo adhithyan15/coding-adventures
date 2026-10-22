@@ -3,9 +3,14 @@
 //! ## Usage
 //!
 //! ```text
-//! lang-aot <FILE> [-o <OUT>] [--lang <LANG>]
+//! lang-aot <FILE> [-o <OUT>] [--lang <LANG>[@<RELEASE>]]
 //! lang-aot --help
 //! ```
+//!
+//! `--lang perl@5.004_72` (or `ruby@3.3.7`, `python@3.0a1`) compiles against exactly that row of the
+//! language's `releases.csv` (LANG84); a bare `--lang perl` uses the
+//! frontend's default release. An unknown or pending release is an error,
+//! never a fallback to another grammar.
 //!
 //! `--lang` is optional: if omitted, the language is inferred from the
 //! input's file extension (`.twig`, `.nib`, `.bf`, `.bas`, `.oct`,
@@ -21,7 +26,7 @@
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use lang_aot::{detect_language_from_path, Language};
+use lang_aot::{detect_language_from_path, LanguageRequest};
 
 fn main() -> ExitCode {
     let args: Vec<String> = std::env::args().collect();
@@ -76,7 +81,7 @@ fn main() -> ExitCode {
     let language = match cmd.language {
         Some(l) => l,
         None => match detect_language_from_path(&input) {
-            Some(l) => l,
+            Some(l) => LanguageRequest::from(l),
             None => {
                 eprintln!("lang-aot: could not infer language from {:?}; pass --lang explicitly", input);
                 eprintln!("  recognised extensions: .twig .nib .bf .bas .oct .mcl .lisp .algol .alg .a60");
@@ -85,7 +90,7 @@ fn main() -> ExitCode {
         },
     };
 
-    match dispatch(&input, &output, language, cmd.emit) {
+    match dispatch(&input, &output, &language, cmd.emit) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => { eprintln!("lang-aot: {e}"); ExitCode::from(1) }
     }
@@ -226,7 +231,7 @@ enum EmitMode {
 struct CliArgs {
     input: Option<PathBuf>,
     output: Option<PathBuf>,
-    language: Option<Language>,
+    language: Option<LanguageRequest>,
     emit: EmitMode,
     help: bool,
 }
@@ -253,10 +258,10 @@ fn parse_args(args: &[String]) -> Result<CliArgs, String> {
             "-l" | "--lang" => {
                 i += 1;
                 let v = args.get(i).ok_or_else(|| "--lang requires a value".to_string())?;
-                language = Some(Language::parse(v)?);
+                language = Some(LanguageRequest::parse(v)?);
             }
             s if s.starts_with("--lang=") => {
-                language = Some(Language::parse(&s["--lang=".len()..])?);
+                language = Some(LanguageRequest::parse(&s["--lang=".len()..])?);
             }
             // --emit=<native|llvm-ir>  (LLVM04)
             //
@@ -341,7 +346,13 @@ Options:
                            (native) or with .ll extension (--emit=llvm-ir).
   -l, --lang <LANG>        Override language detection
                            (twig, nib, bf, basic, oct, mccarthy-lisp/mcl/lisp,
-                            algol60/algol/a60).
+                            algol60/algol/a60, ruby/rb, perl/pl, python/py).
+                           A language with a release inventory takes
+                           <LANG>@<RELEASE>, an exact releases.csv ID
+                           (e.g. perl@5.004_72, ruby@3.3.7,
+                           python@3.0a1); without one, the frontend's
+                           default release (perl: 5.38.0, ruby: 3.3.6,
+                           python: 3.13.16).
       --emit=<MODE>        What to emit:
                              native           → host executable (default)
                              llvm-ir | llvm | ll
@@ -478,20 +489,23 @@ Options:
 fn dispatch(
     input: &Path,
     output: &Path,
-    language: Language,
+    language: &LanguageRequest,
     emit: EmitMode,
 ) -> Result<(), String> {
+    // Each entry point takes the request by value (a plain `Language` is a
+    // request with no release); clone it once per call site.
+    let language = || language.clone();
     // LLVM IR emission is cross-platform — short-circuit before any host
     // cfg gating below.  Reading a file and writing a `.ll` string out
     // doesn't depend on the linker or platform binary format.
     if emit == EmitMode::LlvmIr {
-        return lang_aot::compile_file_to_llvm_ir(input, output, language)
+        return lang_aot::compile_file_to_llvm_ir(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // RV32I .bin emission is also cross-platform — just write the
     // encoded words as little-endian bytes.  No linker, no host gating.
     if emit == EmitMode::Riscv32Bin {
-        return lang_aot::compile_file_to_riscv32_bin(input, output, language)
+        return lang_aot::compile_file_to_riscv32_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // Intel 8008 .bin emission is also cross-platform — just write the
@@ -499,7 +513,7 @@ fn dispatch(
     // conversion (the 8008 has no concept of word endianness — every
     // instruction is a byte sequence).  Oct's native target.
     if emit == EmitMode::Intel8008Bin {
-        return lang_aot::compile_file_to_intel8008_bin(input, output, language)
+        return lang_aot::compile_file_to_intel8008_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // ARMv7 .bin emission is also cross-platform — flatten each
@@ -509,7 +523,7 @@ fn dispatch(
     // host; downstream is always arm-simulator, qemu-arm, or a
     // phone-class Linux board).
     if emit == EmitMode::Armv7Bin {
-        return lang_aot::compile_file_to_armv7_bin(input, output, language)
+        return lang_aot::compile_file_to_armv7_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // Intel 4004 .bin emission is also cross-platform — write the
@@ -519,7 +533,7 @@ fn dispatch(
     // a simulator, the intel-4004-assembler crate, or an EPROM
     // burner.
     if emit == EmitMode::Intel4004Bin {
-        return lang_aot::compile_file_to_intel4004_bin(input, output, language)
+        return lang_aot::compile_file_to_intel4004_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // GE-225 .bin emission is also cross-platform — write each
@@ -529,7 +543,7 @@ fn dispatch(
     // primarily a BASIC fit.  Downstream is always a simulator or
     // a custom decoder.
     if emit == EmitMode::Ge225Bin {
-        return lang_aot::compile_file_to_ge225_bin(input, output, language)
+        return lang_aot::compile_file_to_ge225_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // IBM 704 .bin emission is also cross-platform — write each
@@ -539,7 +553,7 @@ fn dispatch(
     // in 1959; CAR/CDR are literal 704 instruction-field
     // mnemonics.  Downstream is always an emulator or replica.
     if emit == EmitMode::Ibm704Bin {
-        return lang_aot::compile_file_to_ibm704_bin(input, output, language)
+        return lang_aot::compile_file_to_ibm704_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // ARM1 .bin emission is also cross-platform — flatten each
@@ -549,7 +563,7 @@ fn dispatch(
     // downstream is always arm1-simulator or an external ARM1/ARMv1
     // emulator.
     if emit == EmitMode::Arm1Bin {
-        return lang_aot::compile_file_to_arm1_bin(input, output, language)
+        return lang_aot::compile_file_to_arm1_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // MOS 6502 .bin emission is also cross-platform — the 6502 is
@@ -559,7 +573,7 @@ fn dispatch(
     // modern dev host is 6502 silicon); downstream is always
     // mos6502-simulator or an external MOS 6502/NMOS emulator.
     if emit == EmitMode::Mos6502Bin {
-        return lang_aot::compile_file_to_mos6502_bin(input, output, language)
+        return lang_aot::compile_file_to_mos6502_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // Motorola 68000 .bin emission is also cross-platform — the 68000 is
@@ -571,7 +585,7 @@ fn dispatch(
     // silicon); downstream is always m68k-simulator or an external
     // Motorola 68000 emulator.
     if emit == EmitMode::M68kBin {
-        return lang_aot::compile_file_to_m68k_bin(input, output, language)
+        return lang_aot::compile_file_to_m68k_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // Intel 8080 .bin emission is also cross-platform — write the
@@ -584,7 +598,7 @@ fn dispatch(
     // Downstream is always a simulator (in-tree
     // `intel8080-simulator` or external) or an EPROM burner.
     if emit == EmitMode::Intel8080Bin {
-        return lang_aot::compile_file_to_intel8080_bin(input, output, language)
+        return lang_aot::compile_file_to_intel8080_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // MIPS R2000 .bin emission is also cross-platform — write each
@@ -594,7 +608,7 @@ fn dispatch(
     // processor; downstream is always mips-r2000-simulator or an
     // external MIPS I emulator.
     if emit == EmitMode::MipsR2000Bin {
-        return lang_aot::compile_file_to_mips_r2000_bin(input, output, language)
+        return lang_aot::compile_file_to_mips_r2000_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // Z80 .bin emission is also cross-platform — write the 1- to
@@ -605,7 +619,7 @@ fn dispatch(
     // downstream is always z80-simulator, an external Z80 emulator, or
     // an EPROM burner.
     if emit == EmitMode::Z80Bin {
-        return lang_aot::compile_file_to_z80_bin(input, output, language)
+        return lang_aot::compile_file_to_z80_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // Intel 8051 .bin emission is also cross-platform — write each
@@ -616,7 +630,7 @@ fn dispatch(
     // intel8051-simulator, an external MCS-51 emulator, or a real
     // 8051-family part.
     if emit == EmitMode::Intel8051Bin {
-        return lang_aot::compile_file_to_intel8051_bin(input, output, language)
+        return lang_aot::compile_file_to_intel8051_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // Intel 8086 .bin emission is also cross-platform — like the 6502,
@@ -628,7 +642,7 @@ fn dispatch(
     // 8086/8088 emulator.  Ninth and final lane of the 9-architecture
     // expansion.
     if emit == EmitMode::Intel8086Bin {
-        return lang_aot::compile_file_to_intel8086_bin(input, output, language)
+        return lang_aot::compile_file_to_intel8086_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     // SPARC V8 .bin emission is also cross-platform — flatten each
@@ -638,24 +652,24 @@ fn dispatch(
     // host is SPARC V8 silicon); downstream is always
     // sparc-v8-simulator or an external SPARC V8 emulator.
     if emit == EmitMode::SparcV8Bin {
-        return lang_aot::compile_file_to_sparc_v8_bin(input, output, language)
+        return lang_aot::compile_file_to_sparc_v8_bin(input, output, language())
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]
-    { lang_aot::compile_file_to_linux_executable(input, output, language)
+    { lang_aot::compile_file_to_linux_executable(input, output, language())
           .map_err(|e| format!("{e}")) }
     #[cfg(target_os = "windows")]
-    { lang_aot::compile_file_to_windows_executable(input, output, language)
+    { lang_aot::compile_file_to_windows_executable(input, output, language())
           .map_err(|e| format!("{e}")) }
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    { lang_aot::compile_file_to_macos_executable(input, output, language)
+    { lang_aot::compile_file_to_macos_executable(input, output, language())
           .map_err(|e| format!("{e}")) }
     #[cfg(not(any(
         target_os = "linux",
         target_os = "windows",
         all(target_os = "macos", target_arch = "aarch64"),
     )))]
-    { let _ = (input, output, language);
+    { let _ = (input, output, language());
       Err("lang-aot: this host platform is not supported \
            (host-targets-host only; supported hosts: Linux x86-64, \
            Windows x86-64, macOS ARM64)".into()) }

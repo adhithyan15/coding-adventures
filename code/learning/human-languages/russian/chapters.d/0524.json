@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Kinds of Books",
+  "label": "ch:ru-kinds-of-books",
+  "canDo": "I can say what kinds of books I like.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-R524-review-517-524",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can say what kinds of books I like.",
+    "assesses": [
+      "RU-LEX-C524-GENRES-03",
+      "RU-LEX-C524-GENRES-04",
+      "RU-LEX-C524-GENRES-05"
+    ]
+  }
+}

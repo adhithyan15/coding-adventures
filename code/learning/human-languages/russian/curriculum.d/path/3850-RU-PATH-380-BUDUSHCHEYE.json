@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-380-BUDUSHCHEYE",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "RU-EXT-380-BUDUSHCHEYE"
+  ],
+  "after": []
+}

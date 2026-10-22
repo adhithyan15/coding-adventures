@@ -254,6 +254,75 @@ that closurec now optimizes semicolon-light source.
 * **Regression**: the full existing fixture suite must stay byte-identical
   (proves no over-insertion).
 
+## Phase 4 — insertion points for WHITESPACE_ONLY, and postfix `++`/`--` (#17840)
+
+**Problem.** closurec's WHITESPACE_ONLY path re-stitches tokens without
+parsing. It drops newline trivia, and with it every statement boundary a
+newline supplied. `a()⏎b()` became the SyntaxError `a()b()`.
+
+**`asi_insertion_points(tokens, version) -> Vec<usize>`.** This runs the same
+algorithm as `parse_with_asi`: the restricted-production pre-pass, then
+retry-on-error. It tracks which tokens are synthetic, and returns the input
+index *before which* each `;` goes. Callers that keep their own token vector
+can splice at those points without taking a rewritten stream. WHITESPACE_ONLY
+needs this, because its correlation-vector map is keyed on pointers into the
+original tokens. On an unparseable program it errors exactly as
+`parse_with_asi` does, and WHITESPACE_ONLY then keeps its old behaviour.
+
+**Postfix `++`/`--` restricted production.** `UpdateExpression :
+LeftHandSideExpression [no LineTerminator here] ++` means a newline-led
+`++`/`--` after a token that can end an expression starts a new statement:
+`x = 1⏎++y` is `x = 1; ++y`. The grammar is newline-blind and reads `1 ++`
+as postfix, then fails at `y`. Retry-on-error can't recover, because `y` isn't
+newline-led. The pre-pass therefore inserts the `;` proactively.
+
+It does so only after a token that can end an expression: an identifier,
+number, string, `)`, `]`, `}`, or one of `this`/`true`/`false`/`null`/`super`.
+After `=` or `(` the `++` is already prefix (`x =⏎++y` → `x = ++y`).
+
+A `)` that closes an `if`/`while`/`for`/`with` header does **not** end an
+expression. `if (x)⏎++y` has `++y` as its body, so nothing is inserted
+there (`ends_expression_before` finds the matching `(` and checks the keyword).
+
+**Speculative pre-insertion (performance).** Every retry re-parses the whole
+stream, so a semicolon-free file used to cost O(lines × parse). 1,000 lines of
+`a()` took 177 s in a debug build. `speculate_line_semicolons` inserts, in one
+linear pass, the semicolons the retry loop would certainly insert:
+- **Rule 1:** a newline-led identifier, literal or statement keyword after a
+  token that ends an expression. Contextual words and a block-closing `}` are
+  excluded.
+- **Rule 2:** before a `}` that closes a block opened after `)`, `else`, `do`,
+  `try`, `finally`, `;`, `{` or `}`, when the statement inside is
+  unterminated. It also covers an `=>` body, except one that starts
+  `name :`, because the grammar buckets `() => {a:1}` as an object literal.
+
+Rule 1 also treats a postfix `++`/`--` as an expression end (`a++⏎b()`).
+
+**Work budget.** `retry_on_error` charges the stream length per attempt and
+stops once it has spent max(4·n, 200k) token-parses, returning the parse error
+in hand. The budget applies to the speculated attempt and again to the plain
+fallback, so a hostile file costs at most about ten parses, which is still
+linear. A valid
+file that needs more uncovered insertions than that is declined: SIMPLE fails
+cleanly and WHITESPACE_ONLY keeps its old output. An example is 100 lines of
+`x = () => {a:1}` after a large prefix.
+
+The retry loop then handles anything left. If the speculated stream fails to
+parse, the plain algorithm runs on the unspeculated stream, so correctness
+never depends on the guess. A unit test checks that both routes give the same
+final stream. 1,000 lines of `a()` now take about 1.5 s, and 1,600
+`function f(){ a() }` about 1.1 s.
+
+**Measured** against the pinned `v20260915` jar at WHITESPACE_ONLY: 36
+semicolon-light shapes (`tests/regression_ws_newline_asi.rs`) are now
+byte-identical. That includes CCR-080's program-final `;` after a `do…while`.
+
+**Follow-on: CCR-084 slice 2 (#15919).** With every `throw` now ending in a
+`;`, WHITESPACE_ONLY can keep the one upstream forces, as `CodeGenerator` does
+with `endStatement(needSemiColon=true)` for `THROW`. `throw_terminators` marks
+that `;` and gap-030 rule A leaves it in place, so `function f(){throw 1}` →
+`function f(){throw 1;};`. The AST-emitter half is slice 1 (#17839).
+
 ## Non-goals
 
 * No grammar-file changes (semicolons stay mandatory in `es2025.grammar`).

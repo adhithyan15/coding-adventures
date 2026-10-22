@@ -1,0 +1,11 @@
+{
+  "id": "GU-C260-pasand-karvu",
+  "pathSegment": "GU-PATH-260-GAMES260",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-260-GAMES260",
+      "order": 4
+    }
+  ]
+}

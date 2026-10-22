@@ -1,0 +1,11 @@
+{
+  "id": "FA-C493-chekap",
+  "pathSegment": "FA-PATH-493-DOCTOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-493-DOCTOR",
+      "order": 4
+    }
+  ]
+}

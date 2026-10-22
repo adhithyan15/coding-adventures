@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:044329751e2b4865",
+  "lessonIds": [
+    "RU-C517-khor",
+    "RU-C517-orkestr",
+    "RU-C517-dirizhyor",
+    "RU-C517-dirizhirovat",
+    "RU-C517-kompozitor"
+  ],
+  "tex": "russian/book/chapters/ch517-choir-and-orchestra.tex"
+}

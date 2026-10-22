@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C297-travma",
+    "language": "russian",
+    "chapter": 297,
+    "sequence": 17730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16b75115595a07d5"
+  },
+  "findings": []
+}

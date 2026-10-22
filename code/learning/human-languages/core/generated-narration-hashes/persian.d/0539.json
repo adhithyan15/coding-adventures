@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:76acd7114a99d537",
+  "lessonIds": [
+    "FA-C539-abyari-kardan",
+    "FA-C539-chaman-zadan",
+    "FA-C539-heyvan-e-khanegi",
+    "FA-C539-ghaza-dadan",
+    "FA-C539-dowrehami",
+    "FA-R539-review-536-539",
+    "FA-R539-review-final-539"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch539.txt",
+  "json": "persian/narration/ch539.json",
+  "textHash": "fnv1a64:fff75648124e1f8f",
+  "jsonHash": "fnv1a64:e5ff56d6e0f62104",
+  "findings": []
+}

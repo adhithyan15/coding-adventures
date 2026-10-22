@@ -1,0 +1,15 @@
+{
+  "language": "gujarati",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:084228d5fd7a594c",
+  "lessonIds": [
+    "GU-C182-ajkal",
+    "GU-C182-kayam",
+    "GU-C182-acanak",
+    "GU-C182-yad-rakhvu",
+    "GU-C182-gumavvu",
+    "GU-R182-review-177-182",
+    "GU-R182-review-final-182"
+  ],
+  "tex": "gujarati/book/chapters/ch182-these-days-and-for-good.tex"
+}

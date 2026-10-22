@@ -1,0 +1,11 @@
+{
+  "id": "JA-C157-kabin",
+  "pathSegment": "JA-PATH-157-TABLE157",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-157-TABLE157",
+      "order": 1
+    }
+  ]
+}

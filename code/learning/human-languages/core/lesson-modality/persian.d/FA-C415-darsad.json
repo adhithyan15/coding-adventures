@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C415-darsad",
+    "language": "persian",
+    "chapter": 415,
+    "sequence": 21240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee80d3ed81ddbf5f"
+  },
+  "findings": []
+}

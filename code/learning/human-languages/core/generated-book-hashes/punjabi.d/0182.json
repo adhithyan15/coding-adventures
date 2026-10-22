@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 182,
+  "sourceHash": "fnv1a64:37bcb583106f07de",
+  "lessonIds": [
+    "PA-C182-somvar",
+    "PA-C182-mangalvar",
+    "PA-C182-budhvar",
+    "PA-C182-veervar",
+    "PA-C182-shukkarvar",
+    "PA-C182-shanivar",
+    "PA-C182-aitvar",
+    "PA-C182-airhaa-ai",
+    "PA-C182-weekday-review",
+    "PA-C182-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch182-a-week-on-the-noticeboard.tex"
+}

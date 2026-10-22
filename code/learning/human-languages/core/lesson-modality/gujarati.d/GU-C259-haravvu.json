@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C259-haravvu",
+    "language": "gujarati",
+    "chapter": 259,
+    "sequence": 14030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf96fe14fe5f93e1"
+  },
+  "findings": []
+}

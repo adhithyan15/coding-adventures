@@ -1,0 +1,11 @@
+{
+  "id": "RU-C354-snizhat",
+  "pathSegment": "RU-PATH-354-BOLSHE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-354-BOLSHE",
+      "order": 3
+    }
+  ]
+}

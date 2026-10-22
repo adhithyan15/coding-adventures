@@ -1,0 +1,19 @@
+{
+  "chapter": 206,
+  "title": "Arriving at last",
+  "label": "ch:gu-arriving-at-last",
+  "canDo": "I can say when we arrived, how tired I was and how fast we went.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-R206-review-201-206",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 206: I can say when we arrived, how tired I was and how fast we went.",
+    "assesses": [
+      "GU-LEX-C206-ARRIVE206-03",
+      "GU-LEX-C206-ARRIVE206-04",
+      "GU-LEX-C206-ARRIVE206-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C303-nakhost",
+  "pathSegment": "FA-PATH-303-EBTEDA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-303-EBTEDA",
+      "order": 1
+    }
+  ]
+}

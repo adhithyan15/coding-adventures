@@ -15110,7 +15110,7 @@ layout NativeEvents {
         // refreshes the root showing after a deferred answer (UI87 §7.6).
         assert_eq!(main.matches("ApplyRequiredProps(").count(), 2, "{main}");
         assert!(
-            main.contains("            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n"),
+            main.contains("            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n"),
             "{main}"
         );
         let install = main.find("MosaicPlatformEffects.Install(this").expect("platform library");

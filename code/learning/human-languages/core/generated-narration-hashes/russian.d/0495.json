@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:20bc4507001d8268",
+  "lessonIds": [
+    "RU-C495-beremennost",
+    "RU-C495-roddom",
+    "RU-C495-dekret",
+    "RU-C495-kolyaska",
+    "RU-C495-polzat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch495.txt",
+  "json": "russian/narration/ch495.json",
+  "textHash": "fnv1a64:0c92db3d6b5cd06c",
+  "jsonHash": "fnv1a64:b65ce95d5ee85c11",
+  "findings": []
+}

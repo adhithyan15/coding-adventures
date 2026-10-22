@@ -1,0 +1,11 @@
+{
+  "id": "RU-C534-khalat",
+  "pathSegment": "RU-PATH-534-MORNING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-534-MORNING",
+      "order": 4
+    }
+  ]
+}

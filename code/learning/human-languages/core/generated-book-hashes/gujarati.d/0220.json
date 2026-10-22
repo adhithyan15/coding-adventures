@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:889021445088f95c",
+  "lessonIds": [
+    "GU-C220-vahevu",
+    "GU-C220-chalkavu",
+    "GU-C220-pur",
+    "GU-C220-osarvu",
+    "GU-C220-ughadvu"
+  ],
+  "tex": "gujarati/book/chapters/ch220-when-the-river-rises.tex"
+}

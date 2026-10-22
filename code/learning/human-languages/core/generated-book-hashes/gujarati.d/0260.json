@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:601a03534517569b",
+  "lessonIds": [
+    "GU-C260-pattu",
+    "GU-C260-shatranj",
+    "GU-C260-ramakdu",
+    "GU-C260-dharvu",
+    "GU-C260-pasand-karvu",
+    "GU-R260-review-255-260"
+  ],
+  "tex": "gujarati/book/chapters/ch260-cards-chess-and-toys.tex"
+}

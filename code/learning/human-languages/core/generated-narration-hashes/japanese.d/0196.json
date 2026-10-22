@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:a00b99164682a3df",
+  "lessonIds": [
+    "JA-C196-mukau",
+    "JA-C196-kinjo",
+    "JA-C196-juusho",
+    "JA-C196-chizu",
+    "JA-C196-mawaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch196.txt",
+  "json": "japanese/narration/ch196.json",
+  "textHash": "fnv1a64:1870ac991284a203",
+  "jsonHash": "fnv1a64:933211958156c1e7",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:ecfab57d65c414b1",
+  "lessonIds": [
+    "RU-C303-rozhdeniye",
+    "RU-C303-rozhdatsya",
+    "RU-C303-mladenets",
+    "RU-C303-beremennaya",
+    "RU-C303-rozhat"
+  ],
+  "tex": "russian/book/chapters/ch303-birth.tex"
+}

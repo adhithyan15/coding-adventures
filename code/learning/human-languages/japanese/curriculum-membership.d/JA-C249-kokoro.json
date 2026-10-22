@@ -1,0 +1,11 @@
+{
+  "id": "JA-C249-kokoro",
+  "pathSegment": "JA-PATH-249-HEART249",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-249-HEART249",
+      "order": 0
+    }
+  ]
+}

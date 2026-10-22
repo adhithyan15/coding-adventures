@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:a968ddd66c7a377c",
+  "lessonIds": [
+    "FA-C385-jamee",
+    "FA-C385-ejtemai",
+    "FA-C385-nasl",
+    "FA-C385-salmand",
+    "FA-C385-mazhab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch385.txt",
+  "json": "persian/narration/ch385.json",
+  "textHash": "fnv1a64:0bd1e21381ae825f",
+  "jsonHash": "fnv1a64:c46f6ad2a95e0cb8",
+  "findings": []
+}

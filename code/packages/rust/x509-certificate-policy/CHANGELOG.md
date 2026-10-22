@@ -20,3 +20,12 @@
 - Add a directed child-issuer to candidate-subject link gate over one
   caller-supplied distinguished-name comparator, with redacted mismatch and no
   built-in normalization, CA-role, path, signature, or trust claim.
+- Add non-copyable self-issued classification evidence that binds one
+  caller-supplied issuer-to-subject Name-policy result to the exact decoded
+  certificate without claiming self-signature or trust.
+- Add non-copyable certificate-wide role-policy evidence that binds
+  caller-owned critical-extension recognition and algorithm-independent role
+  semantics to the same exact decoded certificate.
+- Add non-copyable certificate-bound algorithm-policy evidence that retains the
+  existing exact caller-supplied profile result with the decoded certificate
+  object it checked, without selecting or enabling a verifier.

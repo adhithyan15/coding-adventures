@@ -1,0 +1,11 @@
+{
+  "id": "GU-C179-nakki-karvu",
+  "pathSegment": "GU-PATH-179-PLAN179",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-179-PLAN179",
+      "order": 1
+    }
+  ]
+}

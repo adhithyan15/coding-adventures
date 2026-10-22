@@ -1,0 +1,11 @@
+{
+  "id": "RU-C456-valyuta",
+  "pathSegment": "RU-PATH-456-OBMENNIK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-456-OBMENNIK",
+      "order": 1
+    }
+  ]
+}

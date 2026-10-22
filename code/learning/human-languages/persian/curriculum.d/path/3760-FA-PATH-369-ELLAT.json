@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-369-ELLAT",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-369-ELLAT"
+  ],
+  "after": []
+}

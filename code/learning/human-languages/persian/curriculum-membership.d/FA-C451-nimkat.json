@@ -1,0 +1,11 @@
+{
+  "id": "FA-C451-nimkat",
+  "pathSegment": "FA-PATH-451-SHOLUGHI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-451-SHOLUGHI",
+      "order": 1
+    }
+  ]
+}

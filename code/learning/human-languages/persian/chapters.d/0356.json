@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "Chop, mince and fry",
+  "label": "ch:fa-chop-mince-and-fry",
+  "canDo": "I can say how food was chopped fine, minced, mashed and lightly fried, and talk about fried onion.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "FA-C356-piyaz-dagh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say how food was chopped fine, minced, mashed and lightly fried, and talk about fried onion.",
+    "assesses": [
+      "FA-LEX-C356-RIZKARDAN-03",
+      "FA-LEX-C356-RIZKARDAN-04",
+      "FA-LEX-C356-RIZKARDAN-05"
+    ]
+  }
+}
