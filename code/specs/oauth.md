@@ -829,6 +829,16 @@ issuer link terminating at a selected reviewed Mozilla root. It still does not
 apply the root's name constraints, path-length or other anchor constraints,
 construct a multi-hop path, check revocation, perform TLS or HTTP, authorize
 OAuth transport, or open a network connection.
+A bounded fail-closed anchor-policy follow-up now consumes that complete direct
+reviewed-server-link evidence and inspects the selected reviewed snapshot entry.
+It accepts only an entry whose optional out-of-band name constraints are absent,
+then retains the consumed link in a distinct non-copyable result. A reviewed
+root carrying name constraints is rejected with a payload-free category until
+repository-owned parsing and subtree evaluation can apply those constraints;
+their bytes are never treated as understood merely because the root was
+selected. This gate adds no NameConstraints parser, constrained-root support,
+multi-hop path construction, revocation, TLS, HTTP, OAuth transport, or network
+authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
