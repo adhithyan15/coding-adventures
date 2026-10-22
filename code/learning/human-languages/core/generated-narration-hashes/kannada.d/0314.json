@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 314,
-  "sourceHash": "fnv1a64:7f225e8699688fc3",
+  "sourceHash": "fnv1a64:cb168b0e61ba7749",
   "lessonIds": [
     "KA-C314-situ",
     "KA-C314-tiket-kodi",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "kannada/narration/ch314.txt",
   "json": "kannada/narration/ch314.json",
-  "textHash": "fnv1a64:dc9860c6f7e29047",
-  "jsonHash": "fnv1a64:19de3de30d8cd88d",
+  "textHash": "fnv1a64:c75051a6574502d7",
+  "jsonHash": "fnv1a64:dd7c1a2ac1e493e6",
   "findings": []
 }

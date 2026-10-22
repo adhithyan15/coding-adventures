@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 309,
-  "sourceHash": "fnv1a64:2a3b0ee97125bd6d",
+  "sourceHash": "fnv1a64:02048a6fe99a9bf1",
   "lessonIds": [
     "KA-C309-hode",
     "KA-C309-oduttidde",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch309.txt",
   "json": "kannada/narration/ch309.json",
-  "textHash": "fnv1a64:aff0d7388a9ce817",
-  "jsonHash": "fnv1a64:9a25f89979a9c5d9",
+  "textHash": "fnv1a64:abd3b47df8e260b8",
+  "jsonHash": "fnv1a64:3919744af0c873e7",
   "findings": []
 }

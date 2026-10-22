@@ -54,7 +54,7 @@ The first verb carries no person and no time: **ಬಂದು**, "having come". O
 
 Build it from the past without its ending. Where the **-ಇ-** came in front of the bead (**ಮಾಡಿದ-**, **ಖರೀದಿಸಿದ-**), keep the **-ಇ** and drop the bead: **ಮಾಡಿ**, **ಖರೀದಿಸಿ**, **ನೋಡಿ**. Everywhere else, the last **-ಅ** becomes **-ಉ**: **ಬಂದ-** → **ಬಂದು**, **ಕುಡಿದ-** → **ಕುಡಿದು**, **ಕೊಟ್ಟ-** → **ಕೊಟ್ಟು**, **ಇದ್ದ-** → **ಇದ್ದು**. Two common verbs go their own way: **ಹೋಗು** → **ಹೋಗಿ**, **ಆಗು** → **ಆಗಿ**.
 
-You have met this form inside words already: **ಕಳೆದುಹೋಗು**, "to get lost", starts with **ಕಳೆದು**, "having been lost", and **ದಯವಿಟ್ಟು**, "please", is "having placed compassion".
+You have met this form inside words already: **ಕಳೆದುಹೋಗು**, "to get lost", starts with **ಕಳೆದು**, the **-ಉ** form of **ಕಳೆ**, "to lose, to leave behind", and **ದಯವಿಟ್ಟು**, "please", is "having placed compassion".
 
 ## You'll want to know: -ಇದ ನಂತರ, after doing
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C310-AFTER-DOING-01]; assesses=[KA-LEX-C106-SOON-03, KA-LEX-C147-ACT147-03, KA-LEX-C72-WANT-01] -->

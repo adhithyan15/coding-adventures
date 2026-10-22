@@ -4,7 +4,7 @@
   "chapter": 314,
   "title": "Tickets, Seats and Trouble",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7f225e8699688fc3",
+  "sourceHash": "fnv1a64:cb168b0e61ba7749",
   "lessons": [
     {
       "id": "KA-C314-situ",
@@ -444,7 +444,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3418ae77d8948f87",
+      "sourceHash": "fnv1a64:09702406e03903e1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -515,7 +515,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ಔ (au) and copy it, slowly, and larger than it is printed. Write the two bowls first, then the bar along the top, and close it with the small inward curl on the right."
+              "text": "Put your pen beside ಔ (au) and copy the shape you can see, slowly, and larger than it is printed. Then hold your copy against the print: two round bowls below, a flat bar along the top that drops into the body on the left, and a small curl turning inward at its right end."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 309,
   "title": "Did, Was Doing, Used To",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2a3b0ee97125bd6d",
+  "sourceHash": "fnv1a64:02048a6fe99a9bf1",
   "lessons": [
     {
       "id": "KA-C309-hode",
@@ -372,7 +372,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56bacb50edc4fe7a",
+      "sourceHash": "fnv1a64:8e0083a73f8a93e4",
       "notice": null,
       "blocks": [
         {
@@ -413,7 +413,7 @@
             },
             {
               "kind": "speech",
-              "text": "ಮಾಡುವಾಗ is ಮಾಡುವ, \"that does\", with ಆಗ, \"when\", the ಆಗ you know from ಬಂದಾಗ. ಬಂದಾಗ is \"when (it) came\": done. ಮಾಡುವಾಗ is \"while doing\": still going on."
+              "text": "ಮಾಡುವಾಗ is ಮಾಡುವ, \"that does\", with ಆಗ, \"when\", the ಆಗ you know from ಬಂದಾಗ. ಬಂದಾಗ is \"on coming\": the coming is complete. ಮಾಡುವಾಗ is \"while doing\": still going on."
             },
             {
               "kind": "speech",

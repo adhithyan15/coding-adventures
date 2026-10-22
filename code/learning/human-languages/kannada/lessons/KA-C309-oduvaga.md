@@ -46,7 +46,7 @@ reviews_of: [KA-C72-when-clause, KA-C309-oduttidde, KA-C40-oota, KA-C106-phone]
 >
 > *nānu ūṭa māḍuvāga phōn bantu.* — "While I was having a meal, a call came."
 
-**ಮಾಡುವಾಗ** is **ಮಾಡುವ**, "that does", with **ಆಗ**, "when", the **ಆಗ** you know from **ಬಂದಾಗ**. **ಬಂದಾಗ** is "when (it) came": done. **ಮಾಡುವಾಗ** is "while doing": still going on.
+**ಮಾಡುವಾಗ** is **ಮಾಡುವ**, "that does", with **ಆಗ**, "when", the **ಆಗ** you know from **ಬಂದಾಗ**. **ಬಂದಾಗ** is "on coming": the coming is complete. **ಮಾಡುವಾಗ** is "while doing": still going on.
 
 That clause is the **scene**. The thing that cut into it is the **event**, in the plain past: **ಬಂತು**. Kannada says a call "came", where English says the phone rang.
 

@@ -45,7 +45,7 @@ reviews_of: [KA-C311-anta-anisuttade, KA-C311-hagagi, KA-R310-a-story-in-order, 
 - [YOU SAY: I felt that the book was difficult.]
 - [YOU SAY: There was no bus. So I walked home.]
 - [YOU SAY: I had a fever yesterday. That's why I did not come.]
-- [YOU SAY: one thing you think about your town, and one result, with -ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ and ಹಾಗಾಗಿ]
+- [YOU SAY: one thing you think about your town, and one result, with … ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ and ಹಾಗಾಗಿ]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C311-THINK-THAT-01, KA-GRAMMAR-C311-IN-MY-OPINION-01, KA-GRAMMAR-C311-HAGAGI-01, KA-GRAMMAR-C311-SO-WORDS-01] -->

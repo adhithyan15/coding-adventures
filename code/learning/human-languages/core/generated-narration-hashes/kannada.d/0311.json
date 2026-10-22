@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 311,
-  "sourceHash": "fnv1a64:7df35a30c1efbe55",
+  "sourceHash": "fnv1a64:3c61fbe8ce6e5b2d",
   "lessonIds": [
     "KA-C311-anta-anisuttade",
     "KA-C311-hagagi",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "kannada/narration/ch311.txt",
   "json": "kannada/narration/ch311.json",
-  "textHash": "fnv1a64:0f30cbe9ac1e1aa5",
-  "jsonHash": "fnv1a64:dcb2df20af711698",
+  "textHash": "fnv1a64:4acbe8234c9f0cd8",
+  "jsonHash": "fnv1a64:b1067c4c896976d7",
   "findings": []
 }

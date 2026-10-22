@@ -4,7 +4,7 @@
   "chapter": 315,
   "title": "Feelings and Hopes",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:754c2361514b8418",
+  "sourceHash": "fnv1a64:b03e02975f955a50",
   "lessons": [
     {
       "id": "KA-C315-khusi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bb08c083a5bc9e6",
+      "sourceHash": "fnv1a64:159681eda338197c",
       "notice": null,
       "blocks": [
         {
@@ -69,7 +69,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ಖುಷಿ (khuṣi) is a loan, usually traced to Persian khushī, \"happiness\", from khush, \"glad, pleasant\". The same word is everyday Hindi and Urdu. It is not the only Persian piece in words you know: the havā of ಹವಾಮಾನ, \"weather\", is Persian for \"air\"."
+              "text": "ಖುಷಿ (khuṣi) is a loan, usually traced to Persian khushī, \"happiness\", from khush, \"glad, pleasant\". The same word is everyday Hindi and Urdu. It is not the only word you know that came in by that road: the havā of ಹವಾಮಾನ, \"weather\", is \"air\", an Arabic word that reached Kannada through Persian."
             }
           ]
         },

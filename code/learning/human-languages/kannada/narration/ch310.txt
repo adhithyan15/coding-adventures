@@ -50,12 +50,12 @@ Now say ಸ್ವಚ್ಛ (svaccha), "clean". You met it a moment ago. Its seco
 Script you'll notice: ಛ.
 ಛ — cha.
 It is ಚ (ca) with a puff of breath after it. Hold a hand in front of your mouth: on ca the air stays put, on cha it comes out. The ch of the romanization is that breath. It is not the English ch of church; that sound is already ಚ.
-It is the pair the breath series was missing. You can read the others, from ಕ ಖ and ಗ ಘ to ಪ ಫ and ಬ ಭ; now ಚ ಛ (cha) joins them.
+It is the breath pair you were missing: you can read the others, from ಕ ಖ to ಬ ಭ, and now ಚ ಛ (cha).
 Its shape does not grow out of ಚ the way ಧ grows out of ದ. In print ಛ (cha) has a small closed loop on the left, a round, cup-shaped body, a right side that rises and bends over to the right at the top, and a short straight tail hanging from the bottom of the cup. That tail is the breath mark you know from ಧ and ಢ.
 In ಸ್ವಚ್ಛ (svaccha) you met it small: ಚ್ಛ is ಚ with a reduced ಛ (cha), without its top hook, written under it. That is how this script writes two consonants with no vowel between them, as ವ sits small under ಸ in ಸ್ವ. Most words that hold ಛ (cha) came from Sanskrit.
 
 Writing: ಛ — copy the printed shape.
-Put your pen beside ಛ (cha) and copy it, slowly, and larger than it is printed. Close the small loop on the left before you go round the cup, and keep the tail short and straight.
+Put your pen beside ಛ (cha) and copy the shape you can see, slowly and large. Check the copy against the print: the loop on the left, the cup, the hook at the top right, the short tail.
 This book does not yet tell you where to start this character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime.
 
 [once you have stopped driving — this part needs your eyes or your hands; if you are driving, skip ahead to the next part]
@@ -122,7 +122,7 @@ You'll want to know: the -ಇ and -ಉ form.
 The first verb carries no person and no time: ಬಂದು (bandu), "having come". Only the last verb says who and when. So a chain of these runs on to one full verb at the end:
 ಅವನು ಅಂಗಡಿಗೆ ಹೋಗಿ ಒಂದು ಪುಸ್ತಕ ಖರೀದಿಸಿ ಮನೆಗೆ ಬಂದನು. avanu aṅgaḍige hōgi ondu pustaka kharīdisi manege bandanu. — "He went to the shop, bought a book and came home."
 Build it from the past without its ending. Where the -ಇ- came in front of the bead (ಮಾಡಿದ-, ಖರೀದಿಸಿದ-), keep the -ಇ and drop the bead: ಮಾಡಿ, ಖರೀದಿಸಿ, ನೋಡಿ. Everywhere else, the last -ಅ becomes -ಉ: ಬಂದ- becomes ಬಂದು (bandu), ಕುಡಿದ- becomes ಕುಡಿದು, ಕೊಟ್ಟ- becomes ಕೊಟ್ಟು, ಇದ್ದ- becomes ಇದ್ದು. Two common verbs go their own way: ಹೋಗು becomes ಹೋಗಿ, ಆಗು becomes ಆಗಿ.
-You have met this form inside words already: ಕಳೆದುಹೋಗು, "to get lost", starts with ಕಳೆದು, "having been lost", and ದಯವಿಟ್ಟು, "please", is "having placed compassion".
+You have met this form inside words already: ಕಳೆದುಹೋಗು, "to get lost", starts with ಕಳೆದು, the -ಉ form of ಕಳೆ, "to lose, to leave behind", and ದಯವಿಟ್ಟು, "please", is "having placed compassion".
 
 You'll want to know: -ಇದ ನಂತರ, after doing.
 ಊಟ ಮಾಡಿದ ನಂತರ ನಾನು ಮಲಗಿದೆ. ūṭa māḍida nantara nānu malagide. — "After having the meal, I lay down."

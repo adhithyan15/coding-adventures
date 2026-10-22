@@ -47,7 +47,7 @@ reviews_of: [KA-S122-letter-ca, KA-S167-letter-dha, KA-C310-svaccha, KA-S03-sign
 
 It is **ಚ** (*ca*) with a puff of breath after it. Hold a hand in front of your mouth: on *ca* the air stays put, on *cha* it comes out. The *ch* of the romanization is that breath. It is not the English *ch* of *church*; that sound is already **ಚ**.
 
-It is the pair the breath series was missing. You can read the others, from **ಕ ಖ** and **ಗ ಘ** to **ಪ ಫ** and **ಬ ಭ**; now **ಚ ಛ** joins them.
+It is the breath pair you were missing: you can read the others, from **ಕ ಖ** to **ಬ ಭ**, and now **ಚ ಛ**.
 
 Its shape does not grow out of **ಚ** the way **ಧ** grows out of **ದ**. In print **ಛ** has a small closed loop on the left, a round, cup-shaped body, a right side that rises and bends over to the right at the top, and a short straight tail hanging from the bottom of the cup. That tail is the breath mark you know from **ಧ** and **ಢ**.
 
@@ -56,7 +56,7 @@ In **ಸ್ವಚ್ಛ** you met it small: **ಚ್ಛ** is **ಚ** with a redu
 ## Writing: ಛ — copy the printed shape
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-174] -->
 
-Put your pen beside **ಛ** and copy it, slowly, and larger than it is printed. Close the small loop on the left before you go round the cup, and keep the tail short and straight.
+Put your pen beside **ಛ** and copy the shape you can see, slowly and large. Check the copy against the print: the loop on the left, the cup, the hook at the top right, the short tail.
 
 > This book does not yet tell you where to start this character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime.
 

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 315,
-  "sourceHash": "fnv1a64:754c2361514b8418",
+  "sourceHash": "fnv1a64:b03e02975f955a50",
   "lessonIds": [
     "KA-C315-khusi",
     "KA-C315-santosavayitu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "kannada/narration/ch315.txt",
   "json": "kannada/narration/ch315.json",
-  "textHash": "fnv1a64:e6ee961ca5a3747d",
-  "jsonHash": "fnv1a64:bf9f37ab2da2d192",
+  "textHash": "fnv1a64:2c14023438740427",
+  "jsonHash": "fnv1a64:63da4db873f85fac",
   "findings": []
 }

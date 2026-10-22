@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 310,
-  "sourceHash": "fnv1a64:6a91304ddf38a878",
+  "sourceHash": "fnv1a64:39c6ebaa91870b4a",
   "lessonIds": [
     "KA-C310-svaccha",
     "KA-S174-letter-chha",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch310.txt",
   "json": "kannada/narration/ch310.json",
-  "textHash": "fnv1a64:30538f0527f9138f",
-  "jsonHash": "fnv1a64:31562a3345ad0466",
+  "textHash": "fnv1a64:eb43c79ea5ed5840",
+  "jsonHash": "fnv1a64:13fc97d57e307b2a",
   "findings": []
 }

@@ -17,7 +17,7 @@ prerequisites: [KA-S158-letter-o, KA-S125-letter-oo, KA-S163-vowel-sign-au, KA-C
 sounds: []
 roots: []
 duration:
-  max_seconds: 273
+  max_seconds: 284
 requires:
   knowledge: [KA-SCRIPT-RECOG-158, KA-SCRIPT-RECOG-125, KA-SCRIPT-RECOG-163, KA-LEX-C314-AUSADHA-01]
 introduces:
@@ -54,7 +54,7 @@ In print the lower part of **ಔ** is the pair of round bowls you know from the 
 ## Writing: ಔ — copy the printed shape
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-175] -->
 
-Put your pen beside **ಔ** and copy it, slowly, and larger than it is printed. Write the two bowls first, then the bar along the top, and close it with the small inward curl on the right.
+Put your pen beside **ಔ** and copy the shape you can see, slowly, and larger than it is printed. Then hold your copy against the print: two round bowls below, a flat bar along the top that drops into the body on the left, and a small curl turning inward at its right end.
 
 > This book does not yet tell you where to start this character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime.
 

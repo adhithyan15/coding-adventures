@@ -4,7 +4,7 @@
   "chapter": 310,
   "title": "Telling a Story in Order",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6a91304ddf38a878",
+  "sourceHash": "fnv1a64:39c6ebaa91870b4a",
   "lessons": [
     {
       "id": "KA-C310-svaccha",
@@ -160,7 +160,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6174c2d276d8c9e3",
+      "sourceHash": "fnv1a64:ff1e8c19599b6795",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -216,7 +216,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is the pair the breath series was missing. You can read the others, from ಕ ಖ and ಗ ಘ to ಪ ಫ and ಬ ಭ; now ಚ ಛ (cha) joins them."
+              "text": "It is the breath pair you were missing: you can read the others, from ಕ ಖ to ಬ ಭ, and now ಚ ಛ (cha)."
             },
             {
               "kind": "speech",
@@ -235,7 +235,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen beside ಛ (cha) and copy it, slowly, and larger than it is printed. Close the small loop on the left before you go round the cup, and keep the tail short and straight."
+              "text": "Put your pen beside ಛ (cha) and copy the shape you can see, slowly and large. Check the copy against the print: the loop on the left, the cup, the hook at the top right, the short tail."
             },
             {
               "kind": "speech",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c598171a45104ca0",
+      "sourceHash": "fnv1a64:f73131867398c078",
       "notice": null,
       "blocks": [
         {
@@ -537,7 +537,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have met this form inside words already: ಕಳೆದುಹೋಗು, \"to get lost\", starts with ಕಳೆದು, \"having been lost\", and ದಯವಿಟ್ಟು, \"please\", is \"having placed compassion\"."
+              "text": "You have met this form inside words already: ಕಳೆದುಹೋಗು, \"to get lost\", starts with ಕಳೆದು, the -ಉ form of ಕಳೆ, \"to lose, to leave behind\", and ದಯವಿಟ್ಟು, \"please\", is \"having placed compassion\"."
             }
           ]
         },

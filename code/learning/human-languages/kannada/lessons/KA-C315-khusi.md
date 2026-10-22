@@ -54,7 +54,7 @@ reviews_of: [KA-C02-santosha, KA-C83-sadness, KA-C83-fear, KA-C314-kaleduhoyitu]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ಖುಷಿ** (*khuṣi*) is a loan, usually traced to Persian *khushī*, "happiness", from *khush*, "glad, pleasant". The same word is everyday Hindi and Urdu. It is not the only Persian piece in words you know: the *havā* of **ಹವಾಮಾನ**, "weather", is Persian for "air".
+**ಖುಷಿ** (*khuṣi*) is a loan, usually traced to Persian *khushī*, "happiness", from *khush*, "glad, pleasant". The same word is everyday Hindi and Urdu. It is not the only word you know that came in by that road: the *havā* of **ಹವಾಮಾನ**, "weather", is "air", an Arabic word that reached Kannada through Persian.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C315-KHUSI-01, KA-LEX-C02-SANTOSHA-01] -->

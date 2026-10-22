@@ -4,7 +4,7 @@
   "chapter": 311,
   "title": "What I Think, and So",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7df35a30c1efbe55",
+  "sourceHash": "fnv1a64:3c61fbe8ce6e5b2d",
   "lessons": [
     {
       "id": "KA-C311-anta-anisuttade",
@@ -308,7 +308,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b3b1000938ca1e26",
+      "sourceHash": "fnv1a64:2f2da7f107e8e828",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -396,11 +396,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "one thing you think about your town, and one result, with -ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ (anta nanage anisuttade) and ಹಾಗಾಗಿ (hāgāgi)",
+              "instruction": "one thing you think about your town, and one result, with … ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ (anta nanage anisuttade) and ಹಾಗಾಗಿ (hāgāgi)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: one thing you think about your town, and one result, with -ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ and ಹಾಗಾಗಿ]"
+              "source": "[YOU SAY: one thing you think about your town, and one result, with … ಅಂತ ನನಗೆ ಅನಿಸುತ್ತದೆ and ಹಾಗಾಗಿ]"
             }
           ]
         },

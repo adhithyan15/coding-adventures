@@ -44,7 +44,7 @@ reviews_of: [KA-C107-eda, KA-C107-bala, KA-C107-nera, KA-C313-hege-hogabeku]
 >
 > *nēravāgi hōgi. modala tiruvinalli eḍakke hōgi.* — "Go straight on. At the first turn, go left."
 
-**ಹೋಗಿ** here is a polite "go": the same **-ಇ** form as "having gone", said to a listener, as in **ಫೋನ್ ಮಾಡಿ**, "please phone". **ನೇರವಾಗಿ** is **ನೇರ** with **-ವಾಗಿ**, the piece you met in **ಸ್ವಚ್ಛವಾಗಿದೆ**: "straight on". **ಎಡಕ್ಕೆ** is **ಎಡ** with **-ಕ್ಕೆ**, "to": "to the left"; and **ಬಲಕ್ಕೆ** (*balakke*), "to the right".
+**ಹೋಗಿ** here is a polite "go", said to a listener: the stem with **-ಇ**, as in **ಫೋನ್ ಮಾಡಿ**, "please phone". It sounds like the **ಹೋಗಿ** of "having gone", but it is a different form, and other verbs keep the two apart: "please give" is **ಕೊಡಿ**, "having given" is **ಕೊಟ್ಟು**. **ನೇರವಾಗಿ** is **ನೇರ** with **-ವಾಗಿ**, the piece you met in **ಸ್ವಚ್ಛವಾಗಿದೆ**: "straight on". **ಎಡಕ್ಕೆ** is **ಎಡ** with **-ಕ್ಕೆ**, "to": "to the left"; and **ಬಲಕ್ಕೆ** (*balakke*), "to the right".
 
 **ಮೊದಲ** (*modala*, "first") is the **ಮೊದಲು** of a story, standing in front of a noun. **ತಿರುವಿನಲ್ಲಿ** (*tiruvinalli*, "at the turn") is **ತಿರುವು** with **-ಇನ-** and **-ಅಲ್ಲಿ**, "at".
 
