@@ -2,25 +2,40 @@
 //!
 //! This crate closes one evidence-mixing gap between target-server policy and
 //! one authenticated RSA SHA-256 issuer link terminating at a reviewed root.
-//! It also applies a narrow fail-closed policy that accepts only selected
-//! snapshot entries without out-of-band name constraints. It performs no new
-//! parsing, signature work, root lookup, path construction, revocation
-//! processing, or network effects.
+//! It also applies selected reviewed-anchor DNS constraints to the exact target
+//! certificate's Subject Alternative Name values. It performs no new signature
+//! work, root lookup, path construction, revocation processing, or network
+//! effects.
 
 #![deny(unsafe_code)]
 
 use core::fmt;
+use der_asn1::{Asn1Decoder, Asn1Limits};
+use x509_name_constraints::{
+    decode_name_constraints_contents, evaluate_permitted_dns_names, DnsConstraintErrorKind,
+    NameConstraintsErrorKind, PermittedDnsNames,
+};
 use x509_rsa_sha256_reviewed_anchor_link::BoundX509RsaSha256ReviewedAnchorLink;
 use x509_server_certificate_policy::ValidatedX509ServerCertificatePolicy;
+use x509_subject_alt_name::{
+    decode_subject_alt_name, SubjectAltNameErrorKind, SUBJECT_ALT_NAME_OID,
+};
 
 /// Stable, payload-free reviewed server-link binding failures.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum X509RsaSha256ReviewedServerLinkErrorKind {
     /// The inputs retain different decoded child certificate objects.
     EvidenceMismatch,
-    /// The selected reviewed anchor carries name constraints this crate cannot
-    /// yet parse and apply.
-    UnsupportedAnchorNameConstraints,
+    /// The selected reviewed anchor's exact constraint bytes were invalid or
+    /// outside the supported bounded subset.
+    InvalidAnchorNameConstraints(NameConstraintsErrorKind),
+    /// The exact target certificate did not contain Subject Alternative Name.
+    MissingTargetSubjectAlternativeName,
+    /// The exact target certificate's Subject Alternative Name was invalid.
+    InvalidTargetSubjectAlternativeName(SubjectAltNameErrorKind),
+    /// At least one target dNSName was invalid or outside every permitted
+    /// subtree.
+    TargetDnsNameConstraints(DnsConstraintErrorKind),
 }
 
 /// A redacted reviewed server-link binding failure.
@@ -36,10 +51,8 @@ impl X509RsaSha256ReviewedServerLinkError {
         }
     }
 
-    const fn unsupported_anchor_name_constraints() -> Self {
-        Self {
-            kind: X509RsaSha256ReviewedServerLinkErrorKind::UnsupportedAnchorNameConstraints,
-        }
+    const fn new(kind: X509RsaSha256ReviewedServerLinkErrorKind) -> Self {
+        Self { kind }
     }
 
     /// Return the stable failure category.
@@ -118,14 +131,13 @@ impl fmt::Debug for BoundX509RsaSha256ReviewedServerLink<'_, '_, '_, '_> {
     }
 }
 
-/// Non-copyable direct reviewed-server-link evidence after fail-closed anchor
-/// name-constraint policy.
+/// Non-copyable direct reviewed-server-link evidence after anchor DNS policy.
 ///
-/// Success proves that the selected reviewed snapshot entry carries no
-/// out-of-band name constraints, so there are no such bytes for a direct path
-/// consumer to ignore. This is deliberately not evidence that arbitrary name
-/// constraints were parsed or applied, and it grants no multi-hop path,
-/// revocation, TLS, HTTP, OAuth, or network authority.
+/// Success proves either that the selected snapshot entry carries no
+/// out-of-band name constraints or that its supported permitted DNS subtrees
+/// were applied to every dNSName in the exact target certificate. This is not
+/// evidence for excluded or non-DNS constraints, a multi-hop path, revocation,
+/// TLS, HTTP, OAuth, or network authority.
 pub struct ValidatedX509RsaSha256ReviewedServerAnchorPolicy<
     'child_certificate,
     'child_encoded,
@@ -138,6 +150,7 @@ pub struct ValidatedX509RsaSha256ReviewedServerAnchorPolicy<
         'issuer_certificate,
         'issuer_encoded,
     >,
+    permitted_dns_names: Option<PermittedDnsNames>,
 }
 
 impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
@@ -159,6 +172,12 @@ impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
     > {
         &self.reviewed_server_link
     }
+
+    /// Return DNS-constraint evidence when the selected anchor carried the
+    /// supported out-of-band constraint form.
+    pub const fn permitted_dns_names(&self) -> Option<PermittedDnsNames> {
+        self.permitted_dns_names
+    }
 }
 
 impl fmt::Debug for ValidatedX509RsaSha256ReviewedServerAnchorPolicy<'_, '_, '_, '_> {
@@ -171,8 +190,60 @@ fn same_exact_object<T>(left: &T, right: &T) -> bool {
     std::ptr::eq(left, right)
 }
 
-fn selected_anchor_has_no_name_constraints(name_constraints: Option<&[u8]>) -> bool {
-    name_constraints.is_none()
+fn evaluate_selected_anchor_dns_policy(
+    certificate: &x509_certificate::X509Certificate<'_>,
+    name_constraints: Option<&[u8]>,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<Option<PermittedDnsNames>, X509RsaSha256ReviewedServerLinkError> {
+    let Some(encoded_constraints) = name_constraints else {
+        return Ok(None);
+    };
+
+    let mut constraint_decoder = Asn1Decoder::new(constraint_limits);
+    let constraints = decode_name_constraints_contents(
+        &mut constraint_decoder,
+        encoded_constraints,
+    )
+    .map_err(|error| {
+        X509RsaSha256ReviewedServerLinkError::new(
+            X509RsaSha256ReviewedServerLinkErrorKind::InvalidAnchorNameConstraints(error.kind()),
+        )
+    })?;
+
+    let extension = certificate
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| {
+            extensions
+                .iter()
+                .find(|extension| extension.extension_id().equals(SUBJECT_ALT_NAME_OID))
+        })
+        .ok_or_else(|| {
+            X509RsaSha256ReviewedServerLinkError::new(
+                X509RsaSha256ReviewedServerLinkErrorKind::MissingTargetSubjectAlternativeName,
+            )
+        })?;
+    let mut subject_alt_name_decoder = Asn1Decoder::new(subject_alt_name_limits);
+    let subject_alt_name = decode_subject_alt_name(&mut subject_alt_name_decoder, extension)
+        .map_err(|error| {
+            X509RsaSha256ReviewedServerLinkError::new(
+                X509RsaSha256ReviewedServerLinkErrorKind::InvalidTargetSubjectAlternativeName(
+                    error.kind(),
+                ),
+            )
+        })?;
+    let permitted_dns_names = evaluate_permitted_dns_names(
+        &constraints,
+        subject_alt_name.dns_names(),
+    )
+    .map_err(|error| {
+        X509RsaSha256ReviewedServerLinkError::new(
+            X509RsaSha256ReviewedServerLinkErrorKind::TargetDnsNameConstraints(error.kind()),
+        )
+    })?;
+
+    Ok(Some(permitted_dns_names))
 }
 
 /// Bind target-server policy to one reviewed-root issuer link for the same
@@ -218,14 +289,14 @@ pub fn bind_x509_rsa_sha256_reviewed_server_link<
     })
 }
 
-/// Apply the currently supported fail-closed policy to the selected reviewed
-/// trust anchor for one complete direct server link.
+/// Apply supported selected-anchor DNS policy to one complete direct link.
 ///
-/// The reviewed snapshot is data-driven: entries without name constraints are
-/// accepted, while every entry carrying constraint bytes is rejected until a
-/// repository-owned parser and subtree evaluator can apply them. Constraint
-/// presence is checked through the anchor evidence retained inside the
-/// consumed link, so callers cannot substitute a different snapshot entry.
+/// The reviewed snapshot is data-driven. Entries without constraints succeed
+/// without DNS evidence. For entries carrying constraint bytes, this function
+/// decodes those exact selected-entry bytes and the exact target certificate's
+/// Subject Alternative Name under separate caller-owned limits, then requires
+/// every target dNSName to satisfy the permitted subtree set. Callers cannot
+/// substitute another snapshot entry, target certificate, or SAN collection.
 pub fn validate_x509_rsa_sha256_reviewed_server_anchor_policy<
     'child_certificate,
     'child_encoded,
@@ -238,6 +309,8 @@ pub fn validate_x509_rsa_sha256_reviewed_server_anchor_policy<
         'issuer_certificate,
         'issuer_encoded,
     >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
 ) -> Result<
     ValidatedX509RsaSha256ReviewedServerAnchorPolicy<
         'child_certificate,
@@ -247,16 +320,21 @@ pub fn validate_x509_rsa_sha256_reviewed_server_anchor_policy<
     >,
     X509RsaSha256ReviewedServerLinkError,
 > {
+    let certificate = reviewed_server_link.server_policy().certificate();
     let name_constraints = reviewed_server_link
         .reviewed_anchor_link()
         .reviewed_anchor()
         .name_constraints();
-    if !selected_anchor_has_no_name_constraints(name_constraints) {
-        return Err(X509RsaSha256ReviewedServerLinkError::unsupported_anchor_name_constraints());
-    }
+    let permitted_dns_names = evaluate_selected_anchor_dns_policy(
+        certificate,
+        name_constraints,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
 
     Ok(ValidatedX509RsaSha256ReviewedServerAnchorPolicy {
         reviewed_server_link,
+        permitted_dns_names,
     })
 }
 
@@ -268,6 +346,7 @@ mod tests {
 
     const SIGNATURE_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
     const KEY_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
+    const SUBJECT_ALT_NAME_OID_DER: &[u8] = &[0x55, 0x1d, 0x11];
     const NULL_DER: &[u8] = &[0x05, 0x00];
 
     fn der(tag: u8, value: &[u8]) -> Vec<u8> {
@@ -297,7 +376,33 @@ mod tests {
         der(0x30, &der(0x31, &der(0x30, &attribute)))
     }
 
-    fn certificate() -> Vec<u8> {
+    fn extension(oid: &[u8], value: &[u8]) -> Vec<u8> {
+        let mut fields = der(0x06, oid);
+        fields.extend(der(0x04, value));
+        der(0x30, &fields)
+    }
+
+    fn subject_alt_name(names: &[Vec<u8>]) -> Vec<u8> {
+        extension(SUBJECT_ALT_NAME_OID_DER, &der(0x30, &names.concat()))
+    }
+
+    fn dns_name(value: &str) -> Vec<u8> {
+        der(0x82, value.as_bytes())
+    }
+
+    fn ip_address(value: &[u8]) -> Vec<u8> {
+        der(0x87, value)
+    }
+
+    fn permitted_dns_subtrees(subtrees: &[&[u8]]) -> Vec<u8> {
+        let mut contents = Vec::new();
+        for subtree in subtrees {
+            contents.extend(der(0x30, &der(0x82, subtree)));
+        }
+        der(0xa0, &contents)
+    }
+
+    fn certificate(extensions: &[Vec<u8>]) -> Vec<u8> {
         let mut validity = der(0x17, b"260101000000Z");
         validity.extend(der(0x17, b"270101000000Z"));
 
@@ -311,6 +416,9 @@ mod tests {
         tbs.extend(der(0x30, &validity));
         tbs.extend(name(b"api.example.test"));
         tbs.extend(der(0x30, &subject_public_key_info));
+        if !extensions.is_empty() {
+            tbs.extend(der(0xa3, &der(0x30, &extensions.concat())));
+        }
 
         let mut fields = der(0x30, &tbs);
         fields.extend(algorithm(SIGNATURE_OID_DER));
@@ -318,9 +426,24 @@ mod tests {
         der(0x30, &fields)
     }
 
+    fn evaluate(
+        encoded: &[u8],
+        constraints: Option<&[u8]>,
+        constraint_limits: Asn1Limits,
+        subject_alt_name_limits: Asn1Limits,
+    ) -> Result<Option<PermittedDnsNames>, X509RsaSha256ReviewedServerLinkError> {
+        let certificate = decode_x509_certificate(encoded, Asn1Limits::default()).unwrap();
+        evaluate_selected_anchor_dns_policy(
+            &certificate,
+            constraints,
+            constraint_limits,
+            subject_alt_name_limits,
+        )
+    }
+
     #[test]
     fn exact_child_identity_accepts_only_the_same_decoded_object() {
-        let encoded = certificate();
+        let encoded = certificate(&[]);
         let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
         let other_certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
 
@@ -343,24 +466,162 @@ mod tests {
     }
 
     #[test]
-    fn anchor_policy_accepts_only_absent_name_constraints() {
-        assert!(selected_anchor_has_no_name_constraints(None));
-        assert!(!selected_anchor_has_no_name_constraints(Some(&[
-            0x30, 0x00,
-        ])));
+    fn absent_anchor_constraints_succeed_without_dns_evidence() {
+        let encoded = certificate(&[]);
+
+        let result =
+            evaluate(&encoded, None, Asn1Limits::default(), Asn1Limits::default()).unwrap();
+
+        assert_eq!(result, None);
     }
 
     #[test]
-    fn unsupported_anchor_name_constraints_error_is_payload_free() {
-        let error = X509RsaSha256ReviewedServerLinkError::unsupported_anchor_name_constraints();
+    fn exact_reviewed_constraint_applies_to_every_target_dns_name() {
+        let encoded = certificate(&[subject_alt_name(&[
+            dns_name("api.tr"),
+            dns_name("*.service.tr"),
+        ])]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+
+        let result = evaluate(
+            &encoded,
+            Some(&constraints),
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap()
+        .unwrap();
+
+        assert_eq!(result.count(), 2);
+    }
+
+    #[test]
+    fn one_target_dns_name_outside_the_subtrees_fails_closed() {
+        let encoded = certificate(&[subject_alt_name(&[
+            dns_name("api.tr"),
+            dns_name("secret.internal"),
+        ])]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+
+        let error = evaluate(
+            &encoded,
+            Some(&constraints),
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
 
         assert_eq!(
             error.kind(),
-            X509RsaSha256ReviewedServerLinkErrorKind::UnsupportedAnchorNameConstraints
+            X509RsaSha256ReviewedServerLinkErrorKind::TargetDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameNotPermitted,
+            )
         );
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("api.tr"));
+        assert!(!diagnostic.contains("secret.internal"));
+    }
+
+    #[test]
+    fn dns_constraints_ignore_an_absent_dns_name_form() {
+        let encoded = certificate(&[subject_alt_name(&[ip_address(&[192, 0, 2, 1])])]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+
+        let result = evaluate(
+            &encoded,
+            Some(&constraints),
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap()
+        .unwrap();
+
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn malformed_constraint_and_target_san_fail_with_stable_categories() {
+        let valid_san = certificate(&[subject_alt_name(&[dns_name("api.tr")])]);
+        let invalid_constraints = [0xa0, 0x00];
+        let constraint_error = evaluate(
+            &valid_san,
+            Some(&invalid_constraints),
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
+        assert!(matches!(
+            constraint_error.kind(),
+            X509RsaSha256ReviewedServerLinkErrorKind::InvalidAnchorNameConstraints(_)
+        ));
+
+        let malformed_san =
+            certificate(&[extension(SUBJECT_ALT_NAME_OID_DER, b"secret malformed SAN")]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+        let san_error = evaluate(
+            &malformed_san,
+            Some(&constraints),
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
+        assert!(matches!(
+            san_error.kind(),
+            X509RsaSha256ReviewedServerLinkErrorKind::InvalidTargetSubjectAlternativeName(_)
+        ));
+        assert!(!format!("{san_error:?} {san_error}").contains("secret"));
+    }
+
+    #[test]
+    fn constrained_target_requires_subject_alt_name() {
+        let encoded = certificate(&[]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+
+        let error = evaluate(
+            &encoded,
+            Some(&constraints),
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
+
         assert_eq!(
-            error.to_string(),
-            "X.509 RSA SHA-256 reviewed server link error UnsupportedAnchorNameConstraints"
+            error.kind(),
+            X509RsaSha256ReviewedServerLinkErrorKind::MissingTargetSubjectAlternativeName
         );
+    }
+
+    #[test]
+    fn caller_limits_independently_bound_both_decoders() {
+        let encoded = certificate(&[subject_alt_name(&[dns_name("api.tr")])]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+        let exhausted = Asn1Limits {
+            max_total_elements: 0,
+            ..Default::default()
+        };
+
+        let constraint_error = evaluate(
+            &encoded,
+            Some(&constraints),
+            exhausted,
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
+        assert!(matches!(
+            constraint_error.kind(),
+            X509RsaSha256ReviewedServerLinkErrorKind::InvalidAnchorNameConstraints(_)
+        ));
+
+        let san_error = evaluate(
+            &encoded,
+            Some(&constraints),
+            Asn1Limits::default(),
+            exhausted,
+        )
+        .unwrap_err();
+        assert!(matches!(
+            san_error.kind(),
+            X509RsaSha256ReviewedServerLinkErrorKind::InvalidTargetSubjectAlternativeName(_)
+        ));
     }
 }
