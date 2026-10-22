@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Long ago",
+  "label": "ch:ar-long-ago",
+  "canDo": "I can say an age, long ago, an era, at that time and a reign.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C304-ahd",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can say an age, long ago, an era, at that time and a reign.",
+    "assesses": [
+      "AR-LEX-C304-ZAMAN304-03",
+      "AR-LEX-C304-ZAMAN304-04",
+      "AR-LEX-C304-ZAMAN304-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C536-istada",
+  "pathSegment": "AR-PATH-536-SAYD536",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-536-SAYD536",
+      "order": 2
+    }
+  ]
+}

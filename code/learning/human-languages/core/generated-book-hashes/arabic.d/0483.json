@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:5c6f35cf049d7d09",
+  "lessonIds": [
+    "AR-C483-buruda",
+    "AR-C483-barid",
+    "AR-C483-qaris",
+    "AR-C483-saqi",
+    "AR-C483-barada"
+  ],
+  "tex": "arabic/book/chapters/ch483-cold.tex"
+}

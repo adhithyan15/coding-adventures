@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:6aa4470bb3c18df4",
+  "lessonIds": [
+    "AR-C505-jumjuma",
+    "AR-C505-dil",
+    "AR-C505-fakhidh",
+    "AR-C505-wirk",
+    "AR-C505-mafsil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch505.txt",
+  "json": "arabic/narration/ch505.json",
+  "textHash": "fnv1a64:d417555fd8917c05",
+  "jsonHash": "fnv1a64:105c80856166b7e7",
+  "findings": []
+}

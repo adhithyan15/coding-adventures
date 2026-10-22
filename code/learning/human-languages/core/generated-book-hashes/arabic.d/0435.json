@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:0c23d3833aef3f29",
+  "lessonIds": [
+    "AR-C435-masar",
+    "AR-C435-ujra",
+    "AR-C435-ishtirak",
+    "AR-C435-mamarr-mushah",
+    "AR-C435-istadara"
+  ],
+  "tex": "arabic/book/chapters/ch435-routes-and-fares.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:3cd6fb501ce51b57",
+  "lessonIds": [
+    "AR-C315-nasr",
+    "AR-C315-hazima",
+    "AR-C315-intasara",
+    "AR-C315-hazama-defeat",
+    "AR-C315-istaslama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch315.txt",
+  "json": "arabic/narration/ch315.json",
+  "textHash": "fnv1a64:e19a56a938c84f71",
+  "jsonHash": "fnv1a64:472b119ede0c7625",
+  "findings": []
+}

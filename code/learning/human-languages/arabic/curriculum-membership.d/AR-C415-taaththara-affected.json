@@ -1,0 +1,11 @@
+{
+  "id": "AR-C415-taaththara-affected",
+  "pathSegment": "AR-PATH-415-INJAZ415",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-415-INJAZ415",
+      "order": 1
+    }
+  ]
+}

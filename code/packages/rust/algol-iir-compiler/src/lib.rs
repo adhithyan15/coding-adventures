@@ -4768,8 +4768,11 @@ impl Compiler {
                                 return None;
                             }
                         } else {
-                            let value =
-                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
+                                .or_else(|| {
+                                    exact_static_integer_reduction_value(operand)
+                                        .map(|value| value as f64)
+                                })?;
                             let units = exact_sign_integer_units(value)?;
                             static_magnitude = static_magnitude.checked_add(units)?;
                             let signed_value = value as i64;
@@ -4809,8 +4812,11 @@ impl Compiler {
                             }
                             rooted_index = Some(index);
                         } else {
-                            let value =
-                                expr_static_real_arithmetic_value_with(operand, &|_| None)?;
+                            let value = expr_static_real_arithmetic_value_with(operand, &|_| None)
+                                .or_else(|| {
+                                    exact_static_integer_reduction_value(operand)
+                                        .map(|value| value as f64)
+                                })?;
                             let units = exact_sign_integer_units(value)?;
                             let operator = (index > 0)
                                 .then(|| sequence.get(index - 1))
@@ -12392,6 +12398,60 @@ fn exact_sign_integer_units(value: f64) -> Option<u64> {
         .then_some(magnitude as u64)
 }
 
+/// Evaluate a grouped variable-free exact-integer expression that uses
+/// ALGOL's integer `div` or `mod`. The general static-real evaluator
+/// intentionally excludes those operators, so this narrow fallback keeps the
+/// sign-rooted proof exact without broadening runtime-real constant folding.
+fn exact_static_integer_reduction_value(node: &GrammarASTNode) -> Option<i64> {
+    if let Some(value) = expr_static_real_arithmetic_value_with(node, &|_| None) {
+        return (value.fract() == 0.0
+            && value.abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE as f64)
+            .then_some(value as i64);
+    }
+    if let Some(child) = single_parenthesized_child(node) {
+        return exact_static_integer_reduction_value(child);
+    }
+
+    let sequence = pieces(node);
+    let mut index = 0;
+    let mut negate = false;
+    if let Some(Piece::Op(operator)) = sequence.first() {
+        negate = match operator.as_str() {
+            "+" => false,
+            "-" => true,
+            _ => return None,
+        };
+        index += 1;
+    }
+    let Piece::Node(first) = sequence.get(index)? else {
+        return None;
+    };
+    let first = exact_static_integer_reduction_value(first)?;
+    let mut value = if negate { first.checked_neg()? } else { first };
+    index += 1;
+    while index < sequence.len() {
+        let Piece::Op(operator) = sequence.get(index)? else {
+            return None;
+        };
+        let Piece::Node(rhs) = sequence.get(index + 1)? else {
+            return None;
+        };
+        let rhs = exact_static_integer_reduction_value(rhs)?;
+        value = match operator.as_str() {
+            "+" => value.checked_add(rhs)?,
+            "-" => value.checked_sub(rhs)?,
+            "*" => value.checked_mul(rhs)?,
+            "/" if rhs != 0 && value % rhs == 0 => value.checked_div(rhs)?,
+            "div" => value.checked_div(rhs)?,
+            "mod" => value.checked_rem(rhs)?,
+            _ => return None,
+        };
+        index += 2;
+    }
+
+    (value.unsigned_abs() <= MAX_EXACT_SIGN_INTEGER_MAGNITUDE).then_some(value)
+}
+
 fn integer_gcd(mut left: u64, mut right: u64) -> u64 {
     while right != 0 {
         (left, right) = (right, left % right);
@@ -15543,6 +15603,42 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a denominator-position root, dynamic or zero divisor, or oversized prefix must remain outside the composed proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_grouped_static_integer_reductions() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((6 div 4) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(sign(pick()) + (11 mod 4)); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((10 div 3) + (7 mod 4)) * ((2 * sign(pick())) + 2)); output(result) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "a grouped variable-free integer reduction remains exact around a sign-rooted transform for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_grouped_static_integer_reductions_reject_unproven_forms() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier((6 div 0) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer divisor; real result; divisor := 4; result := entier((6 div divisor) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(((3 / 2) + (6 div 4)) * sign(pick())); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier(((9007199254740992 div 1) + 1) * sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a zero or dynamic divisor, inexact real division, or oversized grouped reduction must remain outside the proof",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:4e2479710e028b54",
+  "lessonIds": [
+    "AR-C481-zakhkha",
+    "AR-C481-radhadh",
+    "AR-C481-wabil",
+    "AR-C481-hatala",
+    "AR-C481-safa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch481.txt",
+  "json": "arabic/narration/ch481.json",
+  "textHash": "fnv1a64:464ee0d5085ea89e",
+  "jsonHash": "fnv1a64:b473137f120dc841",
+  "findings": []
+}

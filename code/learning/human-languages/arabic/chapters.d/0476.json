@@ -1,0 +1,19 @@
+{
+  "chapter": 476,
+  "title": "Small creatures",
+  "label": "ch:ar-small-creatures",
+  "canDo": "I can say a scorpion, a locust, moss, a claw and to prey on.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C476-iftarasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 476: I can say a scorpion, a locust, moss, a claw and to prey on.",
+    "assesses": [
+      "AR-LEX-C476-AQRAB476-03",
+      "AR-LEX-C476-AQRAB476-04",
+      "AR-LEX-C476-AQRAB476-05"
+    ]
+  }
+}

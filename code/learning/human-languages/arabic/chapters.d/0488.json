@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Happy, bored, angry and sad",
+  "label": "ch:ar-happy-bored-angry-and-sad",
+  "canDo": "I can talk about happiness and boredom, and say that someone got angry, grieved or sighed.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C488-tanahhada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can talk about happiness and boredom, and say that someone got angry, grieved or sighed.",
+    "assesses": [
+      "AR-LEX-C488-MAZAJ488-03",
+      "AR-LEX-C488-MAZAJ488-04",
+      "AR-LEX-C488-MAZAJ488-05"
+    ]
+  }
+}

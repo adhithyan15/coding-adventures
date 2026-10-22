@@ -829,16 +829,19 @@ issuer link terminating at a selected reviewed Mozilla root. It still does not
 apply the root's name constraints, path-length or other anchor constraints,
 construct a multi-hop path, check revocation, perform TLS or HTTP, authorize
 OAuth transport, or open a network connection.
-A bounded fail-closed anchor-policy follow-up now consumes that complete direct
+A bounded fail-closed anchor-policy follow-up consumes that complete direct
 reviewed-server-link evidence and inspects the selected reviewed snapshot entry.
-It accepts only an entry whose optional out-of-band name constraints are absent,
-then retains the consumed link in a distinct non-copyable result. A reviewed
-root carrying name constraints is rejected with a payload-free category until
-repository-owned parsing and subtree evaluation can apply those constraints;
-their bytes are never treated as understood merely because the root was
-selected. This gate adds no NameConstraints parser, constrained-root support,
-multi-hop path construction, revocation, TLS, HTTP, OAuth transport, or network
-authority.
+For an unconstrained entry it retains the consumed link directly. For an entry
+carrying out-of-band name constraints, it decodes those exact selected-entry
+bytes, re-decodes Subject Alternative Name from the exact target certificate
+retained by the server-policy evidence, and requires every target dNSName to
+satisfy the supported permitted DNS subtrees. Separate caller-owned DER limits
+bound both parses, and the non-copyable result retains the link plus optional
+payload-free DNS-constraint evidence. Malformed or unsupported constraint
+bytes, malformed target SAN, or a constraint violation fail closed. This
+supports only the exact direct target-to-reviewed-root link and adds no excluded
+or non-DNS constraint forms, multi-hop path construction, revocation, TLS,
+HTTP, OAuth transport, or network authority.
 A smaller repository-owned DER prerequisite for that future parser now opens an
 exact context-specific constructed value selected by its schema tag as one
 bounded child cursor. The cursor reuses the same depth, total-element, and DER
@@ -859,6 +862,20 @@ non-DNS subtrees, evaluate a certificate name, bind the parsed bytes back to
 selected-anchor evidence, construct or validate a path, grant trust, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection.
+A separate bounded evaluator now validates every decoded permitted DNS subtree
+before matching caller-supplied DNS names. It enforces strict ASCII labels,
+case-insensitive label-boundary matching, the reviewed leading-dot semantics,
+and a complete-leftmost-label-only presented wildcard, then requires every
+supplied name to match at least one data-driven subtree. Both collections are
+capped at 256 and evaluation allocates nothing. The result retains only the
+evaluated count: it is not bound to certificate SAN evidence or the selected
+anchor, does not handle excluded or non-DNS subtrees, construct or validate a
+path, check trust or revocation, perform TLS or HTTP, authorize OAuth transport,
+or open a network connection. Concrete HTTPS therefore remains unavailable.
+The direct reviewed-server anchor-policy composition is the sole consumer in
+this slice that binds that evaluator to certificate and anchor evidence. It
+does not make the standalone decoder or evaluator authoritative, and complete
+path validation, revocation, TLS, HTTP, and OAuth transport remain unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

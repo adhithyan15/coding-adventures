@@ -1,0 +1,11 @@
+{
+  "id": "AR-C477-mahar",
+  "pathSegment": "AR-PATH-477-QIRSH477",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-477-QIRSH477",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C344-tahaqqaqa",
+    "language": "arabic",
+    "chapter": 344,
+    "sequence": 19640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75b2d1fee8a4358f"
+  },
+  "findings": []
+}

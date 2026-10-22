@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C517-dakhkhana",
+    "language": "arabic",
+    "chapter": 517,
+    "sequence": 28680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6976871033de064"
+  },
+  "findings": []
+}

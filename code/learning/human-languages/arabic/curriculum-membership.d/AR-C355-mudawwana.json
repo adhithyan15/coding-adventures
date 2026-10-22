@@ -1,0 +1,11 @@
+{
+  "id": "AR-C355-mudawwana",
+  "pathSegment": "AR-PATH-355-AJIL355",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-355-AJIL355",
+      "order": 1
+    }
+  ]
+}

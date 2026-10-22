@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 495,
+  "title": "Annoyed and fed up",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:aaf40ea5f7050716",
+  "lessons": [
+    {
+      "id": "AR-C495-inziaj",
+      "sequence": 27550,
+      "title": "انزعاج (inziʿāj) — annoyance",
+      "headword": "انزعاج",
+      "romanization": "inziʿāj",
+      "gloss": "annoyance",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2010798f1e45c9cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for frustrated, then the Arabic for to get bored."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انزعاج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انزعاج — inziʿāj — \"annoyance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تكلم الجار عن الموسيقى العالية بانزعاج. takallama al-jār ʿan al-mūsīqā al-ʿāliya bi-inziʿāj. The neighbour spoke about the loud music with annoyance."
+            },
+            {
+              "kind": "speech",
+              "text": "The adjective مزعج, annoying, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انزعاج (inziʿāj) is built on the native Arabic root z-ʿ-j, \"to disquiet, to unsettle\" (Lane). Inziʿāj is the verbal noun of Form VII: being unsettled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inziʿāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inziʿāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inziʿāj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inziʿāj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takallama al-jār ʿan al-mūsīqā al-ʿāliya bi-inziʿāj. — The neighbour spoke about the loud music with annoyance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takallama al-jār ʿan al-mūsīqā al-ʿāliya bi-inziʿāj.* — The neighbour spoke about the loud music with annoyance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for frustrated, then the Arabic for to get bored, then say inziʿāj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for frustrated, then the Arabic for to get bored, then say *inziʿāj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انزعاج (inziʿāj) mean? (\"Annoyance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C495-munzaij",
+      "sequence": 27560,
+      "title": "منزعج (munzaʿij) — annoyed",
+      "headword": "منزعج",
+      "romanization": "munzaʿij",
+      "gloss": "annoyed",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5fc5353bec91e08a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to get bored, then the Arabic for annoyance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منزعج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منزعج — munzaʿij — \"annoyed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الأب منزعج من صوت التلفاز. al-ab munzaʿij min ṣawt at-tilfāz. The father is annoyed by the noise of the television."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من for the cause."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منزعج (munzaʿij) is built on the native Arabic root z-ʿ-j, \"to disquiet, to unsettle\" (Lane). Munzaʿij is the participle of Form VII."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munzaʿij",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munzaʿij*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munzaʿij, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munzaʿij*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-ab munzaʿij min ṣawt at-tilfāz. — The father is annoyed by the noise of the television.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-ab munzaʿij min ṣawt at-tilfāz.* — The father is annoyed by the noise of the television.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to get bored, then the Arabic for annoyance, then say munzaʿij again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to get bored, then the Arabic for annoyance, then say *munzaʿij* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منزعج (munzaʿij) mean? (\"Annoyed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C495-musta",
+      "sequence": 27570,
+      "title": "مستاء (mustāʾ) — displeased, upset",
+      "headword": "مستاء",
+      "romanization": "mustāʾ",
+      "gloss": "displeased, upset",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:275b7cb48caa1a63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for annoyance, then the Arabic for annoyed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مستاء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستاء — mustāʾ — \"displeased, upset\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الزبون مستاء من الخدمة. az-zabūn mustāʾ min al-khidma. The customer is unhappy with the service."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستاء (mustāʾ) is built on the native Arabic root s-w-ʾ, \"to be evil, to be bad\" (Lane). Mustāʾ is the participle of Form VIII, istāʾa: one who takes a thing badly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustāʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustāʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "az-zabūn mustāʾ min al-khidma. — The customer is unhappy with the service.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *az-zabūn mustāʾ min al-khidma.* — The customer is unhappy with the service.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for annoyance, then the Arabic for annoyed, then say mustāʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for annoyance, then the Arabic for annoyed, then say *mustāʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مستاء (mustāʾ) mean? (\"Displeased, upset\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C495-tahammala",
+      "sequence": 27580,
+      "title": "تحمل (taḥammala) — to put up with",
+      "headword": "تحمل",
+      "romanization": "taḥammala",
+      "gloss": "to put up with",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1443e44c24dce0eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for annoyed, then the Arabic for displeased."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تحمل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحمل — taḥammala — \"to put up with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لا يتحمل أبي الحر. lā yataḥammalu abī al-ḥarr. My father cannot stand the heat."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتحمل, yataḥammal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحمل (taḥammala) is built on the native Arabic root ḥ-m-l, \"to carry\" (Lane). Ḥamala, to carry, which you know, is from the same root; Form V is to carry a weight oneself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥammala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥammala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥammala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥammala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lā yataḥammalu abī al-ḥarr. — My father cannot stand the heat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lā yataḥammalu abī al-ḥarr.* — My father cannot stand the heat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for annoyed, then the Arabic for displeased, then say taḥammala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for annoyed, then the Arabic for displeased, then say *taḥammala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تحمل (taḥammala) mean? (\"To put up with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C495-dajira",
+      "sequence": 27590,
+      "title": "ضجر (ḍajira) — to be fed up",
+      "headword": "ضجر",
+      "romanization": "ḍajira",
+      "gloss": "to be fed up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3589dd50b0640af1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for displeased, then the Arabic for to put up with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضجر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضجر — ḍajira — \"to be fed up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ضجر المسافرون من التأخير الطويل. ḍajira al-musāfirūn min at-taʾkhīr aṭ-ṭawīl. The travellers were fed up with the long delay."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يضجر, yaḍjar."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من, as مل does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضجر (ḍajira) is built on the native Arabic root ḍ-j-r, \"to be vexed, disquieted\" (Lane). Lane gives yaḍjaru as its present."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍajira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍajira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍajira, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍajira*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍajira al-musāfirūn min at-taʾkhīr aṭ-ṭawīl. — The travellers were fed up with the long delay.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍajira al-musāfirūn min at-taʾkhīr aṭ-ṭawīl.* — The travellers were fed up with the long delay.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for displeased, then the Arabic for to put up with, then say ḍajira again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for displeased, then the Arabic for to put up with, then say *ḍajira* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضجر (ḍajira) mean? (\"To be fed up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R495-review-488-495",
+      "sequence": 27600,
+      "title": "Feelings and moods — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 488-495",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:573188a662b0465d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for happiness and boredom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "happiness, boredom, to get angry, to grieve, to sigh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: happiness, boredom, to get angry, to grieve, to sigh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "panic, terror, calm, to shiver, to frighten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: panic, terror, calm, to shiver, to frighten]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "astonishment, astonished, to be amazed, to be surprised, admiration",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: astonishment, astonished, to be amazed, to be surprised, admiration]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proud, to take pride, gratitude, grateful, to impress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: proud, to take pride, gratitude, grateful, to impress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jealousy, jealous, envious, to envy, to be jealous",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: jealousy, jealous, envious, to envy, to be jealous]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to regret, regretful, pity, to reproach, despair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to regret, regretful, pity, to reproach, despair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gloom, nostalgia, frustration, frustrated, to get bored",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: gloom, nostalgia, frustration, frustrated, to get bored]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "annoyance, annoyed, displeased, to put up with, to be fed up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: annoyance, annoyed, displeased, to put up with, to be fed up]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Happiness? (سعادة, saʿāda.) Boredom? (ملل, malal.) To get angry? (غضب, ghaḍiba.) To grieve? (حزن, ḥazina.) To sigh? (تنهد, tanahhada.) Panic? (ذعر, dhuʿr.) Terror? (رعب, ruʿb.) Calm? (هدوء, hudūʾ.) To shiver? (ارتعش, irtaʿasha.) To frighten? (أخاف, akhāfa.) Astonishment? (دهشة, dahsha.) Astonished? (مندهش, mundahish.) To be amazed? (اندهش, indahasha.) To be surprised? (تفاجأ, tafājaʾa.) Admiration? (إعجاب, iʿjāb.) Proud? (فخور, fakhūr.) To take pride? (افتخر, iftakhara.) Gratitude? (امتنان, imtinān.) Grateful? (ممتن, mumtann.) To impress? (أعجب, aʿjaba.) Jealousy? (غيرة, ghīra.) Jealous? (غيور, ghayūr.) Envious? (حسود, ḥasūd.) To envy? (حسد, ḥasada.) To be jealous? (غار, ghāra.) To regret? (ندم, nadima.) Regretful? (نادم, nādim.) Pity? (شفقة, shafaqa.) To reproach? (عاتب, ʿātaba.) Despair? (يأس, yaʾs.) Gloom? (كآبة, kaʾāba.) Nostalgia? (حنين, ḥanīn.) Frustration? (إحباط, iḥbāṭ.) Frustrated? (محبط, muḥbaṭ.) To get bored? (مل, malla.) Annoyance? (انزعاج, inziʿāj.) Annoyed? (منزعج, munzaʿij.) Displeased? (مستاء, mustāʾ.) To put up with? (تحمل, taḥammala.) To be fed up? (ضجر, ḍajira.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

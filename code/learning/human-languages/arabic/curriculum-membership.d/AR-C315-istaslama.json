@@ -1,0 +1,11 @@
+{
+  "id": "AR-C315-istaslama",
+  "pathSegment": "AR-PATH-315-NASR315",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-315-NASR315",
+      "order": 4
+    }
+  ]
+}

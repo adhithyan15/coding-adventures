@@ -1,0 +1,11 @@
+{
+  "id": "AR-C425-wusul",
+  "pathSegment": "AR-PATH-425-RAKIB425",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-425-RAKIB425",
+      "order": 4
+    }
+  ]
+}

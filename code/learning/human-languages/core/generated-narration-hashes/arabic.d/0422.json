@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:e5a0c053905ee07f",
+  "lessonIds": [
+    "AR-C422-mawdui",
+    "AR-C422-tasamuh",
+    "AR-C422-mubarrir",
+    "AR-C422-ghiyab",
+    "AR-C422-istankara",
+    "AR-R422-review-422-422",
+    "AR-R422-review-final-422"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch422.txt",
+  "json": "arabic/narration/ch422.json",
+  "textHash": "fnv1a64:8bcb5a67c7650c35",
+  "jsonHash": "fnv1a64:eb8d2d5f42a8ee9d",
+  "findings": []
+}

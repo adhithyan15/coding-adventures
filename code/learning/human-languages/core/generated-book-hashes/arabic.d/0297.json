@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:795c7add606a6220",
+  "lessonIds": [
+    "AR-C297-idhaa",
+    "AR-C297-qanah",
+    "AR-C297-midhya",
+    "AR-C297-adhaa",
+    "AR-C297-ala-al-hawa"
+  ],
+  "tex": "arabic/book/chapters/ch297-on-the-radio.tex"
+}

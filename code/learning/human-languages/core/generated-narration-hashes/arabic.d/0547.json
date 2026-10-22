@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:7ab5e4d3b3ba5bdd",
+  "lessonIds": [
+    "AR-C547-fawz",
+    "AR-C547-butula",
+    "AR-C547-kas",
+    "AR-C547-midaliya",
+    "AR-C547-taahhala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch547.txt",
+  "json": "arabic/narration/ch547.json",
+  "textHash": "fnv1a64:98c682b823e4671d",
+  "jsonHash": "fnv1a64:6eaf7ac95544274d",
+  "findings": []
+}

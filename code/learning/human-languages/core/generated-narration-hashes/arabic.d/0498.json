@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:5f578a019ed37fc0",
+  "lessonIds": [
+    "AR-C498-asada",
+    "AR-C498-ahzana",
+    "AR-C498-adhaka",
+    "AR-C498-aghdaba",
+    "AR-C498-lama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch498.txt",
+  "json": "arabic/narration/ch498.json",
+  "textHash": "fnv1a64:63b9116aaf287156",
+  "jsonHash": "fnv1a64:e8d569976d38793b",
+  "findings": []
+}

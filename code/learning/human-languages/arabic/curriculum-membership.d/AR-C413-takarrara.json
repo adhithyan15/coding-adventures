@@ -1,0 +1,11 @@
+{
+  "id": "AR-C413-takarrara",
+  "pathSegment": "AR-PATH-413-TATAWWUR413",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-413-TATAWWUR413",
+      "order": 3
+    }
+  ]
+}

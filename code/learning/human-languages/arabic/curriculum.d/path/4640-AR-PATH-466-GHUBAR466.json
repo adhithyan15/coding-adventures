@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-466-GHUBAR466",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-466-GHUBAR466"
+  ],
+  "after": []
+}

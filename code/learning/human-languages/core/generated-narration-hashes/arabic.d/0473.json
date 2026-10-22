@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:9e74f0f6c6028729",
+  "lessonIds": [
+    "AR-C473-waha",
+    "AR-C473-sarab",
+    "AR-C473-adghal",
+    "AR-C473-mustanqa",
+    "AR-C473-qahil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch473.txt",
+  "json": "arabic/narration/ch473.json",
+  "textHash": "fnv1a64:b68cb646f70cc80c",
+  "jsonHash": "fnv1a64:e26aa0094f47d773",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:6d5ce864130f95d0",
+  "lessonIds": [
+    "AR-C406-tatallaba",
+    "AR-C406-tawaffara",
+    "AR-C406-kafa",
+    "AR-C406-iftaqara",
+    "AR-C406-ijra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch406.txt",
+  "json": "arabic/narration/ch406.json",
+  "textHash": "fnv1a64:4832d606ac4cf4ab",
+  "jsonHash": "fnv1a64:13bc25c70a8775ba",
+  "findings": []
+}

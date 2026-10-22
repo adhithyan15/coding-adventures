@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:28ecc4331d49f8e8",
+  "lessonIds": [
+    "AR-C549-ulliyya",
+    "AR-C549-jaras",
+    "AR-C549-miqbad",
+    "AR-C549-mizlaj",
+    "AR-C549-balua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch549.txt",
+  "json": "arabic/narration/ch549.json",
+  "textHash": "fnv1a64:7a20410a9035ecca",
+  "jsonHash": "fnv1a64:c4862656e4b86a59",
+  "findings": []
+}

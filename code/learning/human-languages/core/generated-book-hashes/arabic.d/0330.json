@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:c904f801fe60d9de",
+  "lessonIds": [
+    "AR-C330-sajana",
+    "AR-C330-sajin",
+    "AR-C330-zinzana",
+    "AR-C330-qayd",
+    "AR-C330-afraja"
+  ],
+  "tex": "arabic/book/chapters/ch330-prison.tex"
+}

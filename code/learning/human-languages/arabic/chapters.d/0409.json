@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Laws",
+  "label": "ch:ar-laws",
+  "canDo": "I can talk about a law, legislation and a clause, and say what a law stipulates or who legislates.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C409-sharraa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about a law, legislation and a clause, and say what a law stipulates or who legislates.",
+    "assesses": [
+      "AR-LEX-C409-QANUN409-03",
+      "AR-LEX-C409-QANUN409-04",
+      "AR-LEX-C409-QANUN409-05"
+    ]
+  }
+}

@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 447,
+  "title": "Fixing the room",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:97805956e2c032b7",
+  "lessons": [
+    {
+      "id": "AR-C447-dush",
+      "sequence": 25030,
+      "title": "دش (dush) — a shower",
+      "headword": "دش",
+      "romanization": "dush",
+      "gloss": "a shower",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad3c9c4f4b78473d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to greet warmly, then the Arabic for to recommend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دش",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دش — dush — \"a shower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أخذت دشا بعد الرحلة. akhadhtu dushan baʿda ar-riḥla. I took a shower after the trip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دش (dush) is usually traced to French douche."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dush, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dush*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhadhtu dushan baʿda ar-riḥla. — I took a shower after the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhadhtu dushan baʿda ar-riḥla.* — I took a shower after the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to greet warmly, then the Arabic for to recommend, then say dush again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to greet warmly, then the Arabic for to recommend, then say *dush* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دش (dush) mean? (\"A shower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C447-mikwah",
+      "sequence": 25040,
+      "title": "مكواة (mikwāh) — a clothes iron",
+      "headword": "مكواة",
+      "romanization": "mikwāh",
+      "gloss": "a clothes iron",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d9b633bb1861a02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to recommend, then the Arabic for a shower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مكواة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مكواة — mikwāh — \"a clothes iron\"."
+            },
+            {
+              "kind": "speech",
+              "text": "طلبت مكواة من الاستقبال. ṭalabtu mikwāh min al-istiqbāl. I asked reception for an iron."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مكواة (mikwāh) is built on the native Arabic root k-w-y, \"to burn with a hot iron\" (Lane). The tool pattern mifʿala names the thing one irons with, beside kawā, \"to iron\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikwāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikwāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mikwāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mikwāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭalabtu mikwāh min al-istiqbāl. — I asked reception for an iron.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭalabtu mikwāh min al-istiqbāl.* — I asked reception for an iron.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to recommend, then the Arabic for a shower, then say mikwāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to recommend, then the Arabic for a shower, then say *mikwāh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مكواة (mikwāh) mean? (\"A clothes iron\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C447-mujaffif",
+      "sequence": 25050,
+      "title": "مجفف (mujaffif) — a dryer; a hairdryer",
+      "headword": "مجفف",
+      "romanization": "mujaffif",
+      "gloss": "a dryer; a hairdryer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c664ee8ebc20a452",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a shower, then the Arabic for a clothes iron."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مجفف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مجفف — mujaffif — \"a dryer; a hairdryer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لم يعمل مجفف الشعر في الحمام. lam yaʿmal mujaffif ash-shaʿr fī al-ḥammām. The hairdryer in the bathroom did not work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مجفف (mujaffif) is built on the native Arabic root j-f-f, \"to be dry\" (Lane). It is the Form II participle, \"a thing that dries\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mujaffif",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mujaffif*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mujaffif, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mujaffif*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lam yaʿmal mujaffif ash-shaʿr fī al-ḥammām. — The hairdryer in the bathroom did not work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lam yaʿmal mujaffif ash-shaʿr fī al-ḥammām.* — The hairdryer in the bathroom did not work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a shower, then the Arabic for a clothes iron, then say mujaffif again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a shower, then the Arabic for a clothes iron, then say *mujaffif* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مجفف (mujaffif) mean? (\"A dryer; a hairdryer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C447-taattala",
+      "sequence": 25060,
+      "title": "تعطل (taʿaṭṭala) — to break down",
+      "headword": "تعطل",
+      "romanization": "taʿaṭṭala",
+      "gloss": "to break down",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efeb1d3ec2b99546",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a clothes iron, then the Arabic for a dryer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعطل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعطل — taʿaṭṭala — \"to break down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعطل المصعد في الفندق. taʿaṭṭala al-miṣʿad fī al-funduq. The lift in the hotel broke down."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتعطل, yataʿaṭṭal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعطل (taʿaṭṭala) is built on the native Arabic root ʿ-ṭ-l, \"to be idle, without work\" (Lane). It is Form V; muʿaṭṭal, \"out of order\", and ʿuṭla, \"a holiday\", share the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿaṭṭala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿaṭṭala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿaṭṭala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿaṭṭala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿaṭṭala al-miṣʿad fī al-funduq. — The lift in the hotel broke down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿaṭṭala al-miṣʿad fī al-funduq.* — The lift in the hotel broke down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a clothes iron, then the Arabic for a dryer, then say taʿaṭṭala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a clothes iron, then the Arabic for a dryer, then say *taʿaṭṭala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعطل (taʿaṭṭala) mean? (\"To break down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C447-tafaqqada",
+      "sequence": 25070,
+      "title": "تفقد (tafaqqada) — to check on; to inspect",
+      "headword": "تفقد",
+      "romanization": "tafaqqada",
+      "gloss": "to check on; to inspect",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97a9fe31aa18260d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a dryer, then the Arabic for to break down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تفقد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تفقد — tafaqqada — \"to check on; to inspect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تفقد العامل الحمام بعد العطل. tafaqqada al-ʿāmil al-ḥammām baʿda al-ʿuṭl. The worker checked on the bathroom after the breakdown."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتفقد, yatafaqqad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تفقد (tafaqqada) is built on the native Arabic root f-q-d, \"to lose, to miss\" (Lane). It is Form V, \"to look for what is missing\", and so to check on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafaqqada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafaqqada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafaqqada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafaqqada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafaqqada al-ʿāmil al-ḥammām baʿda al-ʿuṭl. — The worker checked on the bathroom after the breakdown.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafaqqada al-ʿāmil al-ḥammām baʿda al-ʿuṭl.* — The worker checked on the bathroom after the breakdown.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a dryer, then the Arabic for to break down, then say tafaqqada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a dryer, then the Arabic for to break down, then say *tafaqqada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تفقد (tafaqqada) mean? (\"To check on; to inspect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

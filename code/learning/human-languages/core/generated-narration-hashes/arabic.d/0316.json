@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:ff614da344532ea5",
+  "lessonIds": [
+    "AR-C316-inhara",
+    "AR-C316-fada",
+    "AR-C316-indalaa",
+    "AR-C316-rukam",
+    "AR-C316-anqad",
+    "AR-R316-review-309-316"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch316.txt",
+  "json": "arabic/narration/ch316.json",
+  "textHash": "fnv1a64:6ead2944ddd43dc9",
+  "jsonHash": "fnv1a64:a235e7019274f74d",
+  "findings": []
+}

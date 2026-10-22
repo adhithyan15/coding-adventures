@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-499-AMANA499",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a person as honest, upright, untruthful, loyal or faithful.",
+  "prerequisites": []
+}

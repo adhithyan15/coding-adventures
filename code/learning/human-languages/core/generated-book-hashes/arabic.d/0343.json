@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:3af80597d1ab9268",
+  "lessonIds": [
+    "AR-C343-mughamara",
+    "AR-C343-majhul",
+    "AR-C343-mufajaa",
+    "AR-C343-sudfa",
+    "AR-C343-khatara"
+  ],
+  "tex": "arabic/book/chapters/ch343-adventures.tex"
+}

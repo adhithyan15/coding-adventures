@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:bb9a7ce158da84cc",
+  "lessonIds": [
+    "AR-C415-injaz",
+    "AR-C415-taaththara-affected",
+    "AR-C415-tabayyana",
+    "AR-C415-tawassala",
+    "AR-C415-mustawa"
+  ],
+  "tex": "arabic/book/chapters/ch415-leaving-a-mark.tex"
+}

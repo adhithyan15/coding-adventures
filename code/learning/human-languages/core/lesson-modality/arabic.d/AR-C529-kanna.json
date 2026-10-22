@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C529-kanna",
+    "language": "arabic",
+    "chapter": 529,
+    "sequence": 29310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0142a47d1e9fdaf4"
+  },
+  "findings": []
+}

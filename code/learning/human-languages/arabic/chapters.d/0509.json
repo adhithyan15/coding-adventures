@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Germs and jabs",
+  "label": "ch:ar-germs-and-jabs",
+  "canDo": "I can talk about an infection, a virus, a germ, a vaccination and a swelling.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C509-waram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about an infection, a virus, a germ, a vaccination and a swelling.",
+    "assesses": [
+      "AR-LEX-C509-ADWA509-03",
+      "AR-LEX-C509-ADWA509-04",
+      "AR-LEX-C509-ADWA509-05"
+    ]
+  }
+}

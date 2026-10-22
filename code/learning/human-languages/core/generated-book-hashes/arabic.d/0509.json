@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:bd70257d83158186",
+  "lessonIds": [
+    "AR-C509-adwa",
+    "AR-C509-fayrus",
+    "AR-C509-jurthuma",
+    "AR-C509-tatim",
+    "AR-C509-waram"
+  ],
+  "tex": "arabic/book/chapters/ch509-germs-and-jabs.tex"
+}

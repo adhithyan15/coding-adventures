@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:54e40cf18eb05d25",
+  "lessonIds": [
+    "AR-C342-turath",
+    "AR-C342-makhtuta",
+    "AR-C342-naqsh",
+    "AR-C342-laqab",
+    "AR-C342-ikhtaraa"
+  ],
+  "tex": "arabic/book/chapters/ch342-heritage-and-inventions.tex"
+}

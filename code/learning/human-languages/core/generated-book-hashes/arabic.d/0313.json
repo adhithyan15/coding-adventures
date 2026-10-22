@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:a92b90e8542ff1ce",
+  "lessonIds": [
+    "AR-C313-ala-al-fawr",
+    "AR-C313-suraana-ma",
+    "AR-C313-tadrijiyyan",
+    "AR-C313-min-jadid",
+    "AR-C313-istaada"
+  ],
+  "tex": "arabic/book/chapters/ch313-right-away.tex"
+}

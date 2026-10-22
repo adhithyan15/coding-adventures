@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "Schooling",
+  "label": "ch:ar-schooling",
+  "canDo": "I can talk about education, upbringing, a kindergarten, literacy and attendance.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C398-hudur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about education, upbringing, a kindergarten, literacy and attendance.",
+    "assesses": [
+      "AR-LEX-C398-TALIM398-03",
+      "AR-LEX-C398-TALIM398-04",
+      "AR-LEX-C398-TALIM398-05"
+    ]
+  }
+}

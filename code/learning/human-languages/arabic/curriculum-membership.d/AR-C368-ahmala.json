@@ -1,0 +1,11 @@
+{
+  "id": "AR-C368-ahmala",
+  "pathSegment": "AR-PATH-368-AHAMMIYYA368",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-368-AHAMMIYYA368",
+      "order": 3
+    }
+  ]
+}

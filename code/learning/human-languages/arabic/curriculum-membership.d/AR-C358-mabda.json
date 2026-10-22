@@ -1,0 +1,11 @@
+{
+  "id": "AR-C358-mabda",
+  "pathSegment": "AR-PATH-358-HUJJA358",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-358-HUJJA358",
+      "order": 1
+    }
+  ]
+}

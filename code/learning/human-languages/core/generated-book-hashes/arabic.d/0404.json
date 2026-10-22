@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:30665e54ce04f0ad",
+  "lessonIds": [
+    "AR-C404-shart",
+    "AR-C404-ishtarata",
+    "AR-C404-hatta-law",
+    "AR-C404-kama-law",
+    "AR-C404-damina"
+  ],
+  "tex": "arabic/book/chapters/ch404-conditions.tex"
+}

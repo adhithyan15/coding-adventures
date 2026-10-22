@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:f4c955606eade338",
+  "lessonIds": [
+    "AR-C366-iddaa",
+    "AR-C366-zaama",
+    "AR-C366-shakkaka",
+    "AR-C366-saddaqa",
+    "AR-C366-istadalla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch366.txt",
+  "json": "arabic/narration/ch366.json",
+  "textHash": "fnv1a64:9277e4846f706f42",
+  "jsonHash": "fnv1a64:15c33bf64485f834",
+  "findings": []
+}

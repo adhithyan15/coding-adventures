@@ -1,0 +1,11 @@
+{
+  "id": "AR-C348-aqaba",
+  "pathSegment": "AR-PATH-348-TUHMA348",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-348-TUHMA348",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:b45e9d32905fd2d7",
+  "lessonIds": [
+    "AR-C293-murasil",
+    "AR-C293-bayan",
+    "AR-C293-sahifa",
+    "AR-C293-alana",
+    "AR-C293-sarraha"
+  ],
+  "tex": "arabic/book/chapters/ch293-reporters-and-statements.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C303-shirrir",
+    "language": "arabic",
+    "chapter": 303,
+    "sequence": 17540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ff0d4d9a70ca3f5"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C316-anqad",
+  "pathSegment": "AR-PATH-316-KARITHA316",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-316-KARITHA316",
+      "order": 4
+    }
+  ]
+}

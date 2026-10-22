@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C414-nataja",
+    "language": "arabic",
+    "chapter": 414,
+    "sequence": 23270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af5c2a8959ba32d7"
+  },
+  "findings": []
+}

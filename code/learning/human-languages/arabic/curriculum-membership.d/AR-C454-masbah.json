@@ -1,0 +1,11 @@
+{
+  "id": "AR-C454-masbah",
+  "pathSegment": "AR-PATH-454-IMARA454",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-454-IMARA454",
+      "order": 3
+    }
+  ]
+}

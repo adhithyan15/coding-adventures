@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:4bedf83be7df0cf0",
+  "lessonIds": [
+    "AR-C375-maa-dhalika",
+    "AR-C375-illa-anna",
+    "AR-C375-amma",
+    "AR-C375-kadhalika",
+    "AR-C375-ilawatan-ala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch375.txt",
+  "json": "arabic/narration/ch375.json",
+  "textHash": "fnv1a64:bd2be2faf252398a",
+  "jsonHash": "fnv1a64:e3d9b17c668f7fbd",
+  "findings": []
+}

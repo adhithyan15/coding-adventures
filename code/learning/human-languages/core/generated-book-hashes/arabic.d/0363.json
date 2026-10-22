@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:e6b213a6b3ab7a9f",
+  "lessonIds": [
+    "AR-C363-nazariyya",
+    "AR-C363-fardiyya",
+    "AR-C363-mafhum",
+    "AR-C363-zahira",
+    "AR-C363-fassara"
+  ],
+  "tex": "arabic/book/chapters/ch363-theories-and-concepts.tex"
+}

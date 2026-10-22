@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:1c9a34a5b3300683",
+  "lessonIds": [
+    "AR-C335-sahir",
+    "AR-C335-ghul",
+    "AR-C335-tinnin",
+    "AR-C335-imlaq",
+    "AR-C335-qazam"
+  ],
+  "tex": "arabic/book/chapters/ch335-fairy-tale-creatures.tex"
+}

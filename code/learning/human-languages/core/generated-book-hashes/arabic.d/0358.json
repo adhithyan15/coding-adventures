@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:d83f7772f6cc0bdb",
+  "lessonIds": [
+    "AR-C358-hujja",
+    "AR-C358-mabda",
+    "AR-C358-burhan",
+    "AR-C358-athbata",
+    "AR-C358-aqnaa"
+  ],
+  "tex": "arabic/book/chapters/ch358-arguments-and-proof.tex"
+}

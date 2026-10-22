@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:b93d52e19d542bc1",
+  "lessonIds": [
+    "AR-C439-manzar",
+    "AR-C439-burj",
+    "AR-C439-nusb",
+    "AR-C439-istakshafa",
+    "AR-C439-istahaba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch439.txt",
+  "json": "arabic/narration/ch439.json",
+  "textHash": "fnv1a64:aaea5ae89579d366",
+  "jsonHash": "fnv1a64:fa5b031741e4b04a",
+  "findings": []
+}

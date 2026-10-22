@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:65f9361ce97c7b74",
+  "lessonIds": [
+    "AR-C386-taawana",
+    "AR-C386-tafawada",
+    "AR-C386-sadaqa",
+    "AR-C386-sira",
+    "AR-C386-azma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch386.txt",
+  "json": "arabic/narration/ch386.json",
+  "textHash": "fnv1a64:489e3611181f894d",
+  "jsonHash": "fnv1a64:b990ed6c6eff6490",
+  "findings": []
+}

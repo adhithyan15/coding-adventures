@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:5d5b77396483f67f",
+  "lessonIds": [
+    "AR-C376-falsafa",
+    "AR-C376-lughawiyyat",
+    "AR-C376-faylasuf",
+    "AR-C376-khabir",
+    "AR-C376-akadimi"
+  ],
+  "tex": "arabic/book/chapters/ch376-fields-of-study.tex"
+}

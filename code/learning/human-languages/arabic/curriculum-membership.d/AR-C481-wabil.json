@@ -1,0 +1,11 @@
+{
+  "id": "AR-C481-wabil",
+  "pathSegment": "AR-PATH-481-MATAR481",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-481-MATAR481",
+      "order": 2
+    }
+  ]
+}

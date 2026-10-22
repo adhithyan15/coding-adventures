@@ -236,4 +236,22 @@ describe("Hindi task-shape inventories", () => {
       "spoken defence, qualification, mediation, and audience-shift reformulation",
     );
   });
+
+  it("does not lose the two documented regional listening voices above B2", () => {
+    for (const level of ["B2", "C1", "C2"] as const) {
+      const listening = loadTaskShapeInventory("hindi", level).sections.find(
+        (section) => section.skill === "listening",
+      );
+      const voiceParts = listening?.parts.filter((part) =>
+        part.promptModes.some((mode) => mode.includes("documented regional Hindi voice")),
+      ) ?? [];
+      expect(voiceParts, `${level} needs two separately assigned voice parts`).toHaveLength(2);
+      expect(voiceParts[0]?.promptModes.some((mode) =>
+        mode.includes("one documented regional Hindi voice"),
+      )).toBe(true);
+      expect(voiceParts[1]?.promptModes.some((mode) =>
+        mode.includes("a second documented regional Hindi voice"),
+      )).toBe(true);
+    }
+  });
 });

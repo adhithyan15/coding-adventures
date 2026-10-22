@@ -1,0 +1,17 @@
+{
+  "language": "arabic",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:1a01d2e512ad9a2b",
+  "lessonIds": [
+    "AR-C290-akbar-min",
+    "AR-C290-mundhu",
+    "AR-R290-comparing-and-time"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "arabic/narration/ch290.txt",
+  "json": "arabic/narration/ch290.json",
+  "textHash": "fnv1a64:c9e859cfc0666044",
+  "jsonHash": "fnv1a64:712b0c80041d04f5",
+  "findings": []
+}

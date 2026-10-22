@@ -1,0 +1,11 @@
+{
+  "id": "AR-C321-salaba",
+  "pathSegment": "AR-PATH-321-SARIQ321",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-321-SARIQ321",
+      "order": 3
+    }
+  ]
+}

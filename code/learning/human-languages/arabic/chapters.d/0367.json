@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "Grasping ideas",
+  "label": "ch:ar-grasping-ideas",
+  "canDo": "I can say that someone realized, imagined or took in an idea, and talk about awareness and knowledge.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C367-marifa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say that someone realized, imagined or took in an idea, and talk about awareness and knowledge.",
+    "assesses": [
+      "AR-LEX-C367-IDRAK367-03",
+      "AR-LEX-C367-IDRAK367-04",
+      "AR-LEX-C367-IDRAK367-05"
+    ]
+  }
+}
