@@ -38,7 +38,10 @@ divisions among those factors, when multiplication connects the resulting
 prefix to that root. Variable-free integer `div` and `mod` reductions may also
 be folded left-to-right in that prefix when multiplication connects the folded
 integer to the root; zero or dynamic divisors, oversized prefixes, and division
-by the root stay conservative. Positive
+by the root stay conservative. Parenthesized variable-free integer reductions
+may also supply static offsets or factors around the root when checked
+arithmetic keeps the grouped result exact and within `2^53`; zero or dynamic
+divisors and inexact real divisions stay conservative. Positive
 variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
