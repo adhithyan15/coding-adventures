@@ -6454,6 +6454,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then ((((6 * sign(left)) + 6) div 4) ^ 2) else ((((6 * sign(right)) + 6) div 4) ^ 2)); output(result) end",
         expect: Expect::Stdout("9"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 - static integer remainder keeps a sign-rooted transform exact
     // through real division and a later power; the false branch computes
@@ -6464,6 +6466,8 @@ fn main() { out(1, VALUE); }\n",
         src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then ((((6 * sign(left) + 6) mod 8) / 2) ^ 2) else ((((6 * sign(right) + 6) mod 8) / 2) ^ 2)); output(result) end",
         expect: Expect::Stdout("4"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
     },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
