@@ -12,3 +12,9 @@ exact heading and TODO wording instead of reading the new shard, so that patch
 failed too. Run repository scripts from the worktree root, run package binaries
 separately from their package directory, and inspect generated lesson text before
 patching it.
+
+This recurred when a successful Rust doc-and-test chain was followed by
+`python3 code/scripts/lessons.py validate` while the shell was still in
+`code/packages/rust`. Keep repository-root and package-local gates in separate
+commands with explicit working directories; `&&` does not correct the cwd when
+the responsibility boundary changes.
