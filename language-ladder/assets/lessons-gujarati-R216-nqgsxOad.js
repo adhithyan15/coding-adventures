@@ -1,0 +1,55 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R218-review-213-218
+spine_node: SPINE-TALK-ABOUT-FUTURE
+sequence: 11900
+chapter: 218
+type: review
+headword: (dialogue)
+gloss: a review of chapters 213-218
+concept_tag: REVIEW
+prerequisites: [GU-C213-havaman, GU-C213-tadko, GU-C213-thandu, GU-C213-vadalchayu, GU-C213-varasvu, GU-C214-padvu, GU-C214-dhodhmar, GU-C214-tipu, GU-C214-tapakvu, GU-C214-palalvu, GU-C215-tharvu, GU-C215-him, GU-C215-os, GU-C215-gadh, GU-C215-huphalu, GU-C216-tapvu, GU-C216-ukalat, GU-C216-bhej, GU-C216-tapman, GU-C216-digri, GU-C217-hava, GU-C217-phukavu, GU-C217-adhi, GU-C217-vantol, GU-C217-phelavu, GU-C218-ugvu, GU-C218-suryoday, GU-C218-athamvu, GU-C218-suryast, GU-C218-ajvalu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C213-WEATHER213-01, GU-LEX-C213-WEATHER213-02, GU-LEX-C213-WEATHER213-03, GU-LEX-C213-WEATHER213-04, GU-LEX-C213-WEATHER213-05, GU-LEX-C214-RAIN214-01, GU-LEX-C214-RAIN214-02, GU-LEX-C214-RAIN214-03, GU-LEX-C214-RAIN214-04, GU-LEX-C214-RAIN214-05, GU-LEX-C215-FOG215-01, GU-LEX-C215-FOG215-02, GU-LEX-C215-FOG215-03, GU-LEX-C215-FOG215-04, GU-LEX-C215-FOG215-05, GU-LEX-C216-HEAT216-01, GU-LEX-C216-HEAT216-02, GU-LEX-C216-HEAT216-03, GU-LEX-C216-HEAT216-04, GU-LEX-C216-HEAT216-05, GU-LEX-C217-WIND217-01, GU-LEX-C217-WIND217-02, GU-LEX-C217-WIND217-03, GU-LEX-C217-WIND217-04, GU-LEX-C217-WIND217-05, GU-LEX-C218-SUN218-01, GU-LEX-C218-SUN218-02, GU-LEX-C218-SUN218-03, GU-LEX-C218-SUN218-04, GU-LEX-C218-SUN218-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C213-WEATHER213-01, GU-LEX-C213-WEATHER213-02, GU-LEX-C213-WEATHER213-03, GU-LEX-C213-WEATHER213-04, GU-LEX-C213-WEATHER213-05, GU-LEX-C214-RAIN214-01, GU-LEX-C214-RAIN214-02, GU-LEX-C214-RAIN214-03, GU-LEX-C214-RAIN214-04, GU-LEX-C214-RAIN214-05, GU-LEX-C215-FOG215-01, GU-LEX-C215-FOG215-02, GU-LEX-C215-FOG215-03, GU-LEX-C215-FOG215-04, GU-LEX-C215-FOG215-05, GU-LEX-C216-HEAT216-01, GU-LEX-C216-HEAT216-02, GU-LEX-C216-HEAT216-03, GU-LEX-C216-HEAT216-04, GU-LEX-C216-HEAT216-05, GU-LEX-C217-WIND217-01, GU-LEX-C217-WIND217-02, GU-LEX-C217-WIND217-03, GU-LEX-C217-WIND217-04, GU-LEX-C217-WIND217-05, GU-LEX-C218-SUN218-01, GU-LEX-C218-SUN218-02, GU-LEX-C218-SUN218-03, GU-LEX-C218-SUN218-04, GU-LEX-C218-SUN218-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C213-havaman, GU-C213-tadko, GU-C213-thandu, GU-C213-vadalchayu, GU-C213-varasvu, GU-C214-padvu, GU-C214-dhodhmar, GU-C214-tipu, GU-C214-tapakvu, GU-C214-palalvu, GU-C215-tharvu, GU-C215-him, GU-C215-os, GU-C215-gadh, GU-C215-huphalu, GU-C216-tapvu, GU-C216-ukalat, GU-C216-bhej, GU-C216-tapman, GU-C216-digri, GU-C217-hava, GU-C217-phukavu, GU-C217-adhi, GU-C217-vantol, GU-C217-phelavu, GU-C218-ugvu, GU-C218-suryoday, GU-C218-athamvu, GU-C218-suryast, GU-C218-ajvalu]
+---
+
+# Weather and the seasons - a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C213-WEATHER213-01, GU-LEX-C213-WEATHER213-02] -->
+
+[PAUSE 3s] Say the Gujarati for weather and sunshine.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C213-WEATHER213-01, GU-LEX-C213-WEATHER213-02, GU-LEX-C213-WEATHER213-03, GU-LEX-C213-WEATHER213-04, GU-LEX-C213-WEATHER213-05, GU-LEX-C214-RAIN214-01, GU-LEX-C214-RAIN214-02, GU-LEX-C214-RAIN214-03, GU-LEX-C214-RAIN214-04, GU-LEX-C214-RAIN214-05, GU-LEX-C215-FOG215-01, GU-LEX-C215-FOG215-02, GU-LEX-C215-FOG215-03, GU-LEX-C215-FOG215-04, GU-LEX-C215-FOG215-05, GU-LEX-C216-HEAT216-01, GU-LEX-C216-HEAT216-02, GU-LEX-C216-HEAT216-03, GU-LEX-C216-HEAT216-04, GU-LEX-C216-HEAT216-05, GU-LEX-C217-WIND217-01, GU-LEX-C217-WIND217-02, GU-LEX-C217-WIND217-03, GU-LEX-C217-WIND217-04, GU-LEX-C217-WIND217-05, GU-LEX-C218-SUN218-01, GU-LEX-C218-SUN218-02, GU-LEX-C218-SUN218-03, GU-LEX-C218-SUN218-04, GU-LEX-C218-SUN218-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: weather, sunshine, cold, cloudy, to pour down]
+- [YOU SAY: to fall, pouring, a drop, to drip, to get soaked]
+- [YOU SAY: to freeze, frost, dew, thick, lukewarm]
+- [YOU SAY: to blaze, sultry heat, humidity, temperature, degree]
+- [YOU SAY: air, to blow, dust storm, whirlwind, to spread]
+- [YOU SAY: to rise, sunrise, to set, sunset, daylight]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C213-WEATHER213-01, GU-LEX-C213-WEATHER213-02, GU-LEX-C213-WEATHER213-03, GU-LEX-C213-WEATHER213-04, GU-LEX-C213-WEATHER213-05, GU-LEX-C214-RAIN214-01, GU-LEX-C214-RAIN214-02, GU-LEX-C214-RAIN214-03, GU-LEX-C214-RAIN214-04, GU-LEX-C214-RAIN214-05, GU-LEX-C215-FOG215-01, GU-LEX-C215-FOG215-02, GU-LEX-C215-FOG215-03, GU-LEX-C215-FOG215-04, GU-LEX-C215-FOG215-05, GU-LEX-C216-HEAT216-01, GU-LEX-C216-HEAT216-02, GU-LEX-C216-HEAT216-03, GU-LEX-C216-HEAT216-04, GU-LEX-C216-HEAT216-05, GU-LEX-C217-WIND217-01, GU-LEX-C217-WIND217-02, GU-LEX-C217-WIND217-03, GU-LEX-C217-WIND217-04, GU-LEX-C217-WIND217-05, GU-LEX-C218-SUN218-01, GU-LEX-C218-SUN218-02, GU-LEX-C218-SUN218-03, GU-LEX-C218-SUN218-04, GU-LEX-C218-SUN218-05] -->
+
+[PAUSE 3s] Weather? (**હવામાન**.) Sunshine? (**તડકો**.) Cold? (**ઠંડું**.) Cloudy? (**વાદળછાયું**.) To pour down? (**વરસવું**.) To fall? (**પડવું**.) Pouring? (**ધોધમાર**.) A drop? (**ટીપું**.) To drip? (**ટપકવું**.) To get soaked? (**પલળવું**.) To freeze? (**ઠરવું**.) Frost? (**હિમ**.) Dew? (**ઓસ**.) Thick? (**ગાઢ**.) Lukewarm? (**હૂંફાળું**.) To blaze? (**તપવું**.) Sultry heat? (**ઉકળાટ**.) Humidity? (**ભેજ**.) Temperature? (**તાપમાન**.) Degree? (**ડિગ્રી**.) Air? (**હવા**.) To blow? (**ફૂંકાવું**.) Dust storm? (**આંધી**.) Whirlwind? (**વંટોળ**.) To spread? (**ફેલાવું**.) To rise? (**ઊગવું**.) Sunrise? (**સૂર્યોદય**.) To set? (**આથમવું**.) Sunset? (**સૂર્યાસ્ત**.) Daylight? (**અજવાળું**.)
+`;export{t};

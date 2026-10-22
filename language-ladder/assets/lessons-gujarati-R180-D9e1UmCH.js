@@ -1,0 +1,104 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R182-review-177-182
+spine_node: SPINE-TALK-ABOUT-FUTURE
+sequence: 9940
+chapter: 182
+type: review
+headword: (dialogue)
+gloss: a review of chapters 177-182
+concept_tag: REVIEW
+prerequisites: [GU-C177-varavar, GU-C177-avarnavar, GU-C177-vakhat, GU-C177-niyamit, GU-C177-rojindu, GU-C178-saru-karvu, GU-C178-patavvu, GU-C178-samaysar, GU-C178-baki, GU-C178-vitvu, GU-C179-yojna, GU-C179-nakki-karvu, GU-C179-karyakram, GU-C179-pahelethi, GU-C179-cokkas, GU-C180-mulakat, GU-C180-amantran, GU-C180-rah-jovi, GU-C180-rokavu, GU-C180-vitavvu, GU-C181-utaval-karvi, GU-C181-multavi-rakhvu, GU-C181-talvu-avoid, GU-C181-rad-karvu, GU-C181-lambavvu, GU-C182-ajkal, GU-C182-kayam, GU-C182-acanak, GU-C182-yad-rakhvu, GU-C182-gumavvu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C177-OFTEN177-01, GU-LEX-C177-OFTEN177-02, GU-LEX-C177-OFTEN177-03, GU-LEX-C177-OFTEN177-04, GU-LEX-C177-OFTEN177-05, GU-LEX-C178-START178-01, GU-LEX-C178-START178-02, GU-LEX-C178-START178-03, GU-LEX-C178-START178-04, GU-LEX-C178-START178-05, GU-LEX-C179-PLAN179-01, GU-LEX-C179-PLAN179-02, GU-LEX-C179-PLAN179-03, GU-LEX-C179-PLAN179-04, GU-LEX-C179-PLAN179-05, GU-LEX-C180-VISIT180-01, GU-LEX-C180-VISIT180-02, GU-LEX-C180-VISIT180-03, GU-LEX-C180-VISIT180-04, GU-LEX-C180-VISIT180-05, GU-LEX-C181-DELAY181-01, GU-LEX-C181-DELAY181-02, GU-LEX-C181-DELAY181-03, GU-LEX-C181-DELAY181-04, GU-LEX-C181-DELAY181-05, GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02, GU-LEX-C182-NOW182-03, GU-LEX-C182-NOW182-04, GU-LEX-C182-NOW182-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C177-OFTEN177-01, GU-LEX-C177-OFTEN177-02, GU-LEX-C177-OFTEN177-03, GU-LEX-C177-OFTEN177-04, GU-LEX-C177-OFTEN177-05, GU-LEX-C178-START178-01, GU-LEX-C178-START178-02, GU-LEX-C178-START178-03, GU-LEX-C178-START178-04, GU-LEX-C178-START178-05, GU-LEX-C179-PLAN179-01, GU-LEX-C179-PLAN179-02, GU-LEX-C179-PLAN179-03, GU-LEX-C179-PLAN179-04, GU-LEX-C179-PLAN179-05, GU-LEX-C180-VISIT180-01, GU-LEX-C180-VISIT180-02, GU-LEX-C180-VISIT180-03, GU-LEX-C180-VISIT180-04, GU-LEX-C180-VISIT180-05, GU-LEX-C181-DELAY181-01, GU-LEX-C181-DELAY181-02, GU-LEX-C181-DELAY181-03, GU-LEX-C181-DELAY181-04, GU-LEX-C181-DELAY181-05, GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02, GU-LEX-C182-NOW182-03, GU-LEX-C182-NOW182-04, GU-LEX-C182-NOW182-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C177-varavar, GU-C177-avarnavar, GU-C177-vakhat, GU-C177-niyamit, GU-C177-rojindu, GU-C178-saru-karvu, GU-C178-patavvu, GU-C178-samaysar, GU-C178-baki, GU-C178-vitvu, GU-C179-yojna, GU-C179-nakki-karvu, GU-C179-karyakram, GU-C179-pahelethi, GU-C179-cokkas, GU-C180-mulakat, GU-C180-amantran, GU-C180-rah-jovi, GU-C180-rokavu, GU-C180-vitavvu, GU-C181-utaval-karvi, GU-C181-multavi-rakhvu, GU-C181-talvu-avoid, GU-C181-rad-karvu, GU-C181-lambavvu, GU-C182-ajkal, GU-C182-kayam, GU-C182-acanak, GU-C182-yad-rakhvu, GU-C182-gumavvu]
+---
+
+# Time and plans words, a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C177-OFTEN177-01, GU-LEX-C177-OFTEN177-02] -->
+
+[PAUSE 3s] Say the Gujarati for again and again and now and then.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C177-OFTEN177-01, GU-LEX-C177-OFTEN177-02, GU-LEX-C177-OFTEN177-03, GU-LEX-C177-OFTEN177-04, GU-LEX-C177-OFTEN177-05, GU-LEX-C178-START178-01, GU-LEX-C178-START178-02, GU-LEX-C178-START178-03, GU-LEX-C178-START178-04, GU-LEX-C178-START178-05, GU-LEX-C179-PLAN179-01, GU-LEX-C179-PLAN179-02, GU-LEX-C179-PLAN179-03, GU-LEX-C179-PLAN179-04, GU-LEX-C179-PLAN179-05, GU-LEX-C180-VISIT180-01, GU-LEX-C180-VISIT180-02, GU-LEX-C180-VISIT180-03, GU-LEX-C180-VISIT180-04, GU-LEX-C180-VISIT180-05, GU-LEX-C181-DELAY181-01, GU-LEX-C181-DELAY181-02, GU-LEX-C181-DELAY181-03, GU-LEX-C181-DELAY181-04, GU-LEX-C181-DELAY181-05, GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02, GU-LEX-C182-NOW182-03, GU-LEX-C182-NOW182-04, GU-LEX-C182-NOW182-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: again and again, now and then, occasion, regular, everyday]
+- [YOU SAY: to start, to finish, on time, remaining, to go by]
+- [YOU SAY: plan, to decide, programme, beforehand, certain]
+- [YOU SAY: visit, invitation, to wait, to stay on, to pass]
+- [YOU SAY: to hurry, to postpone, to avoid, to cancel, to extend]
+- [YOU SAY: these days, permanently, suddenly, to keep in mind, to let slip]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C177-OFTEN177-01, GU-LEX-C177-OFTEN177-02, GU-LEX-C177-OFTEN177-03, GU-LEX-C177-OFTEN177-04, GU-LEX-C177-OFTEN177-05, GU-LEX-C178-START178-01, GU-LEX-C178-START178-02, GU-LEX-C178-START178-03, GU-LEX-C178-START178-04, GU-LEX-C178-START178-05, GU-LEX-C179-PLAN179-01, GU-LEX-C179-PLAN179-02, GU-LEX-C179-PLAN179-03, GU-LEX-C179-PLAN179-04, GU-LEX-C179-PLAN179-05, GU-LEX-C180-VISIT180-01, GU-LEX-C180-VISIT180-02, GU-LEX-C180-VISIT180-03, GU-LEX-C180-VISIT180-04, GU-LEX-C180-VISIT180-05, GU-LEX-C181-DELAY181-01, GU-LEX-C181-DELAY181-02, GU-LEX-C181-DELAY181-03, GU-LEX-C181-DELAY181-04, GU-LEX-C181-DELAY181-05, GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02, GU-LEX-C182-NOW182-03, GU-LEX-C182-NOW182-04, GU-LEX-C182-NOW182-05] -->
+
+[PAUSE 3s] Again and again? (**વારંવાર**.) Now and then? (**અવારનવાર**.) Occasion? (**વખત**.) Regular? (**નિયમિત**.) Everyday? (**રોજિંદું**.) To start? (**શરૂ કરવું**.) To finish? (**પતાવવું**.) On time? (**સમયસર**.) Remaining? (**બાકી**.) To go by? (**વીતવું**.) Plan? (**યોજના**.) To decide? (**નક્કી કરવું**.) Programme? (**કાર્યક્રમ**.) Beforehand? (**પહેલેથી**.) Certain? (**ચોક્કસ**.) Visit? (**મુલાકાત**.) Invitation? (**આમંત્રણ**.) To wait? (**રાહ જોવી**.) To stay on? (**રોકાવું**.) To pass? (**વિતાવવું**.) To hurry? (**ઉતાવળ કરવી**.) To postpone? (**મુલતવી રાખવું**.) To avoid? (**ટાળવું**.) To cancel? (**રદ કરવું**.) To extend? (**લંબાવવું**.) These days? (**આજકાલ**.) Permanently? (**કાયમ**.) Suddenly? (**અચાનક**.) To keep in mind? (**યાદ રાખવું**.) To let slip? (**ગુમાવવું**.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R182-review-final-182
+spine_node: SPINE-TALK-ABOUT-FUTURE
+sequence: 9950
+chapter: 182
+type: review
+headword: (dialogue)
+gloss: one more pass over chapter 182
+concept_tag: REVIEW
+prerequisites: [GU-C182-ajkal, GU-C182-kayam, GU-C182-acanak, GU-C182-yad-rakhvu, GU-C182-gumavvu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02, GU-LEX-C182-NOW182-03, GU-LEX-C182-NOW182-04, GU-LEX-C182-NOW182-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02, GU-LEX-C182-NOW182-03, GU-LEX-C182-NOW182-04, GU-LEX-C182-NOW182-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C182-ajkal, GU-C182-kayam, GU-C182-acanak, GU-C182-yad-rakhvu, GU-C182-gumavvu]
+---
+
+# These days and for good — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02] -->
+
+[PAUSE 3s] Say the Gujarati for these days and permanently.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02, GU-LEX-C182-NOW182-03, GU-LEX-C182-NOW182-04, GU-LEX-C182-NOW182-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: these days, permanently, suddenly, to keep in mind, to let slip]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C182-NOW182-01, GU-LEX-C182-NOW182-02, GU-LEX-C182-NOW182-03, GU-LEX-C182-NOW182-04, GU-LEX-C182-NOW182-05] -->
+
+[PAUSE 3s] These days? (**આજકાલ**.) Permanently? (**કાયમ**.) Suddenly? (**અચાનક**.) To keep in mind? (**યાદ રાખવું**.) To let slip? (**ગુમાવવું**.)
+`;export{t as n,r as t};

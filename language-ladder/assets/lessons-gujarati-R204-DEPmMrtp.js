@@ -1,0 +1,55 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R206-review-201-206
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 11230
+chapter: 206
+type: review
+headword: (dialogue)
+gloss: a review of chapters 201-206
+concept_tag: REVIEW
+prerequisites: [GU-C201-sudharvu, GU-C201-moci, GU-C201-dhobi, GU-C201-hajam, GU-C201-suthar, GU-C202-corvu, GU-C202-thanu, GU-C202-luntvu, GU-C202-jadvu, GU-C202-kadhvu, GU-C203-pravas, GU-C203-saman, GU-C203-nikalvu, GU-C203-chodvu, GU-C203-valavvu, GU-C204-samaypatrak, GU-C204-puchparach, GU-C204-pletphorm, GU-C204-upadvu, GU-C204-chutvu, GU-C205-relve, GU-C205-jagya, GU-C205-utaru, GU-C205-thobhvu, GU-C205-uutarvu, GU-C206-pahocvu, GU-C206-thakvu, GU-C206-pravasi, GU-C206-mukam, GU-C206-gati]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C201-MEND201-01, GU-LEX-C201-MEND201-02, GU-LEX-C201-MEND201-03, GU-LEX-C201-MEND201-04, GU-LEX-C201-MEND201-05, GU-LEX-C202-THEFT202-01, GU-LEX-C202-THEFT202-02, GU-LEX-C202-THEFT202-03, GU-LEX-C202-THEFT202-04, GU-LEX-C202-THEFT202-05, GU-LEX-C203-TRIP203-01, GU-LEX-C203-TRIP203-02, GU-LEX-C203-TRIP203-03, GU-LEX-C203-TRIP203-04, GU-LEX-C203-TRIP203-05, GU-LEX-C204-TIMES204-01, GU-LEX-C204-TIMES204-02, GU-LEX-C204-TIMES204-03, GU-LEX-C204-TIMES204-04, GU-LEX-C204-TIMES204-05, GU-LEX-C205-RAIL205-01, GU-LEX-C205-RAIL205-02, GU-LEX-C205-RAIL205-03, GU-LEX-C205-RAIL205-04, GU-LEX-C205-RAIL205-05, GU-LEX-C206-ARRIVE206-01, GU-LEX-C206-ARRIVE206-02, GU-LEX-C206-ARRIVE206-03, GU-LEX-C206-ARRIVE206-04, GU-LEX-C206-ARRIVE206-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C201-MEND201-01, GU-LEX-C201-MEND201-02, GU-LEX-C201-MEND201-03, GU-LEX-C201-MEND201-04, GU-LEX-C201-MEND201-05, GU-LEX-C202-THEFT202-01, GU-LEX-C202-THEFT202-02, GU-LEX-C202-THEFT202-03, GU-LEX-C202-THEFT202-04, GU-LEX-C202-THEFT202-05, GU-LEX-C203-TRIP203-01, GU-LEX-C203-TRIP203-02, GU-LEX-C203-TRIP203-03, GU-LEX-C203-TRIP203-04, GU-LEX-C203-TRIP203-05, GU-LEX-C204-TIMES204-01, GU-LEX-C204-TIMES204-02, GU-LEX-C204-TIMES204-03, GU-LEX-C204-TIMES204-04, GU-LEX-C204-TIMES204-05, GU-LEX-C205-RAIL205-01, GU-LEX-C205-RAIL205-02, GU-LEX-C205-RAIL205-03, GU-LEX-C205-RAIL205-04, GU-LEX-C205-RAIL205-05, GU-LEX-C206-ARRIVE206-01, GU-LEX-C206-ARRIVE206-02, GU-LEX-C206-ARRIVE206-03, GU-LEX-C206-ARRIVE206-04, GU-LEX-C206-ARRIVE206-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C201-sudharvu, GU-C201-moci, GU-C201-dhobi, GU-C201-hajam, GU-C201-suthar, GU-C202-corvu, GU-C202-thanu, GU-C202-luntvu, GU-C202-jadvu, GU-C202-kadhvu, GU-C203-pravas, GU-C203-saman, GU-C203-nikalvu, GU-C203-chodvu, GU-C203-valavvu, GU-C204-samaypatrak, GU-C204-puchparach, GU-C204-pletphorm, GU-C204-upadvu, GU-C204-chutvu, GU-C205-relve, GU-C205-jagya, GU-C205-utaru, GU-C205-thobhvu, GU-C205-uutarvu, GU-C206-pahocvu, GU-C206-thakvu, GU-C206-pravasi, GU-C206-mukam, GU-C206-gati]
+---
+
+# Words from chapters 201–206 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C201-MEND201-01, GU-LEX-C201-MEND201-02] -->
+
+[PAUSE 3s] Say the Gujarati for to mend and cobbler.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C201-MEND201-01, GU-LEX-C201-MEND201-02, GU-LEX-C201-MEND201-03, GU-LEX-C201-MEND201-04, GU-LEX-C201-MEND201-05, GU-LEX-C202-THEFT202-01, GU-LEX-C202-THEFT202-02, GU-LEX-C202-THEFT202-03, GU-LEX-C202-THEFT202-04, GU-LEX-C202-THEFT202-05, GU-LEX-C203-TRIP203-01, GU-LEX-C203-TRIP203-02, GU-LEX-C203-TRIP203-03, GU-LEX-C203-TRIP203-04, GU-LEX-C203-TRIP203-05, GU-LEX-C204-TIMES204-01, GU-LEX-C204-TIMES204-02, GU-LEX-C204-TIMES204-03, GU-LEX-C204-TIMES204-04, GU-LEX-C204-TIMES204-05, GU-LEX-C205-RAIL205-01, GU-LEX-C205-RAIL205-02, GU-LEX-C205-RAIL205-03, GU-LEX-C205-RAIL205-04, GU-LEX-C205-RAIL205-05, GU-LEX-C206-ARRIVE206-01, GU-LEX-C206-ARRIVE206-02, GU-LEX-C206-ARRIVE206-03, GU-LEX-C206-ARRIVE206-04, GU-LEX-C206-ARRIVE206-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to mend, cobbler, washerman, barber, carpenter]
+- [YOU SAY: to steal, police station, to rob, to be found, to take out]
+- [YOU SAY: trip, luggage, to set out, to drop off, to see off]
+- [YOU SAY: timetable, enquiry, platform, to start off, to leave]
+- [YOU SAY: railway, seat, passenger, to halt, to get off]
+- [YOU SAY: to arrive, to get tired, tourist, stopping place, speed]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C201-MEND201-01, GU-LEX-C201-MEND201-02, GU-LEX-C201-MEND201-03, GU-LEX-C201-MEND201-04, GU-LEX-C201-MEND201-05, GU-LEX-C202-THEFT202-01, GU-LEX-C202-THEFT202-02, GU-LEX-C202-THEFT202-03, GU-LEX-C202-THEFT202-04, GU-LEX-C202-THEFT202-05, GU-LEX-C203-TRIP203-01, GU-LEX-C203-TRIP203-02, GU-LEX-C203-TRIP203-03, GU-LEX-C203-TRIP203-04, GU-LEX-C203-TRIP203-05, GU-LEX-C204-TIMES204-01, GU-LEX-C204-TIMES204-02, GU-LEX-C204-TIMES204-03, GU-LEX-C204-TIMES204-04, GU-LEX-C204-TIMES204-05, GU-LEX-C205-RAIL205-01, GU-LEX-C205-RAIL205-02, GU-LEX-C205-RAIL205-03, GU-LEX-C205-RAIL205-04, GU-LEX-C205-RAIL205-05, GU-LEX-C206-ARRIVE206-01, GU-LEX-C206-ARRIVE206-02, GU-LEX-C206-ARRIVE206-03, GU-LEX-C206-ARRIVE206-04, GU-LEX-C206-ARRIVE206-05] -->
+
+[PAUSE 3s] To mend? (**સુધારવું**.) Cobbler? (**મોચી**.) Washerman? (**ધોબી**.) Barber? (**હજામ**.) Carpenter? (**સુથાર**.) To steal? (**ચોરવું**.) Police station? (**થાણું**.) To rob? (**લૂંટવું**.) To be found? (**જડવું**.) To take out? (**કાઢવું**.) Trip? (**પ્રવાસ**.) Luggage? (**સામાન**.) To set out? (**નીકળવું**.) To drop off? (**છોડવું**.) To see off? (**વળાવવું**.) Timetable? (**સમયપત્રક**.) Enquiry? (**પૂછપરછ**.) Platform? (**પ્લેટફોર્મ**.) To start off? (**ઊપડવું**.) To leave? (**છૂટવું**.) Railway? (**રેલવે**.) Seat? (**જગ્યા**.) Passenger? (**ઉતારુ**.) To halt? (**થોભવું**.) To get off? (**ઊતરવું**.) To arrive? (**પહોંચવું**.) To get tired? (**થાકવું**.) Tourist? (**પ્રવાસી**.) Stopping place? (**મુકામ**.) Speed? (**ગતિ**.)
+`;export{t};

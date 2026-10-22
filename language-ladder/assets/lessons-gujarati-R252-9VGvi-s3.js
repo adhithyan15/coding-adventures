@@ -1,0 +1,55 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R254-review-249-254
+spine_node: SPINE-TALK-ABOUT-PAST
+sequence: 13810
+chapter: 254
+type: review
+headword: (dialogue)
+gloss: a review of chapters 249-254
+concept_tag: REVIEW
+prerequisites: [GU-C249-mobail, GU-C249-nambar, GU-C249-sandesho, GU-C249-avaj, GU-C249-melavvu, GU-C250-kampyutar, GU-C250-skrin, GU-C250-dabavvu, GU-C250-sacavvu, GU-C250-chapvu, GU-C251-arth, GU-C251-anuvad, GU-C251-shabdkosh, GU-C251-dhyan-apvu, GU-C251-yad-karvu, GU-C252-pharaj, GU-C252-javabdari, GU-C252-acarya, GU-C252-ganvesh, GU-C252-nivrtt-thavu, GU-C253-shokh, GU-C253-navrash, GU-C253-manvu-enjoy, GU-C253-kantalvu, GU-C253-ajmavvu, GU-C254-sangit, GU-C254-git, GU-C254-vagadvu, GU-C254-vasli, GU-C254-tablu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C249-PHONE249-01, GU-LEX-C249-PHONE249-02, GU-LEX-C249-PHONE249-03, GU-LEX-C249-PHONE249-04, GU-LEX-C249-PHONE249-05, GU-LEX-C250-COMPUTER250-01, GU-LEX-C250-COMPUTER250-02, GU-LEX-C250-COMPUTER250-03, GU-LEX-C250-COMPUTER250-04, GU-LEX-C250-COMPUTER250-05, GU-LEX-C251-MEANING251-01, GU-LEX-C251-MEANING251-02, GU-LEX-C251-MEANING251-03, GU-LEX-C251-MEANING251-04, GU-LEX-C251-MEANING251-05, GU-LEX-C252-DUTY252-01, GU-LEX-C252-DUTY252-02, GU-LEX-C252-DUTY252-03, GU-LEX-C252-DUTY252-04, GU-LEX-C252-DUTY252-05, GU-LEX-C253-HOBBY253-01, GU-LEX-C253-HOBBY253-02, GU-LEX-C253-HOBBY253-03, GU-LEX-C253-HOBBY253-04, GU-LEX-C253-HOBBY253-05, GU-LEX-C254-MUSIC254-01, GU-LEX-C254-MUSIC254-02, GU-LEX-C254-MUSIC254-03, GU-LEX-C254-MUSIC254-04, GU-LEX-C254-MUSIC254-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C249-PHONE249-01, GU-LEX-C249-PHONE249-02, GU-LEX-C249-PHONE249-03, GU-LEX-C249-PHONE249-04, GU-LEX-C249-PHONE249-05, GU-LEX-C250-COMPUTER250-01, GU-LEX-C250-COMPUTER250-02, GU-LEX-C250-COMPUTER250-03, GU-LEX-C250-COMPUTER250-04, GU-LEX-C250-COMPUTER250-05, GU-LEX-C251-MEANING251-01, GU-LEX-C251-MEANING251-02, GU-LEX-C251-MEANING251-03, GU-LEX-C251-MEANING251-04, GU-LEX-C251-MEANING251-05, GU-LEX-C252-DUTY252-01, GU-LEX-C252-DUTY252-02, GU-LEX-C252-DUTY252-03, GU-LEX-C252-DUTY252-04, GU-LEX-C252-DUTY252-05, GU-LEX-C253-HOBBY253-01, GU-LEX-C253-HOBBY253-02, GU-LEX-C253-HOBBY253-03, GU-LEX-C253-HOBBY253-04, GU-LEX-C253-HOBBY253-05, GU-LEX-C254-MUSIC254-01, GU-LEX-C254-MUSIC254-02, GU-LEX-C254-MUSIC254-03, GU-LEX-C254-MUSIC254-04, GU-LEX-C254-MUSIC254-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C249-mobail, GU-C249-nambar, GU-C249-sandesho, GU-C249-avaj, GU-C249-melavvu, GU-C250-kampyutar, GU-C250-skrin, GU-C250-dabavvu, GU-C250-sacavvu, GU-C250-chapvu, GU-C251-arth, GU-C251-anuvad, GU-C251-shabdkosh, GU-C251-dhyan-apvu, GU-C251-yad-karvu, GU-C252-pharaj, GU-C252-javabdari, GU-C252-acarya, GU-C252-ganvesh, GU-C252-nivrtt-thavu, GU-C253-shokh, GU-C253-navrash, GU-C253-manvu-enjoy, GU-C253-kantalvu, GU-C253-ajmavvu, GU-C254-sangit, GU-C254-git, GU-C254-vagadvu, GU-C254-vasli, GU-C254-tablu]
+---
+
+# Words from chapters 249–254 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C249-PHONE249-01, GU-LEX-C249-PHONE249-02] -->
+
+[PAUSE 3s] Say the Gujarati for mobile phone and number.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C249-PHONE249-01, GU-LEX-C249-PHONE249-02, GU-LEX-C249-PHONE249-03, GU-LEX-C249-PHONE249-04, GU-LEX-C249-PHONE249-05, GU-LEX-C250-COMPUTER250-01, GU-LEX-C250-COMPUTER250-02, GU-LEX-C250-COMPUTER250-03, GU-LEX-C250-COMPUTER250-04, GU-LEX-C250-COMPUTER250-05, GU-LEX-C251-MEANING251-01, GU-LEX-C251-MEANING251-02, GU-LEX-C251-MEANING251-03, GU-LEX-C251-MEANING251-04, GU-LEX-C251-MEANING251-05, GU-LEX-C252-DUTY252-01, GU-LEX-C252-DUTY252-02, GU-LEX-C252-DUTY252-03, GU-LEX-C252-DUTY252-04, GU-LEX-C252-DUTY252-05, GU-LEX-C253-HOBBY253-01, GU-LEX-C253-HOBBY253-02, GU-LEX-C253-HOBBY253-03, GU-LEX-C253-HOBBY253-04, GU-LEX-C253-HOBBY253-05, GU-LEX-C254-MUSIC254-01, GU-LEX-C254-MUSIC254-02, GU-LEX-C254-MUSIC254-03, GU-LEX-C254-MUSIC254-04, GU-LEX-C254-MUSIC254-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: mobile phone, number, message, voice, to obtain]
+- [YOU SAY: computer, screen, to press, to keep safe, to print]
+- [YOU SAY: meaning, translation, dictionary, to pay attention, to memorize]
+- [YOU SAY: duty, responsibility, principal, uniform, to retire]
+- [YOU SAY: hobby, leisure, to enjoy, to get bored, to try out]
+- [YOU SAY: music, song, to play an instrument, flute, tabla drum]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C249-PHONE249-01, GU-LEX-C249-PHONE249-02, GU-LEX-C249-PHONE249-03, GU-LEX-C249-PHONE249-04, GU-LEX-C249-PHONE249-05, GU-LEX-C250-COMPUTER250-01, GU-LEX-C250-COMPUTER250-02, GU-LEX-C250-COMPUTER250-03, GU-LEX-C250-COMPUTER250-04, GU-LEX-C250-COMPUTER250-05, GU-LEX-C251-MEANING251-01, GU-LEX-C251-MEANING251-02, GU-LEX-C251-MEANING251-03, GU-LEX-C251-MEANING251-04, GU-LEX-C251-MEANING251-05, GU-LEX-C252-DUTY252-01, GU-LEX-C252-DUTY252-02, GU-LEX-C252-DUTY252-03, GU-LEX-C252-DUTY252-04, GU-LEX-C252-DUTY252-05, GU-LEX-C253-HOBBY253-01, GU-LEX-C253-HOBBY253-02, GU-LEX-C253-HOBBY253-03, GU-LEX-C253-HOBBY253-04, GU-LEX-C253-HOBBY253-05, GU-LEX-C254-MUSIC254-01, GU-LEX-C254-MUSIC254-02, GU-LEX-C254-MUSIC254-03, GU-LEX-C254-MUSIC254-04, GU-LEX-C254-MUSIC254-05] -->
+
+[PAUSE 3s] Mobile phone? (**મોબાઈલ**.) Number? (**નંબર**.) Message? (**સંદેશો**.) Voice? (**અવાજ**.) To obtain? (**મેળવવું**.) Computer? (**કમ્પ્યૂટર**.) Screen? (**સ્ક્રીન**.) To press? (**દબાવવું**.) To keep safe? (**સાચવવું**.) To print? (**છાપવું**.) Meaning? (**અર્થ**.) Translation? (**અનુવાદ**.) Dictionary? (**શબ્દકોશ**.) To pay attention? (**ધ્યાન આપવું**.) To memorize? (**યાદ કરવું**.) Duty? (**ફરજ**.) Responsibility? (**જવાબદારી**.) Principal? (**આચાર્ય**.) Uniform? (**ગણવેશ**.) To retire? (**નિવૃત્ત થવું**.) Hobby? (**શોખ**.) Leisure? (**નવરાશ**.) To enjoy? (**માણવું**.) To get bored? (**કંટાળવું**.) To try out? (**અજમાવવું**.) Music? (**સંગીત**.) Song? (**ગીત**.) To play an instrument? (**વગાડવું**.) Flute? (**વાંસળી**.) Tabla drum? (**તબલું**.)
+`;export{t};

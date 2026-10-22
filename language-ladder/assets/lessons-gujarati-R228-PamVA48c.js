@@ -1,0 +1,55 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-R230-review-225-230
+spine_node: SPINE-NEGATE-AND-ASK
+sequence: 12520
+chapter: 230
+type: review
+headword: (dialogue)
+gloss: a review of chapters 225-230
+concept_tag: REVIEW
+prerequisites: [GU-C225-cakkar, GU-C225-ulti-thavi, GU-C225-pacvu, GU-C225-bagasu-khavu, GU-C225-parsevo, GU-C226-dhrujvu, GU-C226-haphvu, GU-C226-sughvu, GU-C226-galvu, GU-C226-phephsu, GU-C227-ija, GU-C227-gha, GU-C227-hadku, GU-C227-mackodavu, GU-C227-langdavu, GU-C228-sojo, GU-C228-sujvu, GU-C228-khanjvalvu, GU-C228-camdi, GU-C228-phollo, GU-C229-kadu, GU-C229-angutho, GU-C229-ghuti, GU-C229-edi, GU-C229-pasli, GU-C230-dadh, GU-C230-jadbu, GU-C230-asu, GU-C230-pidavu, GU-C230-bebhan-thavu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-LEX-C225-UNWELL225-01, GU-LEX-C225-UNWELL225-02, GU-LEX-C225-UNWELL225-03, GU-LEX-C225-UNWELL225-04, GU-LEX-C225-UNWELL225-05, GU-LEX-C226-BREATH226-01, GU-LEX-C226-BREATH226-02, GU-LEX-C226-BREATH226-03, GU-LEX-C226-BREATH226-04, GU-LEX-C226-BREATH226-05, GU-LEX-C227-INJURY227-01, GU-LEX-C227-INJURY227-02, GU-LEX-C227-INJURY227-03, GU-LEX-C227-INJURY227-04, GU-LEX-C227-INJURY227-05, GU-LEX-C228-SKIN228-01, GU-LEX-C228-SKIN228-02, GU-LEX-C228-SKIN228-03, GU-LEX-C228-SKIN228-04, GU-LEX-C228-SKIN228-05, GU-LEX-C229-LIMBS229-01, GU-LEX-C229-LIMBS229-02, GU-LEX-C229-LIMBS229-03, GU-LEX-C229-LIMBS229-04, GU-LEX-C229-LIMBS229-05, GU-LEX-C230-TOOTH230-01, GU-LEX-C230-TOOTH230-02, GU-LEX-C230-TOOTH230-03, GU-LEX-C230-TOOTH230-04, GU-LEX-C230-TOOTH230-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [GU-LEX-C225-UNWELL225-01, GU-LEX-C225-UNWELL225-02, GU-LEX-C225-UNWELL225-03, GU-LEX-C225-UNWELL225-04, GU-LEX-C225-UNWELL225-05, GU-LEX-C226-BREATH226-01, GU-LEX-C226-BREATH226-02, GU-LEX-C226-BREATH226-03, GU-LEX-C226-BREATH226-04, GU-LEX-C226-BREATH226-05, GU-LEX-C227-INJURY227-01, GU-LEX-C227-INJURY227-02, GU-LEX-C227-INJURY227-03, GU-LEX-C227-INJURY227-04, GU-LEX-C227-INJURY227-05, GU-LEX-C228-SKIN228-01, GU-LEX-C228-SKIN228-02, GU-LEX-C228-SKIN228-03, GU-LEX-C228-SKIN228-04, GU-LEX-C228-SKIN228-05, GU-LEX-C229-LIMBS229-01, GU-LEX-C229-LIMBS229-02, GU-LEX-C229-LIMBS229-03, GU-LEX-C229-LIMBS229-04, GU-LEX-C229-LIMBS229-05, GU-LEX-C230-TOOTH230-01, GU-LEX-C230-TOOTH230-02, GU-LEX-C230-TOOTH230-03, GU-LEX-C230-TOOTH230-04, GU-LEX-C230-TOOTH230-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C225-cakkar, GU-C225-ulti-thavi, GU-C225-pacvu, GU-C225-bagasu-khavu, GU-C225-parsevo, GU-C226-dhrujvu, GU-C226-haphvu, GU-C226-sughvu, GU-C226-galvu, GU-C226-phephsu, GU-C227-ija, GU-C227-gha, GU-C227-hadku, GU-C227-mackodavu, GU-C227-langdavu, GU-C228-sojo, GU-C228-sujvu, GU-C228-khanjvalvu, GU-C228-camdi, GU-C228-phollo, GU-C229-kadu, GU-C229-angutho, GU-C229-ghuti, GU-C229-edi, GU-C229-pasli, GU-C230-dadh, GU-C230-jadbu, GU-C230-asu, GU-C230-pidavu, GU-C230-bebhan-thavu]
+---
+
+# Words from chapters 225–230 — a review
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C225-UNWELL225-01, GU-LEX-C225-UNWELL225-02] -->
+
+[PAUSE 3s] Say the Gujarati for dizziness and to vomit.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C225-UNWELL225-01, GU-LEX-C225-UNWELL225-02, GU-LEX-C225-UNWELL225-03, GU-LEX-C225-UNWELL225-04, GU-LEX-C225-UNWELL225-05, GU-LEX-C226-BREATH226-01, GU-LEX-C226-BREATH226-02, GU-LEX-C226-BREATH226-03, GU-LEX-C226-BREATH226-04, GU-LEX-C226-BREATH226-05, GU-LEX-C227-INJURY227-01, GU-LEX-C227-INJURY227-02, GU-LEX-C227-INJURY227-03, GU-LEX-C227-INJURY227-04, GU-LEX-C227-INJURY227-05, GU-LEX-C228-SKIN228-01, GU-LEX-C228-SKIN228-02, GU-LEX-C228-SKIN228-03, GU-LEX-C228-SKIN228-04, GU-LEX-C228-SKIN228-05, GU-LEX-C229-LIMBS229-01, GU-LEX-C229-LIMBS229-02, GU-LEX-C229-LIMBS229-03, GU-LEX-C229-LIMBS229-04, GU-LEX-C229-LIMBS229-05, GU-LEX-C230-TOOTH230-01, GU-LEX-C230-TOOTH230-02, GU-LEX-C230-TOOTH230-03, GU-LEX-C230-TOOTH230-04, GU-LEX-C230-TOOTH230-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: dizziness, to vomit, to digest, to yawn, sweat]
+- [YOU SAY: to shiver, to pant, to sniff, to swallow, lung]
+- [YOU SAY: injury, wound, bone, to sprain, to limp]
+- [YOU SAY: swelling, to swell, to scratch, skin, blister]
+- [YOU SAY: wrist, thumb, ankle, heel, rib]
+- [YOU SAY: molar, jaw, tear, to suffer, to faint]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C225-UNWELL225-01, GU-LEX-C225-UNWELL225-02, GU-LEX-C225-UNWELL225-03, GU-LEX-C225-UNWELL225-04, GU-LEX-C225-UNWELL225-05, GU-LEX-C226-BREATH226-01, GU-LEX-C226-BREATH226-02, GU-LEX-C226-BREATH226-03, GU-LEX-C226-BREATH226-04, GU-LEX-C226-BREATH226-05, GU-LEX-C227-INJURY227-01, GU-LEX-C227-INJURY227-02, GU-LEX-C227-INJURY227-03, GU-LEX-C227-INJURY227-04, GU-LEX-C227-INJURY227-05, GU-LEX-C228-SKIN228-01, GU-LEX-C228-SKIN228-02, GU-LEX-C228-SKIN228-03, GU-LEX-C228-SKIN228-04, GU-LEX-C228-SKIN228-05, GU-LEX-C229-LIMBS229-01, GU-LEX-C229-LIMBS229-02, GU-LEX-C229-LIMBS229-03, GU-LEX-C229-LIMBS229-04, GU-LEX-C229-LIMBS229-05, GU-LEX-C230-TOOTH230-01, GU-LEX-C230-TOOTH230-02, GU-LEX-C230-TOOTH230-03, GU-LEX-C230-TOOTH230-04, GU-LEX-C230-TOOTH230-05] -->
+
+[PAUSE 3s] Dizziness? (**ચક્કર**.) To vomit? (**ઊલટી થવી**.) To digest? (**પચવું**.) To yawn? (**બગાસું ખાવું**.) Sweat? (**પરસેવો**.) To shiver? (**ધ્રૂજવું**.) To pant? (**હાંફવું**.) To sniff? (**સૂંઘવું**.) To swallow? (**ગળવું**.) Lung? (**ફેફસું**.) Injury? (**ઈજા**.) Wound? (**ઘા**.) Bone? (**હાડકું**.) To sprain? (**મચકોડાવું**.) To limp? (**લંગડાવું**.) Swelling? (**સોજો**.) To swell? (**સૂજવું**.) To scratch? (**ખંજવાળવું**.) Skin? (**ચામડી**.) Blister? (**ફોલ્લો**.) Wrist? (**કાંડું**.) Thumb? (**અંગૂઠો**.) Ankle? (**ઘૂંટી**.) Heel? (**એડી**.) Rib? (**પાંસળી**.) Molar? (**દાઢ**.) Jaw? (**જડબું**.) Tear? (**આંસુ**.) To suffer? (**પીડાવું**.) To faint? (**બેભાન થવું**.)
+`;export{t};
