@@ -8922,6 +8922,15 @@ fn main_window_cs_with_layout_variants(
                 "            component, mosaicEvent, RequiredProps);\n",
             ),
         );
+        // Profiling observes the active root, including layout variants without
+        // any projections. It must not retain a reference to the default root.
+        source = source.replace(
+            "BeginProfile(\"interaction-handler\", this.Component)",
+            "BeginProfile(\"interaction-handler\", this.layoutRoot)",
+        ).replace(
+            "BeginProfile(\"interaction-next-render\", this.Component)",
+            "BeginProfile(\"interaction-next-render\", this.layoutRoot)",
+        );
         // The changes ENV4 reports are the changes that may select another
         // layout. Reported first (handlers run in the order they were added,
         // and so do the queued callbacks), so the runtime's answer is
@@ -9981,8 +9990,8 @@ public sealed partial class MainWindow : Window
 
     private async void OnComponentDispatch(object? sender, {name}Event mosaicEvent)
     {{
-        using var handlerProfile = MosaicRuntimeHost.BeginProfile("interaction-handler");
-        var frameProfile = MosaicRuntimeHost.BeginProfile("interaction-next-render");
+        using var handlerProfile = MosaicRuntimeHost.BeginProfile("interaction-handler", this.Component);
+        var frameProfile = MosaicRuntimeHost.BeginProfile("interaction-next-render", this.Component);
         if (frameProfile is not null)
         {{
             System.EventHandler<object>? rendered = null;

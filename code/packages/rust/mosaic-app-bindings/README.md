@@ -212,3 +212,11 @@ completion. These fixed names omit property names and values. Sum repeated
 conversion/setter samples within an apply-props interval; each consumes one slot
 in the shared 4096-sample cap. Notification time includes synchronous bindings,
 not subsequent layout or compositor presentation.
+
+Projection-owning components add an optional `projection` object to interaction
+profiling samples with per-interval `reads`, `created`, `reused`, and `removed`
+deltas. These count projected view models, not realized native elements. Frame
+intervals can overlap and must not be summed as exclusive event totals. Missing
+or failing diagnostic getters omit this object; disabled profiling does not read
+them. Counter sampling adds profiling overhead. Export remains bounded and runs
+on normal process exit.
