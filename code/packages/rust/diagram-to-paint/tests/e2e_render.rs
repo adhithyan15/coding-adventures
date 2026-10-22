@@ -31,7 +31,7 @@ mod apple {
     use diagram_to_paint::{
         diagram_to_paint, diagram_to_paint_board, diagram_to_paint_chart,
         diagram_to_paint_event_model, diagram_to_paint_packet, diagram_to_paint_sequence,
-        diagram_to_paint_cynefin, diagram_to_paint_info, diagram_to_paint_ishikawa, diagram_to_paint_railroad, diagram_to_paint_swimlane, diagram_to_paint_treeview, diagram_to_paint_treemap, diagram_to_paint_venn, diagram_to_paint_wardley,
+        diagram_to_paint_cynefin, diagram_to_paint_info, diagram_to_paint_ishikawa, diagram_to_paint_railroad, diagram_to_paint_swimlane, diagram_to_paint_swimlane_with_images, diagram_to_paint_treeview, diagram_to_paint_treemap, diagram_to_paint_venn, diagram_to_paint_wardley,
         diagram_to_paint_structural, diagram_to_paint_temporal, DiagramToPaintOptions,
     };
     use dot_parser::parse_to_diagram;
@@ -44,7 +44,7 @@ mod apple {
         parse_to_diagram as parse_mermaid_to_diagram, parse_cynefin, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_swimlane, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     };
     use paint_codec_png::write_png;
-    use paint_instructions::{PaintInstruction, PathCommand};
+    use paint_instructions::{PaintInstruction, PathCommand, PixelContainer};
     use paint_metal::render;
     use serde_json::Value;
     use text_native_coretext::{CoreTextMetrics, CoreTextResolver, CoreTextShaper};
@@ -3834,7 +3834,7 @@ line "Target" [35, 50, 68, 82]"##,
             } else {
                 layout_swimlane(&diagram)
             };
-            let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
+            let paint_options = DiagramToPaintOptions {
                 background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
                 device_pixel_ratio: 2.0,
                 label_font: font_spec("Helvetica", 13.0),
@@ -3842,7 +3842,16 @@ line "Target" [35, 50, 68, 82]"##,
                 shaper: &shaper,
                 metrics: &metrics,
                 resolver: &resolver,
-            });
+            };
+            let decoded_images = BTreeMap::from([(
+                "https://example.com/logo.png".into(),
+                PixelContainer::from_data(2, 1, vec![235, 87, 87, 255, 54, 122, 246, 255]),
+            )]);
+            let scene = if fixture_name == "image-node" {
+                diagram_to_paint_swimlane_with_images(&layout, &paint_options, &decoded_images)
+            } else {
+                diagram_to_paint_swimlane(&layout, &paint_options)
+            };
             assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
             if fixture_name == "icon-glyph-node" {
                 assert_eq!(layout.icons.get("parser").map(String::as_str), Some("logos:rust"));
@@ -3870,11 +3879,22 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!((layout.image_nodes["logo"].width, layout.image_nodes["logo"].height), (128.0, 64.0));
                 assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
                     PaintInstruction::Image(image) if image.width == 128.0 && image.height == 64.0
-                        && matches!(&image.src, paint_instructions::ImageSrc::Uri(source)
-                            if source == "https://example.com/logo.png")
-                )), "image node must lower to backend-neutral URI image paint");
+                        && matches!(&image.src, paint_instructions::ImageSrc::Pixels(pixels)
+                            if pixels.width == 2 && pixels.height == 1
+                                && pixels.data == vec![235, 87, 87, 255, 54, 122, 246, 255])
+                )), "image node must lower supplied pixels to backend-neutral image paint");
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.node.logo.imageConstraint")), Some(&"on".to_string()));
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.logo.imageResolved")), Some(&"true".to_string()));
+                let uri_scene = diagram_to_paint_swimlane(&layout, &paint_options);
+                assert!(uri_scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Image(image)
+                        if matches!(&image.src, paint_instructions::ImageSrc::Uri(source)
+                            if source == "https://example.com/logo.png")
+                )), "image node must preserve its URI when decoded pixels are unavailable");
+                assert_eq!(uri_scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.logo.imageResolved")), Some(&"false".to_string()));
             }
             if fixture_name == "default-lane-for-loose-nodes" {
                 assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
