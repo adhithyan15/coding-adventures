@@ -1999,6 +1999,24 @@ fn swimlane_icon_node_options_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_image_node_options_reach_semantic_ir() {
+    use diagram_ir::SwimlaneLabelPosition;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  logo@{ img: \"https://example.com/logo.png\", label: \"Logo\", pos: t, w: 96, h: 64, constraint: on }\nend",
+    ).expect("Swimlane image node options should parse");
+
+    let image = &diagram.image_nodes["logo"];
+    assert_eq!(image.source, "https://example.com/logo.png");
+    assert_eq!((image.width, image.height), (96.0, 64.0));
+    assert!(image.preserve_aspect_ratio);
+    assert_eq!(image.label_position, SwimlaneLabelPosition::Top);
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, constraint: maybe }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, w: 0 }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, icon: y }\nend").is_err());
+}
+
+#[test]
 fn swimlane_classic_shape_attributes_and_aliases_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 

@@ -3864,6 +3864,16 @@ line "Target" [35, 50, 68, 82]"##,
                 assert_eq!(scene.metadata.as_ref().and_then(|metadata|
                     metadata.get("swimlane.node.square.iconHeight")), Some(&"60".to_string()));
             }
+            if fixture_name == "image-node" {
+                assert_eq!(layout.image_nodes["logo"].width, 96.0);
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Image(image) if image.width == 96.0 && image.height == 64.0
+                        && matches!(&image.src, paint_instructions::ImageSrc::Uri(source)
+                            if source == "https://example.com/logo.png")
+                )), "image node must lower to backend-neutral URI image paint");
+                assert_eq!(scene.metadata.as_ref().and_then(|metadata|
+                    metadata.get("swimlane.node.logo.imageConstraint")), Some(&"on".to_string()));
+            }
             if fixture_name == "default-lane-for-loose-nodes" {
                 assert_eq!(layout.lanes.iter().map(|lane| lane.id.as_str()).collect::<Vec<_>>(),
                     vec!["OwnedLane", "__swimlane_default__"]);

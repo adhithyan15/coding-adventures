@@ -54,8 +54,8 @@ use layout_ir::{
 use layout_effects::{EffectColor, EffectFilter, EffectStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
-    GlyphPosition, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintInstruction, PaintPath,
-    PaintRect, PaintScene, PathCommand, StrokeCap, StrokeJoin,
+    GlyphPosition, ImageSrc, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
+    PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand, StrokeCap, StrokeJoin,
 };
 use text_interfaces::{
     FontMetrics, FontQuery, FontResolver, FontStyle, FontWeight, ShapeOptions, TextShaper,
@@ -1466,7 +1466,7 @@ where
                 stroke_dash_offset: None,
             }),
         };
-        if diagram.icon_nodes.contains_key(&node.id) {
+        if diagram.icon_nodes.contains_key(&node.id) || diagram.image_nodes.contains_key(&node.id) {
             shape = PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(), x: node.x, y: node.y, width: node.width, height: node.height,
                 fill: None, stroke: None, stroke_width: None, corner_radius: None,
@@ -1496,6 +1496,17 @@ where
                     }),
                 });
             }
+        }
+        if let Some(image) = diagram.image_nodes.get(&node.id) {
+            let has_label = !node.label.text.is_empty();
+            let content_height = image.height + if has_label { 30.0 } else { 0.0 };
+            let content_y = node.y + (node.height - content_height) / 2.0;
+            let image_y = content_y + if has_label && image.label_position == SwimlaneLabelPosition::Top { 30.0 } else { 0.0 };
+            instructions.push(PaintInstruction::Image(PaintImage {
+                base: PaintBase::default(), x: node.x + (node.width - image.width) / 2.0,
+                y: image_y, width: image.width, height: image.height,
+                src: ImageSrc::Uri(image.source.clone()), opacity: None,
+            }));
         }
         match node.shape {
             DiagramShape::Subroutine => {
@@ -1625,6 +1636,19 @@ where
                     content_y
                 } else {
                     content_y + size + 8.0
+                };
+                label_width = node.width - 16.0;
+                label_height = 22.0;
+            }
+            if let Some(image) = diagram.image_nodes.get(&node.id) {
+                let has_label = !node.label.text.is_empty();
+                let content_height = image.height + if has_label { 30.0 } else { 0.0 };
+                let content_y = node.y + (node.height - content_height) / 2.0;
+                label_x = node.x + 8.0;
+                label_y = if image.label_position == SwimlaneLabelPosition::Top {
+                    content_y
+                } else {
+                    content_y + image.height + 8.0
                 };
                 label_width = node.width - 16.0;
                 label_height = 22.0;
@@ -1817,6 +1841,17 @@ where
             }.into());
             metadata.insert(format!("swimlane.node.{node_id}.iconHeight"), options.height.to_string());
         }
+    }
+    for (node_id, image) in &diagram.image_nodes {
+        metadata.insert(format!("swimlane.node.{node_id}.image"), image.source.clone());
+        metadata.insert(format!("swimlane.node.{node_id}.imageWidth"), image.width.to_string());
+        metadata.insert(format!("swimlane.node.{node_id}.imageHeight"), image.height.to_string());
+        metadata.insert(format!("swimlane.node.{node_id}.imageConstraint"),
+            if image.preserve_aspect_ratio { "on" } else { "off" }.into());
+        metadata.insert(format!("swimlane.node.{node_id}.imagePosition"), match image.label_position {
+            SwimlaneLabelPosition::Top => "t",
+            SwimlaneLabelPosition::Bottom => "b",
+        }.into());
     }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {

@@ -2073,6 +2073,14 @@ pub struct SwimlaneIconNode {
     pub height: f64,
 }
 #[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneImageNode {
+    pub source: String,
+    pub width: f64,
+    pub height: f64,
+    pub preserve_aspect_ratio: bool,
+    pub label_position: SwimlaneLabelPosition,
+}
+#[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane {
     pub id: String, pub label: DiagramLabel, pub node_ids: Vec<String>, pub classes: Vec<String>, pub style: DiagramStyle,
 }
@@ -2149,6 +2157,7 @@ pub struct SwimlaneDiagram {
     pub theme: SwimlaneTheme,
     pub icons: BTreeMap<String, String>,
     pub icon_nodes: BTreeMap<String, SwimlaneIconNode>,
+    pub image_nodes: BTreeMap<String, SwimlaneImageNode>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane {
@@ -2188,6 +2197,7 @@ pub struct LayoutedSwimlaneDiagram {
     pub theme: SwimlaneTheme,
     pub icons: BTreeMap<String, String>,
     pub icon_nodes: BTreeMap<String, SwimlaneIconNode>,
+    pub image_nodes: BTreeMap<String, SwimlaneImageNode>,
     pub icon_glyphs: BTreeMap<String, DiagramIconGlyph>,
 }
 
