@@ -343,3 +343,56 @@ TE04 is complete when:
 
 That gives the repo a general-purpose fence seam for Mermaid and for future
 fenced block features beyond diagrams.
+
+## TypeScript fenced-node contract (October 2026 repair)
+
+The public TypeScript GFM parser emits `FencedBlockNode` for every recognized
+fence, including anonymous and empty fences. Indented code and existing
+CommonMark/AsciiDoc producers retain `CodeBlockNode`; its discriminator and
+`language` API do not change. Consumers accept both variants. This is an
+intentional GFM AST correction: callers discriminating on `code_block` must
+handle `fenced_block` as well.
+
+Info normalization is deterministic: remove the opening fence, trim leading
+and trailing ECMAScript whitespace, apply Markdown ASCII-punctuation backslash
+escapes, then decode HTML character references once, then trim the decoded
+result. Preserve interior whitespace and all remaining info text verbatim.
+An empty result yields `info: null, name: null`; otherwise `info` holds that
+entire result and `name` is its first ECMAScript-whitespace-delimited token.
+This explicitly fixes decoded whitespace as a token boundary; it does not
+collapse interior whitespace or recursively decode entities. Fence recognition,
+indent removal and line-ending normalization remain CommonMark 0.31.2 rules.
+`value` is literal payload with a final LF when nonempty, and the empty string
+when no payload lines exist. No info text is interpreted as executable options.
+
+HTML uses `name` as the escaped `language-` class hint and escapes `value`;
+`info` is metadata and is never interpolated into HTML. Layout uses exactly
+the existing preformatted monospace code fallback. AST sanitization applies
+`dropCodeBlocks` to both variants and otherwise preserves fence fields.
+Forme decoration/highlighting may perform their existing explicit filename and
+span transforms, while retaining the fenced discriminator and metadata.
+Typography, links and heading transforms treat payload as opaque. Static
+style projection models `pre > code`; terminal and authoring import validate
+exact canonical fields using their existing bounded snapshot policies. Fence
+`name` and `info` are nullable strings, not legacy portable language names.
+Authoring edits retain the full info string and recompute its first-token name;
+empty fenced payload remains valid.
+
+The parser continues to accept strings under its existing resource/error
+contract. This repair introduces no arbitrary-size, hostile-input, plugin or
+execution guarantee. Terminal/authoring limits remain their existing explicit
+limits; no limit is removed to accommodate fences. Unknown named fences use
+the inert code fallback. The full cross-language GFM corpus and language ports
+remain separately owned.
+
+Validation uses independent literal AST and hand-built consumer witnesses,
+including distinct full info with identical language and HTML, anonymous/tilde/
+empty/CRLF/indented/escape/entity/closing-fence cases. Preserve all 652 literal
+CommonMark corpus expectations and skips. Run changed package tests and
+production coverage, real build fronts, public consumer typechecks and reverse
+consumer tests, then metadata/parity/diff/security checks. Commit this contract
+before RED tests, then source, then package changelogs/README metadata.
+
+Reference: [CommonMark 0.31.2 fenced code blocks](https://spec.commonmark.org/0.31.2/#fenced-code-blocks).
+CommonMark permits implementation-specific info treatment; this section fixes
+the additional TE04 metadata normalization contract.
