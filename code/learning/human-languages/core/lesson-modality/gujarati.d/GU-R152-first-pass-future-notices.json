@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R152-first-pass-future-notices",
+    "language": "gujarati",
+    "chapter": 152,
+    "sequence": 8050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dded7ff75490edd8"
+  },
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "GU-EXT-149-FUT149",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I and other people will do tomorrow with the future endings, ask when someone will come, and say that I am sleepy.",
+  "prerequisites": [
+    "GU-EXT-148-PAST148"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C188-vastu",
+  "pathSegment": "GU-PATH-188-GOODS188",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-188-GOODS188",
+      "order": 4
+    }
+  ]
+}

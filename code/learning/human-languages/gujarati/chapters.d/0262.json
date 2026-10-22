@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "A day out with friends",
+  "label": "ch:gu-a-day-out-with-friends",
+  "canDo": "I can say how we hummed, called out, swam and had a picnic.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C262-dubki-marvi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can say how we hummed, called out, swam and had a picnic.",
+    "assesses": [
+      "GU-LEX-C262-OUTING262-03",
+      "GU-LEX-C262-OUTING262-04",
+      "GU-LEX-C262-OUTING262-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:ca2cfd6ab4b80ab1",
+  "lessonIds": [
+    "GU-C150-javano",
+    "GU-C150-karvana-cho",
+    "GU-C150-kadach",
+    "GU-C150-plans-practice",
+    "GU-R150-not-ask-past"
+  ],
+  "tex": "gujarati/book/chapters/ch150-plans-and-perhaps.tex"
+}

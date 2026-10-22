@@ -1,0 +1,11 @@
+{
+  "id": "GU-C208-paidu",
+  "pathSegment": "GU-PATH-208-HIGHWAY208",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-208-HIGHWAY208",
+      "order": 3
+    }
+  ]
+}

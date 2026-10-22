@@ -1,0 +1,19 @@
+{
+  "chapter": 169,
+  "title": "Khichdi, bhakhri and papad",
+  "label": "ch:gu-khichdi-bhakhri-and-papad",
+  "canDo": "I can name everyday Gujarati dishes and the pans they are made in.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C169-dhaknu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 169: I can name everyday Gujarati dishes and the pans they are made in.",
+    "assesses": [
+      "GU-LEX-C169-DISH169-03",
+      "GU-LEX-C169-DISH169-04",
+      "GU-LEX-C169-DISH169-05"
+    ]
+  }
+}

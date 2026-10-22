@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "A fall in the street",
+  "label": "ch:gu-a-fall-in-the-street",
+  "canDo": "I can say that I am hurt and ask about a sprain.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C227-langdavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can say that I am hurt and ask about a sprain.",
+    "assesses": [
+      "GU-LEX-C227-INJURY227-03",
+      "GU-LEX-C227-INJURY227-04",
+      "GU-LEX-C227-INJURY227-05"
+    ]
+  }
+}

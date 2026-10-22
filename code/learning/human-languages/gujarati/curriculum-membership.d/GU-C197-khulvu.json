@@ -1,0 +1,11 @@
+{
+  "id": "GU-C197-khulvu",
+  "pathSegment": "GU-PATH-197-GATE197",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-197-GATE197",
+      "order": 4
+    }
+  ]
+}

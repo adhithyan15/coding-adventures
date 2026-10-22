@@ -1,0 +1,10 @@
+{
+  "id": "GU-EXT-150-FUT150",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I am going to do as a plan already made, ask other people about their plans, call a plan off, and say what will perhaps happen.",
+  "prerequisites": [
+    "GU-EXT-149-FUT149"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:93f1bd6d63217117",
+  "lessonIds": [
+    "GU-C231-goli",
+    "GU-C231-malam",
+    "GU-C231-nars",
+    "GU-C231-sarvar",
+    "GU-C231-matvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch231.txt",
+  "json": "gujarati/narration/ch231.json",
+  "textHash": "fnv1a64:5d2110e587793ab6",
+  "jsonHash": "fnv1a64:b2b776090e426c42",
+  "findings": []
+}

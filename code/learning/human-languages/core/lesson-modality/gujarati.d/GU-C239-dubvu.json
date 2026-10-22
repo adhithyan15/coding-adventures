@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C239-dubvu",
+    "language": "gujarati",
+    "chapter": 239,
+    "sequence": 12960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2f3e937f60d0668"
+  },
+  "findings": []
+}

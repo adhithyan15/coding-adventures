@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:218973802689676e",
+  "lessonIds": [
+    "GU-C150-javano",
+    "GU-C150-karvana-cho",
+    "GU-C150-kadach",
+    "GU-C150-plans-practice",
+    "GU-R150-not-ask-past"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch150.txt",
+  "json": "gujarati/narration/ch150.json",
+  "textHash": "fnv1a64:7a57c817ece04d09",
+  "jsonHash": "fnv1a64:846d050ae1de4c04",
+  "findings": []
+}

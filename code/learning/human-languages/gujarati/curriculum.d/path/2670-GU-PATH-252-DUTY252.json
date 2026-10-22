@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-252-DUTY252",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "GU-EXT-252-DUTY252"
+  ],
+  "after": []
+}

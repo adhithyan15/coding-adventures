@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:7cfd0fe6b60fcc99",
+  "lessonIds": [
+    "GU-C165-umervu",
+    "GU-C165-redvu",
+    "GU-C165-halavvu",
+    "GU-C165-bhelavvu",
+    "GU-C165-ukalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch165-adding-pouring-and-stirring.tex"
+}

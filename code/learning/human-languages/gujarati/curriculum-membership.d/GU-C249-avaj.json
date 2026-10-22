@@ -1,0 +1,11 @@
+{
+  "id": "GU-C249-avaj",
+  "pathSegment": "GU-PATH-249-PHONE249",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-249-PHONE249",
+      "order": 3
+    }
+  ]
+}

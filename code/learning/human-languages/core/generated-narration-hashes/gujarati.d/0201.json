@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:d806a34c46ea4cff",
+  "lessonIds": [
+    "GU-C201-sudharvu",
+    "GU-C201-moci",
+    "GU-C201-dhobi",
+    "GU-C201-hajam",
+    "GU-C201-suthar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch201.txt",
+  "json": "gujarati/narration/ch201.json",
+  "textHash": "fnv1a64:33817b3c74c4d2bd",
+  "jsonHash": "fnv1a64:26d7c270a0423bc9",
+  "findings": []
+}

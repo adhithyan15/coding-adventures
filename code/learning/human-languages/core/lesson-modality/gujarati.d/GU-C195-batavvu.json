@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C195-batavvu",
+    "language": "gujarati",
+    "chapter": 195,
+    "sequence": 10640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d25e1d3321e154dd"
+  },
+  "findings": []
+}

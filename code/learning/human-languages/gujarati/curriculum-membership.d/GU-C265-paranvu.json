@@ -1,0 +1,11 @@
+{
+  "id": "GU-C265-paranvu",
+  "pathSegment": "GU-PATH-265-LOVE265",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-265-LOVE265",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C184-hafte",
+    "language": "punjabi",
+    "chapter": 184,
+    "sequence": 9740,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:579c8399ce5191f6"
+  },
+  "findings": []
+}

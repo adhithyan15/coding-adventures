@@ -1,0 +1,19 @@
+{
+  "chapter": 230,
+  "title": "Toothache and tears",
+  "label": "ch:gu-toothache-and-tears",
+  "canDo": "I can say that a tooth or my jaw hurts and ask whether someone fainted.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-R230-review-225-230",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 230: I can say that a tooth or my jaw hurts and ask whether someone fainted.",
+    "assesses": [
+      "GU-LEX-C230-TOOTH230-03",
+      "GU-LEX-C230-TOOTH230-04",
+      "GU-LEX-C230-TOOTH230-05"
+    ]
+  }
+}

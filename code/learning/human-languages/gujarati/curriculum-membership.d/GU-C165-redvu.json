@@ -1,0 +1,11 @@
+{
+  "id": "GU-C165-redvu",
+  "pathSegment": "GU-PATH-165-STIR165",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-165-STIR165",
+      "order": 1
+    }
+  ]
+}

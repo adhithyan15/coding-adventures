@@ -1,0 +1,16 @@
+{
+  "language": "gujarati",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:6c60e5314077108d",
+  "lessonIds": [
+    "GU-C145-bole-che",
+    "GU-C145-teo",
+    "GU-W46-o",
+    "GU-C145-bolie-chie",
+    "GU-C145-nathi-bolto",
+    "GU-C145-na-nahi",
+    "GU-C145-koi-nathi",
+    "GU-C145-not-practice"
+  ],
+  "tex": "gujarati/book/chapters/ch145-saying-not.tex"
+}

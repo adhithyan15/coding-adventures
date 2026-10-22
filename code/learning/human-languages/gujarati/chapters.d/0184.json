@@ -1,0 +1,19 @@
+{
+  "chapter": 184,
+  "title": "What it costs",
+  "label": "ch:gu-what-it-costs",
+  "canDo": "I can ask what something costs, how much it weighs and ask for it.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C184-magvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 184: I can ask what something costs, how much it weighs and ask for it.",
+    "assesses": [
+      "GU-LEX-C184-RATE184-03",
+      "GU-LEX-C184-RATE184-04",
+      "GU-LEX-C184-RATE184-05"
+    ]
+  }
+}

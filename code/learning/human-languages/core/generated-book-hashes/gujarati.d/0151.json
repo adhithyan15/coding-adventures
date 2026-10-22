@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:40defa62728bf7e9",
+  "lessonIds": [
+    "GU-C151-notis",
+    "GU-C151-khullun",
+    "GU-C151-phakt",
+    "GU-C151-jaher",
+    "GU-C151-dukan-notis"
+  ],
+  "tex": "gujarati/book/chapters/ch151-reading-a-shop-notice.tex"
+}

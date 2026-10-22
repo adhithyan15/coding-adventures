@@ -1,0 +1,19 @@
+{
+  "chapter": 266,
+  "title": "Fear, tears and shyness",
+  "label": "ch:gu-fear-tears-and-shyness",
+  "canDo": "I can say what someone is not afraid of and ask whether someone is crying.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-R266-review-261-266",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 266: I can say what someone is not afraid of and ask whether someone is crying.",
+    "assesses": [
+      "GU-LEX-C266-FEELINGS266-03",
+      "GU-LEX-C266-FEELINGS266-04",
+      "GU-LEX-C266-FEELINGS266-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-159-WASH159",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "GU-EXT-159-WASH159"
+  ],
+  "after": []
+}

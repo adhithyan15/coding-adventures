@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C151-dukan-notis",
+    "language": "gujarati",
+    "chapter": 151,
+    "sequence": 8000,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:99773b69f93e2f5f"
+  },
+  "findings": []
+}

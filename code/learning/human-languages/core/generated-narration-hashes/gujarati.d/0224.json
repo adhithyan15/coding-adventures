@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:e2ec3260ceea2d3c",
+  "lessonIds": [
+    "GU-C224-daktar",
+    "GU-C224-dardi",
+    "GU-C224-nadi",
+    "GU-C224-dhabakvu",
+    "GU-C224-shvas",
+    "GU-R224-review-219-224"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch224.txt",
+  "json": "gujarati/narration/ch224.json",
+  "textHash": "fnv1a64:2b0e78badf4d3991",
+  "jsonHash": "fnv1a64:cc59775f71ce0c25",
+  "findings": []
+}

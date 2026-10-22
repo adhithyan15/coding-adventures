@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C168-vanvu",
+    "language": "gujarati",
+    "chapter": 168,
+    "sequence": 9190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:348277b4f2d64358"
+  },
+  "findings": []
+}

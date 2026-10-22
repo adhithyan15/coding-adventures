@@ -1,0 +1,11 @@
+{
+  "id": "GU-C196-lipht",
+  "pathSegment": "GU-PATH-196-STOREY196",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-196-STOREY196",
+      "order": 2
+    }
+  ]
+}

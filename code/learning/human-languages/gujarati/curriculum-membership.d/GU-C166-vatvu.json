@@ -1,0 +1,11 @@
+{
+  "id": "GU-C166-vatvu",
+  "pathSegment": "GU-PATH-166-CHOP166",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-166-CHOP166",
+      "order": 4
+    }
+  ]
+}

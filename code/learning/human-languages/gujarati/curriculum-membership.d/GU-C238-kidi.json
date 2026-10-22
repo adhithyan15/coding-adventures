@@ -1,0 +1,11 @@
+{
+  "id": "GU-C238-kidi",
+  "pathSegment": "GU-PATH-238-HOUSE238",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-238-HOUSE238",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C150-javano",
+    "language": "gujarati",
+    "chapter": 150,
+    "sequence": 7910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0cc7e9ca88495fc"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 241,
+  "sourceHash": "fnv1a64:33f7ea73b5799ce8",
+  "lessonIds": [
+    "GU-C241-khilvu",
+    "GU-C241-karmavu",
+    "GU-C241-mul",
+    "GU-C241-ukhedvu",
+    "GU-C241-marvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch241.txt",
+  "json": "gujarati/narration/ch241.json",
+  "textHash": "fnv1a64:555520fb6cc475d8",
+  "jsonHash": "fnv1a64:508ce798f2efdffa",
+  "findings": []
+}

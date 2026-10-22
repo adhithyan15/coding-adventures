@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:3961d14c4a8fbf85",
+  "lessonIds": [
+    "GU-C253-shokh",
+    "GU-C253-navrash",
+    "GU-C253-manvu-enjoy",
+    "GU-C253-kantalvu",
+    "GU-C253-ajmavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch253.txt",
+  "json": "gujarati/narration/ch253.json",
+  "textHash": "fnv1a64:8095254c81a06b67",
+  "jsonHash": "fnv1a64:5697b9634d05e37c",
+  "findings": []
+}

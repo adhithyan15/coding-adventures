@@ -1,0 +1,11 @@
+{
+  "id": "GU-C263-masi",
+  "pathSegment": "GU-PATH-263-INLAWS263",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-263-INLAWS263",
+      "order": 1
+    }
+  ]
+}

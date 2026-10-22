@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:b309b00e0edaace8",
+  "lessonIds": [
+    "GU-C270-svabhav",
+    "GU-C270-dayalu",
+    "GU-C270-pramanik",
+    "GU-C270-ramuji",
+    "GU-C270-ghamandi"
+  ],
+  "tex": "gujarati/book/chapters/ch270-kind-honest-and-funny.tex"
+}

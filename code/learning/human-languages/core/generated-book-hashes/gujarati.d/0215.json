@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:b4e09f914b6d4651",
+  "lessonIds": [
+    "GU-C215-tharvu",
+    "GU-C215-him",
+    "GU-C215-os",
+    "GU-C215-gadh",
+    "GU-C215-huphalu"
+  ],
+  "tex": "gujarati/book/chapters/ch215-a-cold-foggy-morning.tex"
+}

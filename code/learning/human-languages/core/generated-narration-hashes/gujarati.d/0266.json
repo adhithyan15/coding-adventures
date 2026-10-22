@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:2a069c612068b550",
+  "lessonIds": [
+    "GU-C266-lagni",
+    "GU-C266-sukh",
+    "GU-C266-darvu",
+    "GU-C266-radvu",
+    "GU-C266-sharmavu",
+    "GU-R266-review-261-266"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch266.txt",
+  "json": "gujarati/narration/ch266.json",
+  "textHash": "fnv1a64:6d1fd6f7104b5ad2",
+  "jsonHash": "fnv1a64:c105858e041be260",
+  "findings": []
+}

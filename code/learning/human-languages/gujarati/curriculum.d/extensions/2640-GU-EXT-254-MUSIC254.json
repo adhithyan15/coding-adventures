@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-254-MUSIC254",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what music I played and which songs I sang.",
+  "prerequisites": []
+}

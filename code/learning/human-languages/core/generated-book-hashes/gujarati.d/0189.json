@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:83ecf0cbbbcdadb5",
+  "lessonIds": [
+    "GU-C189-lapetvu",
+    "GU-C189-mangavvu",
+    "GU-C189-khutvu",
+    "GU-C189-bacvu",
+    "GU-C189-svikarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch189-wrapping-up-an-order.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C179-cokkas",
+    "language": "gujarati",
+    "chapter": 179,
+    "sequence": 9780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8cb5c540eaefe40"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:c5c05c62e3827e3d",
+  "lessonIds": [
+    "GU-C176-ghadiyal",
+    "GU-C176-sada",
+    "GU-C176-sava",
+    "GU-C176-ponu",
+    "GU-C176-lagbhag",
+    "GU-R176-review-171-176"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch176.txt",
+  "json": "gujarati/narration/ch176.json",
+  "textHash": "fnv1a64:4bac50eb13bf4dbd",
+  "jsonHash": "fnv1a64:a22a15ca61f5076c",
+  "findings": []
+}

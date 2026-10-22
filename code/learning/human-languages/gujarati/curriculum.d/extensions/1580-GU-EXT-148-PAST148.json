@@ -1,0 +1,10 @@
+{
+  "id": "GU-EXT-148-PAST148",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I or someone else did, such as drank, ate, took, gave, wrote or said, with the past whose verb agrees with the object.",
+  "prerequisites": [
+    "GU-EXT-147-PAST147"
+  ]
+}

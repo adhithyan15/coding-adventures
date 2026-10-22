@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:c89ad73f45d583bb",
+  "lessonIds": [
+    "GU-C228-sojo",
+    "GU-C228-sujvu",
+    "GU-C228-khanjvalvu",
+    "GU-C228-camdi",
+    "GU-C228-phollo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch228.txt",
+  "json": "gujarati/narration/ch228.json",
+  "textHash": "fnv1a64:2f48a87cf99d17f4",
+  "jsonHash": "fnv1a64:883b0e1acabc9a31",
+  "findings": []
+}

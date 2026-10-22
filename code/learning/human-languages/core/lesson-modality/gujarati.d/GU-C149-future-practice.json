@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C149-future-practice",
+    "language": "gujarati",
+    "chapter": 149,
+    "sequence": 7900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a9499779c31d5b5"
+  },
+  "findings": []
+}

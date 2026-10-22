@@ -1,0 +1,11 @@
+{
+  "id": "GU-C267-cidavu",
+  "pathSegment": "GU-PATH-267-UPSET267",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-267-UPSET267",
+      "order": 3
+    }
+  ]
+}

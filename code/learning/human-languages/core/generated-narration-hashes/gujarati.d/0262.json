@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:a621b417518c0afd",
+  "lessonIds": [
+    "GU-C262-ganganvu",
+    "GU-C262-pokarvu",
+    "GU-C262-ramatgamat",
+    "GU-C262-ujani",
+    "GU-C262-dubki-marvi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch262.txt",
+  "json": "gujarati/narration/ch262.json",
+  "textHash": "fnv1a64:4ce0504bb18fe658",
+  "jsonHash": "fnv1a64:fd1be2080e721a5a",
+  "findings": []
+}

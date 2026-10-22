@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C260-shatranj",
+    "language": "gujarati",
+    "chapter": 260,
+    "sequence": 14080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1b121174d3d1df4"
+  },
+  "findings": []
+}

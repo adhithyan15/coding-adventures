@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:653908a7f933a0d9",
+  "lessonIds": [
+    "GU-C161-khasedvu",
+    "GU-C161-khankhervu",
+    "GU-C161-dhakvu",
+    "GU-C161-tutvu",
+    "GU-C161-bhegu-karvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch161.txt",
+  "json": "gujarati/narration/ch161.json",
+  "textHash": "fnv1a64:896fd6b03f2a73cf",
+  "jsonHash": "fnv1a64:c323506dcb2794de",
+  "findings": []
+}

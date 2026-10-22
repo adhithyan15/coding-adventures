@@ -1,0 +1,11 @@
+{
+  "id": "GU-C231-sarvar",
+  "pathSegment": "GU-PATH-231-MEDICINE231",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-231-MEDICINE231",
+      "order": 3
+    }
+  ]
+}

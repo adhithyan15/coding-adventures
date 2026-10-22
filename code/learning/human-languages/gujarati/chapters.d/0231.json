@@ -1,0 +1,19 @@
+{
+  "chapter": 231,
+  "title": "Pills and ointment",
+  "label": "ch:gu-pills-and-ointment",
+  "canDo": "I can ask about pills, ointment and treatment.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C231-matvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can ask about pills, ointment and treatment.",
+    "assesses": [
+      "GU-LEX-C231-MEDICINE231-03",
+      "GU-LEX-C231-MEDICINE231-04",
+      "GU-LEX-C231-MEDICINE231-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:f77a19f06923db44",
+  "lessonIds": [
+    "GU-C178-saru-karvu",
+    "GU-C178-patavvu",
+    "GU-C178-samaysar",
+    "GU-C178-baki",
+    "GU-C178-vitvu"
+  ],
+  "tex": "gujarati/book/chapters/ch178-starting-and-finishing.tex"
+}
