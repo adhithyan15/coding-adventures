@@ -1,0 +1,17 @@
+{
+  "language": "persian",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:bfcc51824dca9979",
+  "lessonIds": [
+    "FA-C294-bebakhshid",
+    "FA-C294-dast-e-rast",
+    "FA-R294-asking-the-way"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "persian/narration/ch294.txt",
+  "json": "persian/narration/ch294.json",
+  "textHash": "fnv1a64:e35f2139325723d6",
+  "jsonHash": "fnv1a64:84a0bfd17cf16314",
+  "findings": []
+}

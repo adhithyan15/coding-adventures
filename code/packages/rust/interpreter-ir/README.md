@@ -25,7 +25,7 @@ Source
 
 | Type | Description |
 |------|-------------|
-| `IIRModule` | Top-level container: functions + entry point + language tag |
+| `IIRModule` | Top-level container: functions + entry point + language tag + the source release it was compiled against (`release`, LANG84; `None` for languages without a release inventory) |
 | `IIRFunction` | Named, parameterised sequence of `IIRInstr` |
 | `IIRInstr` | One instruction: `op`, `dest`, `srcs`, `type_hint`, profiling fields |
 | `Operand` | Instruction operand: `Var(name)`, `Int`, `Float`, `Bool`, or `Str` |
@@ -53,7 +53,8 @@ Standard opcodes (handled by `vm-core`):
 | Exceptions (AOT00 T2, inert — no backend lowers these yet) | `throw catch landingpad` |
 | Float math (ALGOL AL8) | `f64_sqrt f64_sin f64_cos f64_ln f64_exp f64_atan f64_tan f64_pow` |
 | Conversions (LANG-FULL E8) | `int_to_real real_to_int_trunc real_to_int_floor` |
-| LANG83 PR1b (registered; no backend lowers them yet) | `i64_div_floor i64_mod_floor trap` |
+| LANG83 PR1b (lowered by every backend) | `i64_div_floor i64_mod_floor trap` |
+| LANG83 PR4 overflow-checked arithmetic (lowered by every backend; trap `Trap.Overflow`) | `i64_add_ovf i64_sub_ovf i64_mul_ovf i64_neg_ovf` |
 
 Type strings: `u8 u16 u32 u64 i8 i16 i32 i64 bool f32 f64 str void any`
 
@@ -67,7 +68,8 @@ LANG83 `trap` may name is the six built-in leaves (`Trap.Bounds`, `Trap.Null`,
 
 `op_registry::STANDARD_OPS` names every operation a frontend may emit and every
 backend must lower or refuse — output builtins (`print_i64`, `putchar`,
-`write_i64`), `print_str` and the string ops, arithmetic and comparison, `f64` math,
+`write_i64`, and since PR6a `write_f64_py` / `write_f64_js`, which print an `f64` as
+the shortest round-trip decimal in Python's or JavaScript's layout), `print_str` and the string ops, arithmetic and comparison, `f64` math,
 conversions and `trap`. Each backend crate publishes an `OP_SUPPORT` table of
 `OpSupport::{Lowered, Refused(reason)}` and checks it with
 `op_registry::check_op_support_table`, so adding a registry op fails CI in every
@@ -84,8 +86,9 @@ assert!(name_rule_violation("div_floor").is_some());
 ```
 
 `opcodes::may_trap`, `opcodes::trap_kinds` and `opcodes::is_terminator` answer the
-analysis questions the new ops raise; `trap`, `i64_div_floor` and `i64_mod_floor`
-count as side-effecting so dead-code elimination keeps them. See
+analysis questions the new ops raise; `trap`, `i64_div_floor`, `i64_mod_floor` and
+the four `i64_*_ovf` ops count as side-effecting so dead-code elimination keeps
+them. See
 `code/specs/LANG83-iir-standard-operation-registry.md`.
 
 ---

@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 202,
+  "title": "Cars, Drivers and Car Parks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b591e6a401b8a46f",
+  "lessons": [
+    {
+      "id": "JA-C202-jidousha",
+      "sequence": 12200,
+      "title": "じどうしゃ (jidōsha) — an automobile; a motor car",
+      "headword": "じどうしゃ",
+      "romanization": "jidōsha",
+      "gloss": "an automobile; a motor car",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cfb5e22b9077b5a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to rush out, then the Japanese for to bump into."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: じどうしゃ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じどうしゃ — jidōsha — \"an automobile; a motor car\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちの じどうしゃは くろいです。 — chichi no jidōsha wa kuroi desu — \"My father's car is black.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "じどうしゃ (jidōsha) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ji, \"self\" (Middle Chinese dzijH), dō, \"to move\" (duwngX) and sha, \"cart\" (tsyhae) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jidōsha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jidōsha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jidōsha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jidōsha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi no jidōsha wa kuroi desu — My father's car is black.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi no jidōsha wa kuroi desu* — My father's car is black.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to rush out, then the Japanese for to bump into, then say jidōsha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to rush out, then the Japanese for to bump into, then say *jidōsha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does じどうしゃ (jidōsha) mean? (\"An automobile; a motor car\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C202-jidousha-type",
+              "prompt": "Say the Japanese for 'an automobile'.",
+              "assesses": [
+                "JA-LEX-C202-DRIVE202-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "じどうしゃ",
+                "jidōsha",
+                "jidousha",
+                "jidoosha",
+                "jidosha"
+              ],
+              "feedback": {
+                "correct": "Right: じどうしゃ (jidōsha) is 'an automobile; a motor car'.",
+                "incorrect": "'An automobile' is じどうしゃ (jidōsha)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C202-unten",
+      "sequence": 12210,
+      "title": "うんてん (unten) — driving; operating (a machine)",
+      "headword": "うんてん",
+      "romanization": "unten",
+      "gloss": "driving; operating (a machine)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67cda7d2470379e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to bump into, then the Japanese for an automobile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うんてん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うんてん — unten — \"driving; operating (a machine)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "うんてんは たのしいです。 — unten wa tanoshii desu — \"Driving is fun.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うんてん (unten) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are un, \"to carry\" (Middle Chinese hjunH) and ten, \"to turn\" (trjwenX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unten",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unten*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unten, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unten*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "unten wa tanoshii desu — Driving is fun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *unten wa tanoshii desu* — Driving is fun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to bump into, then the Japanese for an automobile, then say unten again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to bump into, then the Japanese for an automobile, then say *unten* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うんてん (unten) mean? (\"Driving; operating (a machine)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C202-unten-type",
+              "prompt": "Say the Japanese for 'driving'.",
+              "assesses": [
+                "JA-LEX-C202-DRIVE202-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うんてん",
+                "unten"
+              ],
+              "feedback": {
+                "correct": "Right: うんてん (unten) is 'driving; operating (a machine)'.",
+                "incorrect": "'Driving' is うんてん (unten)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C202-untenshu",
+      "sequence": 12220,
+      "title": "うんてんしゅ (untenshu) — a driver",
+      "headword": "うんてんしゅ",
+      "romanization": "untenshu",
+      "gloss": "a driver",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f9f44475176efce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an automobile, then the Japanese for driving."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うんてんしゅ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うんてんしゅ — untenshu — \"a driver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちちは うんてんしゅです。 — chichi wa untenshu desu — \"My father is a driver.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うんてんしゅ (untenshu) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are un, \"to carry\" (Middle Chinese hjunH), ten, \"to turn\" (trjwenX) and shu, \"hand\" (syuwX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "untenshu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *untenshu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "untenshu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *untenshu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chichi wa untenshu desu — My father is a driver.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chichi wa untenshu desu* — My father is a driver.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an automobile, then the Japanese for driving, then say untenshu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an automobile, then the Japanese for driving, then say *untenshu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うんてんしゅ (untenshu) mean? (\"A driver\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C202-untenshu-type",
+              "prompt": "Say the Japanese for 'a driver'.",
+              "assesses": [
+                "JA-LEX-C202-DRIVE202-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うんてんしゅ",
+                "untenshu"
+              ],
+              "feedback": {
+                "correct": "Right: うんてんしゅ (untenshu) is 'a driver'.",
+                "incorrect": "'A driver' is うんてんしゅ (untenshu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C202-tomeru",
+      "sequence": 12230,
+      "title": "とめる (tomeru) — to halt (a car); to park",
+      "headword": "とめる",
+      "romanization": "tomeru",
+      "gloss": "to halt (a car); to park",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e92ac2254fe6bb27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for driving, then the Japanese for a driver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とめる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とめる — tomeru — \"to halt (a car); to park\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くるまを ここに とめます。 — kuruma o koko ni tomemasu — \"I park the car here.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とめます, tomemasu; an ichidan verb. Its partner is とまる, tomaru, \"to come to a stop\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とめる (tomeru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and it pairs with tomaru, \"to come to a stop\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tomeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tomeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuruma o koko ni tomemasu — I park the car here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuruma o koko ni tomemasu* — I park the car here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for driving, then the Japanese for a driver, then say tomeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for driving, then the Japanese for a driver, then say *tomeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とめる (tomeru) mean? (\"To halt (a car); to park\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C202-tomeru-type",
+              "prompt": "Say the Japanese for 'to halt'.",
+              "assesses": [
+                "JA-LEX-C202-DRIVE202-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とめる",
+                "tomeru"
+              ],
+              "feedback": {
+                "correct": "Right: とめる (tomeru) is 'to halt (a car); to park'.",
+                "incorrect": "'To halt' is とめる (tomeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C202-chuushajou",
+      "sequence": 12240,
+      "title": "ちゅうしゃじょう (chūshajō) — a car park",
+      "headword": "ちゅうしゃじょう",
+      "romanization": "chūshajō",
+      "gloss": "a car park",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bd53cbf3c2465b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a driver, then the Japanese for to halt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ちゅうしゃじょう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうしゃじょう — chūshajō — \"a car park\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ちゅうしゃじょうは えきの となりです。 — chūshajō wa eki no tonari desu — \"The car park is next to the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ちゅうしゃじょう (chūshajō) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are chū, \"to stop over\" (Middle Chinese trjuH), sha, \"cart\" (tsyhae) and jō, \"place\" (drjang) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūshajō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūshajō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūshajō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūshajō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūshajō wa eki no tonari desu — The car park is next to the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūshajō wa eki no tonari desu* — The car park is next to the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a driver, then the Japanese for to halt, then say chūshajō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a driver, then the Japanese for to halt, then say *chūshajō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ちゅうしゃじょう (chūshajō) mean? (\"A car park\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C202-chuushajou-type",
+              "prompt": "Say the Japanese for 'a car park'.",
+              "assesses": [
+                "JA-LEX-C202-DRIVE202-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ちゅうしゃじょう",
+                "chūshajō",
+                "chuushajou",
+                "chūshajoo",
+                "chushajo"
+              ],
+              "feedback": {
+                "correct": "Right: ちゅうしゃじょう (chūshajō) is 'a car park'.",
+                "incorrect": "'A car park' is ちゅうしゃじょう (chūshajō)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

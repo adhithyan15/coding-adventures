@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:6a2237a4a13387b6",
+  "lessonIds": [
+    "RU-C322-rytsar",
+    "RU-C322-dospekhi",
+    "RU-C322-mech",
+    "RU-C322-shchit",
+    "RU-C322-tron"
+  ],
+  "tex": "russian/book/chapters/ch322-knights.tex"
+}

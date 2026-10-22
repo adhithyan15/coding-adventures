@@ -1,0 +1,11 @@
+{
+  "id": "FA-C388-masraf-kardan",
+  "pathSegment": "FA-PATH-388-ALUDEGI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-388-ALUDEGI",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Swelling and itching",
+  "label": "ch:gu-swelling-and-itching",
+  "canDo": "I can say that something is swollen or itchy and ask about a blister.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C228-phollo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say that something is swollen or itchy and ask about a blister.",
+    "assesses": [
+      "GU-LEX-C228-SKIN228-03",
+      "GU-LEX-C228-SKIN228-04",
+      "GU-LEX-C228-SKIN228-05"
+    ]
+  }
+}

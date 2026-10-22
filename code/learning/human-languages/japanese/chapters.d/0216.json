@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Feeling Unwell",
+  "label": "ch:ja-feeling-unwell",
+  "canDo": "I can ask someone how they feel and say I am not well.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C216-furueru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can ask someone how they feel and say I am not well.",
+    "assesses": [
+      "JA-LEX-C216-UNWELL216-03",
+      "JA-LEX-C216-UNWELL216-04",
+      "JA-LEX-C216-UNWELL216-05"
+    ]
+  }
+}

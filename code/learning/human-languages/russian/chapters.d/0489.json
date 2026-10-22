@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "A Check-up",
+  "label": "ch:ru-a-check-up",
+  "canDo": "I can talk about a medical check-up and tests.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C489-khirurg",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about a medical check-up and tests.",
+    "assesses": [
+      "RU-LEX-C489-CHECKUP-03",
+      "RU-LEX-C489-CHECKUP-04",
+      "RU-LEX-C489-CHECKUP-05"
+    ]
+  }
+}

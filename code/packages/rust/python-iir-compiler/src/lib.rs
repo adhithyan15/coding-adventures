@@ -1,4 +1,19 @@
-//! Native Python grammar-tree to InterpreterIR lowering for LANG79's float pilot.
+//! Native Python grammar-tree to InterpreterIR lowering.
+//!
+//! This crate holds two independent Python frontends:
+//!
+//! | Path | Entry points | Subset | Grammar | Errors |
+//! |------|--------------|--------|---------|--------|
+//! | LANG84 release path (phase 7a) | [`compile_source_at`], [`compile_cst`], [`run_source_at`] | `py-int-print`: `print` of `i64` arithmetic, LANG83 ops, runs on all nine backends | one tagged release's `python<release>.*` pair | [`FrontendError`] (LANG84 C6) |
+//! | LANG79 float pilot | [`compile_source`], [`compile_ast`], [`run_source`] | float expressions and bindings on `vm-core` | the legacy minor line `"3.12"` | `String` |
+//!
+//! They share nothing but this crate. The release path is described in
+//! `release_api.rs` and `int_lower.rs`, its release switches in [`profiles`].
+//! The rest of this file is the float pilot, unchanged by LANG84 phase 7a: it
+//! keeps its legacy grammar until LANG83's float formatting lets the float
+//! subset move to release pairs (LANG84 7b/7c).
+//!
+//! # LANG79's float pilot
 //!
 //! The source is parsed by the Rust Python parser and executed by `vm-core`.
 //! Semantic IR and a host Python runtime are not part of the execution path.
@@ -38,6 +53,24 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 use vm_core::{errors::VMError, value::Value, VMCore};
+
+// ---------------------------------------------------------------------------
+// LANG84 phase 7a: the release path (`py-int-print`)
+// ---------------------------------------------------------------------------
+
+mod frontend_error;
+mod int_lower;
+pub mod profiles;
+mod release_api;
+
+pub use coding_adventures_python_parser::{
+    supported_releases, FrontendBudgets, DEFAULT_MAX_SOURCE_BYTES, DEFAULT_RELEASE,
+};
+pub use frontend_error::FrontendError;
+pub use int_lower::{DISPATCHED_RULES, DISPATCHED_TOKENS, MAX_IIR_INSTRUCTIONS};
+pub use release_api::{
+    compile_cst, compile_source_at, run_module, run_source_at, RunError, RunOutput, SUBSET,
+};
 
 /// Bounds for the initial native frontend and its generated VM program.
 pub const MAX_SOURCE_BYTES: usize = 64 * 1024;

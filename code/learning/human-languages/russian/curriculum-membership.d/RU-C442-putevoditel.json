@@ -1,0 +1,11 @@
+{
+  "id": "RU-C442-putevoditel",
+  "pathSegment": "RU-PATH-442-EKSKURSIYA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-442-EKSKURSIYA",
+      "order": 2
+    }
+  ]
+}

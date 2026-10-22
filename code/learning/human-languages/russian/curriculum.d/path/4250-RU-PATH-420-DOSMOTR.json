@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-420-DOSMOTR",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-420-DOSMOTR"
+  ],
+  "after": []
+}

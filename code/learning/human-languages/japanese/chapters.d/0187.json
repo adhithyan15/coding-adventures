@@ -1,0 +1,19 @@
+{
+  "chapter": 187,
+  "title": "At the Bank",
+  "label": "ch:ja-at-the-bank",
+  "canDo": "I can deposit, withdraw and change money at the bank.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C187-ryougae",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 187: I can deposit, withdraw and change money at the bank.",
+    "assesses": [
+      "JA-LEX-C187-BANK187-03",
+      "JA-LEX-C187-BANK187-04",
+      "JA-LEX-C187-BANK187-05"
+    ]
+  }
+}

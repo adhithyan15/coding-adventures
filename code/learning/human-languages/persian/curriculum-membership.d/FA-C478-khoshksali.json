@@ -1,0 +1,11 @@
+{
+  "id": "FA-C478-khoshksali",
+  "pathSegment": "FA-PATH-478-RIZGARD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-478-RIZGARD",
+      "order": 2
+    }
+  ]
+}

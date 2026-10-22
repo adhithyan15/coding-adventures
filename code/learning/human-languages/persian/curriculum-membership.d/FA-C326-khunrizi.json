@@ -1,0 +1,11 @@
+{
+  "id": "FA-C326-khunrizi",
+  "pathSegment": "FA-PATH-326-MASDUM",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-326-MASDUM",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:9394956129629f77",
+  "lessonIds": [
+    "FA-C383-towlid-kardan",
+    "FA-C383-mahsul",
+    "FA-C383-reqabat",
+    "FA-C383-raqib",
+    "FA-C383-tablighat",
+    "FA-R383-review-376-383"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "persian/narration/ch383.txt",
+  "json": "persian/narration/ch383.json",
+  "textHash": "fnv1a64:5415856a413113aa",
+  "jsonHash": "fnv1a64:7979698206e02ad7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "City Hall, Squares and Factories",
+  "label": "ch:ja-city-hall-squares-and-factories",
+  "canDo": "I can talk about public places and new buildings in town.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-R197-review-final-197",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can talk about public places and new buildings in town.",
+    "assesses": [
+      "JA-LEX-C197-CITY197-03",
+      "JA-LEX-C197-CITY197-04",
+      "JA-LEX-C197-CITY197-05"
+    ]
+  }
+}

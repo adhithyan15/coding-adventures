@@ -1,0 +1,11 @@
+{
+  "id": "FA-C533-khire-shodan",
+  "pathSegment": "FA-PATH-533-MEDIA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-533-MEDIA",
+      "order": 4
+    }
+  ]
+}

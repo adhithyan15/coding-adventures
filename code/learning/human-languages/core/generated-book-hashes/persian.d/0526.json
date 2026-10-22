@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:2601ad1a40e8ef81",
+  "lessonIds": [
+    "FA-C526-mojassame-saz",
+    "FA-C526-memari",
+    "FA-C526-miniyator",
+    "FA-C526-tarrahi-kardan",
+    "FA-C526-khalq-kardan"
+  ],
+  "tex": "persian/book/chapters/ch526-art-and-design.tex"
+}

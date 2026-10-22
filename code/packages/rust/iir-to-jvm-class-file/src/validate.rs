@@ -112,7 +112,9 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // `input_str`: BASIC string `INPUT A$` (E4-dyn) — reads a whole line as a
     //   `java.lang.String` via `BasicRuntime.readLine()Ljava/lang/String;`.
     // `write_i64` (LANG83 PR1b): `System.out.print(J)V`, no newline.
-    &["putchar", "getchar", "print_i64", "write_i64", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
+    // `write_f64_py` / `write_f64_js` (LANG83 PR6a): the class's own synthetic
+    // `__iir_write_f64(DI)V` (BigDecimal shortest-digit search, Python / JS layout).
+    &["putchar", "getchar", "print_i64", "write_i64", "write_f64_py", "write_f64_js", "input_i64", "input_more", "input_str", "pair?", "not", "equal?"];
 
 /// Ops that are conditionally supported depending on their `type_hint`.
 ///
@@ -166,6 +168,7 @@ const CONDITIONALLY_SUPPORTED_OPS: &[&str] = &["alloc", "field_load", "field_sto
 ///     language: "test".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 /// assert!(validate_for_jvm(&module).is_empty());
 /// ```
@@ -496,6 +499,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -508,6 +512,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let errs = validate_for_jvm(&module);
         assert!(!errs.is_empty(), "should reject empty module");

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C461-shishka",
+    "language": "russian",
+    "chapter": 461,
+    "sequence": 26210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9dfde284b896c03"
+  },
+  "findings": []
+}

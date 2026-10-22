@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 178,
+  "sourceHash": "fnv1a64:5d9226cfc5be329d",
+  "lessonIds": [
+    "JA-C178-butaniku",
+    "JA-C178-gyuuniku",
+    "JA-C178-toriniku",
+    "JA-C178-gyuunyuu",
+    "JA-C178-hiyasu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch178.txt",
+  "json": "japanese/narration/ch178.json",
+  "textHash": "fnv1a64:ada980c870f6a4a4",
+  "jsonHash": "fnv1a64:9c5021aee8ff0655",
+  "findings": []
+}

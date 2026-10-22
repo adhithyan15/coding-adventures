@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C195-modoru",
+    "language": "japanese",
+    "chapter": 195,
+    "sequence": 11620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73f0a45905745a9d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C323-kotak-zadan",
+  "pathSegment": "FA-PATH-323-KOLAHBARDAR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-323-KOLAHBARDAR",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "When the river rises",
+  "label": "ch:gu-when-the-river-rises",
+  "canDo": "I can say that the river will overflow and that the water will go down.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C220-ughadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can say that the river will overflow and that the water will go down.",
+    "assesses": [
+      "GU-LEX-C220-RIVER220-03",
+      "GU-LEX-C220-RIVER220-04",
+      "GU-LEX-C220-RIVER220-05"
+    ]
+  }
+}

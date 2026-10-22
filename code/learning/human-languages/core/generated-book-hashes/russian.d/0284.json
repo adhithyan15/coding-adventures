@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 284,
+  "sourceHash": "fnv1a64:4507be74f7a91b8f",
+  "lessonIds": [
+    "RU-C284-intervyu",
+    "RU-C284-opros",
+    "RU-C284-redaktor",
+    "RU-C284-kommentirovat",
+    "RU-C284-tsitirovat"
+  ],
+  "tex": "russian/book/chapters/ch284-interviews-and-comments.tex"
+}

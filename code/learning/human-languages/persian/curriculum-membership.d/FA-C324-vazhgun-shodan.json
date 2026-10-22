@@ -1,0 +1,11 @@
+{
+  "id": "FA-C324-vazhgun-shodan",
+  "pathSegment": "FA-PATH-324-HADESE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-324-HADESE",
+      "order": 4
+    }
+  ]
+}

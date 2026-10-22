@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:58899f858960582d",
+  "lessonIds": [
+    "JA-C249-kokoro",
+    "JA-C249-kimochi",
+    "JA-C249-seikaku",
+    "JA-C249-majime",
+    "JA-C249-wagamama",
+    "JA-R249-review-248-249",
+    "JA-R249-review-final-249"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch249.txt",
+  "json": "japanese/narration/ch249.json",
+  "textHash": "fnv1a64:46ad06eac06d131b",
+  "jsonHash": "fnv1a64:e95858f58aec0738",
+  "findings": []
+}

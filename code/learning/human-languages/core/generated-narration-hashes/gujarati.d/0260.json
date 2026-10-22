@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:a661850b2fd93c0d",
+  "lessonIds": [
+    "GU-C260-pattu",
+    "GU-C260-shatranj",
+    "GU-C260-ramakdu",
+    "GU-C260-dharvu",
+    "GU-C260-pasand-karvu",
+    "GU-R260-review-255-260"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch260.txt",
+  "json": "gujarati/narration/ch260.json",
+  "textHash": "fnv1a64:0e13172833111ffc",
+  "jsonHash": "fnv1a64:144a6484f6a067e1",
+  "findings": []
+}

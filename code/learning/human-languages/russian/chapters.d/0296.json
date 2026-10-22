@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Rescue",
+  "label": "ch:ru-rescue",
+  "canDo": "I can talk about a rescuer, saving someone, a rescue, evacuating people and an evacuation.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C296-evakuatsiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can talk about a rescuer, saving someone, a rescue, evacuating people and an evacuation.",
+    "assesses": [
+      "RU-LEX-C296-SPASATEL-03",
+      "RU-LEX-C296-SPASATEL-04",
+      "RU-LEX-C296-SPASATEL-05"
+    ]
+  }
+}

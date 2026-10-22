@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:e3821ef2814e612a",
+  "lessonIds": [
+    "JA-C165-nanoka",
+    "JA-C165-youka",
+    "JA-C165-tooka",
+    "JA-C165-hatsuka",
+    "JA-C165-tanjoubi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch165.txt",
+  "json": "japanese/narration/ch165.json",
+  "textHash": "fnv1a64:01bc1ab756bcff76",
+  "jsonHash": "fnv1a64:db02b92ea0a876d7",
+  "findings": []
+}

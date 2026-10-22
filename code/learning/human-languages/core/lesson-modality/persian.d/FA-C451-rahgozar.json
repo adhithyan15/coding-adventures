@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C451-rahgozar",
+    "language": "persian",
+    "chapter": 451,
+    "sequence": 23110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:628515026b5bf1e9"
+  },
+  "findings": []
+}

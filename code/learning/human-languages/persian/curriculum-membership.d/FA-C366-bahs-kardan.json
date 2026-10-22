@@ -1,0 +1,11 @@
+{
+  "id": "FA-C366-bahs-kardan",
+  "pathSegment": "FA-PATH-366-BAHS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-366-BAHS",
+      "order": 1
+    }
+  ]
+}

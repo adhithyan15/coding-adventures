@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:efb4e1fa5579b181",
+  "lessonIds": [
+    "JA-C234-shiai",
+    "JA-C234-katsu",
+    "JA-C234-makeru",
+    "JA-C234-senshu",
+    "JA-C234-ouen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch234.txt",
+  "json": "japanese/narration/ch234.json",
+  "textHash": "fnv1a64:1c6fa2dde0ea6674",
+  "jsonHash": "fnv1a64:64cd87530cdcf0d5",
+  "findings": []
+}

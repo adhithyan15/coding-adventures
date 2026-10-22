@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:3aa3f98a056ddf84",
+  "lessonIds": [
+    "RU-C456-obmennik",
+    "RU-C456-valyuta",
+    "RU-C456-garantiya",
+    "RU-C456-brakovannyy",
+    "RU-C456-ekonomit"
+  ],
+  "tex": "russian/book/chapters/ch456-currency-and-warranties.tex"
+}

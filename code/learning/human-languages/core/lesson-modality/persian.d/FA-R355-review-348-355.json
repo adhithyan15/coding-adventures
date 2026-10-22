@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R355-review-348-355",
+    "language": "persian",
+    "chapter": 355,
+    "sequence": 18160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ce55a4bd567d6d0"
+  },
+  "findings": []
+}

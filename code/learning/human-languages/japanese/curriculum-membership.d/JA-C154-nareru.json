@@ -1,0 +1,11 @@
+{
+  "id": "JA-C154-nareru",
+  "pathSegment": "JA-PATH-154-HABIT154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-154-HABIT154",
+      "order": 4
+    }
+  ]
+}

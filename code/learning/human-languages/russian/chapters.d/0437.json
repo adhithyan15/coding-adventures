@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Getting lost",
+  "label": "ch:ru-getting-lost",
+  "canDo": "I can say I am lost: getting lost, finding my way, wandering, the compass and the satnav.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C437-navigator",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can say I am lost: getting lost, finding my way, wandering, the compass and the satnav.",
+    "assesses": [
+      "RU-LEX-C437-ZABLUDITSYA-03",
+      "RU-LEX-C437-ZABLUDITSYA-04",
+      "RU-LEX-C437-ZABLUDITSYA-05"
+    ]
+  }
+}

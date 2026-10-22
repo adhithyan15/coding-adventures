@@ -1,0 +1,11 @@
+{
+  "id": "FA-C521-shaer",
+  "pathSegment": "FA-PATH-521-POETRY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-521-POETRY",
+      "order": 1
+    }
+  ]
+}

@@ -245,3 +245,22 @@ cargo test -p vm-core
 module that uses a refused op at compile time, with a typed error. Since LANG83 PR1b every registry op is lowered here, including `write_i64`
 (no newline), `i64_div_floor`/`i64_mod_floor` (defined `Trap.DivZero` /
 `Trap.Overflow` edges) and `trap`, which surfaces as `VMError::Trap { kind }`.
+LANG83 PR4 adds the overflow-checked `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`
+and `i64_neg_ovf` (Rust `checked_*`; an out-of-range result is
+`VMError::Trap { kind: "Trap.Overflow" }`).
+LANG83 PR6a adds the default builtins `write_f64_py` and `write_f64_js`. They
+print a float as the shortest decimal that reads back as exactly that value,
+in Python's `repr` layout or JavaScript's `toString` layout, with no newline.
+The formatting lives in `vm_core::float_format`, which the JIT's embedder
+handlers also call:
+
+```rust
+use vm_core::float_format::{js_to_string, python_repr};
+
+assert_eq!(python_repr(1e16), "1e+16");
+assert_eq!(js_to_string(1e16), "10000000000000000");
+assert_eq!(python_repr(0.1 + 0.2), "0.30000000000000004");
+// An exact tie rounds to the even digit, as Python and JavaScript do
+// (Rust's own `{:e}` rounds this one up).
+assert_eq!(python_repr(2f64.powi(-25)), "2.9802322387695312e-08");
+```

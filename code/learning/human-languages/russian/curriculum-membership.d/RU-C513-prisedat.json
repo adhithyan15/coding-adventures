@@ -1,0 +1,11 @@
+{
+  "id": "RU-C513-prisedat",
+  "pathSegment": "RU-PATH-513-TRAINING",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-513-TRAINING",
+      "order": 2
+    }
+  ]
+}

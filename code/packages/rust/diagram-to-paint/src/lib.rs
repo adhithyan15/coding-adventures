@@ -43,7 +43,7 @@ use diagram_ir::{
     LayoutedTemporalDiagram, LayoutedTemporalItem, Orientation, Point, RelKind, SequenceArrowhead,
     SequenceBlockKind, SequenceCentralConnection, SequenceLineStyle, SequenceParticipantKind,
     GanttTaskTags, SequenceProperty, SwimlaneEdgeAnimation, SwimlaneEdgeCurve, SwimlaneEdgeKind,
-    SwimlaneLineHops,
+    SwimlaneIconForm, SwimlaneLabelPosition, SwimlaneLineHops,
     TextAlign as GeoTextAlign, TreeViewNodeKind,
     RailroadElementKind, StructuralNodeKind,
 };
@@ -54,8 +54,8 @@ use layout_ir::{
 use layout_effects::{EffectColor, EffectFilter, EffectStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
-    GlyphPosition, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintInstruction, PaintPath,
-    PaintRect, PaintScene, PathCommand, StrokeCap, StrokeJoin,
+    GlyphPosition, ImageSrc, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
+    PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand, StrokeCap, StrokeJoin,
 };
 use text_interfaces::{
     FontMetrics, FontQuery, FontResolver, FontStyle, FontWeight, ShapeOptions, TextShaper,
@@ -838,6 +838,7 @@ where
 {
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
+    let mut rich_text_instructions = Vec::new();
     for (index, lane) in diagram.lanes.iter().enumerate() {
         let fallback_fill = if index % 2 == 0 { "#f8fafc" } else { "#eef6f8" };
         let fill = lane.style.fill.as_deref()
@@ -864,21 +865,24 @@ where
         if let Some(weight) = lane.style.font_weight { title_font.weight = weight; }
         if let Some(italic) = lane.style.font_italic { title_font.italic = italic; }
         if let Some(family) = &lane.style.font_family { title_font.family.clone_from(family); }
-        text_children.push(text_node(
-            &lane.label,
-            lane.x + 8.0,
-            lane.y + 7.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
-            lane.width - 16.0,
-            26.0,
-            title_font,
-            lane.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
-                .and_then(parse_css_color).unwrap_or(Color {
-                r: 38,
-                g: 50,
-                b: 56,
-                a: 255,
-            }),
-        ));
+        let label_x = lane.x + 8.0;
+        let label_y = lane.y + 7.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0);
+        let label_color = lane.style.text_color.as_deref()
+            .or(diagram.theme.title_color.as_deref()).unwrap_or("#263238");
+        if lane.label.markdown.is_some() {
+            rich_text_instructions.extend(markdown_label_instructions(
+                &lane.label,
+                MarkdownLabelBox { x: label_x, y: label_y, width: lane.width - 16.0, height: 26.0 },
+                &title_font,
+                label_color,
+                options,
+            ));
+        } else {
+            text_children.push(text_node(
+                &lane.label.text, label_x, label_y, lane.width - 16.0, 26.0, title_font,
+                parse_css_color(label_color).unwrap_or(Color { r: 38, g: 50, b: 56, a: 255 }),
+            ));
+        }
     }
     for group in &diagram.groups {
         let stroke = group.style.stroke.as_deref()
@@ -897,16 +901,24 @@ where
         if let Some(weight) = group.style.font_weight { label_font.weight = weight; }
         if let Some(italic) = group.style.font_italic { label_font.italic = italic; }
         if let Some(family) = &group.style.font_family { label_font.family.clone_from(family); }
-        text_children.push(text_node(
-            &group.label,
-            group.x + 8.0,
-            group.y + 4.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0),
-            group.width - 16.0,
-            22.0,
-            label_font, group.style.text_color.as_deref().or(diagram.theme.title_color.as_deref())
-                .and_then(parse_css_color)
-                .unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
-        ));
+        let label_x = group.x + 8.0;
+        let label_y = group.y + 4.0 + diagram.flowchart_config.subgraph_title_margin_top.unwrap_or(0.0);
+        let label_color = group.style.text_color.as_deref()
+            .or(diagram.theme.title_color.as_deref()).unwrap_or("#455a64");
+        if group.label.markdown.is_some() {
+            rich_text_instructions.extend(markdown_label_instructions(
+                &group.label,
+                MarkdownLabelBox { x: label_x, y: label_y, width: group.width - 16.0, height: 22.0 },
+                &label_font,
+                label_color,
+                options,
+            ));
+        } else {
+            text_children.push(text_node(
+                &group.label.text, label_x, label_y, group.width - 16.0, 22.0, label_font,
+                parse_css_color(label_color).unwrap_or(Color { r: 69, g: 90, b: 100, a: 255 }),
+            ));
+        }
     }
     for (edge_index, edge) in diagram.edges.iter().enumerate() {
         if edge.kind == SwimlaneEdgeKind::Invisible {
@@ -1051,15 +1063,17 @@ where
             edge.end_marker, &end_previous, &edge.to, marker_stroke, stroke_width,
         ));
         if let Some(label) = &edge.label {
-            let label_x = (edge.from.x + edge.to.x) / 2.0 - 52.0;
-            let label_y = (edge.from.y + edge.to.y) / 2.0 - 25.0;
+            let label_position = edge.label_position.as_ref()
+                .expect("laid-out Swimlane edge label must have a position");
+            let label_x = label_position.x - edge.label_width / 2.0;
+            let label_y = label_position.y - edge.label_height / 2.0;
             if let Some(background) = &diagram.theme.edge_label_background {
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase::default(),
                     x: label_x,
                     y: label_y,
-                    width: 104.0,
-                    height: 22.0,
+                    width: edge.label_width,
+                    height: edge.label_height,
                     fill: Some(background.clone()),
                     stroke: None,
                     stroke_width: None,
@@ -1083,15 +1097,21 @@ where
             if let Some(family) = &edge.style.font_family {
                 label_font.family.clone_from(family);
             }
-            text_children.push(text_node(
-                label,
-                label_x,
-                label_y,
-                104.0,
-                22.0,
-                label_font,
-                css_to_color(edge.style.text_color.as_deref().unwrap_or(&diagram.theme.text_color)),
-            ));
+            let label_color = edge.style.text_color.as_deref().unwrap_or(&diagram.theme.text_color);
+            if label.markdown.is_some() {
+                rich_text_instructions.extend(markdown_label_instructions(
+                    label,
+                    MarkdownLabelBox { x: label_x, y: label_y, width: edge.label_width, height: edge.label_height },
+                    &label_font,
+                    label_color,
+                    options,
+                ));
+            } else {
+                text_children.push(text_node(
+                    &label.text, label_x, label_y, edge.label_width, edge.label_height, label_font,
+                    css_to_color(label_color),
+                ));
+            }
         }
     }
     for node in &diagram.nodes {
@@ -1099,7 +1119,7 @@ where
         let stroke = node.style.stroke.clone().unwrap_or_else(|| diagram.theme.node_border.clone());
         let stroke_width = node.style.stroke_width.or(diagram.theme.stroke_width).unwrap_or(2.0);
         let stroke_dash = node.style.stroke_dash.clone();
-        let shape = match node.shape {
+        let mut shape = match node.shape {
             DiagramShape::TextBlock => PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
                 x: node.x,
@@ -1446,7 +1466,48 @@ where
                 stroke_dash_offset: None,
             }),
         };
+        if diagram.icon_nodes.contains_key(&node.id) || diagram.image_nodes.contains_key(&node.id) {
+            shape = PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(), x: node.x, y: node.y, width: node.width, height: node.height,
+                fill: None, stroke: None, stroke_width: None, corner_radius: None,
+                stroke_dash: None, stroke_dash_offset: None,
+            });
+        }
         instructions.push(shape);
+        if let Some(icon) = diagram.icon_nodes.get(&node.id) {
+            if let Some(form) = icon.form {
+                let size = icon.height + 16.0;
+                let has_label = !node.label.text.is_empty();
+                let content_height = size + if has_label { 30.0 } else { 0.0 };
+                let content_y = node.y + (node.height - content_height) / 2.0;
+                let icon_y = content_y + if has_label && icon.label_position == SwimlaneLabelPosition::Top { 30.0 } else { 0.0 };
+                let icon_x = node.x + (node.width - size) / 2.0;
+                instructions.push(match form {
+                    SwimlaneIconForm::Circle => PaintInstruction::Ellipse(PaintEllipse {
+                        base: PaintBase::default(), cx: icon_x + size / 2.0, cy: icon_y + size / 2.0,
+                        rx: size / 2.0, ry: size / 2.0, fill: Some(fill.clone()), stroke: Some(stroke.clone()),
+                        stroke_width: Some(stroke_width), stroke_dash: stroke_dash.clone(), stroke_dash_offset: None,
+                    }),
+                    SwimlaneIconForm::Square | SwimlaneIconForm::Rounded => PaintInstruction::Rect(PaintRect {
+                        base: PaintBase::default(), x: icon_x, y: icon_y, width: size, height: size,
+                        fill: Some(fill.clone()), stroke: Some(stroke.clone()), stroke_width: Some(stroke_width),
+                        corner_radius: Some(if form == SwimlaneIconForm::Rounded { size * 0.2 } else { 2.0 }),
+                        stroke_dash: stroke_dash.clone(), stroke_dash_offset: None,
+                    }),
+                });
+            }
+        }
+        if let Some(image) = diagram.image_nodes.get(&node.id) {
+            let has_label = !node.label.text.is_empty();
+            let content_height = image.height + if has_label { 30.0 } else { 0.0 };
+            let content_y = node.y + (node.height - content_height) / 2.0;
+            let image_y = content_y + if has_label && image.label_position == SwimlaneLabelPosition::Top { 30.0 } else { 0.0 };
+            instructions.push(PaintInstruction::Image(PaintImage {
+                base: PaintBase::default(), x: node.x + (node.width - image.width) / 2.0,
+                y: image_y, width: image.width, height: image.height,
+                src: ImageSrc::Uri(image.source.clone()), opacity: None,
+            }));
+        }
         match node.shape {
             DiagramShape::Subroutine => {
                 instructions.push(PaintInstruction::Path(line_path(
@@ -1532,7 +1593,7 @@ where
             if let Some(family) = &node.style.font_family {
                 label_font.family.clone_from(family);
             }
-            let (label_x, label_y, label_width, label_height) = match node.shape {
+            let (mut label_x, mut label_y, mut label_width, mut label_height) = match node.shape {
                 DiagramShape::CurlyBraceLeft => (node.x + 22.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
                 DiagramShape::CurlyBraceRight => (node.x + 8.0, node.y + 10.0, node.width - 30.0, node.height - 16.0),
                 DiagramShape::CurlyBraces => (node.x + 22.0, node.y + 10.0, node.width - 44.0, node.height - 16.0),
@@ -1565,15 +1626,64 @@ where
                     ),
                 ),
             };
-            text_children.push(text_node(
-                &node.label,
-                label_x,
-                label_y,
-                label_width,
-                label_height,
-                label_font,
-                text_color,
-            ));
+            if let Some(icon) = diagram.icon_nodes.get(&node.id) {
+                let size = icon.height + if icon.form.is_some() { 16.0 } else { 0.0 };
+                let has_label = !node.label.text.is_empty();
+                let content_height = size + if has_label { 30.0 } else { 0.0 };
+                let content_y = node.y + (node.height - content_height) / 2.0;
+                label_x = node.x + 8.0;
+                label_y = if icon.label_position == SwimlaneLabelPosition::Top {
+                    content_y
+                } else {
+                    content_y + size + 8.0
+                };
+                label_width = node.width - 16.0;
+                label_height = 22.0;
+            }
+            if let Some(image) = diagram.image_nodes.get(&node.id) {
+                let has_label = !node.label.text.is_empty();
+                let content_height = image.height + if has_label { 30.0 } else { 0.0 };
+                let content_y = node.y + (node.height - content_height) / 2.0;
+                label_x = node.x + 8.0;
+                label_y = if image.label_position == SwimlaneLabelPosition::Top {
+                    content_y
+                } else {
+                    content_y + image.height + 8.0
+                };
+                label_width = node.width - 16.0;
+                label_height = 22.0;
+            }
+            if let (Some(glyph), Some(icon)) = (diagram.icon_glyphs.get(&node.id), diagram.icon_nodes.get(&node.id)) {
+                let mut icon_font = label_font.clone();
+                icon_font.family.clone_from(&glyph.font_family);
+                icon_font.size = icon.height / 2.0;
+                let size = icon.height + if icon.form.is_some() { 16.0 } else { 0.0 };
+                let has_label = !node.label.text.is_empty();
+                let content_height = size + if has_label { 30.0 } else { 0.0 };
+                let content_y = node.y + (node.height - content_height) / 2.0;
+                let icon_y = content_y + if has_label && icon.label_position == SwimlaneLabelPosition::Top { 30.0 } else { 0.0 };
+                text_children.push(text_node(
+                    &glyph.text, node.x + (node.width - icon.height) / 2.0,
+                    icon_y + (size - icon.height) / 2.0, icon.height, icon.height,
+                    icon_font, text_color,
+                ));
+            }
+            if node.label.markdown.is_some() {
+                let label_color = node.style.text_color.as_deref()
+                    .or(diagram.theme.node_text_color.as_deref())
+                    .unwrap_or(&diagram.theme.primary_text_color);
+                rich_text_instructions.extend(markdown_label_instructions(
+                    &node.label,
+                    MarkdownLabelBox { x: label_x, y: label_y, width: label_width, height: label_height },
+                    &label_font,
+                    label_color,
+                    options,
+                ));
+            } else {
+                text_children.push(text_node(
+                    &node.label.text, label_x, label_y, label_width, label_height, label_font, text_color,
+                ));
+            }
         }
     }
     if let Some(title) = &diagram.title {
@@ -1622,6 +1732,7 @@ where
         },
     );
     instructions.extend(text_scene.instructions);
+    instructions.extend(rich_text_instructions);
     let mut metadata = HashMap::new();
     if let Some(title) = &diagram.accessibility_title {
         metadata.insert("accessibility.title".into(), title.clone());
@@ -1710,6 +1821,37 @@ where
         if let Some(parent_id) = &group.parent_id {
             metadata.insert(format!("swimlane.group.{index}.parent"), parent_id.clone());
         }
+    }
+    for (node_id, icon) in &diagram.icons {
+        metadata.insert(format!("swimlane.node.{node_id}.icon"), icon.clone());
+        metadata.insert(
+            format!("swimlane.node.{node_id}.iconResolved"),
+            diagram.icon_glyphs.contains_key(node_id).to_string(),
+        );
+        if let Some(options) = diagram.icon_nodes.get(node_id) {
+            metadata.insert(format!("swimlane.node.{node_id}.iconForm"), match options.form {
+                Some(SwimlaneIconForm::Square) => "square",
+                Some(SwimlaneIconForm::Circle) => "circle",
+                Some(SwimlaneIconForm::Rounded) => "rounded",
+                None => "none",
+            }.into());
+            metadata.insert(format!("swimlane.node.{node_id}.iconPosition"), match options.label_position {
+                SwimlaneLabelPosition::Top => "t",
+                SwimlaneLabelPosition::Bottom => "b",
+            }.into());
+            metadata.insert(format!("swimlane.node.{node_id}.iconHeight"), options.height.to_string());
+        }
+    }
+    for (node_id, image) in &diagram.image_nodes {
+        metadata.insert(format!("swimlane.node.{node_id}.image"), image.source.clone());
+        metadata.insert(format!("swimlane.node.{node_id}.imageWidth"), image.width.to_string());
+        metadata.insert(format!("swimlane.node.{node_id}.imageHeight"), image.height.to_string());
+        metadata.insert(format!("swimlane.node.{node_id}.imageConstraint"),
+            if image.preserve_aspect_ratio { "on" } else { "off" }.into());
+        metadata.insert(format!("swimlane.node.{node_id}.imagePosition"), match image.label_position {
+            SwimlaneLabelPosition::Top => "t",
+            SwimlaneLabelPosition::Bottom => "b",
+        }.into());
     }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {
@@ -9681,7 +9823,8 @@ mod tests {
     fn swimlane_line_hops_accept_every_orthogonal_friendly_curve() {
         let edge = |curve| LayoutedSwimlaneEdge {
             id: None, from: Point { x: 10.0, y: 20.0 }, to: Point { x: 110.0, y: 120.0 },
-            label: None, kind: SwimlaneEdgeKind::Directed, start_marker: EdgeMarker::None,
+            label: None, label_position: None, label_width: 0.0, label_height: 0.0,
+            kind: SwimlaneEdgeKind::Directed, start_marker: EdgeMarker::None,
             end_marker: EdgeMarker::Point, min_length: 1, classes: Vec::new(),
             style: Default::default(), animate: false, animation: None, curve,
         };

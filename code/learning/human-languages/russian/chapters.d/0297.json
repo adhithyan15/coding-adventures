@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Injuries",
+  "label": "ch:ru-injuries",
+  "canDo": "I can talk about an injury, a bruise and losing consciousness, and say someone was hurt or wounded.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C297-ranit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can talk about an injury, a bruise and losing consciousness, and say someone was hurt or wounded.",
+    "assesses": [
+      "RU-LEX-C297-TRAVMA-03",
+      "RU-LEX-C297-TRAVMA-04",
+      "RU-LEX-C297-TRAVMA-05"
+    ]
+  }
+}

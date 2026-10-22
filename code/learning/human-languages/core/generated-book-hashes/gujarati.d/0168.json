@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 168,
+  "sourceHash": "fnv1a64:6e4adc1e04946991",
+  "lessonIds": [
+    "GU-C168-masalvu",
+    "GU-C168-velan",
+    "GU-C168-vanvu",
+    "GU-C168-tavo",
+    "GU-C168-sekvu"
+  ],
+  "tex": "gujarati/book/chapters/ch168-kneading-and-rolling-rotli.tex"
+}

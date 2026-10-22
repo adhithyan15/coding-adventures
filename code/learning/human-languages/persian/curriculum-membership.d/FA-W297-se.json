@@ -1,0 +1,11 @@
+{
+  "id": "FA-W297-se",
+  "pathSegment": "FA-PATH-297-COMPARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-297-COMPARE",
+      "order": 2
+    }
+  ]
+}

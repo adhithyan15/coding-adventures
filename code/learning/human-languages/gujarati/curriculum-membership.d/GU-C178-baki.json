@@ -1,0 +1,11 @@
+{
+  "id": "GU-C178-baki",
+  "pathSegment": "GU-PATH-178-START178",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-178-START178",
+      "order": 3
+    }
+  ]
+}

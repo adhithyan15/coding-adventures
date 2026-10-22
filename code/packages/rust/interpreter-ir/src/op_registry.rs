@@ -76,7 +76,10 @@
 //! backends — output, strings, integer arithmetic and comparison, `f64` math and
 //! the integer↔real conversions — plus the four PR1b operations (`write_i64`,
 //! `i64_div_floor`, `i64_mod_floor`, `trap`), which every backend declares
-//! `Refused` until PR1b lowers them. Instructions that are not registry entries
+//! `Refused` until PR1b lowers them. Later slices add families that every
+//! backend lowers in the same PR: PR4's overflow-checked `i64_*_ovf` ops and
+//! PR6a's float writers `write_f64_py` / `write_f64_js` (shortest round-trip
+//! digits in Python's and JavaScript's layouts). Instructions that are not registry entries
 //! (control flow, calls, memory, heap, bitwise, the `dyn_*` lisp builtins, …)
 //! are simply not gated by the registry; their existing validators still apply.
 //! See `code/specs/LANG83-iir-standard-operation-registry.md` for the full
@@ -156,6 +159,17 @@ pub const NOT_YET_LOWERED_PR1B: &str = "not yet lowered; LANG83 PR1b";
 /// The `introduced_by` tag of the four operations PR1b will lower.
 pub const LANG83_PR1B: &str = "LANG83 PR1b";
 
+/// The `introduced_by` tag of the overflow-checked arithmetic family (LANG83
+/// PR4): `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf`, `i64_neg_ovf`. Unlike
+/// PR1b's, these were registered and lowered on every backend in one slice.
+pub const LANG83_PR4: &str = "LANG83 PR4";
+
+/// The `introduced_by` tag of the shortest round-trip float-output builtins
+/// (LANG83 PR6a): `write_f64_py` (Python `repr(float)`) and `write_f64_js`
+/// (JavaScript `Number.prototype.toString`). Like PR4's, registered and
+/// lowered on every backend in one slice.
+pub const LANG83_PR6A: &str = "LANG83 PR6a";
+
 /// One registered operation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OpSpec {
@@ -189,6 +203,16 @@ impl OpSpec {
     pub fn is_pr1b(&self) -> bool {
         self.introduced_by == LANG83_PR1B
     }
+
+    /// `true` if this entry is one of the LANG83 PR4 overflow-checked ops.
+    pub fn is_pr4(&self) -> bool {
+        self.introduced_by == LANG83_PR4
+    }
+
+    /// `true` if this entry is one of the LANG83 PR6a float-output builtins.
+    pub fn is_pr6a(&self) -> bool {
+        self.introduced_by == LANG83_PR6A
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -218,12 +242,14 @@ const DIV_ZERO_ONLY: &[&str] = &[TRAP_DIV_ZERO];
 const BOUNDS_ONLY: &[&str] = &[TRAP_BOUNDS];
 const CONV_RANGE_ONLY: &[&str] = &[TRAP_CONV_RANGE];
 const DIV_ZERO_OR_OVERFLOW: &[&str] = &[TRAP_DIV_ZERO, TRAP_OVERFLOW];
+const OVERFLOW_ONLY: &[&str] = &[TRAP_OVERFLOW];
 const ANY_REGISTERED_KIND: &[&str] = &[CATCH_ANY];
 
 const BIN_NUM: &[&str] = &["num", "num"];
 const UN_NUM: &[&str] = &["num"];
 const UN_F64: &[&str] = &["f64"];
 const BIN_I64: &[&str] = &["i64", "i64"];
+const UN_I64: &[&str] = &["i64"];
 
 /// Every standard operation, grouped by family in vocabulary-table order.
 ///
@@ -239,6 +265,13 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     spec("putchar", Builtin, Output, 1, false, &["int"], NO_TRAP, "BF07"),
     spec("print_str", Op, Output, 1, false, &["str"], NO_TRAP, "LANG-FULL E4"),
     spec("write_i64", Builtin, Output, 1, false, &["int"], NO_TRAP, LANG83_PR1B),
+    // LANG83 PR6a: an `f64` as the SHORTEST decimal that reads back as exactly
+    // that value (ties to even), no newline — one builtin per *layout*, not a
+    // flags operand. `_py` is Python `repr` (`1e+16`, `1.0`, `-0.0`, `inf`,
+    // `nan`); `_js` is JavaScript `Number#toString` (`10000000000000000`, `1`,
+    // `0`, `Infinity`, `NaN`). The spec's "PR6a" section has both tables.
+    spec("write_f64_py", Builtin, Output, 1, false, UN_F64, NO_TRAP, LANG83_PR6A),
+    spec("write_f64_js", Builtin, Output, 1, false, UN_F64, NO_TRAP, LANG83_PR6A),
     // ── Strings (LANG-FULL E4): immutable byte strings ──────────────────────
     spec("str_const", Op, Str, 1, true, &["literal"], NO_TRAP, "LANG-FULL E4"),
     spec("str_len", Op, Str, 1, true, &["str"], NO_TRAP, "LANG-FULL E4"),
@@ -260,6 +293,15 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     spec("neg", Op, Arithmetic, 1, true, UN_NUM, NO_TRAP, "IIR core"),
     spec("i64_div_floor", Op, Arithmetic, 2, true, BIN_I64, DIV_ZERO_OR_OVERFLOW, LANG83_PR1B),
     spec("i64_mod_floor", Op, Arithmetic, 2, true, BIN_I64, DIV_ZERO_ONLY, LANG83_PR1B),
+    // LANG83 PR4 — overflow-checked arithmetic. The exact result, or
+    // `Trap.Overflow` when it does not fit in i64 (Python/Ruby integers promote
+    // to a bignum on that trap; the frontend decides). Type-first so the
+    // `add_`/`sub_`/`mul_`/`neg_` prefix arms of the native backends and the
+    // generic JIT can never claim them as *wrapping* arithmetic.
+    spec("i64_add_ovf", Op, Arithmetic, 2, true, BIN_I64, OVERFLOW_ONLY, LANG83_PR4),
+    spec("i64_sub_ovf", Op, Arithmetic, 2, true, BIN_I64, OVERFLOW_ONLY, LANG83_PR4),
+    spec("i64_mul_ovf", Op, Arithmetic, 2, true, BIN_I64, OVERFLOW_ONLY, LANG83_PR4),
+    spec("i64_neg_ovf", Op, Arithmetic, 1, true, UN_I64, OVERFLOW_ONLY, LANG83_PR4),
     // ── Comparison ───────────────────────────────────────────────────────────
     spec("cmp_eq", Op, Comparison, 2, true, BIN_NUM, NO_TRAP, "IIR core"),
     spec("cmp_ne", Op, Comparison, 2, true, BIN_NUM, NO_TRAP, "IIR core"),
@@ -469,7 +511,7 @@ mod tests {
             assert!(name_rule_violation(bad).is_some(), "{bad} should violate the rule");
         }
         // Exactly-named classic ops are fine: the hazard is a *prefix*.
-        for ok in ["div", "mod", "or", "i64_div_floor", "f64_sin", "str_len"] {
+        for ok in ["div", "mod", "or", "i64_div_floor", "i64_add_ovf", "i64_neg_ovf", "f64_sin", "str_len"] {
             assert!(name_rule_violation(ok).is_none(), "{ok} should be accepted");
         }
     }
@@ -526,6 +568,55 @@ mod tests {
             STANDARD_OPS.iter().filter(|s| s.is_pr1b()).map(|s| s.name).collect();
         pr1b.sort_unstable();
         assert_eq!(pr1b, ["i64_div_floor", "i64_mod_floor", "trap", "write_i64"]);
+    }
+
+    #[test]
+    fn pr4_set_is_exactly_the_overflow_family() {
+        let mut pr4: Vec<&str> =
+            STANDARD_OPS.iter().filter(|s| s.is_pr4()).map(|s| s.name).collect();
+        pr4.sort_unstable();
+        assert_eq!(pr4, ["i64_add_ovf", "i64_mul_ovf", "i64_neg_ovf", "i64_sub_ovf"]);
+        for name in pr4 {
+            let spec = lookup(name).unwrap();
+            assert_eq!(spec.kind, OpKind::Op);
+            assert!(spec.dest, "{name} writes its result");
+            assert_eq!(spec.may_trap, [TRAP_OVERFLOW], "{name} traps only on overflow");
+            assert!(spec.operand_types.iter().all(|t| *t == "i64"), "{name} is defined on i64");
+        }
+        assert_eq!(lookup("i64_neg_ovf").unwrap().arity, 1);
+    }
+
+    #[test]
+    fn pr6a_set_is_exactly_the_two_float_writers() {
+        let mut pr6a: Vec<&str> =
+            STANDARD_OPS.iter().filter(|s| s.is_pr6a()).map(|s| s.name).collect();
+        pr6a.sort_unstable();
+        assert_eq!(pr6a, ["write_f64_js", "write_f64_py"]);
+        for name in pr6a {
+            let spec = lookup(name).unwrap();
+            // Output builtins, like write_i64: one f64 operand, no result, and
+            // formatting a float can never trap (inf and nan have spellings).
+            assert_eq!(spec.kind, OpKind::Builtin);
+            assert_eq!(spec.family, OpFamily::Output);
+            assert!(!spec.dest, "{name} only writes");
+            assert_eq!(spec.operand_types, ["f64"]);
+            assert!(spec.may_trap.is_empty(), "{name} never traps");
+        }
+    }
+
+    /// Every LANG83 operation that may trap must be kept by dead-code
+    /// elimination: if it is not side-effecting, an unused result lets an
+    /// optimiser delete the trap. Derived from the registry so a future
+    /// trapping op cannot be added without its `has_side_effects` entry.
+    #[test]
+    fn every_trapping_lang83_op_has_side_effects() {
+        for spec in STANDARD_OPS
+            .iter()
+            .filter(|s| s.kind == OpKind::Op && s.introduced_by.starts_with("LANG83") && !s.may_trap.is_empty())
+        {
+            assert!(crate::opcodes::has_side_effects(spec.name), "{} must survive DCE", spec.name);
+            assert!(crate::opcodes::may_trap(spec.name), "{}", spec.name);
+        }
     }
 
     #[test]

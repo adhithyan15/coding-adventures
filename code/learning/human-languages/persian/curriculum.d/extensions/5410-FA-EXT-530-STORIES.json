@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-530-STORIES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what kind of story something is.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C221-yobou",
+  "pathSegment": "JA-PATH-221-FEVER221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-221-FEVER221",
+      "order": 4
+    }
+  ]
+}

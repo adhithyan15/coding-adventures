@@ -4,11 +4,11 @@
   "chapter": 26,
   "title": "Give, Bring, Put",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a573fef9310f1308",
+  "sourceHash": "fnv1a64:9ae7bc4511703730",
   "lessons": [
     {
       "id": "MR-C22-dene",
-      "sequence": 1070,
+      "sequence": 1075,
       "title": "देणे (deṇe) — to give",
       "headword": "देणे",
       "romanization": "deṇe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cfb3e05d1d76ea9c",
+      "sourceHash": "fnv1a64:e84b9a32f605c0b5",
       "notice": {
         "modality": "sight",
         "needs": [

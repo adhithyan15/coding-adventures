@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C319-gasht",
+    "language": "persian",
+    "chapter": 319,
+    "sequence": 16280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1c2b65d9ac3f12b"
+  },
+  "findings": []
+}

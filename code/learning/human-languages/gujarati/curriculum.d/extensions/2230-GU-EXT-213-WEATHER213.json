@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-213-WEATHER213",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what the weather will be like tomorrow.",
+  "prerequisites": []
+}

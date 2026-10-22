@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:4d9590dc3464cfaf",
+  "lessonIds": [
+    "RU-C481-lopatka",
+    "RU-C481-pozvonochnik",
+    "RU-C481-bedro",
+    "RU-C481-pyatka",
+    "RU-C481-ladon"
+  ],
+  "tex": "russian/book/chapters/ch481-from-shoulder-blade-to-heel.tex"
+}

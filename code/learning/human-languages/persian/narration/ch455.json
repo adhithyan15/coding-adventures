@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 455,
+  "title": "Out and about",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8f2e7c1b3314b556",
+  "lessons": [
+    {
+      "id": "FA-C455-shahrbazi",
+      "sequence": 23290,
+      "title": "شهربازی (shahrbâzi) — an amusement park, a funfair",
+      "headword": "شهربازی",
+      "romanization": "shahrbâzi",
+      "gloss": "an amusement park, a funfair",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:690d3697a0ba63a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a hairdresser's, then the Persian for a watchmaker."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شهربازی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شهربازی (shahrbâzi) — \"an amusement park, a funfair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بچه ها روز جمعه به شهربازی رفتند. Bachche-hâ ruz-e jom'e be shahrbâzi raftand. The children went to the funfair on Friday."
+            },
+            {
+              "kind": "speech",
+              "text": "Literally 'play-town'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shahrbâzi is a native compound of shahr 'town', from Middle Persian šahr (EtymDB), and bâzi 'play', usually traced to Middle Persian wāzīg."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahrbâzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahrbâzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahrbâzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahrbâzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with shahrbâzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *shahrbâzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a hairdresser's, then the Persian for a watchmaker, then say shahrbâzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a hairdresser's, then the Persian for a watchmaker, then say *shahrbâzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شهربازی (shahrbâzi) mean? (\"An amusement park, a funfair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C455-park-e-jangali",
+      "sequence": 23300,
+      "title": "پارک جنگلی (pârk-e jangali) — a forest park, a wooded park",
+      "headword": "پارک جنگلی",
+      "romanization": "pârk-e jangali",
+      "gloss": "a forest park, a wooded park",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c02a12080d876ff0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a watchmaker, then the Persian for an amusement park."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پارک جنگلی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پارک جنگلی (pârk-e jangali) — \"a forest park, a wooded park\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جمعه ها مردم در پارک جنگلی کباب درست میکنند. Jom'e-hâ mardom dar pârk-e jangali kabâb dorost mikonand. On Fridays people make kebabs in the forest park."
+            },
+            {
+              "kind": "speech",
+              "text": "Many Iranian towns have a pârk-e jangali on their edge for picnics."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pârk-e jangali is built from pârk, a loan usually traced to French parc, and jangali 'wooded', from jangal 'forest', usually traced to Sanskrit jaṅgala."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pârk-e jangali",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pârk-e jangali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pârk-e jangali, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pârk-e jangali*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with pârk-e jangali",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *pârk-e jangali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a watchmaker, then the Persian for an amusement park, then say pârk-e jangali again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a watchmaker, then the Persian for an amusement park, then say *pârk-e jangali* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پارک جنگلی (pârk-e jangali) mean? (\"A forest park, a wooded park\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C455-namayeshgah",
+      "sequence": 23310,
+      "title": "نمایشگاه (namâyeshgâh) — an exhibition; a trade fair",
+      "headword": "نمایشگاه",
+      "romanization": "namâyeshgâh",
+      "gloss": "an exhibition; a trade fair",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d13da4657b8b45b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an amusement park, then the Persian for a forest park."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نمایشگاه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نمایشگاه (namâyeshgâh) — \"an exhibition; a trade fair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هفته پیش به نمایشگاه کتاب رفتیم. Hafte-ye pish be namâyeshgâh-e ketâb raftim. Last week we went to the book fair."
+            },
+            {
+              "kind": "speech",
+              "text": "namâyesh 'show' + gâh 'place'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "namâyeshgâh is a native compound of namâyesh 'a showing', built on nemudan 'to show', and gâh 'place'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namâyeshgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namâyeshgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namâyeshgâh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namâyeshgâh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with namâyeshgâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *namâyeshgâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an amusement park, then the Persian for a forest park, then say namâyeshgâh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an amusement park, then the Persian for a forest park, then say *namâyeshgâh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نمایشگاه (namâyeshgâh) mean? (\"An exhibition; a trade fair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C455-farhangsara",
+      "sequence": 23320,
+      "title": "فرهنگسرا (farhangsarâ) — a cultural centre, an arts centre",
+      "headword": "فرهنگسرا",
+      "romanization": "farhangsarâ",
+      "gloss": "a cultural centre, an arts centre",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06d289d5da92034f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a forest park, then the Persian for an exhibition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فرهنگسرا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرهنگسرا (farhangsarâ) — \"a cultural centre, an arts centre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "در فرهنگسرای محله کلاس موسیقی هست. Dar farhangsarâ-ye mahalle kelâs-e musiqi hast. There are music classes at the local cultural centre."
+            },
+            {
+              "kind": "speech",
+              "text": "farhang 'culture' + sarâ 'house'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "farhangsarâ is a native compound of farhang 'culture', from Middle Persian frahang (EtymDB), and sarâ 'house, hall'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farhangsarâ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farhangsarâ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farhangsarâ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farhangsarâ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with farhangsarâ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *farhangsarâ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a forest park, then the Persian for an exhibition, then say farhangsarâ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a forest park, then the Persian for an exhibition, then say *farhangsarâ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فرهنگسرا (farhangsarâ) mean? (\"A cultural centre, an arts centre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C455-tatil-shodan",
+      "sequence": 23330,
+      "title": "تعطیل شدن (ta'til shodan) — to close (for the day or a holiday), to shut",
+      "headword": "تعطیل شدن",
+      "romanization": "ta'til shodan",
+      "gloss": "to close (for the day or a holiday), to shut",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:371eea57eb99a32d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for an exhibition, then the Persian for a cultural centre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعطیل شدن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعطیل شدن (ta'til shodan) — \"to close (for the day or a holiday), to shut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بازار ساعت هشت شب تعطیل شد. Bâzâr sâ'at-e hasht-e shab ta'til shod. The bazaar closed at eight in the evening."
+            },
+            {
+              "kind": "speech",
+              "text": "ta'til 'closed, a holiday' + shodan. Ruz-e ta'til — a day off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ta'til shodan is built from ta'til 'closure, a holiday', borrowed from Arabic taʿṭīl 'suspension, a break' (EtymDB), and the native verb shodan 'to become'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'til shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'til shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ta'til shodan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ta'til shodan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with ta'til shodan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *ta'til shodan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for an exhibition, then the Persian for a cultural centre, then say ta'til shodan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for an exhibition, then the Persian for a cultural centre, then say *ta'til shodan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعطیل شدن (ta'til shodan) mean? (\"To close (for the day or a holiday), to shut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

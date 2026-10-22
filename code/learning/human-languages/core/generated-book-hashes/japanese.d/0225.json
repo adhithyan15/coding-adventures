@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:55985f6d0328c084",
+  "lessonIds": [
+    "JA-C225-oboeru",
+    "JA-C225-renshuu",
+    "JA-C225-fukushuu",
+    "JA-C225-shiraberu",
+    "JA-C225-jisho"
+  ],
+  "tex": "japanese/book/chapters/ch225-practice-and-revision.tex"
+}

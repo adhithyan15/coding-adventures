@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:ec36cb7bc88e381d",
+  "lessonIds": [
+    "RU-C390-soblyudat",
+    "RU-C390-obyazatelnyy",
+    "RU-C390-poryadok",
+    "RU-C390-pravo",
+    "RU-C390-otvetstvennost"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch390.txt",
+  "json": "russian/narration/ch390.json",
+  "textHash": "fnv1a64:30f7c720a9ff29a8",
+  "jsonHash": "fnv1a64:e4ecbb88f841641c",
+  "findings": []
+}

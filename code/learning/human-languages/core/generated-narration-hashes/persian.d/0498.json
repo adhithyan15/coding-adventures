@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:cbea239d62a5ed3b",
+  "lessonIds": [
+    "FA-C498-laghar-shodan",
+    "FA-C498-chaq-shodan",
+    "FA-C498-rezhim-gereftan",
+    "FA-C498-vitamin",
+    "FA-C498-chaqi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch498.txt",
+  "json": "persian/narration/ch498.json",
+  "textHash": "fnv1a64:6c5f49b522b6038a",
+  "jsonHash": "fnv1a64:7dc6fd8b1349ac0f",
+  "findings": []
+}

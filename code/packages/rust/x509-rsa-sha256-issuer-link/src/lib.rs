@@ -6,9 +6,14 @@
 //! validates that certificate's RSA public key under caller-owned strength
 //! policy, and verifies the child's exact RSA PKCS #1 v1.5 SHA-256 signature.
 //!
-//! The result binds the exact child and candidate issuer. It does not process
-//! unknown critical extensions, validity, path length, name constraints,
-//! revocation, trust anchors, path construction, TLS, HTTP, or network effects.
+//! The narrow result binds the exact child and candidate issuer. Stronger
+//! entry points additionally retain caller-owned critical-extension and
+//! issuing-CA role-policy evidence, then certificate-bound data-driven
+//! algorithm-profile evidence, for that exact selected issuer. Recognition is
+//! not semantic validation of other critical extensions, and an algorithm
+//! profile neither chooses nor enables this crate's fixed verifier. No result
+//! establishes validity, path length, name constraints, revocation, trust
+//! anchors, path construction, TLS, HTTP, or network effects.
 
 #![deny(unsafe_code)]
 
@@ -16,8 +21,10 @@ use core::fmt;
 use der_asn1::Asn1Limits;
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate::X509Certificate;
+use x509_certificate_issuer_candidate_selection::SelectedX509IssuerCandidate;
 use x509_certificate_policy::{
     validate_certificate_issuer_link, validate_certificate_role_extensions,
+    ValidatedCertificateAlgorithmPolicy, ValidatedCertificateRolePolicy,
     X509CertificateIssuerLinkErrorKind, X509CertificateRole, X509CertificateRoleErrorKind,
 };
 use x509_name::X509Name;
@@ -106,6 +113,80 @@ impl fmt::Display for X509RsaSha256IssuerLinkError {
 
 impl std::error::Error for X509RsaSha256IssuerLinkError {}
 
+/// Stable stronger-composition failure categories that retain no certificate bytes.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha256IssuerRolePolicyLinkErrorKind {
+    /// The role-policy evidence is not for the exact selected issuing CA.
+    EvidenceMismatch,
+    /// The selected certificate pair failed the existing issuer-link checks.
+    IssuerLink(X509RsaSha256IssuerLinkErrorKind),
+}
+
+/// A redacted failure while composing selection, role-policy, and issuer-link evidence.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha256IssuerRolePolicyLinkError {
+    kind: X509RsaSha256IssuerRolePolicyLinkErrorKind,
+}
+
+impl X509RsaSha256IssuerRolePolicyLinkError {
+    const fn new(kind: X509RsaSha256IssuerRolePolicyLinkErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509RsaSha256IssuerRolePolicyLinkErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha256IssuerRolePolicyLinkError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-256 issuer role-policy link error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha256IssuerRolePolicyLinkError {}
+
+/// Stable full-policy composition failures that retain no certificate bytes.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha256IssuerPolicyLinkErrorKind {
+    /// Role or algorithm evidence is not for the exact selected issuing CA.
+    EvidenceMismatch,
+    /// The role-bound composition failed its existing issuer-link checks.
+    IssuerRolePolicyLink(X509RsaSha256IssuerRolePolicyLinkErrorKind),
+}
+
+/// A redacted failure while binding selection, role, algorithm, and link evidence.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha256IssuerPolicyLinkError {
+    kind: X509RsaSha256IssuerPolicyLinkErrorKind,
+}
+
+impl X509RsaSha256IssuerPolicyLinkError {
+    const fn new(kind: X509RsaSha256IssuerPolicyLinkErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509RsaSha256IssuerPolicyLinkErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha256IssuerPolicyLinkError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-256 issuer policy link error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha256IssuerPolicyLinkError {}
+
 /// Non-copyable evidence for one exact child-to-candidate-issuer link.
 ///
 /// This evidence proves only the directed Name-policy result, issuing-CA role,
@@ -150,6 +231,114 @@ impl fmt::Debug for VerifiedX509RsaSha256IssuerLink<'_, '_, '_, '_> {
     }
 }
 
+/// Non-copyable evidence that retains both an authenticated selected link and
+/// certificate-wide issuing-CA role-policy evidence for its exact issuer.
+///
+/// This is intentionally distinct from [`VerifiedX509RsaSha256IssuerLink`]. It
+/// additionally proves that caller-owned critical-extension recognition and
+/// the issuing-CA role gate were applied to the exact selected issuer. It does
+/// not semantically validate recognized non-role extensions or establish a
+/// complete or trusted certification path.
+pub struct VerifiedX509RsaSha256IssuerRolePolicyLink<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    verified_link: VerifiedX509RsaSha256IssuerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    issuer_role_policy: ValidatedCertificateRolePolicy<'issuer_certificate, 'issuer_encoded>,
+}
+
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    VerifiedX509RsaSha256IssuerRolePolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    pub const fn verified_link(
+        &self,
+    ) -> &VerifiedX509RsaSha256IssuerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.verified_link
+    }
+
+    pub const fn issuer_role_policy(
+        &self,
+    ) -> &ValidatedCertificateRolePolicy<'issuer_certificate, 'issuer_encoded> {
+        &self.issuer_role_policy
+    }
+}
+
+impl fmt::Debug for VerifiedX509RsaSha256IssuerRolePolicyLink<'_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509RsaSha256IssuerRolePolicyLink")
+    }
+}
+
+/// Non-copyable evidence retaining authenticated link, role, and algorithm policy.
+///
+/// The algorithm evidence is certificate-bound caller policy. It does not
+/// route to or enable the fixed RSA SHA-256 verifier, and its encoded key bound
+/// is not a replacement for the issuer-link's RSA modulus-strength policy.
+pub struct VerifiedX509RsaSha256IssuerPolicyLink<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    role_policy_link: VerifiedX509RsaSha256IssuerRolePolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    issuer_algorithm_policy:
+        ValidatedCertificateAlgorithmPolicy<'issuer_certificate, 'issuer_encoded>,
+}
+
+impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
+    VerifiedX509RsaSha256IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    pub const fn role_policy_link(
+        &self,
+    ) -> &VerifiedX509RsaSha256IssuerRolePolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.role_policy_link
+    }
+
+    pub const fn issuer_algorithm_policy(
+        &self,
+    ) -> &ValidatedCertificateAlgorithmPolicy<'issuer_certificate, 'issuer_encoded> {
+        &self.issuer_algorithm_policy
+    }
+}
+
+impl fmt::Debug for VerifiedX509RsaSha256IssuerPolicyLink<'_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509RsaSha256IssuerPolicyLink")
+    }
+}
+
 /// Verify one directed RSA PKCS #1 v1.5 SHA-256 issuer link.
 ///
 /// `same_name` is called exactly once with the child issuer Name followed by
@@ -180,6 +369,182 @@ pub fn verify_x509_rsa_sha256_issuer_link<
         ))
     })?;
 
+    verify_x509_rsa_sha256_issuer_link_after_name(child, candidate_issuer, policy)
+}
+
+/// Authenticate the exact child and issuer already bound by unique selection.
+///
+/// This consuming entry point performs no second Name comparison. It derives
+/// both certificate references from `selected_candidate`, then applies the
+/// issuing-CA role, caller-owned RSA key policy, and exact child-signature
+/// checks to that same selected candidate. Selection evidence is not by itself
+/// authentication, and this result still does not establish a complete or
+/// trusted certification path.
+pub fn verify_selected_x509_rsa_sha256_issuer_link<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    selected_candidate: SelectedX509IssuerCandidate<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    policy: X509RsaSha256IssuerLinkPolicy<'_>,
+) -> Result<
+    VerifiedX509RsaSha256IssuerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha256IssuerLinkError,
+> {
+    verify_x509_rsa_sha256_issuer_link_after_name(
+        selected_candidate.child_certificate(),
+        selected_candidate.candidate_certificate(),
+        policy,
+    )
+}
+
+/// Authenticate one selected issuer while retaining certificate-wide role-policy evidence.
+///
+/// Before any issuer role, key, or signature work, this consuming entry point
+/// requires `issuer_role_policy` to retain the exact selected candidate object
+/// and to have been produced for the issuing-CA role. The existing bounded
+/// issuer-link checks then run unchanged, including role validation under the
+/// supplied policy limits. The distinct result retains both non-copyable proof
+/// objects and grants no path, trust, time, identity, revocation, TLS, HTTP, or
+/// network authority.
+pub fn verify_selected_x509_rsa_sha256_issuer_link_with_role_policy<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    selected_candidate: SelectedX509IssuerCandidate<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    issuer_role_policy: ValidatedCertificateRolePolicy<'issuer_certificate, 'issuer_encoded>,
+    policy: X509RsaSha256IssuerLinkPolicy<'_>,
+) -> Result<
+    VerifiedX509RsaSha256IssuerRolePolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha256IssuerRolePolicyLinkError,
+> {
+    if !std::ptr::eq(
+        selected_candidate.candidate_certificate(),
+        issuer_role_policy.certificate(),
+    ) || issuer_role_policy.role_extensions().role()
+        != X509CertificateRole::IssuingCertificateAuthority
+    {
+        return Err(X509RsaSha256IssuerRolePolicyLinkError::new(
+            X509RsaSha256IssuerRolePolicyLinkErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    let verified_link = verify_selected_x509_rsa_sha256_issuer_link(selected_candidate, policy)
+        .map_err(|error| {
+            X509RsaSha256IssuerRolePolicyLinkError::new(
+                X509RsaSha256IssuerRolePolicyLinkErrorKind::IssuerLink(error.kind()),
+            )
+        })?;
+
+    Ok(VerifiedX509RsaSha256IssuerRolePolicyLink {
+        verified_link,
+        issuer_role_policy,
+    })
+}
+
+/// Authenticate one selected issuer while retaining role and algorithm policy.
+///
+/// All three evidence inputs must retain the same exact selected candidate,
+/// and the role evidence must classify it as an issuing CA. Those bindings are
+/// checked before the existing role, RSA key, or signature work begins. The
+/// algorithm profile remains caller policy data and does not select this
+/// function's fixed RSA PKCS #1 v1.5 SHA-256 implementation.
+pub fn verify_selected_x509_rsa_sha256_issuer_link_with_policies<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    selected_candidate: SelectedX509IssuerCandidate<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    issuer_role_policy: ValidatedCertificateRolePolicy<'issuer_certificate, 'issuer_encoded>,
+    issuer_algorithm_policy: ValidatedCertificateAlgorithmPolicy<
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    policy: X509RsaSha256IssuerLinkPolicy<'_>,
+) -> Result<
+    VerifiedX509RsaSha256IssuerPolicyLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha256IssuerPolicyLinkError,
+> {
+    let selected_issuer = selected_candidate.candidate_certificate();
+    if !std::ptr::eq(selected_issuer, issuer_role_policy.certificate())
+        || issuer_role_policy.role_extensions().role()
+            != X509CertificateRole::IssuingCertificateAuthority
+        || !std::ptr::eq(selected_issuer, issuer_algorithm_policy.certificate())
+    {
+        return Err(X509RsaSha256IssuerPolicyLinkError::new(
+            X509RsaSha256IssuerPolicyLinkErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    let role_policy_link = verify_selected_x509_rsa_sha256_issuer_link_with_role_policy(
+        selected_candidate,
+        issuer_role_policy,
+        policy,
+    )
+    .map_err(|error| {
+        X509RsaSha256IssuerPolicyLinkError::new(
+            X509RsaSha256IssuerPolicyLinkErrorKind::IssuerRolePolicyLink(error.kind()),
+        )
+    })?;
+
+    Ok(VerifiedX509RsaSha256IssuerPolicyLink {
+        role_policy_link,
+        issuer_algorithm_policy,
+    })
+}
+
+fn verify_x509_rsa_sha256_issuer_link_after_name<
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    child: &'child_certificate X509Certificate<'child_encoded>,
+    candidate_issuer: &'issuer_certificate X509Certificate<'issuer_encoded>,
+    policy: X509RsaSha256IssuerLinkPolicy<'_>,
+) -> Result<
+    VerifiedX509RsaSha256IssuerLink<
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaSha256IssuerLinkError,
+> {
     validate_certificate_role_extensions(
         candidate_issuer,
         X509CertificateRole::IssuingCertificateAuthority,

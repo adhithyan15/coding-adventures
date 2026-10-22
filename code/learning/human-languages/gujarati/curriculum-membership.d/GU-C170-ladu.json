@@ -1,0 +1,11 @@
+{
+  "id": "GU-C170-ladu",
+  "pathSegment": "GU-PATH-170-SWEET170",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-170-SWEET170",
+      "order": 1
+    }
+  ]
+}

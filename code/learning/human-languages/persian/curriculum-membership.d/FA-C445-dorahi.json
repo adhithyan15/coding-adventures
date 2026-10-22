@@ -1,0 +1,11 @@
+{
+  "id": "FA-C445-dorahi",
+  "pathSegment": "FA-PATH-445-TAGHATO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-445-TAGHATO",
+      "order": 3
+    }
+  ]
+}

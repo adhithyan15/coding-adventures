@@ -1,0 +1,21 @@
+{
+  "chapter": 266,
+  "title": "A Ticket, and a Missed Train",
+  "label": "ch:ru-a-ticket-and-a-missed-train",
+  "canDo": "I can buy a ticket, туда и обратно, at the station, follow an announcement, and report a problem: я опоздал на поезд, я потерял билет.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "RU-C266-review",
+    "kind": "production",
+    "summary": "Complete RU-C266-review: buy a return ticket at the till, follow an announcement, then report a missed train and a lost ticket.",
+    "assesses": [
+      "RU-LEX-TUDA-I-OBRATNO-01",
+      "RU-GRAMMAR-BILET-DO-NA-01",
+      "RU-LEX-OPOZDAL-NA-POEZD-01",
+      "RU-GRAMMAR-PROBLEM-PERFECTIVE-01",
+      "RU-LEX-OBYAVLENIYE-01"
+    ]
+  }
+}

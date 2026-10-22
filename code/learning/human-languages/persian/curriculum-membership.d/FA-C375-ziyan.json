@@ -1,0 +1,11 @@
+{
+  "id": "FA-C375-ziyan",
+  "pathSegment": "FA-PATH-375-MAZIYYAT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-375-MAZIYYAT",
+      "order": 2
+    }
+  ]
+}

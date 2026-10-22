@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:1177f14d022d2027",
+  "lessonIds": [
+    "FA-C404-moqarrarat",
+    "FA-C404-mamnu",
+    "FA-C404-mojaz",
+    "FA-C404-reayat-kardan",
+    "FA-C404-naqz-kardan"
+  ],
+  "tex": "persian/book/chapters/ch404-rules.tex"
+}

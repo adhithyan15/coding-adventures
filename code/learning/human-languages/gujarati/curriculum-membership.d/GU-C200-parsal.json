@@ -1,0 +1,11 @@
+{
+  "id": "GU-C200-parsal",
+  "pathSegment": "GU-PATH-200-POST200",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-200-POST200",
+      "order": 2
+    }
+  ]
+}

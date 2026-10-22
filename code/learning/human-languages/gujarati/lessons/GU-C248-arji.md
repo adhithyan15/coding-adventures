@@ -1,0 +1,73 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-C248-arji
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 13460
+chapter: 248
+type: word
+headword: "અરજી"
+gloss: "application, petition"
+romanization: "arjī"
+concept_tag: GU-OFFICE248-ARJI
+prerequisites: [GU-C247-mahenatu, GU-C248-bethak]
+sounds: []
+roots: [arabic-arz]
+etymology_hook: 'arjī: usually traced through Persian to Arabic ʿarḍ ''a presenting'', root ʿ-r-ḍ (Lane)'
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-LEX-C247-LIVING247-05, GU-LEX-C248-OFFICE248-01]
+introduces:
+  knowledge: [GU-LEX-C248-OFFICE248-02]
+practises:
+  knowledge: [GU-LEX-C248-OFFICE248-02, GU-LEX-C247-LIVING247-05, GU-LEX-C248-OFFICE248-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C248-bethak]
+---
+
+# અરજી (arjī) — application, petition
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C247-LIVING247-05, GU-LEX-C248-OFFICE248-01] -->
+
+[PAUSE 2s] Before the new one: say the Gujarati for hardworking, then the Gujarati for meeting.
+
+## You'll want to know: અરજી
+<!-- hl-knowledge: introduces=[GU-LEX-C248-OFFICE248-02]; assesses=[] -->
+
+**અરજી** — *arjī* — "application, petition".
+
+> **તે નોકરી માટે અરજી લખે છે.** — *te nokrī māṭe arjī lakhe che* — "She writes an application for a job."
+
+A feminine noun.
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+**અરજી** (*arjī*) is a loan usually traced to a Persian *ʿarzī*, "a petition", built on Arabic *ʿarḍ*, "a presenting, a showing". Its Arabic root is *ʿ-r-ḍ* (Lane).
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for everyday life at A2.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C248-OFFICE248-02, GU-LEX-C247-LIVING247-05, GU-LEX-C248-OFFICE248-01] -->
+
+[PAUSE 1s]
+- [YOU SAY: *arjī*]
+- [YOU SAY: *arjī*, once more]
+- [YOU SAY: *te nokrī māṭe arjī lakhe che* — She writes an application for a job.]
+- [YOU RECALL: say the Gujarati for hardworking, then the Gujarati for meeting, then say *arjī* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C248-OFFICE248-02, GU-LEX-C247-LIVING247-05, GU-LEX-C248-OFFICE248-01] -->
+
+[PAUSE 3s] What does અરજી mean? ("Application, petition".) Say it once more.

@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "Agreeing and disagreeing",
+  "label": "ch:fa-agreeing-and-disagreeing",
+  "canDo": "I can say that I agree or disagree, oppose a plan, say what I believe in and say that I doubt something.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "FA-C361-shak-dashtan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say that I agree or disagree, oppose a plan, say what I believe in and say that I doubt something.",
+    "assesses": [
+      "FA-LEX-C361-MOVAFEQAT-03",
+      "FA-LEX-C361-MOVAFEQAT-04",
+      "FA-LEX-C361-MOVAFEQAT-05"
+    ]
+  }
+}

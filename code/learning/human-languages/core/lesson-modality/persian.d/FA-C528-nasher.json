@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C528-nasher",
+    "language": "persian",
+    "chapter": 528,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b75a0c4bd2ee000"
+  },
+  "findings": []
+}

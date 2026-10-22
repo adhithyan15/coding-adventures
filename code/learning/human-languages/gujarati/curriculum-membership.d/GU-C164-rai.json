@@ -1,0 +1,11 @@
+{
+  "id": "GU-C164-rai",
+  "pathSegment": "GU-PATH-164-SPICE164",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-164-SPICE164",
+      "order": 3
+    }
+  ]
+}

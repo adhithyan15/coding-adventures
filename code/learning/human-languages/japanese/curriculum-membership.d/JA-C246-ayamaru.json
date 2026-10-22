@@ -1,0 +1,11 @@
+{
+  "id": "JA-C246-ayamaru",
+  "pathSegment": "JA-PATH-246-ANGER246",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-246-ANGER246",
+      "order": 2
+    }
+  ]
+}

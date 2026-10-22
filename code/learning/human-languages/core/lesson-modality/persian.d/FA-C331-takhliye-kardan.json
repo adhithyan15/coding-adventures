@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C331-takhliye-kardan",
+    "language": "persian",
+    "chapter": 331,
+    "sequence": 16910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5be8fe424ca7fad8"
+  },
+  "findings": []
+}

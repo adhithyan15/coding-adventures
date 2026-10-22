@@ -1,0 +1,14 @@
+{
+  "language": "russian",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:2552b7e403a181d3",
+  "lessonIds": [
+    "RU-C524-detektiv",
+    "RU-C524-fantastika",
+    "RU-C524-biografiya",
+    "RU-C524-povest",
+    "RU-C524-memuary",
+    "RU-R524-review-517-524"
+  ],
+  "tex": "russian/book/chapters/ch524-kinds-of-books.tex"
+}

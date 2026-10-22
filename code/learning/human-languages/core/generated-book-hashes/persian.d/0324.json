@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:38cccd2b25bac525",
+  "lessonIds": [
+    "FA-C324-hadese",
+    "FA-C324-sanehe",
+    "FA-C324-tasadof-kardan",
+    "FA-C324-barkhord-kardan",
+    "FA-C324-vazhgun-shodan"
+  ],
+  "tex": "persian/book/chapters/ch324-accidents.tex"
+}

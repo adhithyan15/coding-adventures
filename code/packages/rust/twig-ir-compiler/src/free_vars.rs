@@ -9,26 +9,25 @@
 //! [`free_vars`] computes that set in stable order — the order is
 //! significant because the IR compiler emits the captures both as the
 //! leading parameters of the gensym'd `IIRFunction` the lambda compiles
-//! to *and* as the leading arguments to `call_builtin "make_closure"`
+//! to *and* as the leading operands of the `alloc_closure` instruction
 //! at the lambda's source position.  If the order drifted, a closure
 //! would read its captures from the wrong slots.
 //!
 //! The traversal is purely structural — a single "currently-bound" set
-//! threaded down recursive calls.  Output uses an [`indexmap`-like]
-//! pattern (a `Vec` paired with a hash check) so insertion order is
-//! preserved without any third-party dependency.
+//! threaded down recursive calls.  It walks the parse tree through the
+//! borrowed views in [`crate::cst`] (LANG84: no typed AST on the IIR
+//! path).  Output uses an [`indexmap`-like] pattern (a `Vec` paired with
+//! a hash check) so insertion order is preserved without any third-party
+//! dependency.
 
 use std::collections::HashSet;
 
-use twig_parser::{Apply, Begin, Expr, If, Lambda, Let,
-    // LANG52: sequential let* bindings
-    LetStar,
-};
+use crate::cst::{ExprKind, ExprNode, FormKind, LambdaView, ProgramView};
 
 /// Maximum AST depth the walker will descend before bailing out.
 ///
-/// The parser already enforces its own depth cap so this is a
-/// belt-and-braces guard for callers that hand-build an `Expr` tree.
+/// The parser and `check_cst` already enforce their own depth caps, so
+/// this is a belt-and-braces guard for hand-built trees.
 /// Hitting this limit returns an empty capture list — safe-ish but
 /// unusual; callers that build trees deeper than this should bound
 /// depth themselves before calling `free_vars`.
@@ -47,11 +46,11 @@ const MAX_WALK_DEPTH: usize = 256;
 /// left-to-right walk of the lambda body.  Two compiles of the same
 /// source produce identical closure shapes — important for caching
 /// closure-handle layouts and for golden-test stability.
-pub fn free_vars(lam: &Lambda, globals: &HashSet<String>) -> Vec<String> {
-    let mut bound: HashSet<String> = lam.params.iter().cloned().collect();
+pub(crate) fn free_vars(lam: LambdaView<'_>, globals: &HashSet<String>) -> Vec<String> {
+    let mut bound: HashSet<String> = lam.params().map(|p| p.name.to_string()).collect();
     let mut found: Vec<String> = Vec::new();
     let mut seen: HashSet<String> = HashSet::new();
-    for e in &lam.body {
+    for e in lam.body().iter() {
         walk(e, &mut bound, globals, &mut found, &mut seen, 0);
     }
     found
@@ -74,19 +73,21 @@ pub fn free_vars(lam: &Lambda, globals: &HashSet<String>) -> Vec<String> {
 /// counts) that happen to be value-globals are exactly the ones that lambda
 /// captures.  Over-approximation is safe here — a name wrongly flagged as
 /// captured merely stays on the (correct, if slower) global-table path.
-pub fn lambda_captured_globals(
-    forms: &[twig_parser::Form],
+pub(crate) fn lambda_captured_globals(
+    program: ProgramView<'_>,
     value_globals: &HashSet<String>,
 ) -> HashSet<String> {
     let mut captured = HashSet::new();
-    for form in forms {
+    for form in program.forms() {
         match form {
-            twig_parser::Form::Define(d) => {
-                collect_lambda_captures(&d.expr, value_globals, &mut captured, 0)
-            }
-            twig_parser::Form::Expr(e) => {
-                collect_lambda_captures(e, value_globals, &mut captured, 0)
-            }
+            // A define's right-hand side: function sugar is a lambda in its
+            // own right; a value define is an ordinary expression.
+            FormKind::Define(d) => match (d.lambda(), d.value()) {
+                (Some(lam), None) => capture_lambda(lam, value_globals, &mut captured),
+                (_, Some(e)) => collect_lambda_captures(e, value_globals, &mut captured, 0),
+                (None, None) => {}
+            },
+            FormKind::Expr(e) => collect_lambda_captures(e, value_globals, &mut captured, 0),
             // RecordDef / UnionDef synthesise constructor / accessor functions,
             // but those reference only their own parameters — never a user
             // value-global — so they capture nothing.  TypeAlias is erased.
@@ -96,18 +97,27 @@ pub fn lambda_captured_globals(
     captured
 }
 
+/// Union the value-globals one lambda captures into `captured`.
+fn capture_lambda(lam: LambdaView<'_>, value_globals: &HashSet<String>, captured: &mut HashSet<String>) {
+    for name in free_vars(lam, &HashSet::new()) {
+        if value_globals.contains(&name) {
+            captured.insert(name);
+        }
+    }
+}
+
 /// Recurse through `expr` looking for lambdas; union each lambda's captured
 /// value-globals into `captured`.  `free_vars` already descends into nested
 /// lambdas, so once a lambda is found we do not recurse into it again here.
 fn collect_lambda_captures(
-    expr: &Expr,
+    expr: ExprNode<'_>,
     value_globals: &HashSet<String>,
     captured: &mut HashSet<String>,
     depth: usize,
 ) {
     // Same belt-and-braces depth guard as `walk`: a hand-built AST (one that
-    // reached the public `compile_program(&Program, …)` entry without the
-    // parser's paren-depth pre-scan) must not overflow the stack here before
+    // reached the public `compile_ast` entry without the parser's
+    // paren-depth pre-scan) must not overflow the stack here before
     // the main pass's `MAX_COMPILE_DEPTH` guard would fire.  Bailing early only
     // stops accumulating more captures; the main pass still produces the hard
     // depth error, and stopping early can only *under*-collect — which here is
@@ -116,62 +126,52 @@ fn collect_lambda_captures(
         return;
     }
     let depth = depth + 1;
-    match expr {
-        Expr::Lambda(l) => {
-            for name in free_vars(l, &HashSet::new()) {
-                if value_globals.contains(&name) {
-                    captured.insert(name);
-                }
-            }
+    match expr.kind() {
+        ExprKind::Lambda(l) => capture_lambda(l, value_globals, captured),
+        ExprKind::If(i) => {
+            collect_lambda_captures(i.cond, value_globals, captured, depth);
+            collect_lambda_captures(i.then_branch, value_globals, captured, depth);
+            collect_lambda_captures(i.else_branch, value_globals, captured, depth);
         }
-        Expr::If(If { cond, then_branch, else_branch, .. }) => {
-            collect_lambda_captures(cond, value_globals, captured, depth);
-            collect_lambda_captures(then_branch, value_globals, captured, depth);
-            collect_lambda_captures(else_branch, value_globals, captured, depth);
-        }
-        Expr::Begin(Begin { exprs, .. }) => {
-            for e in exprs {
+        ExprKind::Begin(exprs) => {
+            for e in exprs.iter() {
                 collect_lambda_captures(e, value_globals, captured, depth);
             }
         }
-        Expr::Let(Let { bindings, body, .. }) => {
-            for (_, rhs) in bindings {
+        ExprKind::Let(l) | ExprKind::LetStar(l) => {
+            for (_, rhs) in l.bindings() {
                 collect_lambda_captures(rhs, value_globals, captured, depth);
             }
-            for e in body {
+            for e in l.body().iter() {
                 collect_lambda_captures(e, value_globals, captured, depth);
             }
         }
-        Expr::LetStar(LetStar { bindings, body, .. }) => {
-            for (_, rhs) in bindings {
-                collect_lambda_captures(rhs, value_globals, captured, depth);
+        ExprKind::Apply(a) => {
+            if let Some(f) = a.fn_expr() {
+                collect_lambda_captures(f, value_globals, captured, depth);
             }
-            for e in body {
+            for e in a.args().iter() {
                 collect_lambda_captures(e, value_globals, captured, depth);
             }
         }
-        Expr::Apply(Apply { fn_expr, args, .. }) => {
-            collect_lambda_captures(fn_expr, value_globals, captured, depth);
-            for a in args {
-                collect_lambda_captures(a, value_globals, captured, depth);
+        ExprKind::Match(m) => {
+            if let Some(s) = m.scrutinee() {
+                collect_lambda_captures(s, value_globals, captured, depth);
             }
-        }
-        Expr::Match(m) => {
-            collect_lambda_captures(&m.scrutinee, value_globals, captured, depth);
-            for arm in &m.arms {
-                for e in &arm.body {
+            for arm in m.arms() {
+                for e in arm.body().iter() {
                     collect_lambda_captures(e, value_globals, captured, depth);
                 }
             }
         }
         // Atoms — no nested lambdas.
-        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_)
-        | Expr::StrLit(_) | Expr::VarRef(_) => {}
+        ExprKind::IntLit(_) | ExprKind::BoolLit(_) | ExprKind::NilLit | ExprKind::SymLit(_)
+        | ExprKind::StrLit(_) | ExprKind::VarRef(_) => {}
     }
 }
 
 fn walk(
-    expr: &Expr,
+    expr: ExprNode<'_>,
     bound: &mut HashSet<String>,
     globals: &HashSet<String>,
     found: &mut Vec<String>,
@@ -180,17 +180,39 @@ fn walk(
 ) {
     // Depth bound: silently stop descending if we exceed the cap.
     // The compiler's own depth cap fires first on real inputs; this
-    // is for hand-built ASTs that bypass the parser.
+    // is for hand-built trees that bypass the parser.
     if depth > MAX_WALK_DEPTH {
         return;
     }
     let depth = depth + 1;
-    match expr {
+
+    /// Bind `names` for the duration of `body`, then unbind exactly the
+    /// ones that were not already bound (so an inner binder that shadows
+    /// an outer one does not unbind the outer one on the way out).
+    fn with_bound<'n>(
+        bound: &mut HashSet<String>,
+        names: impl Iterator<Item = &'n str>,
+        body: impl FnOnce(&mut HashSet<String>),
+    ) {
+        let mut added: Vec<String> = Vec::new();
+        for n in names {
+            if bound.insert(n.to_string()) {
+                added.push(n.to_string());
+            }
+        }
+        body(bound);
+        for n in added {
+            bound.remove(&n);
+        }
+    }
+
+    match expr.kind() {
         // ------------------------------------------------------------------
         // Atoms with no embedded names
         // ------------------------------------------------------------------
         // LANG51: StrLit is also a leaf — no variable names to capture.
-        Expr::IntLit(_) | Expr::BoolLit(_) | Expr::NilLit(_) | Expr::SymLit(_) | Expr::StrLit(_) => {}
+        ExprKind::IntLit(_) | ExprKind::BoolLit(_) | ExprKind::NilLit | ExprKind::SymLit(_)
+        | ExprKind::StrLit(_) => {}
 
         // ------------------------------------------------------------------
         // Variable reference — the only place a name actually becomes "free"
@@ -198,21 +220,21 @@ fn walk(
         // A reference is free iff it is not currently bound (in some
         // enclosing lambda/let) and not a global.  Builtins are passed in
         // via `globals` so we don't special-case them here.
-        Expr::VarRef(v) => {
-            if !bound.contains(&v.name) && !globals.contains(&v.name) && !seen.contains(&v.name) {
-                seen.insert(v.name.clone());
-                found.push(v.name.clone());
+        ExprKind::VarRef(name) => {
+            if !bound.contains(name) && !globals.contains(name) && !seen.contains(name) {
+                seen.insert(name.to_string());
+                found.push(name.to_string());
             }
         }
 
-        Expr::If(If { cond, then_branch, else_branch, .. }) => {
-            walk(cond, bound, globals, found, seen, depth);
-            walk(then_branch, bound, globals, found, seen, depth);
-            walk(else_branch, bound, globals, found, seen, depth);
+        ExprKind::If(i) => {
+            walk(i.cond, bound, globals, found, seen, depth);
+            walk(i.then_branch, bound, globals, found, seen, depth);
+            walk(i.else_branch, bound, globals, found, seen, depth);
         }
 
-        Expr::Begin(Begin { exprs, .. }) => {
-            for e in exprs {
+        ExprKind::Begin(exprs) => {
+            for e in exprs.iter() {
                 walk(e, bound, globals, found, seen, depth);
             }
         }
@@ -223,37 +245,30 @@ fn walk(
         // The body sees the outer bound-set extended with the binding
         // names.  We restore the outer set on the way out so subsequent
         // peers don't think they're shadowed.
-        Expr::Let(Let { bindings, body, .. }) => {
-            for (_, rhs) in bindings {
+        ExprKind::Let(l) => {
+            for (_, rhs) in l.bindings() {
                 walk(rhs, bound, globals, found, seen, depth);
             }
-            let mut added: Vec<String> = Vec::new();
-            for (n, _) in bindings {
-                if bound.insert(n.clone()) {
-                    added.push(n.clone());
+            with_bound(bound, l.bindings().map(|(n, _)| n), |bound| {
+                for e in l.body().iter() {
+                    walk(e, bound, globals, found, seen, depth);
                 }
-            }
-            for e in body {
-                walk(e, bound, globals, found, seen, depth);
-            }
-            for n in added {
-                bound.remove(&n);
-            }
+            });
         }
 
         // LANG52: let* — each RHS is in scope of all prior bindings, so we
         // bind incrementally as we walk.
-        Expr::LetStar(LetStar { bindings, body, .. }) => {
+        ExprKind::LetStar(l) => {
             let mut added: Vec<String> = Vec::new();
-            for (n, rhs) in bindings {
+            for (n, rhs) in l.bindings() {
                 // The RHS is walked BEFORE the name is bound — same as the
                 // compiler: each binding sees all *prior* names, but not itself.
                 walk(rhs, bound, globals, found, seen, depth);
-                if bound.insert(n.clone()) {
-                    added.push(n.clone());
+                if bound.insert(n.to_string()) {
+                    added.push(n.to_string());
                 }
             }
-            for e in body {
+            for e in l.body().iter() {
                 walk(e, bound, globals, found, seen, depth);
             }
             for n in added {
@@ -267,25 +282,20 @@ fn walk(
         // Free names inside the inner lambda that aren't its params and
         // aren't ours (the outer lambda's captures so far) bubble up as
         // captures of the outer lambda too.
-        Expr::Lambda(inner) => {
-            let mut added: Vec<String> = Vec::new();
-            for p in &inner.params {
-                if bound.insert(p.clone()) {
-                    added.push(p.clone());
+        ExprKind::Lambda(inner) => {
+            with_bound(bound, inner.params().map(|p| p.name), |bound| {
+                for e in inner.body().iter() {
+                    walk(e, bound, globals, found, seen, depth);
                 }
-            }
-            for e in &inner.body {
-                walk(e, bound, globals, found, seen, depth);
-            }
-            for n in added {
-                bound.remove(&n);
-            }
+            });
         }
 
-        Expr::Apply(Apply { fn_expr, args, .. }) => {
-            walk(fn_expr, bound, globals, found, seen, depth);
-            for a in args {
-                walk(a, bound, globals, found, seen, depth);
+        ExprKind::Apply(a) => {
+            if let Some(f) = a.fn_expr() {
+                walk(f, bound, globals, found, seen, depth);
+            }
+            for e in a.args().iter() {
+                walk(e, bound, globals, found, seen, depth);
             }
         }
 
@@ -293,28 +303,16 @@ fn walk(
         //
         // The scrutinee is evaluated in the outer scope.  Each arm's
         // body is evaluated with the arm's bindings added to `bound`.
-        Expr::Match(m) => {
-            walk(&m.scrutinee, bound, globals, found, seen, depth);
-            for arm in &m.arms {
-                // Determine names bound by this arm's pattern.
-                let arm_bindings: Vec<String> = match &arm.pat {
-                    twig_parser::MatchPat::Variant { bindings, .. } => bindings.clone(),
-                    twig_parser::MatchPat::Binding(n) => vec![n.clone()],
-                    twig_parser::MatchPat::Wildcard => vec![],
-                };
-                // Add arm bindings to the bound set for the body.
-                let mut added: Vec<String> = Vec::new();
-                for n in &arm_bindings {
-                    if bound.insert(n.clone()) {
-                        added.push(n.clone());
+        ExprKind::Match(m) => {
+            if let Some(s) = m.scrutinee() {
+                walk(s, bound, globals, found, seen, depth);
+            }
+            for arm in m.arms() {
+                with_bound(bound, arm.pat().bound_names(), |bound| {
+                    for e in arm.body().iter() {
+                        walk(e, bound, globals, found, seen, depth);
                     }
-                }
-                for e in &arm.body {
-                    walk(e, bound, globals, found, seen, depth);
-                }
-                for n in added {
-                    bound.remove(&n);
-                }
+                });
             }
         }
     }
@@ -327,14 +325,23 @@ fn walk(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use twig_parser::{parse, Form};
+    use crate::cst::ProgramView;
+    use parser::grammar_parser::GrammarASTNode;
+    use twig_parser::parse_to_ast;
 
-    fn lam_in(src: &str) -> Lambda {
-        let p = parse(src).unwrap();
-        // Helper accepts `(lambda ...)` as the single top-level expression.
-        match p.forms.into_iter().next().unwrap() {
-            Form::Expr(Expr::Lambda(l)) => l,
-            other => panic!("expected top-level lambda, got {other:?}"),
+    /// Parse `src` (a single top-level `(lambda ...)`) to its CST.
+    fn cst(src: &str) -> GrammarASTNode {
+        parse_to_ast(src).unwrap()
+    }
+
+    /// The lambda view of the only top-level form of `tree`.
+    fn lam_in(tree: &GrammarASTNode) -> LambdaView<'_> {
+        match ProgramView(tree).forms().next() {
+            Some(FormKind::Expr(e)) => match e.kind() {
+                ExprKind::Lambda(l) => l,
+                _ => panic!("expected a top-level lambda"),
+            },
+            _ => panic!("expected a top-level expression"),
         }
     }
 
@@ -344,89 +351,100 @@ mod tests {
 
     #[test]
     fn no_free_vars_when_only_params_referenced() {
-        let l = lam_in("(lambda (x) (+ x x))");
+        let t = cst("(lambda (x) (+ x x))");
+        let l = lam_in(&t);
         let g = globals(&["+"]);
-        assert!(free_vars(&l, &g).is_empty());
+        assert!(free_vars(l, &g).is_empty());
     }
 
     #[test]
     fn captures_are_free() {
         // n is captured from the surrounding scope
-        let l = lam_in("(lambda (x) (+ x n))");
+        let t = cst("(lambda (x) (+ x n))");
+        let l = lam_in(&t);
         let g = globals(&["+"]);
-        assert_eq!(free_vars(&l, &g), vec!["n".to_string()]);
+        assert_eq!(free_vars(l, &g), vec!["n".to_string()]);
     }
 
     #[test]
     fn globals_are_not_free() {
         // `add` is in globals → not captured
-        let l = lam_in("(lambda (x) (add x 1))");
+        let t = cst("(lambda (x) (add x 1))");
+        let l = lam_in(&t);
         let g = globals(&["add"]);
-        assert!(free_vars(&l, &g).is_empty());
+        assert!(free_vars(l, &g).is_empty());
     }
 
     #[test]
     fn duplicate_references_appear_once_in_stable_order() {
-        let l = lam_in("(lambda (x) (+ a (+ a (+ b a))))");
+        let t = cst("(lambda (x) (+ a (+ a (+ b a))))");
+        let l = lam_in(&t);
         let g = globals(&["+"]);
-        assert_eq!(free_vars(&l, &g), vec!["a".to_string(), "b".to_string()]);
+        assert_eq!(free_vars(l, &g), vec!["a".to_string(), "b".to_string()]);
     }
 
     #[test]
     fn let_binding_shadows_capture() {
-        let l = lam_in("(lambda (x) (let ((y 1)) (+ x y)))");
+        let t = cst("(lambda (x) (let ((y 1)) (+ x y)))");
+        let l = lam_in(&t);
         let g = globals(&["+"]);
-        assert!(free_vars(&l, &g).is_empty(), "y is bound by let, not captured");
+        assert!(free_vars(l, &g).is_empty(), "y is bound by let, not captured");
     }
 
     #[test]
     fn let_rhs_uses_outer_scope() {
         // y appears on the RHS of a let — that RHS is in the outer
         // scope, so y is captured.
-        let l = lam_in("(lambda (x) (let ((q y)) (+ x q)))");
+        let t = cst("(lambda (x) (let ((q y)) (+ x q)))");
+        let l = lam_in(&t);
         let g = globals(&["+"]);
-        assert_eq!(free_vars(&l, &g), vec!["y".to_string()]);
+        assert_eq!(free_vars(l, &g), vec!["y".to_string()]);
     }
 
     #[test]
     fn nested_lambda_captures_bubble_up() {
         // Inner lambda captures `n`; outer lambda has no `n` — so `n`
         // bubbles up as outer's capture.
-        let l = lam_in("(lambda () (lambda (x) (+ x n)))");
+        let t = cst("(lambda () (lambda (x) (+ x n)))");
+        let l = lam_in(&t);
         let g = globals(&["+"]);
-        assert_eq!(free_vars(&l, &g), vec!["n".to_string()]);
+        assert_eq!(free_vars(l, &g), vec!["n".to_string()]);
     }
 
     #[test]
     fn nested_lambda_param_does_not_bubble_up() {
         // Inner lambda has its own `n` — outer must NOT capture `n`.
-        let l = lam_in("(lambda () (lambda (n) (+ n 1)))");
+        let t = cst("(lambda () (lambda (n) (+ n 1)))");
+        let l = lam_in(&t);
         let g = globals(&["+"]);
-        assert!(free_vars(&l, &g).is_empty());
+        assert!(free_vars(l, &g).is_empty());
     }
 
     #[test]
     fn if_branches_all_walked() {
-        let l = lam_in("(lambda () (if a b c))");
+        let t = cst("(lambda () (if a b c))");
+        let l = lam_in(&t);
         let g = globals(&[]);
         assert_eq!(
-            free_vars(&l, &g),
+            free_vars(l, &g),
             vec!["a".to_string(), "b".to_string(), "c".to_string()]
         );
     }
 
     #[test]
     fn begin_walked() {
-        let l = lam_in("(lambda () (begin a b))");
+        let t = cst("(lambda () (begin a b))");
+        let l = lam_in(&t);
         let g = globals(&[]);
-        assert_eq!(free_vars(&l, &g), vec!["a".to_string(), "b".to_string()]);
+        assert_eq!(free_vars(l, &g), vec!["a".to_string(), "b".to_string()]);
     }
 
     #[test]
     fn quoted_symbols_are_not_var_refs() {
         // 'foo is a SymLit, not a VarRef — never captured.
-        let l = lam_in("(lambda () 'foo)");
+        let t = cst("(lambda () 'foo)");
+        let l = lam_in(&t);
         let g = globals(&[]);
-        assert!(free_vars(&l, &g).is_empty());
+        assert!(free_vars(l, &g).is_empty());
     }
 }

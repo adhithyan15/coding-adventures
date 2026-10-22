@@ -3460,6 +3460,34 @@ fn qml_text_capitalization(props: &[StyleProp]) -> Option<&'static str> {
     Some(capitalization)
 }
 
+/// Width belongs to the outer text box, not to an inner painted label.
+/// Validate every state before recording a read: mixed fill/scalar geometry
+/// cannot be represented by a static attached layout flag.
+fn qml_text_width_lines(props: &[StyleProp], layers: &[StateLayer<'_>]) -> Vec<String> {
+    fn scalar(value: &str) -> Option<String> {
+        let value = qml_px_or_none(value)?;
+        (value.parse::<f64>().ok()? >= 0.0).then_some(value)
+    }
+    let raw = |props: &[StyleProp]| {
+        props.iter().find(|p| p.name == "width").map(|p| p.value.clone())
+    };
+    let Some(base) = raw(props) else { return Vec::new(); };
+    if base.trim().trim_matches('"') == "100%" {
+        return if host_control_has_fill_width(props, layers) {
+            vec!["Layout.fillWidth: true".to_string()]
+        } else { Vec::new() };
+    }
+    if scalar(&base).is_none()
+        || layers.iter().filter_map(|l| raw(l.props)).any(|v| scalar(&v).is_none())
+    {
+        return Vec::new();
+    }
+    let width = conditional_scalar_expr(
+        style_prop(props, "width").and_then(scalar), layers, "width", "0", scalar,
+    ).expect("validated base width");
+    vec![format!("width: {width}"), format!("Layout.preferredWidth: {width}")]
+}
+
 fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
     if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
@@ -4683,7 +4711,20 @@ fn emit_qml_tree(
     };
     let text_part_lines = if is_text {
         part_style_props(node, ctx)
-            .map(qml_text_part_style_lines)
+            .map(|props| {
+                let mut lines = qml_text_part_style_lines(props);
+                let layers = node.part_name.as_deref()
+                    .map(|part| collect_state_layers(node, part, ctx.part_styles))
+                    .unwrap_or_default();
+                if !needs_container_wrapper(props)
+                    && !layers.iter().any(|l| needs_container_wrapper(l.props))
+                    && !ctx.cell_fill_children
+                    && ctx.text_style.is_none()
+                {
+                    lines.extend(qml_text_width_lines(props, &layers));
+                }
+                lines
+            })
             .unwrap_or_default()
     } else {
         Vec::new()
@@ -6071,7 +6112,7 @@ fn emit_text_input_qml(
     let inner_pad = "    ".repeat(depth + 1);
     let mut out = String::new();
     let typography = typography_lines(node, ctx);
-    let placeholder_line = build_placeholder_text_attribute(node);
+    let placeholder_line = build_placeholder_text_attribute(node)?;
     let control_tag = if multiline {
         "TextArea"
     } else if placeholder_line.is_some() {
@@ -7830,7 +7871,7 @@ fn emit_host_navigation_split_qml(
 /// | moslayout prop  | QML output                                |
 /// |---|---|
 /// | `value: slot|n` | `text: String(<bare-identifier>|n)`          |
-/// | `placeholder`   | `placeholderText: "..."`                    |
+/// | `placeholder`   | `placeholderText: "..."` / `placeholderText: x` |
 /// | `min: <n>`      | `validator.bottom: <n>`                     |
 /// | `max: <n>`      | `validator.top: <n>`                        |
 /// | `disabled: ...` | `enabled: !d` (polarity flip)               |
@@ -7863,9 +7904,10 @@ fn emit_host_number_input_qml(
         writeln!(out, "{inner}text: String({n})").unwrap();
     }
 
-    if let Some(placeholder) = find_string_prop(node, "placeholder") {
-        let escaped = escape_qml_string(placeholder);
-        writeln!(out, "{inner}placeholderText: \"{escaped}\"").unwrap();
+    // placeholder — a literal or a bound value, through the same lowering
+    // as HostInput (EM-14: this read literals only).
+    if let Some(line) = build_placeholder_text_attribute(node)? {
+        writeln!(out, "{inner}{line}").unwrap();
     }
     writeln!(out, "{inner}inputMethodHints: Qt.ImhFormattedNumbersOnly").unwrap();
     writeln!(out, "{inner}validator: DoubleValidator {{").unwrap();
@@ -8079,7 +8121,7 @@ fn tree_needs_controls_import(node: &LayoutNode) -> bool {
     // load error, not a degraded field.
     if matches!(node.tag.as_str(), "Input" | "HostInput")
         && (find_keyword_prop(node, "multiline") == Some("true")
-            || build_placeholder_text_attribute(node).is_some())
+            || node.props.iter().any(|p| p.name == "placeholder"))
     {
         return true;
     }
@@ -9203,26 +9245,40 @@ fn build_read_only_attribute(node: &LayoutNode) -> Option<String> {
     })
 }
 
-/// Build the `placeholderText: ...` attribute for a `HostInput`.
-fn build_placeholder_text_attribute(node: &LayoutNode) -> Option<String> {
-    let prop = node.props.iter().find(|p| p.name == "placeholder")?;
-    Some(match &prop.value {
+/// Build the `placeholderText: ...` attribute for a text field: `HostInput`,
+/// the legacy `Input` (as `TextField` or `TextArea`) and `HostNumberInput`.
+///
+/// | authored form          | QML                                         |
+/// |------------------------|---------------------------------------------|
+/// | `placeholder : "Text"` | `placeholderText: "Text"` (escaped)         |
+/// | `placeholder : 3`      | `placeholderText: "3"`                      |
+/// | `placeholder : slot: s`| `placeholderText: s` (camelCased, validated) |
+/// | `placeholder : item`   | `placeholderText: item` (a `For` binding)   |
+/// | `placeholder : ( e )`  | `placeholderText: ( e )`, verbatim          |
+///
+/// A slot or binding name that is not a QML identifier is an
+/// `UnsafeSlotName` error. Until EM-14 an unsafe name silently became
+/// `placeholderText: ""`, and a bare binding name was quoted, so a `For`
+/// row's hint showed the binding's own name as text.
+fn build_placeholder_text_attribute(
+    node: &LayoutNode,
+) -> Result<Option<String>, PipelineEmitError> {
+    let Some(prop) = node.props.iter().find(|p| p.name == "placeholder") else {
+        return Ok(None);
+    };
+    Ok(Some(match &prop.value {
         LayoutPropValue::String(s) => {
             format!("placeholderText: \"{}\"", escape_qml_string(s))
         }
-        LayoutPropValue::SlotRef(s) => {
-            let camel = to_camel_case_first_lower(s);
-            if is_safe_identifier(&camel) {
-                format!("placeholderText: {camel}")
-            } else {
-                "placeholderText: \"\"".to_string()
-            }
+        LayoutPropValue::SlotRef(name) | LayoutPropValue::Keyword(name) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("placeholderText: {camel}")
         }
-        LayoutPropValue::Keyword(k) => format!("placeholderText: \"{k}\""),
         LayoutPropValue::Number(n) => format!("placeholderText: \"{n}\""),
         LayoutPropValue::Expr(text) => format!("placeholderText: {text}"),
         LayoutPropValue::EmitRef(_) => "placeholderText: \"\"".to_string(),
-    })
+    }))
 }
 
 /// Build the `text: ...` attribute for a `HostButton` from its `label` prop.
@@ -15926,6 +15982,102 @@ mod tests {
         );
     }
 
+    fn placeholder_layout(tag: &str, value: LayoutPropValue) -> LayoutDef {
+        LayoutDef {
+            component_name: "X".to_string(),
+            root: LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "placeholder".to_string(),
+                    value,
+                }],
+                children: Vec::new(),
+            },
+        }
+    }
+
+    /// EM-14 — a bound `placeholder` is the number field's
+    /// `placeholderText`. This read string literals only, so
+    /// mosaic-pkg-toolkit's `NumberInput` (`placeholder : slot:
+    /// placeholder`) had no placeholder on Qt, with nothing reported. The
+    /// literal form is unchanged.
+    #[test]
+    fn host_number_input_bound_placeholder_is_the_placeholder_text() {
+        let m = component(
+            "X",
+            vec![slot("amount-hint", SlotType::Text, false)],
+            vec![],
+        );
+        for (value, expected) in [
+            (
+                LayoutPropValue::SlotRef("amount-hint".to_string()),
+                "placeholderText: amountHint",
+            ),
+            (
+                LayoutPropValue::Keyword("hint".to_string()),
+                "placeholderText: hint",
+            ),
+            (
+                LayoutPropValue::Expr("( hints[0] )".to_string()),
+                "placeholderText: ( hints[0] )",
+            ),
+            (
+                LayoutPropValue::String("Amount".to_string()),
+                "placeholderText: \"Amount\"",
+            ),
+        ] {
+            let out = from_pipeline(
+                &m,
+                &placeholder_layout("HostNumberInput", value),
+                &empty_style("X"),
+            )
+            .unwrap()
+            .output;
+            assert!(out.contains(expected), "expected `{expected}` in:\n{out}");
+        }
+    }
+
+    /// EM-14 — the shared placeholder lowering treats a bare name as what
+    /// the layout compiler means by it, a `For` binding, on every text
+    /// field. It used to quote it, so `placeholder : hint` inside
+    /// `For ( as: hint )` showed the word "hint" on Qt alone.
+    #[test]
+    fn host_input_placeholder_binding_is_not_quoted() {
+        let m = component("X", vec![], vec![]);
+        for tag in ["HostInput", "Input", "HostNumberInput"] {
+            let out = from_pipeline(
+                &m,
+                &placeholder_layout(tag, LayoutPropValue::Keyword("hint".to_string())),
+                &empty_style("X"),
+            )
+            .unwrap()
+            .output;
+            assert!(out.contains("placeholderText: hint"), "{tag}:\n{out}");
+            assert!(!out.contains("placeholderText: \"hint\""), "{tag}:\n{out}");
+        }
+    }
+
+    /// EM-14 — a slot name that is not a QML identifier is an
+    /// `UnsafeSlotName` error on every text field. It used to become
+    /// `placeholderText: ""`, a silent drop.
+    #[test]
+    fn placeholder_unsafe_slot_name_is_rejected() {
+        let m = component("X", vec![], vec![]);
+        for tag in ["HostInput", "Input", "HostNumberInput"] {
+            let err = from_pipeline(
+                &m,
+                &placeholder_layout(tag, LayoutPropValue::SlotRef("x; evil()".to_string())),
+                &empty_style("X"),
+            )
+            .unwrap_err();
+            assert!(
+                matches!(err, PipelineEmitError::UnsafeSlotName(_)),
+                "{tag}: got {err:?}"
+            );
+        }
+    }
+
     /// UI29-4 Qt test 5 — `min`/`max` numeric literals map to
     /// DoubleValidator bounds, while fractional value literals remain
     /// decimal text.
@@ -18921,6 +19073,7 @@ mod tests {
             parts: vec![PartStyle {
                 name: "app-title".to_string(),
                 base: vec![
+                    sp("width", "150"),
                     sp("color", "#f8fafc"),
                     sp("font-size", "28.5"),
                     sp("font-weight", "700"),
@@ -18942,6 +19095,9 @@ mod tests {
         let out = from_pipeline(&component("Title", vec![], vec![]), &layout, &style)
             .unwrap()
             .output;
+
+        assert!(out.contains("width: 150"), "missing text width:\n{out}");
+        assert!(out.contains("Layout.preferredWidth: 150"));
 
         assert!(
             out.contains("color: \"#f8fafc\""),
@@ -18968,6 +19124,33 @@ mod tests {
             0,
             "text-only styling must keep the bare Text shape:\n{out}"
         );
+    }
+
+    #[test]
+    fn text_width_rejects_invalid_geometry_and_preserves_fill() {
+        for value in ["-1", "NaN", "inf", "75%", "auto", "1; evil()", "1.2.3"] {
+            assert!(qml_text_width_lines(&[sp("width", value)], &[]).is_empty(), "{value}");
+        }
+        assert_eq!(qml_text_width_lines(&[sp("width", "100%")], &[]),
+            vec!["Layout.fillWidth: true"]);
+        assert_eq!(qml_text_width_lines(&[sp("width", "190px")], &[]),
+            vec!["width: 190", "Layout.preferredWidth: 190"]);
+    }
+
+    #[test]
+    fn text_width_states_are_ordered_and_mixed_geometry_is_not_consumed() {
+        let base = [sp("width", "150")];
+        let first = [sp("width", "180")];
+        let last = [sp("width", "190")];
+        let layers = [
+            StateLayer { cond_expr: "first".into(), props: &first },
+            StateLayer { cond_expr: "last".into(), props: &last },
+        ];
+        let lines = qml_text_width_lines(&base, &layers);
+        assert_eq!(lines[0], "width: ( last ) ? 190 : ( first ) ? 180 : 150");
+        let invalid = [sp("width", "100%")];
+        assert!(qml_text_width_lines(&base,
+            &[StateLayer { cond_expr: "active".into(), props: &invalid }]).is_empty());
     }
 
     #[test]
@@ -19029,6 +19212,13 @@ mod tests {
             dropped.is_empty(),
             "the surface wrapper must consume every authored property: {dropped:?}"
         );
+        let mut sized_style = style.clone();
+        sized_style.parts[0].base.push(sp("width", "190"));
+        let sized = from_pipeline(&model, &layout, &sized_style).unwrap().output;
+        assert_eq!(sized.matches("Layout.preferredWidth: 190").count(), 1);
+        assert_eq!(sized.matches("implicitWidth: 190").count(), 1);
+        assert!(!sized.lines().any(|line| line.trim() == "width: 190"),
+            "the inner semantic Text must not claim the outer width: {sized}");
     }
 
     /// An unstyled `Box` (no matching part) keeps the bare `Item` shape —

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C451-sholughi",
+    "language": "persian",
+    "chapter": 451,
+    "sequence": 23080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17aa2a4c7546a590"
+  },
+  "findings": []
+}

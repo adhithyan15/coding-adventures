@@ -1,0 +1,11 @@
+{
+  "id": "GU-C264-dost",
+  "pathSegment": "GU-PATH-264-FRIENDS264",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-264-FRIENDS264",
+      "order": 1
+    }
+  ]
+}

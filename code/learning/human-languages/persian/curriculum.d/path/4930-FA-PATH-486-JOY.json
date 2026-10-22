@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-486-JOY",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "FA-EXT-486-JOY"
+  ],
+  "after": []
+}

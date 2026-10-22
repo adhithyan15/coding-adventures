@@ -1,0 +1,53 @@
+# Python 3.0a1 (2007-08-31) grammar: py-int-print subset over the slice's tokens.
+# @version 1
+# PARTIAL: parses only the py-int-print subset below; everything else is a parse error.
+# source_ref: https://github.com/python/cpython/tree/v3.0a1
+# source_sha: 3540ef16c19f2260e347a679cb27d44ba734bec6
+# evidence: Grammar/Grammar blob 6111fae79b80e72e6af8d7c522b272c20bf57772; Grammar/Tokens blob -;
+#   Parser/tokenizer.c blob 776183d80582d7d7d92e548d44f4cc8e35a47e9d; Lib/keyword.py blob 9c49cd2744b23bfb7ae7bfb5b3a9dbcdab2df13e
+# basis: reviewed against the tag's own syntax files (LANG84 phase 7a). Tokens follow tokenizer.c tok_get (decimal [1-9][0-9]* or 0+; no `_`; PyToken_OneChar/TwoChars/ThreeChars) and keyword.py kwlist (33, no async/await); the grammar follows Grammar/Grammar file_input..atom/trailer/arglist.
+
+# ---------------------------------------------------------------------------
+# py-int-print (LANG84 phase 7a) as this release's grammar admits it. The
+# release's own rules, from the tag's grammar file:
+#
+#   file_input : (NEWLINE | stmt)* ENDMARKER
+#   simple_stmt: small_stmt (';' small_stmt)* [';'] NEWLINE
+#   arith_expr : term (('+'|'-') term)*          (python.gram: sum)
+#   term       : factor (('*'|'/'|'%'|'//') factor)*
+#   factor     : ('+'|'-'|'~') factor | power
+#   power      : atom trailer* ['**' factor]     (python.gram: primary)
+#   trailer    : '(' [arglist] ')' | ...
+#   arglist    : argument (',' argument)* [',']  (python.gram: args)
+#   atom       : '(' [testlist_comp] ')' | NAME | NUMBER | ...
+#
+# Rule names follow code/grammars/python/python3.12.grammar (LANG84 C8), so a
+# later subset adds the levels this one never reaches (or_expr ... shift,
+# power, await_expr) without renaming anything. Without them one parenthesis
+# costs 8 parser levels instead of about 18.
+#
+# Narrower than Python on purpose (parse errors here, valid there): every
+# statement other than an expression statement, `**`, `~`, comparisons and
+# boolean operators, subscripts and attributes, tuples and `()`, keyword and
+# starred arguments, and every compound statement.
+# Admitted here and refused by the compiler (`Unsupported`): `/` (true
+# division gives a float), a callee other than `print`, more than one
+# argument, a call used as a value, a bare expression statement.
+# ---------------------------------------------------------------------------
+
+file        = { NEWLINE | statement } ;
+statement   = simple_stmt ;
+simple_stmt = small_stmt { SEMICOLON small_stmt } [ SEMICOLON ] NEWLINE ;
+small_stmt  = expression ;
+
+expression  = arith ;
+arith       = term { ( PLUS | MINUS ) term } ;
+term        = factor { ( STAR | SLASH | FLOOR_DIV | PERCENT ) factor } ;
+factor      = ( PLUS | MINUS ) factor | primary ;
+primary     = atom { suffix } ;
+suffix      = LPAREN [ arguments ] RPAREN ;
+arguments   = argument { COMMA argument } [ COMMA ] ;
+argument    = expression ;
+atom        = INT | NAME | paren_expr ;
+paren_expr  = LPAREN paren_body RPAREN ;
+paren_body  = expression ;

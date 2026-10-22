@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C200-parbidiyu",
+    "language": "gujarati",
+    "chapter": 200,
+    "sequence": 10880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9019380d5cb7456"
+  },
+  "findings": []
+}

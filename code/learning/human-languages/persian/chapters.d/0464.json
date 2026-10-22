@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Shops and deals",
+  "label": "ch:fa-shops-and-deals",
+  "canDo": "I can deal with shopkeepers: a shop, a shopkeeper, doing a deal, a deposit and being overcharged.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C464-geran-forukhtan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can deal with shopkeepers: a shop, a shopkeeper, doing a deal, a deposit and being overcharged.",
+    "assesses": [
+      "FA-LEX-C464-MAGHAZE-03",
+      "FA-LEX-C464-MAGHAZE-04",
+      "FA-LEX-C464-MAGHAZE-05"
+    ]
+  }
+}

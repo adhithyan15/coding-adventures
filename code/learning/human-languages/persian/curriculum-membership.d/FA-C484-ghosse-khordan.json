@@ -1,0 +1,11 @@
+{
+  "id": "FA-C484-ghosse-khordan",
+  "pathSegment": "FA-PATH-484-SADNESS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-484-SADNESS",
+      "order": 2
+    }
+  ]
+}

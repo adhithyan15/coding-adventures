@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:bb74507a88f3b7ff",
+  "lessonIds": [
+    "RU-C301-katastrofa",
+    "RU-C301-vzryv",
+    "RU-C301-vzryvatsya",
+    "RU-C301-obrushitsya",
+    "RU-C301-panika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch301.txt",
+  "json": "russian/narration/ch301.json",
+  "textHash": "fnv1a64:3ed94406fedce813",
+  "jsonHash": "fnv1a64:93f8625ecd12083b",
+  "findings": []
+}

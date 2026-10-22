@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C146-maaro",
+    "language": "gujarati",
+    "chapter": 146,
+    "sequence": 7700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6d3d9f2e8ab2b54"
+  },
+  "findings": []
+}

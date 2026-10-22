@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:b85d74f5867c6410",
+  "lessonIds": [
+    "GU-C244-ganit",
+    "GU-C244-bhugol",
+    "GU-C244-nibandh",
+    "GU-C244-samjavvu",
+    "GU-C244-ukelvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch244.txt",
+  "json": "gujarati/narration/ch244.json",
+  "textHash": "fnv1a64:1fdc203106c537b2",
+  "jsonHash": "fnv1a64:f6704aeed96eee97",
+  "findings": []
+}

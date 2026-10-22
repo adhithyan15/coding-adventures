@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R435-review-428-435",
+    "language": "persian",
+    "chapter": 435,
+    "sequence": 22310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6d5d5f87215d626"
+  },
+  "findings": []
+}

@@ -16,36 +16,35 @@
       "external-approval"
     ]
   },
-  "active_pr": 17738,
+  "active_pr": 17905,
   "last_ci_action": {
-    "observed_at": "2026-10-18T17:00:27.548466+00:00",
-    "pr_number": 17738,
-    "status": "pending",
-    "notes": "Ready-for-review BF03 foundation published after exact-source local/security validation. Monitor actual checks; no implementation churn or second PR while active."
+    "observed_at": "2026-10-21T07:31:05.934362+00:00",
+    "pr_number": 17905,
+    "action": "Fixing three actual CodeQL fixture-reader narrowing annotations in same PR after checked-boundary/race/vet/build/coverage/security validation; awaiting pushed-head hosted recheck. No auto-merge while failing/pending. No item status transition."
   },
   "last_inventory": {
-    "revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+    "revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1508,
-    "implementation_package_slots": 4790,
-    "all_reported_identities": 1550,
+    "implementation_identities": 1521,
+    "implementation_package_slots": 4803,
+    "all_reported_identities": 1563,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 250,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1026,
-    "singleton_missing_slots": 14364,
-    "rust_singletons": 827,
+    "singleton_packages": 1039,
+    "singleton_missing_slots": 14546,
+    "rust_singletons": 840,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0,
-    "audit_notes": "Fresh immutable main after external Go merge: 15 established lanes, 1508 identities, 4790 slots, 1550 all-union, 5198 roots, zero collisions/unknown; no root or lane gap delta. OCaml five emerging roots excluded. Register24 reviewed classifiers and required.NET digest edge before selection; optional/conditional edges remain unapplied. No native qualification from inventory.",
-    "package_paths": 58156,
-    "evidence": "post-go-merge-a9f4-inventory-evidence.json",
-    "report": "post-go-merge-a9f4-inventory.json"
+    "audit_notes": "15 established lanes;1521identities/4803slots;5211accepted roots;13new Rust-only RSA/X509 identities registered under one applicability classifier. OCaml5 emerging excluded.28new owners and all25saved note updates plus fixture/validation plans incorporated; no native qualification.",
+    "package_paths": 58429,
+    "evidence": "code/specs/package-parity-audits/20261021-bf03-postmerge.json",
+    "report": "code/specs/package-parity-audits/20261021-bf03-postmerge.json"
   },
   "items": [
     {
@@ -4973,7 +4972,18 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Selection-blocked classification umbrella. Deliver one independent engine per PR, consume the strengthened eight-graph/eleven-diff roster, and complete the explicit matcher children before claiming all front doors remediated. C# and F# may share the reviewed C# engine, but F# still requires its own language-native facade and adapter, independent front-door invocation, and full neutral-corpus evidence; shared implementation is not a lane exception. JVM, Dart, and OCaml remain governed by their exact core/current-contract owners."
+      "notes": "Selection-blocked classification umbrella. Deliver one independent engine per PR, consume the strengthened eight-graph/eleven-diff roster, and complete the explicit matcher children before claiming all front doors remediated. C# and F# may share the reviewed C# engine, but F# still requires its own language-native facade and adapter, independent front-door invocation, and full neutral-corpus evidence; shared implementation is not a lane exception. JVM, Dart, and OCaml remain governed by their exact core/current-contract owners. Postmerge preparation correction: coverage targets distinguish libraries95%+ and programs80%+ WELL above80%; stricter program95 is optional, not a universal governing mandate. Final table15 capabilities versus schema16 are distinct; source_collection applies to its20cases. The179 process-free cases across13domains do not qualify execution/fulltool. Existing Python/Ruby graph8/diff12 rosters supersede older diff11 prose. Native commands, source pins and missing-tool skips in saved plans are historical/unexecuted and require revalidation.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-dotnet-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-python-ruby-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-lua-perl-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-elixir-typescript-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-go-rust-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-swift-haskell-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-jvm-dart-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-ocaml-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-haskell-neutral-adapter-closure",
@@ -5011,7 +5021,11 @@
         "report": "stp01-five-lane-buildtool-contract-refresh.md",
         "revision": "e3731d869a655f4b6ef4252aeee2664080725d85",
         "limits": "Five-lane matrix source-only. JVM/Dart core-only; Swift/Haskell partial readers/executables. Adapter gates blocked; no implementation/coverage/native success from source or configured thresholds. Current exact bounded missing adopters already owned, no duplicate new implementation."
-      }
+      },
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-swift-haskell-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-swift-neutral-adapter-closure",
@@ -5053,7 +5067,11 @@
         "report": "stp01-five-lane-buildtool-contract-refresh.md",
         "revision": "e3731d869a655f4b6ef4252aeee2664080725d85",
         "limits": "Five-lane matrix source-only. JVM/Dart core-only; Swift/Haskell partial readers/executables. Adapter gates blocked; no implementation/coverage/native success from source or configured thresholds. Current exact bounded missing adopters already owned, no duplicate new implementation."
-      }
+      },
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-swift-haskell-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-csharp-fsharp-neutral-adapter-closure",
@@ -5074,7 +5092,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal shared-engine lane gate discovered by the post-#16100 adapter audit. After every listed correctness child lands, add distinct language-native C# and F# facades and adapters, invoke both front doors independently, and run the complete versioned neutral corpus with zero undeclared skips or failures. The reviewed shared C# engine is architecture reuse, not an F# denominator exception.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-dotnet-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-elixir-neutral-adapter-closure",
@@ -5103,7 +5125,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Elixir build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Elixir front door with zero undeclared skips or failures and process-free fixture authority.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-elixir-typescript-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-go-neutral-adapter-closure",
@@ -5123,7 +5149,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Go build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter, prove two-way plan interchange where applicable, and run the complete versioned neutral corpus through the Go front door with zero undeclared skips or failures and process-free fixture authority.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-go-rust-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-lua-neutral-adapter-closure",
@@ -5144,7 +5174,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Lua build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Lua front door with zero undeclared skips or failures and process-free fixture authority.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-lua-perl-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-perl-neutral-adapter-closure",
@@ -5170,7 +5204,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Perl build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Perl front door with zero undeclared skips or failures and process-free fixture authority.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-lua-perl-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-python-neutral-adapter-closure",
@@ -5191,7 +5229,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Python build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Python front door with zero undeclared skips or failures and process-free fixture authority.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-python-ruby-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-ruby-neutral-adapter-closure",
@@ -5213,7 +5255,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Ruby build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Ruby front door with zero undeclared skips or failures and process-free fixture authority.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-python-ruby-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-rust-neutral-adapter-closure",
@@ -5238,7 +5284,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal Rust build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the Rust front door with zero undeclared skips or failures and process-free fixture authority.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-go-rust-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-typescript-neutral-adapter-closure",
@@ -5261,7 +5311,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal TypeScript build-tool lane gate discovered by the post-#16100 adapter audit. After every listed native correctness child lands, add a real adapter and run the complete versioned neutral corpus through the TypeScript front door with zero undeclared skips or failures and process-free fixture authority.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-elixir-typescript-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-jvm-neutral-adapter-closure",
@@ -5284,7 +5338,11 @@
         "report": "stp01-five-lane-buildtool-contract-refresh.md",
         "revision": "e3731d869a655f4b6ef4252aeee2664080725d85",
         "limits": "Five-lane matrix source-only. JVM/Dart core-only; Swift/Haskell partial readers/executables. Adapter gates blocked; no implementation/coverage/native success from source or configured thresholds. Current exact bounded missing adopters already owned, no duplicate new implementation."
-      }
+      },
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-jvm-dart-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-dart-neutral-adapter-closure",
@@ -5307,7 +5365,11 @@
         "report": "stp01-five-lane-buildtool-contract-refresh.md",
         "revision": "e3731d869a655f4b6ef4252aeee2664080725d85",
         "limits": "Five-lane matrix source-only. JVM/Dart core-only; Swift/Haskell partial readers/executables. Adapter gates blocked; no implementation/coverage/native success from source or configured thresholds. Current exact bounded missing adopters already owned, no duplicate new implementation."
-      }
+      },
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-jvm-dart-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "ocaml-build-tool-neutral-adapter-closure",
@@ -5325,7 +5387,11 @@
       "branch": null,
       "pr_number": null,
       "notes": "Terminal emerging-lane adapter gate discovered by the post-PR #16171 all-lane audit. After OCaml has its native current-contract engine and real Ubuntu, macOS, and Windows execution, add a real adapter and run the complete versioned neutral corpus with zero undeclared skips or failures before promotion into the established denominator. Emerging status is not an implementation waiver.",
-      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration."
+      "read_only_lane_closure_audit": "build-tool-all-lane-closure-classification-audit.md: all15 established plus emerging OCaml manifest adapters remain missing, no reviewed exception or fresh native execution. Existing14 exact blocked closure records cover16 lanes (paired .NET/JVM). Java/Kotlin/Dart/OCaml are partial process-free cores, Lua CLI integration partial; README/front presence not full tested engine qualification. Keep current-contract/creation/authority and OCaml actual three-host/promotion gates distinct; F# shared engine still needs independent facade/front/corpus evidence. No new closure owner found; exact remaining dependencies in snapshot1339 report remain unchanged by later facade registration.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-ocaml-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-all-language-adapter-ci-closure",
@@ -5370,7 +5436,18 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Terminal classification and integration gate discovered by the parallel all-language build-tool audit after PR #14352 and decomposed into exact lane gates after PR #16100. All 16 current implementation-manifest entries still report adapter_status=missing, CI validates only the Python schema/reference path, and no terminal owner yet requires every applicable native front door to run the same versioned neutral corpus. After every dependency lands, require ready adapters and same-corpus CI for all supported implementations, two-way Go plan interchange where applicable, zero unreviewed failures, and explicit reviewed exceptions. C# and F# may share the reviewed C# engine, but both remain mandatory lanes with distinct language-native facades and adapters, independent front-door invocation, and full neutral-corpus evidence. Keep this owner selection-blocked until its implementation prerequisites and exact supported-lane/exception matrix are complete.",
-      "refresh_notes": "The post-PR #16100 read-only audit confirms that complete Dart, Java, and Kotlin build-tool implementations remain missing and emerging OCaml still lacks its native build tool. The neutral corpus has 162 cases across 13 process-free domains but no execution-semantics cases, and every adapter remains unavailable. Preserve the dependency order: trusted platform execution authority, execution-semantics corpus, native current-contract engines, exact native adapter closures, then this all-language closure. Shared C# engine reuse is approved architecture, not an F# denominator exception; both front doors require independent full-corpus evidence."
+      "refresh_notes": "The post-PR #16100 read-only audit confirms that complete Dart, Java, and Kotlin build-tool implementations remain missing and emerging OCaml still lacks its native build tool. The neutral corpus has 162 cases across 13 process-free domains but no execution-semantics cases, and every adapter remains unavailable. Preserve the dependency order: trusted platform execution authority, execution-semantics corpus, native current-contract engines, exact native adapter closures, then this all-language closure. Shared C# engine reuse is approved architecture, not an F# denominator exception; both front doors require independent full-corpus evidence.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-dotnet-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-python-ruby-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-lua-perl-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-elixir-typescript-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-go-rust-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-swift-haskell-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-jvm-dart-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-ocaml-full-buildtool-adoption-plan.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-full-buildtool-plan-consistency-review.json"
+      ]
     },
     {
       "id": "build-tool-jvm",
@@ -13691,7 +13768,10 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Freeze the four-stage SourceToAst, AstToIr, IrToIr, and IrToMachineCode model; forward and reverse lookup; interval boundaries and precedence; optimizer-pass composition; deterministic ordering; immutable ownership; stable errors; and resource ceilings in a versioned corpus. Reconcile the 11 canonical existing established lanes with an empty capability profile."
+      "notes": "Freeze the four-stage SourceToAst, AstToIr, IrToIr, and IrToMachineCode model; forward and reverse lookup; interval boundaries and precedence; optimizer-pass composition; deterministic ordering; immutable ownership; stable errors; and resource ceilings in a versioned corpus. Reconcile the 11 canonical existing established lanes with an empty capability profile.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-source-map-fixture-refinement.json"
+      ]
     },
     {
       "id": "compiler-source-map-java-kotlin-lane-parity",
@@ -16677,11 +16757,11 @@
     {
       "id": "compiler-ir-aot-neutral-conformance",
       "title": "Freeze BF03 compiler IR types, opcodes, and text round trips",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-bf03-neutral-20261018",
       "pr_number": 17738,
-      "notes": "The collision-checked post-#16972 inventory finds compiler IR in 9/15 established lanes, leaving six slots in C#/Dart/F#/Java/Kotlin/Swift and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858.",
+      "notes": "The collision-checked post-#16972 inventory finds compiler IR in 9/15 established lanes, leaving six slots in C#/Dart/F#/Java/Kotlin/Swift and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858. Actual external merge verified against final0fba head:31SUCCESS/8SKIPPED, both required gatesSUCCESS. Neutral foundation qualifies zero native lanes.",
       "bounded_read_only_classification": "jvm-dart-eight-nine-lane-classification-audit.md: exact grouped owner/alias scopes cover selected codecs/IR/VM/Nib packages; native target ports remain prerequisite-gated. Shared neutral owner readiness is graph state, not source/API/coverage execution. Nib actual TS lexer/parser embed generated grammar objects rather than runtime filesystem reads; source-map/protocol/IR/encoder requirements remain separately owned. Later exact lane children must be collision-checked under existing classifier rather than duplicated from package-name-only searches. No new owner or native validation in this report.",
       "worktree": "C:/Users/adhit/.codex/worktrees/parity-bf03-neutral-20261018/coding-adventures",
       "started_at": "2026-10-18T16:38:03.9513531Z",
@@ -16729,7 +16809,12 @@
         "limitations": "No native IR lane API/runtime/source-map/optimizer/backend execution; no whole-language qualification."
       },
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17738",
-      "ready_for_review_at": "2026-10-18T17:00:27.548466+00:00"
+      "ready_for_review_at": "2026-10-18T17:00:27.548466+00:00",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-incorporation-readiness-review.json"
+      ],
+      "merged_at": "2026-10-19T21:50:46Z",
+      "merge_commit": "69b5174dcb2900a1be108f3a82457f944807a47d"
     },
     {
       "id": "segment-tree-dt05-neutral-conformance",
@@ -17071,7 +17156,10 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Bignum-core, math-core, number-format-core, array-core, smt-lib-format, numeric-tower and R-vector NA need distinct fixture and lane children; C bridges are native."
+      "notes": "Bignum-core, math-core, number-format-core, array-core, smt-lib-format, numeric-tower and R-vector NA need distinct fixture and lane children; C bridges are native. At immutable5af7 explicitlyretain number-format-core under this existing numeric-foundation owner (already named), coordinated with existing spreadsheet/business foundation and datetime-core-portable-conformance rather than another classifier. Actual NumberFormat::parse/apply and format_number acceptsuppliedf64+formattext,returnowneddeterministicdisplaytext; numericsections/grouping/percent/trailingcommas/literals plus actualdate/timebranch delegatedtodatecore. Resolve stale numeric-onlyheader/README15versusactual21tests, ties-evenversusExceltiesaway, strictparseerrorsversusconvenienceGeneralfallback, negativezero/nonfinite/scaledoverflow, escaping/sectionrouting and resource/outputbounds beforelanechildren.340fractionprecisioncapdoesnotboundrequiredpadding/output. SML02formattedisnotthisfullrenderer; itsdate60policyremainsexistingdatetimeowner. No newrequirededgeforboundaryclassification,nativeclock/filesystem/localeauthority/fullOOXMLorExcelcompatibility/adopter/coveragecredit.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-number-format-core-classification.json"
+      ]
     },
     {
       "id": "javascript-ast-and-typesidecar-neutral-foundation",
@@ -17080,7 +17168,10 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Token and AST roots have 21 and 17 Rust dependents. Split lexer, AST, JSDoc, parser, sidecar and JS-to-SIR; distinct from owned Dart/Swift frontend vertical."
+      "notes": "Token and AST roots have 21 and 17 Rust dependents. Split lexer, AST, JSDoc, parser, sidecar and JS-to-SIR; distinct from owned Dart/Swift frontend vertical. Explicitly preserve Rust-only javascript-tokens as the existing token-root data substrate under this CLOC02 foundation, not a new lexer/VM/classifier or automatic14-lane bundle. At immutable5af7 actual APIs are14exactEsVersionlabels/latest-defaultEs2025/strictFromStr, uncheckedu32half-openbyteSpan and20TokenKindvariants withownedOtherString. CLOC02 references this crate but excludes its full smallspec; classify exactversionaliasrejection,byte-domain/malformedspanpolicy,trivia/EOFversusOther,stableboundeddiagnostics/ownership/resource/wireprojections beforelateradopters. Existing tests19 are native source only; trivia-casearrayisnotcompile-timeexhaustivematch. Preserve genericJS/editionlexer/frontendvertical/LANG78runner/CVsidecar scopes separately; no newedge,ECMAgrammar/ASI/regex/VM/native/coveragequalification.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-javascript-tokens-classification.json"
+      ]
     },
     {
       "id": "smart-home-local-http-portable-conformance",
@@ -17176,7 +17267,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes array-runtime MA00, AsciiMath, Axiom, Board, BASIC, C, COBOL, Derive, Flow-Matic, F#, J, IDL, Lisp, Maple, Matlab, Octave, Q, Reduce, Scilab, LaTeX, Mermaid, Mosaic, MacroNib, JS. Split lexer/parser/SIR/runtime and host exceptions.",
+      "notes": "Audit includes array-runtime MA00, AsciiMath, Axiom, Board, BASIC, C, COBOL, Derive, Flow-Matic, F#, J, IDL, Lisp, Maple, Matlab, Octave, Q, Reduce, Scilab, LaTeX, Mermaid, Mosaic, MacroNib, JS. Split lexer/parser/SIR/runtime and host exceptions. Explicitly retain ecmascript-es3-lexer and ecmascript-es5-lexer (Haskell/Swift) in the existing sparse JS family classifier alongside the recorded ES1 sibling. Actual embedded-grammar tokenization wrappers are not description-only production stubs; Haskell tests exercise descriptions only. Freeze exact edition-specific supplied-source token/value/position/flags/EOF/error/resource and grammar-embed drift profiles before adopter or absent-lane decomposition. Reconcile Haskell generic KEYWORD vs Swift uppercase-keyword projection, ES3 reserved debugger versus ES5 keyword, regex/division context, escapes/line continuation and malformed lexical cases. Existing merged language-frontends-v1 manifest hashes ES3/ES5 but has no corresponding behavioral cases; its success token+AST profile cannot silently represent token-only/error outcomes. Preserve generic JavaScript Dart/Swift vertical and CLOC02 AST/type-sidecar as separate scopes. Review stale Swift filesystem:read declarations against actual embedded runtime behavior and failure-masking/skip BUILD fronts without granting capability/native qualification. No parser/ASI/strict-mode/regex-execution/Test262/browser/VM/full-ECMA acceptance credit or new owner/edge. Explicit bounded review of lisp-compiler/lisp-vm Python/Ruby/Rust at0fba: existing Lisp family classifier retains compiler/runtime split. Python/Ruby use GenericCompiler/GenericVM with GC/symbol-table closures; Rust has custom SExpr compiler/LispOp/CodeObject/Value and own heap-index VM. Preserve generic Lisp lexer/parser profile versus Rust SExpr distinction; lisp-frontend-neutral-extension is frontend-only, generic VM foundation excludes builtins/call frames/GC, and bytecode-compiler foundation does not qualify Lisp specialization. Future named supplied-source/AST-to-CodeObject and finite literal bytecode/value/heap/frame/output traces need independent opcode/constant/name/nested-code/quote/dotted-list/closure/tail-call/NIL/truthiness/arity/error/ownership/fuel/heap/depth/output boundaries before children. PRINT inspected as collected strings, not direct stdout; compile/run convenience still executes code and injected GC/handlers may have arbitrary effects. Do not count generic SExpr text, opaque LANG01 IIR, LANG77 native tagged ABI or lispy runtime as interchangeable. Preserve real package/GC/substrate/closure and capability evidence, no VM execution/native callbacks/IO/ABI/backend activation or whole identity/adopter/termination claim in this audit. Decompose reuse prerequisites only after profile decisions; no unconditional new edge.",
       "pending_main_spline_classification": "parity-pending-main-e7c6-inventory-audit.md: newest immutable Mermaid/DG04 delta adds cardinal/catmullRom/natural parsing and curve IR/collinear cubic paint lowering. Existing classifier owns diagram IR/layout/paint and Mermaid frontend splitting; exact pure spline contract/case/decomposition coverage is still unqualified. Narrow Swimlane quoted/entity/class owners do not imply spline behavior closure; layout typed-IR geometry/metadata excludes parsing/paint backend. No native backend/security delivery or new overlapping umbrella/selection in this refresh.",
       "reference_refresh_894bde60": {
         "revision": "894bde600d2c8693f127e09542b76678fc5169db",
@@ -17211,7 +17302,11 @@
         "revision": "b1bd9219ea9ebe0ca3e1fe96ada4930cc62fe3f1",
         "report": "stp01-live-main-second-readonly-refresh.md",
         "notes": "Actual v2 resolved StyleDef property/value checker and v1-warning/v2-error gate now present. Keep exact finite table/profile decomposition pending; broad Mosaic ownership is not wholeUI90 acceptance. Part-kind/brand-font/token-own-value/reporting gaps remain separate, and host artifact filesystem/CLI effects excluded."
-      }
+      },
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-ecmascript-es3-es5-classification.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-lisp-compiler-vm-classification.json"
+      ]
     },
     {
       "id": "compiler-and-ir-rust-singleton-foundation",
@@ -17220,7 +17315,11 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes Closure scope/typecheck/passes/emitter, compute-IR, constraint VM, grammar type checker, IIR linker/type/coverage, semantic-IR backends and CPU targets. Split neutral and target children, avoid existing owner duplication."
+      "notes": "Audit includes Closure scope/typecheck/passes/emitter, compute-IR, constraint VM, grammar type checker, IIR linker/type/coverage, semantic-IR backends and CPU targets. Split neutral and target children, avoid existing owner duplication. At immutable5af7, standalone Python beam-opcode-metadata is a finite 191-row/3-built-in-profile inert data catalog with no runtime dependencies. The broad compiler/IR singleton umbrella notes enumerate examples using includes; neither those notes nor the Rust-containing ID establish that this Python catalog is excluded. Clarify whether the umbrella owns this literal metadata profile, and if so preserve it as a bounded data-only sub-scope. Only create a separate classifier after explicit non-overlap review; current audit adds no owner/edge. Profile names/maxima/chunk/encoding flags are local data declarations, not real OTP compatibility or BEAM runtime/encoder qualification. Review custom profile/wrong-type/numeric-alias/cache ownership admission separately. Retain type-declarations as the small declarative data boundary adjacent to the explicitly listed grammar type checker within compiler-and-ir-rust-singleton-foundation. Source is Rust-only657line/14inline-test, no manifest dependencies; public declaration/annotation containers and finite hint/lookup/alias helpers. Review bounded neutral KindDecl/NamedTypeDecl/TypedMode/AnnotatedChild data and helper semantics before checker/adopter work; preserve separate type-checker-protocol, CLOC02 sidecar, IIR/CIR/BF03/AOT/JIT/runtime owners. Neither no exact name nor broad includes implies missing ownership. Alias depth32/33, unknown versus alias, ordered union/fields/children, unordered maps, individual optional coordinate fallback, usize domain and mutable public construction require explicit fixtures. README/native-code/zero-warmup claims are outside data-profile acceptance. No new classifier or unconditional edge justified.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-next-identity-classification.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-type-declarations-classification.json"
+      ]
     },
     {
       "id": "document-diagram-and-layout-neutral-foundation",
@@ -17229,7 +17328,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes diagram IR/DOT/layout/paint, document AST→layout, layout IR→paint, HTML→layout, CFB, OPC, DOCX/PPTX, format-doc. Split pure fixtures from host painting/storage.",
+      "notes": "Audit includes diagram IR/DOT/layout/paint, document AST→layout, layout IR→paint, HTML→layout, CFB, OPC, DOCX/PPTX, format-doc. Split pure fixtures from host painting/storage. Bounded UI06/UI04 review at0fba2a5: document-ast-to-layout is Rust/TS supplied DocumentAST+theme to LayoutNode; the requested layout-ir-to-paint name is descriptive only, actual manifest/spec/root identity is layout-to-paint (Rust/TS). Preserve existing owner and do not register alias as a package. Reconcile TS styled inline/image/table handling versus Rust flatten-to-text/link-URL/image-placeholder/table/raw placeholders and theme/data/ID/ext/copy/error/resource projections; comments may understate current task-item support. UI04 Rust caller-supplied matched TXT00 resolver/metrics/shaper emits real glyph runs and propagates binding data; TS historical glyph mode substitutes codepoint IDs and0.6em/0.8em metrics, with separate canvas:text mode. Freeze named geometry-only, supplied-shaping transcript and intentional legacy profiles before lane qualification; never normalize them as identical glyphs. Preserve silent Rust resolver failure versus spec propagated errors, DPR/order/clip/layer/binding/fontref/resource limits. No paragraph/line layout algorithm, host font discovery/file/image/network load, CoreText/Canvas/native paint execution or whole rendering/adopter credit. Existing diagnostic Rust rust-cargo declarations and TS empty capabilities require policy review, not automatic pure/native approval. Source conversion and inert scene data remain distinct from supplied callback execution or downstream backend authority.",
       "pending_main_spline_classification": "parity-pending-main-e7c6-inventory-audit.md: newest immutable Mermaid/DG04 delta adds cardinal/catmullRom/natural parsing and curve IR/collinear cubic paint lowering. Existing classifier owns diagram IR/layout/paint and Mermaid frontend splitting; exact pure spline contract/case/decomposition coverage is still unqualified. Narrow Swimlane quoted/entity/class owners do not imply spline behavior closure; layout typed-IR geometry/metadata excludes parsing/paint backend. No native backend/security delivery or new overlapping umbrella/selection in this refresh.",
       "reference_refresh_5526f94f": {
         "revision": "5526f94f956ac390fc667af525dabef602ec7fce",
@@ -17240,6 +17339,9 @@
         "diagram-ir-dg00-graph-profile-neutral-conformance",
         "diagram-layout-graph-dg02-finite-placement-neutral-conformance",
         "diagram-to-paint-dg03-geometry-projection-classification"
+      ],
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-document-layout-paint-scope-review.json"
       ]
     },
     {
@@ -17249,7 +17351,10 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Audit includes RAW/TIFF/camera RAW, GIF/JPEG/JXL/ICO/PNG; DSP complex→FFT→filters/STFT/DCT/wavelets; range/RANS. Split malformed-input security bounds, native GPU/FFI exceptions and lane ports."
+      "notes": "Audit includes RAW/TIFF/camera RAW, GIF/JPEG/JXL/ICO/PNG; DSP complex→FFT→filters/STFT/DCT/wavelets; range/RANS. Split malformed-input security bounds, native GPU/FFI exceptions and lane ports. Audit finite MUS05 musical-instruments catalog/profile data boundary before any whole synthesis/rendering/lane delivery: Python-only128literal1-based GM-style entries and built-in preset lookup, strict program admission and explicit naive recipe identity. This umbrella has broad codec/DSP pure-chain scope with non-exhaustive includes; its Rust-containing ID does not prove Python/audio exclusion. Clarify applicability here rather than creating an unproven missing classifier. Preserve OSC00 sampler, MUS02 PCM/no-op sink, PHY/trig and whole render/device scopes. Review complete table/preset references, strings/coercions/custom inputs, tuples/shared ownership, current sine/additive/silence versus spec future sample/physical vocabulary and independently sourced provenance. No General MIDI standard fidelity/hardware clone/physical acoustics/sample/real-time/native playback guarantee. No new prerequisite/owner/selection.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-musical-instruments-classification.json"
+      ]
     },
     {
       "id": "storage-network-and-job-rust-singleton-foundation",
@@ -17316,7 +17421,43 @@
           "status": "pending",
           "audit_report": "five-seven-audio-png-metal-audit.md",
           "notes": "Concrete bridge/device/ABI applicability stays native-owned. Pure PCM component separately pending; pure PNG semantics already merged IC18. Platform/import availability, unsupported skips and wrappers are not real backend acceptance. No reviewed exception."
+        },
+        {
+          "identity": "graph-native",
+          "delivery_class": "native-runtime",
+          "selection_blocked": true,
+          "status": "pending",
+          "audit_report": "bf03-pending-native-graph-wrapper-classification.md",
+          "notes": "Actual Python/Ruby/Node host extension over existing Rust graph algorithm core via python-bridge/ruby-bridge/node-bridge; no pure fallback in inspected import/require paths. Preserve DT00/DT01 algorithm semantics separately from cdylib loading, interpreter ABI, object handles/GC/finalizers, exception/panic/concurrency/marshaling/resource/platform/build linkage. Empty capabilities are declarations, not native authority proof or approved exception. Review host/runtime/source provenance and actual native module/front/coverage/error-lifetime evidence before wrapper qualification; TypeScript directed-graph-native currently only Cargo/source/capability metadata, not full Node front. Do not manufacture missing-language wrapper ports or invoke native tooling in portable loop. Existing broad native applicability owner retained."
+        },
+        {
+          "identity": "directed-graph-native",
+          "delivery_class": "native-runtime",
+          "selection_blocked": true,
+          "status": "pending",
+          "audit_report": "bf03-pending-native-graph-wrapper-classification.md",
+          "notes": "Actual Python/Ruby/Node host extension over existing Rust graph algorithm core via python-bridge/ruby-bridge/node-bridge; no pure fallback in inspected import/require paths. Preserve DT00/DT01 algorithm semantics separately from cdylib loading, interpreter ABI, object handles/GC/finalizers, exception/panic/concurrency/marshaling/resource/platform/build linkage. Empty capabilities are declarations, not native authority proof or approved exception. Review host/runtime/source provenance and actual native module/front/coverage/error-lifetime evidence before wrapper qualification; TypeScript directed-graph-native currently only Cargo/source/capability metadata, not full Node front. Do not manufacture missing-language wrapper ports or invoke native tooling in portable loop. Existing broad native applicability owner retained."
+        },
+        {
+          "identity": "commonmark-native",
+          "delivery_class": "native-runtime",
+          "selection_blocked": true,
+          "status": "pending",
+          "audit_report": "bf03-pending-commonmark-heap-wrapper-classification.md",
+          "notes": "Actual Python/Ruby/Node host loader and Rust cdylib bridge over existing commonmark parsing/rendering; direct native import/require, no pure fallback evidenced. Review exact host/library provenance, UTF8/NUL/string/exception/panic/memory ownership, bridge/platform builds, bounded conversion/resource behavior and truthful capabilities before native wrapper qualification. Empty declarations and safe-named HTML function are neither native exception approval nor a new sanitization guarantee; keep CommonMark/document AST/HTML semantics with existing core owners. No automatic missing-language wrapper ports or native-runtime selection."
+        },
+        {
+          "identity": "heap-native",
+          "delivery_class": "native-runtime",
+          "selection_blocked": true,
+          "status": "pending",
+          "audit_report": "bf03-pending-commonmark-heap-wrapper-classification.md",
+          "notes": "Actual Python object-comparison bridge and Dart i64 C-ABI cdylib over existing Rust heap core; direct extension/DynamicLibrary loading, no pure fallback evidenced. Python retains PyObject references and calls rich comparison while clearing comparator exceptions; Dart loads absolute HEAP_NATIVE_PATH/platform library, owns opaque handles/buffers/NativeFinalizer/dispose and ffi:call declaration, with Windows BUILD echo-skip. Review comparator/reentrancy/GIL/GC/panic/exception, i64/size/n conversion, output ownership/limits, library provenance and real host-platform/coverage receipts. Pure core heaps remain separate; no fallback, approved exception, Windows qualification or automatic15-lane port is claimed. Selection blocked as native-runtime."
         }
+      ],
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-native-graph-wrapper-classification.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-commonmark-heap-wrapper-classification.json"
       ]
     },
     {
@@ -18120,7 +18261,10 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-csharp-fsharp-bf03-validation-plan.json"
+      ]
     },
     {
       "id": "compiler-ir-bf03-dart-lane-parity",
@@ -18131,7 +18275,10 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-swift-dart-bf03-validation-plan.json"
+      ]
     },
     {
       "id": "compiler-ir-bf03-fsharp-lane-parity",
@@ -18142,7 +18289,10 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-csharp-fsharp-bf03-validation-plan.json"
+      ]
     },
     {
       "id": "compiler-ir-bf03-java-lane-parity",
@@ -18153,7 +18303,10 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-java-kotlin-bf03-validation-plan.json"
+      ]
     },
     {
       "id": "compiler-ir-bf03-kotlin-lane-parity",
@@ -18164,7 +18317,10 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-java-kotlin-bf03-validation-plan.json"
+      ]
     },
     {
       "id": "compiler-ir-bf03-swift-lane-parity",
@@ -18175,7 +18331,10 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-swift-dart-bf03-validation-plan.json"
+      ]
     },
     {
       "id": "segment-tree-dt05-nine-lane-parity",
@@ -18241,8 +18400,11 @@
       ],
       "branch": null,
       "pr_number": null,
-      "notes": "Seven Brainfuck/Nib/AOT families each 9/15 and 42 structural slots absent in C#/Dart/F#/Java/Kotlin/Swift. Separate BF02 IR producer from Nib frontend, then split per dependency and lane before ports; no native-runtime scope.",
-      "bounded_read_only_classification": "jvm-dart-eight-nine-lane-classification-audit.md: exact grouped owner/alias scopes cover selected codecs/IR/VM/Nib packages; native target ports remain prerequisite-gated. Shared neutral owner readiness is graph state, not source/API/coverage execution. Nib actual TS lexer/parser embed generated grammar objects rather than runtime filesystem reads; source-map/protocol/IR/encoder requirements remain separately owned. Later exact lane children must be collision-checked under existing classifier rather than duplicated from package-name-only searches. No new owner or native validation in this report."
+      "notes": "Seven Brainfuck/Nib/AOT families each 9/15 and 42 structural slots absent in C#/Dart/F#/Java/Kotlin/Swift. Separate BF02 IR producer from Nib frontend, then split per dependency and lane before ports; no native-runtime scope. Existing nine-lane BF02/Nib/IR-to-Wasm producer staging remains owned; do not infer sparse BF04/JVM/CLR orchestration qualification from seven-family count. New exact proposed classifiers reuse producer/target ownership and preserve runtime exclusions; no direct Wasm prerequisite imposed on pure JVM/CIL orchestration.",
+      "bounded_read_only_classification": "jvm-dart-eight-nine-lane-classification-audit.md: exact grouped owner/alias scopes cover selected codecs/IR/VM/Nib packages; native target ports remain prerequisite-gated. Shared neutral owner readiness is graph state, not source/API/coverage execution. Nib actual TS lexer/parser embed generated grammar objects rather than runtime filesystem reads; source-map/protocol/IR/encoder requirements remain separately owned. Later exact lane children must be collision-checked under existing classifier rather than duplicated from package-name-only searches. No new owner or native validation in this report.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-brainfuck-three-classification.json"
+      ]
     },
     {
       "id": "build-tool-toolchain-detection-fixture-native-ci-selection",
@@ -21331,8 +21493,11 @@
       "delivery_class": "portable",
       "discovered_at": "2026-10-14T00:28:50.7116-07:00",
       "discovered_revision": "e3731d869a655f4b6ef4252aeee2664080725d85",
-      "notes": "Distinguish TS diagnostic IIR text artifacts/registry from Rust generic injected optimizer/compiler/statistics protocols. Freeze registry replacement/missing/order and finite callback/output/error/copy projections; real backends and sampled clocks/runtime authority are separate. Later IIR text conformance requires qualified IIR data; concrete BF03 optimization needs existing compiler-IR/optimizer gates. This classification can decide boundaries without falsely claiming whole native LANG19 compiler pipeline or arbitrary callback termination. No nine-lane implementation bundle.",
-      "audit_report": "five-seven-codegen-interpreter-optimizer-audit.md"
+      "notes": "Distinguish TS diagnostic IIR text artifacts/registry from Rust generic injected optimizer/compiler/statistics protocols. Freeze registry replacement/missing/order and finite callback/output/error/copy projections; real backends and sampled clocks/runtime authority are separate. Later IIR text conformance requires qualified IIR data; concrete BF03 optimization needs existing compiler-IR/optimizer gates. This classification can decide boundaries without falsely claiming whole native LANG19 compiler pipeline or arbitrary callback termination. No nine-lane implementation bundle. Preserve generic adapter protocol: Python diagnostic messages omit rule and raises aggregated exception; Rust uses local Display(rule:message) and panics generate on errors. Concrete8008 lowering belongs new classifier; no generic runtime/backend execution claim.",
+      "audit_report": "five-seven-codegen-interpreter-optimizer-audit.md",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-ir-intel8008-lowering-classification.json"
+      ]
     },
     {
       "id": "rom-bios-s01-image-data-neutral-conformance",
@@ -22013,13 +22178,18 @@
       "delivery_class": "portable",
       "selection_blocked": false,
       "report": "post-stp01-two-four-sim00-lp00-audit.md",
-      "limits": "Unregistered finite portable classification proposal, not whole-identity/adopter qualification. Reconcile latest-main/full-owner scopes before postmerge registration and next selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-lp00-cas-proposal-review.md",
       "title": "logic core lp00 portable profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "notes": "Already registered pending in current parity journal; limits text saying unregistered is stale. Preserve actual status/deps/evidence. Its finite terms/substitution/unification/state classification is prerequisite to distinct proposed logic-engine classification; no whole-substrate/native qualification.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-logic-engine-classification.json"
+      ],
+      "historical_registration_limits": "Unregistered finite portable classification proposal, not whole-identity/adopter qualification. Reconcile latest-main/full-owner scopes before postmerge registration and next selection."
     },
     {
       "id": "cas-pattern-matching-symbolic-tree-neutral-classification",
@@ -22028,14 +22198,15 @@
       "delivery_class": "portable",
       "selection_blocked": false,
       "report": "post-stp01-two-four-cas-substitution-pattern-audit.md",
-      "limits": "Unregistered finite portable classification proposal, not whole-identity/adopter qualification. Reconcile latest-main/full-owner scopes before postmerge registration and next selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-lp00-cas-proposal-review.md",
       "governing_spec_caveat": "Reconcile SIR23:131-170 binding matching/rewrite semantics and existing symbolic-CAS runtime owner; do not invent competing traversal semantics.",
       "title": "cas pattern matching symbolic tree neutral classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite portable classification proposal, not whole-identity/adopter qualification. Reconcile latest-main/full-owner scopes before postmerge registration and next selection."
     },
     {
       "id": "cas-substitution-symbolic-tree-neutral-classification",
@@ -22046,13 +22217,14 @@
       "delivery_class": "portable",
       "selection_blocked": false,
       "report": "post-stp01-two-four-cas-substitution-pattern-audit.md",
-      "limits": "Unregistered finite portable classification proposal, not whole-identity/adopter qualification. Reconcile latest-main/full-owner scopes before postmerge registration and next selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-lp00-cas-proposal-review.md",
       "title": "cas substitution symbolic tree neutral classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite portable classification proposal, not whole-identity/adopter qualification. Reconcile latest-main/full-owner scopes before postmerge registration and next selection."
     },
     {
       "id": "lef-def-portable-text-profile-classification",
@@ -22061,13 +22233,14 @@
       "delivery_class": "portable",
       "selection_blocked": false,
       "report": "post-stp01-two-four-lef-gds-audit.md",
-      "limits": "Unregistered finite classification only. Owner-level readiness flag follows independent LP00/CAS review principle; whole-identity/adopter/port/native-clock/file behavior remains unqualified. Reconcile freshmain/currentowner collisions and format/input boundaries before postmerge registration and selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-lef-gds-proposal-review.md",
       "title": "lef def portable text profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite classification only. Owner-level readiness flag follows independent LP00/CAS review principle; whole-identity/adopter/port/native-clock/file behavior remains unqualified. Reconcile freshmain/currentowner collisions and format/input boundaries before postmerge registration and selection."
     },
     {
       "id": "gdsii-writer-portable-record-profile-classification",
@@ -22076,14 +22249,15 @@
       "delivery_class": "portable",
       "selection_blocked": false,
       "report": "post-stp01-two-four-lef-gds-audit.md",
-      "limits": "Unregistered finite classification only. Owner-level readiness flag follows independent LP00/CAS review principle; whole-identity/adopter/port/native-clock/file behavior remains unqualified. Reconcile freshmain/currentowner collisions and format/input boundaries before postmerge registration and selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-lef-gds-proposal-review.md",
       "governing_spec_caveat": "Resolve both sample length endianness and STRANS/MAG/ANGLE record/type table-versus-source conflict before goldens; source is not automatically the standard.",
       "title": "gdsii writer portable record profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite classification only. Owner-level readiness flag follows independent LP00/CAS review principle; whole-identity/adopter/port/native-clock/file behavior remains unqualified. Reconcile freshmain/currentowner collisions and format/input boundaries before postmerge registration and selection."
     },
     {
       "id": "asic-floorplan-supplied-geometry-profile-classification",
@@ -22092,14 +22266,15 @@
       "delivery_class": "portable",
       "selection_blocked": false,
       "report": "post-stp01-two-four-asic-floorplan-placement-audit.md",
-      "limits": "Unregistered finite supplied-model classification only. Whole identity, adopters, external clock/PDK/tool/fabrication behavior unqualified. Static hand-derived discrepancy is not executed RED. Reconcile latestmain/currentowners before postmerge registration and selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-asic-floorplan-placement-proposal-review.md",
       "governing_spec_caveat": "Reconcile utilization-adjusted area and independent versus width-recompute snapping; placement initialization consumes randomness even at iterations0, and HPWL report phase/elapsedclock stay explicit. Static witnesses are not executed RED.",
       "title": "asic floorplan supplied geometry profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite supplied-model classification only. Whole identity, adopters, external clock/PDK/tool/fabrication behavior unqualified. Static hand-derived discrepancy is not executed RED. Reconcile latestmain/currentowners before postmerge registration and selection."
     },
     {
       "id": "asic-placement-supplied-geometry-profile-classification",
@@ -22110,14 +22285,15 @@
       "delivery_class": "portable",
       "selection_blocked": false,
       "report": "post-stp01-two-four-asic-floorplan-placement-audit.md",
-      "limits": "Unregistered finite supplied-model classification only. Whole identity, adopters, external clock/PDK/tool/fabrication behavior unqualified. Static hand-derived discrepancy is not executed RED. Reconcile latestmain/currentowners before postmerge registration and selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-asic-floorplan-placement-proposal-review.md",
       "governing_spec_caveat": "Reconcile utilization-adjusted area and independent versus width-recompute snapping; placement initialization consumes randomness even at iterations0, and HPWL report phase/elapsedclock stay explicit. Static witnesses are not executed RED.",
       "title": "asic placement supplied geometry profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite supplied-model classification only. Whole identity, adopters, external clock/PDK/tool/fabrication behavior unqualified. Static hand-derived discrepancy is not executed RED. Reconcile latestmain/currentowners before postmerge registration and selection."
     },
     {
       "id": "asic-routing-single-layer-grid-profile-classification",
@@ -22127,14 +22303,15 @@
       "depends_on": [],
       "notes": "Finite supplied DEF/pin-access grid profile, origin/rounding/obstacles/BFS order/work budget/net reservation and partial-failure/resources. Wider global/multilayer/DRC/tool identity and adopters unqualified.",
       "report": "post-stp01-two-four-routing-drclvs-audit.md",
-      "limits": "Unregistered finite classification independently reviewed; reconcile fresh main/full owner scopes before registration/selection. Whole identity, native behavior and physical signoff remain unqualified.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-routing-drclvs-proposal-review.md",
       "governing_spec_caveat": "Fractional grid witness includes sink beyond nominal physical width; demonstrates source policy divergence, not normative valid-input failure until admissibility is specified. Static proof only.",
       "title": "asic routing single layer grid profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite classification independently reviewed; reconcile fresh main/full owner scopes before registration/selection. Whole identity, native behavior and physical signoff remain unqualified."
     },
     {
       "id": "drc-lvs-supplied-geometry-netlist-profile-classification",
@@ -22144,14 +22321,15 @@
       "depends_on": [],
       "notes": "Finite supplied rectangle-rule and flat-netlist comparison classification, approximate signatures versus exact isomorphism/extraction, unknown-rule/severity/numeric/identifier/order/resources. Whole identity/adopters/physical signoff unqualified.",
       "report": "post-stp01-two-four-routing-drclvs-audit.md",
-      "limits": "Unregistered finite classification independently reviewed; reconcile fresh main/full owner scopes before registration/selection. Whole identity, native behavior and physical signoff remain unqualified.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-routing-drclvs-proposal-review.md",
       "governing_spec_caveat": "Local signature equality for connected6cycle versus disconnected two3cycles proves approximation limits by hand; do not freeze approximate matched=true as full exact LVS success. No native execution.",
       "title": "drc lvs supplied geometry netlist profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite classification independently reviewed; reconcile fresh main/full owner scopes before registration/selection. Whole identity, native behavior and physical signoff remain unqualified."
     },
     {
       "id": "standard-cell-library-supplied-nldm-profile-classification",
@@ -22161,14 +22339,15 @@
       "depends_on": [],
       "notes": "Finite supplied NLDM axes/table/interpolation/catalog/drive-selection/data-ownership/error/resource classification; resolve clamping versus extrapolation, units and indicative default data. Separate Liberty text/PDK loads/SPICE characterization/physical timing; whole identity/adopters unqualified.",
       "report": "post-stp01-two-four-cell-library-tech-mapping-audit.md",
-      "limits": "Unregistered finite supplied-data classification independently reviewed; fresh main/inventory/full semantic owners must be reconciled before registration and selection. No native, whole-package, electrical or physical qualification.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-cell-library-tech-mapping-proposal-review.md",
       "governing_spec_caveat": "Resolve extrapolation versus source clamping; Python/Rust transition factors differ. Separate supplied LUT math from indicative catalog data/provenance and physical calibration.",
       "title": "standard cell library supplied nldm profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite supplied-data classification independently reviewed; fresh main/inventory/full semantic owners must be reconciled before registration and selection. No native, whole-package, electrical or physical qualification."
     },
     {
       "id": "tech-mapping-hnl-transform-profile-classification",
@@ -22178,14 +22357,15 @@
       "depends_on": [],
       "notes": "Finite supplied HNL fixed-map/pin remap/INV cancellation profile classification with independent connectivity/truth-table oracle, metadata/unknown/custom-map/width/fanout/order/resource decisions. Preserve pending HNL schema owner and broader library-driven AOI/drive/validation debt; whole identity/adopters unqualified.",
       "report": "post-stp01-two-four-cell-library-tech-mapping-audit.md",
-      "limits": "Unregistered finite supplied-data classification independently reviewed; fresh main/inventory/full semantic owners must be reconciled before registration and selection. No native, whole-package, electrical or physical qualification.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-cell-library-tech-mapping-proposal-review.md",
       "governing_spec_caveat": "NOT->NOT->BUF static connectivity witness is unexecuted; Python explicit push_bubbles differs from Rust automatic map_module phase. Preserve HNL substrate, polarity/bit/fanout/port/metadata validation; no invented library prerequisite.",
       "title": "tech mapping hnl transform profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite supplied-data classification independently reviewed; fresh main/inventory/full semantic owners must be reconciled before registration and selection. No native, whole-package, electrical or physical qualification."
     },
     {
       "id": "resistor-phy02-finite-model-classification",
@@ -22196,14 +22376,15 @@
       "notes": "Classify finite supplied PHY02 resistor scalar/metadata/network/temperature/power-rating arithmetic, errors/resource/tolerance domains and independent rational oracle. No physical component/safety/solver or twelve-lane qualification; normal future pure native validation permitted.",
       "report": "post-stp01-two-four-resistor-power-supply-audit.md",
       "delta_report": "post-stp01-resistor-fsharp-power-supply-haskell-delta.md",
-      "limits": "Unregistered finite supplied-model/profile classification independently reviewed; all3current lane roots statically inspected per identity. Fresh main/inventory/full semantic owners must be reconciled before registration and selection. No native, whole-package, physical or safety qualification.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-resistor-power-supply-proposal-review.md",
       "governing_spec_caveat": "Finite teaching profile does not redefine whole-public-domain constraints; tolerance>1 and adjusted nonpositive values not explicitly forbidden by current spec. Bound supplied arrays; arbitrary enumerable termination is not established.",
       "title": "resistor phy02 finite model classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite supplied-model/profile classification independently reviewed; all3current lane roots statically inspected per identity. Fresh main/inventory/full semantic owners must be reconciled before registration and selection. No native, whole-package, physical or safety qualification."
     },
     {
       "id": "power-supply-phy06-source-adapter-classification",
@@ -22216,14 +22397,15 @@
       "notes": "Classify PHY06 ideal source wrappers/DC signed P=VI and exact parameter/query projection into existing PHY03 constant/sine contracts; preserve offset/API/numeric validation differences and do not duplicate signal oracle. Whole identity/adopters/physical power delivery unqualified.",
       "report": "post-stp01-two-four-resistor-power-supply-audit.md",
       "delta_report": "post-stp01-resistor-fsharp-power-supply-haskell-delta.md",
-      "limits": "Unregistered finite supplied-model/profile classification independently reviewed; all3current lane roots statically inspected per identity. Fresh main/inventory/full semantic owners must be reconciled before registration and selection. No native, whole-package, physical or safety qualification.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-resistor-power-supply-proposal-review.md",
       "governing_spec_caveat": "Complete DC+sine parameter/query profile must reuse finalized PHY03 corpus and numeric governance; inventory-only partition is insufficient completion. PHY03 edge is this explicit scope choice, not Haskell package import prerequisite. PHY06 does not mandate P=VI/offset APIs; Haskell is DC-only base-only with exported constructor.",
       "title": "power supply phy06 source adapter classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite supplied-model/profile classification independently reviewed; all3current lane roots statically inspected per identity. Fresh main/inventory/full semantic owners must be reconciled before registration and selection. No native, whole-package, physical or safety qualification."
     },
     {
       "id": "oscillator-osc00-finite-sampling-profile-classification",
@@ -22234,13 +22416,14 @@
       "notes": "Finite OSC00 built-in sine/square supplied-time and half-open sample/count/buffer/stream projection classification; independent phase-cycle/count/domain/error/resource/ownership decisions. Reuse existing PHY03/PHY04/PHY00 fixtures without duplicating their contracts. Arbitrary callbacks/real clocks/devices/playback and whole adopter/port qualification outside finite tranche.",
       "report": "post-stp01-two-four-oscillator-electronics-audit.md",
       "review": "post-stp01-oscillator-electronics-proposal-review.md",
-      "limits": "Unregistered finite supplied-profile classification independently reviewed; five current roots statically inspected across two identities, no native, full-package, device or physical qualification. Fresh main/inventory/full semantic ownership reconciliation required before registration and selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "governing_spec_caveat": "OSC00 cycle phase, square/duty and half-open sampler/count scope differs from PHY03/04. Fixed1e-9 count snap is not dictated by value tolerance; freeze rounding/intermediate/resource/ownership and bounded built-in callback projection before fixtures.",
       "title": "oscillator osc00 finite sampling profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite supplied-profile classification independently reviewed; five current roots statically inspected across two identities, no native, full-package, device or physical qualification. Fresh main/inventory/full semantic ownership reconciliation required before registration and selection."
     },
     {
       "id": "electronics-phy05-component-composition-classification",
@@ -22250,17 +22433,18 @@
       "depends_on": [
         "analog-waveform-phy03-finite-signal-neutral-conformance"
       ],
-      "notes": "Classify PHY05 supplied resistor/DC/divider/sine-response composition plus actual Haskell RC-step extension versus governed initial scope; API/numeric/error/query-grid/state/resource/dependency partition. Reuse PHY03 signal oracle and preserve separate pending unregistered PHY02/PHY06 proposals. No duplicate resistor/sine oracle, universal package imports, full solver/hardware or twelve-lane qualification.",
+      "notes": "Classify PHY05 supplied resistor/DC/divider/sine-response composition plus actual Haskell RC-step extension versus governed initial scope; API/numeric/error/query-grid/state/resource/dependency partition. Reuse PHY03 signal oracle and preserve separate registered pending PHY02/PHY06 classifications. No duplicate resistor/sine oracle, universal package imports, full solver/hardware or twelve-lane qualification.",
       "report": "post-stp01-two-four-oscillator-electronics-audit.md",
       "review": "post-stp01-oscillator-electronics-proposal-review.md",
-      "limits": "Unregistered finite supplied-profile classification independently reviewed; five current roots statically inspected across two identities, no native, full-package, device or physical qualification. Fresh main/inventory/full semantic ownership reconciliation required before registration and selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "completion_scope": "Complete governed sinusoidal-response parameter/query profile must reuse finalized existing PHY03 numeric governance/corpus; inventory/scalar/RC partition alone is insufficient completion. PHY03 edge is this explicit scope choice, not a Haskell import or execution prerequisite.",
       "governing_spec_caveat": "PHY05 does not prescribe batch endpoint policy: TS closed grid is not automatically a bug versus OSC00 half-open. Haskell is base-only RC Euler extension missing initial DC/divider/sine helpers; no stability or physical assurance.",
       "title": "electronics phy05 component composition classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite supplied-profile classification independently reviewed; five current roots statically inspected across two identities, no native, full-package, device or physical qualification. Fresh main/inventory/full semantic ownership reconciliation required before registration and selection."
     },
     {
       "id": "oct-lexer-oct00-token-profile-classification",
@@ -22270,14 +22454,15 @@
       "depends_on": [],
       "notes": "Finite caller-source Oct token/position/error/resource/grammar-embed drift classification. Reconcile OCT00/OCT02 live grammar scope; separate Octave/MacroOct/backend matrix, runtime grammar loads and actual compiler/device execution. Whole identity/adopters/thirteen absent lanes unqualified.",
       "report": "post-stp01-two-four-oct-frontends-audit.md",
-      "limits": "Unregistered finite complete token/AST profile classification independently reviewed. Four public wrapper roots statically inspected; generic engine/embedding/native behavior unqualified. Fresh main/inventory/full semantic owners must be reconciled before registration/selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-oct-frontends-proposal-review.md",
       "governing_spec_caveat": "Reconcile OCT02 Draft lowering-cut/shared-frontend promises vs OCT00/grammar; no source-majority oracle. Malformed0b2 may split tokens; print(n) ordinary call differs from absent special print n. Separate raw rule/token tree from folded AST, rule-depth200 from parentheses/native stack safety.",
       "title": "oct lexer oct00 token profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite complete token/AST profile classification independently reviewed. Four public wrapper roots statically inspected; generic engine/embedding/native behavior unqualified. Fresh main/inventory/full semantic owners must be reconciled before registration/selection."
     },
     {
       "id": "oct-parser-oct00-ast-profile-classification",
@@ -22289,7 +22474,7 @@
       ],
       "notes": "Finite caller-source or explicit token grammar AST projection/precedence/EOF/diagnostics/depth/work profile classification using resolved Oct tokens. Preserve syntax versus semantic limits, OCT02 cut disagreement and existing backend/MacroOct ownership; whole identity/adopters unqualified.",
       "report": "post-stp01-two-four-oct-frontends-audit.md",
-      "limits": "Unregistered finite complete token/AST profile classification independently reviewed. Four public wrapper roots statically inspected; generic engine/embedding/native behavior unqualified. Fresh main/inventory/full semantic owners must be reconciled before registration/selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "review": "post-stp01-oct-frontends-proposal-review.md",
       "governing_spec_caveat": "Reconcile OCT02 Draft lowering-cut/shared-frontend promises vs OCT00/grammar; no source-majority oracle. Malformed0b2 may split tokens; print(n) ordinary call differs from absent special print n. Separate raw rule/token tree from folded AST, rule-depth200 from parentheses/native stack safety.",
       "completion_scope": "Complete source-and-promoted-token AST profile requires finalized lexer type/keyword/position/EOF/dialect decisions. Supplied preprocessed MacroOct tokens need no invented single raw-source roundtrip; no backend/runtime gate.",
@@ -22297,7 +22482,8 @@
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite complete token/AST profile classification independently reviewed. Four public wrapper roots statically inspected; generic engine/embedding/native behavior unqualified. Fresh main/inventory/full semantic owners must be reconciled before registration/selection."
     },
     {
       "id": "prolog-lexer-pr00-dialect-token-profile-classification",
@@ -22308,13 +22494,14 @@
       "notes": "Finite supplied-source PR00 foundation versus current Rust ISO/NAF/block-comment/ProbLog token profiles; token/position/quoted/regex-patch/error/embed/resource decisions. Preserve distinct ISO/SWI roots, loader/BUILD closure and whole-identity/adopter scope; no thirteen-lane bundle.",
       "report": "post-stp01-two-four-prolog-frontends-audit.md",
       "review": "post-stp01-prolog-frontends-proposal-review.md",
-      "limits": "Unregistered complete finite token/dialect/lowering classification independently reviewed; four public roots/targeted lowering statically inspected, generic engines/native/solver/import behavior unqualified. Fresh postmerge main/inventory/full semantic scopes required before registration or selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "governing_spec_caveat": "Python basePR00/PR01 vs same-name RustISO-oriented roots are distinct profiles; preserve raw reporter identities and separate iso-* roots. ISO-only spellings may become foundation ATOM tokens, not lexical error. Parser must cover finite lowering/control/alpha identity, not AST-only; numeric fallback0, repeated grammar leak/panic and lowering-depth debt remain explicit.",
       "title": "prolog lexer pr00 dialect token profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered complete finite token/dialect/lowering classification independently reviewed; four public roots/targeted lowering statically inspected, generic engines/native/solver/import behavior unqualified. Fresh postmerge main/inventory/full semantic scopes required before registration or selection."
     },
     {
       "id": "prolog-parser-pr01-dialect-lowering-profile-classification",
@@ -22327,14 +22514,15 @@
       "notes": "Finite PR01 AST-to-clause/query/term/goal data projection and current Rust ISO extensions; alpha scopes/anonymous freshness/number/list/control/probability/error/depth/resource decisions. Parser-only AST subset does not close canonical lowering identity; no solver/load/query execution or whole adopter qualification.",
       "report": "post-stp01-two-four-prolog-frontends-audit.md",
       "review": "post-stp01-prolog-frontends-proposal-review.md",
-      "limits": "Unregistered complete finite token/dialect/lowering classification independently reviewed; four public roots/targeted lowering statically inspected, generic engines/native/solver/import behavior unqualified. Fresh postmerge main/inventory/full semantic scopes required before registration or selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "governing_spec_caveat": "Python basePR00/PR01 vs same-name RustISO-oriented roots are distinct profiles; preserve raw reporter identities and separate iso-* roots. ISO-only spellings may become foundation ATOM tokens, not lexical error. Parser must cover finite lowering/control/alpha identity, not AST-only; numeric fallback0, repeated grammar leak/panic and lowering-depth debt remain explicit.",
       "completion_scope": "Complete source-and-finite-lowering profile waits finalized lexer token/quote/span/EOF/dialect decisions. No solver/loader/VM execution or source-majority oracle; actual future adapter build/construction closure separately qualified.",
       "title": "prolog parser pr01 dialect lowering profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered complete finite token/dialect/lowering classification independently reviewed; four public roots/targeted lowering statically inspected, generic engines/native/solver/import behavior unqualified. Fresh postmerge main/inventory/full semantic scopes required before registration or selection."
     },
     {
       "id": "nib-formatter-nib03-source-preservation-profile-classification",
@@ -22345,13 +22533,14 @@
       "notes": "Finite NIB03 source/AST/token formatting profile, canonical spacing/width/newline/comment/EOF/trivia/idempotence/syntax-preservation/diagnostic/resource decisions, reconciles Rust token printer versus TS Doc-layout-ASCII pipeline. Existing Nib frontend/AOT and format-doc/core/helpers/bridge scopes remain separate dependencies for later native adoption; no thirteen-lane bundle or host rendering.",
       "report": "post-stp01-two-four-nib-formatter-dot-parser-audit.md",
       "review": "post-stp01-nib-formatter-dot-ownership-review.md",
-      "limits": "Unregistered finite NIB03 classifier independently reviewed; target public/trivia/helper surfaces, not exhaustive generic engines/native qualification. DOT explicitly retains existing foundation owner; no new DOT node. Fresh main/inventory/full semantic ownership reconciliation before registration/selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "governing_spec_caveat": "Preserve normalized comments/intentional blank lines and canonical syntax, not exact original-source fidelity. Source-based EOF trivia differs from AST-only; Rust token printer/unused width100/final newline differs from TS80/Doc pipeline. Later actual same-lane substrates remain qualified separately.",
       "title": "nib formatter nib03 source preservation profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite NIB03 classifier independently reviewed; target public/trivia/helper surfaces, not exhaustive generic engines/native qualification. DOT explicitly retains existing foundation owner; no new DOT node. Fresh main/inventory/full semantic ownership reconciliation before registration/selection."
     },
     {
       "id": "cas-pretty-printer-symbolic-tree-output-profile-classification",
@@ -22361,14 +22550,15 @@
       "scope": "Classify supplied symbolic-tree to literal text profiles, exact dialect/style/extension/resource boundaries; no adopters or whole-identity parity.",
       "report": "post-stp01-two-four-cas-printer-list-audit.md",
       "review": "post-stp01-cas-printer-list-proposal-review.md",
-      "limits": "Unregistered finite symbolic-tree output/list classification independently reviewed; three lane cores statically inspected, not exhaustive dialect/2D helpers/native/evaluator qualification. Reuse existing closed symbolic-tree projection; no duplicate generic oracle. Fresh postmerge main/inventory/full semantic ownership reconciliation before registration/selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "governing_spec_caveat": "Exact linear/dialect output versus optional2D, negative precedence/n-ary spacing and codepoint/UTF16 width require explicit profile; no terminal display-width proof. Fixed registry callbacks only, preserve whole extension/Unicode debt.",
       "delivery_class": "portable",
       "title": "cas pretty printer symbolic tree output profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite symbolic-tree output/list classification independently reviewed; three lane cores statically inspected, not exhaustive dialect/2D helpers/native/evaluator qualification. Reuse existing closed symbolic-tree projection; no duplicate generic oracle. Fresh postmerge main/inventory/full semantic ownership reconciliation before registration/selection."
     },
     {
       "id": "cas-list-operations-symbolic-tree-profile-classification",
@@ -22378,14 +22568,15 @@
       "scope": "Classify direct symbolic-list transformations, numeric/index/order/error/resource profile and VM integration split; no evaluator, adopter or whole-identity parity.",
       "report": "post-stp01-two-four-cas-printer-list-audit.md",
       "review": "post-stp01-cas-printer-list-proposal-review.md",
-      "limits": "Unregistered finite symbolic-tree output/list classification independently reviewed; three lane cores statically inspected, not exhaustive dialect/2D helpers/native/evaluator qualification. Reuse existing closed symbolic-tree projection; no duplicate generic oracle. Fresh postmerge main/inventory/full semantic ownership reconciliation before registration/selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "governing_spec_caveat": "Unevaluated IR constructors are not evaluator/Define/simplify closure. Sort must resolve printer-order or backend-hook choice; Range one-argument step/zero and inclusive endpoint overflow, Flatten depth and bounded expansion need explicit policy. No automatic printer/VM dependency.",
       "delivery_class": "portable",
       "title": "cas list operations symbolic tree profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite symbolic-tree output/list classification independently reviewed; three lane cores statically inspected, not exhaustive dialect/2D helpers/native/evaluator qualification. Reuse existing closed symbolic-tree projection; no duplicate generic oracle. Fresh postmerge main/inventory/full semantic ownership reconciliation before registration/selection."
     },
     {
       "id": "cas-complex-symbolic-numeric-profile-classification",
@@ -22396,13 +22587,14 @@
       "delivery_class": "portable",
       "report": "post-stp01-two-four-cas-complex-number-theory-audit.md",
       "review": "post-stp01-cas-complex-number-theory-proposal-review.md",
-      "limits": "Unregistered finite classifier independently reviewed; targeted three-lane helpers/selected handlers, no native/whole-package/VM/security qualification. Reuse tree projection. Fresh postmerge main/inventory/full ownership reconciliation before registration/selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "governing_spec_caveat": "ImaginaryUnit/I and direct symbolic/numeric versus VM normalization require explicit profiles. Preserve quadrant/zero/exponent/precision/resource distinctions, no arbitrary-symbol mathematical reality proof.",
       "title": "cas complex symbolic numeric profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite classifier independently reviewed; targeted three-lane helpers/selected handlers, no native/whole-package/VM/security qualification. Reuse tree projection. Fresh postmerge main/inventory/full ownership reconciliation before registration/selection."
     },
     {
       "id": "cas-number-theory-finite-integer-profile-classification",
@@ -22413,13 +22605,14 @@
       "delivery_class": "portable",
       "report": "post-stp01-two-four-cas-complex-number-theory-audit.md",
       "review": "post-stp01-cas-complex-number-theory-proposal-review.md",
-      "limits": "Unregistered finite classifier independently reviewed; targeted three-lane helpers/selected handlers, no native/whole-package/VM/security qualification. Reuse tree projection. Fresh postmerge main/inventory/full ownership reconciliation before registration/selection.",
+      "limits": "Registered pending finite classification; current-main and full-owner reconciliation completed at 22755d9313ce8fed25a7e9a14aa96cb6865b9e4c. Original scope limits retained as historical_registration_limits. No whole-identity, adopter, native, physical or security qualification follows.",
       "governing_spec_caveat": "Base simple CRT rejects noncoprime moduli; generalized compatible CRT is an extension. Preserve raw-helper/IR handler/empty/error differences and randomized-factorization progress/resource debt; no primality/security guarantee.",
       "title": "cas number theory finite integer profile classification",
       "branch": null,
       "pr_number": null,
       "discovered_at": "2026-10-18T09:35:50.337519-07:00",
-      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95"
+      "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
+      "historical_registration_limits": "Unregistered finite classifier independently reviewed; targeted three-lane helpers/selected handlers, no native/whole-package/VM/security qualification. Reuse tree projection. Fresh postmerge main/inventory/full ownership reconciliation before registration/selection."
     },
     {
       "id": "compiler-ir-bf03-elixir-core-profile-adoption",
@@ -22440,18 +22633,127 @@
     {
       "id": "compiler-ir-bf03-go-core-profile-adoption",
       "title": "Qualify the existing go compiler IR against the BF03 neutral core profile",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [
         "compiler-ir-aot-neutral-conformance"
       ],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-bf03-go-20261021",
+      "pr_number": 17905,
       "delivery_class": "portable",
       "selection_blocked": false,
       "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
-      "notes": "Existing compiler IR root code/packages/go/compiler-ir is package presence, not native conformance to the new shared BF03 core profile. After the neutral profile is frozen, consume its complete declared typed-ID/opcode/text/domain/error/resource/ownership cases through actual production APIs and an independent bounded shared-corpus reader; validate production coverage, real package/downstream BUILD fronts, metadata and final-head security/CI. Resolve existing profile discrepancies in this lane without using production output or source-majority as oracle. Preserve explicitly outside-profile extension opcodes, opaque ID/sentinel rules and source-map/runtime/backend scopes; completion qualifies only the reviewed core component, not the whole compiler IR identity or every extension. Deliver one coherent lane at a time; no nine-lane implementation bundle.",
+      "notes": "Existing compiler IR root code/packages/go/compiler-ir is package presence, not native conformance to the new shared BF03 core profile. After the neutral profile is frozen, consume its complete declared typed-ID/opcode/text/domain/error/resource/ownership cases through actual production APIs and an independent bounded shared-corpus reader; validate production coverage, real package/downstream BUILD fronts, metadata and final-head security/CI. Resolve existing profile discrepancies in this lane without using production output or source-majority as oracle. Preserve explicitly outside-profile extension opcodes, opaque ID/sentinel rules and source-map/runtime/backend scopes; completion qualifies only the reviewed core component, not the whole compiler IR identity or every extension. Deliver one coherent lane at a time; no nine-lane implementation bundle. Actual Nib producers emit colon-bearing COMMENTs as IrLabel outside frozen core. Global legacy Parse/Print tightening is not safe by assumption. Preserve broad production API/consumer regressions while exposing actual strict core production admission/parse/print/checked-ID route and explicit text tag; never coerce wrong neutral labels to valid text in test reader. Additive API family is an unselected design option, not an implementation commitment or qualification.",
       "classification_notes": "post-go-merge-a9f4-bf03-native-adoption-gap.md: full1456owner semantic search plus exact/canonical checks against24reviewed proposals; existing neutral owner freezes fixtures and six missing-lane port children cover C#/Dart/F#/Java/Kotlin/Swift, none owns native adoption in these nine existing roots. No compiler-ir-v1 reference found across the nine actual roots at the immutable pin; absence alone is not a native correctness verdict.",
-      "validation_plan": "Independent core-profile fixture reader with exact public API observations; actual native package/downstream suites, meaningful corpus/schema/mutation negatives, production coverage, lint/vet/build/front/metadata/parity/diff/security on final source. No package/native execution occurred in discovery."
+      "validation_plan": "Independent core-profile fixture reader with exact public API observations; actual native package/downstream suites, meaningful corpus/schema/mutation negatives, production coverage, lint/vet/build/front/metadata/parity/diff/security on final source. No package/native execution occurred in discovery.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-go-core-adoption-compatibility-plan.json"
+      ],
+      "worktree": "C:/Users/adhit/.codex/worktrees/parity-next-20261021/coding-adventures",
+      "started_at": "2026-10-21T05:56:36.942951+00:00",
+      "base_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
+      "selection_notes": "Exactly one successor after1517owner/2576edge reconciliation,28newpending discoveries and25savednote updates. Go1.26.4 available;18directconsumers; no directsource/spec overlap among25openPRs. Neutral BF03 externallymerged. Additive strict boundary preserves broadlegacy API/Nibdebugcomments; all50cases and25roles required. Source-map/duplicate-selector/.NETdigest alternatives retained; RustSTP01 heavier fullworkspace validation.",
+      "local_validation": {
+        "observed_at": "2026-10-21T06:20:48.606749+00:00",
+        "source_head": "531d1608bbb641a2d55a7c39361e6763c1188768",
+        "source_hashes": {
+          "code/packages/go/compiler-ir/core_profile.go": "aabde62bd4a06321b36b580082dda5c752516cde662754a1ceeadf7ae847b764",
+          "code/packages/go/compiler-ir/core_profile_test.go": "815a4e9df102a5db2e791e25fae2e9c106944a7721d56e45ac021b8965f49bbe",
+          "code/programs/go/build-tool/main.go": "bf70bf426317ad228e6824af27ade63bec469689e4473995c320394f1cdf099a",
+          "code/programs/go/build-tool/compiler_ir_core_ci_selection_test.go": "fc4bc3031f9611a86ab5e0abb36437bfcdb6adbf6b06c8b3c1d78c1768f09fbc"
+        },
+        "scope": "Go BF03 core-text-v1 native data/text component; no other lane/runtime/backend/full-build-tool qualification",
+        "native_package": {
+          "BUILD": "PASS go test ./... -v -cover",
+          "statements_covered": 280,
+          "statements_total": 281,
+          "percent": 99.644128,
+          "includes_generated_production": true,
+          "reader_coverage_credit": false,
+          "race": "PASS",
+          "vet": "PASS",
+          "build": "PASS",
+          "gofmt": "PASS",
+          "corpus_cases": 50,
+          "operation_roles": 25,
+          "fuzz_executions": 614689,
+          "fuzz_seconds": 10
+        },
+        "native_affected_closure": {
+          "force": false,
+          "discovered_go": 314,
+          "built": 61,
+          "skipped": 253,
+          "failed": 0,
+          "log": "bf03-go-native-plan-execution-final.log"
+        },
+        "fixture_only": {
+          "actual_unforced_detector_and_real_copied_native_BUILD": "PASS",
+          "exact_unchanged_corpus": true,
+          "affected": [
+            "go/compiler-ir"
+          ],
+          "log": "bf03-go-fixture-only-native-build-final.log"
+        },
+        "build_tool": {
+          "all15package_test_suites": "PASS",
+          "vet": "PASS",
+          "build": "PASS",
+          "selector_linux_darwin_windows_all_go_rust_and_atomic_plan": "PASS"
+        },
+        "all_language_metadata_plan": {
+          "packages": 5341,
+          "starlark_builds": 45,
+          "existing_exemptions": 38,
+          "status": "PASS"
+        },
+        "neutral_and_metadata": {
+          "compiler_ir_tests": 11,
+          "reporter_tests": 10,
+          "CI_registry_tests": 19,
+          "lessons_tests": 31,
+          "lesson_shards": 1296,
+          "collision_report": "PASS same15lanes1521identities4803slots;OCaml5emerging excluded",
+          "diff": "PASS"
+        },
+        "vulnerability": {
+          "tool": "govulncheck@v1.9.0",
+          "go": "go1.26.4",
+          "database": "vuln.go.dev updated2026-10-21T00:27:29Z",
+          "modules_scanned": [
+            "go/compiler-ir",
+            "go/programs/build-tool"
+          ],
+          "reachable": 0,
+          "unreachable_imported_package_advisories": 2,
+          "unreachable_module_advisories": 22
+        },
+        "independent_security_reviews": [
+          "bf03-go-security-code-review.md",
+          "bf03-go-security-data-review.md"
+        ],
+        "limitations": "Native BUILD execution on Windows; otherplatformdetectorplans tested, actualcrossplatformpackageCI pending. No reviewed exception or wholelane claim.",
+        "receipt": "bf03-go-local-validation-receipt.json"
+      },
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17905",
+      "ready_for_review_at": "2026-10-21T06:22:16.040789+00:00",
+      "ci_recovery": {
+        "observed_at": "2026-10-21T07:31:05.934362+00:00",
+        "failed_head": "d4d437c380934d5b2e3efded262cd696f6af4977",
+        "check_run": 119096369448,
+        "findings": "Three CodeQL go/incorrect-integer-conversion annotations in test fixture reader; workflow itself succeeded.",
+        "fix": "Wide native-int bounds before conversion; checked sequence count; native endpoints/types/32-bit admission tests. Production source unchanged.",
+        "validation": {
+          "amd64_package_coverage": "PASS280/281productionstatements99.644%",
+          "race": "PASS",
+          "vet": "PASS",
+          "build": "PASS",
+          "386_focused_integer_admission": "PASS actual Windows386execution",
+          "386_full_corpus": "NOT QUALIFIED: semantic-negative fixture values exceed legacy32bitnativeint; transport rejection not production credit",
+          "security": "PASS bf03-go-codeql-fix-security-review.md",
+          "codeql": "Await new-head hosted recheck; old failure remains until rescanned"
+        },
+        "test_sha256": "85f5f685445a9bd82ceeb36ebf3768b519baa3dc3864223855e08e401ee3a68f"
+      }
     },
     {
       "id": "compiler-ir-bf03-haskell-core-profile-adoption",
@@ -22467,7 +22769,10 @@
       "discovered_revision": "a9f4f459c4789405e2b7d44a2493111817388a95",
       "notes": "Existing compiler IR root code/packages/haskell/compiler-ir is package presence, not native conformance to the new shared BF03 core profile. After the neutral profile is frozen, consume its complete declared typed-ID/opcode/text/domain/error/resource/ownership cases through actual production APIs and an independent bounded shared-corpus reader; validate production coverage, real package/downstream BUILD fronts, metadata and final-head security/CI. Resolve existing profile discrepancies in this lane without using production output or source-majority as oracle. Preserve explicitly outside-profile extension opcodes, opaque ID/sentinel rules and source-map/runtime/backend scopes; completion qualifies only the reviewed core component, not the whole compiler IR identity or every extension. Deliver one coherent lane at a time; no nine-lane implementation bundle.",
       "classification_notes": "post-go-merge-a9f4-bf03-native-adoption-gap.md: full1456owner semantic search plus exact/canonical checks against24reviewed proposals; existing neutral owner freezes fixtures and six missing-lane port children cover C#/Dart/F#/Java/Kotlin/Swift, none owns native adoption in these nine existing roots. No compiler-ir-v1 reference found across the nine actual roots at the immutable pin; absence alone is not a native correctness verdict.",
-      "validation_plan": "Independent core-profile fixture reader with exact public API observations; actual native package/downstream suites, meaningful corpus/schema/mutation negatives, production coverage, lint/vet/build/front/metadata/parity/diff/security on final source. No package/native execution occurred in discovery."
+      "validation_plan": "Independent core-profile fixture reader with exact public API observations; actual native package/downstream suites, meaningful corpus/schema/mutation negatives, production coverage, lint/vet/build/front/metadata/parity/diff/security on final source. No package/native execution occurred in discovery.",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-haskell-bf03-validation-plan.json"
+      ]
     },
     {
       "id": "compiler-ir-bf03-lua-core-profile-adoption",
@@ -22564,6 +22869,397 @@
       "notes": "Existing compiler IR root code/packages/typescript/compiler-ir is package presence, not native conformance to the new shared BF03 core profile. After the neutral profile is frozen, consume its complete declared typed-ID/opcode/text/domain/error/resource/ownership cases through actual production APIs and an independent bounded shared-corpus reader; validate production coverage, real package/downstream BUILD fronts, metadata and final-head security/CI. Resolve existing profile discrepancies in this lane without using production output or source-majority as oracle. Preserve explicitly outside-profile extension opcodes, opaque ID/sentinel rules and source-map/runtime/backend scopes; completion qualifies only the reviewed core component, not the whole compiler IR identity or every extension. Deliver one coherent lane at a time; no nine-lane implementation bundle.",
       "classification_notes": "post-go-merge-a9f4-bf03-native-adoption-gap.md: full1456owner semantic search plus exact/canonical checks against24reviewed proposals; existing neutral owner freezes fixtures and six missing-lane port children cover C#/Dart/F#/Java/Kotlin/Swift, none owns native adoption in these nine existing roots. No compiler-ir-v1 reference found across the nine actual roots at the immutable pin; absence alone is not a native correctness verdict.",
       "validation_plan": "Independent core-profile fixture reader with exact public API observations; actual native package/downstream suites, meaningful corpus/schema/mutation negatives, production coverage, lint/vet/build/front/metadata/parity/diff/security on final source. No package/native execution occurred in discovery."
+    },
+    {
+      "id": "compiler-ir-bf03-ocaml-lane-parity",
+      "title": "Introduce the OCaml BF03 core compiler IR after reviewed lane promotion",
+      "status": "pending",
+      "delivery_class": "portable",
+      "depends_on": [
+        "ocaml-lane-promotion",
+        "compiler-ir-aot-neutral-conformance"
+      ],
+      "notes": "After actual reviewed OCaml promotion and BF03 neutral foundation merge, introduce the missing OCaml compiler-IR core package with actual production typed records,25named operations, checked core-profile validation, canonical print/parse and bounded ID generation. Consume the complete independent neutral corpus through a strict bounded native reader; preserve named rejection/golden witnesses, input/result ownership, resource limits, production coverage, capability checks, actual package/downstream BUILD fronts and CI. Existing infrastructure/buildtool/promotion owners remain separate; no source-map/runtime/backend/extension or whole-identity completion credit.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "device-physics-supplied-analytical-profile-classification",
+      "title": "Classify supplied analytical device-physics core",
+      "status": "pending",
+      "delivery_class": "portable",
+      "depends_on": [],
+      "notes": "Classify finite supplied-value constants, thermal/intrinsic/Fermi helpers, PN-junction and MOS threshold/body-effect component across existing Python/Rust roots under device-physics.md. Reconcile SI units and rounded versus exact constants, floating tolerance/finite numeric admission, valid T/doping/lifetime/bias domains, PMOS sign, low-temperature error propagation versus Rust fallback, input/result ownership, stable errors and resource limits before an independent neutral corpus or lane adoption. Distinguish broader I-V/mobility/TCAD/spec promises from admitted implemented core. Exclude hardware/real-device accuracy, SPICE engine/model cards, PDK/table loads, PDE/quantum/native runtime/backend/external authority. Classification only; whole identity/adopters remain unqualified.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "fab-process-simulation-supplied-cross-section-profile-classification",
+      "title": "Classify supplied one-dimensional fab cross-section core",
+      "status": "pending",
+      "delivery_class": "portable",
+      "depends_on": [],
+      "notes": "Classify supplied bounded layer/doping cross-sections and Deal-Grove oxidation, deposition, selective etch, tabulated/interpolated implant and diffusion component across Python/Rust under fab-process-simulation.md. Reconcile units/table versions/tolerances, zero-time and missing-Si/dose errors, finite sample/work bounds, input/result ownership including Python implant list aliasing, no-op sample-preserving diffusion versus required Fick broadening/mass conservation, and oxide Si consumption/doping preservation. Keep recipe/mask/lithography/CMP/anneal/silicide/full process and Vt-to-device integration explicit unqualified extensions. Exclude TCAD/PDE, Sky130/PDK loads or calibrated physical/fabrication fidelity, SPICE/tool/process/hardware/external authority. No unconditional device-physics edge for standalone transforms: actual inspected core imports none and Rust manifest is dependency-free; revisit required edge if future scope includes threshold integration. Classification only; whole identity/adopters remain unqualified.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "cas-factor-finite-polynomial-profile-classification",
+      "depends_on": [],
+      "scope": "Classify finite integer-polynomial factoring helper/result contracts, content/sign/multiplicity/order, bounded residual versus irreducibility claims, and selected symbolic handler boundaries. Separate multivariate Hensel extensions; no adopter or whole-package qualification.",
+      "status": "pending",
+      "delivery_class": "portable",
+      "registration": "external proposal only; not registered or selected",
+      "limits": "Requires parent review and fresh postmerge full-owner reconciliation; no native or whole-package parity.",
+      "title": "Classify finite polynomial factoring and residual-result policy",
+      "notes": "Classify finite integer-polynomial factoring helper/result contracts, content/sign/multiplicity/order, bounded residual versus irreducibility claims, and selected symbolic handler boundaries. Separate multivariate Hensel extensions; no adopter or whole-package qualification. Requires parent review and fresh postmerge full-owner reconciliation; no native or whole-package parity.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "cas-algebraic-quadratic-extension-profile-classification",
+      "depends_on": [
+        "cas-factor-finite-polynomial-profile-classification"
+      ],
+      "scope": "Classify finite exact Q[sqrt(d)] monic quadratic/depressed-quartic and full integer-factor-first orchestration profiles, rational transport, no-split/domain/content semantics, and separate IR/handler boundary. No general algebraic-field factoring or VM qualification.",
+      "status": "pending",
+      "delivery_class": "portable",
+      "registration": "external proposal only; not registered or selected",
+      "limits": "Requires parent review and fresh postmerge full-owner reconciliation; no native or whole-package parity.",
+      "title": "Classify exact quadratic-extension polynomial splitting",
+      "notes": "Classify finite exact Q[sqrt(d)] monic quadratic/depressed-quartic and full integer-factor-first orchestration profiles, rational transport, no-split/domain/content semantics, and separate IR/handler boundary. No general algebraic-field factoring or VM qualification. Requires parent review and fresh postmerge full-owner reconciliation; no native or whole-package parity.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "cas-trig-symbolic-numeric-profile-classification",
+      "depends_on": [],
+      "scope": "Classify exact symbolic special-angle and bounded expansion/reduction profiles separately from finite floating evaluation, structural canonicalization, error/fallthrough and resource limits. No frontend aliases, full simplifier, VM integration or native adopter qualification.",
+      "status": "pending",
+      "delivery_class": "portable",
+      "registration": "external proposal only; not registered or selected",
+      "limits": "Requires parent review and fresh postmerge full-owner reconciliation; no native or whole-package parity.",
+      "title": "Classify supplied symbolic and numeric trigonometric profiles",
+      "notes": "Classify exact symbolic special-angle and bounded expansion/reduction profiles separately from finite floating evaluation, structural canonicalization, error/fallthrough and resource limits. No frontend aliases, full simplifier, VM integration or native adopter qualification. Requires parent review and fresh postmerge full-owner reconciliation; no native or whole-package parity.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "cas-simplify-canonical-rewrite-profile-classification",
+      "depends_on": [
+        "cas-pattern-matching-symbolic-tree-neutral-classification"
+      ],
+      "scope": "Classify finite canonical/numeric-fold/fixed-point rewrite contracts, structural ordering, domain/error/cycle outcomes, and explicitly supplied assumption-context extensions. Reconcile broad spec/API drift; no whole-package/adopter/VM parity.",
+      "status": "pending",
+      "delivery_class": "portable",
+      "registration": "external unregistered proposal only",
+      "limits": "Parent review and fresh postmerge ownership reconciliation before registration or selection. No native/whole-package/adopter parity.",
+      "title": "Classify canonical symbolic simplification and rewrite policy",
+      "notes": "Classify finite canonical/numeric-fold/fixed-point rewrite contracts, structural ordering, domain/error/cycle outcomes, and explicitly supplied assumption-context extensions. Reconcile broad spec/API drift; no whole-package/adopter/VM parity. Parent review and fresh postmerge ownership reconciliation before registration or selection. No native/whole-package/adopter parity.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "cas-solve-exact-numeric-profile-classification",
+      "depends_on": [],
+      "scope": "Classify bounded exact degree1-4 and square linear-system profiles separately from numeric roots, transcendental/inequality extensions, sentinel/fallback/domain/precision/convergence semantics. No generic Solve orchestrator/VM or complete root-certification claim.",
+      "status": "pending",
+      "delivery_class": "portable",
+      "registration": "external unregistered proposal only",
+      "limits": "Parent review and fresh postmerge ownership reconciliation before registration or selection. No native/whole-package/adopter parity.",
+      "title": "Classify bounded exact and numeric equation-solving profiles",
+      "notes": "Classify bounded exact degree1-4 and square linear-system profiles separately from numeric roots, transcendental/inequality extensions, sentinel/fallback/domain/precision/convergence semantics. No generic Solve orchestrator/VM or complete root-certification claim. Parent review and fresh postmerge ownership reconciliation before registration or selection. No native/whole-package/adopter parity.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "cas-limit-series-finite-analysis-profile-classification",
+      "depends_on": [
+        "cas-substitution-symbolic-tree-neutral-classification"
+      ],
+      "scope": "Classify direct structural limits and polynomial Taylor profiles separately from advanced/series fallbacks and optional callback traces, bounded errors and resource domains. Reconcile stale specs; no full analysis/VM/callback authority claim.",
+      "status": "pending",
+      "delivery_class": "portable",
+      "registration": "external unregistered proposal only",
+      "limits": "Parent review and fresh postmerge ownership reconciliation before registration or selection. No native/whole-package/adopter parity.",
+      "title": "Classify supplied finite limit and series-analysis profiles",
+      "notes": "Classify direct structural limits and polynomial Taylor profiles separately from advanced/series fallbacks and optional callback traces, bounded errors and resource domains. Reconcile stale specs; no full analysis/VM/callback authority claim. Parent review and fresh postmerge ownership reconciliation before registration or selection. No native/whole-package/adopter parity.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "cas-fourier-finite-symbolic-table-profile-classification",
+      "status": "pending",
+      "depends_on": [],
+      "scope": "Classify finite supplied symbolic Fourier/inverse-table mappings, exact structural/head/convention/admission/linearity/fallthrough/resource boundary; separate evaluator/VM adapter from mathematical transform validity. Preserve existing Python Laplace-Fourier build-front ownership.",
+      "delivery_class": "portable",
+      "registration": "external unregistered proposal; needs parent review/fresh postmerge ownership reconciliation",
+      "limits": "Finite supplied-data/stage profile only; no native, whole-package, VM integration, transform theorem or numeric accuracy/stability qualification.",
+      "title": "Classify supplied finite symbolic Fourier and Laplace tables",
+      "notes": "Classify finite supplied symbolic Fourier/inverse-table mappings, exact structural/head/convention/admission/linearity/fallthrough/resource boundary; separate evaluator/VM adapter from mathematical transform validity. Preserve existing Python Laplace-Fourier build-front ownership. Finite supplied-data/stage profile only; no native, whole-package, VM integration, transform theorem or numeric accuracy/stability qualification.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "cas-ode-numeric-finite-stage-profile-classification",
+      "status": "pending",
+      "depends_on": [],
+      "scope": "Classify finite RK4 stage/grid/trajectory/evaluation-result and error profiles with supplied declarative RHS/callback traces, separately identify Python VM binding/restoration obligations; no arbitrary callback authority, native VM equivalence or numerical accuracy/stability promise.",
+      "delivery_class": "portable",
+      "registration": "external unregistered proposal; needs parent review/fresh postmerge ownership reconciliation",
+      "limits": "Finite supplied-data/stage profile only; no native, whole-package, VM integration, transform theorem or numeric accuracy/stability qualification.",
+      "title": "Classify supplied finite numeric ODE stage profiles",
+      "notes": "Classify finite RK4 stage/grid/trajectory/evaluation-result and error profiles with supplied declarative RHS/callback traces, separately identify Python VM binding/restoration obligations; no arbitrary callback authority, native VM equivalence or numerical accuracy/stability promise. Finite supplied-data/stage profile only; no native, whole-package, VM integration, transform theorem or numeric accuracy/stability qualification.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "aot-core-lang04-portable-component-classification",
+      "title": "Classify LANG04 inert AOT artifacts and supplied compilation policy",
+      "status": "pending",
+      "delivery_class": "portable",
+      "depends_on": [],
+      "notes": "Classify aot-core Python/Rust portable components under LANG04: opaque supplied native/IIR/library byte linking and offsets, versioned26-byte AOT snapshot admission/ownership/errors/resources, and finite supplied-IIR inference/specialization/orchestration policy as separately qualified tiers. Reconcile spec version01 00 versus implemented0x0100 little-endian, JSON IIR-table dialect versus LANG01 wire, trailing appended runtime bytes/flags/entry/collision rules and counts. Classification/inert bytes need no BF03/VM/backend prerequisite; later actual IIR/CIR policy tiers must reconcile existing interpreter-ir/codegen/jit classification contracts rather than bypass them. Never invoke arbitrary backend callbacks, clocks, compile_to_file, executable loading, native ABI/linker/runtime/VM/GC/debugger execution or grant real native-code correctness/whole-package/adopter credit. Preserve LANG10 code-packager, BF03 compiler IR/optimizer and source-map owners as distinct.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "debug-sidecar-lang13-inert-metadata-profile-classification",
+      "title": "Classify LANG13 supplied debug metadata and wire profiles",
+      "status": "pending",
+      "delivery_class": "portable",
+      "depends_on": [],
+      "notes": "Classify finite supplied-path/checksum/function/instruction/source/variable metadata writer/reader/query behavior across existing Python/Rust debug-sidecar roots. Name current JSONv1 versus future05d DBG binary/scopes/directory profiles explicitly; do not call JSON binary conformance. Freeze nearest-preceding/duplicate/sorted-row and reverse-minimum semantics, function/liveness bounds/order, source dedup/checksum policy, nonnegative integer/range checks before Rust narrowing/Python indexing, strict bounded duplicate/shape/version/scalar JSON admission and stable errors/ownership/work/output. Metadata filenames/checksums are supplied inert values, not filesystem or SHA-computation requirements. Keep compiler-source-map four-stage composition, DWARF/native-debug-info, live debugger/DAP/VM, file loading, checksums against host files, ABI/runtime/native authority and full-format/adopter credit outside. Classification requires no unconditional BF03/IIR/VM/SHA/packager edge; review future integrations separately.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "ge225-simulator-07g-profile-classification",
+      "status": "pending",
+      "depends_on": [],
+      "scope": "Classify finite supplied-word GE225 behavioral machine/trace/lifecycle/error/device-event profiles; reconcile compiler-MVP versus corrected-manual Rust completion and other actual lane differences. Keep gate-level/protocol and full historical CPU qualification distinct.",
+      "delivery_class": "portable",
+      "registration": "external unregistered proposal; parent review/fresh postmerge ownership reconciliation required",
+      "limits": "No all-language target applicability, native/runtime/physical fidelity, whole-package/adopter, C/C++ or full ISA completion qualification.",
+      "title": "Classify supplied GE225 behavioral machine profile",
+      "notes": "Classify finite supplied-word GE225 behavioral machine/trace/lifecycle/error/device-event profiles; reconcile compiler-MVP versus corrected-manual Rust completion and other actual lane differences. Keep gate-level/protocol and full historical CPU qualification distinct. No all-language target applicability, native/runtime/physical fidelity, whole-package/adopter, C/C++ or full ISA completion qualification.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "dartmouth-basic-ge225-composition-profile-classification",
+      "status": "pending",
+      "depends_on": [
+        "dartmouth-basic-pl02-ir-neutral-conformance",
+        "ge225-simulator-07g-profile-classification",
+        "ir-to-ge225-compiler-ir01-lowering-profile-classification"
+      ],
+      "scope": "Classify finite source-to-GE225 runner composition: width20/encoding, image/layout handoff, halt-step budget, output normalization, spill variable projection and stage errors. Reuse PL02 and simulator profiles; assess unresolved IR01 lowering prerequisite without claiming backend/adopter/runtime delivery.",
+      "unresolved_prerequisite_review": "Full pipeline/native qualification needs a separately reviewed IR01 ir-to-ge225-compiler artifact contract/owner. This audit reads governing IR01 and runner handoff only; no third package ownership proposed or inferred.",
+      "delivery_class": "portable",
+      "registration": "external unregistered proposal; parent review/fresh postmerge ownership reconciliation required",
+      "limits": "No all-language target applicability, native/runtime/physical fidelity, whole-package/adopter, C/C++ or full ISA completion qualification.",
+      "title": "Classify Dartmouth BASIC GE225 runner composition",
+      "notes": "Classify finite source-to-GE225 runner composition: width20/encoding, image/layout handoff, halt-step budget, output normalization, spill variable projection and stage errors. Reuse PL02 and simulator profiles; assess unresolved IR01 lowering prerequisite without claiming backend/adopter/runtime delivery. No all-language target applicability, native/runtime/physical fidelity, whole-package/adopter, C/C++ or full ISA completion qualification. Backend ownership review now proposes the distinct IR01 lowering classifier as a required prerequisite; see bf03-pending-ge225-ir01-ownership-review.md. No full runner qualification. IR01 lowering prerequisite is now registered in depends_on; older unresolved-prerequisite proposal prose is historical. Do not add the edge twice.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "ir-to-ge225-compiler-ir01-lowering-profile-classification",
+      "status": "pending",
+      "depends_on": [
+        "compiler-ir-aot-neutral-conformance",
+        "ge225-simulator-07g-profile-classification"
+      ],
+      "delivery_class": "portable",
+      "scope": "Classify finite supplied BF03 IrProgram -> IR01 GE225 inert packed image/label/halt/data layout and diagnostics/resource contracts in existing Python/Rust; reconcile manual/core dialect and branch-word divergence. Direct functions first; preserve LANG20 generic adapter ownership and separate CIR/IIR/AOT/runtime scopes.",
+      "limits": "External unregistered classifier proposal only; requires parent review and fresh postmerge ownership reconciliation. No native execution, full pipeline, whole package, all-language target applicability, historical fidelity or adapter protocol qualification.",
+      "title": "Classify supplied BF03 to IR01 GE225 inert lowering",
+      "notes": "Classify finite supplied BF03 IrProgram -> IR01 GE225 inert packed image/label/halt/data layout and diagnostics/resource contracts in existing Python/Rust; reconcile manual/core dialect and branch-word divergence. Direct functions first; preserve LANG20 generic adapter ownership and separate CIR/IIR/AOT/runtime scopes. External unregistered classifier proposal only; requires parent review and fresh postmerge ownership reconciliation. No native execution, full pipeline, whole package, all-language target applicability, historical fidelity or adapter protocol qualification.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "brainfuck-iir-bf04-supplied-lowering-classification",
+      "title": "Classify BF04 supplied Brainfuck to IIR lowering",
+      "status": "pending",
+      "delivery_class": "portable",
+      "depends_on": [
+        "interpreter-ir-lang01-neutral-data-wire-classification"
+      ],
+      "notes": "Classify finite BF04 source/AST to LANG01 module/instruction projection, source grammar/bracket/depth admission, main/type/operand/label/memory/u8/EOF emission and deterministic error/ownership/resource policy across Python/Rust. Reconcile Python u8 getchar/store versus Rust i64 high-bit mask and arm-local stores, ignored malformed AST behavior and source comments. Reuse owned IIR data/wire and Brainfuck source classification, not BF03 register IR or a new opaque IIR foundation. Exclude BrainfuckVM/JIT backend.run, simulator/VM/WASM/native execution, host I/O/filesystem/clock/ABI authority and full identity/adopter credit. Lane/runtime applicability requires later reviewed decomposition.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "brainfuck-jvm-source-pipeline-profile-classification",
+      "title": "Classify supplied Brainfuck to JVM artifact orchestration",
+      "status": "pending",
+      "delivery_class": "portable",
+      "depends_on": [
+        "ir-to-jvm-class-file-neutral-byte-lowering-conformance",
+        "ir-optimizer-neutral-ir-to-ir-conformance"
+      ],
+      "notes": "Classify finite source/AST to BF02 IR, optional/default optimizer, JVM backend artifact and parsed-class result orchestration/config/error/ownership/resource profiles. Existing Python/Rust representative APIs and Go/TS roots are presence only. Reuse existing BF03, JVM class-file/backend and BF02/Nib producer staging owners; do not duplicate encoders or infer a Wasm dependency from the grouped Nib classifier. Pin class/main-wrapper/default options, stage labels and literal source-to-artifact witnesses only after prerequisites; target JVM does not restrict implementation language to JVM hosts. Optional disk writers and Java/Graal execution/host environment/process/runtime/ABI remain outside; no whole identity/adopter/all-lane credit.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "brainfuck-clr-source-pipeline-profile-classification",
+      "title": "Classify supplied Brainfuck to CIL and CLI artifact orchestration",
+      "status": "pending",
+      "delivery_class": "portable",
+      "depends_on": [
+        "ir-to-cil-bytecode-neutral-encoding-lowering-classification",
+        "ir-optimizer-neutral-ir-to-ir-conformance"
+      ],
+      "notes": "Classify finite BF02 source/AST/IR plus optional/default optimizer to named CIL method artifact versus PE/CLI assembly profiles, metadata/options/stage errors/ownership/resources across Python/Rust. Python returns assembly bytes plus decoded PE; Rust returns CIL method bytes, so no shared full-assembly contract is established. Reuse existing BF03/CIL/token/byte-builder/format owners and BF02/Nib producer staging; no new CIL/opaque IIR foundation. Declare additional assembly profile dependencies only if that tier is admitted. Exclude writer filesystem, CLR simulator/.NET/VM/JIT/native execution, runtime stdlib/token/ABI authority and full identity/adopter credit; CLI target is not an implementation-language denominator.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "hdl-elaboration-supplied-ast-hir-profile-classification",
+      "status": "pending",
+      "depends_on": [
+        "hdl-ir-neutral-schema-conformance"
+      ],
+      "scope": "Classify bounded supplied structural Verilog AST -> HIR module/port/continuous-assignment/expression/provenance transforms, module/top/duplicate/error/copy/resource decisions. Separate parsed-source adapters and broad VHDL/Ruby/parameter/generate/hierarchy promises; no HDL simulation/synthesis qualification.",
+      "delivery_class": "portable",
+      "registration": "external unregistered classifier only; parent review/fresh postmerge reconciliation required",
+      "limits": "Only finite supplied AST/HIR or HNL/config data profile. No native, whole-package/adopter, HDL simulation, F01 execution, physical toolchain/bitstream or reviewed exception qualification.",
+      "title": "Classify supplied HDL AST to HIR elaboration profile",
+      "notes": "Classify bounded supplied structural Verilog AST -> HIR module/port/continuous-assignment/expression/provenance transforms, module/top/duplicate/error/copy/resource decisions. Separate parsed-source adapters and broad VHDL/Ruby/parameter/generate/hierarchy promises; no HDL simulation/synthesis qualification. Only finite supplied AST/HIR or HNL/config data profile. No native, whole-package/adopter, HDL simulation, F01 execution, physical toolchain/bitstream or reviewed exception qualification.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "fpga-place-route-bridge-hnl-config-profile-classification",
+      "status": "pending",
+      "depends_on": [
+        "gate-netlist-format-hnl-neutral-schema-conformance",
+        "fpga-f01-neutral-conformance-and-existing-lane-reconciliation"
+      ],
+      "scope": "Classify bounded supplied flat HNL primitive cells -> literal LUT-table/row-major config/route-name/report data and F01 config admission. Reconcile synthetic connectivity/capacity/domain/order errors before compatibility claims. No SA/PathFinder/external tools, real bitstream or physical P&R qualification.",
+      "delivery_class": "portable",
+      "registration": "external unregistered classifier only; parent review/fresh postmerge reconciliation required",
+      "limits": "Only finite supplied AST/HIR or HNL/config data profile. No native, whole-package/adopter, HDL simulation, F01 execution, physical toolchain/bitstream or reviewed exception qualification.",
+      "title": "Classify supplied HNL to FPGA configuration bridge",
+      "notes": "Classify bounded supplied flat HNL primitive cells -> literal LUT-table/row-major config/route-name/report data and F01 config admission. Reconcile synthetic connectivity/capacity/domain/order errors before compatibility claims. No SA/PathFinder/external tools, real bitstream or physical P&R qualification. Only finite supplied AST/HIR or HNL/config data profile. No native, whole-package/adopter, HDL simulation, F01 execution, physical toolchain/bitstream or reviewed exception qualification.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "intel-8008-ir-validator-oct01-profile-classification",
+      "status": "pending",
+      "depends_on": [
+        "compiler-ir-aot-neutral-conformance"
+      ],
+      "delivery_class": "portable",
+      "scope": "Classify finite supplied BF03 IrProgram -> six OCT01 target-policy diagnostic passes: word op/staticRAM/call graph/register/immediate/SYSCALL rules, stable ordering/dedup/cycle witness/error/resource and reuse/copy boundaries. Reconcile sparse index, function-label interpretation and calling-convention claims; no code generation/assembly/CPU execution or physical feasibility qualification.",
+      "registration": "External unregistered classifier only; parent review/fresh postmerge ownership reconciliation required.",
+      "title": "Classify supplied OCT01 Intel8008 IR diagnostics",
+      "notes": "Classify finite supplied BF03 IrProgram -> six OCT01 target-policy diagnostic passes: word op/staticRAM/call graph/register/immediate/SYSCALL rules, stable ordering/dedup/cycle witness/error/resource and reuse/copy boundaries. Reconcile sparse index, function-label interpretation and calling-convention claims; no code generation/assembly/CPU execution or physical feasibility qualification.  Include Rust ir-to-intel-8008-compiler embedded public IrValidator as a second target-policy surface under this same owner. It is not a dependency on standalone crate: no call_depth, static_data identifier, per-instruction repeated diagnostics, sparseindex>5 rejection differ from standalone six-pass/cardinality-only behavior. Resolve policies rather than add duplicate owner.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-ir-intel8008-lowering-classification.json"
+      ]
+    },
+    {
+      "id": "ir-to-intel-8008-compiler-oct01-assembly-profile-classification",
+      "status": "pending",
+      "depends_on": [
+        "compiler-ir-aot-neutral-conformance",
+        "intel-8008-ir-validator-oct01-profile-classification",
+        "intel-8008-assembler-oct01-neutral-conformance"
+      ],
+      "delivery_class": "portable",
+      "scope": "Classify finite supplied BF03 IrProgram -> inert OCT01 assembly text and validate/generate facade profiles; register/address/intrinsic assumptions, support matrix, label hygiene/reuse, formatting, stable unsupported/malformed/errors/resources. Reuse validator policy and target assembly dialect; keep generic LANG20 protocol, binary packager/CPU/runtime separate.",
+      "registration": "External unregistered classifier; parent review/fresh postmerge ownership reconciliation required.",
+      "title": "Classify supplied CompilerIR to OCT01 Intel8008 assembly",
+      "notes": "Classify finite supplied BF03 IrProgram -> inert OCT01 assembly text and validate/generate facade profiles; register/address/intrinsic assumptions, support matrix, label hygiene/reuse, formatting, stable unsupported/malformed/errors/resources. Reuse validator policy and target assembly dialect; keep generic LANG20 protocol, binary packager/CPU/runtime separate. ",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "jit-profiling-insights-lang11-supplied-report-profile-classification",
+      "title": "Classify LANG11 supplied profiling insight and report profile",
+      "status": "pending",
+      "depends_on": [
+        "interpreter-ir-lang01-neutral-data-wire-classification"
+      ],
+      "delivery_class": "portable",
+      "source_revision": "0fba2a598ae44b4b7456c807547bfd6e44b0c325",
+      "notes": "Classify finite caller-supplied annotated IIR to dispatch cost/root-register/weighted stable ranking/structured report and inert text-JSON profiles. Freeze actual deopt-count versus anchor projection, precedence, scalar/count/threshold/overflow/rounding/top-N/text/ownership/aggregate-work domains and independent literal witnesses. Existing LANG03 specialization/cache policy and 05b/05c shell owners remain distinct; no collecting profiler, JIT execution, native probe/clock/process/memory or external report delivery. Future native readers/adopters separate; no whole identity or measured performance claim.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
+    },
+    {
+      "id": "logic-engine-finite-relational-profile-classification",
+      "status": "pending",
+      "depends_on": [
+        "logic-core-lp00-portable-profile-classification"
+      ],
+      "delivery_class": "portable",
+      "selection_blocked": false,
+      "scope": "Classify actual Python LP01/LP02+later goal/runtime extensions versus Rust LP19 probability/KB/proof/numeric extensions; freeze finite supplied certain positive clause/query resolution and explicit answer/mode/order/alpha-renaming/error/resource boundaries first, keeping callback/store/probability and other extensions separately qualified. No Prolog completeness, solver truth or runtime/native assurance.",
+      "registration": "External unregistered pending classification proposal; dependency-gated on existing LP00; parent fresh postmerge reconciliation required.",
+      "prerequisite_resolution": "Reuse existing current-parity journal pending logic-core-lp00-portable-profile-classification, deps[],selection_blockedfalse. Its referenced audit/review explicitly covers the finite term/variable/substitution/unification/occurs/reification and Python state/goals/disequality split required by this finite engine classification. No new LP00 owner/review item.",
+      "title": "Classify finite supplied relational logic-engine profiles",
+      "notes": "Classify actual Python LP01/LP02+later goal/runtime extensions versus Rust LP19 probability/KB/proof/numeric extensions; freeze finite supplied certain positive clause/query resolution and explicit answer/mode/order/alpha-renaming/error/resource boundaries first, keeping callback/store/probability and other extensions separately qualified. No Prolog completeness, solver truth or runtime/native assurance. Retain LP07 logic-instructions supplied record/static-admission boundary as an explicit adjacent applicability question before whole instruction-stream/logic-engine family delivery. CurrentPython0.2.0 has5top-level DEF_REL,DYNAMIC_REL,FACT,RULE,QUERY records, ordered declaration/ground-fact/explicit-goal checks and separate assemble/run helpers. These are not WAM/raw bytecode. Finite closed profile must exclude NativeGoalExpr/DeferredExpr/host callbacks and arbitrary object conversion; validate intentionally leaves deferred opaque and does not prove execution safety/termination. Public dataclass container annotation does not enforce tuple ownership, and helper snapshots differ. Review counts/depth/numeric/label/output None-v-empty/order/dynamic effects with imported LP00/engine data; no new unconditional edge or namespace/VM execution qualification. Coordinate broad existing compiler-and-ir-rust-singleton-foundation rather than infer exclusion from missing exactalias.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-logic-engine-classification.json",
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-logic-instructions-classification.json"
+      ]
+    },
+    {
+      "id": "prolog-operator-parser-pr06-supplied-token-profile-classification",
+      "title": "Classify supplied-token Prolog operator parsing and finite frontend effects",
+      "status": "pending",
+      "depends_on": [],
+      "delivery_class": "portable",
+      "selection_blocked": false,
+      "scope": "Classify Python prolog-operator-parser supplied token/operator-table entrypoints and finite term/goal/clause/query projection, source-order op/3 and predicate-registry data updates, and DCG expansion; reconcile historical PR06/PR07 non-goals with current API. Define finite table/token/numeric/alpha/error/ownership/resource boundaries. No query/solver/loader/hook execution, ISO/SWI completeness, native authority, corpus delivery or lane ports.",
+      "notes": "Distinct component from tracked PR01 foundation which explicitly excludes operator tables/directives/DCG. Existing PR00/PR01/LP00 and pending logic-engine owner retained; no duplicate of their base profiles. Token-level classification can be authored from supplied literal data; imports and later adapter construction closure alone do not prove a required full lexer/parser/solver delivery prerequisite.",
+      "report": "bf03-pending-logic-parser-classification.md",
+      "registration": "External proposal only; parent fresh reconciliation and independent review required.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-prolog-operator-fixture-plan.json"
+      ]
+    },
+    {
+      "id": "dotnet-wasm-opcodes-build-coverage-enforcement",
+      "title": "Wire and prove C# and F# WasmOpcodes BUILD coverage gates",
+      "status": "pending",
+      "depends_on": [],
+      "delivery_class": "portable",
+      "selection_blocked": false,
+      "scope": "Repair only repository-declared coverage instrumentation/report/threshold enforcement for the existing C# and F# wasm-opcodes packages and their Unix/Windows BUILD fronts. Wire a real reviewed MSBuild coverage provider or an explicitly selected collector plus independent fail-closed threshold evaluator; retain production-only reports and a negative threshold-enforcement witness. Preserve at least the declared80%line floor and enforce the governing library-quality target (currently95%) where applicable; do not lower thresholds or waive the governing target. No Wasm opcode/VM semantic expansion or all-.NET sweep.",
+      "notes": "Both WasmOpcodes fronts pass CollectCoverage/Threshold/ThresholdType but no project/shared configuration wires the MSBuild coverage consumer. C# has no Coverlet package; F# has collector6.0.4 only and no --collect or runsettings selection/threshold evaluator. CtCompare already references CoverletMSBuild6.0.2; preserve its existing CT01 adoption owner. Static evidence only; no native failure or coverage percentage measured. Fresh main includes PR17830 artifact-output isolation via --artifacts-path; provider/report/threshold enforcement remains pending. Historical source pins in preparation are not a fresh native result.",
+      "report": "bf03-pending-dotnet-coverage-ownership-review.md",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
+      "postmerge_preparation_evidence": [
+        "code/specs/package-parity-audits/20261021-bf03-postmerge.json#bf03-pending-dotnet-wasm-coverage-validation-plan.json"
+      ]
+    },
+    {
+      "id": "x509-rsa-public-verification-stack-profile-classification",
+      "title": "Classify supplied public RSA and X.509 structural, policy and snapshot components",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "delivery_class": "boundary-classification",
+      "selection_blocked": false,
+      "discovered_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c",
+      "notes": "Classify 13 new Rust-only supplied-data components before native or lane delivery: complete certificate structural composition; five DirectoryString encodings, opaque Teletex and exact scalar comparison; supplied-equivalence structural Name comparison; explicit critical-extension, role, algorithm, purpose, SAN, time, issuer-link and self-issued policies; unique issuer selection and exact-certificate-bound evidence; path-length state; RSA SPKI, modulus and exponent admission; fixed-width public RSA operation; exact PKCS #1 v1.5 SHA-256 encoded-message validation; certificate-signature and selected-issuer composition; pinned 121-entry Web PKI snapshot bytes, provenance and exact membership. Reuse existing DER TLV, ASN.1, X.509 field, tls-server-identity, numeric foundations/bignum and SHA-256 contracts. Neutral callback fixtures must contain inert equivalence/result records, never executable code. Classifier dependencies are empty because this is applicability review only; future profile and native children require exact proven prerequisites. Empty capabilities and static presence prove no native conformance, cryptographic correctness, production security, live trust or snapshot freshness. Exclude private keys, signing, secret constant-time claims, root acquisition or updating, platform trust, clocks, revocation, path validation, name constraints, TLS, HTTP, OAuth, network, native authority and external approval. No reviewed exception or multi-lane port bundle is delivered.",
+      "registered_at": "2026-10-21T05:55:30.688172+00:00",
+      "registration_revision": "22755d9313ce8fed25a7e9a14aa96cb6865b9e4c"
     }
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C238-dokusho",
+  "pathSegment": "JA-PATH-238-BOOKS238",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-238-BOOKS238",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:fccc801f138a7548",
+  "lessonIds": [
+    "RU-C341-protivorechit",
+    "RU-C341-otvergat",
+    "RU-C341-kompromiss",
+    "RU-C341-nastaivat",
+    "RU-C341-priznavat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch341.txt",
+  "json": "russian/narration/ch341.json",
+  "textHash": "fnv1a64:52a0e19389bc40ed",
+  "jsonHash": "fnv1a64:ec975100f2d0fa7a",
+  "findings": []
+}

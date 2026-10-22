@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C343-osuzhdat",
+    "language": "russian",
+    "chapter": 343,
+    "sequence": 20130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ce6fc91e80e1d81"
+  },
+  "findings": []
+}

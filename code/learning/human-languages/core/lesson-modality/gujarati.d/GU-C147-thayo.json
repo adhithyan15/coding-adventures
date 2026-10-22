@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C147-thayo",
+    "language": "gujarati",
+    "chapter": 147,
+    "sequence": 7760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d604ebef8bcd50cd"
+  },
+  "findings": []
+}

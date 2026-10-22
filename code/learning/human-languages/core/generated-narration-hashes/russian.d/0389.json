@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:3f242be6f44e7559",
+  "lessonIds": [
+    "RU-C389-zapreshchat",
+    "RU-C389-zapret",
+    "RU-C389-razreshat",
+    "RU-C389-razreshenie",
+    "RU-C389-pozvolyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch389.txt",
+  "json": "russian/narration/ch389.json",
+  "textHash": "fnv1a64:643c51d5ba75743b",
+  "jsonHash": "fnv1a64:3158247d277821cc",
+  "findings": []
+}

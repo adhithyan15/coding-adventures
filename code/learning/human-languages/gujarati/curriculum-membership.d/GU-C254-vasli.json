@@ -1,0 +1,11 @@
+{
+  "id": "GU-C254-vasli",
+  "pathSegment": "GU-PATH-254-MUSIC254",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-254-MUSIC254",
+      "order": 3
+    }
+  ]
+}

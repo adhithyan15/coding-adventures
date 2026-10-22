@@ -1,0 +1,14 @@
+{
+  "language": "persian",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:f8d5529c11ec772a",
+  "lessonIds": [
+    "FA-C415-makharej",
+    "FA-C415-surathesab",
+    "FA-C415-karmozd",
+    "FA-C415-darsad",
+    "FA-C415-velkharj",
+    "FA-R415-review-408-415"
+  ],
+  "tex": "persian/book/chapters/ch415-bills-and-fees.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "The forecast",
+  "label": "ch:fa-the-forecast",
+  "canDo": "I can follow a forecast: the climate, the weather service, degrees, changes in the weather and below zero.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C473-zir-e-sefr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can follow a forecast: the climate, the weather service, degrees, changes in the weather and below zero.",
+    "assesses": [
+      "FA-LEX-C473-HAVASHENASI-03",
+      "FA-LEX-C473-HAVASHENASI-04",
+      "FA-LEX-C473-HAVASHENASI-05"
+    ]
+  }
+}

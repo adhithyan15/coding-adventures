@@ -1,0 +1,11 @@
+{
+  "id": "FA-C413-yarane",
+  "pathSegment": "FA-PATH-413-EQTESAD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-413-EQTESAD",
+      "order": 3
+    }
+  ]
+}

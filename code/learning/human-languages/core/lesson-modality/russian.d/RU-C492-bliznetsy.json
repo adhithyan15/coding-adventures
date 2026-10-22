@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C492-bliznetsy",
+    "language": "russian",
+    "chapter": 492,
+    "sequence": 27800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e174c2a6010d0ff0"
+  },
+  "findings": []
+}

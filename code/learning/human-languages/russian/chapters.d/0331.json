@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Dough",
+  "label": "ch:ru-dough",
+  "canDo": "I can describe making dough: dough, kneading, rolling out, shaping and a filling.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "RU-C331-nachinka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can describe making dough: dough, kneading, rolling out, shaping and a filling.",
+    "assesses": [
+      "RU-LEX-C331-TESTO-03",
+      "RU-LEX-C331-TESTO-04",
+      "RU-LEX-C331-TESTO-05"
+    ]
+  }
+}

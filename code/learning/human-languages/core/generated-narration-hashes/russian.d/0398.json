@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:3876237e35fa0d8a",
+  "lessonIds": [
+    "RU-C398-arenda",
+    "RU-C398-arendovat",
+    "RU-C398-ipoteka",
+    "RU-C398-strakhovat",
+    "RU-C398-strakhovka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch398.txt",
+  "json": "russian/narration/ch398.json",
+  "textHash": "fnv1a64:615fb09eab35cbc6",
+  "jsonHash": "fnv1a64:1b7a2966764f6302",
+  "findings": []
+}

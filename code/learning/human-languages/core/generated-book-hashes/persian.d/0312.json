@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:d168367ad0008128",
+  "lessonIds": [
+    "FA-C312-montasher-kardan",
+    "FA-C312-pakhsh-kardan",
+    "FA-C312-guyande",
+    "FA-C312-binande",
+    "FA-C312-pushesh-e-khabari"
+  ],
+  "tex": "persian/book/chapters/ch312-on-air-and-in-print.tex"
+}

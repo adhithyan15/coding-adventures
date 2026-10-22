@@ -1,0 +1,19 @@
+{
+  "chapter": 341,
+  "title": "Reaching a compromise",
+  "label": "ch:ru-reaching-a-compromise",
+  "canDo": "I can say that two things contradict each other, reject an idea, insist on something, admit a point and reach a compromise.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C341-priznavat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 341: I can say that two things contradict each other, reject an idea, insist on something, admit a point and reach a compromise.",
+    "assesses": [
+      "RU-LEX-C341-KOMPROMISS-03",
+      "RU-LEX-C341-KOMPROMISS-04",
+      "RU-LEX-C341-KOMPROMISS-05"
+    ]
+  }
+}

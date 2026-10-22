@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C236-canvu",
+    "language": "gujarati",
+    "chapter": 236,
+    "sequence": 12820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17846ccb3e998834"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C469-talab",
+  "pathSegment": "FA-PATH-469-TALAB",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-469-TALAB",
+      "order": 1
+    }
+  ]
+}

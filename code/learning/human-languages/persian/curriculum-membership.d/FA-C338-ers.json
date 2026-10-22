@@ -1,0 +1,11 @@
+{
+  "id": "FA-C338-ers",
+  "pathSegment": "FA-PATH-338-KHATM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-338-KHATM",
+      "order": 4
+    }
+  ]
+}

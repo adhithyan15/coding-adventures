@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:6d95a675514c15d6",
+  "lessonIds": [
+    "FA-C329-enfejar",
+    "FA-C329-monfajer-shodan",
+    "FA-C329-tarakidan",
+    "FA-C329-nasht-kardan",
+    "FA-C329-khakestar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch329.txt",
+  "json": "persian/narration/ch329.json",
+  "textHash": "fnv1a64:99a134c83853e16f",
+  "jsonHash": "fnv1a64:6bd0e3d2c1a8580d",
+  "findings": []
+}

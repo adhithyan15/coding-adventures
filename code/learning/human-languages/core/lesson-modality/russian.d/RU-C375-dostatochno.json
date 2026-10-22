@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C375-dostatochno",
+    "language": "russian",
+    "chapter": 375,
+    "sequence": 21780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f6cabcd8999116d"
+  },
+  "findings": []
+}

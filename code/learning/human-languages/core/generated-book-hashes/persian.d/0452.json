@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:74b84457667b1372",
+  "lessonIds": [
+    "FA-C452-nobat",
+    "FA-C452-nobat-gereftan",
+    "FA-C452-moattal-shodan",
+    "FA-C452-fish",
+    "FA-C452-maliyat"
+  ],
+  "tex": "persian/book/chapters/ch452-offices-and-queues.tex"
+}

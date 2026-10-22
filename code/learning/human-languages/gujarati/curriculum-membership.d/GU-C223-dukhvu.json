@@ -1,0 +1,11 @@
+{
+  "id": "GU-C223-dukhvu",
+  "pathSegment": "GU-PATH-223-FEEL223",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-223-FEEL223",
+      "order": 2
+    }
+  ]
+}

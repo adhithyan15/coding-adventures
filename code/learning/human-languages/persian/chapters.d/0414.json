@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "At the bank",
+  "label": "ch:fa-at-the-bank",
+  "canDo": "I can talk about foreign currency and credit, savings deposits, and say that I withdrew or transferred money.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "FA-C414-enteqal-dadan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about foreign currency and credit, savings deposits, and say that I withdrew or transferred money.",
+    "assesses": [
+      "FA-LEX-C414-ARZ-03",
+      "FA-LEX-C414-ARZ-04",
+      "FA-LEX-C414-ARZ-05"
+    ]
+  }
+}

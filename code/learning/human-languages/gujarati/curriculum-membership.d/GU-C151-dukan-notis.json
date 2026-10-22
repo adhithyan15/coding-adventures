@@ -1,0 +1,11 @@
+{
+  "id": "GU-C151-dukan-notis",
+  "pathSegment": "GU-PATH-151-READ151",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-151-READ151",
+      "order": 4
+    }
+  ]
+}

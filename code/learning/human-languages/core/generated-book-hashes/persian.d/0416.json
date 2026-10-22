@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:c728271089eb6d24",
+  "lessonIds": [
+    "FA-C416-karbar",
+    "FA-C416-ramz-e-obur",
+    "FA-C416-zakhire-kardan",
+    "FA-C416-hazf-kardan",
+    "FA-C416-be-ruz-resani"
+  ],
+  "tex": "persian/book/chapters/ch416-accounts-and-passwords.tex"
+}

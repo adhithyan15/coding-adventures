@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:4f806c1e694bd9d9",
+  "lessonIds": [
+    "JA-C225-oboeru",
+    "JA-C225-renshuu",
+    "JA-C225-fukushuu",
+    "JA-C225-shiraberu",
+    "JA-C225-jisho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch225.txt",
+  "json": "japanese/narration/ch225.json",
+  "textHash": "fnv1a64:5abcbcc9406bf69b",
+  "jsonHash": "fnv1a64:c9e36da66eb6488c",
+  "findings": []
+}

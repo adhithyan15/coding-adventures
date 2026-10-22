@@ -8,6 +8,12 @@ on every platform for all/Go invocations. Nearby schema/docs paths and other
 language filters do not acquire that relation. Missing required readers fail
 before a plan is written; ordinary affected-package propagation is preserved.
 
+The exact `code/specs/fixtures/compiler-ir-v1/cases.json` path similarly seeds
+the real `go/compiler-ir` BF03 native reader for all/Go selections, including
+deleted/renamed old paths. Normal dependency propagation selects its consumers.
+Other language filters and nearby schema/docs/lookalike paths do not gain that
+relation, and a missing Go reader fails before plan output is replaced.
+
 ## What it does
 
 This tool discovers packages in the monorepo by recursively walking for `BUILD` files, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel using Go goroutines.

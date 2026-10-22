@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:2d564daeed85fee3",
+  "lessonIds": [
+    "GU-C160-pathari",
+    "GU-C160-patharvu",
+    "GU-C160-hincko",
+    "GU-C160-batti",
+    "GU-C160-holavvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch160.txt",
+  "json": "gujarati/narration/ch160.json",
+  "textHash": "fnv1a64:517dc29017d5b308",
+  "jsonHash": "fnv1a64:4eda9ae10d17c215",
+  "findings": []
+}

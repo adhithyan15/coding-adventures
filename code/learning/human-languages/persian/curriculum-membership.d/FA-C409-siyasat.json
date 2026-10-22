@@ -1,0 +1,11 @@
+{
+  "id": "FA-C409-siyasat",
+  "pathSegment": "FA-PATH-409-HOKUMAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-409-HOKUMAT",
+      "order": 1
+    }
+  ]
+}

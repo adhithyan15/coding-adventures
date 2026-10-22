@@ -1,0 +1,58 @@
+# Ruby 3.3.6 (2024-11-05) grammar: rb-int-puts subset over the R0 tokens.
+# @version 1
+# PARTIAL: parses only the rb-int-puts subset below; everything else is a parse error.
+# source_ref: https://github.com/ruby/ruby/tree/v3_3_6
+# source_sha: 75015d4c1f6965b5e85e96fb309f1f2129f933c0
+# evidence: parse.y blob baf391e52d2d2c094af2e6b4b236101c4c0f07fc; keywords blob -; defs/keywords blob a1b1f4f60fff880c554c017720298b550ce36529; prism/config.yml blob d3b6b08709c4924dc61ae375fe0030a574e14266
+# basis: mechanical copy of ruby3.3.5.grammar; every syntax blob above is
+#   identical to release 3.3.5's (LANG84 "Materialized pair per release").
+
+# ---------------------------------------------------------------------------
+# rb-int-puts subset (LANG80) as this release's grammar admits it:
+#
+#   top_stmts : none | top_stmt | top_stmts terms top_stmt ;  terms : term | terms ';'
+#   paren_args: '(' opt_call_args rparen ;  rparen : opt_nl ')'
+#   command   : operation command_args          (`puts 1 + 2`)
+#   arg       : arg '+' arg | arg '-' arg | arg '*' arg | arg '/' arg | arg '%' arg
+#             | tUMINUS arg | tUMINUS_NUM simple_numeric | primary
+#   primary   : tLPAREN compstmt ')' | literal | method_call
+#
+# `%` binds like `*` and `/` (`%left '*' '/' '%'` at parse.y line 2185;
+# `arg '%' arg` at line 3396). LANG84 phase 5 added it to rb-int-puts.
+#
+# The lexer ignores a newline in EXPR_BEG (after an operator, `(`, `,`, `;`
+# or another newline), so NEWLINE is accepted in exactly those places, plus
+# before `)` where rparen allows it.
+#
+# Narrower than Ruby on purpose (rejected here, valid there): trailing commas,
+# `puts (1) + 2`, a command argument that starts with `-` (whether `puts -1`
+# is a unary minus depends on the space before it, an R6/E6 concern),
+# statement modifiers, everything outside rb-int-puts.
+# Wider than Ruby (accepted here, a syntax error there): `puts (1, 2)` with a
+# space before `(`. Telling it apart from `puts(1, 2)` needs the E6
+# `@space_before` predicate.
+#
+# Rule names follow code/grammars/ruby/ruby.grammar so the CST keeps the
+# shape the Ruby IIR compiler walks (LANG84 C8). The ternary..shift rules
+# are single-child links inside this subset, kept only for that contract.
+# ---------------------------------------------------------------------------
+
+program     = { NEWLINE | SEMICOLON } [ statement { terms statement } { NEWLINE | SEMICOLON } ] ;
+terms       = ( NEWLINE | SEMICOLON ) { NEWLINE | SEMICOLON } ;
+statement   = method_call | method_call_no_paren ;
+method_call = NAME LPAREN { NEWLINE } [ call_arg { COMMA { NEWLINE } call_arg } { NEWLINE } ] RPAREN ;
+method_call_no_paren = NAME !MINUS expression { COMMA { NEWLINE } expression } ;
+call_arg    = expression ;
+
+expression  = ternary ;
+ternary     = range ;
+range       = logical_or ;
+logical_or  = logical_and ;
+logical_and = logical_not ;
+logical_not = comparison ;
+comparison  = shift ;
+shift       = sum ;
+sum         = term { ( PLUS | MINUS ) { NEWLINE } term } ;
+term        = factor { ( STAR | SLASH | PERCENT ) { NEWLINE } factor } ;
+factor      = NUMBER | LPAREN { NEWLINE } expression { NEWLINE } RPAREN | unary_minus ;
+unary_minus = MINUS { NEWLINE } factor ;

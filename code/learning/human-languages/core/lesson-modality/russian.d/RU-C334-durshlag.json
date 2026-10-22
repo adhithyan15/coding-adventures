@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C334-durshlag",
+    "language": "russian",
+    "chapter": 334,
+    "sequence": 19650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0e56fddb7c7a872"
+  },
+  "findings": []
+}

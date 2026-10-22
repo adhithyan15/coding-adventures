@@ -1,0 +1,20 @@
+{
+  "language": "persian",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:1dab3421e558f92f",
+  "lessonIds": [
+    "FA-C298-agar",
+    "FA-C298-zhakat",
+    "FA-W298-zhe",
+    "FA-C298-agar-baran-biyayad",
+    "FA-C298-bastegi-darad",
+    "FA-R298-if-and-it-depends"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "persian/narration/ch298.txt",
+  "json": "persian/narration/ch298.json",
+  "textHash": "fnv1a64:1333dd48f043b633",
+  "jsonHash": "fnv1a64:ff8a2349ff4978e3",
+  "findings": []
+}

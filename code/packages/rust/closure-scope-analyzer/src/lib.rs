@@ -1036,18 +1036,30 @@ fn walk_tagged_statement(
             walk_expression(&ts.argument, ctx, analysis, pending);
         }
         TaggedStatement::SwitchStatement(ss) => {
-            // Visit the discriminant in the enclosing scope, then
-            // each case's test expression and consequent. Per
-            // ECMAScript §13.12, switch bodies share a single
-            // lexical scope spanning all cases, so we keep `ctx`
-            // unchanged across consequents.
+            // The discriminant is evaluated in the enclosing scope. Then
+            // ECMAScript §14.12.4 creates ONE fresh block environment for the
+            // whole case block, so every case test and consequent walks inside
+            // a single new Block scope, shared across cases (#17836):
+            //
+            //   var x = 1;
+            //   switch (1) { case 1: let x = 2; }   // the case block's x
+            //   console.log(x);                      // the outer x
+            //
+            // Walking the cases in the enclosing scope put the case's `let x`
+            // beside the outer `var x`, so the read after the switch resolved
+            // to the wrong one and remove-unused-vars deleted the outer `var`.
+            // `var` inside a case still hoists out via `enclosing_function`.
             walk_expression(&ss.discriminant, ctx, analysis, pending);
+            let case_block = WalkCtx {
+                current: emit_scope(ScopeKind::Block, ctx.current, analysis),
+                enclosing_function: ctx.enclosing_function,
+            };
             for case in &ss.cases {
                 if let Some(test) = &case.test {
-                    walk_expression(test, ctx, analysis, pending);
+                    walk_expression(test, case_block, analysis, pending);
                 }
                 for s in &case.consequent {
-                    walk_statement(s, ctx, analysis, pending);
+                    walk_statement(s, case_block, analysis, pending);
                 }
             }
         }
@@ -2420,5 +2432,108 @@ mod tests {
         let analysis = analyze(&prog);
         assert_eq!(analysis.scopes.len(), 1);
         assert!(analysis.bindings.is_empty());
+    }
+
+    // ---------------------------------------------------------------
+    // #17836 — a `switch` case block is its own lexical scope.
+    //
+    // ```js
+    // var x = 1;
+    // switch (1) { case 1: let x = 2; console.log(x); }   // case block's x
+    // console.log(x);                                      // outer x
+    // ```
+    //
+    // The cases share ONE scope (§14.12.4 CaseBlock evaluation), but that
+    // scope is a fresh block, not the enclosing one. Before the fix the
+    // case's `let x` landed beside the outer `var x`, the trailing read
+    // resolved to it, and remove-unused-vars deleted the outer `var`.
+    //
+    // | part            | scope it is walked in |
+    // |-----------------|-----------------------|
+    // | discriminant    | enclosing             |
+    // | case tests      | case block            |
+    // | case bodies     | case block (shared)   |
+    // ---------------------------------------------------------------
+
+    use coding_adventures_javascript_ast::{SwitchCase, SwitchStatement};
+
+    /// `let`/`const`/`var <name>;` as a nested statement.
+    fn decl_stmt(kind: VarKind, name: &str) -> Statement {
+        Statement::Declaration(Declaration::VariableDeclaration(VariableDeclaration {
+            cv: None,
+            kind,
+            declarations: vec![VariableDeclarator {
+                cv: None,
+                id: BindingTarget::Identifier(ident(name)),
+                init: None,
+            }],
+        }))
+    }
+
+    /// `switch (d) { case t: <first>; default: <second>; }`
+    fn switch_item(first: Vec<Statement>, second: Vec<Statement>) -> ProgramItem {
+        ProgramItem::Statement(Statement::switch_statement(SwitchStatement {
+            cv: None,
+            discriminant: id_expr("d"),
+            cases: vec![
+                SwitchCase {
+                    cv: None,
+                    test: Some(id_expr("t")),
+                    consequent: first,
+                },
+                SwitchCase {
+                    cv: None,
+                    test: None,
+                    consequent: second,
+                },
+            ],
+        }))
+    }
+
+    #[test]
+    fn switch_case_let_lives_in_the_case_block_scope() {
+        // var x; switch (d) { case t: let x; x; default: x; } x;
+        for head in [VarKind::Let, VarKind::Const] {
+            let prog = program_with(vec![
+                var_decl(VarKind::Var, &["x"]),
+                switch_item(vec![decl_stmt(head, "x"), read_stmt("x")], vec![read_stmt("x")]),
+                expr_stmt(id_expr("x")),
+            ]);
+            let analysis = analyze(&prog);
+            assert_eq!(analysis.scopes.len(), 2);
+            assert_eq!(analysis.scopes[1].kind, ScopeKind::Block);
+            assert_eq!(analysis.scopes[1].parent, Some(ScopeId::GLOBAL));
+            assert_eq!(analysis.bindings[1].scope, ScopeId(1));
+            // Both case bodies share the block, so the `default:` read also
+            // sees the case's `let x`; only the read after the switch sees
+            // the outer one.
+            assert_trailing_read_resolves_outward(&analysis);
+        }
+    }
+
+    #[test]
+    fn switch_discriminant_is_outside_and_tests_inside_the_case_block() {
+        let analysis = analyze(&program_with(vec![switch_item(vec![], vec![])]));
+        let from = |name: &str| {
+            analysis
+                .references
+                .iter()
+                .find(|r| r.name == name)
+                .map(|r| r.from_scope)
+                .expect("reference")
+        };
+        assert_eq!(from("d"), ScopeId::GLOBAL);
+        assert_eq!(from("t"), ScopeId(1));
+    }
+
+    #[test]
+    fn var_in_switch_case_still_hoists_to_the_function() {
+        // switch (d) { case t: var y; } — `var` ignores the case block.
+        let analysis = analyze(&program_with(vec![switch_item(
+            vec![decl_stmt(VarKind::Var, "y")],
+            vec![],
+        )]));
+        let y = analysis.bindings.iter().find(|b| b.name == "y").expect("y");
+        assert_eq!(y.scope, ScopeId::GLOBAL);
     }
 }

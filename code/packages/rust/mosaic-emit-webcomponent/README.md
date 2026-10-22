@@ -16,6 +16,13 @@ based on the generated `variant` attribute local. Base declarations apply
 first, enum axes follow model slot order, and existing structural or
 interaction `state-when-*` layers remain more specific.
 
+Text fields dispatch `onChange` on every keystroke (`input`; an IME composition
+is sent once, on `compositionend`) and `onCommit` on Enter (Ctrl/Cmd+Enter in a
+`<textarea>`). Because `_render` rebuilds the shadow tree on each attribute
+change, a component with a focusable control restores focus, caret and scroll
+after every render, so a host that echoes a field's value back as an attribute
+does not interrupt typing.
+
 `HostSlider` lowers to the browser's native `<input type="range">`. The
 generated element preserves literal and slot-backed value/bounds, disabled and
 accessible-name bindings, dispatches numeric `onChange` payloads on `input`,

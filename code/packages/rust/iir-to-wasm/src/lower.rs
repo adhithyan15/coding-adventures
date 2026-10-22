@@ -1310,6 +1310,11 @@ fn has_control_flow(fn_: &IIRFunction) -> bool {
 struct Lang83Imports {
     write_i64: Option<u32>,
     trap: Option<u32>,
+    /// LANG83 PR6a: the function index of the in-module
+    /// `$__iir_write_f64(f64, i32 layout)` (NOT an import — see
+    /// `lang83_f64.rs`), present when the module uses `write_f64_py` or
+    /// `write_f64_js`.
+    write_f64: Option<u32>,
 }
 
 /// Emit WASM bytes for a single IIR instruction.
@@ -3477,6 +3482,128 @@ fn emit_instr(
             code.extend(encode_local_set(rd));
         }
 
+        // ── LANG83 PR4: overflow-checked arithmetic ──────────────────────────
+        //
+        // WASM has no overflow flag and no wide multiply, so overflow is
+        // computed from the operands. No scratch locals: a value needed twice
+        // is recomputed (cheaper than widening the locals section, and the
+        // operands are plain `local.get`s).
+        //
+        //   add:  r = a + b overflows  ⇔  ((a ^ r) & (b ^ r)) < 0
+        //         (both operands have the same sign and r's sign differs)
+        //   sub:  r = a - b overflows  ⇔  ((a ^ b) & (a ^ r)) < 0
+        //         (the operands' signs differ and r's sign differs from a's)
+        //   neg:  overflows  ⇔  a == MIN
+        //   mul:  a == -1 && b == MIN  → overflow (and the check below would
+        //         itself compute MIN / -1, which WASM traps on);
+        //         otherwise, for a != 0, overflow  ⇔  (a * b) / a != b
+        //         (a wrapped product differs from a*b by a non-zero multiple
+        //         of 2^64 > |a|, so it can never divide back to b).
+        //
+        // Each test is `if ; <trap Trap.Overflow> ; end`, and the destination
+        // is written only after every test passed.
+        "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf" => {
+            use interpreter_ir::exception_kind::{trap_kind_id, TRAP_OVERFLOW};
+            let overflow = trap_kind_id(TRAP_OVERFLOW).expect("built-in kind");
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: format!("{} must have a dest", instr.op),
+            })?;
+            let rd = get_reg(dest)?;
+            let unary = instr.op == "i64_neg_ovf";
+            let ra = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+            let rb = if unary { ra } else { get_src_reg(&instr.srcs, 1, reg_map, fn_name)? };
+            if !(slot_is_i64(ra) && slot_is_i64(rb) && slot_is_i64(rd)) {
+                return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: format!("{} operates on i64 operands and an i64 dest", instr.op),
+                });
+            }
+            let get = |code: &mut Vec<u8>, r: u32| code.extend(encode_local_get(r));
+            match instr.op.as_str() {
+                "i64_add_ovf" | "i64_sub_ovf" => {
+                    let arith = if instr.op == "i64_add_ovf" { I64_ADD } else { I64_SUB };
+                    // r = a op b, pushed fresh each time it is needed.
+                    let push_r = |code: &mut Vec<u8>| {
+                        code.extend(encode_local_get(ra));
+                        code.extend(encode_local_get(rb));
+                        code.push(arith);
+                    };
+                    if arith == I64_ADD {
+                        get(code, ra);
+                        push_r(code);
+                        code.push(I64_XOR); // a ^ r
+                        get(code, rb);
+                        push_r(code);
+                        code.push(I64_XOR); // b ^ r
+                    } else {
+                        get(code, ra);
+                        get(code, rb);
+                        code.push(I64_XOR); // a ^ b
+                        get(code, ra);
+                        push_r(code);
+                        code.push(I64_XOR); // a ^ r
+                    }
+                    code.push(I64_AND);
+                    code.extend(encode_i64_const(0));
+                    code.push(I64_LT_S);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    emit_lang83_trap(code, lang83, overflow, fn_name)?;
+                    code.push(END);
+                    push_r(code);
+                }
+                "i64_neg_ovf" => {
+                    get(code, ra);
+                    code.extend(encode_i64_const(i64::MIN));
+                    code.push(I64_EQ);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    emit_lang83_trap(code, lang83, overflow, fn_name)?;
+                    code.push(END);
+                    code.extend(encode_i64_const(0));
+                    get(code, ra);
+                    code.push(I64_SUB);
+                }
+                _ => {
+                    // a == -1 && b == MIN
+                    get(code, ra);
+                    code.extend(encode_i64_const(-1));
+                    code.push(I64_EQ);
+                    get(code, rb);
+                    code.extend(encode_i64_const(i64::MIN));
+                    code.push(I64_EQ);
+                    code.push(I32_AND);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    emit_lang83_trap(code, lang83, overflow, fn_name)?;
+                    code.push(END);
+                    // a != 0 && (a * b) / a != b
+                    get(code, ra);
+                    code.push(I64_EQZ);
+                    code.push(I32_EQZ);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    get(code, ra);
+                    get(code, rb);
+                    code.push(I64_MUL);
+                    get(code, ra);
+                    code.push(I64_DIV_S);
+                    get(code, rb);
+                    code.push(I64_NE);
+                    code.push(IF);
+                    code.push(BLOCK_EMPTY);
+                    emit_lang83_trap(code, lang83, overflow, fn_name)?;
+                    code.push(END);
+                    code.push(END);
+                    get(code, ra);
+                    get(code, rb);
+                    code.push(I64_MUL);
+                }
+            }
+            code.extend(encode_local_set(rd));
+        }
+
         // ── io_out → call $__print_i64 ────────────────────────────────────────
         //
         // `io_out Var("%val")`
@@ -4078,6 +4205,29 @@ fn emit_instr(
                 // - dest    = None (void)
                 // LANG83 PR1b `write_i64` → `env.__write_i64(i64)`: decimal, no
                 // newline. An i32-slot argument is sign-extended first.
+                // LANG83 PR6a `write_f64_py` / `write_f64_js` → the in-module
+                // `$__iir_write_f64(x, layout)`; layout 0 = Python repr,
+                // 1 = JavaScript toString. The operand must be an f64 local:
+                // anything else would make an ill-typed call.
+                "write_f64_py" | "write_f64_js" => {
+                    let val_slot = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+                    let is_f64 = local_type_hints
+                        .get(&val_slot)
+                        .is_some_and(|h| matches!(hint_to_value_type(h), Some(ValueType::F64)));
+                    if !is_f64 {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: format!("call_builtin \"{name}\" requires an f64 operand"),
+                        });
+                    }
+                    let fn_idx = lang83.write_f64.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: format!("call_builtin \"{name}\": no $__iir_write_f64 helper (internal error)"),
+                    })?;
+                    code.extend(encode_local_get(val_slot));
+                    code.extend(encode_i32_const(i32::from(name == "write_f64_js")));
+                    code.extend(encode_call(fn_idx));
+                }
                 "write_i64" => {
                     let val_slot = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
                     let fn_idx = lang83.write_i64.ok_or_else(|| IIRWasmError::UnsupportedOp {
@@ -5505,6 +5655,9 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                     if let Some(Operand::Var(name)) = instr.srcs.first() {
                         match name.as_str() {
                             "putchar" => uses_putchar = true,
+                            // LANG83 PR6a: the in-module float writer prints
+                            // through `env.putchar`, byte by byte.
+                            "write_f64_py" | "write_f64_js" => uses_putchar = true,
                             "getchar" => uses_getchar = true,
                             // G2: `print_i64` reuses the same
                             // `env.__print_i64` import the `io_out`
@@ -5659,7 +5812,25 @@ pub fn lower_iir_to_wasm(
     let uses_str_eq_runtime = features.uses_str_eq_runtime;
     let uses_str_cmp_runtime = features.uses_str_cmp_runtime;
     let string_literals = features.string_literals;
-    let string_data = features.string_data;
+    let mut string_data = features.string_data;
+    // LANG83 PR6a: a module that prints a float reserves the float writer's
+    // scratch region (five big integers, the digit buffer, `k` — see
+    // `lang83_f64.rs`) at the END of its static data, 8-byte aligned. Static
+    // data is never written by anything else, and the bump allocator starts
+    // after it (`__array_bump` is initialised to `string_data.len()`), so no
+    // string, array or runtime block can overlap the region.
+    let lang83_uses_write_f64 = module.functions.iter().flat_map(|f| &f.instructions).any(|i| {
+        i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "write_f64_py" || n == "write_f64_js")
+    });
+    let f64_scratch: Option<u32> = if lang83_uses_write_f64 {
+        string_data.resize(string_data.len().next_multiple_of(8), 0);
+        let base = string_data.len() as u32;
+        string_data.resize(string_data.len() + crate::lang83_f64::F64_SCRATCH_BYTES, 0);
+        Some(base)
+    } else {
+        None
+    };
     let runtime_str_vars = features.runtime_str_vars;
     let runtime_str_blocks = features.runtime_str_blocks;
 
@@ -5741,7 +5912,14 @@ pub fn lower_iir_to_wasm(
         .functions
         .iter()
         .flat_map(|f| &f.instructions)
-        .any(|i| matches!(i.op.as_str(), "trap" | "i64_div_floor" | "i64_mod_floor"));
+        .any(|i| {
+            matches!(
+                i.op.as_str(),
+                "trap" | "i64_div_floor" | "i64_mod_floor"
+                    // LANG83 PR4: the overflow-checked ops trap Trap.Overflow.
+                    | "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf"
+            )
+        });
     let mut lang83 = Lang83Imports::default();
     if lang83_uses_write_i64 {
         lang83.write_i64 = Some(next_import_idx);
@@ -5795,6 +5973,18 @@ pub fn lower_iir_to_wasm(
     } else {
         None
     };
+
+    // LANG83 PR6a: the float writer's eleven in-module helpers are appended
+    // after `$__ensure_capacity` (or wherever the helpers before it end), so
+    // their indices follow on. `$__iir_write_f64` is the last of them.
+    let f64_helpers_base: Option<u32> = f64_scratch.map(|_| {
+        fn_idx_base
+            + module.functions.len() as u32
+            + u32::from(uses_str_eq_runtime)
+            + u32::from(uses_str_cmp_runtime)
+            + u32::from(uses_memory)
+    });
+    lang83.write_f64 = f64_helpers_base.map(|base| base + crate::lang83_f64::WRITE_F64_OFFSET);
 
     // ── Step 4: Lower each function ──────────────────────────────────────────
 
@@ -6198,6 +6388,21 @@ pub fn lower_iir_to_wasm(
         code.push(build_ensure_capacity_helper());
     }
 
+    // LANG83 PR6a: append the float writer's helpers (see `lang83_f64.rs`),
+    // matching `f64_helpers_base` above.
+    if let (Some(base), Some(scratch)) = (f64_helpers_base, f64_scratch) {
+        let putchar = putchar_fn_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+            function: "<module>".to_string(),
+            op: "write_f64_*: no env.putchar import (internal error)".to_string(),
+        })?;
+        for (ty, body) in crate::lang83_f64::build_f64_helpers(base, putchar, scratch) {
+            let type_idx = types.len() as u32 + struct_type_offset;
+            types.push(ty);
+            functions.push(type_idx);
+            code.push(body);
+        }
+    }
+
     // ── Step 5: Assemble WasmModule ──────────────────────────────────────────
 
     // If the module uses $LispyPair, register the struct type.
@@ -6299,6 +6504,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -6428,6 +6634,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
         assert!(matches!(result, Err(IIRWasmError::ValidationFailed(_))));

@@ -183,6 +183,15 @@ if let Some(mode) = program.module_info.as_ref().and_then(|m| m.typed_mode.as_re
 
 `TypedMode::Off` and programs without `module_info` are untouched — zero overhead.
 
+> **Update (LANG84 decision 6, twig-ir-compiler 0.46).** The IIR compiler no
+> longer receives a `Program`: its entry points are `compile_ast*`, which take
+> the `GrammarASTNode` CST. The gate reads the `(typed …)` mode from the CST
+> and calls `twig_type_checker::check_cst_with_globals(cst, None, globals)`.
+> That function lifts the tree to a `Program` *inside the checker* and runs
+> the pass above. The compiler consumes only `ok` and the position-keyed
+> diagnostics, and the strict/lenient behaviour is unchanged. Whether TW05-B
+> itself should walk the CST is LANG84 open question 2.
+
 ---
 
 ## Acceptance Criteria

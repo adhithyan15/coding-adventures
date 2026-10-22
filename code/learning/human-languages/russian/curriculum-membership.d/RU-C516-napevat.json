@@ -1,0 +1,11 @@
+{
+  "id": "RU-C516-napevat",
+  "pathSegment": "RU-PATH-516-MELODY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-516-MELODY",
+      "order": 3
+    }
+  ]
+}

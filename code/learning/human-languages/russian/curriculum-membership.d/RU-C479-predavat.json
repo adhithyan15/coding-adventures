@@ -1,0 +1,11 @@
+{
+  "id": "RU-C479-predavat",
+  "pathSegment": "RU-PATH-479-TRUST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-479-TRUST",
+      "order": 2
+    }
+  ]
+}

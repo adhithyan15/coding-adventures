@@ -1,0 +1,11 @@
+{
+  "id": "JA-C228-yameru",
+  "pathSegment": "JA-PATH-228-LEARN228",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-228-LEARN228",
+      "order": 3
+    }
+  ]
+}

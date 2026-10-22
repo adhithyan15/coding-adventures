@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 242,
+  "title": "Partners and Best Friends",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0860f7fd59576962",
+  "lessons": [
+    {
+      "id": "JA-C242-kare",
+      "sequence": 14530,
+      "title": "かれ (kare) — he; a boyfriend",
+      "headword": "かれ",
+      "romanization": "kare",
+      "gloss": "he; a boyfriend",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f5a728d394bf60a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to sign up, then the Japanese for to do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かれ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かれ — kare — \"he; a boyfriend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは がくせいですか。 — kare wa gakusei desu ka — \"Is he a student?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かれ (kare) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa gakusei desu ka — Is he a student?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa gakusei desu ka* — Is he a student?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to sign up, then the Japanese for to do, then say kare again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to sign up, then the Japanese for to do, then say *kare* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かれ (kare) mean? (\"He; a boyfriend\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C242-kare-type",
+              "prompt": "Say the Japanese for 'he'.",
+              "assesses": [
+                "JA-LEX-C242-FRIENDS242-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かれ",
+                "kare"
+              ],
+              "feedback": {
+                "correct": "Right: かれ (kare) is 'he; a boyfriend'.",
+                "incorrect": "'He' is かれ (kare)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C242-kanojo",
+      "sequence": 14540,
+      "title": "かのじょ (kanojo) — she; a girlfriend",
+      "headword": "かのじょ",
+      "romanization": "kanojo",
+      "gloss": "she; a girlfriend",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f37dd7eb300174d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to do, then the Japanese for he."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かのじょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かのじょ — kanojo — \"she; a girlfriend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かのじょは いま きょうしつに いません。 — kanojo wa ima kyōshitsu ni imasen — \"She is not in the classroom now.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かのじょ (kanojo) is a mixed word: native kano, \"that\", joined to Sino-Japanese jo, \"woman\" (Middle Chinese nrjoX), borrowed from Chinese (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanojo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanojo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanojo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanojo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanojo wa ima kyōshitsu ni imasen — She is not in the classroom now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanojo wa ima kyōshitsu ni imasen* — She is not in the classroom now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to do, then the Japanese for he, then say kanojo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to do, then the Japanese for he, then say *kanojo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かのじょ (kanojo) mean? (\"She; a girlfriend\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C242-kanojo-type",
+              "prompt": "Say the Japanese for 'she'.",
+              "assesses": [
+                "JA-LEX-C242-FRIENDS242-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かのじょ",
+                "kanojo"
+              ],
+              "feedback": {
+                "correct": "Right: かのじょ (kanojo) is 'she; a girlfriend'.",
+                "incorrect": "'She' is かのじょ (kanojo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C242-koibito",
+      "sequence": 14550,
+      "title": "こいびと (koibito) — a sweetheart; a lover",
+      "headword": "こいびと",
+      "romanization": "koibito",
+      "gloss": "a sweetheart; a lover",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49acaa1f79afa808",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for he, then the Japanese for she."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こいびと",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こいびと — koibito — \"a sweetheart; a lover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あにには こいびとが いません。 — ani ni wa koibito ga imasen — \"My elder brother does not have a sweetheart.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こいびと (koibito) is a native Japanese compound (wago), inherited rather than borrowed: it is built from koi, \"love\", and hito, \"person\", with h voiced to b (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koibito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koibito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koibito, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koibito*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani ni wa koibito ga imasen — My elder brother does not have a sweetheart.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani ni wa koibito ga imasen* — My elder brother does not have a sweetheart.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for he, then the Japanese for she, then say koibito again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for he, then the Japanese for she, then say *koibito* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こいびと (koibito) mean? (\"A sweetheart; a lover\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C242-koibito-type",
+              "prompt": "Say the Japanese for 'a sweetheart'.",
+              "assesses": [
+                "JA-LEX-C242-FRIENDS242-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こいびと",
+                "koibito"
+              ],
+              "feedback": {
+                "correct": "Right: こいびと (koibito) is 'a sweetheart; a lover'.",
+                "incorrect": "'A sweetheart' is こいびと (koibito)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C242-shinyuu",
+      "sequence": 14560,
+      "title": "しんゆう (shin'yū) — a close friend; a best friend",
+      "headword": "しんゆう",
+      "romanization": "shin'yū",
+      "gloss": "a close friend; a best friend",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0353df1e2e71f66b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for she, then the Japanese for a sweetheart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しんゆう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんゆう — shin'yū — \"a close friend; a best friend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "かれは あにの しんゆうですか。 — kare wa ani no shin'yū desu ka — \"Is he my elder brother's best friend?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しんゆう (shin'yū) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shin, \"intimate\" (Middle Chinese tshin) and yū, \"friend\" (hjuwX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shin'yū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shin'yū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shin'yū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shin'yū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kare wa ani no shin'yū desu ka — Is he my elder brother's best friend?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kare wa ani no shin'yū desu ka* — Is he my elder brother's best friend?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for she, then the Japanese for a sweetheart, then say shin'yū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for she, then the Japanese for a sweetheart, then say *shin'yū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しんゆう (shin'yū) mean? (\"A close friend; a best friend\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C242-shinyuu-type",
+              "prompt": "Say the Japanese for 'a close friend'.",
+              "assesses": [
+                "JA-LEX-C242-FRIENDS242-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しんゆう",
+                "shin'yū",
+                "shin'yuu",
+                "shin'yu",
+                "shinyū",
+                "shinyuu",
+                "shinyu"
+              ],
+              "feedback": {
+                "correct": "Right: しんゆう (shin'yū) is 'a close friend; a best friend'.",
+                "incorrect": "'A close friend' is しんゆう (shin'yū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C242-tsukiau",
+      "sequence": 14570,
+      "title": "つきあう (tsukiau) — to go out with; to keep company with",
+      "headword": "つきあう",
+      "romanization": "tsukiau",
+      "gloss": "to go out with; to keep company with",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:327ca56c8c971775",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sweetheart, then the Japanese for a close friend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つきあう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つきあう — tsukiau — \"to go out with; to keep company with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あねは かれと つきあいますか。 — ane wa kare to tsukiaimasu ka — \"Will my elder sister go out with him?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite つきあいます, tsukiaimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つきあう (tsukiau) is a native Japanese compound (wago), inherited rather than borrowed: it is built from tsuki, from tsuku, \"to stick to\", and au, \"to do together\" (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukiau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukiau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukiau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukiau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ane wa kare to tsukiaimasu ka — Will my elder sister go out with him?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ane wa kare to tsukiaimasu ka* — Will my elder sister go out with him?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sweetheart, then the Japanese for a close friend, then say tsukiau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sweetheart, then the Japanese for a close friend, then say *tsukiau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つきあう (tsukiau) mean? (\"To go out with; to keep company with\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C242-tsukiau-type",
+              "prompt": "Say the Japanese for 'to go out with'.",
+              "assesses": [
+                "JA-LEX-C242-FRIENDS242-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つきあう",
+                "tsukiau"
+              ],
+              "feedback": {
+                "correct": "Right: つきあう (tsukiau) is 'to go out with; to keep company with'.",
+                "incorrect": "'To go out with' is つきあう (tsukiau)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

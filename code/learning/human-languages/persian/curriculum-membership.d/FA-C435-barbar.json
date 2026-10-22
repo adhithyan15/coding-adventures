@@ -1,0 +1,11 @@
+{
+  "id": "FA-C435-barbar",
+  "pathSegment": "FA-PATH-435-DARBAST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-435-DARBAST",
+      "order": 3
+    }
+  ]
+}

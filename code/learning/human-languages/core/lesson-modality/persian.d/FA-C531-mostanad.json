@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C531-mostanad",
+    "language": "persian",
+    "chapter": 531,
+    "sequence": 27210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f089b671d3a65dc"
+  },
+  "findings": []
+}

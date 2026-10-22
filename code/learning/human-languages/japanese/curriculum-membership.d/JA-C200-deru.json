@@ -1,0 +1,11 @@
+{
+  "id": "JA-C200-deru",
+  "pathSegment": "JA-PATH-200-CHANGE200",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-200-CHANGE200",
+      "order": 1
+    }
+  ]
+}

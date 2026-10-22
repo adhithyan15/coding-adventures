@@ -1,0 +1,11 @@
+{
+  "id": "JA-C248-himitsu",
+  "pathSegment": "JA-PATH-248-TRUST248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-248-TRUST248",
+      "order": 3
+    }
+  ]
+}

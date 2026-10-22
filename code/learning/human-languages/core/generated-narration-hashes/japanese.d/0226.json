@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:ef748195b1732607",
+  "lessonIds": [
+    "JA-C226-shitsumon",
+    "JA-C226-kotaeru",
+    "JA-C226-shiken",
+    "JA-C226-ukeru",
+    "JA-C226-ten"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch226.txt",
+  "json": "japanese/narration/ch226.json",
+  "textHash": "fnv1a64:8f4f00c6e94ce262",
+  "jsonHash": "fnv1a64:115e61294f05ff6b",
+  "findings": []
+}

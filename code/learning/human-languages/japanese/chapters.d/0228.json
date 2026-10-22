@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Learning, Slacking and Graduating",
+  "label": "ch:ja-learning-slacking-and-graduating",
+  "canDo": "I can talk about learning, quitting and finishing school.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C228-sotsugyou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can talk about learning, quitting and finishing school.",
+    "assesses": [
+      "JA-LEX-C228-LEARN228-03",
+      "JA-LEX-C228-LEARN228-04",
+      "JA-LEX-C228-LEARN228-05"
+    ]
+  }
+}

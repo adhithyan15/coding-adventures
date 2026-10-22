@@ -1,0 +1,11 @@
+{
+  "id": "JA-C162-shuuri",
+  "pathSegment": "JA-PATH-162-REPAIR162",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-162-REPAIR162",
+      "order": 3
+    }
+  ]
+}

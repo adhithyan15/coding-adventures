@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-225-UNWELL225",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I feel dizzy or sick and that food does not agree with me.",
+  "prerequisites": []
+}

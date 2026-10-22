@@ -1,0 +1,21 @@
+{
+  "chapter": 151,
+  "title": "Reading a shop notice",
+  "label": "ch:gu-reading-a-shop-notice",
+  "canDo": "I can read a shop's notice of opening days and times, with its advert, and decide when I can go.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C151-dukan-notis",
+    "kind": "task",
+    "summary": "Read a 45-word shop notice and decide when to go for rice, for milk, and on the public holiday.",
+    "assesses": [
+      "GU-LEX-C151-READ151-01",
+      "GU-LEX-C151-READ151-02",
+      "GU-LEX-C151-READ151-03",
+      "GU-LEX-C151-READ151-04",
+      "GU-SKILL-C151-READ-NOTICE-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C369-amel",
+  "pathSegment": "FA-PATH-369-ELLAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-369-ELLAT",
+      "order": 1
+    }
+  ]
+}

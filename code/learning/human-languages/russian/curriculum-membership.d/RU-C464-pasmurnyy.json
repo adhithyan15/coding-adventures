@@ -1,0 +1,11 @@
+{
+  "id": "RU-C464-pasmurnyy",
+  "pathSegment": "RU-PATH-464-PROGNOZ",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-464-PROGNOZ",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-433-SHUM",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can complain about a room: noise, being disturbed, cockroaches, the safe and a fault.",
+  "prerequisites": []
+}

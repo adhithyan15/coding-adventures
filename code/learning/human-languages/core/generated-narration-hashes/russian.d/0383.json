@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:803fabccfeb0aa23",
+  "lessonIds": [
+    "RU-C383-postuplenie",
+    "RU-C383-abiturient",
+    "RU-C383-vstupitelnyy",
+    "RU-C383-fakultet",
+    "RU-C383-stipendiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch383.txt",
+  "json": "russian/narration/ch383.json",
+  "textHash": "fnv1a64:719fc30642c50a3d",
+  "jsonHash": "fnv1a64:7fc8c131320d768a",
+  "findings": []
+}

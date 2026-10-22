@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Junctions and roundabouts",
+  "label": "ch:fa-junctions-and-roundabouts",
+  "canDo": "I can describe junctions: a crossroads, a roundabout, a T-junction, a fork and crossing over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C445-obur-kardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can describe junctions: a crossroads, a roundabout, a T-junction, a fork and crossing over.",
+    "assesses": [
+      "FA-LEX-C445-TAGHATO-03",
+      "FA-LEX-C445-TAGHATO-04",
+      "FA-LEX-C445-TAGHATO-05"
+    ]
+  }
+}

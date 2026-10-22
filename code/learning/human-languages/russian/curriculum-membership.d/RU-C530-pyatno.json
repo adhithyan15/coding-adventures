@@ -1,0 +1,11 @@
+{
+  "id": "RU-C530-pyatno",
+  "pathSegment": "RU-PATH-530-LAUNDRY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-530-LAUNDRY",
+      "order": 2
+    }
+  ]
+}

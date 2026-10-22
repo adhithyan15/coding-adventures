@@ -1,0 +1,11 @@
+{
+  "id": "JA-C153-nakusu",
+  "pathSegment": "JA-PATH-153-OUTING153",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-153-OUTING153",
+      "order": 3
+    }
+  ]
+}

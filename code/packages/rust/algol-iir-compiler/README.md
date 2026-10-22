@@ -246,12 +246,29 @@ exact binary64 integer. Fractional, oversized, and dynamic additive terms
 remain conservative. The budget is tracked through parentheses, supported
 standard-function wrappers, and runtime conditional branches; each conditional
 path receives its own budget.
-Variable-free exact multiplicative unit factors may likewise surround it;
-non-unit or variable factors remain conservative.
-Exact unit division is also permitted when the bounded result is the numerator;
-non-unit or variable divisors and a bounded denominator remain conservative.
-An exact variable-free exponent chain evaluating to one may preserve the
-bounded result before `entier`; other or dynamic exponents remain conservative.
+Exact whole-number multiplication may scale the sign-rooted integer transform
+through magnitude `2^53`, including composition with exact additive terms, as
+long as every intermediate magnitude stays in that exact binary64 range.
+Fractional factors, oversized products, repeated roots, and variable factors
+remain conservative. Exact whole-number division is also permitted when the
+bounded result is the numerator and every possible transformed integer is
+divisible by the static nonzero divisor. Inexact or variable divisors and a
+bounded denominator remain conservative. Static whole-number factors may
+precede the bounded numerator, including exact divisions among those factors,
+provided multiplication connects the resulting prefix to its root; division
+by that root remains conservative.
+Positive variable-free whole-number powers may raise the exact sign-rooted
+integer transform within the existing exponent-unroll cap while checked
+exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and
+oversized powers remain conservative.
+Integer `div` by a variable-free nonzero whole number may reduce the exact
+sign-rooted transform, including composition through later powers, remainders,
+and exact real division. The quotient bound uses truncation toward zero; zero,
+dynamic, and sign-rooted divisors remain outside this composed proof.
+Integer `mod` by a variable-free nonzero whole number may reduce the exact
+sign-rooted transform, including composition through later exact powers and
+divisions; zero and dynamic divisors remain outside this composed provenance
+proof.
 Additional built-in `entier` calls may wrap that already integral bounded
 result; an unrestricted runtime `entier` operand remains conservative.
 Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`

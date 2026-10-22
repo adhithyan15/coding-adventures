@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Jealousy and Envy",
+  "label": "ch:ru-jealousy-and-envy",
+  "canDo": "I can talk about jealousy and envy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C469-zavidovat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can talk about jealousy and envy.",
+    "assesses": [
+      "RU-LEX-C469-JEALOUSY-03",
+      "RU-LEX-C469-JEALOUSY-04",
+      "RU-LEX-C469-JEALOUSY-05"
+    ]
+  }
+}

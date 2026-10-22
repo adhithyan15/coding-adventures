@@ -1,0 +1,11 @@
+{
+  "id": "GU-C223-tabiyat",
+  "pathSegment": "GU-PATH-223-FEEL223",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-223-FEEL223",
+      "order": 0
+    }
+  ]
+}

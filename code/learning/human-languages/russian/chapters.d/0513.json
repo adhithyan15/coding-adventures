@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Warming Up",
+  "label": "ch:ru-warming-up",
+  "canDo": "I can talk about exercises in the gym.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C513-vynoslivost",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about exercises in the gym.",
+    "assesses": [
+      "RU-LEX-C513-TRAINING-03",
+      "RU-LEX-C513-TRAINING-04",
+      "RU-LEX-C513-TRAINING-05"
+    ]
+  }
+}

@@ -1,4 +1,36 @@
 # Changelog — `x86_64-backend`
+## Unreleased — LANG83 PR6a — shortest round-trip float output
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): two `V1_BUILTINS` rows,
+  so `call_builtin` lowers to `call __twig_write_f64_py` / `__twig_write_f64_js`.
+  The f64 slot's raw bytes reach `rdi` through an integer `mov`, which is the
+  runtime's `int64_t bits` argument. No SSE instruction is involved.
+- `op_support`: both `Lowered`. A test pins the shape.
+
+## Unreleased — LANG83 PR4 — overflow-checked arithmetic
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4):
+  `add` / `sub` / `imul r64, r64` / `neg` set OF exactly when the signed
+  result does not fit in 64 bits, so each lowers to the one instruction, then
+  `jno` over `mov edi, 5; call __twig_trap; ud2` (`Trap.Overflow`), then the
+  store. The result is written only after the check. Matched by full name
+  ahead of the wrapping `add_`/`sub_`/`mul_`/`neg_` prefix arms.
+- `op_support`: all four `Lowered`.
+- Tests pin the byte sequence for each op (flag-setting instruction, `jno`
+  over exactly the 14-byte trap, store after), the Microsoft x64 kind-id
+  register, and malformed-operand errors. The sequences were also checked
+  with `llvm-mc --disassemble`; `lang-aot`'s `op_conformance` executes them.
+
+## 0.41.0 - 2026-10-19 - fail-closed real-to-integer narrowing
+
+`real_to_int_trunc` and `real_to_int_floor` now trap with `ud2` instead of
+storing a wrong integer. `cvttsd2si` returns the integer-indefinite `i64::MIN`
+on NaN, ±∞ and out-of-range input, so `entier(exp(exp(4)))` printed a large
+*negative* number. The input is rounded in place (`roundsd` mode 1 for floor,
+3 for trunc), converted, converted back with `cvtsi2sd` and compared with
+`ucomisd`. An unordered or unequal compare falls through to the trap.
+
 ## Unreleased — LANG83 PR1b — floor division, `trap`, `write_i64`
 
 - **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): both

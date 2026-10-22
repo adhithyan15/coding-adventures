@@ -1,0 +1,11 @@
+{
+  "id": "GU-C221-bhukamp",
+  "pathSegment": "GU-PATH-221-DROUGHT221",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-221-DROUGHT221",
+      "order": 4
+    }
+  ]
+}

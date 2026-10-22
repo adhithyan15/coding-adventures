@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Storms",
+  "label": "ch:fa-storms",
+  "canDo": "I can talk about storms: thunder and lightning, a lightning strike, rumbling, a gale and a whirlwind.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-R475-review-468-475",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about storms: thunder and lightning, a lightning strike, rumbling, a gale and a whirlwind.",
+    "assesses": [
+      "FA-LEX-C475-SAEGHE-03",
+      "FA-LEX-C475-SAEGHE-04",
+      "FA-LEX-C475-SAEGHE-05"
+    ]
+  }
+}

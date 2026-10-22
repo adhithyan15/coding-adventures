@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:0c72f54e94def675",
+  "lessonIds": [
+    "RU-C531-besporyadok",
+    "RU-C531-khlam",
+    "RU-C531-kladovka",
+    "RU-C531-skladyvat",
+    "RU-C531-vybrasyvat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch531.txt",
+  "json": "russian/narration/ch531.json",
+  "textHash": "fnv1a64:b814c787445792ae",
+  "jsonHash": "fnv1a64:92bf9179fc9a5e3c",
+  "findings": []
+}

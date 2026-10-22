@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:2770bd2a3a55492a",
+  "lessonIds": [
+    "JA-C235-nageru",
+    "JA-C235-keru",
+    "JA-C235-yakyuu",
+    "JA-C235-juudou",
+    "JA-C235-yuushou",
+    "JA-R235-review-230-235"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch235.txt",
+  "json": "japanese/narration/ch235.json",
+  "textHash": "fnv1a64:6006b41fbf6f13c9",
+  "jsonHash": "fnv1a64:f1021805c8820738",
+  "findings": []
+}

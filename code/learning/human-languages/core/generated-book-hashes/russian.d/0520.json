@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:ad80a2a9ba5d2375",
+  "lessonIds": [
+    "RU-C520-rezhissyor",
+    "RU-C520-aktrisa",
+    "RU-C520-rol",
+    "RU-C520-zritel",
+    "RU-C520-snimatsya"
+  ],
+  "tex": "russian/book/chapters/ch520-directors-and-actresses.tex"
+}

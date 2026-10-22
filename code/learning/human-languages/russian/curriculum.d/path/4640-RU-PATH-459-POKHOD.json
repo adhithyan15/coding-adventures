@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-459-POKHOD",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-459-POKHOD"
+  ],
+  "after": []
+}

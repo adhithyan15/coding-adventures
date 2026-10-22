@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "The town centre",
+  "label": "ch:fa-the-town-centre",
+  "canDo": "I can describe the town centre: the centre, the outskirts, a tower, a statue and a fountain.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C450-favvare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can describe the town centre: the centre, the outskirts, a tower, a statue and a fountain.",
+    "assesses": [
+      "FA-LEX-C450-MARKAZ-03",
+      "FA-LEX-C450-MARKAZ-04",
+      "FA-LEX-C450-MARKAZ-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C499-khab-mandan",
+  "pathSegment": "FA-PATH-499-SLEEP",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-499-SLEEP",
+      "order": 4
+    }
+  ]
+}

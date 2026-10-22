@@ -1,0 +1,11 @@
+{
+  "id": "FA-C316-jib-bor",
+  "pathSegment": "FA-PATH-316-DOZD",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-316-DOZD",
+      "order": 3
+    }
+  ]
+}

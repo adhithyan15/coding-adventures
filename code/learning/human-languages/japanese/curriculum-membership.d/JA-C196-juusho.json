@@ -1,0 +1,11 @@
+{
+  "id": "JA-C196-juusho",
+  "pathSegment": "JA-PATH-196-ADDR196",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-196-ADDR196",
+      "order": 2
+    }
+  ]
+}

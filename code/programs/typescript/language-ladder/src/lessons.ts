@@ -208,10 +208,76 @@ export async function loadBundledLessons(
     const id = lessonIdFromPath(path);
     return id !== "" && (wanted === null || wanted.has(id));
   });
-  const loaded = await Promise.all(
-    entries.map(async ([path, load]) => [path, await load()] as const),
+  const loaded = await mapWithConcurrency(
+    entries,
+    LESSON_LOAD_CONCURRENCY,
+    async ([path, load]) => [path, await load()] as const,
   );
   return loadLessons(Object.fromEntries(loaded));
+}
+
+/**
+ * How many lazy lesson loaders may be in flight at once.
+ *
+ * WHY A LIMIT AT ALL? Each loader is one `?raw` import, and under Vitest (and
+ * the Vite dev server) one import opens one Markdown file. The corpus is tens
+ * of thousands of lessons, and growing every week. Starting every loader at
+ * once — a bare `Promise.all` — asked the operating system for that many open
+ * files simultaneously. Linux and macOS runners shrugged; the Windows runner
+ * stopped at its handle limit with `EMFILE: too many open files` while the
+ * Lessons, Concepts and lesson-body test files were still importing.
+ *
+ * WHY 64? It is far below every platform's descriptor limit, yet wide enough
+ * that the disk (or, in the browser, the network) is never left idle: loading
+ * is I/O-bound, so a few dozen outstanding reads already saturate it. The
+ * number is a throttle, not a batch size — a new load starts the moment any
+ * earlier one settles.
+ */
+export const LESSON_LOAD_CONCURRENCY = 64;
+
+/**
+ * `Promise.all(items.map(fn))`, but with at most `limit` calls of `fn` running
+ * at once. Results come back in INPUT order, exactly as `Promise.all` would
+ * return them, so callers cannot tell the difference except by the number of
+ * files open at a time.
+ *
+ * How it works: `limit` "workers" share one cursor. Each worker takes the next
+ * unclaimed index, awaits `fn` on it, stores the result in that index's slot,
+ * and goes back for another, until the cursor runs off the end. JavaScript is
+ * single-threaded, so `next++` is never claimed twice. If any call rejects,
+ * the returned promise rejects with that error (as `Promise.all` does); the
+ * other workers simply finish the item they are on and stop.
+ *
+ *     items:    a b c d e f g        limit = 3
+ *     worker 1: a ─────── d ── g
+ *     worker 2: b ── e ──────
+ *     worker 3: c ────── f ──
+ *     result:   [fa, fb, fc, fd, fe, ff, fg]   (input order)
+ */
+export async function mapWithConcurrency<T, R>(
+  items: readonly T[],
+  limit: number,
+  fn: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  if (!Number.isInteger(limit) || limit < 1) {
+    throw new RangeError(`mapWithConcurrency: limit must be a positive integer, got ${limit}`);
+  }
+  const results = new Array<R>(items.length);
+  let next = 0;
+  let failed = false;
+  const worker = async (): Promise<void> => {
+    while (!failed && next < items.length) {
+      const index = next++;
+      try {
+        results[index] = await fn(items[index]!, index);
+      } catch (error) {
+        failed = true;
+        throw error;
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
 }
 
 /** The distinct track names present, sorted. */

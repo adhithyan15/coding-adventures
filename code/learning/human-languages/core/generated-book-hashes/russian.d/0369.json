@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:7f4148584d3bffc5",
+  "lessonIds": [
+    "RU-C369-ekologiya",
+    "RU-C369-zagryaznenie",
+    "RU-C369-zagryaznyat",
+    "RU-C369-pererabatyvat",
+    "RU-C369-berech"
+  ],
+  "tex": "russian/book/chapters/ch369-the-environment.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C307-avayel",
+  "pathSegment": "FA-PATH-307-AVAYEL",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-307-AVAYEL",
+      "order": 0
+    }
+  ]
+}

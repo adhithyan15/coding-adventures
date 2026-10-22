@@ -1,0 +1,11 @@
+{
+  "id": "GU-C175-satat",
+  "pathSegment": "GU-PATH-175-MOON175",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-175-MOON175",
+      "order": 4
+    }
+  ]
+}

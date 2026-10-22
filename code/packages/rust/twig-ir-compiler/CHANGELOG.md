@@ -1,5 +1,115 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
+## 0.46.0 - Unreleased - LANG84 decision 6: the compiler walks the `GrammarASTNode` CST
+
+LANG84's rule is that the IIR compiler walks the parse tree: no hand-written
+code may lift the CST into an owned, typed AST before IIR compilation. Up to
+0.45 this crate lowered `twig_parser::Program`, which `twig_parser::parse`
+builds by running `ast_extract.rs` over the `GrammarParser` output. The
+compiler's only input is now the `GrammarASTNode` from
+`twig_parser::parse_to_ast`.
+
+### Fixed (security review)
+
+- **A wide `(and …)` or `(or …)` no longer overflows the stack.**
+  - `compile_and` and `compile_or` used to call themselves once per argument.
+  - The number of arguments is not limited by the parser's nesting limit or by `MAX_COMPILE_DEPTH`.
+  - So a 40 KB `(and 1 1 … 1)` with about 20,000 arguments aborted the process.
+  - Both are now a two-pass loop over the arguments, collected once.
+  - Stack use stays constant however many arguments there are, and the work grows linearly. Under the borrowed `Exprs` cursor this rewrite introduced, it would otherwise have grown quadratically.
+  - The emitted IIR is byte-identical to the recursive lowering.
+  - The stale comment claiming the depth counter bounded this recursion is corrected.
+  - New test `wide_and_or_compile_in_constant_stack`: 50,000 arguments on a 1 MiB thread.
+
+### Changed (breaking)
+
+- **New CST entry points.** `compile_ast(&GrammarASTNode, name)`,
+  `compile_ast_with_externs(…, externs)` and
+  `compile_ast_with_externs_and_globals(…, externs, globals)` replace
+  `compile_program`, `compile_program_with_externs` and
+  `compile_program_with_externs_and_globals`, which took a `&Program` and are
+  removed. `Compiler::compile` now takes the CST too. `compile_source` is
+  `parse_to_ast` + `compile_ast`. `compile_typed_source` keeps its signature.
+  The only in-workspace caller, `twig-module-driver`, moves to
+  `compile_ast_with_externs_and_globals` in the same change.
+- **`free_vars` is crate-private.** It took a `&twig_parser::Lambda`; it now
+  takes a CST lambda view. Nothing outside the crate used it.
+
+### Added
+
+- **`src/cst.rs` — borrowed views over the CST.** `ExprNode` is a `Copy`
+  handle on an `expr` node. `ExprNode::kind` classifies it one level deep
+  (`IntLit`, `If`, `Let`, `Apply`, `Match`, …) and returns its children as
+  further unclassified handles. `Exprs` is a lazy cursor over a node's `expr`
+  children. `LambdaView`, `DefineView`, `MatchView` and the others answer one
+  question about one node. Nothing owns or builds a tree. The views also
+  expand the sugar the extractor used to expand: `'x` and `(quote x)` are one
+  `SymLit`, and `(define (f x) …)` and `(define f (lambda (x) …))` are one
+  top-level lambda. Every view reports the same source position the typed AST
+  stored, so source maps are unchanged.
+- **`check_cst` (public) — `src/check_cst.rs`.** A validation pass that
+  mirrors `ast_extract.rs` line for line, with construction stripped out.
+  It rejects the same trees, with the same `TwigParseError` messages and
+  positions, in the same depth-first order: non-`program` root, malformed
+  nodes, i64 overflow (literals and type expressions), `(typed bogus)`,
+  multi-expression value `define`, oversized `(Member …)` sets, `->` without an
+  annotation, and nesting past `twig_parser::MAX_AST_DEPTH`. `compile_ast`
+  reports these as `parse error: …`, exactly as `compile_source` did.
+- **`tests/cst_walk.rs` (16 tests).** Source checks prove that no file under
+  `src/` names the typed AST (`extract_program`, `ast_nodes`, `Program`,
+  `Expr`, …). The only items the compiler may import from `twig_parser` are
+  `parse_to_ast`, `TwigParseError`, `MAX_AST_DEPTH` and
+  `check_membership_int_count`, and the only checker entry points it may use
+  are `check_cst_with_globals`, `TwigKind` and `type_check_source`. The file
+  also covers the `compile_ast*` entry points, checks that `check_cst` and
+  `extract_program` give identical errors on hand-built malformed trees
+  (including a tree 512 levels deep), and tests sugar equivalence and the
+  type gate.
+
+### Type information (the TW05-B gate)
+
+The compiler never consumed type-checker output keyed to typed-AST nodes.
+For `(typed lenient|strict)` modules it only read `TypeCheckResult::ok` and
+the diagnostics, which are keyed by `(line, column)`. It now passes the
+checker the CST through the new `twig_type_checker::check_cst_with_globals`
+(twig-type-checker 0.10.0) and still reads back only those position-keyed
+diagnostics. Strict errors stop compilation, lenient errors are printed as
+warnings, and nothing the checker computes feeds IIR emission. The checker
+still lifts the tree into its own typed AST internally. Whether TW05-B itself
+should walk the CST is LANG84 open question 2, and that is outside this crate.
+`compile_typed_source` (LANG50) already consumed the checker's span-keyed
+`AnnotatedNode` hints and is unchanged.
+
+### Verification: IIR identity
+
+- **Corpus.** The old and new pipelines were run on 7,343 inputs, comparing
+  the `Debug` dump of the result. The inputs were every Rust string literal in
+  the twig crates, `lang-aot`, `jit-loader-macos` and `iir-coverage`, every
+  `.tw` file in the repo, and about 50 hand-written edge cases. Each input went
+  through `compile_source`, `compile_typed_source`, and the externs/globals
+  entry point (with unbound names fed back as externs until the input
+  compiled). All 22,029 results were byte-identical, compiled modules and
+  error values alike, with one exception. In 4 inputs the old harness's
+  `twig_parser::parse` step raised an extractor error, and `compile_ast` now
+  raises the same message at the same position as a `parse error: …`.
+  Successful compiles: 623 via `compile_source`, 613 via
+  `compile_typed_source` and 3,573 via the externs path.
+- **Mutation fuzz.** Every parseable input was mutated 40 times: nodes
+  removed, duplicated, swapped or renamed, positions dropped, and token types
+  and values changed. Across the resulting 143,480 hand-built trees,
+  `check_cst` and `extract_program` returned the same `Result`. On the 42,704
+  trees the extractor accepted, the old and new compilers produced
+  byte-identical results (11,537 compiled; the rest errored with identical
+  errors). There were no panics.
+
+These harnesses were temporary and are not committed.
+
 ## [0.45.1] — 2026-09-15 (VM-041 follow-up — union-variant `box` no longer interleaves `alloc`/`field_store`)
 
 `emit_union_def`'s per-field cons-cell construction now emits the field's

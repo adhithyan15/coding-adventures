@@ -1,0 +1,11 @@
+{
+  "id": "RU-C316-shestviye",
+  "pathSegment": "RU-PATH-316-KARNAVAL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-316-KARNAVAL",
+      "order": 3
+    }
+  ]
+}

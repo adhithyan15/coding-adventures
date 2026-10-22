@@ -1,0 +1,11 @@
+{
+  "id": "FA-C344-halva",
+  "pathSegment": "FA-PATH-344-NAZR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-344-NAZR",
+      "order": 2
+    }
+  ]
+}

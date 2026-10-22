@@ -1,0 +1,11 @@
+{
+  "id": "RU-C353-vredit",
+  "pathSegment": "RU-PATH-353-USHCHERB",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-353-USHCHERB",
+      "order": 2
+    }
+  ]
+}

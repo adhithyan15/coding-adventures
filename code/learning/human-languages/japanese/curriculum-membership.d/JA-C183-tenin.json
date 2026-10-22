@@ -1,0 +1,11 @@
+{
+  "id": "JA-C183-tenin",
+  "pathSegment": "JA-PATH-183-STAFF183",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-183-STAFF183",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:07b01b8815900072",
+  "lessonIds": [
+    "FA-C377-bohran",
+    "FA-C377-rah-e-hall",
+    "FA-C377-jelogiri-kardan",
+    "FA-C377-pishgiri",
+    "FA-C377-ahamiyyat-dashtan"
+  ],
+  "tex": "persian/book/chapters/ch377-crises-and-solutions.tex"
+}

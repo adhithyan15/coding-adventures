@@ -1,0 +1,19 @@
+{
+  "chapter": 480,
+  "title": "Laughter and Tears",
+  "label": "ch:ru-laughter-and-tears",
+  "canDo": "I can describe ways of laughing and crying.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C480-utesheniye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can describe ways of laughing and crying.",
+    "assesses": [
+      "RU-LEX-C480-LAUGHTER-03",
+      "RU-LEX-C480-LAUGHTER-04",
+      "RU-LEX-C480-LAUGHTER-05"
+    ]
+  }
+}

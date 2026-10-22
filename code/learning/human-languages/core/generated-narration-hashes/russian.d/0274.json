@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:eb48f507cdb77533",
+  "lessonIds": [
+    "RU-C274-postepenno",
+    "RU-C274-odnovremenno",
+    "RU-C274-ponachalu",
+    "RU-C274-vposledstvii",
+    "RU-C274-naposledok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch274.txt",
+  "json": "russian/narration/ch274.json",
+  "textHash": "fnv1a64:cbc59f020e15c966",
+  "jsonHash": "fnv1a64:105e774fe94dcc7f",
+  "findings": []
+}

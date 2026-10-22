@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-273-PROISKHODIT",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-273-PROISKHODIT"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C186-amaru",
+    "language": "japanese",
+    "chapter": 186,
+    "sequence": 11120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:087eda367884943b"
+  },
+  "findings": []
+}

@@ -11,7 +11,7 @@ import {
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { loadEverything, loadModalityManifest, modalityManifestById } from "../src/loader.js";
+import { loadLessons, loadModalityManifest, modalityManifestById } from "../src/loader.js";
 import {
   generatedModalityOutputs,
   generatedModalityOutputsFromLessons,
@@ -196,12 +196,39 @@ afterEach(() => {
 //
 // Nothing below mutates either value: every assertion filters, maps, or copies into
 // a new array before sorting.
+//
+// The hook loads LESSONS ONLY. It used to call `loadEverything()`, whose lessons are
+// this same `loadLessons()` result, but which also reads the taxonomy, the registry,
+// the spine, every language curriculum (about 39,000 membership owner files, each
+// `lstat`ed and parsed), the book corpus, the scripts and the ledgers. None of that
+// reaches the manifest. On a loaded Windows runner those extra file opens were what
+// pushed this hook past its 30 s budget, while the manifest itself built in seconds.
 let realLessons: ParsedLesson[] = [];
 let realManifest: ReturnType<typeof buildModalityManifest>;
 beforeAll(() => {
-  realLessons = loadEverything().lessons;
+  realLessons = loadLessons();
   realManifest = buildModalityManifest(realLessons);
 });
+
+// The COMMITTED manifest, read from disk at most once per file.
+//
+// `loadModalityManifest()` is not a cheap getter: it opens, `lstat`s and parses one
+// owner file per lesson — 39,484 of them in October 2026 — plus the narration
+// identity ledgers it is checked against. That measured 2.3 s on a quiet 4-core
+// Linux machine, and it is file-system-bound, so it grows fastest exactly where
+// opens are slowest: a loaded Windows CI runner. Two cases below read it, and one
+// of them read it twice, so a run paid for three full reads of files that nothing
+// in this file writes; the two reads inside "carries the marker into the committed
+// manifest" were that case's entire cost, and it timed out at 30 s on CI.
+//
+// Lazy rather than in `beforeAll`, so the cost stays with the cases that use it
+// (and inside their budgets) instead of moving into the shared hook. Read-only for
+// the same reason as `realManifest` above: every use filters or maps a copy.
+let committedManifestOnce: ModalityManifest | undefined;
+function committedManifest(): ModalityManifest {
+  committedManifestOnce ??= loadModalityManifest();
+  return committedManifestOnce;
+}
 
 // ---------------------------------------------------------------------------
 // The artifact's shape
@@ -886,13 +913,13 @@ describe("the script strand is declared, not inferred", () => {
 
   it("carries the marker into the committed manifest, not just a freshly built one", () => {
     const fresh = built().lessons.filter((entry) => entry.delivery === "script").map((e) => e.id);
-    const committed = loadModalityManifest()
+    const committed = committedManifest()
       .lessons.filter((entry) => entry.delivery === "script")
       .map((entry) => entry.id);
     expect(fresh.length).toBeGreaterThan(0);
     expect(committed.sort()).toEqual([...fresh].sort());
     // Absent, not empty, on everything else — the manifest's house rule for optionals.
-    expect(loadModalityManifest().lessons.filter((entry) => "delivery" in entry).length).toBe(
+    expect(committedManifest().lessons.filter((entry) => "delivery" in entry).length).toBe(
       fresh.length,
     );
   });
@@ -939,7 +966,10 @@ describe("corpus regression", () => {
     // `npm run generate:modality` and commit the result — exactly what CI will say.
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runModalityManifest(["--check"])).toBe(0);
-    expect(loadModalityManifest()).toEqual(realManifest);
+    // The read-back half: what a consumer loads from those files equals what the
+    // lessons derive. `--check` only reads, so the shared read is the same bytes a
+    // fresh read after it would see.
+    expect(committedManifest()).toEqual(realManifest);
   });
 
   it("carries no unexplained overrides", () => {

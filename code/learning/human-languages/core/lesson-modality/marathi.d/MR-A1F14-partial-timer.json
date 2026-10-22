@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "MR-A1F14-partial-timer",
+    "language": "marathi",
+    "chapter": 25,
+    "sequence": 1070,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a8a6cab3cda1b508",
+    "detachableSegments": [
+      "Writing — generous partial timer"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

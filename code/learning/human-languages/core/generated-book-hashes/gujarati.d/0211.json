@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:6f5819e84a726e01",
+  "lessonIds": [
+    "GU-C211-hodi",
+    "GU-C211-savari-karvi",
+    "GU-C211-hankarvu",
+    "GU-C211-yatra",
+    "GU-C211-vahan"
+  ],
+  "tex": "gujarati/book/chapters/ch211-boats-pilgrims-and-rides.tex"
+}

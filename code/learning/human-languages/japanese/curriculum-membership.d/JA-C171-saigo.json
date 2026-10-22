@@ -1,0 +1,11 @@
+{
+  "id": "JA-C171-saigo",
+  "pathSegment": "JA-PATH-171-ORDER171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-171-ORDER171",
+      "order": 3
+    }
+  ]
+}

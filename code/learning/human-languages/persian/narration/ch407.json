@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 407,
+  "title": "Crime and arrest",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a60a38dc84118d8a",
+  "lessons": [
+    {
+      "id": "FA-C407-jorm",
+      "sequence": 20800,
+      "title": "جرم (jorm) — a crime",
+      "headword": "جرم",
+      "romanization": "jorm",
+      "gloss": "a crime",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c541f49d15194eac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a verdict, then the Persian for a trial."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جرم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جرم (jorm) — \"a crime\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دزدی یک جرم است. dozdi yek jorm ast. Theft is a crime."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural jarâyem, an Arabic broken plural. More serious than takhallof."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جرم (jorm) is usually traced to Arabic jurm \"offence, crime\", from the same Arabic family as jarime \"a fine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jorm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jorm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jorm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jorm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with jorm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *jorm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a verdict, then the Persian for a trial, then say jorm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a verdict, then the Persian for a trial, then say *jorm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جرم (jorm) mean? (\"A crime\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C407-mojrem",
+      "sequence": 20810,
+      "title": "مجرم (mojrem) — a criminal, an offender",
+      "headword": "مجرم",
+      "romanization": "mojrem",
+      "gloss": "a criminal, an offender",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69665c6e1d2b0605",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a trial, then the Persian for a crime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مجرم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مجرم (mojrem) — \"a criminal, an offender\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پلیس مجرم را پیدا کرد. polis mojrem râ peydâ kard. The police found the criminal."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural mojremân."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مجرم (mojrem) is usually traced to Arabic mujrim \"offender\", one who has committed a jurm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mojrem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mojrem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mojrem, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mojrem*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mojrem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mojrem*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a trial, then the Persian for a crime, then say mojrem again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a trial, then the Persian for a crime, then say *mojrem* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مجرم (mojrem) mean? (\"A criminal, an offender\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C407-dastgir-kardan",
+      "sequence": 20820,
+      "title": "دستگیر کردن (dastgir kardan) — to arrest",
+      "headword": "دستگیر کردن",
+      "romanization": "dastgir kardan",
+      "gloss": "to arrest",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf4d59e1c374c03e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a crime, then the Persian for a criminal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دستگیر کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دستگیر کردن (dastgir kardan) — \"to arrest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "پلیس دزد را در خیابان دستگیر کرد. polis dozd râ dar khiyâbân dastgir kard. The police arrested the thief in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Dast \"hand\" + gir \"taking\" + kardan. Dastgir shodan — to be arrested."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دستگیر کردن (dastgir kardan) is native Persian, built from dast \"hand\" + gir-, the present stem of gereftan \"to take\", + kardan \"to do\". To arrest is to take someone by the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dastgir kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dastgir kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dastgir kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dastgir kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with dastgir kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *dastgir kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a crime, then the Persian for a criminal, then say dastgir kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a crime, then the Persian for a criminal, then say *dastgir kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دستگیر کردن (dastgir kardan) mean? (\"To arrest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C407-bigonah",
+      "sequence": 20830,
+      "title": "بی گناه (bigonâh) — innocent",
+      "headword": "بی گناه",
+      "romanization": "bigonâh",
+      "gloss": "innocent",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f87f1aad108880d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a criminal, then the Persian for to arrest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بی گناه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بی گناه (bigonâh) — \"innocent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قاضی گفت که او بی گناه است. qâzi goft ke u bigonâh ast. The judge said that he was innocent."
+            },
+            {
+              "kind": "speech",
+              "text": "Bi- \"without\" + gonâh \"guilt\". The opposite is gonâhkâr, guilty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بی گناه (bigonâh) is native Persian, built from bi- \"without\" + gonâh \"sin, guilt\", usually traced to Middle Persian wināh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bigonâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bigonâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bigonâh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bigonâh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with bigonâh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *bigonâh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a criminal, then the Persian for to arrest, then say bigonâh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a criminal, then the Persian for to arrest, then say *bigonâh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بی گناه (bigonâh) mean? (\"Innocent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C407-mahkum-kardan",
+      "sequence": 20840,
+      "title": "محکوم کردن (mahkum kardan) — to sentence; to condemn",
+      "headword": "محکوم کردن",
+      "romanization": "mahkum kardan",
+      "gloss": "to sentence; to condemn",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d88d4e88fc681e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for to arrest, then the Persian for innocent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: محکوم کردن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محکوم کردن (mahkum kardan) — \"to sentence; to condemn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قاضی او را به یک سال زندان محکوم کرد. qâzi u râ be yek sâl zendân mahkum kard. The judge sentenced him to a year in prison."
+            },
+            {
+              "kind": "speech",
+              "text": "Be chizi mahkum kardan — to sentence to something. Also to condemn in public."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "محکوم is usually traced to Arabic maḥkūm \"judged, sentenced\", from the same Arabic family as ḥukm \"judgement\"; kardan \"to do\" is inherited Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahkum kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahkum kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahkum kardan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahkum kardan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with mahkum kardan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *mahkum kardan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for to arrest, then the Persian for innocent, then say mahkum kardan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for to arrest, then the Persian for innocent, then say *mahkum kardan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does محکوم کردن (mahkum kardan) mean? (\"To sentence; to condemn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R407-review-400-407",
+      "sequence": 20850,
+      "title": "Words from chapters 400–407 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 400-407",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08b0bf67c746ba3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Persian for a faculty and tuition fees."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a faculty, tuition fees, to be admitted, a scholarship, a course credit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a faculty, tuition fees, to be admitted, a scholarship, a course credit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to revise, to concentrate, to cheat, lecture notes, homework",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to revise, to concentrate, to cheat, lecture notes, homework]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "research, scholarly research, an article, a thesis, a lecture",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: research, scholarly research, an article, a thesis, a lecture]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a graduate, education, to present, a bachelor's degree, a doctorate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a graduate, education, to present, a bachelor's degree, a doctorate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "regulations, forbidden, allowed, to observe, to break",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: regulations, forbidden, allowed, to observe, to break]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "legal, illegal, an offence, a punishment, a permit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: legal, illegal, an offence, a punishment, a permit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a judge, accused, a witness, a verdict, a trial",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a judge, accused, a witness, a verdict, a trial]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crime, a criminal, to arrest, innocent, to sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crime, a criminal, to arrest, innocent, to sentence]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A faculty? (دانشکده.) Tuition fees? (شهریه.) To be admitted? (پذیرفته شدن.) A scholarship? (بورسیه.) A course credit? (واحد.) To revise? (مرور کردن.) To concentrate? (تمرکز کردن.) To cheat? (تقلب کردن.) Lecture notes? (جزوه.) Homework? (تکلیف.) Research? (تحقیق.) Scholarly research? (پژوهش.) An article? (مقاله.) A thesis? (پایان نامه.) A lecture? (سخنرانی.) A graduate? (فارغ التحصیل.) Education? (تحصیلات.) To present? (ارائه دادن.) A bachelor's degree? (لیسانس.) A doctorate? (دکترا.) Regulations? (مقررات.) Forbidden? (ممنوع.) Allowed? (مجاز.) To observe? (رعایت کردن.) To break? (نقض کردن.) Legal? (قانونی.) Illegal? (غیرقانونی.) An offence? (تخلف.) A punishment? (مجازات.) A permit? (مجوز.) A judge? (قاضی.) Accused? (متهم.) A witness? (شاهد.) A verdict? (حکم.) A trial? (محاکمه.) A crime? (جرم (jorm).) A criminal? (مجرم (mojrem).) To arrest? (دستگیر کردن (dastgir kardan).) Innocent? (بی گناه (bigonâh).) To sentence? (محکوم کردن (mahkum kardan).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

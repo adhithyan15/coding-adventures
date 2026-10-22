@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:f79efac997c6b969",
+  "lessonIds": [
+    "JA-C208-hare",
+    "JA-C208-kumori",
+    "JA-C208-tenkiyohou",
+    "JA-C208-sora",
+    "JA-C208-taifuu"
+  ],
+  "tex": "japanese/book/chapters/ch208-the-weather-forecast.tex"
+}

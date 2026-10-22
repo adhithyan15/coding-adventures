@@ -116,21 +116,21 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "TEMPLATE_HEAD",
-        pattern: "`([^`\\\\$]|\\\\.|\\$[^{])*\\$\\{",
+        pattern: "`([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*\\$\\{",
         is_regex: true,
         line_number: 88,
         alias_name: nil,
       ),
       GT::TokenDefinition.new(
         name: "TEMPLATE_NO_SUB",
-        pattern: "`([^`\\\\$]|\\\\.|\\$[^{])*`",
+        pattern: "`([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*`",
         is_regex: true,
         line_number: 89,
         alias_name: nil,
       ),
       GT::TokenDefinition.new(
         name: "REGEX",
-        pattern: "\\/([^\\/\\\\\\n]|\\\\.)+\\/[gimsuy]*",
+        pattern: "\\/([^\\/\\\\\\n\\r]|\\\\[^\\n\\r])+\\/[gimsuy]*",
         is_regex: true,
         line_number: 93,
         alias_name: nil,
@@ -548,14 +548,14 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "LINE_COMMENT",
-        pattern: "\\/\\/[^\\n]*",
+        pattern: "\\/\\/[^\\n\\r]*",
         is_regex: true,
         line_number: 252,
         alias_name: nil,
       ),
       GT::TokenDefinition.new(
         name: "BLOCK_COMMENT",
-        pattern: "\\/\\*([^*]|\\*[^\\/])*\\*\\/",
+        pattern: "\\/\\*[^*]*\\*+([^\\/*][^*]*\\*+)*\\/",
         is_regex: true,
         line_number: 253,
         alias_name: nil,
@@ -586,7 +586,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "BAD_TEMPLATE",
-        pattern: "`([^`\\\\$]|\\\\.|\\$[^{])*$",
+        pattern: "`([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*$",
         is_regex: true,
         line_number: 263,
         alias_name: nil,
@@ -598,14 +598,14 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
         definitions: [
           GT::TokenDefinition.new(
             name: "TEMPLATE_MIDDLE",
-            pattern: "\\}([^`\\\\$]|\\\\.|\\$[^{])*\\$\\{",
+            pattern: "\\}([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*\\$\\{",
             is_regex: true,
             line_number: 243,
             alias_name: nil,
           ),
           GT::TokenDefinition.new(
             name: "TEMPLATE_TAIL",
-            pattern: "\\}([^`\\\\$]|\\\\.|\\$[^{])*`",
+            pattern: "\\}([^`\\\\$]|\\\\.|\\$+([^{`\\\\$]|\\\\.))*\\$*`",
             is_regex: true,
             line_number: 244,
             alias_name: nil,

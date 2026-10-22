@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C459-asl",
+    "language": "persian",
+    "chapter": 459,
+    "sequence": 23510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca20ce341d4eeced"
+  },
+  "findings": []
+}

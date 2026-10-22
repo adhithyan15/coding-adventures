@@ -1,0 +1,11 @@
+{
+  "id": "GU-C190-jama-karvu",
+  "pathSegment": "GU-PATH-190-BANK190",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-190-BANK190",
+      "order": 1
+    }
+  ]
+}

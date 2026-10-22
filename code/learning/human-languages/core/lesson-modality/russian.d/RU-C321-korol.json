@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C321-korol",
+    "language": "russian",
+    "chapter": 321,
+    "sequence": 18960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f05f404fc98576d"
+  },
+  "findings": []
+}

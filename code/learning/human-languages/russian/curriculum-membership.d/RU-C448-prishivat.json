@@ -1,0 +1,11 @@
+{
+  "id": "RU-C448-prishivat",
+  "pathSegment": "RU-PATH-448-KHIMCHISTKA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-448-KHIMCHISTKA",
+      "order": 4
+    }
+  ]
+}

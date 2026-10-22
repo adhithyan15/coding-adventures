@@ -1,5 +1,7 @@
 //! LANG83 PR1b on the BEAM backend: `i64_div_floor`, `i64_mod_floor`, `trap`,
-//! `write_i64`.
+//! `write_i64` — and the PR4 overflow-checked `i64_add_ovf`, `i64_sub_ovf`,
+//! `i64_mul_ovf`, `i64_neg_ovf` (end of file), whose bignum-then-range-check
+//! sequence runs on the same model (`gc_bif2` over `*` added).
 //!
 //! There is no `erl` on the development hosts (CI's BEAM column runs the real
 //! emulator), so besides pinning the instruction shapes these tests **execute
@@ -40,6 +42,7 @@ fn lower(name: &str, params: Vec<(String, String)>, ret: &str, body: Vec<IIRInst
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
     lower_iir_to_beam(&module, &IIRBeamConfig::new("lang83")).expect("lowers")
@@ -131,6 +134,9 @@ fn run(m: &BEAMModule, args: &[i64]) -> Outcome {
                     }
                     "erlang:+/2" => l + r,
                     "erlang:-/2" => l - r,
+                    // i128 holds every product of two i64s exactly, like a
+                    // BEAM bignum would.
+                    "erlang:*/2" => l * r,
                     other => panic!("bif {other} not modelled"),
                 };
                 // Every gc_bif must count the floor temp as live: a register at
@@ -224,6 +230,7 @@ fn trap_raises_the_kind_atom() {
         language: "test".into(),
         exports: vec![],
         imports: vec![],
+        release: None,
     };
     assert!(lower_iir_to_beam(&bad, &IIRBeamConfig::new("lang83")).is_err());
 }
@@ -280,4 +287,97 @@ fn user_variable_named_like_the_floor_temp_is_not_clobbered() {
         assert_eq!(run(&m, &[7, 2]), Outcome::Returned(q + 42), "{op}(7, 2)");
         assert_eq!(run(&m, &[-7, 2]), Outcome::Returned(q_neg + 42), "{op}(-7, 2)");
     }
+}
+
+// ── LANG83 PR4: overflow-checked arithmetic ─────────────────────────────────
+
+fn checked_fn(op: &str) -> BEAMModule {
+    let srcs = if op == "i64_neg_ovf" { vec![v("a")] } else { vec![v("a"), v("b")] };
+    lower(
+        "f",
+        vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+        "i64",
+        vec![IIRInstr::new(op, Some("q".into()), srcs, "i64"), IIRInstr::new("ret", None, vec![v("q")], "i64")],
+    )
+}
+
+const MAX: i64 = i64::MAX;
+const MIN: i64 = i64::MIN;
+
+#[test]
+fn checked_ops_return_the_exact_result_inside_the_range() {
+    for (op, a, b, want) in [
+        ("i64_add_ovf", MAX - 1, 1, MAX),
+        ("i64_add_ovf", MIN, MAX, -1),
+        ("i64_sub_ovf", MIN + 1, 1, MIN),
+        ("i64_sub_ovf", -1, MAX, MIN),
+        ("i64_mul_ovf", -(1 << 32), 1 << 31, MIN),
+        ("i64_mul_ovf", 3_037_000_499, 3_037_000_499, 9_223_372_030_926_249_001),
+        ("i64_mul_ovf", MIN, 1, MIN),
+        ("i64_neg_ovf", MAX, 0, -MAX),
+        ("i64_neg_ovf", 0, 0, 0),
+    ] {
+        assert_eq!(run(&checked_fn(op), &[a, b]), Outcome::Returned(i128::from(want)), "{op}({a}, {b})");
+    }
+}
+
+#[test]
+fn checked_ops_raise_overflow_instead_of_returning_a_bignum() {
+    for (op, a, b) in [
+        ("i64_add_ovf", MAX, 1),
+        ("i64_add_ovf", MIN, -1),
+        ("i64_sub_ovf", MIN, 1),
+        ("i64_sub_ovf", MAX, -1),
+        ("i64_sub_ovf", 0, MIN),
+        ("i64_mul_ovf", MIN, -1),
+        ("i64_mul_ovf", -1, MIN),
+        ("i64_mul_ovf", 1 << 32, 1 << 31),
+        ("i64_mul_ovf", 3_037_000_500, 3_037_000_500),
+        ("i64_mul_ovf", MIN, MIN),
+        ("i64_neg_ovf", MIN, 0),
+    ] {
+        assert_eq!(run(&checked_fn(op), &[a, b]), Outcome::Raised("Trap.Overflow".into()), "{op}({a}, {b})");
+    }
+}
+
+/// The shape: one exact `gc_bif2`, then two `is_lt` range checks against the
+/// i64 bounds, each followed by `erlang:error('Trap.Overflow')`.
+#[test]
+fn checked_op_is_exact_bif_then_two_range_checks() {
+    for (op, bif) in [
+        ("i64_add_ovf", "erlang:+/2"),
+        ("i64_sub_ovf", "erlang:-/2"),
+        ("i64_mul_ovf", "erlang:*/2"),
+        ("i64_neg_ovf", "erlang:-/2"),
+    ] {
+        let m = checked_fn(op);
+        let code = &m.instructions;
+        let bifs: Vec<usize> = (0..code.len()).filter(|&i| code[i].opcode == OP_GC_BIF2).collect();
+        assert_eq!(bifs.len(), 1, "{op}");
+        assert_eq!(import(&m, code[bifs[0]].operands[2].value), bif, "{op}");
+        let lts: Vec<usize> = (0..code.len()).filter(|&i| code[i].opcode == OP_IS_LT).collect();
+        assert_eq!(lts.len(), 2, "{op}");
+        assert_eq!(code[lts[0]].operands[2].value as i64, MIN, "{op}: low bound");
+        assert_eq!(code[lts[1]].operands[1].value as i64, MAX, "{op}: high bound");
+        let raises = code.iter().filter(|i| i.opcode == OP_CALL_EXT).count();
+        assert_eq!(raises, 2, "{op}: one raise per bound");
+        if op == "i64_neg_ovf" {
+            assert_eq!((code[bifs[0]].operands[3].tag, code[bifs[0]].operands[3].value), (BEAMTag::I, 0), "0 - a");
+        }
+    }
+}
+
+#[test]
+fn checked_dest_may_alias_an_operand() {
+    let m = lower(
+        "f",
+        vec![("a".into(), "i64".into()), ("b".into(), "i64".into())],
+        "i64",
+        vec![
+            IIRInstr::new("i64_mul_ovf", Some("a".into()), vec![v("a"), v("b")], "i64"),
+            IIRInstr::new("ret", None, vec![v("a")], "i64"),
+        ],
+    );
+    assert_eq!(run(&m, &[-6, 7]), Outcome::Returned(-42));
+    assert_eq!(run(&m, &[MAX, 2]), Outcome::Raised("Trap.Overflow".into()));
 }

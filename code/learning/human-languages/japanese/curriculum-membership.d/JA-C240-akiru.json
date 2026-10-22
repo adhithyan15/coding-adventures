@@ -1,0 +1,11 @@
+{
+  "id": "JA-C240-akiru",
+  "pathSegment": "JA-PATH-240-LIKES240",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-240-LIKES240",
+      "order": 4
+    }
+  ]
+}

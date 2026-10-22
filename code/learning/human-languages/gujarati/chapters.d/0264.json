@@ -1,0 +1,19 @@
+{
+  "chapter": 264,
+  "title": "Friends and neighbours",
+  "label": "ch:gu-friends-and-neighbours",
+  "canDo": "I can ask whether people know each other and say who is not at home.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C264-bhetvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 264: I can ask whether people know each other and say who is not at home.",
+    "assesses": [
+      "GU-LEX-C264-FRIENDS264-03",
+      "GU-LEX-C264-FRIENDS264-04",
+      "GU-LEX-C264-FRIENDS264-05"
+    ]
+  }
+}

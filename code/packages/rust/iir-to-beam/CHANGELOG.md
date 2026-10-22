@@ -1,5 +1,48 @@
 # Changelog — iir-to-beam
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
+## [0.23.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **`write_f64_py` / `write_f64_js`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a): `call 2,
+  '__iir_write_f64'/2`, a function emitted only when a module prints a
+  float. It is exported like every function this backend emits, because
+  `ir-to-beam` writes the Code chunk's function count as `exports.len()` and
+  the loader rejects extra `func_info`s (found by the security review). A module that prints none keeps byte-identical tables. Its digits come
+  from `erlang:float_to_list(F, [short])` (OTP 25+, Ryu), re-parsed with
+  `string:split`, `string:trim` and `list_to_integer`. It prints through
+  `io:put_chars/1`. Values live in an initialised Y frame across every call,
+  and each `gc_bif` names the exact Live count. BEAM floats are never
+  `inf`/`nan`, so it has no arms for them. The call site joins the
+  live-across list of call-emitting builtins.
+- `LiteralPool::intern_term` holds the helper's character-list and `[short]`
+  literals.
+- No local `erl`. `tests/lang83_pr6a.rs` executes the helper on an opcode and
+  library model that clobbers X registers at every call and GC, and fails on
+  any read of a clobbered or uninitialised register. It feeds four Erlang
+  layouts of the same digits. A mutation of one Live count is caught.
+
+## [0.22.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic)
+
+- **`i64_add_ovf` / `i64_sub_ovf` / `i64_mul_ovf` / `i64_neg_ovf`**
+  ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR4).
+  BEAM integers never overflow, they become bignums, so the lowering computes
+  the *exact* result with one `gc_bif2` (`erlang:'+'`, `'-'`, `'*'`; negation
+  is `0 - a`) into the destination register, then range-checks it:
+  `is_lt {f,LO_OK} rd MIN` and `is_lt {f,DONE} MAX rd`, each followed by
+  `erlang:error('Trap.Overflow')`. An out-of-range bignum reaches only the
+  raise. The destination is a variable register below `live`, so the bignum
+  survives a GC.
+- `op_support`: all four `Lowered`.
+- `tests/lang83_pr1b.rs`'s opcode model gains `erlang:*/2` (in `i128`, exact
+  like a bignum) and runs the sequences: exact results at the range edges,
+  `Trap.Overflow` for 11 overflowing inputs (including `MIN * MIN`), the
+  instruction shape, and a destination that aliases an operand.
+
 ## [0.21.0] — 2026-10-19 (LANG83 PR1b — floor division, `trap`, `write_i64`)
 
 - **`i64_div_floor` / `i64_mod_floor`** ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md)): Erlang's

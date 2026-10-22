@@ -1,0 +1,11 @@
+{
+  "id": "GU-C162-sametvu",
+  "pathSegment": "GU-PATH-162-CHORE162",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-162-CHORE162",
+      "order": 2
+    }
+  ]
+}

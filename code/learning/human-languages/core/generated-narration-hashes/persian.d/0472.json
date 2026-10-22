@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:b3d206817cdd15ec",
+  "lessonIds": [
+    "FA-C472-tabiat",
+    "FA-C472-hefazat-kardan",
+    "FA-C472-gardeshgar",
+    "FA-C472-atashfeshan",
+    "FA-C472-zistgah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch472.txt",
+  "json": "persian/narration/ch472.json",
+  "textHash": "fnv1a64:e41708a04170b35d",
+  "jsonHash": "fnv1a64:d3de4b0ed4324820",
+  "findings": []
+}

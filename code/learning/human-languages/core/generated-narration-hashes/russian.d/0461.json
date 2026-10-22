@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:268494503bb8e61d",
+  "lessonIds": [
+    "RU-C461-polyana",
+    "RU-C461-opushka",
+    "RU-C461-chashcha",
+    "RU-C461-mokh",
+    "RU-C461-shishka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch461.txt",
+  "json": "russian/narration/ch461.json",
+  "textHash": "fnv1a64:9cb8b620b24d0794",
+  "jsonHash": "fnv1a64:8e69757a6cc32006",
+  "findings": []
+}

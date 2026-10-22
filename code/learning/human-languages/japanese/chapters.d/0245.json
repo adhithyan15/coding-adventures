@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Glad, Lonely and Laughing",
+  "label": "ch:ja-glad-lonely-and-laughing",
+  "canDo": "I can ask how someone feels and say how they do not feel.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C245-egao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can ask how someone feels and say how they do not feel.",
+    "assesses": [
+      "JA-LEX-C245-JOY245-03",
+      "JA-LEX-C245-JOY245-04",
+      "JA-LEX-C245-JOY245-05"
+    ]
+  }
+}

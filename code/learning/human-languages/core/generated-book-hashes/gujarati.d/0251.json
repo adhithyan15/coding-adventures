@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:c595dff20d7adcb3",
+  "lessonIds": [
+    "GU-C251-arth",
+    "GU-C251-anuvad",
+    "GU-C251-shabdkosh",
+    "GU-C251-dhyan-apvu",
+    "GU-C251-yad-karvu"
+  ],
+  "tex": "gujarati/book/chapters/ch251-words-and-their-meanings.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C436-ustranyat",
+  "pathSegment": "RU-PATH-436-VOZVRAT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-436-VOZVRAT",
+      "order": 3
+    }
+  ]
+}

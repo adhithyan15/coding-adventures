@@ -56,3 +56,6 @@ pub mod token;
 pub mod tokenizer;
 pub mod tokenizer_dfa;
 pub mod grammar_lexer;
+
+/// Source-bound lexical ranges and bounded coordinate/partition validation (CV04a).
+pub mod lexical;

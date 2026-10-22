@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C188-nakli",
+    "language": "gujarati",
+    "chapter": 188,
+    "sequence": 10260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdd825fb9c0b979d"
+  },
+  "findings": []
+}

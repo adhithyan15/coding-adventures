@@ -1,0 +1,11 @@
+{
+  "id": "GU-C256-citarvu",
+  "pathSegment": "GU-PATH-256-PAINT256",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-256-PAINT256",
+      "order": 1
+    }
+  ]
+}

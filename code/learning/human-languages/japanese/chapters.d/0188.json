@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "At the Post Office",
+  "label": "ch:ja-at-the-post-office",
+  "canDo": "I can buy stamps and send post at the post office.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C188-kakitome",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can buy stamps and send post at the post office.",
+    "assesses": [
+      "JA-LEX-C188-POST188-03",
+      "JA-LEX-C188-POST188-04",
+      "JA-LEX-C188-POST188-05"
+    ]
+  }
+}

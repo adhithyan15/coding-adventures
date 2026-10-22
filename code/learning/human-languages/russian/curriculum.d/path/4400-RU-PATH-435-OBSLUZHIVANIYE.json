@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-435-OBSLUZHIVANIYE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "RU-EXT-435-OBSLUZHIVANIYE"
+  ],
+  "after": []
+}

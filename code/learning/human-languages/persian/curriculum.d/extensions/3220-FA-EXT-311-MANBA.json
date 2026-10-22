@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-311-MANBA",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where news came from: a source, according to someone, quoting someone, the details and a news agency.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "At the Theatre",
+  "label": "ch:fa-at-the-theatre",
+  "canDo": "I can talk about going to the theatre.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C523-naqsh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about going to the theatre.",
+    "assesses": [
+      "FA-LEX-C523-THEATRE-03",
+      "FA-LEX-C523-THEATRE-04",
+      "FA-LEX-C523-THEATRE-05"
+    ]
+  }
+}

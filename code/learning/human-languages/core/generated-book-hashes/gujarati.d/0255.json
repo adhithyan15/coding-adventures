@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:be49baca46dd16cf",
+  "lessonIds": [
+    "GU-C255-varta",
+    "GU-C255-kavita",
+    "GU-C255-navalkatha",
+    "GU-C255-natak",
+    "GU-C255-philm"
+  ],
+  "tex": "gujarati/book/chapters/ch255-stories-poems-and-films.tex"
+}

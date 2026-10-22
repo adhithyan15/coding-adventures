@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C483-rok",
+    "language": "persian",
+    "chapter": 483,
+    "sequence": 24770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cac0949dbdf96a8"
+  },
+  "findings": []
+}

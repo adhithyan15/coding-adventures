@@ -1,0 +1,11 @@
+{
+  "id": "RU-C356-tem-ne-menee",
+  "pathSegment": "RU-PATH-356-NESMOTRYA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-356-NESMOTRYA",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:f15cc20efcc1ae2a",
+  "lessonIds": [
+    "GU-C157-gothavvu",
+    "GU-C157-mukvu",
+    "GU-C157-tagvu",
+    "GU-C157-paddo",
+    "GU-C157-chajli"
+  ],
+  "tex": "gujarati/book/chapters/ch157-putting-things-in-their-place.tex"
+}

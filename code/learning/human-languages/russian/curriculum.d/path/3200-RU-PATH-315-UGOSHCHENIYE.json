@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-315-UGOSHCHENIYE",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-315-UGOSHCHENIYE"
+  ],
+  "after": []
+}

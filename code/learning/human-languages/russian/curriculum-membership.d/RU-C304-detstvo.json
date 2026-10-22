@@ -1,0 +1,11 @@
+{
+  "id": "RU-C304-detstvo",
+  "pathSegment": "RU-PATH-304-DETSTVO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-304-DETSTVO",
+      "order": 0
+    }
+  ]
+}

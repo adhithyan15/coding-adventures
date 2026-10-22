@@ -1,0 +1,11 @@
+{
+  "id": "JA-C234-katsu",
+  "pathSegment": "JA-PATH-234-MATCH234",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-234-MATCH234",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C371-az-in-ru",
+  "pathSegment": "FA-PATH-371-DALIL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-371-DALIL",
+      "order": 2
+    }
+  ]
+}

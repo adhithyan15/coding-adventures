@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C331-viran-shodan",
+    "language": "persian",
+    "chapter": 331,
+    "sequence": 16880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89f97bf9a6fb31f5"
+  },
+  "findings": []
+}

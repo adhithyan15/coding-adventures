@@ -1,0 +1,19 @@
+{
+  "chapter": 183,
+  "title": "At the grocer's counter",
+  "label": "ch:gu-at-the-grocer-s-counter",
+  "canDo": "I can name the people and the goods at a grocer's shop.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C183-kilo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 183: I can name the people and the goods at a grocer's shop.",
+    "assesses": [
+      "GU-LEX-C183-GROCER183-03",
+      "GU-LEX-C183-GROCER183-04",
+      "GU-LEX-C183-GROCER183-05"
+    ]
+  }
+}

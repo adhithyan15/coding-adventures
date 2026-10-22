@@ -1,0 +1,11 @@
+{
+  "id": "JA-C183-uriba",
+  "pathSegment": "JA-PATH-183-STAFF183",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-183-STAFF183",
+      "order": 2
+    }
+  ]
+}

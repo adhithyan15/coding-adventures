@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C200-noriba",
+    "language": "japanese",
+    "chapter": 200,
+    "sequence": 12130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aceaf158e2097aa8"
+  },
+  "findings": []
+}

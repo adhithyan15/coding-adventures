@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C240-ropvu",
+    "language": "gujarati",
+    "chapter": 240,
+    "sequence": 13010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6009f6783d32fb40"
+  },
+  "findings": []
+}

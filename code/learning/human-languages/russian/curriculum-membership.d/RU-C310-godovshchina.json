@@ -1,0 +1,11 @@
+{
+  "id": "RU-C310-godovshchina",
+  "pathSegment": "RU-PATH-310-YUBILEY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-310-YUBILEY",
+      "order": 1
+    }
+  ]
+}

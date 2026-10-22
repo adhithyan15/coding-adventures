@@ -637,8 +637,11 @@ jobs:
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           # LANG84 release inventories (`code/grammars/*/releases.csv`): the
-          # common header, date order, predecessor lineage and status claims.
-          python3 code/scripts/release_inventory.py check
+          # common header (every inventory, Perl's included since phase 2b),
+          # date order, predecessor lineage, status claims, `subsets.csv` and
+          # corpora. `--matrix` also fails a B(S) claim that has no
+          # `lang_matrix` row on the release or its IIR class representative.
+          python3 code/scripts/release_inventory.py check --matrix
           python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
@@ -1232,7 +1235,9 @@ jobs:
 
   # ── Job 7c: reconciled Rust compiled-grammar regeneration ──────
   #
-  # MacroOct and Nib are the first reconciled Rust grammar lanes. Protect them
+  # MacroOct and Nib are the first reconciled Rust grammar lanes; Ruby joins
+  # as the first LANG84 release family (tables follow releases.csv), and
+  # Python as the second (phase 7a, with its legacy minor lines). Protect them
   # without running the still-drifting full Rust sweep tracked by #14202. Keep
   # widening this job only after each additional lane has been reconciled.
   rust-grammar-regen-check:
@@ -1253,7 +1258,7 @@ jobs:
       - name: Regenerate the reconciled Rust grammar lanes
         run: |
           GT=code/programs/rust/grammar-tools/target/release/grammar-tools
-          for stem in macrooct nib; do
+          for stem in macrooct nib ruby python; do
             "$GT" generate-rust-compiled-grammars "$stem"
           done
 
@@ -1263,11 +1268,15 @@ jobs:
             code/packages/rust/macrooct-lexer/src/_grammar.rs
             code/packages/rust/nib-lexer/src/_grammar.rs
             code/packages/rust/nib-parser/src/_grammar.rs
+            code/packages/rust/ruby-lexer/src/_grammar.rs
+            code/packages/rust/ruby-parser/src/_grammar.rs
+            code/packages/rust/python-lexer/src/_grammar.rs
+            code/packages/rust/python-parser/src/_grammar.rs
           )
           if ! git diff --quiet -- "${paths[@]}"; then
             echo "::error::A reconciled Rust compiled grammar differs from its canonical source."
             git diff --stat -- "${paths[@]}"
-            echo "Regenerate with: for s in macrooct nib; do grammar-tools generate-rust-compiled-grammars \$s; done"
+            echo "Regenerate with: for s in macrooct nib ruby python; do grammar-tools generate-rust-compiled-grammars \$s; done"
             exit 1
           fi
           echo "All reconciled Rust compiled grammars are up to date."

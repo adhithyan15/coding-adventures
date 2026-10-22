@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C462-spalnik",
+    "language": "russian",
+    "chapter": 462,
+    "sequence": 26230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bed22255b07bb60"
+  },
+  "findings": []
+}

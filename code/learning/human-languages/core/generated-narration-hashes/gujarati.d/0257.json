@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:0191ebfac3e9c4ea",
+  "lessonIds": [
+    "GU-C257-ramat",
+    "GU-C257-kheladi",
+    "GU-C257-hariphai",
+    "GU-C257-bhag-levo",
+    "GU-C257-jodavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch257.txt",
+  "json": "gujarati/narration/ch257.json",
+  "textHash": "fnv1a64:10e7a122c34d262b",
+  "jsonHash": "fnv1a64:809e12c5b0d76098",
+  "findings": []
+}

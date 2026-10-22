@@ -1,0 +1,19 @@
+{
+  "chapter": 175,
+  "title": "Cooking at Home",
+  "label": "ch:ja-cooking-at-home",
+  "canDo": "I can say how I cook at home.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C175-abura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 175: I can say how I cook at home.",
+    "assesses": [
+      "JA-LEX-C175-COOK175-03",
+      "JA-LEX-C175-COOK175-04",
+      "JA-LEX-C175-COOK175-05"
+    ]
+  }
+}

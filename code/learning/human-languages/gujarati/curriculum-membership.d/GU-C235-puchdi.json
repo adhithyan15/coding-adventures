@@ -1,0 +1,11 @@
+{
+  "id": "GU-C235-puchdi",
+  "pathSegment": "GU-PATH-235-DOG235",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-235-DOG235",
+      "order": 4
+    }
+  ]
+}

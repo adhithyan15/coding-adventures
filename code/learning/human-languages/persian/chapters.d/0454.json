@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Repairs around town",
+  "label": "ch:fa-repairs-around-town",
+  "canDo": "I can get things fixed in town: the repairman, the cobbler, the locksmith, the hairdresser and the watchmaker.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C454-saatsaz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can get things fixed in town: the repairman, the cobbler, the locksmith, the hairdresser and the watchmaker.",
+    "assesses": [
+      "FA-LEX-C454-KAFFASH-03",
+      "FA-LEX-C454-KAFFASH-04",
+      "FA-LEX-C454-KAFFASH-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Photos and Collections",
+  "label": "ch:ja-photos-and-collections",
+  "canDo": "I can talk about photos I took and things I collected.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "JA-C237-ningyou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can talk about photos I took and things I collected.",
+    "assesses": [
+      "JA-LEX-C237-PHOTO237-03",
+      "JA-LEX-C237-PHOTO237-04",
+      "JA-LEX-C237-PHOTO237-05"
+    ]
+  }
+}

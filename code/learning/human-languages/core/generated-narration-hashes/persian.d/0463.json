@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:0740b85f2c6c3874",
+  "lessonIds": [
+    "FA-C463-sowghati",
+    "FA-C463-sanaye-e-dasti",
+    "FA-C463-gelim",
+    "FA-C463-javaher",
+    "FA-C463-atr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch463.txt",
+  "json": "persian/narration/ch463.json",
+  "textHash": "fnv1a64:06bc7334c4ec1f4c",
+  "jsonHash": "fnv1a64:3997487fcef21a0e",
+  "findings": []
+}

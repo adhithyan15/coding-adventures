@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-235-DOG235",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what a pet dog did.",
+  "prerequisites": []
+}

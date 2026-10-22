@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "Good Character",
+  "label": "ch:fa-good-character",
+  "canDo": "I can describe good qualities in people.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "FA-C488-delsuz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can describe good qualities in people.",
+    "assesses": [
+      "FA-LEX-C488-CHARACTER-03",
+      "FA-LEX-C488-CHARACTER-04",
+      "FA-LEX-C488-CHARACTER-05"
+    ]
+  }
+}

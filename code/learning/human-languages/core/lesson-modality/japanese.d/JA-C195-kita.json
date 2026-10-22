@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C195-kita",
+    "language": "japanese",
+    "chapter": 195,
+    "sequence": 11580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b61c9a4f64b7d999"
+  },
+  "findings": []
+}

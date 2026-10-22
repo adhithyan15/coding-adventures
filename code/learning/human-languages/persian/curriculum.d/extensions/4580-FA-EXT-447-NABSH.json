@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-447-NABSH",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find a building: the street corner, the house number, the postcode, a main road and a side street.",
+  "prerequisites": []
+}

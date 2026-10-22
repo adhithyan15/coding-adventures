@@ -1,0 +1,11 @@
+{
+  "id": "GU-C168-tavo",
+  "pathSegment": "GU-PATH-168-ROTLI168",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-168-ROTLI168",
+      "order": 3
+    }
+  ]
+}

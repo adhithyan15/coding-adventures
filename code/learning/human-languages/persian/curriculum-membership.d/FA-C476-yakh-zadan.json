@@ -1,0 +1,11 @@
+{
+  "id": "FA-C476-yakh-zadan",
+  "pathSegment": "FA-PATH-476-KULAK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-476-KULAK",
+      "order": 3
+    }
+  ]
+}

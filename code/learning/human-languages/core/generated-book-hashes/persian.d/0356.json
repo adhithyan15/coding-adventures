@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:83b1fb7a34b6ee86",
+  "lessonIds": [
+    "FA-C356-riz-kardan",
+    "FA-C356-charkh-kardan",
+    "FA-C356-leh-kardan",
+    "FA-C356-taft-dadan",
+    "FA-C356-piyaz-dagh"
+  ],
+  "tex": "persian/book/chapters/ch356-chop-mince-and-fry.tex"
+}

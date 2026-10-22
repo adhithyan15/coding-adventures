@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-206-ARRIVE206",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when we arrived, how tired I was and how fast we went.",
+  "prerequisites": []
+}

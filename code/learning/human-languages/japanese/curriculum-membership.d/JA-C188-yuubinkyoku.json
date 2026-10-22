@@ -1,0 +1,11 @@
+{
+  "id": "JA-C188-yuubinkyoku",
+  "pathSegment": "JA-PATH-188-POST188",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-188-POST188",
+      "order": 0
+    }
+  ]
+}

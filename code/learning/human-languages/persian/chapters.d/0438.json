@@ -1,0 +1,19 @@
+{
+  "chapter": 438,
+  "title": "Checking in and out",
+  "label": "ch:fa-checking-in-and-out",
+  "canDo": "I can check in and out: getting the room, settling the bill, the ID card, the deposit and the safe.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "FA-C438-gavsanduq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can check in and out: getting the room, settling the bill, the ID card, the deposit and the safe.",
+    "assesses": [
+      "FA-LEX-C438-TAHVIL-03",
+      "FA-LEX-C438-TAHVIL-04",
+      "FA-LEX-C438-TAHVIL-05"
+    ]
+  }
+}

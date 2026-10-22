@@ -1,0 +1,19 @@
+{
+  "chapter": 167,
+  "title": "Okra, peas and eggs",
+  "label": "ch:gu-okra-peas-and-eggs",
+  "canDo": "I can talk about vegetables and eggs and how they are cooked.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C167-talvu-fry",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 167: I can talk about vegetables and eggs and how they are cooked.",
+    "assesses": [
+      "GU-LEX-C167-OKRA167-03",
+      "GU-LEX-C167-OKRA167-04",
+      "GU-LEX-C167-OKRA167-05"
+    ]
+  }
+}

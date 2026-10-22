@@ -5882,6 +5882,7 @@ fn emit_code_behind(
         )
         .unwrap();
         writeln!(out).unwrap();
+        out.push_str(emit_projection_counters());
         out.push_str(r#"    private int projectionBatchDepth;
     private readonly List<string> pendingProjections = new();
 
@@ -7401,6 +7402,28 @@ fn row_projections_depending_on<'a>(ctx: &'a EmitContext<'_>, slot_path: &str) -
 }
 
 /// Translate a mosmodel slot type to its C# property type per spec §8.
+/// Shared by generated components and the executable headless projection probe.
+fn emit_projection_counters() -> &'static str {
+    r#"    // Cumulative projection work, not native realization counts. The owning
+    // component also receives counts from nested row VMs. Read snapshots on
+    // the UI thread around an interaction; no app data or I/O is involved.
+    private static readonly bool mosaicProfileProjections = !string.IsNullOrWhiteSpace(
+        System.Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH"));
+    private long mosaicProjectionReads, mosaicProjectionCreated, mosaicProjectionReused, mosaicProjectionRemoved;
+    public (long Reads, long Created, long Reused, long Removed) MosaicProjectionCounts =>
+        (mosaicProjectionReads, mosaicProjectionCreated, mosaicProjectionReused, mosaicProjectionRemoved);
+    internal void MosaicCountProjection(long reads, long created, long reused, long removed)
+    {
+        if (!mosaicProfileProjections) return;
+        mosaicProjectionReads += reads;
+        mosaicProjectionCreated += created;
+        mosaicProjectionReused += reused;
+        mosaicProjectionRemoved += removed;
+    }
+
+"#
+}
+
 fn emit_row_projection_property(projection: &RowProjection) -> String {
     let property_name = &projection.property_name;
     let source_path = &projection.source_path;
@@ -7424,6 +7447,7 @@ fn emit_row_projection_property(projection: &RowProjection) -> String {
     }
     args.extend(projection.capture_args.iter().cloned());
     let ctor_args = args.join(", ");
+    let counter_owner = &projection.owner_expr;
 
     let mut out = String::new();
     // Keep ItemsSource stable. Collection edits describe only changed positions,
@@ -7435,14 +7459,16 @@ fn emit_row_projection_property(projection: &RowProjection) -> String {
     writeln!(out, "        {{").unwrap();
     writeln!(out, "            var source = {source_path};").unwrap();
     writeln!(out, "            var rows = mosaic{property_name};").unwrap();
-    writeln!(out, "            if (source is null) {{ rows.Clear(); return rows; }}").unwrap();
+    writeln!(out, "            {counter_owner}.MosaicCountProjection(1, 0, 0, 0);").unwrap();
+    writeln!(out, "            if (source is null) {{ {counter_owner}.MosaicCountProjection(0, 0, 0, rows.Count); rows.Clear(); return rows; }}").unwrap();
     writeln!(out, "            var count = source.Count;").unwrap();
+    writeln!(out, "            {counter_owner}.MosaicCountProjection(0, 0, 0, System.Math.Max(0, rows.Count - count));").unwrap();
     writeln!(out, "            while (rows.Count > count) rows.RemoveAt(rows.Count - 1);").unwrap();
     writeln!(out, "            for (var i = 0; i < count; i++)").unwrap();
     writeln!(out, "            {{").unwrap();
     writeln!(
         out,
-        "                if (i == rows.Count) rows.Add(new {vm_class}({ctor_args}));\n                else if (!rows[i].MosaicMatches({ctor_args})) rows[i] = new {vm_class}({ctor_args});\n                else rows[i].MosaicRefresh();"
+        "                if (i == rows.Count) {{ rows.Add(new {vm_class}({ctor_args})); {counter_owner}.MosaicCountProjection(0, 1, 0, 0); }}\n                else if (!rows[i].MosaicMatches({ctor_args})) {{ rows[i] = new {vm_class}({ctor_args}); {counter_owner}.MosaicCountProjection(0, 1, 0, 1); }}\n                else {{ rows[i].MosaicRefresh(); {counter_owner}.MosaicCountProjection(0, 0, 1, 0); }}"
     )
     .unwrap();
     writeln!(out, "            }}").unwrap();
@@ -7452,6 +7478,7 @@ fn emit_row_projection_property(projection: &RowProjection) -> String {
     out
 }
 
+/// Translate a mosmodel slot type to its C# property type per spec §8.
 fn slot_type_to_csharp(t: &SlotType) -> Result<String, PipelineEmitError> {
     Ok(match t {
         SlotType::Text => "string".to_string(),
@@ -8895,6 +8922,15 @@ fn main_window_cs_with_layout_variants(
                 "            component, mosaicEvent, RequiredProps);\n",
             ),
         );
+        // Profiling observes the active root, including layout variants without
+        // any projections. It must not retain a reference to the default root.
+        source = source.replace(
+            "BeginProfile(\"interaction-handler\", this.Component)",
+            "BeginProfile(\"interaction-handler\", this.layoutRoot)",
+        ).replace(
+            "BeginProfile(\"interaction-next-render\", this.Component)",
+            "BeginProfile(\"interaction-next-render\", this.layoutRoot)",
+        );
         // The changes ENV4 reports are the changes that may select another
         // layout. Reported first (handlers run in the order they were added,
         // and so do the queued callbacks), so the runtime's answer is
@@ -8933,14 +8969,14 @@ fn main_window_cs_with_layout_variants(
             concat!(
                 "        try\n",
                 "        {\n",
-                "            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);\n",
+                "            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);\n",
                 "        }\n",
             ),
             concat!(
                 "        if (this.layoutRoot is not { } component) return;\n",
                 "        try\n",
                 "        {\n",
-                "            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
+                "            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
                 "        }\n",
             ),
         );
@@ -9954,8 +9990,8 @@ public sealed partial class MainWindow : Window
 
     private async void OnComponentDispatch(object? sender, {name}Event mosaicEvent)
     {{
-        using var handlerProfile = MosaicRuntimeHost.BeginProfile("interaction-handler");
-        var frameProfile = MosaicRuntimeHost.BeginProfile("interaction-next-render");
+        using var handlerProfile = MosaicRuntimeHost.BeginProfile("interaction-handler", this.Component);
+        var frameProfile = MosaicRuntimeHost.BeginProfile("interaction-next-render", this.Component);
         if (frameProfile is not null)
         {{
             System.EventHandler<object>? rendered = null;
@@ -9984,9 +10020,12 @@ public sealed partial class MainWindow : Window
         // An answer that raced a Close() arrives after the runtime is gone:
         // there are no props to apply, and nothing to report.
         if (!MosaicRuntimeHost.IsAvailable) return;
+        // Completion can clear a pending-effect persistence warning, or
+        // replace it with a real write failure. Show the host's current
+        // status together with the properties from that same refresh.
         try
         {{
-            MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);
+            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);
         }}
         catch (System.Exception error)
         {{
@@ -21751,6 +21790,12 @@ mod tests {
             cs.contains("        this.DispatcherQueue.TryEnqueue(RefreshProps);\n"),
             "{cs}"
         );
+        let refresh = cs.split("private void RefreshProps()").nth(1).unwrap();
+        assert!(refresh.contains("if (!MosaicRuntimeHost.IsAvailable) return;"));
+        assert!(refresh.contains(
+            "this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(this.Component, RequiredProps);"
+        ), "deferred completion must refresh the host status, including remaining warnings: {refresh}");
+        assert!(refresh.contains("this.StatusText.Text = $\"Mosaic host failed:"));
         assert!(p
             .main_window_xaml
             .contains("AutomationProperties.AutomationId=\"mosaic-startup-loading\""));
@@ -22226,10 +22271,13 @@ mod tests {
                 "        // An answer that raced a Close() arrives after the runtime is gone:\n",
                 "        // there are no props to apply, and nothing to report.\n",
                 "        if (!MosaicRuntimeHost.IsAvailable) return;\n",
+                "        // Completion can clear a pending-effect persistence warning, or\n",
+                "        // replace it with a real write failure. Show the host's current\n",
+                "        // status together with the properties from that same refresh.\n",
                 "        if (this.layoutRoot is not { } component) return;\n",
                 "        try\n",
                 "        {\n",
-                "            MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
+                "            this.StatusText.Text = MosaicRuntimeHost.ApplyRequiredProps(component, RequiredProps);\n",
             )),
             "{source}"
         );
@@ -28643,6 +28691,20 @@ class Owner {
 PROJECTION
     static void Check(bool ok, string why) { if (!ok) throw new Exception(why); }
     static void Main() {
+        if (string.IsNullOrWhiteSpace(System.Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH"))) {
+            var disabled = new Owner(); _ = disabled.Rows[0].Cells;
+            Check(disabled.MosaicProjectionCounts == (0L, 0L, 0L, 0L), "disabled counters");
+            return;
+        }
+        var measured = new Owner();
+        _ = measured.Rows[0].Cells;
+        Check(measured.MosaicProjectionCounts == (2L, 4L, 0L, 0L), "initial nested counters");
+        _ = measured.Rows;
+        Check(measured.MosaicProjectionCounts == (3L, 4L, 2L, 0L), "retained counters");
+        measured.Data = new[] { new[] { "replacement" } }; _ = measured.Rows;
+        Check(measured.MosaicProjectionCounts == (4L, 5L, 2L, 2L), "replace and shrink counters");
+        measured.Data = null; _ = measured.Rows;
+        Check(measured.MosaicProjectionCounts == (5L, 5L, 2L, 3L), "null counters");
         var owner = new Owner(); var rows = owner.Rows; var first = rows[0]; var second = rows[1];
         var cells = first.Cells; var cell = cells[0]; Check(first.Label == "before", "initial helper");
         Check(cell.MosaicTableName == "A, row 1: a", "initial accessible name");
@@ -28672,7 +28734,7 @@ PROJECTION
         var isolated = new Owner(); Check(!ReferenceEquals(rows, isolated.Rows), "cache crossed owners");
     }
 }
-"#.replace("PROJECTION", &emit_row_projection_property(&root)).replace("class Owner", "public class Owner");
+"#.replace("PROJECTION", &format!("{}{}", emit_projection_counters(), emit_row_projection_property(&root))).replace("class Owner", "public class Owner");
         let support = emit_native_table_support_source("Probe");
         let start = support.find("    internal ProbeMosaicTableCell? FindCell(").unwrap();
         let end = support[start..].find("    internal IReadOnlyList<ProbeMosaicTableHeaderCell> ColumnHeaders()").unwrap() + start;
@@ -28776,7 +28838,9 @@ QUEUE
 }
 "#.replace("QUEUE", &support[queue_start..queue_end]));
         fs::write(dir.join("Program.cs"), source).unwrap();
-        let output = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).current_dir(&dir).output().unwrap();
+        let disabled = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).env_remove("MOSAIC_PROFILE_PATH").current_dir(&dir).output().unwrap();
+        assert!(disabled.status.success(), "{}{}", String::from_utf8_lossy(&disabled.stdout), String::from_utf8_lossy(&disabled.stderr));
+        let output = Command::new("dotnet").args(["run", "--project", "Probe.csproj", "-v", "quiet"]).env("MOSAIC_PROFILE_PATH", "counter-probe").current_dir(&dir).output().unwrap();
         assert!(output.status.success(), "{}\n{}", String::from_utf8_lossy(&output.stdout), String::from_utf8_lossy(&output.stderr));
     }
 }

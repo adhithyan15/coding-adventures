@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-272-PROMISE272",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "GU-EXT-272-PROMISE272"
+  ],
+  "after": []
+}

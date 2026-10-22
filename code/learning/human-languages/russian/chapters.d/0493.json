@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Sweethearts",
+  "label": "ch:ru-sweethearts",
+  "canDo": "I can talk about being in love and showing affection.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C493-laskovyy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about being in love and showing affection.",
+    "assesses": [
+      "RU-LEX-C493-SWEETHEARTS-03",
+      "RU-LEX-C493-SWEETHEARTS-04",
+      "RU-LEX-C493-SWEETHEARTS-05"
+    ]
+  }
+}

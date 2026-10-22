@@ -1,0 +1,11 @@
+{
+  "id": "RU-C528-videoigra",
+  "pathSegment": "RU-PATH-528-GAMING",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-528-GAMING",
+      "order": 1
+    }
+  ]
+}

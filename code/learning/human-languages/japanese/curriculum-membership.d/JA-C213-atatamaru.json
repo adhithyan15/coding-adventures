@@ -1,0 +1,11 @@
+{
+  "id": "JA-C213-atatamaru",
+  "pathSegment": "JA-PATH-213-SKY213",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-213-SKY213",
+      "order": 4
+    }
+  ]
+}

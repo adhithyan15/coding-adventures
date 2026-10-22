@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:f28a00daa068b090",
+  "lessonIds": [
+    "RU-C390-soblyudat",
+    "RU-C390-obyazatelnyy",
+    "RU-C390-poryadok",
+    "RU-C390-pravo",
+    "RU-C390-otvetstvennost"
+  ],
+  "tex": "russian/book/chapters/ch390-keeping-the-rules.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C401-jozve",
+  "pathSegment": "FA-PATH-401-MORUR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-401-MORUR",
+      "order": 3
+    }
+  ]
+}

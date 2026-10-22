@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:ab676a575936dc5e",
+  "lessonIds": [
+    "FA-C440-sar-o-seda",
+    "FA-C440-kasif",
+    "FA-C440-seda-dadan",
+    "FA-C440-badbu",
+    "FA-C440-abgarmkon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch440.txt",
+  "json": "persian/narration/ch440.json",
+  "textHash": "fnv1a64:5288c349d054290c",
+  "jsonHash": "fnv1a64:d6ce27c976729236",
+  "findings": []
+}

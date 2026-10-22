@@ -1,0 +1,11 @@
+{
+  "id": "FA-C457-bazarche",
+  "pathSegment": "FA-PATH-457-RASTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-457-RASTE",
+      "order": 2
+    }
+  ]
+}

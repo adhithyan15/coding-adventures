@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-288-KRAZHA",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "RU-EXT-288-KRAZHA"
+  ],
+  "after": []
+}

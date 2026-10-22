@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 24,
-  "sourceHash": "fnv1a64:c6427391dce89959",
+  "sourceHash": "fnv1a64:ac3676dd3c7be5fc",
   "lessonIds": [
     "MR-A1M01-reader-greeting",
     "MR-A1M02-name-line",
@@ -20,7 +20,9 @@
     "MR-A1M15-skills-block-two",
     "MR-A1M16-closing-block",
     "MR-A1M17-guided-message",
-    "MR-A1M18-independent-message"
+    "MR-A1M18-independent-message",
+    "MR-A1M19-partial-timer",
+    "MR-A1M20-timed-message"
   ],
   "tex": "marathi/book/chapters/ch24-a1-named-reader-message.tex"
 }

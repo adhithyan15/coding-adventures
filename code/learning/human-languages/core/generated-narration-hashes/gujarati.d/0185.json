@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 185,
+  "sourceHash": "fnv1a64:e77ca2ad4849f717",
+  "lessonIds": [
+    "GU-C185-bhavtal-karvo",
+    "GU-C185-sodo",
+    "GU-C185-ochu",
+    "GU-C185-jodi",
+    "GU-C185-parakhvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch185.txt",
+  "json": "gujarati/narration/ch185.json",
+  "textHash": "fnv1a64:60c2060fee574728",
+  "jsonHash": "fnv1a64:fad1ae85231c237b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C229-douryou",
+  "pathSegment": "JA-PATH-229-OFFICE229",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-229-OFFICE229",
+      "order": 4
+    }
+  ]
+}

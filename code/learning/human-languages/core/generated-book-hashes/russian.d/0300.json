@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:6ca6fba46695daf4",
+  "lessonIds": [
+    "RU-C300-navodneniye",
+    "RU-C300-zemletryaseniye",
+    "RU-C300-smerch",
+    "RU-C300-zasukha",
+    "RU-C300-zatoplyat"
+  ],
+  "tex": "russian/book/chapters/ch300-natural-disasters.tex"
+}

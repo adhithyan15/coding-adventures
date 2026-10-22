@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:e3b1b1fc290c25ee",
+  "lessonIds": [
+    "FA-C345-qesse",
+    "FA-C345-ruzi-ruzegari",
+    "FA-C345-yeki-bud-yeki-nabud",
+    "FA-C345-qesse-gu",
+    "FA-C345-ravi"
+  ],
+  "tex": "persian/book/chapters/ch345-once-upon-a-time.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-205-RAIL205",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where I sat, who travelled with me and where we got off.",
+  "prerequisites": []
+}

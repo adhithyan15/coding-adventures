@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 286,
+  "title": "Covering a story",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3a70b5d7f970f687",
+  "lessons": [
+    {
+      "id": "RU-C286-translirovat",
+      "sequence": 17160,
+      "title": "транслировать (translírovat) — to broadcast",
+      "headword": "транслировать",
+      "romanization": "translírovat",
+      "gloss": "to broadcast",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d973ceab848c6294",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a summary, then the Russian for the result."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: транслировать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "транслировать (translírovat) — \"to broadcast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Матч транслировали по телевизору. Match translírovali po televízoru. The match was broadcast on television."
+            },
+            {
+              "kind": "speech",
+              "text": "One form for both aspects. Трансляция — a broadcast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "транслировать (translírovat) is usually traced to Latin trānslātus \"carried across\", the participle of trānsferre \"to carry over\" (Lewis & Short), with the Russian ending -ировать; EtymDB lists no parent."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "translírovat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *translírovat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "translírovat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *translírovat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with translírovat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *translírovat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a summary, then the Russian for the result, then say translírovat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a summary, then the Russian for the result, then say *translírovat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does транслировать (translírovat) mean? (\"To broadcast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C286-osveshchat",
+      "sequence": 17170,
+      "title": "освещать (osveshchát) — to report on, to cover (in the news); to light up",
+      "headword": "освещать",
+      "romanization": "osveshchát",
+      "gloss": "to report on, to cover (in the news); to light up",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af2dfbf6af326e09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for the result, then the Russian for to broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: освещать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "освещать (osveshchát) — \"to report on, to cover (in the news); to light up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Газеты широко освещали эту историю. Gazéty shirokó osveshcháli étu istóriyu. The newspapers covered this story widely."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective осветить (osvetít), я освещу. First sense: лампа освещает комнату — the lamp lights the room."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "освещать (osveshchát) is built on о- and свет \"light\", an inherited Slavic word (Proto-Slavic světŭ), with -щ-, the Church Slavonic shape -свещ- (native Russian has ч, as in свеча): to throw light on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osveshchát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osveshchát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "osveshchát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *osveshchát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with osveshchát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *osveshchát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for the result, then the Russian for to broadcast, then say osveshchát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for the result, then the Russian for to broadcast, then say *osveshchát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does освещать (osveshchát) mean? (\"To report on, to cover (in the news); to light up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C286-raskryvat",
+      "sequence": 17180,
+      "title": "раскрывать (raskryvát) — to reveal, to uncover; to solve (a case)",
+      "headword": "раскрывать",
+      "romanization": "raskryvát",
+      "gloss": "to reveal, to uncover; to solve (a case)",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61822dbcff473188",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to broadcast, then the Russian for to report on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: раскрывать",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "раскрывать (raskryvát) — \"to reveal, to uncover; to solve (a case)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Журналист раскрыл тайну компании. Zhurnalíst raskrýl táynu kompánii. The journalist uncovered the company's secret."
+            },
+            {
+              "kind": "speech",
+              "text": "Imperfective; perfective раскрыть (raskrýt), я раскрою. Раскрыть тайну — to reveal a secret."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "раскрывать (raskryvát) is built on рас- \"apart\" and крыть \"to cover\", an inherited Slavic verb: to take the cover off. EtymDB lists no parent for the compound."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raskryvát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raskryvát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raskryvát, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raskryvát*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with raskryvát",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *raskryvát*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to broadcast, then the Russian for to report on, then say raskryvát again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to broadcast, then the Russian for to report on, then say *raskryvát* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does раскрывать (raskryvát) mean? (\"To reveal, to uncover; to solve (a case)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C286-publikatsiya",
+      "sequence": 17190,
+      "title": "публикация (publikátsiya) — a publication",
+      "headword": "публикация",
+      "romanization": "publikátsiya",
+      "gloss": "a publication",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9d272dd9ac68554",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to report on, then the Russian for to reveal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: публикация",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "публикация (publikátsiya) — \"a publication\"."
+            },
+            {
+              "kind": "speech",
+              "text": "После публикации книга стала известной. Pósle publikátsii kníga stála izvéstnoy. After publication the book became well known."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "публикация (publikátsiya) goes back to Latin pūblicātiō \"a making public\", from pūblicus \"of the people\" (Lewis & Short); EtymDB lists no parent for the Russian word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "publikátsiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *publikátsiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "publikátsiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *publikátsiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with publikátsiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *publikátsiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to report on, then the Russian for to reveal, then say publikátsiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to report on, then the Russian for to reveal, then say *publikátsiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does публикация (publikátsiya) mean? (\"A publication\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C286-tirazh",
+      "sequence": 17200,
+      "title": "тираж (tirázh) — a print run, a circulation; a lottery draw",
+      "headword": "тираж",
+      "romanization": "tirázh",
+      "gloss": "a print run, a circulation; a lottery draw",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc4c6310b8361a02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for to reveal, then the Russian for a publication."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: тираж",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тираж (tirázh) — \"a print run, a circulation; a lottery draw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "У этой газеты большой тираж. U étoy gazéty bolshóy tirázh. This newspaper has a large circulation."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine; the stress moves to the ending: тиража, тиражи. Выиграть в тираже — to win in a lottery draw."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "тираж (tirázh) was borrowed from French tirage \"a printing; a drawing of lots\" (EtymDB). The French noun is usually traced to tirer \"to draw, to pull\", as copies are drawn off a press and numbers out of a drum; EtymDB lists no parent for tirage itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling, explaining and describing at B1."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirázh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirázh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tirázh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tirázh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence of your own with tirázh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence of your own with *tirázh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for to reveal, then the Russian for a publication, then say tirázh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for to reveal, then the Russian for a publication, then say *tirázh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does тираж (tirázh) mean? (\"A print run, a circulation; a lottery draw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R286-review-279-286",
+      "sequence": 17210,
+      "title": "Words from chapters 279–286 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 279-286",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:867799ed2c018085",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Russian for a piece of news and a bulletin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a piece of news, a bulletin, a headline, an article, a sensation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a piece of news, a bulletin, a headline, an article, a sensation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to report, to deny, to publish, to confirm, to refute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to report, to deny, to publish, to confirm, to refute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a correspondent, a report, a presenter, the air, a TV channel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a correspondent, a report, a presenter, the air, a TV channel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a source, an eyewitness, a rumour, a detail, a fact",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a source, an eyewitness, a rumour, a detail, a fact]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to claim, to mention, to clarify, to find out, to warn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to claim, to mention, to clarify, to find out, to warn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an interview, a survey, an editor, to comment on, to quote",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an interview, a survey, an editor, to comment on, to quote]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an event, an incident, a news round-up, a summary, the result",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an event, an incident, a news round-up, a summary, the result]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to broadcast, to report on, to reveal, a publication, a print run",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to broadcast, to report on, to reveal, a publication, a print run]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A piece of news? (известие.) A bulletin? (выпуск.) A headline? (заголовок.) An article? (статья.) A sensation? (сенсация.) To report? (сообщать.) To deny? (отрицать.) To publish? (публиковать.) To confirm? (подтверждать.) To refute? (опровергать.) A correspondent? (корреспондент.) A report? (репортаж.) A presenter? (ведущий.) The air? (эфир.) A TV channel? (телеканал.) A source? (источник.) An eyewitness? (очевидец.) A rumour? (слух.) A detail? (подробность.) A fact? (факт.) To claim? (утверждать.) To mention? (упоминать.) To clarify? (уточнять.) To find out? (выяснять.) To warn? (предупреждать.) An interview? (интервью.) A survey? (опрос.) An editor? (редактор.) To comment on? (комментировать.) To quote? (цитировать.) An event? (событие.) An incident? (происшествие.) A news round-up? (хроника.) A summary? (сводка.) The result? (итог.) To broadcast? (транслировать (translírovat).) To report on? (освещать (osveshchát).) To reveal? (раскрывать (raskryvát).) A publication? (публикация (publikátsiya).) A print run? (тираж (tirázh).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

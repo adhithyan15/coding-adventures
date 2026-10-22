@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:75b660a31a0c52b8",
+  "lessonIds": [
+    "RU-C282-istochnik",
+    "RU-C282-ochevidets",
+    "RU-C282-slukh",
+    "RU-C282-podrobnost",
+    "RU-C282-fakt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch282.txt",
+  "json": "russian/narration/ch282.json",
+  "textHash": "fnv1a64:c2e1d174b69a1b19",
+  "jsonHash": "fnv1a64:355127fa38deba35",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Apps",
+  "label": "ch:ru-apps",
+  "canDo": "I can talk about apps: installing them, updating them, deleting them and uploading files.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "RU-C401-zagruzhat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about apps: installing them, updating them, deleting them and uploading files.",
+    "assesses": [
+      "RU-LEX-C401-PRILOZHENIYA-03",
+      "RU-LEX-C401-PRILOZHENIYA-04",
+      "RU-LEX-C401-PRILOZHENIYA-05"
+    ]
+  }
+}

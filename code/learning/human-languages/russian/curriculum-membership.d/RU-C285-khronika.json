@@ -1,0 +1,11 @@
+{
+  "id": "RU-C285-khronika",
+  "pathSegment": "RU-PATH-285-SOBYTIYE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-285-SOBYTIYE",
+      "order": 2
+    }
+  ]
+}

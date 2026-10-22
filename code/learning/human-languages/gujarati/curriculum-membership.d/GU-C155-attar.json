@@ -1,0 +1,11 @@
+{
+  "id": "GU-C155-attar",
+  "pathSegment": "GU-PATH-155-READY155",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-155-READY155",
+      "order": 3
+    }
+  ]
+}

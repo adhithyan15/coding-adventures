@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C476-ispug",
+    "language": "russian",
+    "chapter": 476,
+    "sequence": 26950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:caa6daae0c28d6cd"
+  },
+  "findings": []
+}

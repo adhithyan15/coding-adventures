@@ -1,0 +1,11 @@
+{
+  "id": "GU-C245-rabar",
+  "pathSegment": "GU-PATH-245-SPELL245",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-245-SPELL245",
+      "order": 3
+    }
+  ]
+}

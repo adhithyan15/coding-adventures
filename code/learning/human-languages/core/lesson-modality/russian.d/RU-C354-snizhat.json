@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C354-snizhat",
+    "language": "russian",
+    "chapter": 354,
+    "sequence": 20700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1dcd293d7bd32b9a"
+  },
+  "findings": []
+}

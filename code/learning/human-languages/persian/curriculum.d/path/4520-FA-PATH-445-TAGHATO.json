@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-445-TAGHATO",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "FA-EXT-445-TAGHATO"
+  ],
+  "after": []
+}

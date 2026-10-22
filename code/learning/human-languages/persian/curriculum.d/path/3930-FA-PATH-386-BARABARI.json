@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-386-BARABARI",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "FA-EXT-386-BARABARI"
+  ],
+  "after": []
+}

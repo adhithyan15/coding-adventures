@@ -1,0 +1,11 @@
+{
+  "id": "FA-C456-tamas-gereftan",
+  "pathSegment": "FA-PATH-456-PEYK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-456-PEYK",
+      "order": 4
+    }
+  ]
+}
