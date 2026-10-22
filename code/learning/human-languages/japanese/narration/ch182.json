@@ -1,0 +1,800 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 182,
+  "title": "Paying, Cash and Coins",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1ff55caf00142112",
+  "lessons": [
+    {
+      "id": "JA-C182-harau",
+      "sequence": 10910,
+      "title": "はらう (harau) — to pay",
+      "headword": "はらう",
+      "romanization": "harau",
+      "gloss": "to pay",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e45ce685f690a112",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to sell, then the Japanese for to sell well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はらう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はらう — harau — \"to pay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ここで おかねを はらいます。 — koko de okane o haraimasu — \"Customers pay here.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite はらいます, haraimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はらう (harau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koko de okane o haraimasu — Customers pay here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koko de okane o haraimasu* — Customers pay here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to sell, then the Japanese for to sell well, then say harau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to sell, then the Japanese for to sell well, then say *harau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はらう (harau) mean? (\"To pay\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C182-harau-type",
+              "prompt": "Say the Japanese for 'to pay'.",
+              "assesses": [
+                "JA-LEX-C182-PAY182-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はらう",
+                "harau"
+              ],
+              "feedback": {
+                "correct": "Right: はらう (harau) is 'to pay'.",
+                "incorrect": "'To pay' is はらう (harau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C182-otsuri",
+      "sequence": 10920,
+      "title": "おつり (otsuri) — change (money back)",
+      "headword": "おつり",
+      "romanization": "otsuri",
+      "gloss": "change (money back)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b82b97dce2b7816",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to sell well, then the Japanese for to pay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おつり",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おつり — otsuri — \"change (money back)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おつりは じゅうえんです。 — otsuri wa jūen desu — \"The change is ten yen.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おつり (otsuri) is built from polite o- and native tsuri, written with the same kanji as tsuri, \"fishing\"; how the money sense arose is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otsuri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otsuri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otsuri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otsuri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otsuri wa jūen desu — The change is ten yen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otsuri wa jūen desu* — The change is ten yen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to sell well, then the Japanese for to pay, then say otsuri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to sell well, then the Japanese for to pay, then say *otsuri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おつり (otsuri) mean? (\"Change (money back)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C182-otsuri-type",
+              "prompt": "Say the Japanese for 'change'.",
+              "assesses": [
+                "JA-LEX-C182-PAY182-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おつり",
+                "otsuri"
+              ],
+              "feedback": {
+                "correct": "Right: おつり (otsuri) is 'change (money back)'.",
+                "incorrect": "'Change' is おつり (otsuri)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C182-genkin",
+      "sequence": 10930,
+      "title": "げんきん (genkin) — cash",
+      "headword": "げんきん",
+      "romanization": "genkin",
+      "gloss": "cash",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3accee408fd042fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to pay, then the Japanese for change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: げんきん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんきん — genkin — \"cash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "げんきんで はらいます。 — genkin de haraimasu — \"I pay in cash.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "げんきん (genkin) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are gen, \"present, actual\" (Middle Chinese henH) and kin, \"gold, money\" (kim) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genkin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genkin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genkin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genkin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "genkin de haraimasu — I pay in cash.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *genkin de haraimasu* — I pay in cash.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to pay, then the Japanese for change, then say genkin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to pay, then the Japanese for change, then say *genkin* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does げんきん (genkin) mean? (\"Cash\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C182-genkin-type",
+              "prompt": "Say the Japanese for 'cash'.",
+              "assesses": [
+                "JA-LEX-C182-PAY182-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "げんきん",
+                "genkin"
+              ],
+              "feedback": {
+                "correct": "Right: げんきん (genkin) is 'cash'.",
+                "incorrect": "'Cash' is げんきん (genkin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C182-satsu",
+      "sequence": 10940,
+      "title": "さつ (satsu) — banknote; paper money",
+      "headword": "さつ",
+      "romanization": "satsu",
+      "gloss": "banknote; paper money",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acd15f88344d3464",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for change, then the Japanese for cash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さつ — satsu — \"banknote; paper money\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さいふに さつが ありません。 — saifu ni satsu ga arimasen — \"There are no banknotes in my wallet.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さつ (satsu) is Sino-Japanese (kango): one Chinese character, \"tag, paper money\", read with its on'yomi, a reading borrowed from Chinese (Middle Chinese tsreat) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saifu ni satsu ga arimasen — There are no banknotes in my wallet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saifu ni satsu ga arimasen* — There are no banknotes in my wallet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for change, then the Japanese for cash, then say satsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for change, then the Japanese for cash, then say *satsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さつ (satsu) mean? (\"Banknote; paper money\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C182-satsu-type",
+              "prompt": "Say the Japanese for 'banknote'.",
+              "assesses": [
+                "JA-LEX-C182-PAY182-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さつ",
+                "satsu"
+              ],
+              "feedback": {
+                "correct": "Right: さつ (satsu) is 'banknote; paper money'.",
+                "incorrect": "'Banknote' is さつ (satsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C182-kozeni",
+      "sequence": 10950,
+      "title": "こぜに (kozeni) — small coins; small change",
+      "headword": "こぜに",
+      "romanization": "kozeni",
+      "gloss": "small coins; small change",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:273e6ea915d2d994",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for cash, then the Japanese for banknote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こぜに",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こぜに — kozeni — \"small coins; small change\"."
+            },
+            {
+              "kind": "speech",
+              "text": "こぜにで はらいます。 — kozeni de haraimasu — \"I pay with small coins.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こぜに (kozeni) is built from native ko-, \"small\", and zeni, \"coin\"; KANJIDIC2 lists zeni as a kun reading, but it looks like an early loan from Chinese (Middle Chinese dzjen), so its history is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kozeni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kozeni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kozeni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kozeni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kozeni de haraimasu — I pay with small coins.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kozeni de haraimasu* — I pay with small coins.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for cash, then the Japanese for banknote, then say kozeni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for cash, then the Japanese for banknote, then say *kozeni* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こぜに (kozeni) mean? (\"Small coins; small change\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C182-kozeni-type",
+              "prompt": "Say the Japanese for 'small coins'.",
+              "assesses": [
+                "JA-LEX-C182-PAY182-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こぜに",
+                "kozeni"
+              ],
+              "feedback": {
+                "correct": "Right: こぜに (kozeni) is 'small coins; small change'.",
+                "incorrect": "'Small coins' is こぜに (kozeni)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C242-tsukiau",
+    "language": "japanese",
+    "chapter": 242,
+    "sequence": 14570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:327ca56c8c971775"
+  },
+  "findings": []
+}

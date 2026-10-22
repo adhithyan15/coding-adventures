@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Broken, Cracked and Repaired",
+  "label": "ch:ja-broken-cracked-and-repaired",
+  "canDo": "I can say when things break and get repaired.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C162-furui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can say when things break and get repaired.",
+    "assesses": [
+      "JA-LEX-C162-REPAIR162-03",
+      "JA-LEX-C162-REPAIR162-04",
+      "JA-LEX-C162-REPAIR162-05"
+    ]
+  }
+}

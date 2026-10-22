@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-200-CHANGE200",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where I change trains and wait for a bus.",
+  "prerequisites": []
+}

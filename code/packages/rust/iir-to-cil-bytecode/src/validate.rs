@@ -140,7 +140,9 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// runtime can stub or provide either independently.
 pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
     // `write_i64` (LANG83 PR1b): `Console.Write(int64)` on the textual path.
-    &["putchar", "getchar", "print_i64", "write_i64", "pair?", "not", "equal?"];
+    // `write_f64_py` / `write_f64_js` (LANG83 PR6a): the module's own
+    // `__iir_write_f64` helper on the textual path; the binary path refuses them.
+    &["putchar", "getchar", "print_i64", "write_i64", "write_f64_py", "write_f64_js", "pair?", "not", "equal?"];
 
 // ---------------------------------------------------------------------------
 // Heap ops that need special validation (type-restricted)

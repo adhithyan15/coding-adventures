@@ -1,0 +1,19 @@
+{
+  "chapter": 209,
+  "title": "Spring, Autumn and Cherry Blossom",
+  "label": "ch:ja-spring-autumn-and-cherry-blossom",
+  "canDo": "I can talk about the seasons ahead.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-R209-review-204-209",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 209: I can talk about the seasons ahead.",
+    "assesses": [
+      "JA-LEX-C209-SEASON209-03",
+      "JA-LEX-C209-SEASON209-04",
+      "JA-LEX-C209-SEASON209-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C157-oku",
+    "language": "japanese",
+    "chapter": 157,
+    "sequence": 9400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:456dc0b57152969e"
+  },
+  "findings": []
+}

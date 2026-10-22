@@ -1,0 +1,11 @@
+{
+  "id": "JA-C172-bangohan",
+  "pathSegment": "JA-PATH-172-MEALS172",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-172-MEALS172",
+      "order": 3
+    }
+  ]
+}

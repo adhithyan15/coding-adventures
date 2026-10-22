@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "A Message for Mira",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8c031e608e673bda",
+  "sourceHash": "fnv1a64:c219780f43b762f2",
   "lessons": [
     {
       "id": "MR-A1M01-reader-greeting",
@@ -100,7 +100,7 @@
         "writing-block",
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:c476356288d39382",
+      "sourceHash": "fnv1a64:c4f27c12e61cb114",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -119,6 +119,10 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Before looking back, recall the form label for a friend's name. Write it from memory and circle the -चे ending that agrees with neuter नाव. Check the form page only after writing it. Now turn from a friend's name to the sender's own name in the message."
+            },
             {
               "kind": "speech",
               "text": "Write yesterday's reader greeting from memory. The next line is not new Marathi: माझं नाव अरुण आहे. (mājhaṁ nāv Aruṇ āhe) already appeared in the introduction recap."

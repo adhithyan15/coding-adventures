@@ -1,0 +1,809 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 170,
+  "title": "The New Year and the Weeks After Next",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:071968b192f627d2",
+  "lessons": [
+    {
+      "id": "JA-C170-saraishuu",
+      "sequence": 10040,
+      "title": "さらいしゅう (saraishū) — the week after next",
+      "headword": "さらいしゅう",
+      "romanization": "saraishū",
+      "gloss": "the week after next",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a00f58e29d2c05e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for every month, then the Japanese for to repeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さらいしゅう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さらいしゅう — saraishū — \"the week after next\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さらいしゅう ひっこします。 — saraishū hikkoshimasu — \"I will move house the week after next.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さらいしゅう (saraishū) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"again\" (Middle Chinese tsojH), rai, \"coming\" (loj) and shū, \"week\", whose Middle Chinese reading the sources here do not give (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saraishū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saraishū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saraishū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saraishū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saraishū hikkoshimasu — I will move house the week after next.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saraishū hikkoshimasu* — I will move house the week after next.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for every month, then the Japanese for to repeat, then say saraishū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for every month, then the Japanese for to repeat, then say *saraishū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さらいしゅう (saraishū) mean? (\"The week after next\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C170-saraishuu-type",
+              "prompt": "Say the Japanese for 'the week after next'.",
+              "assesses": [
+                "JA-LEX-C170-NEWYEAR170-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さらいしゅう",
+                "saraishū",
+                "saraishuu",
+                "saraishu"
+              ],
+              "feedback": {
+                "correct": "Right: さらいしゅう (saraishū) is 'the week after next'.",
+                "incorrect": "'The week after next' is さらいしゅう (saraishū)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C170-sarainen",
+      "sequence": 10050,
+      "title": "さらいねん (sarainen) — the year after next",
+      "headword": "さらいねん",
+      "romanization": "sarainen",
+      "gloss": "the year after next",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9778486ce261085",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to repeat, then the Japanese for the week after next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さらいねん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さらいねん — sarainen — \"the year after next\"."
+            },
+            {
+              "kind": "speech",
+              "text": "さらいねん いなかに すむ つもりです。 — sarainen inaka ni sumu tsumori desu — \"I plan to live in the countryside the year after next.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さらいねん (sarainen) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are sa, \"again\" (Middle Chinese tsojH), rai, \"coming\" (loj) and nen, \"year\" (nen) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarainen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarainen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarainen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarainen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarainen inaka ni sumu tsumori desu — I plan to live in the countryside the year after next.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarainen inaka ni sumu tsumori desu* — I plan to live in the countryside the year after next.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to repeat, then the Japanese for the week after next, then say sarainen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to repeat, then the Japanese for the week after next, then say *sarainen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さらいねん (sarainen) mean? (\"The year after next\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C170-sarainen-type",
+              "prompt": "Say the Japanese for 'the year after next'.",
+              "assesses": [
+                "JA-LEX-C170-NEWYEAR170-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さらいねん",
+                "sarainen"
+              ],
+              "feedback": {
+                "correct": "Right: さらいねん (sarainen) is 'the year after next'.",
+                "incorrect": "'The year after next' is さらいねん (sarainen)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C170-shougatsu",
+      "sequence": 10060,
+      "title": "しょうがつ (shōgatsu) — the New Year; January",
+      "headword": "しょうがつ",
+      "romanization": "shōgatsu",
+      "gloss": "the New Year; January",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3a5089507dc5769",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the week after next, then the Japanese for the year after next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しょうがつ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうがつ — shōgatsu — \"the New Year; January\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうがつに いなかに かえります。 — shōgatsu ni inaka ni kaerimasu — \"I will go back to the countryside at New Year.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しょうがつ (shōgatsu) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are shō, \"correct, righteous\" (Middle Chinese tsyeng) and gatsu, \"moon, month\" (ngjwot) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōgatsu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōgatsu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōgatsu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōgatsu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōgatsu ni inaka ni kaerimasu — I will go back to the countryside at New Year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōgatsu ni inaka ni kaerimasu* — I will go back to the countryside at New Year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the week after next, then the Japanese for the year after next, then say shōgatsu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the week after next, then the Japanese for the year after next, then say *shōgatsu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しょうがつ (shōgatsu) mean? (\"The New Year; January\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C170-shougatsu-type",
+              "prompt": "Say the Japanese for 'the New Year'.",
+              "assesses": [
+                "JA-LEX-C170-NEWYEAR170-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しょうがつ",
+                "shōgatsu",
+                "shougatsu",
+                "shoogatsu",
+                "shogatsu"
+              ],
+              "feedback": {
+                "correct": "Right: しょうがつ (shōgatsu) is 'the New Year; January'.",
+                "incorrect": "'The New Year' is しょうがつ (shōgatsu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C170-iwau",
+      "sequence": 10070,
+      "title": "いわう (iwau) — to celebrate",
+      "headword": "いわう",
+      "romanization": "iwau",
+      "gloss": "to celebrate",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:466a54faf08a22e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the year after next, then the Japanese for the New Year."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いわう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いわう — iwau — \"to celebrate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいしゅう ちちの たんじょうびを いわいます。 — raishū chichi no tanjōbi o iwaimasu — \"Next week we will celebrate my father's birthday.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite いわいます, iwaimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いわう (iwau) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iwau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iwau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iwau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iwau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raishū chichi no tanjōbi o iwaimasu — Next week we will celebrate my father's birthday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raishū chichi no tanjōbi o iwaimasu* — Next week we will celebrate my father's birthday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the year after next, then the Japanese for the New Year, then say iwau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the year after next, then the Japanese for the New Year, then say *iwau* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いわう (iwau) mean? (\"To celebrate\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C170-iwau-type",
+              "prompt": "Say the Japanese for 'to celebrate'.",
+              "assesses": [
+                "JA-LEX-C170-NEWYEAR170-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いわう",
+                "iwau"
+              ],
+              "feedback": {
+                "correct": "Right: いわう (iwau) is 'to celebrate'.",
+                "incorrect": "'To celebrate' is いわう (iwau)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C170-sugosu",
+      "sequence": 10080,
+      "title": "すごす (sugosu) — to spend time; to pass (the days)",
+      "headword": "すごす",
+      "romanization": "sugosu",
+      "gloss": "to spend time; to pass (the days)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7290ec9ec6593f73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the New Year, then the Japanese for to celebrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すごす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すごす — sugosu — \"to spend time; to pass (the days)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "しょうがつは かぞくと すごします。 — shōgatsu wa kazoku to sugoshimasu — \"I will spend the New Year with my family.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite すごします, sugoshimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すごす (sugosu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugosu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugosu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugosu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sugosu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shōgatsu wa kazoku to sugoshimasu — I will spend the New Year with my family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shōgatsu wa kazoku to sugoshimasu* — I will spend the New Year with my family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the New Year, then the Japanese for to celebrate, then say sugosu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the New Year, then the Japanese for to celebrate, then say *sugosu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すごす (sugosu) mean? (\"To spend time; to pass (the days)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C170-sugosu-type",
+              "prompt": "Say the Japanese for 'to spend time'.",
+              "assesses": [
+                "JA-LEX-C170-NEWYEAR170-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すごす",
+                "sugosu"
+              ],
+              "feedback": {
+                "correct": "Right: すごす (sugosu) is 'to spend time; to pass (the days)'.",
+                "incorrect": "'To spend time' is すごす (sugosu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

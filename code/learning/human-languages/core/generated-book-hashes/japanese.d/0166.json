@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:ad1b8c75c47c4541",
+  "lessonIds": [
+    "JA-C166-gozen",
+    "JA-C166-hiru",
+    "JA-C166-ban",
+    "JA-C166-konban",
+    "JA-C166-maiban"
+  ],
+  "tex": "japanese/book/chapters/ch166-mornings-noons-and-nights-ahead.tex"
+}

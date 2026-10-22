@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:1ebdeb2ae60c4eba",
+  "lessonIds": [
+    "JA-C183-kyaku",
+    "JA-C183-tenin",
+    "JA-C183-uriba",
+    "JA-C183-erabu",
+    "JA-C183-narabu",
+    "JA-R183-review-178-183"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch183.txt",
+  "json": "japanese/narration/ch183.json",
+  "textHash": "fnv1a64:4e966c8f156b707e",
+  "jsonHash": "fnv1a64:19b92fba3bd98288",
+  "findings": []
+}

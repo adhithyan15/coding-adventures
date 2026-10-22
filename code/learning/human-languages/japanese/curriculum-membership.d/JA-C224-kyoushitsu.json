@@ -1,0 +1,11 @@
+{
+  "id": "JA-C224-kyoushitsu",
+  "pathSegment": "JA-PATH-224-SCHOOL224",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-224-SCHOOL224",
+      "order": 1
+    }
+  ]
+}

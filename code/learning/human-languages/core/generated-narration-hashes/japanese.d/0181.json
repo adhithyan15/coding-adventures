@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:445d17d7696e73d9",
+  "lessonIds": [
+    "JA-C181-kaimono",
+    "JA-C181-nedan",
+    "JA-C181-ikura",
+    "JA-C181-uru",
+    "JA-C181-ureru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch181.txt",
+  "json": "japanese/narration/ch181.json",
+  "textHash": "fnv1a64:0ec21a0efd4bb734",
+  "jsonHash": "fnv1a64:1124a572514a2e25",
+  "findings": []
+}

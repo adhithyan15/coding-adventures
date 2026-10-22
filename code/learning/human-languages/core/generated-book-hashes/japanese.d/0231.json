@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 231,
+  "sourceHash": "fnv1a64:97a98df42619bffc",
+  "lessonIds": [
+    "JA-C231-moshimoshi",
+    "JA-C231-bangou",
+    "JA-C231-renraku",
+    "JA-C231-henji",
+    "JA-C231-tsutaeru"
+  ],
+  "tex": "japanese/book/chapters/ch231-calls-and-messages.tex"
+}

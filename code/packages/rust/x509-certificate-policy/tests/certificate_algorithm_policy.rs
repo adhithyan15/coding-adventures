@@ -1,9 +1,9 @@
 use der_asn1::Asn1Limits;
 use x509_certificate::decode_x509_certificate;
 use x509_certificate_policy::{
-    validate_certificate_algorithm_profile, X509AlgorithmParametersPolicy,
-    X509CertificateAlgorithmErrorKind, X509CertificateAlgorithmProfile,
-    X509CertificateAlgorithmProfileDefinitionErrorKind,
+    validate_certificate_algorithm_policy, validate_certificate_algorithm_profile,
+    X509AlgorithmParametersPolicy, X509CertificateAlgorithmErrorKind,
+    X509CertificateAlgorithmProfile, X509CertificateAlgorithmProfileDefinitionErrorKind,
 };
 
 const SIGNATURE_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
@@ -232,6 +232,41 @@ fn selects_exact_algorithm_and_parameter_profile_with_borrowed_evidence() {
         .equals(KEY_OID));
     assert_eq!(evidence.subject_public_key().bytes(), &[0xaa, 0xbb]);
     assert_eq!(evidence.signature_value().bytes(), &[0xcc, 0xdd]);
+}
+
+#[test]
+fn binds_algorithm_profile_evidence_to_the_exact_certificate() {
+    let encoded = certificate(
+        SIGNATURE_OID_DER,
+        Some(NULL_DER),
+        KEY_OID_DER,
+        Some(NULL_DER),
+        &[0, 0xaa, 0xbb],
+        &[0, 0xcc, 0xdd],
+    );
+    let certificate = decode_x509_certificate(&encoded, Asn1Limits::default()).unwrap();
+    let profiles = [profile(
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        16,
+        16,
+        16,
+        16,
+    )];
+
+    let evidence = validate_certificate_algorithm_policy(&certificate, &profiles).unwrap();
+
+    assert!(std::ptr::eq(evidence.certificate(), &certificate));
+    assert_eq!(evidence.algorithm_profile().profile_index(), 0);
+    assert!(evidence
+        .algorithm_profile()
+        .signature_algorithm()
+        .algorithm()
+        .equals(SIGNATURE_OID));
+    assert_eq!(
+        format!("{evidence:?}"),
+        "ValidatedCertificateAlgorithmPolicy { profile_index: 0, .. }"
+    );
 }
 
 #[test]

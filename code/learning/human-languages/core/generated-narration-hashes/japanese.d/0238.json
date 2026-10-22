@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:9d32a4f8d3be58db",
+  "lessonIds": [
+    "JA-C238-manga",
+    "JA-C238-shousetsu",
+    "JA-C238-dokusho",
+    "JA-C238-bangumi",
+    "JA-C238-tsumaranai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch238.txt",
+  "json": "japanese/narration/ch238.json",
+  "textHash": "fnv1a64:75fb8ac2e3584088",
+  "jsonHash": "fnv1a64:0e560422ec1c8faa",
+  "findings": []
+}

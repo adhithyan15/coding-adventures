@@ -1,9 +1,32 @@
-//! Python parser backed by compiled versioned parser grammars.
+//! Python parser backed by compiled parser grammars.
+//!
+//! Two entry points live side by side while LANG84 phase 7 lands:
+//!
+//! - The **release API** ([`parse_python_at`], [`tokenize_python_at`]) runs
+//!   the generic `GrammarLexer` + `GrammarParser` over one tagged release's
+//!   `python<release>.tokens` / `python<release>.grammar` pair, with typed
+//!   errors and no fallback between releases. This is the LANG84 frontend
+//!   path that `python-iir-compiler::compile_source_at` uses.
+//! - The **legacy API** ([`parse_python`], [`create_python_parser`]) keeps the
+//!   pre-LANG84 minor-line pairs (`"2.7"` … `"3.12"`) for its existing
+//!   callers (LANG79's float pilot, `python-to-semantic-ir`, the WASM
+//!   wrappers), unchanged.
+//!
+//! A release ID is never a minor-line version and vice versa; see
+//! `release.rs` for the table.
 
 use coding_adventures_python_lexer::{tokenize_python, DEFAULT_VERSION};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser};
 
 mod _grammar;
+mod release;
+
+pub use release::{
+    grammar_classes, parse_python_at, release_parser_grammar, resolve_release,
+    supported_releases, tokenize_python_at, FrontendBudgets, PythonFrontendError, PythonParse,
+    DEFAULT_MAX_SOURCE_BYTES, DEFAULT_MAX_TOKENS, DEFAULT_RELEASE, MAX_TRUSTED_SOURCE_BYTES,
+    MAX_TRUSTED_TOKENS,
+};
 
 /// Recursion-depth cap for the Python [`GrammarParser`] — see
 /// [`GrammarParser::with_max_depth`] for why this guard exists at all (deep
@@ -53,7 +76,13 @@ mod _grammar;
 /// tracked follow-up; this pass at minimum replaces an unmeasured,
 /// silently-broken default with a properly-measured floor for the shape
 /// most likely to bind.
-const MAX_RULE_DEPTH: usize = 190;
+///
+/// The LANG84 release grammars use the same engine and recursion path, so the
+/// release API applies the same cap (`FrontendBudgets::max_rule_depth` is
+/// clamped to it). Their subset grammars are shallower per parenthesis (8
+/// rule levels instead of about 18), so the cap admits deeper source nesting
+/// there; `release_probes` measures it.
+pub(crate) const MAX_RULE_DEPTH: usize = 190;
 
 fn resolve_version(version: &str) -> Result<&str, String> {
     let resolved = if version.is_empty() {
@@ -62,12 +91,12 @@ fn resolve_version(version: &str) -> Result<&str, String> {
         version
     };
 
-    if _grammar::SUPPORTED_VERSIONS.contains(&resolved) {
+    if _grammar::legacy_versions::SUPPORTED_VERSIONS.contains(&resolved) {
         Ok(resolved)
     } else {
         Err(format!(
             "Unsupported Python version '{version}'. Supported versions: {}",
-            _grammar::SUPPORTED_VERSIONS
+            _grammar::legacy_versions::SUPPORTED_VERSIONS
                 .iter()
                 .map(|value| format!("\"{}\"", value))
                 .collect::<Vec<_>>()
@@ -79,7 +108,7 @@ fn resolve_version(version: &str) -> Result<&str, String> {
 pub fn create_python_parser(source: &str, version: &str) -> Result<GrammarParser, String> {
     let version = resolve_version(version)?;
     let tokens = tokenize_python(source, version)?;
-    let grammar = _grammar::parser_grammar(version)
+    let grammar = _grammar::legacy_versions::parser_grammar(version)
         .expect("compiled Python parser grammar missing supported version");
     Ok(GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH))
 }
@@ -109,7 +138,7 @@ mod tests {
 
     #[test]
     fn all_supported_versions_load() {
-        for version in _grammar::SUPPORTED_VERSIONS {
+        for version in _grammar::legacy_versions::SUPPORTED_VERSIONS {
             let ast = parse_python("", version).unwrap();
             assert!(
                 !ast.rule_name.is_empty(),

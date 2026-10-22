@@ -1,0 +1,15 @@
+{
+  "language": "japanese",
+  "chapter": 171,
+  "sourceHash": "fnv1a64:c8584d928121d787",
+  "lessonIds": [
+    "JA-C171-saisho",
+    "JA-C171-mazu",
+    "JA-C171-tsugi",
+    "JA-C171-saigo",
+    "JA-C171-sorosoro",
+    "JA-R171-review-170-171",
+    "JA-R171-review-final-171"
+  ],
+  "tex": "japanese/book/chapters/ch171-first-of-all-next-and-last.tex"
+}

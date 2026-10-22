@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C146-nemuru",
+    "language": "japanese",
+    "chapter": 146,
+    "sequence": 8800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f06a086040683c0c"
+  },
+  "findings": []
+}

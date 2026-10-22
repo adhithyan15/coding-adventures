@@ -1,0 +1,11 @@
+{
+  "id": "JA-C229-kaigi",
+  "pathSegment": "JA-PATH-229-OFFICE229",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-229-OFFICE229",
+      "order": 1
+    }
+  ]
+}

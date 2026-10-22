@@ -1,0 +1,809 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 200,
+  "title": "Changing Trains and Waiting for Buses",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f24374805d906d06",
+  "lessons": [
+    {
+      "id": "JA-C200-norikaeru",
+      "sequence": 12100,
+      "title": "のりかえる (norikaeru) — to change trains; to transfer",
+      "headword": "のりかえる",
+      "romanization": "norikaeru",
+      "gloss": "to change trains; to transfer",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c726e900efcd81e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to come to a stop, then the Japanese for an express."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のりかえる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のりかえる — norikaeru — \"to change trains; to transfer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ここで ちかてつに のりかえます。 — koko de chikatetsu ni norikaemasu — \"I change to the subway here.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite のりかえます, norikaemasu; an ichidan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のりかえる (norikaeru) is native Japanese (wago), built from nori, \"riding\", and kaeru, \"to change\", both inherited rather than borrowed (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "norikaeru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *norikaeru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "norikaeru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *norikaeru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koko de chikatetsu ni norikaemasu — I change to the subway here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koko de chikatetsu ni norikaemasu* — I change to the subway here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to come to a stop, then the Japanese for an express, then say norikaeru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to come to a stop, then the Japanese for an express, then say *norikaeru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のりかえる (norikaeru) mean? (\"To change trains; to transfer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C200-norikaeru-type",
+              "prompt": "Say the Japanese for 'to change trains'.",
+              "assesses": [
+                "JA-LEX-C200-CHANGE200-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のりかえる",
+                "norikaeru"
+              ],
+              "feedback": {
+                "correct": "Right: のりかえる (norikaeru) is 'to change trains; to transfer'.",
+                "incorrect": "'To change trains' is のりかえる (norikaeru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C200-deru",
+      "sequence": 12110,
+      "title": "でる (deru) — to leave; to go out",
+      "headword": "でる",
+      "romanization": "deru",
+      "gloss": "to leave; to go out",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f55e436caa34247a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an express, then the Japanese for to change trains."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: でる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でる — deru — \"to leave; to go out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とっきゅうは もう でました。 — tokkyū wa mō demashita — \"The limited express has already left.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite でます, demasu; an ichidan verb. Its partner だす, dasu, means \"to take out\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "でる (deru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokkyū wa mō demashita — The limited express has already left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokkyū wa mō demashita* — The limited express has already left.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an express, then the Japanese for to change trains, then say deru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an express, then the Japanese for to change trains, then say *deru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does でる (deru) mean? (\"To leave; to go out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C200-deru-type",
+              "prompt": "Say the Japanese for 'to leave'.",
+              "assesses": [
+                "JA-LEX-C200-CHANGE200-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "でる",
+                "deru"
+              ],
+              "feedback": {
+                "correct": "Right: でる (deru) is 'to leave; to go out'.",
+                "incorrect": "'To leave' is でる (deru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C200-tetsudou",
+      "sequence": 12120,
+      "title": "てつどう (tetsudō) — a railway",
+      "headword": "てつどう",
+      "romanization": "tetsudō",
+      "gloss": "a railway",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b22a5fd74a10a52f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to change trains, then the Japanese for to leave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: てつどう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てつどう — tetsudō — \"a railway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "この てつどうは みなとまで いきます。 — kono tetsudō wa minato made ikimasu — \"This railway goes as far as the harbour.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "てつどう (tetsudō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tetsu, \"iron\" (Middle Chinese thet) and dō, \"way\" (dawX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tetsudō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tetsudō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tetsudō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tetsudō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kono tetsudō wa minato made ikimasu — This railway goes as far as the harbour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kono tetsudō wa minato made ikimasu* — This railway goes as far as the harbour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to change trains, then the Japanese for to leave, then say tetsudō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to change trains, then the Japanese for to leave, then say *tetsudō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does てつどう (tetsudō) mean? (\"A railway\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C200-tetsudou-type",
+              "prompt": "Say the Japanese for 'a railway'.",
+              "assesses": [
+                "JA-LEX-C200-CHANGE200-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "てつどう",
+                "tetsudō",
+                "tetsudou",
+                "tetsudoo",
+                "tetsudo"
+              ],
+              "feedback": {
+                "correct": "Right: てつどう (tetsudō) is 'a railway'.",
+                "incorrect": "'A railway' is てつどう (tetsudō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C200-noriba",
+      "sequence": 12130,
+      "title": "のりば (noriba) — a boarding point; a bus or taxi stand",
+      "headword": "のりば",
+      "romanization": "noriba",
+      "gloss": "a boarding point; a bus or taxi stand",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aceaf158e2097aa8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to leave, then the Japanese for a railway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: のりば",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のりば — noriba — \"a boarding point; a bus or taxi stand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "のりばは えきの まえです。 — noriba wa eki no mae desu — \"The boarding point is in front of the station.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "のりば (noriba) is native Japanese (wago), built from nori, \"riding\", and ba, \"place\", both inherited rather than borrowed (JMdict)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noriba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noriba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noriba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noriba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "noriba wa eki no mae desu — The boarding point is in front of the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *noriba wa eki no mae desu* — The boarding point is in front of the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to leave, then the Japanese for a railway, then say noriba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to leave, then the Japanese for a railway, then say *noriba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does のりば (noriba) mean? (\"A boarding point; a bus or taxi stand\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "JA-C200-noriba-type",
+              "prompt": "Type the Japanese for 'a boarding point'.",
+              "assesses": [
+                "JA-LEX-C200-CHANGE200-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のりば",
+                "noriba"
+              ],
+              "feedback": {
+                "correct": "Right: のりば (noriba) is 'a boarding point; a bus or taxi stand'.",
+                "incorrect": "'A boarding point' is のりば (noriba)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C200-teiryuujo",
+      "sequence": 12140,
+      "title": "ていりゅうじょ (teiryūjo) — a bus stop; a tram stop",
+      "headword": "ていりゅうじょ",
+      "romanization": "teiryūjo",
+      "gloss": "a bus stop; a tram stop",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85c4cb04b077f0f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a railway, then the Japanese for a boarding point."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ていりゅうじょ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ていりゅうじょ — teiryūjo — \"a bus stop; a tram stop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ていりゅうじょで ともだちを まちます。 — teiryūjo de tomodachi o machimasu — \"I wait for my friend at the bus stop.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ていりゅうじょ (teiryūjo) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are tei, \"to halt\" (Middle Chinese deng), ryū, \"to stay\" (ljuw) and jo, \"place\" (srjoX) (KANJIDIC2; Middle Chinese in Baxter's transcription). The last is voiced from sho to jo."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teiryūjo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teiryūjo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teiryūjo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teiryūjo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teiryūjo de tomodachi o machimasu — I wait for my friend at the bus stop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teiryūjo de tomodachi o machimasu* — I wait for my friend at the bus stop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a railway, then the Japanese for a boarding point, then say teiryūjo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a railway, then the Japanese for a boarding point, then say *teiryūjo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ていりゅうじょ (teiryūjo) mean? (\"A bus stop; a tram stop\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C200-teiryuujo-type",
+              "prompt": "Say the Japanese for 'a bus stop'.",
+              "assesses": [
+                "JA-LEX-C200-CHANGE200-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ていりゅうじょ",
+                "teiryūjo",
+                "teiryuujo",
+                "teiryujo"
+              ],
+              "feedback": {
+                "correct": "Right: ていりゅうじょ (teiryūjo) is 'a bus stop; a tram stop'.",
+                "incorrect": "'A bus stop' is ていりゅうじょ (teiryūjo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

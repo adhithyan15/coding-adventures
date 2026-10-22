@@ -1,0 +1,11 @@
+{
+  "id": "JA-C208-tenkiyohou",
+  "pathSegment": "JA-PATH-208-FORECAST208",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-208-FORECAST208",
+      "order": 2
+    }
+  ]
+}

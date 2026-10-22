@@ -1,0 +1,11 @@
+{
+  "id": "JA-C160-yogoreru",
+  "pathSegment": "JA-PATH-160-DIRT160",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-160-DIRT160",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "JA-EXT-182-PAY182",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can pay and talk about cash and change.",
+  "prerequisites": []
+}

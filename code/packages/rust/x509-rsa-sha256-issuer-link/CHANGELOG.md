@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a consuming composition from unique issuer-candidate selection evidence
   that authenticates the exact bound child and candidate without repeating Name
   policy.
+- Added a stronger consuming composition that binds selected-candidate evidence
+  to certificate-wide issuing-CA role-policy evidence for the exact same object
+  and retains both proofs in a distinct non-copyable result.
+- Added the strongest consuming composition, which also requires
+  certificate-bound data-driven algorithm-policy evidence for that same issuer
+  and retains all three proofs without treating the profile as verifier routing.
 
 ### Security
 
@@ -26,3 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   revocation, TLS, HTTP, or network authority.
 - Selection-bound authentication prevents cross-certificate substitution
   between candidate selection and RSA link verification.
+- Role-policy composition rejects certificate or role mismatches before RSA key
+  or signature work; recognition alone remains insufficient for non-role
+  critical-extension semantics.
+- Full-policy composition rejects role or algorithm evidence for another
+  certificate before RSA parsing or signature verification; encoded key-size
+  policy remains distinct from RSA modulus-strength validation.

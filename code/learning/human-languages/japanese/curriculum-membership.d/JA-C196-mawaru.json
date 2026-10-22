@@ -1,0 +1,11 @@
+{
+  "id": "JA-C196-mawaru",
+  "pathSegment": "JA-PATH-196-ADDR196",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-196-ADDR196",
+      "order": 4
+    }
+  ]
+}

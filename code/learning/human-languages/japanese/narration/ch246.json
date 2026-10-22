@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 246,
+  "title": "Anger and Apologies",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:55b1016139be4d8a",
+  "lessons": [
+    {
+      "id": "JA-C246-okoru",
+      "sequence": 14730,
+      "title": "おこる (okoru) — to get angry; to tell off",
+      "headword": "おこる",
+      "romanization": "okoru",
+      "gloss": "to get angry; to tell off",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:257dce43c21c2d02",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to laugh, then the Japanese for a smile."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おこる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おこる — okoru — \"to get angry; to tell off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "せんせいは よく おこりますか。 — sensei wa yoku okorimasu ka — \"Does the teacher often get angry?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite おこります, okorimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おこる (okoru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okoru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okoru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "okoru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *okoru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sensei wa yoku okorimasu ka — Does the teacher often get angry?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sensei wa yoku okorimasu ka* — Does the teacher often get angry?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to laugh, then the Japanese for a smile, then say okoru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to laugh, then the Japanese for a smile, then say *okoru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おこる (okoru) mean? (\"To get angry; to tell off\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C246-okoru-type",
+              "prompt": "Say the Japanese for 'to get angry'.",
+              "assesses": [
+                "JA-LEX-C246-ANGER246-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おこる",
+                "okoru"
+              ],
+              "feedback": {
+                "correct": "Right: おこる (okoru) is 'to get angry; to tell off'.",
+                "incorrect": "'To get angry' is おこる (okoru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C246-kenka",
+      "sequence": 14740,
+      "title": "けんか (kenka) — a quarrel; a fight",
+      "headword": "けんか",
+      "romanization": "kenka",
+      "gloss": "a quarrel; a fight",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a19d154bca56b8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a smile, then the Japanese for to get angry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: けんか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんか — kenka — \"a quarrel; a fight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あには ともだちと けんかを しません。 — ani wa tomodachi to kenka o shimasen — \"My elder brother does not quarrel with his friends.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "けんか (kenka) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are ken, \"noisy, boisterous\" (Middle Chinese xjwon), and ka, \"noisy\", whose Middle Chinese xwae is listed under a variant spelling that JMdict also gives (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kenka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kenka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ani wa tomodachi to kenka o shimasen — My elder brother does not quarrel with his friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ani wa tomodachi to kenka o shimasen* — My elder brother does not quarrel with his friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a smile, then the Japanese for to get angry, then say kenka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a smile, then the Japanese for to get angry, then say *kenka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does けんか (kenka) mean? (\"A quarrel; a fight\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C246-kenka-type",
+              "prompt": "Say the Japanese for 'a quarrel'.",
+              "assesses": [
+                "JA-LEX-C246-ANGER246-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "けんか",
+                "kenka"
+              ],
+              "feedback": {
+                "correct": "Right: けんか (kenka) is 'a quarrel; a fight'.",
+                "incorrect": "'A quarrel' is けんか (kenka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C246-ayamaru",
+      "sequence": 14750,
+      "title": "あやまる (ayamaru) — to apologize",
+      "headword": "あやまる",
+      "romanization": "ayamaru",
+      "gloss": "to apologize",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e985a72f3800fc65",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to get angry, then the Japanese for a quarrel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あやまる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あやまる — ayamaru — \"to apologize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "おとうとは いもうとに あやまりますか。 — otōto wa imōto ni ayamarimasu ka — \"Does my younger brother apologize to my younger sister?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite あやまります, ayamarimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あやまる (ayamaru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayamaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayamaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ayamaru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ayamaru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "otōto wa imōto ni ayamarimasu ka — Does my younger brother apologize to my younger sister?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *otōto wa imōto ni ayamarimasu ka* — Does my younger brother apologize to my younger sister?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to get angry, then the Japanese for a quarrel, then say ayamaru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to get angry, then the Japanese for a quarrel, then say *ayamaru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あやまる (ayamaru) mean? (\"To apologize\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C246-ayamaru-type",
+              "prompt": "Say the Japanese for 'to apologize'.",
+              "assesses": [
+                "JA-LEX-C246-ANGER246-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あやまる",
+                "ayamaru"
+              ],
+              "feedback": {
+                "correct": "Right: あやまる (ayamaru) is 'to apologize'.",
+                "incorrect": "'To apologize' is あやまる (ayamaru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C246-yurusu",
+      "sequence": 14760,
+      "title": "ゆるす (yurusu) — to forgive; to allow",
+      "headword": "ゆるす",
+      "romanization": "yurusu",
+      "gloss": "to forgive; to allow",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:174820b6fbf6b3a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a quarrel, then the Japanese for to apologize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆるす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆるす — yurusu — \"to forgive; to allow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "いもうとは おとうとを ゆるしますか。 — imōto wa otōto o yurushimasu ka — \"Does my younger sister forgive my younger brother?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ゆるします, yurushimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆるす (yurusu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yurusu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yurusu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yurusu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yurusu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imōto wa otōto o yurushimasu ka — Does my younger sister forgive my younger brother?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imōto wa otōto o yurushimasu ka* — Does my younger sister forgive my younger brother?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a quarrel, then the Japanese for to apologize, then say yurusu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a quarrel, then the Japanese for to apologize, then say *yurusu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆるす (yurusu) mean? (\"To forgive; to allow\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C246-yurusu-type",
+              "prompt": "Say the Japanese for 'to forgive'.",
+              "assesses": [
+                "JA-LEX-C246-ANGER246-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆるす",
+                "yurusu"
+              ],
+              "feedback": {
+                "correct": "Right: ゆるす (yurusu) is 'to forgive; to allow'.",
+                "incorrect": "'To forgive' is ゆるす (yurusu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C246-zannen",
+      "sequence": 14770,
+      "title": "ざんねん (zannen) — a pity; regrettable",
+      "headword": "ざんねん",
+      "romanization": "zannen",
+      "gloss": "a pity; regrettable",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c134b12c07363918",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to apologize, then the Japanese for to forgive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ざんねん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざんねん — zannen — \"a pity; regrettable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "きのうの しあいは ざんねんでしたね。 — kinō no shiai wa zannen deshita ne — \"Yesterday's match was a pity, wasn't it.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざんねん (zannen) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are zan, \"remain\" (Middle Chinese dzan) and nen, \"thought, feeling\" (nemH) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zannen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zannen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zannen, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zannen*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kinō no shiai wa zannen deshita ne — Yesterday's match was a pity, wasn't it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kinō no shiai wa zannen deshita ne* — Yesterday's match was a pity, wasn't it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to apologize, then the Japanese for to forgive, then say zannen again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to apologize, then the Japanese for to forgive, then say *zannen* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ざんねん (zannen) mean? (\"A pity; regrettable\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C246-zannen-type",
+              "prompt": "Say the Japanese for 'a pity'.",
+              "assesses": [
+                "JA-LEX-C246-ANGER246-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ざんねん",
+                "zannen"
+              ],
+              "feedback": {
+                "correct": "Right: ざんねん (zannen) is 'a pity; regrettable'.",
+                "incorrect": "'A pity' is ざんねん (zannen)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

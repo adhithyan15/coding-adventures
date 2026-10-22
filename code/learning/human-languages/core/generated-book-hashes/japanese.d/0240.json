@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:776b1e30844d8c30",
+  "lessonIds": [
+    "JA-C240-jouzu",
+    "JA-C240-heta",
+    "JA-C240-suki",
+    "JA-C240-kirai",
+    "JA-C240-akiru"
+  ],
+  "tex": "japanese/book/chapters/ch240-likes-and-skills.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-153-OUTING153",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "JA-EXT-153-OUTING153"
+  ],
+  "after": []
+}

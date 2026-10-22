@@ -5,6 +5,7 @@
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)
   names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
   behaviour change: backends do not read the field.
+
 ## Unreleased — a void entry's `ret_void` returns an `int32` (LANG84 4a)
 
 - **Fix: `ret_void` in the entry method.** `emit_il` always gives the entry
@@ -23,6 +24,22 @@
   `int32` before `ret` and a void helper does not. Confirmed against real
   CoreCLR (SDK 10, `DOTNET_ROLL_FORWARD=Major`): all eleven Perl CLR matrix
   cells now print their expected output.
+
+## [0.49.0] — 2026-10-20 (LANG83 PR6a — shortest round-trip float output)
+
+- **`write_f64_py` / `write_f64_js`** on the textual path ([LANG83](../../../specs/LANG83-iir-standard-operation-registry.md) PR6a):
+  `ldloc x; ldc.i4.0|1; call void <Asm>Program::__iir_write_f64(float64,
+  int32)`. The module carries one IL helper: digits from
+  `Math.Abs(x).ToString("R", CultureInfo.InvariantCulture)` (shortest
+  round-trip on .NET Core 3.0+), re-parsed with `IndexOf` / `Substring` /
+  `Remove` / `TrimStart('0')` / `TrimEnd('0')` / `Int32.Parse`, then written
+  piece by piece with `Console.Write`. The stack is empty at every label and
+  branch. A non-float operand and a user function named `__iir_write_f64` are
+  refused. The binary (32-bit simulator) path refuses both builtins.
+- No local `dotnet`. `tests/lang83_pr6a.rs` walks every path of the helper
+  with a stack-depth model (Perl 4a's lesson) and executes it on an IL
+  interpreter model, fed .NET-style, all-scientific and all-fixed `"R"`
+  strings. Both checks are mutation-tested.
 
 ## [0.48.0] — 2026-10-20 (LANG83 PR4 — overflow-checked arithmetic on the textual path)
 

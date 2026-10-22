@@ -1,0 +1,11 @@
+{
+  "id": "JA-C191-yakkyoku",
+  "pathSegment": "JA-PATH-191-SHUT191",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-191-SHUT191",
+      "order": 3
+    }
+  ]
+}

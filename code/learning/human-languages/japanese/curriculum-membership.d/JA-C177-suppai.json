@@ -1,0 +1,11 @@
+{
+  "id": "JA-C177-suppai",
+  "pathSegment": "JA-PATH-177-TASTE177",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-177-TASTE177",
+      "order": 1
+    }
+  ]
+}

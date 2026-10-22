@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C148-keshou",
+    "language": "japanese",
+    "chapter": 148,
+    "sequence": 8940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c2c8f896e755260"
+  },
+  "findings": []
+}

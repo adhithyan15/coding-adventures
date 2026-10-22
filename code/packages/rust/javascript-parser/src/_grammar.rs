@@ -6094,8 +6094,26 @@ mod v_es2015 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -6103,7 +6121,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 199,
+                    line_number: 204,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -6120,7 +6138,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 201,
+                    line_number: 206,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -6143,7 +6161,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 203,
+                    line_number: 208,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -6175,14 +6193,14 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 205,
+                    line_number: 210,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 207,
+                    line_number: 212,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -6196,7 +6214,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 209,
+                    line_number: 214,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -6231,7 +6249,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 211,
+                    line_number: 216,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -6254,7 +6272,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 213,
+                    line_number: 218,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -6283,7 +6301,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 215,
+                    line_number: 220,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -6344,7 +6362,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 217,
+                    line_number: 222,
                 },
                 GrammarRule {
                     name: r#"lexical_declaration_no_semi"#.to_string(),
@@ -6367,7 +6385,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 226,
+                    line_number: 231,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -6456,7 +6474,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 228,
+                    line_number: 233,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -6545,7 +6563,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 243,
+                    line_number: 248,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -6564,7 +6582,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 250,
+                    line_number: 255,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -6583,7 +6601,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 252,
+                    line_number: 257,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -6602,7 +6620,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 254,
+                    line_number: 259,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -6625,7 +6643,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 256,
+                    line_number: 261,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -6670,7 +6688,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 258,
+                    line_number: 263,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -6686,13 +6704,31 @@ mod v_es2015 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 261,
+                    line_number: 266,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -6705,13 +6741,31 @@ mod v_es2015 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 263,
+                    line_number: 268,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -6728,7 +6782,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 265,
+                    line_number: 270,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -6765,7 +6819,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 267,
+                    line_number: 272,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -6788,7 +6842,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 269,
+                    line_number: 274,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -6802,7 +6856,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 271,
+                    line_number: 276,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -6819,7 +6873,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 273,
+                    line_number: 278,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -6833,7 +6887,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 275,
+                    line_number: 280,
                 },
                 GrammarRule {
                     name: r#"binding_pattern"#.to_string(),
@@ -6847,7 +6901,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 293,
+                    line_number: 298,
                 },
                 GrammarRule {
                     name: r#"object_binding_pattern"#.to_string(),
@@ -6887,7 +6941,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 295,
+                    line_number: 300,
                 },
                 GrammarRule {
                     name: r#"binding_property"#.to_string(),
@@ -6927,7 +6981,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 297,
+                    line_number: 302,
                 },
                 GrammarRule {
                     name: r#"binding_element"#.to_string(),
@@ -6959,7 +7013,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 300,
+                    line_number: 305,
                 },
                 GrammarRule {
                     name: r#"array_binding_pattern"#.to_string(),
@@ -7000,7 +7054,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 302,
+                    line_number: 307,
                 },
                 GrammarRule {
                     name: r#"array_binding_element"#.to_string(),
@@ -7030,7 +7084,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 304,
+                    line_number: 309,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -7053,7 +7107,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 314,
+                    line_number: 319,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -7095,7 +7149,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 319,
+                    line_number: 324,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -7139,7 +7193,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 324,
+                    line_number: 329,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -7156,7 +7210,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 338,
+                    line_number: 343,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -7182,7 +7236,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 340,
+                    line_number: 345,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -7206,7 +7260,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 343,
+                    line_number: 348,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -7235,7 +7289,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 348,
+                    line_number: 353,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -7258,7 +7312,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 353,
+                    line_number: 358,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -7281,7 +7335,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 355,
+                    line_number: 360,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -7304,7 +7358,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 359,
+                    line_number: 364,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -7327,7 +7381,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 361,
+                    line_number: 366,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -7350,7 +7404,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 363,
+                    line_number: 368,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -7388,7 +7442,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 367,
+                    line_number: 372,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -7432,7 +7486,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 373,
+                    line_number: 378,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -7467,7 +7521,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 379,
+                    line_number: 384,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -7499,7 +7553,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 384,
+                    line_number: 389,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -7534,7 +7588,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 387,
+                    line_number: 392,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -7635,7 +7689,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 392,
+                    line_number: 397,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -7658,7 +7712,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 405,
+                    line_number: 410,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -7672,7 +7726,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 409,
+                    line_number: 414,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -7721,7 +7775,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 411,
+                    line_number: 416,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -7742,7 +7796,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 415,
+                    line_number: 420,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -7831,7 +7885,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 418,
+                    line_number: 423,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -7850,7 +7904,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 424,
+                    line_number: 429,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -7907,7 +7961,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 426,
+                    line_number: 431,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -7970,7 +8024,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 432,
+                    line_number: 437,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -8006,7 +8060,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 460,
+                    line_number: 465,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -8025,7 +8079,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 465,
+                    line_number: 470,
                 },
                 GrammarRule {
                     name: r#"array_element_list"#.to_string(),
@@ -8053,7 +8107,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 467,
+                    line_number: 472,
                 },
                 GrammarRule {
                     name: r#"array_element"#.to_string(),
@@ -8074,7 +8128,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 469,
+                    line_number: 474,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -8114,7 +8168,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 476,
+                    line_number: 481,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -8248,7 +8302,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 478,
+                    line_number: 483,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -8278,7 +8332,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 487,
+                    line_number: 492,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -8314,7 +8368,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 492,
+                    line_number: 497,
                 },
                 GrammarRule {
                     name: r#"generator_expression"#.to_string(),
@@ -8353,7 +8407,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 495,
+                    line_number: 500,
                 },
                 GrammarRule {
                     name: r#"class_expression"#.to_string(),
@@ -8377,7 +8431,7 @@ mod v_es2015 {
                             },
                         ],
                     },
-                    line_number: 500,
+                    line_number: 505,
                 },
             ],
             version: 1,
@@ -9575,8 +9629,23 @@ mod v_es2016 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -9584,7 +9653,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 196,
+                    line_number: 201,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -9601,7 +9670,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 198,
+                    line_number: 203,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -9624,7 +9693,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 200,
+                    line_number: 205,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -9656,14 +9725,14 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 202,
+                    line_number: 207,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 204,
+                    line_number: 209,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -9677,7 +9746,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 206,
+                    line_number: 211,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -9712,7 +9781,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 208,
+                    line_number: 213,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -9735,7 +9804,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 210,
+                    line_number: 215,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -9764,7 +9833,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 212,
+                    line_number: 217,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -9842,7 +9911,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 214,
+                    line_number: 219,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -9907,7 +9976,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 223,
+                    line_number: 228,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -9972,7 +10041,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 235,
+                    line_number: 240,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -9991,7 +10060,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 242,
+                    line_number: 247,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -10010,7 +10079,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 244,
+                    line_number: 249,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -10029,7 +10098,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 246,
+                    line_number: 251,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -10052,7 +10121,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 248,
+                    line_number: 253,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -10097,7 +10166,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 250,
+                    line_number: 255,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -10113,13 +10182,28 @@ mod v_es2016 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 253,
+                    line_number: 258,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -10132,13 +10216,28 @@ mod v_es2016 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 255,
+                    line_number: 260,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -10155,7 +10254,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 257,
+                    line_number: 262,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -10192,7 +10291,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 259,
+                    line_number: 264,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -10215,7 +10314,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 261,
+                    line_number: 266,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -10229,7 +10328,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 263,
+                    line_number: 268,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -10246,7 +10345,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 265,
+                    line_number: 270,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -10260,7 +10359,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 267,
+                    line_number: 272,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -10283,7 +10382,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 281,
+                    line_number: 286,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -10313,7 +10412,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 283,
+                    line_number: 288,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -10360,7 +10459,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 290,
+                    line_number: 295,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -10389,7 +10488,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 296,
+                    line_number: 301,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -10412,7 +10511,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 299,
+                    line_number: 304,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -10435,7 +10534,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 301,
+                    line_number: 306,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -10458,7 +10557,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 303,
+                    line_number: 308,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -10481,7 +10580,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 305,
+                    line_number: 310,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -10504,7 +10603,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 307,
+                    line_number: 312,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -10542,7 +10641,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 309,
+                    line_number: 314,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -10586,7 +10685,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 313,
+                    line_number: 318,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -10621,7 +10720,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 317,
+                    line_number: 322,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -10653,7 +10752,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 320,
+                    line_number: 325,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -10688,7 +10787,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 328,
+                    line_number: 333,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -10711,7 +10810,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 346,
+                    line_number: 351,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -10812,7 +10911,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 348,
+                    line_number: 353,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -10835,7 +10934,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 359,
+                    line_number: 364,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -10849,7 +10948,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 361,
+                    line_number: 366,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -10898,7 +10997,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 363,
+                    line_number: 368,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -10919,7 +11018,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 367,
+                    line_number: 372,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -11021,7 +11120,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 370,
+                    line_number: 375,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -11040,7 +11139,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 377,
+                    line_number: 382,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -11082,7 +11181,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 379,
+                    line_number: 384,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -11096,7 +11195,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 382,
+                    line_number: 387,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -11113,7 +11212,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 392,
+                    line_number: 397,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -11139,7 +11238,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 394,
+                    line_number: 399,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -11163,7 +11262,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 397,
+                    line_number: 402,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -11226,7 +11325,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 402,
+                    line_number: 407,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -11245,7 +11344,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 418,
+                    line_number: 423,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -11287,7 +11386,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 420,
+                    line_number: 425,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -11327,7 +11426,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 430,
+                    line_number: 435,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -11364,7 +11463,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 432,
+                    line_number: 437,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -11394,7 +11493,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 437,
+                    line_number: 442,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -11430,7 +11529,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 442,
+                    line_number: 447,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -11456,7 +11555,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 453,
+                    line_number: 458,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -11470,7 +11569,7 @@ mod v_es2016 {
                             },
                         ],
                     },
-                    line_number: 456,
+                    line_number: 461,
                 },
             ],
             version: 1,
@@ -12848,8 +12947,26 @@ mod v_es2017 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -12857,7 +12974,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 253,
+                    line_number: 258,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -12874,7 +12991,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 255,
+                    line_number: 260,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -12897,7 +13014,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 257,
+                    line_number: 262,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -12929,14 +13046,14 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 259,
+                    line_number: 264,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 261,
+                    line_number: 266,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -12950,7 +13067,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 263,
+                    line_number: 268,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -12985,7 +13102,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 265,
+                    line_number: 270,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -13008,7 +13125,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 267,
+                    line_number: 272,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -13037,7 +13154,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 269,
+                    line_number: 274,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -13115,7 +13232,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 271,
+                    line_number: 276,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -13180,7 +13297,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 280,
+                    line_number: 285,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -13245,7 +13362,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 287,
+                    line_number: 292,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -13264,7 +13381,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 294,
+                    line_number: 299,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -13283,7 +13400,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 296,
+                    line_number: 301,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -13302,7 +13419,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 298,
+                    line_number: 303,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -13325,7 +13442,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 300,
+                    line_number: 305,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -13370,7 +13487,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 302,
+                    line_number: 307,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -13386,13 +13503,31 @@ mod v_es2017 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 305,
+                    line_number: 310,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -13405,13 +13540,31 @@ mod v_es2017 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 307,
+                    line_number: 312,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -13428,7 +13581,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 309,
+                    line_number: 314,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -13465,7 +13618,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 311,
+                    line_number: 316,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -13488,7 +13641,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 313,
+                    line_number: 318,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -13502,7 +13655,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 315,
+                    line_number: 320,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -13519,7 +13672,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 317,
+                    line_number: 322,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -13533,7 +13686,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 319,
+                    line_number: 324,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -13556,7 +13709,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 325,
+                    line_number: 330,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -13589,7 +13742,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 327,
+                    line_number: 332,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -13636,7 +13789,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 333,
+                    line_number: 338,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -13665,7 +13818,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 339,
+                    line_number: 344,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -13688,7 +13841,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 342,
+                    line_number: 347,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -13711,7 +13864,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 344,
+                    line_number: 349,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -13734,7 +13887,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 346,
+                    line_number: 351,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -13757,7 +13910,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 348,
+                    line_number: 353,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -13780,7 +13933,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 350,
+                    line_number: 355,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -13818,7 +13971,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 352,
+                    line_number: 357,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -13862,7 +14015,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 356,
+                    line_number: 361,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -13897,7 +14050,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 360,
+                    line_number: 365,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -13929,7 +14082,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 363,
+                    line_number: 368,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -13964,7 +14117,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 366,
+                    line_number: 371,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -13987,7 +14140,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 369,
+                    line_number: 374,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -14091,7 +14244,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 373,
+                    line_number: 378,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -14114,7 +14267,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 385,
+                    line_number: 390,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -14128,7 +14281,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 387,
+                    line_number: 392,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -14177,7 +14330,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 389,
+                    line_number: 394,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -14198,7 +14351,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 393,
+                    line_number: 398,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -14300,7 +14453,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 396,
+                    line_number: 401,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -14328,7 +14481,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 405,
+                    line_number: 410,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -14370,7 +14523,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 407,
+                    line_number: 412,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -14384,7 +14537,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 410,
+                    line_number: 415,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -14401,7 +14554,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 414,
+                    line_number: 419,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -14427,7 +14580,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 416,
+                    line_number: 421,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -14451,7 +14604,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 419,
+                    line_number: 424,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -14517,7 +14670,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 424,
+                    line_number: 429,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -14536,7 +14689,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 441,
+                    line_number: 446,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -14578,7 +14731,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 443,
+                    line_number: 448,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -14618,7 +14771,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 446,
+                    line_number: 451,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -14658,7 +14811,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 448,
+                    line_number: 453,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -14688,7 +14841,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 454,
+                    line_number: 459,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -14724,7 +14877,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 459,
+                    line_number: 464,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -14750,7 +14903,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 464,
+                    line_number: 469,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -14764,7 +14917,7 @@ mod v_es2017 {
                             },
                         ],
                     },
-                    line_number: 467,
+                    line_number: 472,
                 },
             ],
             version: 1,
@@ -16257,8 +16410,29 @@ mod v_es2018 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -16266,7 +16440,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 240,
+                    line_number: 245,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -16283,7 +16457,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 242,
+                    line_number: 247,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -16306,7 +16480,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 244,
+                    line_number: 249,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -16338,14 +16512,14 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 246,
+                    line_number: 251,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 248,
+                    line_number: 253,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -16359,7 +16533,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 250,
+                    line_number: 255,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -16394,7 +16568,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 252,
+                    line_number: 257,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -16417,7 +16591,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 254,
+                    line_number: 259,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -16446,7 +16620,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 256,
+                    line_number: 261,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -16524,7 +16698,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 258,
+                    line_number: 263,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -16589,7 +16763,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 267,
+                    line_number: 272,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -16654,7 +16828,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 274,
+                    line_number: 279,
                 },
                 GrammarRule {
                     name: r#"for_await_of_statement"#.to_string(),
@@ -16722,7 +16896,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 292,
+                    line_number: 297,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -16741,7 +16915,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 299,
+                    line_number: 304,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -16760,7 +16934,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 301,
+                    line_number: 306,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -16779,7 +16953,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 303,
+                    line_number: 308,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -16802,7 +16976,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 305,
+                    line_number: 310,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -16847,7 +17021,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 307,
+                    line_number: 312,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -16863,13 +17037,34 @@ mod v_es2018 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 310,
+                    line_number: 315,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -16882,13 +17077,34 @@ mod v_es2018 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 312,
+                    line_number: 317,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -16905,7 +17121,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 314,
+                    line_number: 319,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -16942,7 +17158,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 316,
+                    line_number: 321,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -16965,7 +17181,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 318,
+                    line_number: 323,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -16979,7 +17195,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 320,
+                    line_number: 325,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -16996,7 +17212,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 322,
+                    line_number: 327,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -17010,7 +17226,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 324,
+                    line_number: 329,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -17033,7 +17249,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 330,
+                    line_number: 335,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -17066,7 +17282,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 332,
+                    line_number: 337,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -17113,7 +17329,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 338,
+                    line_number: 343,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -17142,7 +17358,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 344,
+                    line_number: 349,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -17165,7 +17381,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 347,
+                    line_number: 352,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -17188,7 +17404,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 349,
+                    line_number: 354,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -17211,7 +17427,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 351,
+                    line_number: 356,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -17234,7 +17450,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 353,
+                    line_number: 358,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -17257,7 +17473,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 355,
+                    line_number: 360,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -17295,7 +17511,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 357,
+                    line_number: 362,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -17339,7 +17555,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 361,
+                    line_number: 366,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -17374,7 +17590,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 365,
+                    line_number: 370,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -17406,7 +17622,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 368,
+                    line_number: 373,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -17441,7 +17657,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 371,
+                    line_number: 376,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -17464,7 +17680,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 374,
+                    line_number: 379,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -17568,7 +17784,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 376,
+                    line_number: 381,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -17591,7 +17807,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 388,
+                    line_number: 393,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -17605,7 +17821,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 390,
+                    line_number: 395,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -17654,7 +17870,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 392,
+                    line_number: 397,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -17675,7 +17891,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 396,
+                    line_number: 401,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -17777,7 +17993,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 399,
+                    line_number: 404,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -17805,7 +18021,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 406,
+                    line_number: 411,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -17847,7 +18063,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 408,
+                    line_number: 413,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -17861,7 +18077,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 411,
+                    line_number: 416,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -17878,7 +18094,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 415,
+                    line_number: 420,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -17904,7 +18120,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 417,
+                    line_number: 422,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -17928,7 +18144,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 420,
+                    line_number: 425,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -17994,7 +18210,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 425,
+                    line_number: 430,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -18013,7 +18229,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 442,
+                    line_number: 447,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -18055,7 +18271,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 444,
+                    line_number: 449,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -18095,7 +18311,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 456,
+                    line_number: 461,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -18128,7 +18344,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 458,
+                    line_number: 463,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -18142,7 +18358,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 464,
+                    line_number: 469,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -18172,7 +18388,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 466,
+                    line_number: 471,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -18208,7 +18424,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 471,
+                    line_number: 476,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -18234,7 +18450,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 476,
+                    line_number: 481,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -18248,7 +18464,7 @@ mod v_es2018 {
                             },
                         ],
                     },
-                    line_number: 479,
+                    line_number: 484,
                 },
             ],
             version: 1,
@@ -19741,8 +19957,29 @@ mod v_es2019 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -19750,7 +19987,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 209,
+                    line_number: 214,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -19767,7 +20004,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 211,
+                    line_number: 216,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -19790,7 +20027,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 213,
+                    line_number: 218,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -19822,14 +20059,14 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 215,
+                    line_number: 220,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 217,
+                    line_number: 222,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -19843,7 +20080,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 219,
+                    line_number: 224,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -19878,7 +20115,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 221,
+                    line_number: 226,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -19901,7 +20138,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 223,
+                    line_number: 228,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -19930,7 +20167,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 225,
+                    line_number: 230,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -20008,7 +20245,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 227,
+                    line_number: 232,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -20073,7 +20310,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 236,
+                    line_number: 241,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -20138,7 +20375,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 243,
+                    line_number: 248,
                 },
                 GrammarRule {
                     name: r#"for_await_of_statement"#.to_string(),
@@ -20206,7 +20443,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 250,
+                    line_number: 255,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -20225,7 +20462,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 257,
+                    line_number: 262,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -20244,7 +20481,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 259,
+                    line_number: 264,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -20263,7 +20500,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 261,
+                    line_number: 266,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -20286,7 +20523,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 263,
+                    line_number: 268,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -20331,7 +20568,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 265,
+                    line_number: 270,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -20347,13 +20584,34 @@ mod v_es2019 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 268,
+                    line_number: 273,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -20366,13 +20624,34 @@ mod v_es2019 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 270,
+                    line_number: 275,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -20389,7 +20668,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 272,
+                    line_number: 277,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -20426,7 +20705,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 274,
+                    line_number: 279,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -20455,7 +20734,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 284,
+                    line_number: 289,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -20469,7 +20748,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 286,
+                    line_number: 291,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -20486,7 +20765,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 288,
+                    line_number: 293,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -20500,7 +20779,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 290,
+                    line_number: 295,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -20523,7 +20802,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 296,
+                    line_number: 301,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -20556,7 +20835,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 298,
+                    line_number: 303,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -20603,7 +20882,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 304,
+                    line_number: 309,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -20632,7 +20911,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 310,
+                    line_number: 315,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -20655,7 +20934,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 313,
+                    line_number: 318,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -20678,7 +20957,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 315,
+                    line_number: 320,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -20701,7 +20980,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 317,
+                    line_number: 322,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -20724,7 +21003,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 319,
+                    line_number: 324,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -20747,7 +21026,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 321,
+                    line_number: 326,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -20785,7 +21064,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 323,
+                    line_number: 328,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -20829,7 +21108,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 327,
+                    line_number: 332,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -20864,7 +21143,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 331,
+                    line_number: 336,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -20896,7 +21175,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 334,
+                    line_number: 339,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -20931,7 +21210,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 337,
+                    line_number: 342,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -20954,7 +21233,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 340,
+                    line_number: 345,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -21058,7 +21337,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 342,
+                    line_number: 347,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -21081,7 +21360,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 354,
+                    line_number: 359,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -21095,7 +21374,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 356,
+                    line_number: 361,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -21144,7 +21423,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 358,
+                    line_number: 363,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -21165,7 +21444,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 362,
+                    line_number: 367,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -21267,7 +21546,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 365,
+                    line_number: 370,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -21295,7 +21574,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 372,
+                    line_number: 377,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -21337,7 +21616,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 374,
+                    line_number: 379,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -21351,7 +21630,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 377,
+                    line_number: 382,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -21368,7 +21647,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 379,
+                    line_number: 384,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -21394,7 +21673,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 381,
+                    line_number: 386,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -21418,7 +21697,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 384,
+                    line_number: 389,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -21484,7 +21763,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 387,
+                    line_number: 392,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -21503,7 +21782,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 404,
+                    line_number: 409,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -21545,7 +21824,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 406,
+                    line_number: 411,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -21585,7 +21864,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 409,
+                    line_number: 414,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -21618,7 +21897,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 411,
+                    line_number: 416,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -21632,7 +21911,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 417,
+                    line_number: 422,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -21662,7 +21941,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 419,
+                    line_number: 424,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -21698,7 +21977,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 424,
+                    line_number: 429,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -21724,7 +22003,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 427,
+                    line_number: 432,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -21738,7 +22017,7 @@ mod v_es2019 {
                             },
                         ],
                     },
-                    line_number: 430,
+                    line_number: 435,
                 },
             ],
             version: 1,
@@ -23231,8 +23510,29 @@ mod v_es2020 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -23240,7 +23540,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 208,
+                    line_number: 213,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -23257,7 +23557,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 210,
+                    line_number: 215,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -23280,7 +23580,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 212,
+                    line_number: 217,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -23312,14 +23612,14 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 214,
+                    line_number: 219,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 216,
+                    line_number: 221,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -23333,7 +23633,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 218,
+                    line_number: 223,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -23368,7 +23668,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 220,
+                    line_number: 225,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -23391,7 +23691,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 222,
+                    line_number: 227,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -23420,7 +23720,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 224,
+                    line_number: 229,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -23498,7 +23798,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 226,
+                    line_number: 231,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -23563,7 +23863,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 235,
+                    line_number: 240,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -23628,7 +23928,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 242,
+                    line_number: 247,
                 },
                 GrammarRule {
                     name: r#"for_await_of_statement"#.to_string(),
@@ -23696,7 +23996,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 249,
+                    line_number: 254,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -23715,7 +24015,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 256,
+                    line_number: 261,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -23734,7 +24034,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 258,
+                    line_number: 263,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -23753,7 +24053,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 260,
+                    line_number: 265,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -23776,7 +24076,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 262,
+                    line_number: 267,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -23821,7 +24121,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 264,
+                    line_number: 269,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -23837,13 +24137,34 @@ mod v_es2020 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 267,
+                    line_number: 272,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -23856,13 +24177,34 @@ mod v_es2020 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 269,
+                    line_number: 274,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -23879,7 +24221,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 271,
+                    line_number: 276,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -23916,7 +24258,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 273,
+                    line_number: 278,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -23945,7 +24287,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 275,
+                    line_number: 280,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -23959,7 +24301,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 277,
+                    line_number: 282,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -23976,7 +24318,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 279,
+                    line_number: 284,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -23990,7 +24332,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 281,
+                    line_number: 286,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -24013,7 +24355,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 295,
+                    line_number: 300,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -24046,7 +24388,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 297,
+                    line_number: 302,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -24093,7 +24435,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 303,
+                    line_number: 308,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -24122,7 +24464,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 309,
+                    line_number: 314,
                 },
                 GrammarRule {
                     name: r#"nullish_coalescing_expression"#.to_string(),
@@ -24145,7 +24487,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 326,
+                    line_number: 331,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -24168,7 +24510,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 329,
+                    line_number: 334,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -24191,7 +24533,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 331,
+                    line_number: 336,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -24214,7 +24556,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 333,
+                    line_number: 338,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -24237,7 +24579,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 335,
+                    line_number: 340,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -24260,7 +24602,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 337,
+                    line_number: 342,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -24298,7 +24640,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 339,
+                    line_number: 344,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -24342,7 +24684,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 343,
+                    line_number: 348,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -24377,7 +24719,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 347,
+                    line_number: 352,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -24409,7 +24751,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 350,
+                    line_number: 355,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -24444,7 +24786,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 353,
+                    line_number: 358,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -24467,7 +24809,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 356,
+                    line_number: 361,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -24571,7 +24913,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 358,
+                    line_number: 363,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -24594,7 +24936,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 370,
+                    line_number: 375,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -24611,7 +24953,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 374,
+                    line_number: 379,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -24660,7 +25002,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 378,
+                    line_number: 383,
                 },
                 GrammarRule {
                     name: r#"optional_chain_expression"#.to_string(),
@@ -24742,7 +25084,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 400,
+                    line_number: 405,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -24763,7 +25105,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 409,
+                    line_number: 414,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -24865,7 +25207,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 412,
+                    line_number: 417,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -24893,7 +25235,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 419,
+                    line_number: 424,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -24935,7 +25277,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 421,
+                    line_number: 426,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -24949,7 +25291,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 424,
+                    line_number: 429,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -24966,7 +25308,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 426,
+                    line_number: 431,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -24992,7 +25334,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 428,
+                    line_number: 433,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -25016,7 +25358,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 431,
+                    line_number: 436,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -25091,7 +25433,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 436,
+                    line_number: 441,
                 },
                 GrammarRule {
                     name: r#"dynamic_import"#.to_string(),
@@ -25111,7 +25453,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 466,
+                    line_number: 471,
                 },
                 GrammarRule {
                     name: r#"import_meta"#.to_string(),
@@ -25128,7 +25470,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 477,
+                    line_number: 482,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -25147,7 +25489,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 479,
+                    line_number: 484,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -25189,7 +25531,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 481,
+                    line_number: 486,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -25229,7 +25571,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 484,
+                    line_number: 489,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -25262,7 +25604,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 486,
+                    line_number: 491,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -25276,7 +25618,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 492,
+                    line_number: 497,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -25306,7 +25648,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 494,
+                    line_number: 499,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -25342,7 +25684,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 499,
+                    line_number: 504,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -25368,7 +25710,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 502,
+                    line_number: 507,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -25382,7 +25724,7 @@ mod v_es2020 {
                             },
                         ],
                     },
-                    line_number: 505,
+                    line_number: 510,
                 },
             ],
             version: 1,
@@ -26875,8 +27217,29 @@ mod v_es2021 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -26884,7 +27247,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 206,
+                    line_number: 211,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -26901,7 +27264,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 208,
+                    line_number: 213,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -26924,7 +27287,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 210,
+                    line_number: 215,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -26956,14 +27319,14 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 212,
+                    line_number: 217,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 214,
+                    line_number: 219,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -26977,7 +27340,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 216,
+                    line_number: 221,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -27012,7 +27375,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 218,
+                    line_number: 223,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -27035,7 +27398,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 220,
+                    line_number: 225,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -27064,7 +27427,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 222,
+                    line_number: 227,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -27142,7 +27505,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 224,
+                    line_number: 229,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -27207,7 +27570,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 233,
+                    line_number: 238,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -27272,7 +27635,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 240,
+                    line_number: 245,
                 },
                 GrammarRule {
                     name: r#"for_await_of_statement"#.to_string(),
@@ -27340,7 +27703,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 247,
+                    line_number: 252,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -27359,7 +27722,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 254,
+                    line_number: 259,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -27378,7 +27741,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 256,
+                    line_number: 261,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -27397,7 +27760,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 258,
+                    line_number: 263,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -27420,7 +27783,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 260,
+                    line_number: 265,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -27465,7 +27828,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 262,
+                    line_number: 267,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -27481,13 +27844,34 @@ mod v_es2021 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 265,
+                    line_number: 270,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -27500,13 +27884,34 @@ mod v_es2021 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 267,
+                    line_number: 272,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -27523,7 +27928,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 269,
+                    line_number: 274,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -27560,7 +27965,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 271,
+                    line_number: 276,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -27589,7 +27994,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 273,
+                    line_number: 278,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -27603,7 +28008,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 275,
+                    line_number: 280,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -27620,7 +28025,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 277,
+                    line_number: 282,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -27634,7 +28039,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 279,
+                    line_number: 284,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -27657,7 +28062,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 285,
+                    line_number: 290,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -27690,7 +28095,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 287,
+                    line_number: 292,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -27746,7 +28151,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 295,
+                    line_number: 300,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -27775,7 +28180,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 302,
+                    line_number: 307,
                 },
                 GrammarRule {
                     name: r#"nullish_coalescing_expression"#.to_string(),
@@ -27798,7 +28203,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 305,
+                    line_number: 310,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -27821,7 +28226,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 308,
+                    line_number: 313,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -27844,7 +28249,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 310,
+                    line_number: 315,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -27867,7 +28272,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 312,
+                    line_number: 317,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -27890,7 +28295,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 314,
+                    line_number: 319,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -27913,7 +28318,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 316,
+                    line_number: 321,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -27951,7 +28356,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 318,
+                    line_number: 323,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -27995,7 +28400,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 322,
+                    line_number: 327,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -28030,7 +28435,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 326,
+                    line_number: 331,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -28062,7 +28467,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 329,
+                    line_number: 334,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -28097,7 +28502,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 332,
+                    line_number: 337,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -28120,7 +28525,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 335,
+                    line_number: 340,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -28224,7 +28629,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 337,
+                    line_number: 342,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -28247,7 +28652,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 349,
+                    line_number: 354,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -28264,7 +28669,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 351,
+                    line_number: 356,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -28313,7 +28718,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 355,
+                    line_number: 360,
                 },
                 GrammarRule {
                     name: r#"optional_chain_expression"#.to_string(),
@@ -28395,7 +28800,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 359,
+                    line_number: 364,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -28416,7 +28821,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 368,
+                    line_number: 373,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -28518,7 +28923,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 371,
+                    line_number: 376,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -28546,7 +28951,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 378,
+                    line_number: 383,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -28588,7 +28993,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 380,
+                    line_number: 385,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -28602,7 +29007,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 383,
+                    line_number: 388,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -28619,7 +29024,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 385,
+                    line_number: 390,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -28645,7 +29050,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 387,
+                    line_number: 392,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -28669,7 +29074,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 390,
+                    line_number: 395,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -28744,7 +29149,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 393,
+                    line_number: 398,
                 },
                 GrammarRule {
                     name: r#"dynamic_import"#.to_string(),
@@ -28764,7 +29169,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 413,
+                    line_number: 418,
                 },
                 GrammarRule {
                     name: r#"import_meta"#.to_string(),
@@ -28781,7 +29186,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 415,
+                    line_number: 420,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -28800,7 +29205,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 417,
+                    line_number: 422,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -28842,7 +29247,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 419,
+                    line_number: 424,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -28882,7 +29287,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 422,
+                    line_number: 427,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -28915,7 +29320,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 424,
+                    line_number: 429,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -28929,7 +29334,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 430,
+                    line_number: 435,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -28959,7 +29364,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 432,
+                    line_number: 437,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -28995,7 +29400,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 437,
+                    line_number: 442,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -29021,7 +29426,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 440,
+                    line_number: 445,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -29035,7 +29440,7 @@ mod v_es2021 {
                             },
                         ],
                     },
-                    line_number: 443,
+                    line_number: 448,
                 },
             ],
             version: 1,
@@ -30777,8 +31182,29 @@ mod v_es2022 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -30786,7 +31212,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 281,
+                    line_number: 286,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -30803,7 +31229,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 283,
+                    line_number: 288,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -30826,7 +31252,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 285,
+                    line_number: 290,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -30858,14 +31284,14 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 287,
+                    line_number: 292,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 289,
+                    line_number: 294,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -30879,7 +31305,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 291,
+                    line_number: 296,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -30914,7 +31340,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 293,
+                    line_number: 298,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -30937,7 +31363,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 295,
+                    line_number: 300,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -30966,7 +31392,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 297,
+                    line_number: 302,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -31044,7 +31470,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 299,
+                    line_number: 304,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -31109,7 +31535,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 308,
+                    line_number: 313,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -31174,7 +31600,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 315,
+                    line_number: 320,
                 },
                 GrammarRule {
                     name: r#"for_await_of_statement"#.to_string(),
@@ -31242,7 +31668,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 322,
+                    line_number: 327,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -31261,7 +31687,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 329,
+                    line_number: 334,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -31280,7 +31706,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 331,
+                    line_number: 336,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -31299,7 +31725,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 333,
+                    line_number: 338,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -31322,7 +31748,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 335,
+                    line_number: 340,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -31367,7 +31793,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 337,
+                    line_number: 342,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -31383,13 +31809,34 @@ mod v_es2022 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 340,
+                    line_number: 345,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -31402,13 +31849,34 @@ mod v_es2022 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 342,
+                    line_number: 347,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -31425,7 +31893,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 344,
+                    line_number: 349,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -31462,7 +31930,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 346,
+                    line_number: 351,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -31491,7 +31959,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 348,
+                    line_number: 353,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -31505,7 +31973,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 350,
+                    line_number: 355,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -31522,7 +31990,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 352,
+                    line_number: 357,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -31536,7 +32004,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 354,
+                    line_number: 359,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -31559,7 +32027,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 360,
+                    line_number: 365,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -31592,7 +32060,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 362,
+                    line_number: 367,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -31648,7 +32116,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 368,
+                    line_number: 373,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -31677,7 +32145,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 375,
+                    line_number: 380,
                 },
                 GrammarRule {
                     name: r#"nullish_coalescing_expression"#.to_string(),
@@ -31700,7 +32168,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 378,
+                    line_number: 383,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -31723,7 +32191,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 381,
+                    line_number: 386,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -31746,7 +32214,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 383,
+                    line_number: 388,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -31769,7 +32237,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 385,
+                    line_number: 390,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -31792,7 +32260,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 387,
+                    line_number: 392,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -31815,7 +32283,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 389,
+                    line_number: 394,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -31853,7 +32321,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 391,
+                    line_number: 396,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -31921,7 +32389,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 406,
+                    line_number: 411,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -31956,7 +32424,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 411,
+                    line_number: 416,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -31988,7 +32456,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 414,
+                    line_number: 419,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -32023,7 +32491,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 417,
+                    line_number: 422,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -32046,7 +32514,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 420,
+                    line_number: 425,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -32150,7 +32618,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 422,
+                    line_number: 427,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -32173,7 +32641,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 434,
+                    line_number: 439,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -32190,7 +32658,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 436,
+                    line_number: 441,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -32249,7 +32717,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 440,
+                    line_number: 445,
                 },
                 GrammarRule {
                     name: r#"optional_chain_expression"#.to_string(),
@@ -32351,7 +32819,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 444,
+                    line_number: 449,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -32372,7 +32840,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 455,
+                    line_number: 460,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -32484,7 +32952,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 460,
+                    line_number: 465,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -32512,7 +32980,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 468,
+                    line_number: 473,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -32554,7 +33022,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 470,
+                    line_number: 475,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -32568,7 +33036,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 473,
+                    line_number: 478,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -32585,7 +33053,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 475,
+                    line_number: 480,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -32611,7 +33079,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 477,
+                    line_number: 482,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -32635,7 +33103,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 480,
+                    line_number: 485,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -32710,7 +33178,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 483,
+                    line_number: 488,
                 },
                 GrammarRule {
                     name: r#"dynamic_import"#.to_string(),
@@ -32730,7 +33198,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 503,
+                    line_number: 508,
                 },
                 GrammarRule {
                     name: r#"import_meta"#.to_string(),
@@ -32747,7 +33215,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 505,
+                    line_number: 510,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -32766,7 +33234,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 507,
+                    line_number: 512,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -32808,7 +33276,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 509,
+                    line_number: 514,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -32848,7 +33316,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 512,
+                    line_number: 517,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -32881,7 +33349,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 514,
+                    line_number: 519,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -32895,7 +33363,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 520,
+                    line_number: 525,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -32925,7 +33393,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 522,
+                    line_number: 527,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -32961,7 +33429,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 527,
+                    line_number: 532,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -32987,7 +33455,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 530,
+                    line_number: 535,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -33001,7 +33469,7 @@ mod v_es2022 {
                             },
                         ],
                     },
-                    line_number: 533,
+                    line_number: 538,
                 },
             ],
             version: 1,
@@ -34752,8 +35220,29 @@ mod v_es2023 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -34761,7 +35250,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 221,
+                    line_number: 226,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -34778,7 +35267,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 223,
+                    line_number: 228,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -34801,7 +35290,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 225,
+                    line_number: 230,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -34833,14 +35322,14 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 227,
+                    line_number: 232,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 229,
+                    line_number: 234,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -34854,7 +35343,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 231,
+                    line_number: 236,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -34889,7 +35378,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 233,
+                    line_number: 238,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -34912,7 +35401,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 235,
+                    line_number: 240,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -34941,7 +35430,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 237,
+                    line_number: 242,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -35019,7 +35508,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 239,
+                    line_number: 244,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -35084,7 +35573,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 248,
+                    line_number: 253,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -35149,7 +35638,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 255,
+                    line_number: 260,
                 },
                 GrammarRule {
                     name: r#"for_await_of_statement"#.to_string(),
@@ -35217,7 +35706,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 262,
+                    line_number: 267,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -35236,7 +35725,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 269,
+                    line_number: 274,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -35255,7 +35744,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 271,
+                    line_number: 276,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -35274,7 +35763,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 273,
+                    line_number: 278,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -35297,7 +35786,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 275,
+                    line_number: 280,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -35342,7 +35831,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 277,
+                    line_number: 282,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -35358,13 +35847,34 @@ mod v_es2023 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 280,
+                    line_number: 285,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -35377,13 +35887,34 @@ mod v_es2023 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 282,
+                    line_number: 287,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -35400,7 +35931,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 284,
+                    line_number: 289,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -35437,7 +35968,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 286,
+                    line_number: 291,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -35466,7 +35997,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 288,
+                    line_number: 293,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -35480,7 +36011,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 290,
+                    line_number: 295,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -35497,7 +36028,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 292,
+                    line_number: 297,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -35511,7 +36042,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 294,
+                    line_number: 299,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -35534,7 +36065,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 300,
+                    line_number: 305,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -35567,7 +36098,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 302,
+                    line_number: 307,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -35623,7 +36154,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 308,
+                    line_number: 313,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -35652,7 +36183,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 315,
+                    line_number: 320,
                 },
                 GrammarRule {
                     name: r#"nullish_coalescing_expression"#.to_string(),
@@ -35675,7 +36206,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 318,
+                    line_number: 323,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -35698,7 +36229,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 321,
+                    line_number: 326,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -35721,7 +36252,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 323,
+                    line_number: 328,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -35744,7 +36275,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 325,
+                    line_number: 330,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -35767,7 +36298,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 327,
+                    line_number: 332,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -35790,7 +36321,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 329,
+                    line_number: 334,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -35828,7 +36359,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 331,
+                    line_number: 336,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -35896,7 +36427,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 335,
+                    line_number: 340,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -35931,7 +36462,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 340,
+                    line_number: 345,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -35963,7 +36494,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 343,
+                    line_number: 348,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -35998,7 +36529,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 346,
+                    line_number: 351,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -36021,7 +36552,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 349,
+                    line_number: 354,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -36125,7 +36656,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 351,
+                    line_number: 356,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -36148,7 +36679,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 363,
+                    line_number: 368,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -36165,7 +36696,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 365,
+                    line_number: 370,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -36224,7 +36755,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 369,
+                    line_number: 374,
                 },
                 GrammarRule {
                     name: r#"optional_chain_expression"#.to_string(),
@@ -36326,7 +36857,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 373,
+                    line_number: 378,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -36347,7 +36878,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 384,
+                    line_number: 389,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -36459,7 +36990,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 387,
+                    line_number: 392,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -36487,7 +37018,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 395,
+                    line_number: 400,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -36529,7 +37060,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 397,
+                    line_number: 402,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -36543,7 +37074,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 400,
+                    line_number: 405,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -36560,7 +37091,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 402,
+                    line_number: 407,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -36586,7 +37117,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 404,
+                    line_number: 409,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -36610,7 +37141,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 407,
+                    line_number: 412,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -36685,7 +37216,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 410,
+                    line_number: 415,
                 },
                 GrammarRule {
                     name: r#"dynamic_import"#.to_string(),
@@ -36705,7 +37236,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 430,
+                    line_number: 435,
                 },
                 GrammarRule {
                     name: r#"import_meta"#.to_string(),
@@ -36722,7 +37253,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 432,
+                    line_number: 437,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -36741,7 +37272,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 434,
+                    line_number: 439,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -36783,7 +37314,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 436,
+                    line_number: 441,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -36823,7 +37354,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 439,
+                    line_number: 444,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -36856,7 +37387,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 441,
+                    line_number: 446,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -36870,7 +37401,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 447,
+                    line_number: 452,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -36900,7 +37431,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 449,
+                    line_number: 454,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -36936,7 +37467,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 454,
+                    line_number: 459,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -36962,7 +37493,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 457,
+                    line_number: 462,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -36976,7 +37507,7 @@ mod v_es2023 {
                             },
                         ],
                     },
-                    line_number: 460,
+                    line_number: 465,
                 },
             ],
             version: 1,
@@ -38727,8 +39258,29 @@ mod v_es2024 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -38736,7 +39288,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 216,
+                    line_number: 221,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -38753,7 +39305,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 218,
+                    line_number: 223,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -38776,7 +39328,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 220,
+                    line_number: 225,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -38808,14 +39360,14 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 222,
+                    line_number: 227,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 224,
+                    line_number: 229,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -38829,7 +39381,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 226,
+                    line_number: 231,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -38864,7 +39416,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 228,
+                    line_number: 233,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -38887,7 +39439,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 230,
+                    line_number: 235,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -38916,7 +39468,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 232,
+                    line_number: 237,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -38994,7 +39546,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 234,
+                    line_number: 239,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -39059,7 +39611,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 243,
+                    line_number: 248,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -39124,7 +39676,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 250,
+                    line_number: 255,
                 },
                 GrammarRule {
                     name: r#"for_await_of_statement"#.to_string(),
@@ -39192,7 +39744,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 257,
+                    line_number: 262,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -39211,7 +39763,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 264,
+                    line_number: 269,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -39230,7 +39782,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 266,
+                    line_number: 271,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -39249,7 +39801,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 268,
+                    line_number: 273,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -39272,7 +39824,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 270,
+                    line_number: 275,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -39317,7 +39869,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 272,
+                    line_number: 277,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -39333,13 +39885,34 @@ mod v_es2024 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 275,
+                    line_number: 280,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -39352,13 +39925,34 @@ mod v_es2024 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 277,
+                    line_number: 282,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -39375,7 +39969,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 279,
+                    line_number: 284,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -39412,7 +40006,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 281,
+                    line_number: 286,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -39441,7 +40035,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 283,
+                    line_number: 288,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -39455,7 +40049,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 285,
+                    line_number: 290,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -39472,7 +40066,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 287,
+                    line_number: 292,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -39486,7 +40080,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 289,
+                    line_number: 294,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -39509,7 +40103,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 295,
+                    line_number: 300,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -39542,7 +40136,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 297,
+                    line_number: 302,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -39598,7 +40192,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 303,
+                    line_number: 308,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -39627,7 +40221,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 310,
+                    line_number: 315,
                 },
                 GrammarRule {
                     name: r#"nullish_coalescing_expression"#.to_string(),
@@ -39650,7 +40244,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 313,
+                    line_number: 318,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -39673,7 +40267,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 316,
+                    line_number: 321,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -39696,7 +40290,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 318,
+                    line_number: 323,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -39719,7 +40313,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 320,
+                    line_number: 325,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -39742,7 +40336,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 322,
+                    line_number: 327,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -39765,7 +40359,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 324,
+                    line_number: 329,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -39803,7 +40397,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 326,
+                    line_number: 331,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -39871,7 +40465,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 330,
+                    line_number: 335,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -39906,7 +40500,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 335,
+                    line_number: 340,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -39938,7 +40532,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 338,
+                    line_number: 343,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -39973,7 +40567,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 341,
+                    line_number: 346,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -39996,7 +40590,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 344,
+                    line_number: 349,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -40100,7 +40694,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 346,
+                    line_number: 351,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -40123,7 +40717,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 358,
+                    line_number: 363,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -40140,7 +40734,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 360,
+                    line_number: 365,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -40199,7 +40793,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 364,
+                    line_number: 369,
                 },
                 GrammarRule {
                     name: r#"optional_chain_expression"#.to_string(),
@@ -40301,7 +40895,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 368,
+                    line_number: 373,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -40322,7 +40916,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 379,
+                    line_number: 384,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -40434,7 +41028,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 382,
+                    line_number: 387,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -40462,7 +41056,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 390,
+                    line_number: 395,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -40504,7 +41098,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 392,
+                    line_number: 397,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -40518,7 +41112,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 395,
+                    line_number: 400,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -40535,7 +41129,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 397,
+                    line_number: 402,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -40561,7 +41155,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 399,
+                    line_number: 404,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -40585,7 +41179,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 402,
+                    line_number: 407,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -40660,7 +41254,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 405,
+                    line_number: 410,
                 },
                 GrammarRule {
                     name: r#"dynamic_import"#.to_string(),
@@ -40680,7 +41274,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 425,
+                    line_number: 430,
                 },
                 GrammarRule {
                     name: r#"import_meta"#.to_string(),
@@ -40697,7 +41291,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 427,
+                    line_number: 432,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -40716,7 +41310,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 429,
+                    line_number: 434,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -40758,7 +41352,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 431,
+                    line_number: 436,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -40798,7 +41392,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 434,
+                    line_number: 439,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -40831,7 +41425,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 436,
+                    line_number: 441,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -40845,7 +41439,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 442,
+                    line_number: 447,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -40875,7 +41469,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 444,
+                    line_number: 449,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -40911,7 +41505,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 449,
+                    line_number: 454,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -40937,7 +41531,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 452,
+                    line_number: 457,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -40951,7 +41545,7 @@ mod v_es2024 {
                             },
                         ],
                     },
-                    line_number: 455,
+                    line_number: 460,
                 },
             ],
             version: 1,
@@ -42915,8 +43509,32 @@ mod v_es2025 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"decorated_class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -42924,7 +43542,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 369,
+                    line_number: 374,
                 },
                 GrammarRule {
                     name: r#"variable_statement"#.to_string(),
@@ -42941,7 +43559,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 371,
+                    line_number: 376,
                 },
                 GrammarRule {
                     name: r#"variable_declaration_list"#.to_string(),
@@ -42964,7 +43582,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 373,
+                    line_number: 378,
                 },
                 GrammarRule {
                     name: r#"variable_declaration"#.to_string(),
@@ -42996,14 +43614,14 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 375,
+                    line_number: 380,
                 },
                 GrammarRule {
                     name: r#"empty_statement"#.to_string(),
                     body: GrammarElement::TokenReference {
                         name: r#"SEMICOLON"#.to_string(),
                     },
-                    line_number: 377,
+                    line_number: 382,
                 },
                 GrammarRule {
                     name: r#"expression_statement"#.to_string(),
@@ -43017,7 +43635,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 379,
+                    line_number: 384,
                 },
                 GrammarRule {
                     name: r#"if_statement"#.to_string(),
@@ -43052,7 +43670,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 381,
+                    line_number: 386,
                 },
                 GrammarRule {
                     name: r#"while_statement"#.to_string(),
@@ -43075,7 +43693,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 383,
+                    line_number: 388,
                 },
                 GrammarRule {
                     name: r#"do_while_statement"#.to_string(),
@@ -43104,7 +43722,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 385,
+                    line_number: 390,
                 },
                 GrammarRule {
                     name: r#"for_statement"#.to_string(),
@@ -43182,7 +43800,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 387,
+                    line_number: 392,
                 },
                 GrammarRule {
                     name: r#"for_in_statement"#.to_string(),
@@ -43247,7 +43865,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 396,
+                    line_number: 401,
                 },
                 GrammarRule {
                     name: r#"for_of_statement"#.to_string(),
@@ -43322,7 +43940,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 413,
+                    line_number: 418,
                 },
                 GrammarRule {
                     name: r#"for_await_of_statement"#.to_string(),
@@ -43413,7 +44031,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 421,
+                    line_number: 426,
                 },
                 GrammarRule {
                     name: r#"continue_statement"#.to_string(),
@@ -43432,7 +44050,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 430,
+                    line_number: 435,
                 },
                 GrammarRule {
                     name: r#"break_statement"#.to_string(),
@@ -43451,7 +44069,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 432,
+                    line_number: 437,
                 },
                 GrammarRule {
                     name: r#"return_statement"#.to_string(),
@@ -43470,7 +44088,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 434,
+                    line_number: 439,
                 },
                 GrammarRule {
                     name: r#"with_statement"#.to_string(),
@@ -43493,7 +44111,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 436,
+                    line_number: 441,
                 },
                 GrammarRule {
                     name: r#"switch_statement"#.to_string(),
@@ -43538,7 +44156,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 438,
+                    line_number: 443,
                 },
                 GrammarRule {
                     name: r#"case_clause"#.to_string(),
@@ -43554,13 +44172,37 @@ mod v_es2025 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"decorated_class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 441,
+                    line_number: 446,
                 },
                 GrammarRule {
                     name: r#"default_clause"#.to_string(),
@@ -43573,13 +44215,37 @@ mod v_es2025 {
                                 name: r#"COLON"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"decorated_class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                         ],
                     },
-                    line_number: 443,
+                    line_number: 448,
                 },
                 GrammarRule {
                     name: r#"labelled_statement"#.to_string(),
@@ -43596,7 +44262,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 445,
+                    line_number: 450,
                 },
                 GrammarRule {
                     name: r#"try_statement"#.to_string(),
@@ -43633,7 +44299,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 447,
+                    line_number: 452,
                 },
                 GrammarRule {
                     name: r#"catch_clause"#.to_string(),
@@ -43662,7 +44328,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 449,
+                    line_number: 454,
                 },
                 GrammarRule {
                     name: r#"finally_clause"#.to_string(),
@@ -43676,7 +44342,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 451,
+                    line_number: 456,
                 },
                 GrammarRule {
                     name: r#"throw_statement"#.to_string(),
@@ -43693,7 +44359,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 453,
+                    line_number: 458,
                 },
                 GrammarRule {
                     name: r#"debugger_statement"#.to_string(),
@@ -43707,7 +44373,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 455,
+                    line_number: 460,
                 },
                 GrammarRule {
                     name: r#"expression"#.to_string(),
@@ -43730,7 +44396,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 461,
+                    line_number: 466,
                 },
                 GrammarRule {
                     name: r#"assignment_expression"#.to_string(),
@@ -43763,7 +44429,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 463,
+                    line_number: 468,
                 },
                 GrammarRule {
                     name: r#"assignment_operator"#.to_string(),
@@ -43819,7 +44485,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 469,
+                    line_number: 474,
                 },
                 GrammarRule {
                     name: r#"conditional_expression"#.to_string(),
@@ -43848,7 +44514,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 476,
+                    line_number: 481,
                 },
                 GrammarRule {
                     name: r#"nullish_coalescing_expression"#.to_string(),
@@ -43871,7 +44537,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 479,
+                    line_number: 484,
                 },
                 GrammarRule {
                     name: r#"logical_or_expression"#.to_string(),
@@ -43894,7 +44560,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 482,
+                    line_number: 487,
                 },
                 GrammarRule {
                     name: r#"logical_and_expression"#.to_string(),
@@ -43917,7 +44583,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 484,
+                    line_number: 489,
                 },
                 GrammarRule {
                     name: r#"bitwise_or_expression"#.to_string(),
@@ -43940,7 +44606,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 486,
+                    line_number: 491,
                 },
                 GrammarRule {
                     name: r#"bitwise_xor_expression"#.to_string(),
@@ -43963,7 +44629,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 488,
+                    line_number: 493,
                 },
                 GrammarRule {
                     name: r#"bitwise_and_expression"#.to_string(),
@@ -43986,7 +44652,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 490,
+                    line_number: 495,
                 },
                 GrammarRule {
                     name: r#"equality_expression"#.to_string(),
@@ -44024,7 +44690,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 492,
+                    line_number: 497,
                 },
                 GrammarRule {
                     name: r#"relational_expression"#.to_string(),
@@ -44092,7 +44758,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 496,
+                    line_number: 501,
                 },
                 GrammarRule {
                     name: r#"shift_expression"#.to_string(),
@@ -44127,7 +44793,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 501,
+                    line_number: 506,
                 },
                 GrammarRule {
                     name: r#"additive_expression"#.to_string(),
@@ -44159,7 +44825,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 504,
+                    line_number: 509,
                 },
                 GrammarRule {
                     name: r#"multiplicative_expression"#.to_string(),
@@ -44194,7 +44860,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 507,
+                    line_number: 512,
                 },
                 GrammarRule {
                     name: r#"exponentiation_expression"#.to_string(),
@@ -44217,7 +44883,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 510,
+                    line_number: 515,
                 },
                 GrammarRule {
                     name: r#"unary_expression"#.to_string(),
@@ -44321,7 +44987,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 512,
+                    line_number: 517,
                 },
                 GrammarRule {
                     name: r#"postfix_expression"#.to_string(),
@@ -44344,7 +45010,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 524,
+                    line_number: 529,
                 },
                 GrammarRule {
                     name: r#"left_hand_side_expression"#.to_string(),
@@ -44361,7 +45027,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 526,
+                    line_number: 531,
                 },
                 GrammarRule {
                     name: r#"call_expression"#.to_string(),
@@ -44420,7 +45086,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 530,
+                    line_number: 535,
                 },
                 GrammarRule {
                     name: r#"optional_chain_expression"#.to_string(),
@@ -44522,7 +45188,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 534,
+                    line_number: 539,
                 },
                 GrammarRule {
                     name: r#"new_expression"#.to_string(),
@@ -44543,7 +45209,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 545,
+                    line_number: 550,
                 },
                 GrammarRule {
                     name: r#"member_expression"#.to_string(),
@@ -44655,7 +45321,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 548,
+                    line_number: 553,
                 },
                 GrammarRule {
                     name: r#"arguments"#.to_string(),
@@ -44683,7 +45349,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 556,
+                    line_number: 561,
                 },
                 GrammarRule {
                     name: r#"argument_list"#.to_string(),
@@ -44725,7 +45391,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 558,
+                    line_number: 563,
                 },
                 GrammarRule {
                     name: r#"spread_element"#.to_string(),
@@ -44739,7 +45405,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 561,
+                    line_number: 566,
                 },
                 GrammarRule {
                     name: r#"arrow_function"#.to_string(),
@@ -44756,7 +45422,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 563,
+                    line_number: 568,
                 },
                 GrammarRule {
                     name: r#"arrow_parameters"#.to_string(),
@@ -44782,7 +45448,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 565,
+                    line_number: 570,
                 },
                 GrammarRule {
                     name: r#"concise_body"#.to_string(),
@@ -44806,7 +45472,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 568,
+                    line_number: 573,
                 },
                 GrammarRule {
                     name: r#"primary_expression"#.to_string(),
@@ -44881,7 +45547,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 571,
+                    line_number: 576,
                 },
                 GrammarRule {
                     name: r#"dynamic_import"#.to_string(),
@@ -44901,7 +45567,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 591,
+                    line_number: 596,
                 },
                 GrammarRule {
                     name: r#"import_meta"#.to_string(),
@@ -44918,7 +45584,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 593,
+                    line_number: 598,
                 },
                 GrammarRule {
                     name: r#"array_literal"#.to_string(),
@@ -44937,7 +45603,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 595,
+                    line_number: 600,
                 },
                 GrammarRule {
                     name: r#"element_list"#.to_string(),
@@ -44979,7 +45645,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 597,
+                    line_number: 602,
                 },
                 GrammarRule {
                     name: r#"object_literal"#.to_string(),
@@ -45019,7 +45685,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 600,
+                    line_number: 605,
                 },
                 GrammarRule {
                     name: r#"property_definition"#.to_string(),
@@ -45052,7 +45718,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 602,
+                    line_number: 607,
                 },
                 GrammarRule {
                     name: r#"object_spread_property"#.to_string(),
@@ -45066,7 +45732,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 608,
+                    line_number: 613,
                 },
                 GrammarRule {
                     name: r#"property_name"#.to_string(),
@@ -45096,7 +45762,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 610,
+                    line_number: 615,
                 },
                 GrammarRule {
                     name: r#"function_expression"#.to_string(),
@@ -45132,7 +45798,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 615,
+                    line_number: 620,
                 },
                 GrammarRule {
                     name: r#"template_literal"#.to_string(),
@@ -45158,7 +45824,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 618,
+                    line_number: 623,
                 },
                 GrammarRule {
                     name: r#"template_span"#.to_string(),
@@ -45172,7 +45838,7 @@ mod v_es2025 {
                             },
                         ],
                     },
-                    line_number: 621,
+                    line_number: 626,
                 },
             ],
             version: 1,

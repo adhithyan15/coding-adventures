@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C210-ki-tree",
+    "language": "japanese",
+    "chapter": 210,
+    "sequence": 12620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb25101fc5bcf431"
+  },
+  "findings": []
+}

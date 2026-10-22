@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:48758954e4ae22f0",
+  "lessonIds": [
+    "JA-C147-arau",
+    "JA-C147-migaku",
+    "JA-C147-abiru",
+    "JA-C147-yu",
+    "JA-C147-sekken"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch147.txt",
+  "json": "japanese/narration/ch147.json",
+  "textHash": "fnv1a64:abb38e6d486c0a53",
+  "jsonHash": "fnv1a64:a267f0c8659c81fd",
+  "findings": []
+}

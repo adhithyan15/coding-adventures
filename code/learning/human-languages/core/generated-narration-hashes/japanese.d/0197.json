@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:7cf099b26d978ddd",
+  "lessonIds": [
+    "JA-C197-shiyakusho",
+    "JA-C197-hiroba",
+    "JA-C197-koujou",
+    "JA-C197-tateru",
+    "JA-C197-mitsukaru",
+    "JA-R197-review-196-197",
+    "JA-R197-review-final-197"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch197.txt",
+  "json": "japanese/narration/ch197.json",
+  "textHash": "fnv1a64:2fd3992b2286372a",
+  "jsonHash": "fnv1a64:e94269c170147183",
+  "findings": []
+}

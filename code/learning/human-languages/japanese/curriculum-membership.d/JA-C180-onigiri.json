@@ -1,0 +1,11 @@
+{
+  "id": "JA-C180-onigiri",
+  "pathSegment": "JA-PATH-180-EATOUT180",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-180-EATOUT180",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 217,
+  "title": "At the Doctor's",
+  "label": "ch:ja-at-the-doctor-s",
+  "canDo": "I can answer a doctor's simple questions.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C217-mushiba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 217: I can answer a doctor's simple questions.",
+    "assesses": [
+      "JA-LEX-C217-DOCTOR217-03",
+      "JA-LEX-C217-DOCTOR217-04",
+      "JA-LEX-C217-DOCTOR217-05"
+    ]
+  }
+}

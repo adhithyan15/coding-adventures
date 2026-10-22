@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C220-joubu",
+    "language": "japanese",
+    "chapter": 220,
+    "sequence": 13140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f06c1369f359916"
+  },
+  "findings": []
+}

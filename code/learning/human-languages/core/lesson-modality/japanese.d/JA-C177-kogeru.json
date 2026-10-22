@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C177-kogeru",
+    "language": "japanese",
+    "chapter": 177,
+    "sequence": 10680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3005ca5dd83a9b78"
+  },
+  "findings": []
+}

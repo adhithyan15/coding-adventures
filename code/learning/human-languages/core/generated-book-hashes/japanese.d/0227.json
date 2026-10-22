@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:32c0e527114d2935",
+  "lessonIds": [
+    "JA-C227-machigaeru",
+    "JA-C227-kangaeru",
+    "JA-C227-omoidasu",
+    "JA-C227-tashikameru",
+    "JA-C227-kuraberu"
+  ],
+  "tex": "japanese/book/chapters/ch227-mistakes-and-second-thoughts.tex"
+}

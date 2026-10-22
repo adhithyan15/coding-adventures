@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Animals in the Hills",
+  "label": "ch:ja-animals-in-the-hills",
+  "canDo": "I can name some animals and say where they live.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C211-fueru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 211: I can name some animals and say where they live.",
+    "assesses": [
+      "JA-LEX-C211-ANIMAL211-03",
+      "JA-LEX-C211-ANIMAL211-04",
+      "JA-LEX-C211-ANIMAL211-05"
+    ]
+  }
+}

@@ -1233,7 +1233,8 @@ jobs:
   # ── Job 7c: reconciled Rust compiled-grammar regeneration ──────
   #
   # MacroOct and Nib are the first reconciled Rust grammar lanes; Ruby joins
-  # as the first LANG84 release family (tables follow releases.csv). Protect them
+  # as the first LANG84 release family (tables follow releases.csv), and
+  # Python as the second (phase 7a, with its legacy minor lines). Protect them
   # without running the still-drifting full Rust sweep tracked by #14202. Keep
   # widening this job only after each additional lane has been reconciled.
   rust-grammar-regen-check:
@@ -1254,7 +1255,7 @@ jobs:
       - name: Regenerate the reconciled Rust grammar lanes
         run: |
           GT=code/programs/rust/grammar-tools/target/release/grammar-tools
-          for stem in macrooct nib ruby; do
+          for stem in macrooct nib ruby python; do
             "$GT" generate-rust-compiled-grammars "$stem"
           done
 
@@ -1266,11 +1267,13 @@ jobs:
             code/packages/rust/nib-parser/src/_grammar.rs
             code/packages/rust/ruby-lexer/src/_grammar.rs
             code/packages/rust/ruby-parser/src/_grammar.rs
+            code/packages/rust/python-lexer/src/_grammar.rs
+            code/packages/rust/python-parser/src/_grammar.rs
           )
           if ! git diff --quiet -- "${paths[@]}"; then
             echo "::error::A reconciled Rust compiled grammar differs from its canonical source."
             git diff --stat -- "${paths[@]}"
-            echo "Regenerate with: for s in macrooct nib ruby; do grammar-tools generate-rust-compiled-grammars \$s; done"
+            echo "Regenerate with: for s in macrooct nib ruby python; do grammar-tools generate-rust-compiled-grammars \$s; done"
             exit 1
           fi
           echo "All reconciled Rust compiled grammars are up to date."

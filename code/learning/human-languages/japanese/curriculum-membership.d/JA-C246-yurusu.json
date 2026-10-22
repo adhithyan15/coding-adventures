@@ -1,0 +1,11 @@
+{
+  "id": "JA-C246-yurusu",
+  "pathSegment": "JA-PATH-246-ANGER246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-246-ANGER246",
+      "order": 3
+    }
+  ]
+}

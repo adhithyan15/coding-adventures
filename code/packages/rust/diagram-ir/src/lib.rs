@@ -1,5 +1,7 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
+use std::collections::BTreeMap;
+
 pub const VERSION: &str = "0.85.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
@@ -2135,6 +2137,7 @@ pub struct SwimlaneDiagram {
     pub ignore_cross_lane_edges: bool, pub optimize_ranks_by_crossings: bool,
     pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
+    pub icons: BTreeMap<String, String>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane {
@@ -2155,6 +2158,7 @@ pub struct LayoutedSwimlaneNode {
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneEdge {
     pub id: Option<String>, pub from: Point, pub to: Point, pub label: Option<DiagramLabel>, pub kind: SwimlaneEdgeKind,
+    pub label_position: Option<Point>, pub label_width: f64, pub label_height: f64,
     pub start_marker: EdgeMarker, pub end_marker: EdgeMarker, pub min_length: usize,
     pub classes: Vec<String>, pub style: DiagramStyle,
     pub animate: bool, pub animation: Option<SwimlaneEdgeAnimation>,
@@ -2171,6 +2175,8 @@ pub struct LayoutedSwimlaneDiagram {
     pub optimize_ranks_by_crossings: bool,
     pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
+    pub icons: BTreeMap<String, String>,
+    pub icon_glyphs: BTreeMap<String, DiagramIconGlyph>,
 }
 
 // GRAMMAR VISUALIZATION FAMILY

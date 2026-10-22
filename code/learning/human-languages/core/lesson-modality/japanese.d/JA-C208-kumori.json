@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C208-kumori",
+    "language": "japanese",
+    "chapter": 208,
+    "sequence": 12520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea097668e6020f2f"
+  },
+  "findings": []
+}

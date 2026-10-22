@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C182-satsu",
+    "language": "japanese",
+    "chapter": 182,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acd15f88344d3464"
+  },
+  "findings": []
+}

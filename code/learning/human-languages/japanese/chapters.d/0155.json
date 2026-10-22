@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Moving House and Shifting Furniture",
+  "label": "ch:ja-moving-house-and-shifting-furniture",
+  "canDo": "I can talk about moving into a home.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C155-genkan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can talk about moving into a home.",
+    "assesses": [
+      "JA-LEX-C155-MOVE155-03",
+      "JA-LEX-C155-MOVE155-04",
+      "JA-LEX-C155-MOVE155-05"
+    ]
+  }
+}

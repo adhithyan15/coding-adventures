@@ -1,0 +1,11 @@
+{
+  "id": "JA-C157-oku",
+  "pathSegment": "JA-PATH-157-TABLE157",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-157-TABLE157",
+      "order": 4
+    }
+  ]
+}

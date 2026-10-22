@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:46f8c9bca182c9b9",
+  "lessonIds": [
+    "JA-C243-ryoushin",
+    "JA-C243-sofu",
+    "JA-C243-sobo",
+    "JA-C243-kyoudai",
+    "JA-C243-sodateru"
+  ],
+  "tex": "japanese/book/chapters/ch243-grandparents-and-siblings.tex"
+}

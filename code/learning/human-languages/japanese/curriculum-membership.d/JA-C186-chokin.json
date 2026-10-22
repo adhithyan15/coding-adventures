@@ -1,0 +1,11 @@
+{
+  "id": "JA-C186-chokin",
+  "pathSegment": "JA-PATH-186-SAVE186",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-186-SAVE186",
+      "order": 1
+    }
+  ]
+}

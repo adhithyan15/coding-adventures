@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C214-hi-fire",
+    "language": "japanese",
+    "chapter": 214,
+    "sequence": 12840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c87204a9beeffafe"
+  },
+  "findings": []
+}

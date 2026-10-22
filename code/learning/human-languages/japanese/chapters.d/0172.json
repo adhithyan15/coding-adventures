@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Mealtimes and Hunger",
+  "label": "ch:ja-mealtimes-and-hunger",
+  "canDo": "I can talk about my meals and when I eat them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C172-yaku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can talk about my meals and when I eat them.",
+    "assesses": [
+      "JA-LEX-C172-MEALS172-03",
+      "JA-LEX-C172-MEALS172-04",
+      "JA-LEX-C172-MEALS172-05"
+    ]
+  }
+}

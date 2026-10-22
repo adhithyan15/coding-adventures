@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:54de277982882bff",
+  "lessonIds": [
+    "JA-C188-yuubinkyoku",
+    "JA-C188-kitte",
+    "JA-C188-hagaki",
+    "JA-C188-okuru",
+    "JA-C188-kakitome"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch188.txt",
+  "json": "japanese/narration/ch188.json",
+  "textHash": "fnv1a64:5496cb6c097bd85f",
+  "jsonHash": "fnv1a64:ab818fdff47290e0",
+  "findings": []
+}

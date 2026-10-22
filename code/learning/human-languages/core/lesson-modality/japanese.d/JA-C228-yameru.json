@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C228-yameru",
+    "language": "japanese",
+    "chapter": 228,
+    "sequence": 13830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:638b4fb33496254e"
+  },
+  "findings": []
+}

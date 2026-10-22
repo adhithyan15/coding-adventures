@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C227-kangaeru",
+    "language": "japanese",
+    "chapter": 227,
+    "sequence": 13760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e6e0b830af6db09"
+  },
+  "findings": []
+}
