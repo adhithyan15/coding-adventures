@@ -1,0 +1,13 @@
+[package]
+name = "x509-rsa-sha256-reviewed-server-link"
+version = "0.1.0"
+edition = "2021"
+description = "Exact evidence binding for server policy and one reviewed-root RSA SHA-256 link"
+
+[dependencies]
+x509-rsa-sha256-reviewed-anchor-link = { path = "../x509-rsa-sha256-reviewed-anchor-link" }
+x509-server-certificate-policy = { path = "../x509-server-certificate-policy" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
