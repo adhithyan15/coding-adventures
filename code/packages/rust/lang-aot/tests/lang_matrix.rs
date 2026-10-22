@@ -13603,8 +13603,23 @@ fn ruby_rows_agree_with_the_host_ruby_oracle() {
         return;
     }
     for program in ruby_rows() {
-        // `-e` with the source as its own argument: no shell, no temp file.
-        let out = Command::new("ruby").args(["-e", program.src]).output().expect("ruby ran once already");
+        // The source goes in on stdin (`ruby` with no script argument reads
+        // its program there): no shell, no temp file, and no argv quoting.
+        // `-e "\n"` is not enough: Rust quotes a Windows argument only when
+        // it holds a space or tab, and Ruby's Windows argv splitter drops a
+        // bare "\n" as whitespace, so `empty_program` would reach Ruby as
+        // `-e` with no code ("no code specified for -e").
+        use std::io::Write as _;
+        let mut child = Command::new("ruby")
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .expect("ruby ran once already");
+        // The sources are a few bytes, far below any pipe buffer, so writing
+        // before reading cannot deadlock; dropping the handle sends EOF.
+        child.stdin.take().expect("piped stdin").write_all(program.src.as_bytes()).expect("ruby stdin");
+        let out = child.wait_with_output().expect("ruby exited");
         // Windows interpreters write text-mode stdout ("\r\n"); the rows
         // record the language's output, so fold the line ending back.
         let stdout = String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n");
