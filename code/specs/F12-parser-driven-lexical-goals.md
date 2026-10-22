@@ -1,7 +1,8 @@
 # F12 — Parser-driven lexical goals
 
-**Status:** accepted (2026-10-22). Proposed 2026-10-21; the open questions
-were settled with their recommended answers (see *Decisions* at the end). Builds on [F04](F04-lexer-pattern-groups.md)
+**Status:** proposed 2026-10-21. Phase 0 is queued. Claude settled the open
+questions provisionally on 2026-10-22 (see *Decisions* at the end); the owner
+has not confirmed them yet. Builds on [F04](F04-lexer-pattern-groups.md)
 (pattern groups) and [F10](F10-declarative-lexer-modes.md) (declarative modes),
 and resolves F10's "Residual Hard Cases". It replaces the heuristic context
 stack tried on the local branch `claude/closurec-regex-after-brace`, which was
@@ -219,9 +220,11 @@ One PR each, every one under about 1,500 lines:
 
 ## Decisions
 
-These were open questions when the spec was proposed. They were settled on
-2026-10-22 with the recommended answers, which also follow the owner's
-standing direction to match Closure's observable behavior.
+These were open questions when the spec was proposed. On 2026-10-22, Claude
+settled them provisionally while restarting the Closure loop, using the
+spec's own recommendations. The owner has not reviewed them. They follow the
+owner's standing direction to match Closure's observable behavior (CCR-075).
+The owner can overrule any of them before phase 1 starts.
 
 1. **Keep the F10 guess as the first guess.** The parser corrects it by
    re-lexing. Always scanning `/` as division, as Closure does, is simpler,

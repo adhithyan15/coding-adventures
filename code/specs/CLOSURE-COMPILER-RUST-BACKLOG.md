@@ -66,7 +66,9 @@ stop and ask the owner. Don't stretch the PR to satisfy both.
    inside item PRs, because concurrent PRs would conflict on it.
 6. **Timebox an item, never the loop.** An item that has gone 24 hours, three
    CI rounds or three security-review rounds without converging is *parked*:
-   - Push its branch as is.
+   - Keep its branch local. Push it only if its latest `/security-review`
+     passed; never push a branch whose latest review failed or is missing.
+     Parking never skips security review or CI.
    - Post one comment on its issue saying where it stands and what blocks it.
    - Mark its row `Parked`, and tell the owner in one line.
    - Then take the next row.
@@ -168,7 +170,7 @@ Ranking:
 | 9 | #17854 | Any template literal with a substitution fails the typed parse at SIMPLE/ADVANCED. | Ready |
 | 10 | #17941 | Object method shorthand and async function expressions fail to parse. | Ready |
 | 11 | #17852 | Adjacent class members and reserved-word property names fail to parse. | Ready |
-| 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Ready after #1 |
+| 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Ready after #1 (the owner may still overrule F12's decisions) |
 | 13 | #17884 | Support Annex B HTML-like comments (`<!--` and line-leading `-->`) instead of refusing them. Coordinate with #17914, another session's fix for the `-->` test262 regression. | Ready after #17914 merges |
 | 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (private class elements) merged as #17876; find and ship the remaining upstream refusals. | Ready |
 
@@ -229,8 +231,11 @@ migration trial). Each one starts with a survey PR that splits it into issues.
 
 ### Decisions needed from the owner
 
-None open. F12's open questions were settled on 2026-10-22 with their
-recommended answers (see the spec's *Decisions* section).
+None blocking. On 2026-10-22, while restarting the loop, Claude settled F12's
+four open questions using the spec's own recommendations. The owner had not
+answered them; the spec's *Decisions* section records this. The owner can
+overrule any of them before F12 phase 1 starts. Phase 0 does not depend on
+them.
 
 ### Filler (only while waiting on CI)
 
@@ -280,4 +285,4 @@ Add one line per batch of merges or selections.
 | 2026-10-19 | Backlog reset. #17288 closed; lexer intervals salvaged as #17803. Provenance is no longer a gate. Next: #16008. |
 | 2026-10-19 | Owner decided CCR-075: refuse what Closure refuses. Added to Q0 as rank 5.5. |
 | 2026-10-19 | Selected #16008 (PR #17829) and #16009 (bounded chains, CLOC42). |
-| 2026-10-22 | Recorded 20 Closure PRs merged since the reset. The loop had stopped after parking fix B, so rule 6 now parks the item, not the loop. Merges are recorded in a daily docs PR (rule 5), and near-root crate PRs use `ci-full-build` (rule 10). F12 accepted. New front-end findings ranked into Q0/Q0.5. Next: F12 phase 0. |
+| 2026-10-22 | Recorded 20 Closure PRs merged since the reset. The loop had stopped after parking fix B, so rule 6 now parks the item, not the loop. Merges are recorded in a daily docs PR (rule 5), and near-root crate PRs use `ci-full-build` (rule 10). F12 phase 0 queued; Claude settled phases 1–4's open questions provisionally. New front-end findings ranked into Q0/Q0.5. Next: F12 phase 0. |
