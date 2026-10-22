@@ -578,7 +578,12 @@ describe.runIf(POSIX)("the Windows rules, simulated", () => {
   it("refuses an entry swapped for another file between the look and the open", () => {
     configureLessonCache({ root, directory: cacheDir }, win32());
     loadTrackLessons("spanish", root);
-    const entry = join(cacheDir, entries()[0]!);
+    // The cache opens entries under the directory's REAL path — that is
+    // what `openEntryStore` validated and stored — so the hook must compare
+    // against the same spelling. On macOS `tmpdir()` lives under `/var`,
+    // a symlink to `/private/var`: `join(cacheDir, …)` names the file the
+    // cache opens, but not in the form it opens it, and the swap never ran.
+    const entry = join(realpathSync.native(cacheDir), entries()[0]!);
     // A complete, correctly digested entry with different content and the
     // same lesson count: everything but the same-file check would accept it.
     const impostor = join(scratch, "impostor.v8");
