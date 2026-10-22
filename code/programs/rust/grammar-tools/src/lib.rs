@@ -937,30 +937,6 @@ struct RustReleaseFamilySpec {
     /// execution grammar is a token/parser PAIR; Ruby's lexer is hand-written
     /// around its unversioned tokens, so it leaves this off.
     legacy_token_grammar: bool,
-    /// Where each row's `grammar_stage` comes from (see [`StageSource`]).
-    stage_source: StageSource,
-}
-
-/// Where a release row's `grammar_stage` comes from.
-///
-/// ```text
-///   StageSource::Column             header has grammar_stage ── read it
-///   StageSource::DerivedFromStatus  header has no grammar_stage ── derive:
-///        grammar_status   pending   partial   complete
-///        grammar_stage    none      P         P
-/// ```
-///
-/// The derivation is exactly the mechanical rule LANG84's "Migration of the
-/// Perl inventory" applies when the schema PR adds the column, so a family
-/// produces the same `INVENTORY` before and after its migration. A family
-/// declared `Column` still REQUIRES the column: a missing one is an error,
-/// never a silent fallback to derivation.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum StageSource {
-    /// The LANG84 schema: `grammar_stage` is a required column.
-    Column,
-    /// An inventory that predates the LANG84 schema (Perl until phase 2b).
-    DerivedFromStatus,
 }
 
 /// Opt-in table. A language joins once its first pair exists; until then its
@@ -973,11 +949,11 @@ fn rust_release_family_for_package(package_stem: &str) -> Option<RustReleaseFami
             input_prefix: "ruby",
             legacy_parser_grammar: true,
             legacy_token_grammar: false,
-            stage_source: StageSource::Column,
             legacy_versions: &[],
         }),
-        // LANG84 phase 4a. Perl's checked partial pairs collapse to a
-        // handful of distinct grammars. Both halves of the unversioned
+        // LANG84 phase 4a; phase 2b gave Perl's inventory the common header,
+        // `grammar_stage` included. Perl's checked partial pairs collapse to
+        // a handful of distinct grammars. Both halves of the unversioned
         // `perl.tokens`/`perl.grammar` pair (LANG81's execution grammar) stay
         // reachable as `unversioned_*()`, never as the `""` release.
         "perl" => Some(RustReleaseFamilySpec {
@@ -986,7 +962,6 @@ fn rust_release_family_for_package(package_stem: &str) -> Option<RustReleaseFami
             input_prefix: "perl",
             legacy_parser_grammar: true,
             legacy_token_grammar: true,
-            stage_source: StageSource::DerivedFromStatus,
             legacy_versions: &[],
         }),
         // LANG84 phase 7a. Python's release pairs (`python3.13.16.*` …)
@@ -1000,7 +975,6 @@ fn rust_release_family_for_package(package_stem: &str) -> Option<RustReleaseFami
             input_prefix: "python",
             legacy_parser_grammar: false,
             legacy_token_grammar: false,
-            stage_source: StageSource::Column,
             legacy_versions: PYTHON_VERSIONS,
         }),
         _ => None,
@@ -1054,22 +1028,16 @@ fn is_safe_release_id(release: &str) -> bool {
 ///
 /// A row "has a pair" when it left stage `none` or is not `pending` — the
 /// same rule `release_inventory.py check` applies.
-fn read_release_inventory(
-    path: &Path,
-    stage_source: StageSource,
-) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
+fn read_release_inventory(path: &Path) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
     let text = std::fs::read_to_string(path)
         .map_err(|e| format!("Failed to read {}: {}", path.display(), e))?;
-    parse_release_inventory(&text, stage_source).map_err(|e| format!("{}: {}", path.display(), e))
+    parse_release_inventory(&text).map_err(|e| format!("{}: {}", path.display(), e))
 }
 
 /// The body of [`read_release_inventory`], on text, so the tests can feed it
 /// hostile rows without touching the disk. A trailing `\r` is dropped from
 /// each line so a CRLF checkout reads the same as an LF one.
-fn parse_release_inventory(
-    text: &str,
-    stage_source: StageSource,
-) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
+fn parse_release_inventory(text: &str) -> Result<(Vec<RustReleaseRow>, Vec<String>), String> {
     let mut lines = text
         .lines()
         .map(|line| line.strip_suffix('\r').unwrap_or(line))
@@ -1081,11 +1049,8 @@ fn parse_release_inventory(
             .position(|cell| *cell == name)
             .ok_or_else(|| format!("no `{}` column", name))
     };
-    let (release_col, status_col) = (column("release")?, column("grammar_status")?);
-    let stage_col = match stage_source {
-        StageSource::Column => Some(column("grammar_stage")?),
-        StageSource::DerivedFromStatus => None,
-    };
+    let (release_col, status_col, stage_col) =
+        (column("release")?, column("grammar_status")?, column("grammar_stage")?);
     let mut seen = HashSet::new();
     let mut rows = Vec::new();
     let mut paired = Vec::new();
@@ -1109,11 +1074,7 @@ fn parse_release_inventory(
         if !matches!(status, "pending" | "partial" | "complete") {
             return Err(format!("release {}: unknown grammar_status {:?}", release, status));
         }
-        let stage = match stage_col {
-            Some(col) => cells[col],
-            None if status == "pending" => "none",
-            None => "P",
-        };
+        let stage = cells[stage_col];
         if !matches!(stage, "none" | "G" | "P") {
             return Err(format!("release {}: unknown grammar_stage {:?}", release, stage));
         }
@@ -1135,7 +1096,7 @@ fn build_release_family_target(
 ) -> Result<RustReleaseFamilyTarget, String> {
     let input_dir = grammars_dir.join(spec.input_dir);
     let (inventory, paired_ids) =
-        read_release_inventory(&input_dir.join("releases.csv"), spec.stage_source)?;
+        read_release_inventory(&input_dir.join("releases.csv"))?;
     if paired_ids.is_empty() {
         return Err(format!(
             "Release family '{}' has no row past stage `none` in releases.csv.",
@@ -2223,19 +2184,19 @@ mod tests {
             "# provenance\nx,grammar_stage,release,grammar_status\n1,none,0.1,pending\n2,P,0.2,partial\n3,G,0.3,pending\n",
         )
         .unwrap();
-        let (rows, paired) = read_release_inventory(&path, StageSource::Column).unwrap();
+        let (rows, paired) = read_release_inventory(&path).unwrap();
         assert_eq!(rows.len(), 3);
         assert_eq!(rows[1], RustReleaseRow { release: "0.2".into(), stage: "P".into() });
         assert_eq!(paired, vec!["0.2".to_string(), "0.3".to_string()]);
 
         std::fs::write(&path, "release,grammar_status\n0.1,pending\n").unwrap();
-        assert!(read_release_inventory(&path, StageSource::Column).unwrap_err().contains("grammar_stage"));
+        assert!(read_release_inventory(&path).unwrap_err().contains("grammar_stage"));
         std::fs::write(&path, "release,grammar_status,grammar_stage\n\"0.1\",pending,none\n").unwrap();
-        assert!(read_release_inventory(&path, StageSource::Column).unwrap_err().contains("quoted"));
+        assert!(read_release_inventory(&path).unwrap_err().contains("quoted"));
         std::fs::write(&path, "release,grammar_status,grammar_stage\n../x,partial,P\n").unwrap();
-        assert!(read_release_inventory(&path, StageSource::Column).unwrap_err().contains("unsafe"));
+        assert!(read_release_inventory(&path).unwrap_err().contains("unsafe"));
         std::fs::write(&path, "release,grammar_status,grammar_stage\n0.1,partial\n").unwrap();
-        assert!(read_release_inventory(&path, StageSource::Column).unwrap_err().contains("field count"));
+        assert!(read_release_inventory(&path).unwrap_err().contains("field count"));
         std::fs::remove_dir_all(dir).unwrap();
     }
 
@@ -2254,28 +2215,38 @@ mod tests {
             ("grammar_status,grammar_stage\npartial,P\n".to_string(), "release"),
             ("# only a comment\n".to_string(), "no header"),
         ] {
-            let error = parse_release_inventory(&csv, StageSource::Column).unwrap_err();
+            let error = parse_release_inventory(&csv).unwrap_err();
             assert!(error.contains(why), "{csv:?}: {error}");
         }
     }
 
+    /// LANG84 phase 2b: Perl's inventory has the common header, with
+    /// `grammar_status` seventh, `grammar_stage` eighth and LANG82's
+    /// `perlhist_line` as an extra. Columns are found by name, and a CRLF
+    /// checkout reads like an LF one.
     #[test]
-    fn pre_lang84_inventory_derives_stage_by_the_migration_rule() {
-        // Perl's pre-2b header: no grammar_stage column. Derivation maps
-        // pending → none and partial/complete → P, and tolerates CRLF.
-        let csv = "# provenance\r\nrelease,date,perlhist_line,grammar_status\r\n\
-                   1.000,1987,78,partial\r\n1.001,1988,80,pending\r\n2.0,1988,81,complete\r\n";
-        let (rows, paired) = parse_release_inventory(csv, StageSource::DerivedFromStatus).unwrap();
-        let stages: Vec<_> = rows.iter().map(|r| (r.release.as_str(), r.stage.as_str())).collect();
-        assert_eq!(stages, [("1.000", "P"), ("1.001", "none"), ("2.0", "P")]);
-        assert_eq!(paired, ["1.000", "2.0"]);
-        // The same text is an error for a family that declares the column.
-        let error = parse_release_inventory(csv, StageSource::Column).unwrap_err();
+    fn release_inventory_reads_the_lang84_header() {
+        let csv = "# LANG84 release inventory: Perl\r\n\
+                   release,date,channel,source_ref,source_sha,predecessor,grammar_status,\
+                   grammar_stage,grammar_subset,iir_status,backend_status,profile,\
+                   perlhist_line,lineage\r\n\
+                   1.000,1987-12-18,final,https://x/perl-1.0,8d063cd8450e59ea1c611a2f4f5a21059a2804f1,\
+                   ,partial,P,pl-decimal-print,-,-,-,78,first\r\n\
+                   1.001,1988-01-30,patch,https://x/perlhist.pod#L80,\
+                   d97e2dc0ca5fcae83ac557cf21372672cd497510,1.000,pending,none,-,-,-,-,80,line\r\n";
+        let (rows, paired) = parse_release_inventory(csv).unwrap();
+        assert_eq!(
+            rows,
+            vec![
+                RustReleaseRow { release: "1.000".into(), stage: "P".into() },
+                RustReleaseRow { release: "1.001".into(), stage: "none".into() },
+            ]
+        );
+        assert_eq!(paired, ["1.000"]);
+        // The pre-2b four-column LANG82 header is now an error, not a guess.
+        let lang82 = "release,date,perlhist_line,grammar_status\n1.000,1987-Dec-18,78,partial\n";
+        let error = parse_release_inventory(lang82).unwrap_err();
         assert!(error.contains("grammar_stage"), "{error}");
-        // Derivation does not relax any row check.
-        let short = "release,grammar_status\n1.0\n";
-        let error = parse_release_inventory(short, StageSource::DerivedFromStatus).unwrap_err();
-        assert!(error.contains("field count"), "{error}");
     }
 
     #[test]
@@ -2310,7 +2281,6 @@ mod tests {
             input_prefix: "toy",
             legacy_parser_grammar: false,
             legacy_token_grammar: false,
-            stage_source: StageSource::Column,
             legacy_versions: &[],
         };
         let family_target = build_release_family_target(&dir, spec, RustGrammarKind::Tokens).unwrap();
@@ -2365,7 +2335,6 @@ mod tests {
             input_prefix: "toy",
             legacy_parser_grammar: false,
             legacy_token_grammar: false,
-            stage_source: StageSource::Column,
             legacy_versions: &["9.0"],
         };
         let family_target = build_release_family_target(&dir, spec, RustGrammarKind::Grammar).unwrap();

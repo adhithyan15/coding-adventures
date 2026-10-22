@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Drought fire and earthquake",
+  "label": "ch:gu-drought-fire-and-earthquake",
+  "canDo": "I can say what a hard year will bring.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C221-bhukamp",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can say what a hard year will bring.",
+    "assesses": [
+      "GU-LEX-C221-DROUGHT221-03",
+      "GU-LEX-C221-DROUGHT221-04",
+      "GU-LEX-C221-DROUGHT221-05"
+    ]
+  }
+}

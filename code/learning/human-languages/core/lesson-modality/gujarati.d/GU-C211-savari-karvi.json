@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C211-savari-karvi",
+    "language": "gujarati",
+    "chapter": 211,
+    "sequence": 11450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a1c98fad85e7010"
+  },
+  "findings": []
+}

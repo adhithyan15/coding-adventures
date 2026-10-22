@@ -20,6 +20,20 @@ using System.Threading.Tasks;
 
 namespace Mosaic.Generated;
 
+internal sealed class MalformedProjectionProbe { public string MosaicProjectionCounts => "not counters"; }
+
+// Mirrors the emitter's public diagnostic shape without a WinUI dependency.
+internal sealed class ProjectionProbe
+{
+    public int Reads;
+    public bool Throw;
+    public (long, long, long, long) Counts = (10, 20, 30, 40);
+    public (long, long, long, long) MosaicProjectionCounts
+    {
+        get { Reads++; if (Throw) throw new InvalidOperationException(); return Counts; }
+    }
+}
+
 /// Props land here by reflection, the way a real XAML page receives them.
 ///
 /// Every field starts at a sentinel no run produces, so a prop the update never
@@ -446,7 +460,40 @@ internal static class Driver
         switch (probeCase)
         {
             case "profile-disabled":
+                var disabledProjection = new ProjectionProbe();
+                Check(MosaicRuntimeHost.BeginProfile("probe", disabledProjection) is null
+                    && disabledProjection.Reads == 0, "disabled profiling never reads diagnostics");
                 Check(MosaicRuntimeHost.BeginProfile("probe") is null, "profiling allocates no scope when disabled");
+                break;
+            case "projection-profile":
+                var projectionProbe = new ProjectionProbe();
+                var projectionScope = MosaicRuntimeHost.BeginProfile("projection", projectionProbe)!;
+                projectionProbe.Counts = (12, 23, 35, 47);
+                CheckScope(projectionScope);
+                Check(projectionProbe.Reads == 2, "idempotent disposal reads end counters once");
+                using (MosaicRuntimeHost.BeginProfile("absent", new object())) { }
+                using (MosaicRuntimeHost.BeginProfile("malformed", new MalformedProjectionProbe())) { }
+                var failingEnd = MosaicRuntimeHost.BeginProfile("end-throws", projectionProbe);
+                projectionProbe.Throw = true;
+                failingEnd?.Dispose();
+                using (MosaicRuntimeHost.BeginProfile("throwing", projectionProbe)) { }
+                break;
+            case "projection-validate":
+                var projectionLines = System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!);
+                Check(projectionLines.Length == 5, "one record per scope");
+                using (var doc = System.Text.Json.JsonDocument.Parse(projectionLines[0]))
+                {
+                    var delta = doc.RootElement.GetProperty("projection");
+                    Check(delta.GetProperty("reads").GetInt64() == 2
+                        && delta.GetProperty("created").GetInt64() == 3
+                        && delta.GetProperty("reused").GetInt64() == 5
+                        && delta.GetProperty("removed").GetInt64() == 7, "counter deltas are exported");
+                }
+                foreach (var line in projectionLines[1..])
+                {
+                    using var doc = System.Text.Json.JsonDocument.Parse(line);
+                    Check(!doc.RootElement.TryGetProperty("projection", out _), "unavailable diagnostics omit projection");
+                }
                 break;
             case "profile-bounded":
                 var scopes = new List<IDisposable>();

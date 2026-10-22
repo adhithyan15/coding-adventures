@@ -1,0 +1,27 @@
+{
+  "chapter": 145,
+  "title": "Saying not",
+  "label": "ch:gu-saying-not",
+  "canDo": "I can complete the present for every person, say that someone does not do something with nathī, na and nahī̃, and say nobody, nothing and never.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C145-not-practice",
+    "kind": "dialogue",
+    "summary": "Turn present sentences into negatives, then carry a short exchange that needs nathī, na and nahī̃.",
+    "assesses": [
+      "GU-GRAMMAR-C145-PRESENT-E-01",
+      "GU-GRAMMAR-C145-PRESENT-IE-01",
+      "GU-GRAMMAR-C145-PRESENT-O-01",
+      "GU-GRAMMAR-C145-NEGATE-01",
+      "GU-LEX-C145-NEG145-01",
+      "GU-GRAMMAR-C145-NA-01",
+      "GU-GRAMMAR-C145-NAHI-01",
+      "GU-GRAMMAR-C145-KOI-NATHI-01",
+      "GU-GRAMMAR-C145-KAI-NATHI-01",
+      "GU-GRAMMAR-C145-KYAREY-01",
+      "GU-SCRIPT-C145-O-01"
+    ]
+  }
+}

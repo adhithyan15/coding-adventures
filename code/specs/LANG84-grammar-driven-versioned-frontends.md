@@ -307,10 +307,20 @@ branches, for example Ruby 1.8.7-p374 (2013-06) released after 2.0.0-p0
 (2013-02), make semver order wrong for scheduling and lineage. Syntax lineage
 follows `predecessor`, a tree. Inventory order schedules work: earliest first.
 
+A reduced-precision date sorts as the start of its period, but it is not
+forced there. A row may sit anywhere its period allows. The order check passes
+when some day inside each row's period makes the column non-decreasing. This
+keeps perlhist's `5.000alpha4 1993-???-??` between alpha3 (1993-10-10) and
+alpha6 (1994-03-18), where upstream lists it. *(Amended in 2b. The 2a check
+put every reduced date at the start of its period, which would have moved
+alpha4 ahead of alpha1.)*
+
 Migration of the Perl inventory: the existing columns are kept. `perlhist_line`
 becomes a language-specific extra column. The schema PR adds the required
 columns and fills them mechanically: `partial` rows become `grammar_stage=P`
 with `grammar_subset=pl-decimal-print`, and `pending` rows become `none`.
+The rules used for the other columns (ISO dates, row order, channel, source,
+and lineage) are in `code/grammars/perl/README.md`.
 
 `code/scripts/release_inventory.py check` (new) validates the following:
 
@@ -335,10 +345,60 @@ the stems it lists and fails if a listed stem has no files.
 covers the header, uniqueness and charset, date format and order, the
 predecessor rule (an earlier row; empty only on the first row), the allowed
 status values, the monotonic claims, pair files in both directions, declared
-subsets, and named profiles. `--matrix` is not implemented yet. Perl's
+subsets, and named profiles. ~~`--matrix` is not implemented yet. Perl's
 inventory keeps the LANG82 header and is reported as skipped until the
-phase 2b migration. Only directories listed in the script's `LEGACY_SCHEMA`
-may be skipped.
+phase 2b migration.~~ *(Superseded by 2b, below.)*
+
+**Status (2b).** Every inventory, Perl's included, now has the common header,
+and the legacy-schema skip (`LEGACY_SCHEMA`) is gone. CI runs
+`release_inventory.py check --matrix`. grammar-tools' Perl release family
+reads `grammar_stage` from its column like Ruby's, so the 4a stopgap that
+derived it from `grammar_status` (`StageSource::DerivedFromStatus`) is
+removed; every release family requires the column.
+
+- **Perl migration.** All 776 rows keep their IDs and `grammar_status`.
+  `perlhist_line` stays as an extra column, and `lineage` is added
+  (`first`/`line`/`branch-point`, as for Ruby and Python). The migration
+  converted dates to ISO and reordered 164 rows into date order. It derived
+  `channel` from the ID. It cited the upstream tag (493 rows) or the pinned
+  `perlhist.pod` line, at commit `d97e2dc0ca5f…`, as `source_ref`. It derived
+  `predecessor` from per-ID lines rather than git ancestry. 2c is expected to
+  confirm that lineage. `iir_status`, `backend_status` and `profile` stay `-`:
+  stage I for `pl-int-print` needs the corpus and the `release_subsets` test
+  from 4c. The reordering changes only the order of the generated
+  `INVENTORY`/`SUPPORTED_RELEASES`. It moves no release to another
+  table, changes no `g_` module, and does not change the first release of any
+  class. The grammar-tools reader now refuses a row whose field count differs
+  from the header's. The perl-parser tests read the CSV by header name, and
+  none of them matches `,partial` row endings any more.
+- **`subsets.csv`** for `perl/` (`pl-decimal-print`, LANG82; `pl-int-print`,
+  LANG81), `ruby/` (`rb-int-puts`, LANG80), `python/` (`py-float-print`,
+  LANG79) and `ecmascript/` (`es-number-log`, LANG78). The checker reads the
+  four columns by name. It requires a subset name matching
+  `[a-z0-9]+(-[a-z0-9]+)*`, other than `full`, and a non-empty description.
+  `corpus_dir` must be exactly `corpus/<subset>`, so a cell cannot point
+  outside the grammar directory. `spec` must name a file in `code/specs/`, and
+  `subsets.csv` must not exist without a `releases.csv`. A subset claimed at
+  I or B needs at least one positive corpus case. Every case has exactly one
+  source file and exactly one of `.expect` or `.reject`. Every `.expect` has a
+  `.cite`, and an `.expect@<profile>` override has a plain `.expect`.
+- **`--matrix`** (contract for 4c). For each release R claiming B(S), each
+  positive case C of S needs one of three things. `release_classes.csv` can
+  mark (C, R) `rejected`, meaning R's grammar does not parse C. A
+  `lang_matrix` row can run C on R. Or `release_classes.csv` can put (C, R) in
+  an IIR-identity class whose representative (its first release in inventory
+  order) has such a row. `release_classes.csv` (`subset,case,release,class`,
+  where `class` is 12–64 hex digits of the IIR hash, or `rejected`) is
+  written by 4c's `release_sweep.rs`. A `lang_matrix` row counts when it names
+  `release: Some("<id>")` and `case: Some("<subset>/<name>")`. The `case`
+  field is new: it ties a row to a corpus case without comparing program
+  text. The checker reads `Prog { .. }` literals with string and character
+  literals masked, so program text cannot be mistaken for a field. It fails
+  on a row naming an unknown release or case, and on a malformed or
+  duplicate class entry. Matrix rows that name no release are counted in a
+  note rather than failed until 4c adds the field to the 11 Perl rows. Each
+  inventory prints a coverage line (`N backend claim(s); case coverage …`),
+  so a pass with zero claims is visible rather than silent.
 
 ### Materialized pair per release
 
@@ -477,10 +537,20 @@ hand-picked:
 
 `lang_matrix`'s `Prog` gains `release: Option<&'static str>`. It is required
 (`Some`) for every language with an inventory, and `None` only for in-repo
-languages without one. A new `release_sweep.rs` test performs steps 1–2 and
+languages without one. It also gains `case: Option<&'static str>`
+(`"<subset>/<name>"`), which names the corpus case the row runs. *(Added in
+2b for `--matrix`.)* A new `release_sweep.rs` test performs steps 1–2 and
 generates the boundary set. `release_inventory.py check --matrix` fails if a
 release claims B(S) while a case of S has neither a matrix row on its
 boundary release nor membership in a class whose representative has one.
+Until `Prog` has those fields (phase 4c), no row can name a release, so a
+language whose rows ALL name no release has its B claims reported as
+*pending* (a note, not an error): Ruby 5a's and Python 7a's default-release
+claims landed before the check could apply to them. The first row of a
+language that names a release makes every claim of that language strict.
+Corpus overrides `<name>.expect@<profile>` and `<name>.reject@<release>` (a
+release that must refuse an otherwise accepted case, such as Python's
+`int_underscores.reject@3.0a1`) both need the plain `.expect`.
 
 ## grammar-tools capability extensions
 
@@ -1221,7 +1291,8 @@ execute in CI; the authoring host had no `dotnet` or `erl`.
   reachable as release `""`. Perl's pre-schema inventory has no
   `grammar_stage` column until phase 2b, so its family declares
   `StageSource::DerivedFromStatus`: the stage is derived by the migration
-  rule above (`pending` → `none`, otherwise `P`). Every family's reader
+  rule above (`pending` → `none`, otherwise `P`); 2b removed that stopgap
+  once the column existed. Every family's reader
   refuses quoted rows, field-count mismatches, unsafe or duplicate IDs, and
   unknown statuses or stages.
 - `perl_iir_compiler::compile_source_at(source, release, module_name,
@@ -1328,8 +1399,9 @@ selectable and recorded end to end.
 
 Divergences from this spec in 4b:
 
-- **C4.4.** CI cannot assert a non-empty `iir_status` for the default yet:
-  Perl's `releases.csv` keeps the LANG82 header until the 2b migration. The
+- **C4.4.** CI cannot assert a non-empty `iir_status` for the default yet.
+  Perl's `releases.csv` kept the LANG82 header until the 2b migration, and
+  since 2b its `iir_status` is `-` until 4c proves stage I. The
   tests assert instead that `DEFAULT_RELEASE_ID` is a checked
   (non-pending) row with compiled tables and resolves to itself.
 - **C8.** "Every release whose `iir_status` is non-empty" is read as every
@@ -1362,7 +1434,10 @@ Remaining phase 4 slice:
 
 - **4c.** Release sweep: B(pl-int-print) for every checked release on the
   backends, bounded per [CI bounding](#ci-bounding), with the corpus under
-  `code/grammars/perl/corpus/` once 2b's `subsets.csv` exists.
+  `code/grammars/perl/corpus/pl-int-print/`. 2b declared the subset in
+  `subsets.csv`. 4c writes `release_classes.csv`, adds `release` and `case`
+  to the 11 Perl `lang_matrix` rows, and then fills `iir_status`,
+  `backend_status` and `profile`, which `check --matrix` verifies.
 
 ### Python phase 7a: `py-int-print` on every backend
 
@@ -1630,7 +1705,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | --- | --- | --- | --- |
 | 1 | 1 | This spec, plus cross-links from LANG78 and LANG82 | doc only |
 | 2 | 2a | `releases.csv` and README for Ruby (1,189 rows), Python (657) and ecmascript (29), plus the first `release_inventory.py check` and its CI hook | ~1,900 CSV rows, ~200 lines of prose, ~400 lines of checker and tests |
-| | 2b | `subsets.csv` scaffolding, Perl CSV schema migration (including the perl-parser tests that match `,partial` row endings), `--matrix` | ~600 lines |
+| | 2b | **Done:** `subsets.csv` scaffolding, Perl CSV schema migration (including the perl-parser tests that match `,partial` row endings), `--matrix` | ~600 lines |
 | | 2c | `release_evidence.py` (blob-ID capture per release) | ~400 lines |
 | 3 | 3.1 | E1 line/column guards (+ F-spec) | ~800 lines Rust + tests |
 | | 3.2 | Ruby R0: `ruby<earliest…>` partial pairs for `rb-int-puts`, mechanically materialized from evidence; differential tests. **Landed for 0.49, 0.50, 3.3.5–3.3.7** (see the Ruby status above) | ~600 lines + pairs |

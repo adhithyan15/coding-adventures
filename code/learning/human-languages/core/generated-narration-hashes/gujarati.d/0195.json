@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:9a76b3e4947b2e0b",
+  "lessonIds": [
+    "GU-C195-khovavu",
+    "GU-C195-rakhadvu",
+    "GU-C195-batavvu",
+    "GU-C195-thekanu",
+    "GU-C195-antar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch195.txt",
+  "json": "gujarati/narration/ch195.json",
+  "textHash": "fnv1a64:4a29710f308a166c",
+  "jsonHash": "fnv1a64:9121d18a2c74986a",
+  "findings": []
+}

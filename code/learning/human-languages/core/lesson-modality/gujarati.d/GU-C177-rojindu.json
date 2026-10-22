@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C177-rojindu",
+    "language": "gujarati",
+    "chapter": 177,
+    "sequence": 9680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e2f307d81a760ef"
+  },
+  "findings": []
+}

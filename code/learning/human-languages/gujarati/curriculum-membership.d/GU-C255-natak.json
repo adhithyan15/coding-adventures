@@ -1,0 +1,11 @@
+{
+  "id": "GU-C255-natak",
+  "pathSegment": "GU-PATH-255-STORY255",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-255-STORY255",
+      "order": 3
+    }
+  ]
+}

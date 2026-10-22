@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:be8127209c7142e3",
+  "lessonIds": [
+    "GU-C186-cukavvu",
+    "GU-C186-rokad",
+    "GU-C186-parcuran",
+    "GU-C186-not",
+    "GU-C186-rasid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch186.txt",
+  "json": "gujarati/narration/ch186.json",
+  "textHash": "fnv1a64:142d8801930077ae",
+  "jsonHash": "fnv1a64:afe8935b5d8d8077",
+  "findings": []
+}

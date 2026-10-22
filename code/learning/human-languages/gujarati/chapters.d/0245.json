@@ -1,0 +1,19 @@
+{
+  "chapter": 245,
+  "title": "Homework and spelling",
+  "label": "ch:gu-homework-and-spelling",
+  "canDo": "I can talk about homework, spelling and saying words clearly.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C245-uccarvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can talk about homework, spelling and saying words clearly.",
+    "assesses": [
+      "GU-LEX-C245-SPELL245-03",
+      "GU-LEX-C245-SPELL245-04",
+      "GU-LEX-C245-SPELL245-05"
+    ]
+  }
+}

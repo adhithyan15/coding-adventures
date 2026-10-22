@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:25da69543d0d7b41",
+  "lessonIds": [
+    "GU-C162-gharkam",
+    "GU-C162-ghantadi",
+    "GU-C162-sametvu",
+    "GU-C162-matlu",
+    "GU-C162-khuno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch162.txt",
+  "json": "gujarati/narration/ch162.json",
+  "textHash": "fnv1a64:36d9594d5c3d158d",
+  "jsonHash": "fnv1a64:ca8d9d9449b06fce",
+  "findings": []
+}

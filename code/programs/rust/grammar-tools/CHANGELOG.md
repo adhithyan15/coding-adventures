@@ -1,5 +1,20 @@
 # Changelog — grammar-tools (Rust program)
 
+## Unreleased
+
+### Changed
+- LANG84 phase 2b: Perl's `releases.csv` now has the common LANG84 header
+  (`grammar_status` is the seventh of fourteen columns, `grammar_stage` the
+  eighth, and `perlhist_line` an extra). The Perl release family now reads
+  `grammar_stage` from its column like Ruby's, so
+  `RustReleaseFamilySpec.stage_source` and `StageSource::DerivedFromStatus`
+  (added in 2.3.0 only for the pre-schema file) are removed, and every family
+  requires the column again. The reader already refused rows whose field
+  count differs from the header's. New test
+  `release_inventory_reads_the_lang84_header`, which also checks that the old
+  four-column LANG82 header is refused. Regenerating `perl` gives the same
+  grammar classes; the release lists follow the new date order.
+
 ## [2.3.0] - 2026-10-20
 
 ### Added — Perl joins the LANG84 release families (phase 4a)

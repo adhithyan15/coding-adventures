@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 172,
+  "sourceHash": "fnv1a64:d0d2dc1125b4e625",
+  "lessonIds": [
+    "GU-C172-phiku",
+    "GU-C172-vasi",
+    "GU-C172-balvu",
+    "GU-C172-narangi",
+    "GU-C172-ras"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch172.txt",
+  "json": "gujarati/narration/ch172.json",
+  "textHash": "fnv1a64:dbef160d64550d02",
+  "jsonHash": "fnv1a64:23d561311080b4ef",
+  "findings": []
+}

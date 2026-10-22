@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 180,
+  "sourceHash": "fnv1a64:a5308c1ff87da8be",
+  "lessonIds": [
+    "GU-C180-mulakat",
+    "GU-C180-amantran",
+    "GU-C180-rah-jovi",
+    "GU-C180-rokavu",
+    "GU-C180-vitavvu"
+  ],
+  "tex": "gujarati/book/chapters/ch180-visits-and-invitations.tex"
+}

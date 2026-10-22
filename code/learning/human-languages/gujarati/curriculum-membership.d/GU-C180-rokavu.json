@@ -1,0 +1,11 @@
+{
+  "id": "GU-C180-rokavu",
+  "pathSegment": "GU-PATH-180-VISIT180",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-180-VISIT180",
+      "order": 3
+    }
+  ]
+}

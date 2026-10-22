@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Staying healthy",
+  "label": "ch:gu-staying-healthy",
+  "canDo": "I can say how I stay healthy and ask about illness.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C232-saju-thavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say how I stay healthy and ask about illness.",
+    "assesses": [
+      "GU-LEX-C232-HEALTHY232-03",
+      "GU-LEX-C232-HEALTHY232-04",
+      "GU-LEX-C232-HEALTHY232-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 181,
+  "title": "Hurry and delay",
+  "label": "ch:gu-hurry-and-delay",
+  "canDo": "I can say that plans will be hurried, put off, cancelled or extended.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C181-lambavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 181: I can say that plans will be hurried, put off, cancelled or extended.",
+    "assesses": [
+      "GU-LEX-C181-DELAY181-03",
+      "GU-LEX-C181-DELAY181-04",
+      "GU-LEX-C181-DELAY181-05"
+    ]
+  }
+}

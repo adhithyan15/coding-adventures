@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:97b55d963c4dfbab",
+  "lessonIds": [
+    "GU-C200-tapali",
+    "GU-C200-parbidiyu",
+    "GU-C200-parsal",
+    "GU-C200-nakhvu",
+    "GU-C200-nondhavvu",
+    "GU-R200-review-195-200"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch200.txt",
+  "json": "gujarati/narration/ch200.json",
+  "textHash": "fnv1a64:3183a66bff77f546",
+  "jsonHash": "fnv1a64:a1d8d427058bc10b",
+  "findings": []
+}

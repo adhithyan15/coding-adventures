@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:28c4cceeeddb351c",
+  "lessonIds": [
+    "GU-C225-cakkar",
+    "GU-C225-ulti-thavi",
+    "GU-C225-pacvu",
+    "GU-C225-bagasu-khavu",
+    "GU-C225-parsevo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch225.txt",
+  "json": "gujarati/narration/ch225.json",
+  "textHash": "fnv1a64:a66988581546e4ad",
+  "jsonHash": "fnv1a64:f0265e9f51c87010",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 210,
+  "title": "Papers and baggage",
+  "label": "ch:gu-papers-and-baggage",
+  "canDo": "I can say what we showed and carried at the airport.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C210-uncakvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 210: I can say what we showed and carried at the airport.",
+    "assesses": [
+      "GU-LEX-C210-PAPERS210-03",
+      "GU-LEX-C210-PAPERS210-04",
+      "GU-LEX-C210-PAPERS210-05"
+    ]
+  }
+}

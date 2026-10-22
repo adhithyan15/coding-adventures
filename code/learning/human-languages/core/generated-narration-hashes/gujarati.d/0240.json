@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:3de8a3b0c79da405",
+  "lessonIds": [
+    "GU-C240-chod",
+    "GU-C240-bij",
+    "GU-C240-ropvu",
+    "GU-C240-sicvu",
+    "GU-C240-gulab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch240.txt",
+  "json": "gujarati/narration/ch240.json",
+  "textHash": "fnv1a64:f7b3e2d6d04ee769",
+  "jsonHash": "fnv1a64:e8700dfaa8698714",
+  "findings": []
+}

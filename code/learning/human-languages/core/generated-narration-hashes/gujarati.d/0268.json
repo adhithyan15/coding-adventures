@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:85e2dddf42cc51c2",
+  "lessonIds": [
+    "GU-C268-ladvu-fight",
+    "GU-C268-vadhvu-scold",
+    "GU-C268-chetarvu",
+    "GU-C268-manavvu",
+    "GU-C268-salah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch268.txt",
+  "json": "gujarati/narration/ch268.json",
+  "textHash": "fnv1a64:44171149e39ced41",
+  "jsonHash": "fnv1a64:db0610f093c509a5",
+  "findings": []
+}

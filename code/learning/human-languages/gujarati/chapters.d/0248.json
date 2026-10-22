@@ -1,0 +1,19 @@
+{
+  "chapter": 248,
+  "title": "Meetings and applications",
+  "label": "ch:gu-meetings-and-applications",
+  "canDo": "I can talk about meetings, applications and signing papers.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-R248-review-243-248",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 248: I can talk about meetings, applications and signing papers.",
+    "assesses": [
+      "GU-LEX-C248-OFFICE248-03",
+      "GU-LEX-C248-OFFICE248-04",
+      "GU-LEX-C248-OFFICE248-05"
+    ]
+  }
+}

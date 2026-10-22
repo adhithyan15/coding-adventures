@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:187f8fbfacfebab6",
+  "lessonIds": [
+    "GU-C153-ordo",
+    "GU-C153-rasodu",
+    "GU-C153-agasi",
+    "GU-C153-osri",
+    "GU-C153-dadar"
+  ],
+  "tex": "gujarati/book/chapters/ch153-rooms-roof-and-veranda.tex"
+}

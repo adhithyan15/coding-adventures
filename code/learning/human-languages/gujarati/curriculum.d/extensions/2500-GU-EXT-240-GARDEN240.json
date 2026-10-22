@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-240-GARDEN240",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what I planted and watered.",
+  "prerequisites": []
+}

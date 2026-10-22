@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:18c28beb19d2d1fc",
+  "lessonIds": [
+    "GU-C224-daktar",
+    "GU-C224-dardi",
+    "GU-C224-nadi",
+    "GU-C224-dhabakvu",
+    "GU-C224-shvas",
+    "GU-R224-review-219-224"
+  ],
+  "tex": "gujarati/book/chapters/ch224-at-the-doctor-s.tex"
+}

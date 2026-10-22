@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:eaef323acd1339e0",
+  "lessonIds": [
+    "GU-C148-me-pidhi",
+    "GU-C148-tene",
+    "GU-C148-karyun",
+    "GU-C148-lidhun",
+    "GU-C148-did-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch148.txt",
+  "json": "gujarati/narration/ch148.json",
+  "textHash": "fnv1a64:be1173b48d890fa4",
+  "jsonHash": "fnv1a64:3148d0c397094974",
+  "findings": []
+}

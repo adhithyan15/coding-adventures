@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 170,
+  "sourceHash": "fnv1a64:f346470791c2ab6e",
+  "lessonIds": [
+    "GU-C170-mithai",
+    "GU-C170-ladu",
+    "GU-C170-makhan",
+    "GU-C170-calvu",
+    "GU-C170-cotvu",
+    "GU-R170-review-165-170"
+  ],
+  "tex": "gujarati/book/chapters/ch170-laddoos-and-butter.tex"
+}

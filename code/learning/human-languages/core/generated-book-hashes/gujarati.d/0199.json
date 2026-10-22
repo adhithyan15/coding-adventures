@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 199,
+  "sourceHash": "fnv1a64:2886bd7ec42b0dae",
+  "lessonIds": [
+    "GU-C199-bhid",
+    "GU-C199-katar",
+    "GU-C199-niyam",
+    "GU-C199-ghusvu",
+    "GU-C199-khasvu"
+  ],
+  "tex": "gujarati/book/chapters/ch199-queues-and-crowds.tex"
+}

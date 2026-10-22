@@ -1,0 +1,19 @@
+{
+  "chapter": 214,
+  "title": "Rain on the way",
+  "label": "ch:gu-rain-on-the-way",
+  "canDo": "I can say that rain will fall and that I will get wet.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C214-palalvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 214: I can say that rain will fall and that I will get wet.",
+    "assesses": [
+      "GU-LEX-C214-RAIN214-03",
+      "GU-LEX-C214-RAIN214-04",
+      "GU-LEX-C214-RAIN214-05"
+    ]
+  }
+}

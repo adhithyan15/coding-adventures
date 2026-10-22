@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:32e7f4525a40acea",
+  "lessonIds": [
+    "GU-C214-padvu",
+    "GU-C214-dhodhmar",
+    "GU-C214-tipu",
+    "GU-C214-tapakvu",
+    "GU-C214-palalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch214-rain-on-the-way.tex"
+}

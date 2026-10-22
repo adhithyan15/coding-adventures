@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C223-sharir",
+    "language": "gujarati",
+    "chapter": 223,
+    "sequence": 12120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1a9a0c51530b55d"
+  },
+  "findings": []
+}

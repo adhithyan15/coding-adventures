@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:36ae464d0c7c6791",
+  "lessonIds": [
+    "GU-C190-khatu",
+    "GU-C190-jama-karvu",
+    "GU-C190-cek",
+    "GU-C190-vatavvu",
+    "GU-C190-udhar-levu"
+  ],
+  "tex": "gujarati/book/chapters/ch190-at-the-bank-counter.tex"
+}

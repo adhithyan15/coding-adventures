@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C222-vatavaran",
+    "language": "gujarati",
+    "chapter": 222,
+    "sequence": 12070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d1f0fdb04e4b882"
+  },
+  "findings": []
+}

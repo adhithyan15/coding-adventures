@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C171-kadvu",
+    "language": "gujarati",
+    "chapter": 171,
+    "sequence": 9350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bdb05c3d5bb4af5"
+  },
+  "findings": []
+}

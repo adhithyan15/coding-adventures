@@ -1,0 +1,19 @@
+{
+  "chapter": 163,
+  "title": "Breakfast and the family meal",
+  "label": "ch:gu-breakfast-and-the-family-meal",
+  "canDo": "I can talk about breakfast and the family meal.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C163-vahecvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 163: I can talk about breakfast and the family meal.",
+    "assesses": [
+      "GU-LEX-C163-MEAL163-03",
+      "GU-LEX-C163-MEAL163-04",
+      "GU-LEX-C163-MEAL163-05"
+    ]
+  }
+}

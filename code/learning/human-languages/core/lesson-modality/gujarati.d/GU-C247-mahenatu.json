@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C247-mahenatu",
+    "language": "gujarati",
+    "chapter": 247,
+    "sequence": 13440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e80259a2a94df89f"
+  },
+  "findings": []
+}

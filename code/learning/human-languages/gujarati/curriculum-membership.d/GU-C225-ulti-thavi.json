@@ -1,0 +1,11 @@
+{
+  "id": "GU-C225-ulti-thavi",
+  "pathSegment": "GU-PATH-225-UNWELL225",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-225-UNWELL225",
+      "order": 1
+    }
+  ]
+}

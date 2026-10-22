@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 225,
+  "sourceHash": "fnv1a64:529111e3430158cc",
+  "lessonIds": [
+    "GU-C225-cakkar",
+    "GU-C225-ulti-thavi",
+    "GU-C225-pacvu",
+    "GU-C225-bagasu-khavu",
+    "GU-C225-parsevo"
+  ],
+  "tex": "gujarati/book/chapters/ch225-not-so-well-today.tex"
+}

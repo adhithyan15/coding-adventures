@@ -1,0 +1,11 @@
+{
+  "id": "GU-C179-karyakram",
+  "pathSegment": "GU-PATH-179-PLAN179",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-179-PLAN179",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Animals that work",
+  "label": "ch:gu-animals-that-work",
+  "canDo": "I can say what the working animals did.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C233-khedvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can say what the working animals did.",
+    "assesses": [
+      "GU-LEX-C233-WORK233-03",
+      "GU-LEX-C233-WORK233-04",
+      "GU-LEX-C233-WORK233-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C192-vedaphvu",
+  "pathSegment": "GU-PATH-192-BILL192",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-192-BILL192",
+      "order": 4
+    }
+  ]
+}

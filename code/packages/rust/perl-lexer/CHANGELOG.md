@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- LANG84 phase 2b: regenerated after the `releases.csv` schema migration.
+  The rows are now in date order, so `SUPPORTED_RELEASES` and the match
+  arms list releases chronologically
+  (1.0.15 and 1.0_16 now come after the 2002 releases, for example). The
+  token tables, the `g_` modules and the first release of each class are
+  unchanged.
+
 - LANG84 phase 4b: regenerated for the new `perl5.38.0` partial pair
   (118 checked releases, still 5 distinct token tables: 5.38.0 shares
   5.004_72's). The unversioned table remains for `tokenize_perl` only.

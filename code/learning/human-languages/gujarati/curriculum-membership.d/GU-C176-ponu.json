@@ -1,0 +1,11 @@
+{
+  "id": "GU-C176-ponu",
+  "pathSegment": "GU-PATH-176-CLOCK176",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-176-CLOCK176",
+      "order": 3
+    }
+  ]
+}

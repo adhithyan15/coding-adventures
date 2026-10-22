@@ -1,0 +1,19 @@
+{
+  "chapter": 173,
+  "title": "A week and a fortnight",
+  "label": "ch:gu-a-week-and-a-fortnight",
+  "canDo": "I can say how long I will stay and what the last day will be.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C173-akhu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 173: I can say how long I will stay and what the last day will be.",
+    "assesses": [
+      "GU-LEX-C173-WEEK173-03",
+      "GU-LEX-C173-WEEK173-04",
+      "GU-LEX-C173-WEEK173-05"
+    ]
+  }
+}

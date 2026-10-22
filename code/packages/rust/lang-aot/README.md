@@ -30,7 +30,7 @@ an exact binary64 integer; the budget is tracked through parentheses and
 supported wrappers and applied per conditional path. Exact whole-number
 factors may also scale the sign-rooted integer transform through magnitude
 `2^53`, including exact additive composition; fractional factors, non-unit
-integer division, denominator roots, repeated roots, and oversized products
+prefix integer division, denominator roots, repeated roots, and oversized products
 stay conservative. A non-unit static divisor is accepted only when it divides
 every possible exact integer value of the sign-rooted transform. Static
 whole-number factors may precede the sign-rooted numerator, including exact
@@ -39,7 +39,14 @@ prefix to that root; division by the root stays conservative. Positive
 variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
-stay conservative. Unary signs, arithmetic composition with finite static
+stay conservative. Integer `div` by a variable-free nonzero whole number may
+reduce the exact transform with a truncation-toward-zero bound, including
+composition through later powers, remainders, and exact real division; zero,
+dynamic, and sign-rooted divisors remain outside this composed proof. Integer
+`mod` by a variable-free nonzero whole number may
+reduce the exact transform, including composition through later exact powers
+and divisions; zero and dynamic divisors remain outside this composed
+provenance proof. Unary signs, arithmetic composition with finite static
 operands, and real-valued
 standard functions preserve it, while a finite static real actual is safe
 directly. Variable-free exact `sign` and exact-range `entier`

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:1a0b279a834ee109",
+  "lessonIds": [
+    "GU-C191-dhirvu",
+    "GU-C191-vyaj",
+    "GU-C191-bacat",
+    "GU-C191-napho",
+    "GU-C191-khot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch191.txt",
+  "json": "gujarati/narration/ch191.json",
+  "textHash": "fnv1a64:94f0bb11e9b967bc",
+  "jsonHash": "fnv1a64:6cde6e9f8bfd2430",
+  "findings": []
+}

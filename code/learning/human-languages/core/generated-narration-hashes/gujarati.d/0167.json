@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 167,
+  "sourceHash": "fnv1a64:71e38cb33cdc7d8c",
+  "lessonIds": [
+    "GU-C167-bhido",
+    "GU-C167-vatano",
+    "GU-C167-idu",
+    "GU-C167-baphvu",
+    "GU-C167-talvu-fry"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch167.txt",
+  "json": "gujarati/narration/ch167.json",
+  "textHash": "fnv1a64:ab3833f39be472b4",
+  "jsonHash": "fnv1a64:962a97ac5981fec5",
+  "findings": []
+}

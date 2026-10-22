@@ -69,14 +69,19 @@ Each item, once picked up, follows: spec-sync → tests → implementation → C
 
 ## Product completion queue
 
-**Next priority: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
+**Current bounded item: #17913 — preserve Qt Text widths.** Both authored
+themes emit calendar heading fill and timeline widths, with 78 drops instead
+of 81. Native payload CI remains required before merge.
+
+**Published checkpoint: [#17682](https://github.com/adhithyan15/coding-adventures/issues/17682)
 — publish and audit `task-app-v0.5.8`.** The P0 native lifecycle gates and the
 immutable v0.5.7 publication/audit (#17610) are complete. The timeline
 milestone and legend-swatch diamonds now retain centered native Qt rotation
 through #17676, with both themes measuring 81 style drops instead of 83.
 Validate every existing release payload, publish after preparation merges,
 and audit the immutable assets before closing #17682. Artifact coverage is
-unchanged; preparation is not publication.
+unchanged. Published from `22755d9313ce8fed25a7e9a14aa96cb6865b9e4c`;
+the immutable tag, manifest, thirteen assets and twelve checksums were audited.
 
 The durable product backlog is [GitHub issue #13517](https://github.com/adhithyan15/coding-adventures/issues/13517).
 It tracks the local-first, Rust-scheduled, native TaskApp completion loop and

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C174-disembar",
+  "pathSegment": "GU-PATH-174-MONTH174",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-174-MONTH174",
+      "order": 1
+    }
+  ]
+}

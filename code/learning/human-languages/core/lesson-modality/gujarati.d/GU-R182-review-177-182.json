@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R182-review-177-182",
+    "language": "gujarati",
+    "chapter": 182,
+    "sequence": 9940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb6a5c9b63f72f92"
+  },
+  "findings": []
+}

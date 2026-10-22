@@ -261,6 +261,14 @@ Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and
 oversized powers remain conservative.
+Integer `div` by a variable-free nonzero whole number may reduce the exact
+sign-rooted transform, including composition through later powers, remainders,
+and exact real division. The quotient bound uses truncation toward zero; zero,
+dynamic, and sign-rooted divisors remain outside this composed proof.
+Integer `mod` by a variable-free nonzero whole number may reduce the exact
+sign-rooted transform, including composition through later exact powers and
+divisions; zero and dynamic divisors remain outside this composed provenance
+proof.
 Additional built-in `entier` calls may wrap that already integral bounded
 result; an unrestricted runtime `entier` operand remains conservative.
 Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`

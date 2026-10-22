@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-181-DELAY181",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that plans will be hurried, put off, cancelled or extended.",
+  "prerequisites": []
+}

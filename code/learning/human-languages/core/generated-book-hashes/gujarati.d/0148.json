@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:e573f860b52d90e5",
+  "lessonIds": [
+    "GU-C148-me-pidhi",
+    "GU-C148-tene",
+    "GU-C148-karyun",
+    "GU-C148-lidhun",
+    "GU-C148-did-practice"
+  ],
+  "tex": "gujarati/book/chapters/ch148-what-i-did.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 229,
+  "title": "From the wrist to the heel",
+  "label": "ch:gu-from-the-wrist-to-the-heel",
+  "canDo": "I can say which part of my hand or foot hurts.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C229-pasli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 229: I can say which part of my hand or foot hurts.",
+    "assesses": [
+      "GU-LEX-C229-LIMBS229-03",
+      "GU-LEX-C229-LIMBS229-04",
+      "GU-LEX-C229-LIMBS229-05"
+    ]
+  }
+}

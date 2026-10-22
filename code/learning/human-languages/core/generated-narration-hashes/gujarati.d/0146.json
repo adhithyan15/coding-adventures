@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:ebcd353c96ad9b9b",
+  "lessonIds": [
+    "GU-C146-shun-polar",
+    "GU-C146-ke-nahi",
+    "GU-C146-mane",
+    "GU-C146-maaro",
+    "GU-C146-tamaro",
+    "GU-C146-ask-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch146.txt",
+  "json": "gujarati/narration/ch146.json",
+  "textHash": "fnv1a64:adf9304bb732aa6d",
+  "jsonHash": "fnv1a64:1e807f6157608755",
+  "findings": []
+}

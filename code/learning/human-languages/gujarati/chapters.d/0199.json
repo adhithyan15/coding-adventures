@@ -1,0 +1,19 @@
+{
+  "chapter": 199,
+  "title": "Queues and crowds",
+  "label": "ch:gu-queues-and-crowds",
+  "canDo": "I can wait in a queue and say who pushes in.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C199-khasvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 199: I can wait in a queue and say who pushes in.",
+    "assesses": [
+      "GU-LEX-C199-QUEUE199-03",
+      "GU-LEX-C199-QUEUE199-04",
+      "GU-LEX-C199-QUEUE199-05"
+    ]
+  }
+}

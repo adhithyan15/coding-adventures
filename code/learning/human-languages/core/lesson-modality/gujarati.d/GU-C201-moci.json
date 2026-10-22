@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C201-moci",
+    "language": "gujarati",
+    "chapter": 201,
+    "sequence": 10940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7861c16d237e6731"
+  },
+  "findings": []
+}

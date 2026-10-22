@@ -1,0 +1,19 @@
+{
+  "chapter": 172,
+  "title": "Stale, burnt and fresh juice",
+  "label": "ch:gu-stale-burnt-and-fresh-juice",
+  "canDo": "I can say that food is bland, stale or burnt.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C172-ras",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say that food is bland, stale or burnt.",
+    "assesses": [
+      "GU-LEX-C172-STALE172-03",
+      "GU-LEX-C172-STALE172-04",
+      "GU-LEX-C172-STALE172-05"
+    ]
+  }
+}
