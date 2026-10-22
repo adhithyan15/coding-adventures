@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:0a423464a96eb227",
+  "lessonIds": [
+    "AR-C446-baqshish",
+    "AR-C446-khidma",
+    "AR-C446-khadama",
+    "AR-C446-rahhaba",
+    "AR-C446-awsa",
+    "AR-R446-review-439-446"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch446.txt",
+  "json": "arabic/narration/ch446.json",
+  "textHash": "fnv1a64:8c5391ce221ff864",
+  "jsonHash": "fnv1a64:4f106ee5a526b6ba",
+  "findings": []
+}

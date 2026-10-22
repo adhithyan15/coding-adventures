@@ -1,0 +1,11 @@
+{
+  "id": "AR-C548-nafasa",
+  "pathSegment": "AR-PATH-548-HALABA548",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-548-HALABA548",
+      "order": 3
+    }
+  ]
+}

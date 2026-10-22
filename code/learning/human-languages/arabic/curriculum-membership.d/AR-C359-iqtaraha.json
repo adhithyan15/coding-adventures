@@ -1,0 +1,11 @@
+{
+  "id": "AR-C359-iqtaraha",
+  "pathSegment": "AR-PATH-359-NAZAR359",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-359-NAZAR359",
+      "order": 3
+    }
+  ]
+}

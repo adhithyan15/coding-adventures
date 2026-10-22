@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:697344538d3fcbb6",
+  "lessonIds": [
+    "AR-C466-ghubar",
+    "AR-C466-mughbarr",
+    "AR-C466-tasahhur",
+    "AR-C466-kathib",
+    "AR-C466-ikhtanaqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch466.txt",
+  "json": "arabic/narration/ch466.json",
+  "textHash": "fnv1a64:500d7721bffbf9b2",
+  "jsonHash": "fnv1a64:b90476311109ec02",
+  "findings": []
+}

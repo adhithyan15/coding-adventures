@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:e64bd80de6fa8ed5",
+  "lessonIds": [
+    "AR-C492-ghira",
+    "AR-C492-ghayur",
+    "AR-C492-hasud",
+    "AR-C492-hasada-envy",
+    "AR-C492-ghara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch492.txt",
+  "json": "arabic/narration/ch492.json",
+  "textHash": "fnv1a64:30a5e49b6699afd2",
+  "jsonHash": "fnv1a64:cd53703e9c12b93f",
+  "findings": []
+}

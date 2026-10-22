@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:8143529cf9587e75",
+  "lessonIds": [
+    "AR-C414-nataja",
+    "AR-C414-tarattaba",
+    "AR-C414-inakasa",
+    "AR-C414-aqiba",
+    "AR-C414-tathir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch414.txt",
+  "json": "arabic/narration/ch414.json",
+  "textHash": "fnv1a64:9eb9182f63fc877d",
+  "jsonHash": "fnv1a64:98c563fbae52f461",
+  "findings": []
+}

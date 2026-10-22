@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C496-irtiyah",
+    "language": "arabic",
+    "chapter": 496,
+    "sequence": 27630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f88f2d46f8e19f91"
+  },
+  "findings": []
+}

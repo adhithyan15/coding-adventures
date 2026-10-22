@@ -1,0 +1,11 @@
+{
+  "id": "AR-C315-hazama-defeat",
+  "pathSegment": "AR-PATH-315-NASR315",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-315-NASR315",
+      "order": 3
+    }
+  ]
+}

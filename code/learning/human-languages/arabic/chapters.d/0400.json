@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Whatever and wherever",
+  "label": "ch:ar-whatever-and-wherever",
+  "canDo": "I can say if not for, whatever, whenever, whether and wherever.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C400-aynama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can say if not for, whatever, whenever, whether and wherever.",
+    "assesses": [
+      "AR-LEX-C400-KULLAMA400-03",
+      "AR-LEX-C400-KULLAMA400-04",
+      "AR-LEX-C400-KULLAMA400-05"
+    ]
+  }
+}

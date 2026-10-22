@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C366-iddaa",
+    "language": "arabic",
+    "chapter": 366,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:051d019ba81bbb20"
+  },
+  "findings": []
+}

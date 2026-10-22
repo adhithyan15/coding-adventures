@@ -1484,6 +1484,10 @@ backend immediately) come before the enabler-dependent items.
   Static whole-number numerator factors may precede the sign-rooted transform,
   including exact divisions among those factors, when multiplication connects
   the resulting prefix to its root; division by the root remains conservative.
+  Variable-free integer `div` and `mod` reductions may also be folded
+  left-to-right before that multiplying connection, including composition
+  through later exact operations. Zero and dynamic divisors, oversized folded
+  prefixes, and non-multiplying connections to the root remain conservative.
   Positive variable-free whole-number powers may raise that exact sign-rooted
   integer transform within the existing exponent-unroll cap when checked
   exponentiation keeps its worst-case magnitude within `2^53`; zero, negative,

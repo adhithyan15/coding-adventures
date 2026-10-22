@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:24e7b589af9bbe71",
+  "lessonIds": [
+    "AR-C545-shair",
+    "AR-C545-qafiya",
+    "AR-C545-anshada",
+    "AR-C545-abdaa",
+    "AR-C545-akhraja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch545.txt",
+  "json": "arabic/narration/ch545.json",
+  "textHash": "fnv1a64:07daeda6863d616c",
+  "jsonHash": "fnv1a64:4682cd99b614ae0a",
+  "findings": []
+}

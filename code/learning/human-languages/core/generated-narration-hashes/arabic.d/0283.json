@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:9eb3814f5f519c84",
+  "lessonIds": [
+    "AR-C283-yaktubu",
+    "AR-C283-katabtu",
+    "AR-C283-kana",
+    "AR-C283-kana-yaktubu",
+    "AR-R283-the-past-person-by-person"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch283.txt",
+  "json": "arabic/narration/ch283.json",
+  "textHash": "fnv1a64:9ba6e6b33378073a",
+  "jsonHash": "fnv1a64:b22c70a3ea73c52e",
+  "findings": []
+}

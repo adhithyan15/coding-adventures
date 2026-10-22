@@ -1,0 +1,11 @@
+{
+  "id": "AR-C414-aqiba",
+  "pathSegment": "AR-PATH-414-NATIJA414",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-414-NATIJA414",
+      "order": 3
+    }
+  ]
+}

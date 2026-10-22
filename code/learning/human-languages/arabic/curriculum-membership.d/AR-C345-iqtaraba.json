@@ -1,0 +1,11 @@
+{
+  "id": "AR-C345-iqtaraba",
+  "pathSegment": "AR-PATH-345-MUWAJAHA345",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-345-MUWAJAHA345",
+      "order": 3
+    }
+  ]
+}

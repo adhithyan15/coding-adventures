@@ -1,0 +1,11 @@
+{
+  "id": "AR-C380-zalim",
+  "pathSegment": "AR-PATH-380-ADALA380",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-380-ADALA380",
+      "order": 2
+    }
+  ]
+}

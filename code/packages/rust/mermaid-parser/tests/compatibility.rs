@@ -1836,8 +1836,17 @@ fn swimlane_loose_nodes_lower_into_the_default_lane() {
 }
 
 #[test]
-fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
+fn pinned_swimlane_corpus_qualifies_full_compatibility() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST)
+        .expect("compatibility manifest must be JSON");
+    let family = manifest["families"].as_array().expect("families must be an array")
+        .iter().find(|family| family["id"] == "swimlane").expect("swimlane family");
+    assert_eq!(family["status"].as_str(), Some("full"));
+
     let corpus: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus must be JSON");
+    assert_eq!(corpus["upstream_version"].as_str(), Some(MERMAID_COMPATIBILITY_BASELINE));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    assert_eq!(corpus["scope"].as_str(), Some("complete pinned Mermaid 11.16.1 Swimlane syntax corpus"));
     for fixture in corpus["fixtures"].as_array().expect("fixtures must be an array") {
         let source = fixture["source"].as_str().expect("fixture source must be a string");
         assert!(parse_swimlane(source).is_ok(), "fixture {:?} should parse", fixture["name"]);
@@ -1855,6 +1864,14 @@ fn pinned_swimlane_visual_corpus_references_syntax_fixtures() {
         .map(|fixture| fixture.as_str().expect("visual fixture name")).collect::<BTreeSet<_>>();
     assert_eq!(visual_names.len(), visual["fixtures"].as_array().expect("visual fixtures").len());
     assert!(visual_names.is_subset(&syntax_names));
+    let expected_nonvisual = BTreeSet::from([
+        "click-callback-action",
+        "click-legacy-callback-alias",
+        "click-url-tooltip",
+        "shapes-labels-and-accessibility",
+    ]);
+    assert_eq!(syntax_names.difference(&visual_names).copied().collect::<BTreeSet<_>>(),
+        expected_nonvisual);
 }
 
 #[test]

@@ -28,7 +28,7 @@
 
 pub const VERSION: &str = "0.76.0";
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
     ChartTextAnchor, ChartTextBaseline, DiagramDirection, DiagramLabel, DiagramShape, EdgeKind, GeoElement, GitCommitSymbol,
@@ -54,7 +54,7 @@ use layout_ir::{
 use layout_effects::{EffectColor, EffectFilter, EffectStyle};
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
 use paint_instructions::{
-    GlyphPosition, ImageSrc, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
+    GlyphPosition, ImageSrc, PaintBase, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage, PixelContainer,
     PaintInstruction, PaintPath, PaintRect, PaintScene, PathCommand, StrokeCap, StrokeJoin,
 };
 use text_interfaces::{
@@ -836,6 +836,20 @@ where
     M: FontMetrics<Handle = S::Handle>,
     R: FontResolver<Handle = S::Handle>,
 {
+    diagram_to_paint_swimlane_with_images(diagram, options, &BTreeMap::new())
+}
+
+/// Lower Swimlanes while substituting integrator-decoded image pixels by source URI.
+pub fn diagram_to_paint_swimlane_with_images<S, M, R>(
+    diagram: &LayoutedSwimlaneDiagram,
+    options: &DiagramToPaintOptions<'_, S, M, R>,
+    decoded_images: &BTreeMap<String, PixelContainer>,
+) -> PaintScene
+where
+    S: TextShaper,
+    M: FontMetrics<Handle = S::Handle>,
+    R: FontResolver<Handle = S::Handle>,
+{
     let mut instructions = Vec::new();
     let mut text_children = Vec::new();
     let mut rich_text_instructions = Vec::new();
@@ -1505,7 +1519,9 @@ where
             instructions.push(PaintInstruction::Image(PaintImage {
                 base: PaintBase::default(), x: node.x + (node.width - image.width) / 2.0,
                 y: image_y, width: image.width, height: image.height,
-                src: ImageSrc::Uri(image.source.clone()), opacity: None,
+                src: decoded_images.get(&image.source).cloned()
+                    .map_or_else(|| ImageSrc::Uri(image.source.clone()), ImageSrc::Pixels),
+                opacity: None,
             }));
         }
         match node.shape {
@@ -1852,6 +1868,8 @@ where
             SwimlaneLabelPosition::Top => "t",
             SwimlaneLabelPosition::Bottom => "b",
         }.into());
+        metadata.insert(format!("swimlane.node.{node_id}.imageResolved"),
+            decoded_images.contains_key(&image.source).to_string());
     }
     for (index, edge) in diagram.edges.iter().enumerate() {
         if let Some(id) = &edge.id {

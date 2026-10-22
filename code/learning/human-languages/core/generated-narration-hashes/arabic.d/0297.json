@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:e6c3df1b7ce27f3d",
+  "lessonIds": [
+    "AR-C297-idhaa",
+    "AR-C297-qanah",
+    "AR-C297-midhya",
+    "AR-C297-adhaa",
+    "AR-C297-ala-al-hawa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch297.txt",
+  "json": "arabic/narration/ch297.json",
+  "textHash": "fnv1a64:75f58c457b9349ca",
+  "jsonHash": "fnv1a64:693060677fe343cd",
+  "findings": []
+}

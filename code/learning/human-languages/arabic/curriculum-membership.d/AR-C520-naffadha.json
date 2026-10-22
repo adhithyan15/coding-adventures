@@ -1,0 +1,11 @@
+{
+  "id": "AR-C520-naffadha",
+  "pathSegment": "AR-PATH-520-DAWAM520",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-520-DAWAM520",
+      "order": 4
+    }
+  ]
+}

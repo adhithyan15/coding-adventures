@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C544-tabl",
+    "language": "arabic",
+    "chapter": 544,
+    "sequence": 30090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ad13b73551965e9"
+  },
+  "findings": []
+}

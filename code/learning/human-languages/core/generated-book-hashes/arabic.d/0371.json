@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:2ded2530e3de15a4",
+  "lessonIds": [
+    "AR-C371-wasila",
+    "AR-C371-saa",
+    "AR-C371-anjaza",
+    "AR-C371-sahama",
+    "AR-C371-hafiz"
+  ],
+  "tex": "arabic/book/chapters/ch371-aims-and-means.tex"
+}

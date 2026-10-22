@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 317,
+  "title": "Stopped by the police",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:150807f9d99e31a7",
+  "lessons": [
+    {
+      "id": "AR-C317-qabada",
+      "sequence": 18230,
+      "title": "قبض (qabaḍa) — to seize, to grasp",
+      "headword": "قبض",
+      "romanization": "qabaḍa",
+      "gloss": "to seize, to grasp",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7ec2d4c793418a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for rubble, then the Arabic for ruins."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قبض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قبض — qabaḍa — \"to seize, to grasp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قبضت الشرطة على اللص في السوق. qabaḍat ash-shurṭa ʿalā al-liṣṣ fī as-sūq. The police caught the thief in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقبض, yaqbiḍ."
+            },
+            {
+              "kind": "speech",
+              "text": "قبض (qabaḍa) على: to arrest. قبض (qabaḍa) راتبه: he drew his pay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قبض (qabaḍa) is built on the native Arabic root q-b-ḍ (Lane), \"to take a thing in the closed hand\"; qabḍa is a fist."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabaḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabaḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabaḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabaḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabaḍat ash-shurṭa ʿalā al-liṣṣ fī as-sūq. — The police caught the thief in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabaḍat ash-shurṭa ʿalā al-liṣṣ fī as-sūq.* — The police caught the thief in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for rubble, then the Arabic for ruins, then say qabaḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for rubble, then the Arabic for ruins, then say *qabaḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قبض (qabaḍa) mean? (\"To seize, to grasp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C317-ihtajaza",
+      "sequence": 18240,
+      "title": "احتجز (iḥtajaza) — to detain, to hold",
+      "headword": "احتجز",
+      "romanization": "iḥtajaza",
+      "gloss": "to detain, to hold",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3cacf9539ebcc47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for ruins, then the Arabic for to seize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: احتجز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احتجز — iḥtajaza — \"to detain, to hold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "احتجز الموظف جواز سفري ساعة. iḥtajaza al-muwaẓẓaf jawāz safarī sāʿa. The official held my passport for an hour."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحتجز, yaḥtajiz."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "احتجز (iḥtajaza) is built on the native Arabic root ḥ-j-z (Lane), \"to keep apart, to hold back\". It is Form VIII, \"to hold back for oneself\"; a hotel booking, ḥajz, is the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtajaza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtajaza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtajaza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtajaza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḥtajaza al-muwaẓẓaf jawāz safarī sāʿa. — The official held my passport for an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḥtajaza al-muwaẓẓaf jawāz safarī sāʿa.* — The official held my passport for an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for ruins, then the Arabic for to seize, then say iḥtajaza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for ruins, then the Arabic for to seize, then say *iḥtajaza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does احتجز (iḥtajaza) mean? (\"To detain, to hold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C317-awqafa",
+      "sequence": 18250,
+      "title": "أوقف (awqafa) — to stop someone; to arrest",
+      "headword": "أوقف",
+      "romanization": "awqafa",
+      "gloss": "to stop someone; to arrest",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d4240284c682a47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to seize, then the Arabic for to detain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أوقف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أوقف — awqafa — \"to stop someone; to arrest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أوقف الشرطي السيارة عند الجسر. awqafa ash-shurṭī as-sayyāra ʿinda al-jisr. The policeman stopped the car at the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يوقف, yūqif."
+            },
+            {
+              "kind": "speech",
+              "text": "توقف is to stop oneself; أوقف (awqafa) is to stop someone or something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أوقف (awqafa) is built on the native Arabic root w-q-f (Lane), \"to stand still\", the root of tawaqqafa, to stop. It is Form IV, \"to make stand still\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awqafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awqafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awqafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awqafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "awqafa ash-shurṭī as-sayyāra ʿinda al-jisr. — The policeman stopped the car at the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *awqafa ash-shurṭī as-sayyāra ʿinda al-jisr.* — The policeman stopped the car at the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to seize, then the Arabic for to detain, then say awqafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to seize, then the Arabic for to detain, then say *awqafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أوقف (awqafa) mean? (\"To stop someone; to arrest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C317-dawriyya",
+      "sequence": 18260,
+      "title": "دورية (dawriyya) — a patrol",
+      "headword": "دورية",
+      "romanization": "dawriyya",
+      "gloss": "a patrol",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c987058130df71fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to detain, then the Arabic for to stop someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دورية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دورية — dawriyya — \"a patrol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مرت دورية (dawriyya) شرطة في الشارع. marrat dawriyyat shurṭa fī ash-shāriʿ. A police patrol went by in the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a periodical: مجلة دورية (dawriyya)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دورية (dawriyya) is built on the native Arabic root d-w-r (Lane), \"to turn, to go round\", the root of dawr, a turn. A dawriyya makes its round again and again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dawriyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dawriyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dawriyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dawriyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marrat dawriyyat shurṭa fī ash-shāriʿ. — A police patrol went by in the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marrat dawriyyat shurṭa fī ash-shāriʿ.* — A police patrol went by in the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to detain, then the Arabic for to stop someone, then say dawriyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to detain, then the Arabic for to stop someone, then say *dawriyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دورية (dawriyya) mean? (\"A patrol\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C317-hajiz",
+      "sequence": 18270,
+      "title": "حاجز (ḥājiz) — a checkpoint; a barrier",
+      "headword": "حاجز",
+      "romanization": "ḥājiz",
+      "gloss": "a checkpoint; a barrier",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80c2fb0b681997f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to stop someone, then the Arabic for a patrol."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حاجز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حاجز — ḥājiz — \"a checkpoint; a barrier\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وقفت السيارات عند الحاجز. waqafat as-sayyārāt ʿinda al-ḥājiz. The cars stopped at the checkpoint."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: حواجز, ḥawājiz."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حاجز (ḥājiz) is built on the native Arabic root ḥ-j-z (Lane), \"to keep two things apart\". Ḥājiz is the participle: \"what stands between\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥājiz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥājiz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥājiz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥājiz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqafat as-sayyārāt ʿinda al-ḥājiz. — The cars stopped at the checkpoint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqafat as-sayyārāt ʿinda al-ḥājiz.* — The cars stopped at the checkpoint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to stop someone, then the Arabic for a patrol, then say ḥājiz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to stop someone, then the Arabic for a patrol, then say *ḥājiz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حاجز (ḥājiz) mean? (\"A checkpoint; a barrier\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

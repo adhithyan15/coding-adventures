@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C409-tashri",
+    "language": "arabic",
+    "chapter": 409,
+    "sequence": 23020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdc368dbc0b43e29"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C310-istaghatha",
+  "pathSegment": "AR-PATH-310-NAJDA310",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-310-NAJDA310",
+      "order": 0
+    }
+  ]
+}

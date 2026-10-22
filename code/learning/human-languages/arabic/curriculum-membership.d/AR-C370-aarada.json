@@ -1,0 +1,11 @@
+{
+  "id": "AR-C370-aarada",
+  "pathSegment": "AR-PATH-370-NAQD370",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-370-NAQD370",
+      "order": 1
+    }
+  ]
+}

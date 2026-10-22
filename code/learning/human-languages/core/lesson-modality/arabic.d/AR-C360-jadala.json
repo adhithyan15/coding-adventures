@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C360-jadala",
+    "language": "arabic",
+    "chapter": 360,
+    "sequence": 20530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:598faa22a37227b9"
+  },
+  "findings": []
+}

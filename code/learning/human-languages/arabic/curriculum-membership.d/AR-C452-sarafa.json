@@ -1,0 +1,11 @@
+{
+  "id": "AR-C452-sarafa",
+  "pathSegment": "AR-PATH-452-FAR452",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-452-FAR452",
+      "order": 3
+    }
+  ]
+}

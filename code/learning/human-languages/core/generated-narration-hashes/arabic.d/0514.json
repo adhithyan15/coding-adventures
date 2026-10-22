@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:f519bc2a9562bb46",
+  "lessonIds": [
+    "AR-C514-araq",
+    "AR-C514-irhaq",
+    "AR-C514-arhaqa",
+    "AR-C514-tathaaba",
+    "AR-C514-ghafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch514.txt",
+  "json": "arabic/narration/ch514.json",
+  "textHash": "fnv1a64:96ae04bf0ed268bd",
+  "jsonHash": "fnv1a64:30fd4fde762bb80e",
+  "findings": []
+}

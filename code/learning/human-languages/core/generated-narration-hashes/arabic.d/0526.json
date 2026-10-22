@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:c0f0eb2d6f3a4e00",
+  "lessonIds": [
+    "AR-C526-mikaniki",
+    "AR-C526-muqawil",
+    "AR-C526-dahhan",
+    "AR-C526-banna",
+    "AR-C526-iskafi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch526.txt",
+  "json": "arabic/narration/ch526.json",
+  "textHash": "fnv1a64:46f6f3afe2811e13",
+  "jsonHash": "fnv1a64:d4caa98dcd3dfdb3",
+  "findings": []
+}

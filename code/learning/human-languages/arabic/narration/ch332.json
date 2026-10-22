@@ -1,0 +1,878 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 332,
+  "title": "Leaving home",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c4e007c0f3be18d0",
+  "lessons": [
+    {
+      "id": "AR-C332-hajara-emigrate",
+      "sequence": 18990,
+      "title": "هاجر (hājara) — to emigrate",
+      "headword": "هاجر",
+      "romanization": "hājara",
+      "gloss": "to emigrate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:214607788b52967f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to flourish, then the Arabic for an emperor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: هاجر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هاجر — hājara — \"to emigrate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هاجر عمي إلى بلد بعيد قبل عشرين سنة. hājara ʿammī ilā balad baʿīd qabla ʿishrīn sana. My uncle emigrated to a distant country twenty years ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يهاجر, yuhājir."
+            },
+            {
+              "kind": "speech",
+              "text": "An emigrant is مهاجر."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "هاجر (hājara) is built on the native Arabic root h-j-r (Lane), \"to leave, to cut oneself off from\". It is Form III, \"to leave one's land for another\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājara ʿammī ilā balad baʿīd qabla ʿishrīn sana. — My uncle emigrated to a distant country twenty years ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājara ʿammī ilā balad baʿīd qabla ʿishrīn sana.* — My uncle emigrated to a distant country twenty years ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to flourish, then the Arabic for an emperor, then say hājara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to flourish, then the Arabic for an emperor, then say *hājara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does هاجر (hājara) mean? (\"To emigrate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C332-istaqarra",
+      "sequence": 19000,
+      "title": "استقر (istaqarra) — to settle down",
+      "headword": "استقر",
+      "romanization": "istaqarra",
+      "gloss": "to settle down",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b565824ce60f4ea4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for an emperor, then the Arabic for to emigrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استقر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقر — istaqarra — \"to settle down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استقرت الأسرة في مدينة على البحر. istaqarrat al-usra fī madīna ʿalā al-baḥr. The family settled in a city by the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستقر, yastaqirr."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a situation: استقر (istaqarra) الوضع, things calmed down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقر (istaqarra) is built on the native Arabic root q-r-r (Lane), \"to stay in a place, to be at rest\". It is Form X, \"to come to rest\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqarra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqarra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqarra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqarra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaqarrat al-usra fī madīna ʿalā al-baḥr. — The family settled in a city by the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaqarrat al-usra fī madīna ʿalā al-baḥr.* — The family settled in a city by the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for an emperor, then the Arabic for to emigrate, then say istaqarra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for an emperor, then the Arabic for to emigrate, then say *istaqarra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استقر (istaqarra) mean? (\"To settle down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C332-rahala",
+      "sequence": 19010,
+      "title": "رحل (raḥala) — to move out; to depart",
+      "headword": "رحل",
+      "romanization": "raḥala",
+      "gloss": "to move out; to depart",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa8883f8eaee8ef4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to emigrate, then the Arabic for to settle down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رحل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رحل — raḥala — \"to move out; to depart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رحل الجيران عن الحي الشهر الماضي. raḥala al-jīrān ʿan al-ḥayy ash-shahr al-māḍī. The neighbours moved out of the area last month."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرحل, yarḥal."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a person who died: رحل (raḥala) عنا, he has left us."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رحل (raḥala) is built on the native Arabic root r-ḥ-l (Lane), where raḥl is a camel saddle and raḥala, \"to set off\"; the taught riḥla, a journey, shares it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raḥala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raḥala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raḥala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raḥala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raḥala al-jīrān ʿan al-ḥayy ash-shahr al-māḍī. — The neighbours moved out of the area last month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raḥala al-jīrān ʿan al-ḥayy ash-shahr al-māḍī.* — The neighbours moved out of the area last month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to emigrate, then the Arabic for to settle down, then say raḥala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to emigrate, then the Arabic for to settle down, then say *raḥala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رحل (raḥala) mean? (\"To move out; to depart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C332-nazaha",
+      "sequence": 19020,
+      "title": "نزح (nazaḥa) — to be displaced, to flee one’s home",
+      "headword": "نزح",
+      "romanization": "nazaḥa",
+      "gloss": "to be displaced, to flee one’s home",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:107f55a426e6b1db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to settle down, then the Arabic for to move out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نزح",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزح — nazaḥa — \"to be displaced, to flee one’s home\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نزح كثير من الناس بعد الفيضان. nazaḥa kathīr min an-nās baʿda al-fayaḍān. Many people left their homes after the flood."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينزح, yanzaḥ."
+            },
+            {
+              "kind": "speech",
+              "text": "A displaced person is نازح."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزح (nazaḥa) is built on the native Arabic root n-z-ḥ (Lane), \"to become far away\", and \"to draw all the water from a well\". People who must go far from home are nāziḥūn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazaḥa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazaḥa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazaḥa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazaḥa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazaḥa kathīr min an-nās baʿda al-fayaḍān. — Many people left their homes after the flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazaḥa kathīr min an-nās baʿda al-fayaḍān.* — Many people left their homes after the flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to settle down, then the Arabic for to move out, then say nazaḥa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to settle down, then the Arabic for to move out, then say *nazaḥa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نزح (nazaḥa) mean? (\"To be displaced, to flee one’s home\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C332-waddaa",
+      "sequence": 19030,
+      "title": "ودع (waddaʿa) — to bid farewell",
+      "headword": "ودع",
+      "romanization": "waddaʿa",
+      "gloss": "to bid farewell",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18c975488c75f8f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to move out, then the Arabic for to be displaced."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ودع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ودع — waddaʿa — \"to bid farewell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ودعت الأم ابنها في المطار. waddaʿat al-umm ibnahā fī al-maṭār. The mother said goodbye to her son at the airport."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يودع, yuwaddiʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "A farewell is وداع; مع السلامة is what is said."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ودع (waddaʿa) is built on the native Arabic root w-d-ʿ (Lane), \"to leave, to let be\". It is Form II, \"to take leave of\"; wadāʿ is a farewell."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waddaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waddaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waddaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waddaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waddaʿat al-umm ibnahā fī al-maṭār. — The mother said goodbye to her son at the airport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waddaʿat al-umm ibnahā fī al-maṭār.* — The mother said goodbye to her son at the airport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to move out, then the Arabic for to be displaced, then say waddaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to move out, then the Arabic for to be displaced, then say *waddaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ودع (waddaʿa) mean? (\"To bid farewell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R332-review-325-332",
+      "sequence": 19040,
+      "title": "Words from chapters 325–332 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 325-332",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b722d13069bdcfd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for to witness and to swear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to witness, to swear, to take an oath, to confess, to deny",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to witness, to swear, to take an oath, to confess, to deny]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a weapon, a sword, a spear, an arrow, armour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a weapon, a sword, a spear, an arrow, armour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "that night, at the same time, as soon as, until, throughout",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: that night, at the same time, as soon as, until, throughout]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hold an event, to perform at, a procession, a banquet, an invited guest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hold an event, to perform at, a procession, a banquet, an invited guest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a revolution, to revolt, to become independent, independence, a country’s people",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a revolution, to revolt, to become independent, independence, a country’s people]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to imprison, a prisoner, a prison cell, a shackle, to release",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to imprison, a prisoner, a prison cell, a shackle, to release]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to erect, to control, to extend, to flourish, an emperor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to erect, to control, to extend, to flourish, an emperor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to emigrate, to settle down, to move out, to be displaced, to bid farewell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to emigrate, to settle down, to move out, to be displaced, to bid farewell]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To witness? (شهد, shahida.) To swear? (أقسم, aqsama.) To take an oath? (حلف, ḥalafa.) To confess? (اعترف, iʿtarafa.) To deny? (أنكر, ankara.) A weapon? (سلاح, silāḥ.) A sword? (سيف, sayf.) A spear? (رمح, rumḥ.) An arrow? (سهم, sahm.) Armour? (درع, dirʿ.) That night? (في تلك الليلة, fī tilka al-layla.) At the same time? (في الوقت نفسه, fī al-waqt nafsih.) As soon as? (حالما, ḥālamā.) Until? (إلى أن, ilā an.) Throughout? (طوال, ṭuwāla.) To hold an event? (أقام, aqāma.) To perform at? (أحيا, aḥyā.) A procession? (موكب, mawkib.) A banquet? (وليمة, walīma.) An invited guest? (مدعو, madʿuww.) A revolution? (ثورة, thawra.) To revolt? (ثار, thāra.) To become independent? (استقل, istaqalla.) Independence? (استقلال, istiqlāl.) A country’s people? (شعب, shaʿb.) To imprison? (سجن, sajana.) A prisoner? (سجين, sajīn.) A prison cell? (زنزانة, zinzāna.) A shackle? (قيد, qayd.) To release? (أفرج, afraja.) To erect? (شيد, shayyada.) To control? (سيطر, sayṭara.) To extend? (امتد, imtadda.) To flourish? (ازدهر, izdahara.) An emperor? (إمبراطور, imbarāṭūr.) To emigrate? (هاجر, hājara.) To settle down? (استقر, istaqarra.) To move out? (رحل, raḥala.) To be displaced? (نزح, nazaḥa.) To bid farewell? (ودع, waddaʿa.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

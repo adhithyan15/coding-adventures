@@ -1,0 +1,11 @@
+{
+  "id": "AR-C378-intakhaba",
+  "pathSegment": "AR-PATH-378-INTIKHAB378",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-378-INTIKHAB378",
+      "order": 1
+    }
+  ]
+}

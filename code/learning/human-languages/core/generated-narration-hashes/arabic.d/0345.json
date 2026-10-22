@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:8cf8df34412087d4",
+  "lessonIds": [
+    "AR-C345-tahadda",
+    "AR-C345-wajaha",
+    "AR-C345-taghallaba",
+    "AR-C345-iqtaraba",
+    "AR-C345-ibtaada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch345.txt",
+  "json": "arabic/narration/ch345.json",
+  "textHash": "fnv1a64:2259f99b4ec8cded",
+  "jsonHash": "fnv1a64:532451d60ae8e9d1",
+  "findings": []
+}

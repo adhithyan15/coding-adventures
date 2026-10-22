@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Bays and oceans",
+  "label": "ch:ar-bays-and-oceans",
+  "canDo": "I can say a gulf, an ocean, coral, a current and depth.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C471-umq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can say a gulf, an ocean, coral, a current and depth.",
+    "assesses": [
+      "AR-LEX-C471-KHALIJ471-03",
+      "AR-LEX-C471-KHALIJ471-04",
+      "AR-LEX-C471-KHALIJ471-05"
+    ]
+  }
+}

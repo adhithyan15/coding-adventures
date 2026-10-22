@@ -1,0 +1,11 @@
+{
+  "id": "AR-C466-kathib",
+  "pathSegment": "AR-PATH-466-GHUBAR466",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-466-GHUBAR466",
+      "order": 3
+    }
+  ]
+}

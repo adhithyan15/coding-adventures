@@ -1,0 +1,11 @@
+{
+  "id": "AR-C314-dafana",
+  "pathSegment": "AR-PATH-314-JANAZA314",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-314-JANAZA314",
+      "order": 2
+    }
+  ]
+}

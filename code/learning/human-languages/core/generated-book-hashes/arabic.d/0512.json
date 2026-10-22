@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:af06ae3ef0836b61",
+  "lessonIds": [
+    "AR-C512-shifa",
+    "AR-C512-naqaha",
+    "AR-C512-taafa",
+    "AR-C512-afiya",
+    "AR-C512-taallama-pain"
+  ],
+  "tex": "arabic/book/chapters/ch512-getting-well-again.tex"
+}

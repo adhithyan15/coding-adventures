@@ -1,0 +1,850 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 470,
+  "title": "Springs and rivers",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:8f7ba1913b0e8204",
+  "lessons": [
+    {
+      "id": "AR-C470-yanbu",
+      "sequence": 26200,
+      "title": "ينبوع (yanbūʿ) — a spring (of water)",
+      "headword": "ينبوع",
+      "romanization": "yanbūʿ",
+      "gloss": "a spring (of water)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1189fe312b8d2172",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for fertile, then the Arabic for to uproot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ينبوع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ينبوع — yanbūʿ — \"a spring (of water)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شربنا من ينبوع في الجبل. sharibnā min yanbūʿ fī al-jabal. We drank from a spring in the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ينابيع, yanābīʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ينبوع (yanbūʿ) is built on the native Arabic root n-b-ʿ, \"to well up, to gush\" (Lane). EtymDB traces the word back to Proto-Semitic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yanbūʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yanbūʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yanbūʿ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yanbūʿ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sharibnā min yanbūʿ fī al-jabal. — We drank from a spring in the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sharibnā min yanbūʿ fī al-jabal.* — We drank from a spring in the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for fertile, then the Arabic for to uproot, then say yanbūʿ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for fertile, then the Arabic for to uproot, then say *yanbūʿ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ينبوع (yanbūʿ) mean? (\"A spring (of water)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C470-manba",
+      "sequence": 26210,
+      "title": "منبع (manbaʿ) — a river source; a source",
+      "headword": "منبع",
+      "romanization": "manbaʿ",
+      "gloss": "a river source; a source",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd341322f9c586e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to uproot, then the Arabic for a spring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: منبع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منبع — manbaʿ — \"a river source; a source\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يقع منبع النهر في الجبال. yaqaʿu manbaʿ an-nahr fī al-jibāl. The source of the river lies in the mountains."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "منبع (manbaʿ) is built on the native Arabic root n-b-ʿ, \"to well up, to gush\" (Lane). The pattern mafʿal makes it the place where water wells up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manbaʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manbaʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "manbaʿ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *manbaʿ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaqaʿu manbaʿ an-nahr fī al-jibāl. — The source of the river lies in the mountains.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaqaʿu manbaʿ an-nahr fī al-jibāl.* — The source of the river lies in the mountains.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to uproot, then the Arabic for a spring, then say manbaʿ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to uproot, then the Arabic for a spring, then say *manbaʿ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does منبع (manbaʿ) mean? (\"A river source; a source\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C470-masabb",
+      "sequence": 26220,
+      "title": "مصب (maṣabb) — a river mouth",
+      "headword": "مصب",
+      "romanization": "maṣabb",
+      "gloss": "a river mouth",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d696b426983196b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a spring, then the Arabic for a river source."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مصب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصب — maṣabb — \"a river mouth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عند المصب يلتقي النهر بالبحر. ʿinda al-maṣabb yaltaqī an-nahr bi-l-baḥr. At the mouth the river meets the sea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مصب (maṣabb) is built on the native Arabic root ṣ-b-b, \"to pour\" (Lane). It is the place where a river pours out; ṣabba, \"to pour\", shares the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṣabb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṣabb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṣabb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṣabb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿinda al-maṣabb yaltaqī an-nahr bi-l-baḥr. — At the mouth the river meets the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿinda al-maṣabb yaltaqī an-nahr bi-l-baḥr.* — At the mouth the river meets the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a spring, then the Arabic for a river source, then say maṣabb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a spring, then the Arabic for a river source, then say *maṣabb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مصب (maṣabb) mean? (\"A river mouth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C470-diffa",
+      "sequence": 26230,
+      "title": "ضفة (ḍiffa) — a riverbank",
+      "headword": "ضفة",
+      "romanization": "ḍiffa",
+      "gloss": "a riverbank",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62db4425e53b0dc6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a river source, then the Arabic for a river mouth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ضفة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضفة — ḍiffa — \"a riverbank\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جلسنا على ضفة (ḍiffa) النهر. jalasnā ʿalā ḍiffat an-nahr. We sat on the riverbank."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ضفاف, ḍifāf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ضفة (ḍiffa) is usually traced to the native Arabic root ḍ-f-f, \"the side of a river\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍiffa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍiffa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍiffa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍiffa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jalasnā ʿalā ḍiffat an-nahr. — We sat on the riverbank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jalasnā ʿalā ḍiffat an-nahr.* — We sat on the riverbank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a river source, then the Arabic for a river mouth, then say ḍiffa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a river source, then the Arabic for a river mouth, then say *ḍiffa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ضفة (ḍiffa) mean? (\"A riverbank\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C470-adhb",
+      "sequence": 26240,
+      "title": "عذب (ʿadhb) — sweet (of water); fresh",
+      "headword": "عذب",
+      "romanization": "ʿadhb",
+      "gloss": "sweet (of water); fresh",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1adb7d4bc2e4e0ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a river mouth, then the Arabic for a riverbank."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عذب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عذب — ʿadhb — \"sweet (of water); fresh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ماء الينبوع عذب. māʾ al-yanbūʿ ʿadhb. The water of the spring is sweet."
+            },
+            {
+              "kind": "speech",
+              "text": "Of water, sweet means fresh, not salty."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عذب (ʿadhb) is built on the native Arabic root ʿ-dh-b, \"to be sweet (of water)\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿadhb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿadhb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿadhb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿadhb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māʾ al-yanbūʿ ʿadhb. — The water of the spring is sweet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māʾ al-yanbūʿ ʿadhb.* — The water of the spring is sweet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a river mouth, then the Arabic for a riverbank, then say ʿadhb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a river mouth, then the Arabic for a riverbank, then say *ʿadhb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عذب (ʿadhb) mean? (\"Sweet (of water); fresh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R470-review-463-470",
+      "sequence": 26250,
+      "title": "Words from chapters 463–470 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 463-470",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f0ac00a32e48576",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for climate and global warming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "climate, global warming, the atmosphere, an emission, carbon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: climate, global warming, the atmosphere, an emission, carbon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pollution, polluted, waste, to pollute, to sort",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pollution, polluted, waste, to pollute, to sort]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "energy, gas, crude oil, coal, to consume",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: energy, gas, crude oil, coal, to consume]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fine dust, dusty, desertification, a sand dune, to choke",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fine dust, dusty, desertification, a sand dune, to choke]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nature reserve, endangered, to protect, to die out, to squander",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nature reserve, endangered, to protect, to die out, to squander]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plant life, a shrub, to wilt, to bloom, to bear fruit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: plant life, a shrub, to wilt, to bloom, to bear fruit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soil, fertiliser, a crop, fertile, to uproot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: soil, fertiliser, a crop, fertile, to uproot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spring, a river source, a river mouth, a riverbank, sweet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spring, a river source, a river mouth, a riverbank, sweet]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Climate? (مناخ, munākh.) Global warming? (احتباس حراري, iḥtibās ḥarārī.) The atmosphere? (غلاف جوي, ghilāf jawwī.) An emission? (انبعاث, inbiʿāth.) Carbon? (كربون, karbūn.) Pollution? (تلوث, talawwuth.) Polluted? (ملوث, mulawwath.) Waste? (نفايات, nufāyāt.) To pollute? (لوث, lawwatha.) To sort? (فرز, faraza.) Energy? (طاقة, ṭāqa.) Gas? (غاز, ghāz.) Crude oil? (نفط, nafṭ.) Coal? (فحم, faḥm.) To consume? (استهلك, istahlaka.) Fine dust? (غبار, ghubār.) Dusty? (مغبر, mughbarr.) Desertification? (تصحر, taṣaḥḥur.) A sand dune? (كثيب, kathīb.) To choke? (اختنق, ikhtanaqa.) A nature reserve? (محمية, maḥmiyya.) Endangered? (مهدد, muhaddad.) To protect? (حافظ, ḥāfaẓa.) To die out? (انقرض, inqaraḍa.) To squander? (أهدر, ahdara.) Plant life? (نبات, nabāt.) A shrub? (شجيرة, shujayra.) To wilt? (ذبل, dhabala.) To bloom? (أزهر, azhara.) To bear fruit? (أثمر, athmara.) Soil? (تربة, turba.) Fertiliser? (سماد, samād.) A crop? (محصول, maḥṣūl.) Fertile? (خصب, khaṣib.) To uproot? (اقتلع, iqtalaʿa.) A spring? (ينبوع, yanbūʿ.) A river source? (منبع, manbaʿ.) A river mouth? (مصب, maṣabb.) A riverbank? (ضفة, ḍiffa.) Sweet? (عذب, ʿadhb.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

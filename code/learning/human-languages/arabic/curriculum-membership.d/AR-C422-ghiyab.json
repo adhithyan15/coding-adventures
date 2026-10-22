@@ -1,0 +1,11 @@
+{
+  "id": "AR-C422-ghiyab",
+  "pathSegment": "AR-PATH-422-MAWDUI422",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-422-MAWDUI422",
+      "order": 3
+    }
+  ]
+}

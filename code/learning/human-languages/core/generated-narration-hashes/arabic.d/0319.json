@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:01db12a29bdfb1e1",
+  "lessonIds": [
+    "AR-C319-aza",
+    "AR-C319-azza",
+    "AR-C319-ratha",
+    "AR-C319-naa",
+    "AR-C319-hidad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch319.txt",
+  "json": "arabic/narration/ch319.json",
+  "textHash": "fnv1a64:44d1829492b8a37b",
+  "jsonHash": "fnv1a64:e90c13d942bb3042",
+  "findings": []
+}

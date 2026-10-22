@@ -1,0 +1,11 @@
+{
+  "id": "AR-C415-mustawa",
+  "pathSegment": "AR-PATH-415-INJAZ415",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-415-INJAZ415",
+      "order": 4
+    }
+  ]
+}

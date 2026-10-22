@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:f23bca49ee907a69",
+  "lessonIds": [
+    "AR-C488-saada",
+    "AR-C488-malal",
+    "AR-C488-ghadiba",
+    "AR-C488-hazina",
+    "AR-C488-tanahhada"
+  ],
+  "tex": "arabic/book/chapters/ch488-happy-bored-angry-and-sad.tex"
+}

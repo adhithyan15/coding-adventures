@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C470-adhb",
+    "language": "arabic",
+    "chapter": 470,
+    "sequence": 26240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1adb7d4bc2e4e0ad"
+  },
+  "findings": []
+}

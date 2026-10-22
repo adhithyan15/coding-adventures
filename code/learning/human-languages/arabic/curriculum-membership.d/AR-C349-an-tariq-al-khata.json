@@ -1,0 +1,11 @@
+{
+  "id": "AR-C349-an-tariq-al-khata",
+  "pathSegment": "AR-PATH-349-MARRA349",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-349-MARRA349",
+      "order": 1
+    }
+  ]
+}

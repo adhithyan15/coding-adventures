@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-407-TAJANNUB407",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "AR-EXT-407-TAJANNUB407"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C313-suraana-ma",
+  "pathSegment": "AR-PATH-313-FAWR313",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-313-FAWR313",
+      "order": 1
+    }
+  ]
+}

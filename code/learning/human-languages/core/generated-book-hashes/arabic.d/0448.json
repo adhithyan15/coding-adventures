@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:6b8fed5d0ef9cdc1",
+  "lessonIds": [
+    "AR-C448-dajij",
+    "AR-C448-azaja",
+    "AR-C448-ayqaza",
+    "AR-C448-hadaa",
+    "AR-C448-ishtaka"
+  ],
+  "tex": "arabic/book/chapters/ch448-a-noisy-night.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Exceptions",
+  "label": "ch:ar-exceptions",
+  "canDo": "I can talk about an exception, and say that something excludes, includes, contains or concerns something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-R405-review-398-405",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can talk about an exception, and say that something excludes, includes, contains or concerns something.",
+    "assesses": [
+      "AR-LEX-C405-ISTITHNA405-03",
+      "AR-LEX-C405-ISTITHNA405-04",
+      "AR-LEX-C405-ISTITHNA405-05"
+    ]
+  }
+}

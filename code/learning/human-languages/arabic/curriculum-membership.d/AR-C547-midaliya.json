@@ -1,0 +1,11 @@
+{
+  "id": "AR-C547-midaliya",
+  "pathSegment": "AR-PATH-547-BUTULA547",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-547-BUTULA547",
+      "order": 3
+    }
+  ]
+}

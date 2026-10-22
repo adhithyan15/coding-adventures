@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-401-IHTIMAL401",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "AR-EXT-401-IHTIMAL401"
+  ],
+  "after": []
+}

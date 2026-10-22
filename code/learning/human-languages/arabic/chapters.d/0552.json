@@ -1,0 +1,19 @@
+{
+  "chapter": 552,
+  "title": "Doing up the house",
+  "label": "ch:ar-doing-up-the-house",
+  "canDo": "I can talk about a coat of paint, and say that someone renovated, decorated, furnished or dried something.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R552-review-final-552",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can talk about a coat of paint, and say that someone renovated, decorated, furnished or dried something.",
+    "assesses": [
+      "AR-LEX-C552-TARMIM552-03",
+      "AR-LEX-C552-TARMIM552-04",
+      "AR-LEX-C552-TARMIM552-05"
+    ]
+  }
+}

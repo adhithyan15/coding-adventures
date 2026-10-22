@@ -1,0 +1,11 @@
+{
+  "id": "AR-C441-nazil",
+  "pathSegment": "AR-PATH-441-ISTIQBAL441",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-441-ISTIQBAL441",
+      "order": 1
+    }
+  ]
+}

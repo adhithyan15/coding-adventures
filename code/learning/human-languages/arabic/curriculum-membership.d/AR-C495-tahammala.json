@@ -1,0 +1,11 @@
+{
+  "id": "AR-C495-tahammala",
+  "pathSegment": "AR-PATH-495-INZIAJ495",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-495-INZIAJ495",
+      "order": 3
+    }
+  ]
+}

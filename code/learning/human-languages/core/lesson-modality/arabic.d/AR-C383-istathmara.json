@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C383-istathmara",
+    "language": "arabic",
+    "chapter": 383,
+    "sequence": 21720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d03d81bb8ecb8249"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C518-mustashar",
+  "pathSegment": "AR-PATH-518-MIHNA518",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-518-MIHNA518",
+      "order": 3
+    }
+  ]
+}

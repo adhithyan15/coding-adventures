@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:2dc60e0c9e383a70",
+  "lessonIds": [
+    "AR-C310-istaghatha",
+    "AR-C310-naja",
+    "AR-C310-saha",
+    "AR-C310-nada",
+    "AR-C310-munqidh"
+  ],
+  "tex": "arabic/book/chapters/ch310-calling-for-help.tex"
+}
