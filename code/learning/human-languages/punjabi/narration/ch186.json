@@ -1,0 +1,836 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 186,
+  "title": "What Will Happen? Who Will Come?",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:2713c3eec66f6bbb",
+  "lessons": [
+    {
+      "id": "PA-C186-future-return",
+      "sequence": 9910,
+      "title": "Start with two verbs you know",
+      "headword": "(future base review)",
+      "romanization": "honaa / aaunaa",
+      "gloss": "return to two familiar infinitives before future forms",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eeeb1d92d86ee81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi infinitive for “to be,” then the infinitive for “to come.”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one future contrast at a time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the two familiar meanings steady. The next steps will make a masculine future form and then a feminine future form from the first verb. Only after that contrast is secure will the same two endings move to the second verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "honaa; YOU SAY: ਹੋਣਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *honaa*; YOU SAY: **ਹੋਣਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "aaunaa; YOU SAY: ਆਉਣਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *aaunaa*; YOU SAY: **ਆਉਣਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say “to be; to come” once more in Punjabi."
+            },
+            {
+              "kind": "speech",
+              "text": "This voice-first review introduces no new written target."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C186-hovega",
+      "sequence": 9920,
+      "title": "ਹੋਵੇਗਾ (hovegaa) — it will be or happen",
+      "headword": "ਹੋਵੇਗਾ",
+      "romanization": "hovegaa",
+      "gloss": "will be or will happen, masculine singular",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11aba33369e27463",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਹੋਣਾ, then say ਕੰਮ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the masculine singular future",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੋਵੇਗਾ — hovegaa — it will be or it will happen."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the masculine singular future form. First keep it whole; the feminine contrast comes in the next small step."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "hovegaa; YOU SAY: ਹੋਵੇਗਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *hovegaa*; YOU SAY: **ਹੋਵੇਗਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੰਮ ਹੋਵੇਗਾ (hovegaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੰਮ ਹੋਵੇਗਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹੋਵੇਗਾ (hovegaa) once and check the final ਾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹੋਵੇਗਾ** once and check the final **ਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read the exact form for “it will happen.” (ਹੋਵੇਗਾ (hovegaa).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: standard Punjabi uses this form as the masculine singular future of the already-taught infinitive ਹੋਣਾ."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C186-hovegi",
+      "sequence": 9930,
+      "title": "ਹੋਵੇਗੀ (hovegii) — it will be, with a feminine subject",
+      "headword": "ਹੋਵੇਗੀ",
+      "romanization": "hovegii",
+      "gloss": "will be or will happen, feminine singular",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab057e844a3aa77f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਹੋਵੇਗਾ (hovegaa), then say ਯਾਤਰਾ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: change only the agreement ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੋਵੇਗੀ — hovegii — it will be or happen, feminine singular."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending changes from ਾ to ੀ. The time stays future; the form now agrees with a feminine singular subject."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "hovegaa, hovegii; YOU SAY: ਹੋਵੇਗਾ, ਹੋਵੇਗੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *hovegaa, hovegii*; YOU SAY: **ਹੋਵੇਗਾ, ਹੋਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਯਾਤਰਾ ਹੋਵੇਗੀ (hovegii)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਯਾਤਰਾ ਹੋਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹੋਵੇਗੀ (hovegii) once and check the final ੀ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹੋਵੇਗੀ** once and check the final **ੀ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the masculine form, then the feminine form."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: standard Punjabi future agreement changes the final masculine ਾ to feminine ੀ here."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C186-hovega-hovegi-review",
+      "sequence": 9940,
+      "title": "Hold the first future contrast steady",
+      "headword": "ਹੋਵੇਗਾ · ਹੋਵੇਗੀ",
+      "romanization": "hovegaa / hovegii",
+      "gloss": "retrieve the masculine and feminine future forms of to be",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1758057372b05f4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the pair once without looking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamm hovegaa; YOU SAY: ਕੰਮ ਹੋਵੇਗਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamm hovegaa*; YOU SAY: **ਕੰਮ ਹੋਵੇਗਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "yaatraa hovegii; YOU SAY: ਯਾਤਰਾ ਹੋਵੇਗੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *yaatraa hovegii*; YOU SAY: **ਯਾਤਰਾ ਹੋਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਹੋਵੇਗਾ (hovegaa), ਹੋਵੇਗੀ (hovegii)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਹੋਵੇਗਾ · ਹੋਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the pair and write ਹੋਵੇਗਾ (hovegaa), ਹੋਵੇਗੀ (hovegii)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the pair and write **ਹੋਵੇਗਾ, ਹੋਵੇਗੀ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "The stem and future meaning stay together. Only the final agreement vowel changes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form ends in ਾ? Which ends in ੀ?"
+            },
+            {
+              "kind": "speech",
+              "text": "This review adds no new future form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C186-aavega",
+      "sequence": 9950,
+      "title": "ਆਵੇਗਾ (aavegaa) — he or it will come",
+      "headword": "ਆਵੇਗਾ",
+      "romanization": "aavegaa",
+      "gloss": "he or it will come, masculine singular",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c70895bda836c2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਆਉਣਾ, then retrieve the masculine future ending from the last pair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: transfer the masculine future",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਆਵੇਗਾ — aavegaa — he or it will come."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb changes, but the masculine singular future ending remains familiar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "aavegaa; YOU SAY: ਆਵੇਗਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *aavegaa*; YOU SAY: **ਆਵੇਗਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਅਮਨ ਆਵੇਗਾ (aavegaa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਅਮਨ ਆਵੇਗਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਆਵੇਗਾ (aavegaa) once and check the final ਾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਆਵੇਗਾ** once and check the final **ਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read “will come,” masculine singular. (ਆਵੇਗਾ (aavegaa).)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: standard Punjabi uses this form as the masculine singular future of the already-taught infinitive ਆਉਣਾ."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C186-aavegi",
+      "sequence": 9960,
+      "title": "ਆਵੇਗੀ (aavegii) — she or it will come",
+      "headword": "ਆਵੇਗੀ",
+      "romanization": "aavegii",
+      "gloss": "she or it will come, feminine singular",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a53f3f4332f73afa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਆਵੇਗਾ (aavegaa), then say ਰੇਲ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: transfer the feminine future",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਆਵੇਗੀ — aavegii — she or it will come."
+            },
+            {
+              "kind": "speech",
+              "text": "Change the final ਾ to ੀ, just as in the first future pair. The verb still means “come”; agreement is now feminine singular."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "aavegaa, aavegii; YOU SAY: ਆਵੇਗਾ, ਆਵੇਗੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *aavegaa, aavegii*; YOU SAY: **ਆਵੇਗਾ, ਆਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਰੇਲ ਆਵੇਗੀ (aavegii)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਰੇਲ ਆਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਆਵੇਗੀ (aavegii) once and check the final ੀ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਆਵੇਗੀ** once and check the final **ੀ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the masculine “will come,” then the feminine “will come.”"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: standard Punjabi future agreement changes the final masculine ਾ to feminine ੀ here too."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C186-future-review",
+      "sequence": 9970,
+      "title": "Two verbs, one future agreement contrast",
+      "headword": "ਹੋਵੇਗਾ · ਹੋਵੇਗੀ · ਆਵੇਗਾ · ਆਵੇਗੀ",
+      "romanization": "hovegaa / hovegii / aavegaa / aavegii",
+      "gloss": "retrieve two third-person future agreement pairs",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b213ce3688a74dcf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say both masculine forms, then both feminine forms."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamm hovegaa; yaatraa hovegii; YOU SAY: ਕੰਮ ਹੋਵੇਗਾ; ਯਾਤਰਾ ਹੋਵੇਗੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamm hovegaa; yaatraa hovegii*; YOU SAY: **ਕੰਮ ਹੋਵੇਗਾ; ਯਾਤਰਾ ਹੋਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman aavegaa; rel aavegii; YOU SAY: ਅਮਨ ਆਵੇਗਾ; ਰੇਲ ਆਵੇਗੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman aavegaa; rel aavegii*; YOU SAY: **ਅਮਨ ਆਵੇਗਾ; ਰੇਲ ਆਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਹੋਵੇਗਾ (hovegaa), ਹੋਵੇਗੀ (hovegii), ਆਵੇਗਾ (aavegaa), ਆਵੇਗੀ (aavegii)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਹੋਵੇਗਾ, ਹੋਵੇਗੀ, ਆਵੇਗਾ, ਆਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write the four forms in the same order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write the four forms in the same order]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the verb pair separate from the agreement pair: “be” and “come” each have one masculine and one feminine singular future form here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve all four exact forms without looking."
+            },
+            {
+              "kind": "speech",
+              "text": "This review adds no first-person future and no past form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C186-payoff",
+      "sequence": 9980,
+      "title": "A gentle third-person future payoff",
+      "headword": "ਕੰਮ ਹੋਵੇਗਾ · ਯਾਤਰਾ ਹੋਵੇਗੀ · ਅਮਨ ਆਵੇਗਾ · ਰੇਲ ਆਵੇਗੀ",
+      "romanization": "kamm hovegaa; yaatraa hovegii; Aman aavegaa; rel aavegii",
+      "gloss": "retrieve four exact third-person future forms in familiar phrases",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:d1595301cc2eed94",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice: four skills, bounded to the two pairs"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice: four skills, bounded to the two pairs."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Without looking, say one future form ending in ਾ and one ending in ੀ for each verb."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills, bounded to the two pairs",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamm hovegaa, yaatraa hovegii, Aman aavegaa, rel aavegii; YOU SAY: ਕੰਮ ਹੋਵੇਗਾ, ਯਾਤਰਾ ਹੋਵੇਗੀ, ਅਮਨ ਆਵੇਗਾ, ਰੇਲ ਆਵੇਗੀ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamm hovegaa, yaatraa hovegii, Aman aavegaa, rel aavegii*; YOU SAY: **ਕੰਮ ਹੋਵੇਗਾ, ਯਾਤਰਾ ਹੋਵੇਗੀ, ਅਮਨ ਆਵੇਗਾ, ਰੇਲ ਆਵੇਗੀ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੰਮ ਹੋਵੇਗਾ (hovegaa)। ਯਾਤਰਾ ਹੋਵੇਗੀ (hovegii)। ਅਮਨ ਆਵੇਗਾ (aavegaa)। ਰੇਲ ਆਵੇਗੀ (aavegii)।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੰਮ ਹੋਵੇਗਾ। ਯਾਤਰਾ ਹੋਵੇਗੀ। ਅਮਨ ਆਵੇਗਾ। ਰੇਲ ਆਵੇਗੀ।**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਹੋਵੇਗਾ (hovegaa), ਹੋਵੇਗੀ (hovegii), ਆਵੇਗਾ (aavegaa), ਆਵੇਗੀ (aavegii)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਹੋਵੇਗਾ, ਹੋਵੇਗੀ, ਆਵੇਗਾ, ਆਵੇਗੀ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now underline the two masculine endings and circle the two feminine endings."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the four measured forms once more."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the ninth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: the standard Punjabi third-person future agreement pattern applied to the already-taught infinitives ਹੋਣਾ and ਆਉਣਾ."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
