@@ -1,9 +1,10 @@
 use std::collections::BTreeSet;
 
+use diagram_ir::DiagramDirection;
 use mermaid_parser::{
     detect_mermaid_type, parse_any_mermaid, parse_architecture, parse_block, parse_gantt, parse_gitgraph, parse_journey, parse_pie,
     parse_kanban, parse_mindmap, parse_packet, parse_quadrant_chart, parse_requirement_diagram, parse_sankey,
-    parse_cynefin, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
+    parse_cynefin, parse_er_diagram, parse_event_modeling, parse_info, parse_ishikawa, parse_radar, parse_railroad, parse_sequence_diagram, parse_swimlane, parse_timeline, parse_treeview, parse_treemap, parse_venn, parse_wardley, parse_xychart, parse_zenuml,
     MERMAID_COMPATIBILITY_BASELINE,
 };
 use serde_json::Value;
@@ -19,6 +20,14 @@ const SWIMLANE_CORPUS: &str = include_str!(concat!(
 const SWIMLANE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
+));
+const ER_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-11.16.1-corpus.json"
+));
+const ER_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-11.16.1-visual-corpus.json"
 ));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -1872,6 +1881,26 @@ fn pinned_swimlane_visual_corpus_references_syntax_fixtures() {
     ]);
     assert_eq!(syntax_names.difference(&visual_names).copied().collect::<BTreeSet<_>>(),
         expected_nonvisual);
+}
+
+#[test]
+fn pinned_er_direction_corpus_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_CORPUS).expect("ER corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_VISUAL_CORPUS).expect("ER visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = [
+        DiagramDirection::Tb,
+        DiagramDirection::Bt,
+        DiagramDirection::Lr,
+        DiagramDirection::Rl,
+    ];
+    let fixtures = syntax["fixtures"].as_array().expect("ER fixtures must be an array");
+    assert_eq!(fixtures.len(), expected.len());
+    for (fixture, direction) in fixtures.iter().zip(expected) {
+        let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER fixture source"))
+            .unwrap_or_else(|error| panic!("failed to parse {:?}: {error}", fixture["name"]));
+        assert_eq!(diagram.direction, Some(direction));
+    }
 }
 
 #[test]
