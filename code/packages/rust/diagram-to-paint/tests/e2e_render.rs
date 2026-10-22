@@ -12,7 +12,7 @@ mod apple {
     use std::collections::{BTreeMap, BTreeSet};
 
     use diagram_ir::{
-        DiagramIconGlyph, DiagramStyle, EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody,
+        DiagramDirection, DiagramIconGlyph, DiagramStyle, EdgeKind, SequenceBlockKind, SequenceEvent, TemporalBody,
         TemporalDiagram, TemporalKind,
     };
     use diagram_layout_board::layout_board_diagram;
@@ -96,6 +96,14 @@ mod apple {
     const SWIMLANE_VISUAL_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
+    ));
+    const ER_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-11.16.1-corpus.json"
+    ));
+    const ER_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-11.16.1-visual-corpus.json"
     ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -1927,6 +1935,50 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(pixels.width > 0);
         assert!(pixels.height > 0);
         assert!(!scene.instructions.is_empty());
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_directions_to_png() {
+        let syntax: Value = serde_json::from_str(ER_CORPUS).expect("ER corpus JSON");
+        let visual: Value = serde_json::from_str(ER_VISUAL_CORPUS).expect("ER visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER fixtures");
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+
+        for (index, fixture_name) in visual["fixtures"].as_array().expect("ER visual fixtures").iter().enumerate() {
+            let fixture_name = fixture_name.as_str().expect("ER visual fixture name");
+            let fixture = fixtures.iter().find(|fixture| fixture["name"] == fixture_name)
+                .unwrap_or_else(|| panic!("missing ER fixture {fixture_name}"));
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER fixture source"))
+                .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
+            let direction = diagram.direction.clone().expect("ER fixture direction");
+            let layout = layout_structural_diagram(&diagram);
+            let customer = layout.nodes.iter().find(|node| node.id == "CUSTOMER").expect("CUSTOMER node");
+            let order = layout.nodes.iter().find(|node| node.id == "ORDER").expect("ORDER node");
+            match direction {
+                DiagramDirection::Tb => assert!(order.y > customer.y),
+                DiagramDirection::Bt => assert!(customer.y > order.y),
+                DiagramDirection::Lr => assert!(order.x > customer.x),
+                DiagramDirection::Rl => assert!(customer.x > order.x),
+            }
+            let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty());
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_er_direction_{index}_e2e.png");
+            write_png(&pixels, &path)
+                .expect("ER direction PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
     }
 
     #[test]
