@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Use a multiline Fence info field and preserve unchanged canonical metadata/payload despite browser newline normalization. Keep no payload distinct from one or more blank payload lines.
 - Recognizes and edits existing fenced blocks using the complete Fence info field. Saving recomputes the name token and preserves the discriminator and empty payload; default new code-block creation remains unchanged.
 
 All notable changes to this package will be documented in this file.

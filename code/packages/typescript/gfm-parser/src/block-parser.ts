@@ -398,15 +398,12 @@ function virtualColAfter(line: string, charCount: number, startCol = 0): number 
   return col;
 }
 
-/** Extract the info string from a fenced code block opening line. */
-function extractInfoString(line: string): string {
-  // Strip the fence characters and leading whitespace from the info string
-  const m = line.match(/^[`~]+\s*(.*)$/);
-  if (!m) return "";
-  // TE04 retains the complete normalized info, including extra options.
-  // Preserve the whole info string before conversion; extracting its first
-  // token here used to irreversibly discard TE04 metadata.
-  return decodeEntities(applyBackslashEscapes(m[1]!.trim())).trim();
+/** Normalize metadata after the opener's exact fence has been consumed. */
+function extractInfoString(infoLine: string): string {
+  // Opposite fence characters and Unicode line/paragraph separators are
+  // legitimate info content. Slicing the already-matched fence avoids
+  // treating them as another fence or as a regular-expression line boundary.
+  return decodeEntities(applyBackslashEscapes(infoLine.trim())).trim();
 }
 
 // ─── ATX Heading Detection ────────────────────────────────────────────────────
@@ -965,7 +962,7 @@ export function parseBlocks(input: string): {
       const fenceChar = fenceMatch[1]![0]!;
       const fenceLen = fenceMatch[1]!.length;
       const infoLine = lineContent.trimStart().slice(fenceLen);
-      const infoString = extractInfoString(lineContent.trimStart());
+      const infoString = extractInfoString(infoLine);
 
       // Backtick fences cannot have backticks in info string
       if (fenceChar === "`" && infoLine.includes("`")) {

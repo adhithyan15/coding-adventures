@@ -258,17 +258,23 @@ function blockForm(
         event.preventDefault();
         const language = formValue(event.currentTarget, "language");
         let value = formValue(event.currentTarget, "code");
+        // Textareas normalize CR/CRLF to LF. An unchanged submission retains
+        // the canonical AST string, including a single blank payload line.
+        if (block.type === "fenced_block" && value === block.value.replace(/\r\n?/g, "\n")) value = block.value;
         if (!value.endsWith("\n") && (value !== "" || block.type !== "fenced_block")) value += "\n";
         if (block.type === "fenced_block") {
           // This form edits already-decoded AST metadata, not raw Markdown.
-          const info = language.trim() || null;
+          const originalInfo = block.info ?? "";
+          const info = language === originalInfo.replace(/\r\n?/g, "\n") ? block.info : language.trim() || null;
           save({ type: "fenced_block", info, name: info?.split(/\s+/)[0] ?? null, value }, "Code block saved.");
         } else {
           save({ type: "code_block", language: language === "" ? null : language, value }, "Code block saved.");
         }
       }}>
-        <label>{block.type === "fenced_block" ? "Fence info" : "Code language"}<input name="language" defaultValue={block.type === "fenced_block" ? block.info ?? "" : block.type === "code_block" ? block.language ?? "" : ""} /></label>
-        <label>Code<textarea name="code" defaultValue={block.type === "code_block" || block.type === "fenced_block" ? block.value.replace(/\n$/, "") : ""} /></label>
+        {block.type === "fenced_block"
+          ? <label>Fence info<textarea name="language" defaultValue={block.info ?? ""} /></label>
+          : <label>Code language<input name="language" defaultValue={block.type === "code_block" ? block.language ?? "" : ""} /></label>}
+        <label>Code<textarea name="code" defaultValue={block.type === "fenced_block" ? block.value : block.type === "code_block" ? block.value.replace(/\n$/, "") : ""} /></label>
         <button disabled={disabled}>Save code block</button>
       </form>;
     case "blockquote":

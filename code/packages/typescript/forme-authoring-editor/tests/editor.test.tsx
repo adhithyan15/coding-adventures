@@ -475,3 +475,21 @@ it("edits full fence info while preserving its discriminator and empty payload",
   view.unmount();
  }
 });
+
+// Canonical AST values must survive an unchanged browser form submission.
+it.each([
+  { name: "ts", info: "ts\nlinenos", value: "x\n" },
+  { name: "ts", info: "ts\rlinenos", value: "x\n" },
+  { name: "ts", info: "ts\r\nlinenos", value: "x\r\ny\n" },
+  { name: null, info: null, value: "" },
+  { name: null, info: null, value: "\n" },
+  { name: null, info: null, value: "\n\n" },
+])("preserves unchanged fenced form values %#", async (initial) => {
+  const { session } = await sessionFixture();
+  const block = { type: "fenced_block" as const, ...initial };
+  await session.dispatch({ type: "replace-document-body", documentId: FIRST_DOCUMENT_ID, body: { type: "document", children: [block] } });
+  render(<AuthoringEditor session={session} themeOptions={themes} createDocumentIdentity={() => SECOND_DOCUMENT_ID} />);
+  fireEvent.click(screen.getByRole("button", { name: "Save code block" }));
+  await screen.findByText("Code block saved.");
+  expect(session.project.documents[0]!.body.children[0]).toEqual(block);
+});

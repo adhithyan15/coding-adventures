@@ -17197,20 +17197,22 @@
         "status": "incomplete; no parity qualification or ready PR",
         "changed_packages": 15,
         "fronts": "Actual local build scripts where provided and Vitest production-coverage fronts exit0; package-local installs, full production include globs retained. document-ast is types-only0/0.",
-        "fixture_cases": 16,
-        "parser": "738 tests including unchanged652literalCommonMark corpus;89.03%production statements",
+        "fixture_cases": 21,
+        "parser": "743tests including unchanged652literalCommonMark corpus;89.07%production statements86.96%branches",
         "html_renderer": "46tests;98.59%statements97.66%branches",
         "authoring_core": "95.39%statements93.7%branches; canonical metadata roundtrip and hostile-input negatives",
-        "authoring_editor": "98.75%statements91.09%branches; fullinfo editing and empty payload retention",
+        "authoring_editor": "54tests;98.76%statements91.27%branches; fullinfo editing plus exact unchanged LF/CR/CRLF and empty/blank payload roundtrips",
         "terminal": "91.83%statements87.68%branches; canonical name/info and finalLF checks plus existing control filtering",
         "other_coverage": "Remaining changed runtime packages83.17%to100%statements; target95review remains open.",
         "remaining": "Full74reverse/118prerequisite native closure and actual BUILD fronts;17unvalidated targets have no local node_modules and need installs. Baseline verification for AsciiDoc/layout-block/nodecrypto candidates; coverage target review; full-scope final security and live main/PR overlap before publication.",
         "fixture_ci_gap": "Repaired exact cases.json all/typescript native selection; RED then source, full Go module tests, go vet and executable build PASS. Three-platform facade propagation, source union, wrong-lane/missing-reader fail-closed, and atomic plan output regressions pass. Bounded security review: no findings.",
         "blocker": "C: space insufficient for full closure; partial space used only for already-installed focused checks and durable source checkpoint. No new installs, pushes or PR.",
         "metadata_validation": "Current executable all-language dry-run with BUILD validation and plan emission PASS at ccfa7c79eec;115affected roots, including prerequisite closure. Collision inventory PASS at same head; not native behavioral qualification.",
-        "validated_at": "2026-10-22T08:52:47.304402+00:00",
+        "validated_at": "2026-10-22T15:08:32.828329+00:00",
         "go_coverage": "Final root package tests with production coverage PASS62.5%; all new selector blocks exercised. Internal package coverage run passed71.6%-97.7% except initial new-test map-order assertion; final main rerun and30focused repetitions pass after set-membership correction. Existing broad build-tool coverage remains below80%; no full coverage qualification claimed.",
-        "go_test_lesson": "Coverage exposed nondeterministic affected-array order. Test now compares sorted membership; dependency edges retain execution ordering. Recorded lesson; production scheduling unchanged."
+        "go_test_lesson": "Coverage exposed nondeterministic affected-array order. Test now compares sorted membership; dependency edges retain execution ordering. Recorded lesson; production scheduling unchanged.",
+        "full_scope_review": "Full initial implementation diff review found3P2metadata/payload data-loss gaps: browser info newline stripping, blankpayload collapse and parser Unicode/opposite-fence extraction. Reproduced RED5editor/4parser; fixes and finalproductioncoveragePASS. Corrected-diff security rereview complete: no remaining actionable findings; reviewed source/fixture/spec hashes verified.",
+        "consumer_source_audit": "Bounded readonly382sourcefile/74affectedroot audit found no remaining unmodified code_block-only consumer requiring migration; source only, no native closure credit."
       }
     },
     {

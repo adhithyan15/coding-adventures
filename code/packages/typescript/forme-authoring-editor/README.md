@@ -96,3 +96,7 @@ See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
 source retention, compatibility and validation boundaries. Run package-local
 `npm run build` when supplied and `npm test -- --coverage` after installing
 local dependencies; BUILD fronts also install required sibling packages.
+
+Fence info supports multiple lines. Saving unchanged metadata or code preserves
+the exact AST string despite browser newline normalization, including the
+difference between an empty payload and one blank payload line.

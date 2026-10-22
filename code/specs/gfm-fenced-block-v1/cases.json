@@ -161,6 +161,56 @@
         "info": "ts extra",
         "value": ""
       }
+    },
+    {
+      "id": "interior-unicode-line-separator",
+      "markdown": "~~~ts\u2028linenos\nx\n~~~\n",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ts",
+        "info": "ts\u2028linenos",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "interior-unicode-paragraph-separator",
+      "markdown": "~~~ts\u2029linenos\nx\n~~~\n",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ts",
+        "info": "ts\u2029linenos",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "tilde-fence-backtick-info",
+      "markdown": "~~~```ts extra\nx\n~~~\n",
+      "expected": {
+        "type": "fenced_block",
+        "name": "```ts",
+        "info": "```ts extra",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "backtick-fence-tilde-info",
+      "markdown": "```~~~ts extra\nx\n```\n",
+      "expected": {
+        "type": "fenced_block",
+        "name": "~~~ts",
+        "info": "~~~ts extra",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "one-blank-payload-line",
+      "markdown": "~~~\n\n~~~\n",
+      "expected": {
+        "type": "fenced_block",
+        "name": null,
+        "info": null,
+        "value": "\n"
+      }
     }
   ]
 }

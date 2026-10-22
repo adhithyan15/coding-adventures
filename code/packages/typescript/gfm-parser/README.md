@@ -10,3 +10,6 @@ See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
 source retention, compatibility and validation boundaries. Run package-local
 `npm run build` when supplied and `npm test -- --coverage` after installing
 local dependencies; BUILD fronts also install required sibling packages.
+
+Fence metadata retains literal U+2028/U+2029 and opposite fence characters;
+only the recognized opener delimiter is removed before normalization.
