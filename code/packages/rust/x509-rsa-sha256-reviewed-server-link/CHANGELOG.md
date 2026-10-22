@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.0 - 2026-10-22
+
+### Added
+
+- Added a fail-closed anchor-policy composition that consumes the complete
+  reviewed server link and accepts only selected snapshot entries without
+  out-of-band name constraints.
+- Added distinct non-copyable success evidence plus a payload-free
+  `UnsupportedAnchorNameConstraints` failure category.
+- Documented that constrained anchors remain unavailable until a
+  repository-owned parser and subtree evaluator can apply their constraints.
+
 ## 0.1.0 - 2026-10-21
 
 ### Added
