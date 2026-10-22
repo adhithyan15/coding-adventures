@@ -2062,6 +2062,16 @@ pub struct SwimlaneNode {
     pub id: String, pub label: DiagramLabel, pub lane_id: Option<String>, pub shape: DiagramShape,
     pub classes: Vec<String>, pub style: DiagramStyle,
 }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum SwimlaneIconForm { Square, Circle, Rounded }
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub enum SwimlaneLabelPosition { Top, #[default] Bottom }
+#[derive(Clone, Debug, PartialEq)]
+pub struct SwimlaneIconNode {
+    pub form: Option<SwimlaneIconForm>,
+    pub label_position: SwimlaneLabelPosition,
+    pub height: f64,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane {
     pub id: String, pub label: DiagramLabel, pub node_ids: Vec<String>, pub classes: Vec<String>, pub style: DiagramStyle,
@@ -2138,6 +2148,7 @@ pub struct SwimlaneDiagram {
     pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
     pub icons: BTreeMap<String, String>,
+    pub icon_nodes: BTreeMap<String, SwimlaneIconNode>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane {
@@ -2176,6 +2187,7 @@ pub struct LayoutedSwimlaneDiagram {
     pub flowchart_config: SwimlaneFlowchartConfig,
     pub theme: SwimlaneTheme,
     pub icons: BTreeMap<String, String>,
+    pub icon_nodes: BTreeMap<String, SwimlaneIconNode>,
     pub icon_glyphs: BTreeMap<String, DiagramIconGlyph>,
 }
 
