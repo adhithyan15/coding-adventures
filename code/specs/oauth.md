@@ -848,6 +848,17 @@ the missing IMPLICIT-constructed traversal primitive required by the
 `permittedSubtrees [0]` and `excludedSubtrees [1]` NameConstraints fields; it
 does not recognize either field, decode GeneralSubtree, apply a constraint, or
 grant certificate-path, trust, TLS, HTTP, OAuth, or network authority.
+A bounded repository-owned NameConstraints structural decoder now consumes the
+out-of-band SEQUENCE contents carried by reviewed trust anchors. Its first
+fail-closed subset accepts one `permittedSubtrees [0]` field containing one or
+more dNSName GeneralSubtree sequences with absent distance fields, retaining
+the non-empty ASCII subtree strings in fixed capacity and wire order. The
+decoder is data-driven and covers the reviewed `.tr` constraint without
+hard-coding that suffix. It does not validate DNS syntax, support excluded or
+non-DNS subtrees, evaluate a certificate name, bind the parsed bytes back to
+selected-anchor evidence, construct or validate a path, grant trust, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
