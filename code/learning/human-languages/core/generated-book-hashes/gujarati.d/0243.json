@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:19639ede38bf3ccb",
+  "lessonIds": [
+    "GU-C243-path",
+    "GU-C243-gokhvu",
+    "GU-C243-copdi",
+    "GU-C243-daphtar",
+    "GU-C243-hajar"
+  ],
+  "tex": "gujarati/book/chapters/ch243-lessons-and-school-bags.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C182-payoff",
+  "pathSegment": "PA-PATH-182-A2-WEEKDAY-SCHEDULE",
+  "pathOrder": 9,
+  "extensions": [
+    {
+      "id": "PA-EXT-182-A2-WEEKDAY-SCHEDULE",
+      "order": 9
+    }
+  ]
+}

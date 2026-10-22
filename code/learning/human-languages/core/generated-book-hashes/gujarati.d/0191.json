@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 191,
+  "sourceHash": "fnv1a64:45e7a94b5add5381",
+  "lessonIds": [
+    "GU-C191-dhirvu",
+    "GU-C191-vyaj",
+    "GU-C191-bacat",
+    "GU-C191-napho",
+    "GU-C191-khot"
+  ],
+  "tex": "gujarati/book/chapters/ch191-lending-at-interest.tex"
+}

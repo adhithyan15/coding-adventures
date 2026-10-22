@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 200,
+  "sourceHash": "fnv1a64:7be74005b443a9fe",
+  "lessonIds": [
+    "JA-C200-norikaeru",
+    "JA-C200-deru",
+    "JA-C200-tetsudou",
+    "JA-C200-noriba",
+    "JA-C200-teiryuujo"
+  ],
+  "tex": "japanese/book/chapters/ch200-changing-trains-and-waiting-for-buses.tex"
+}

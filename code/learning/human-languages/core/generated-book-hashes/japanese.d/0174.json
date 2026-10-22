@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:706b3637f8d66932",
+  "lessonIds": [
+    "JA-C174-nabe",
+    "JA-C174-houchou",
+    "JA-C174-kizamu",
+    "JA-C174-osara",
+    "JA-C174-moru"
+  ],
+  "tex": "japanese/book/chapters/ch174-pots-knives-and-plates.tex"
+}

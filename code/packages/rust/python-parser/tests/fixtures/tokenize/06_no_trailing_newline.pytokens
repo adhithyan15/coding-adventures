@@ -1,0 +1,6 @@
+NAME	1	1	print
+LPAREN	1	6	(
+INT	1	7	1
+RPAREN	1	8	)
+NEWLINE
+EOF

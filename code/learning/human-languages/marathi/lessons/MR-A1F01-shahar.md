@@ -16,13 +16,13 @@ prerequisites: [MR-A1F01-naav, MR-C05-rahne]
 sounds: []
 roots: []
 duration:
-  max_seconds: 150
+  max_seconds: 165
 requires:
   knowledge: [MR-A1-FORM-LABEL-NAAV]
 introduces:
   knowledge: [MR-A1-FORM-LABEL-SHAHAR]
 practises:
-  knowledge: [MR-A1-FORM-LABEL-SHAHAR]
+  knowledge: [MR-A1-FORM-LABEL-NAAV, MR-A1-FORM-LABEL-SHAHAR]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,11 @@ reviews_of: [MR-A1F01-naav, MR-C05-rahne]
 # शहर — the city box
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[MR-A1-FORM-LABEL-SHAHAR]; assesses=[] -->
+<!-- hl-knowledge: introduces=[MR-A1-FORM-LABEL-SHAHAR]; assesses=[MR-A1-FORM-LABEL-NAAV] -->
+
+Before looking back, cover the title and recall the form label that asks for a
+person's name. Write only that label, then check the previous page. This is a
+quick memory check, not another form to fill.
 
 The known sentence **मी पुण्यात राहतो / राहते** put the practice person in
 Pune. A short form asks for that place with **शहर** — “city.”

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C172-narangi",
+  "pathSegment": "GU-PATH-172-STALE172",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-172-STALE172",
+      "order": 3
+    }
+  ]
+}

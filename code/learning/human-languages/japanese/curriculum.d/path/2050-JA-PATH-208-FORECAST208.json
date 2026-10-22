@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-208-FORECAST208",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "JA-EXT-208-FORECAST208"
+  ],
+  "after": []
+}

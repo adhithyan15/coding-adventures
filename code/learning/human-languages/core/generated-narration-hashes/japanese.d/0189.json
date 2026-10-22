@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:3c88834204ea3683",
+  "lessonIds": [
+    "JA-C189-hakaru",
+    "JA-C189-todokeru",
+    "JA-C189-uketoru",
+    "JA-C189-watasu",
+    "JA-C189-omiyage",
+    "JA-R189-review-184-189"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch189.txt",
+  "json": "japanese/narration/ch189.json",
+  "textHash": "fnv1a64:67d307855396018c",
+  "jsonHash": "fnv1a64:c086cfbdd33a8959",
+  "findings": []
+}

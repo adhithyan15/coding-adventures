@@ -1968,6 +1968,55 @@ fn swimlane_cloud_and_bang_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_icon_identities_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  parser@{ icon: \"logos:rust\", label: \"Parser\" }\n  output[Output]\nend\nparser --> output",
+    ).expect("Swimlane icon identities should parse");
+
+    assert_eq!(diagram.nodes[0].label, "Parser");
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::RoundedRect);
+    assert_eq!(diagram.icons.get("parser").map(String::as_str), Some("logos:rust"));
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: \"\" }\nend").is_err());
+}
+
+#[test]
+fn swimlane_icon_node_options_reach_semantic_ir() {
+    use diagram_ir::{SwimlaneIconForm, SwimlaneLabelPosition};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  plain@{ icon: \"logos:rust\" }\n  user@{ icon: \"fa:user\", form: circle, label: \"User\", pos: t, h: 60 }\nend",
+    ).expect("Swimlane icon node options should parse");
+
+    assert_eq!(diagram.nodes[0].label.text, "");
+    assert_eq!(diagram.icon_nodes["plain"].form, None);
+    assert_eq!(diagram.icon_nodes["plain"].height, 48.0);
+    assert_eq!(diagram.icon_nodes["user"].form, Some(SwimlaneIconForm::Circle));
+    assert_eq!(diagram.icon_nodes["user"].label_position, SwimlaneLabelPosition::Top);
+    assert_eq!(diagram.icon_nodes["user"].height, 60.0);
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, form: hexagon }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, pos: left }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ icon: x, h: nope }\nend").is_err());
+}
+
+#[test]
+fn swimlane_image_node_options_reach_semantic_ir() {
+    use diagram_ir::SwimlaneLabelPosition;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  logo@{ img: \"https://example.com/logo.png\", label: \"Logo\", pos: t, w: 96, h: 64, constraint: on }\nend",
+    ).expect("Swimlane image node options should parse");
+
+    let image = &diagram.image_nodes["logo"];
+    assert_eq!(image.source, "https://example.com/logo.png");
+    assert_eq!((image.width, image.height), (Some(96.0), Some(64.0)));
+    assert!(image.preserve_aspect_ratio);
+    assert_eq!(image.label_position, SwimlaneLabelPosition::Top);
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, constraint: maybe }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, w: 0 }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ img: x, icon: y }\nend").is_err());
+}
+
+#[test]
 fn swimlane_classic_shape_attributes_and_aliases_reach_semantic_ir() {
     use diagram_ir::DiagramShape;
 
@@ -2671,14 +2720,36 @@ fn swimlane_styled_endpoint_markers_lower_to_semantic_ir() {
 }
 
 #[test]
+fn swimlane_long_endpoint_markers_preserve_minimum_lengths() {
+    use diagram_ir::{EdgeMarker, SwimlaneEdgeKind};
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na o----> b\nb x-----o c\nc <====> d\nd o=====x e\ne <-...-> f\nf x-....-o g",
+    ).expect("long endpoint-marked links should parse");
+
+    assert_eq!(diagram.edges.iter().map(|edge| edge.min_length).collect::<Vec<_>>(),
+        vec![3, 4, 3, 4, 3, 4]);
+    assert_eq!(diagram.edges.iter().map(|edge| edge.kind).collect::<Vec<_>>(), vec![
+        SwimlaneEdgeKind::Directed, SwimlaneEdgeKind::Undirected,
+        SwimlaneEdgeKind::Thick, SwimlaneEdgeKind::Thick,
+        SwimlaneEdgeKind::Dotted, SwimlaneEdgeKind::Dotted,
+    ]);
+    assert_eq!((diagram.edges[0].start_marker, diagram.edges[0].end_marker),
+        (EdgeMarker::Circle, EdgeMarker::Point));
+    assert_eq!((diagram.edges[5].start_marker, diagram.edges[5].end_marker),
+        (EdgeMarker::Cross, EdgeMarker::Circle));
+}
+
+#[test]
 fn swimlane_minimum_link_lengths_lower_to_semantic_ir() {
     let diagram = parse_swimlane(
-        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g",
+        "swimlane-beta LR\nsubgraph Review\n  a[A]\n  b[B]\n  c[C]\n  d[D]\n  e[E]\n  f[F]\n  g[G]\nend\na ---> b ---- c ===> d ==== e -..-> f -..- g\na ----> b ----- c ====> d ===== e -...-> f -...- g\na -----> b ------ c =====> d ====== e -....-> f -....- g",
     ).expect("minimum-length Flowchart links should parse");
 
-    assert_eq!(diagram.edges.len(), 12);
+    assert_eq!(diagram.edges.len(), 18);
     assert!(diagram.edges[..6].iter().all(|edge| edge.min_length == 2));
-    assert!(diagram.edges[6..].iter().all(|edge| edge.min_length == 3));
+    assert!(diagram.edges[6..12].iter().all(|edge| edge.min_length == 3));
+    assert!(diagram.edges[12..].iter().all(|edge| edge.min_length == 4));
     assert_eq!(diagram.edges[0].kind, diagram_ir::SwimlaneEdgeKind::Directed);
     assert_eq!(diagram.edges[2].kind, diagram_ir::SwimlaneEdgeKind::Thick);
     assert_eq!(diagram.edges[4].kind, diagram_ir::SwimlaneEdgeKind::Dotted);

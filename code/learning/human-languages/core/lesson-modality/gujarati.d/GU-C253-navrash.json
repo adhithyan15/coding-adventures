@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C253-navrash",
+    "language": "gujarati",
+    "chapter": 253,
+    "sequence": 13720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f4c56e176ff0ab6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R171-review-170-171",
+    "language": "japanese",
+    "chapter": 171,
+    "sequence": 10140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be11155f7637b01d"
+  },
+  "findings": []
+}

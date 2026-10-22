@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Resting on the way",
+  "label": "ch:gu-resting-on-the-way",
+  "canDo": "I can say where travellers rested and who guided them.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-R212-review-final-212",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say where travellers rested and who guided them.",
+    "assesses": [
+      "GU-LEX-C212-REST212-03",
+      "GU-LEX-C212-REST212-04",
+      "GU-LEX-C212-REST212-05"
+    ]
+  }
+}

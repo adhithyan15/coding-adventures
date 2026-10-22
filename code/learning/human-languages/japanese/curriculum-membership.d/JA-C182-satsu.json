@@ -1,0 +1,11 @@
+{
+  "id": "JA-C182-satsu",
+  "pathSegment": "JA-PATH-182-PAY182",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-182-PAY182",
+      "order": 3
+    }
+  ]
+}

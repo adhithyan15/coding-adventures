@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C191-ichiba",
+    "language": "japanese",
+    "chapter": 191,
+    "sequence": 11390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aaefbd2d60d44ed1"
+  },
+  "findings": []
+}

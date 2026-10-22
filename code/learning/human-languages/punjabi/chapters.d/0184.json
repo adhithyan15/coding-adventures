@@ -1,0 +1,22 @@
+{
+  "chapter": 184,
+  "title": "Next Week, Last Week",
+  "label": "ch:pa-a2-nearby-time",
+  "canDo": "I can recognise and use five exact forms for nearby weeks, months, and next or last references.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C184-payoff",
+    "kind": "production",
+    "summary": "Retrieve five exact nearby-time and reference forms through listening, speaking, reading, and bounded copying after a slow review-led ramp.",
+    "assesses": [
+      "PA-FORM-HAFTE-184",
+      "PA-FORM-MAHINE-184",
+      "PA-FORM-AGLI-184",
+      "PA-FORM-AGLE-184",
+      "PA-FORM-PICHHLE-184"
+    ],
+    "note": "This seventh Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C184-retsu",
+  "pathSegment": "JA-PATH-184-GOODS184",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-184-GOODS184",
+      "order": 1
+    }
+  ]
+}

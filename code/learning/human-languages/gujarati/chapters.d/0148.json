@@ -1,0 +1,22 @@
+{
+  "chapter": 148,
+  "title": "What I did",
+  "label": "ch:gu-what-i-did",
+  "canDo": "I can say what I or someone else did, such as drank, ate, took, gave, wrote or said, with the past whose verb agrees with the object.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C148-did-practice",
+    "kind": "task",
+    "summary": "Tell five past events side by side and say what each verb agrees with, then move one event to another doer.",
+    "assesses": [
+      "GU-GRAMMAR-C148-ERGATIVE-01",
+      "GU-GRAMMAR-C148-OBJECT-AGREE-01",
+      "GU-GRAMMAR-C148-ERG-SG-01",
+      "GU-GRAMMAR-C148-ERG-PL-01",
+      "GU-GRAMMAR-C148-YUN-01",
+      "GU-GRAMMAR-C148-DHUN-01"
+    ]
+  }
+}

@@ -115,6 +115,9 @@ pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &[
     "input_str",
     // LANG83 PR1b: `io:format("~w", [X])` — `print_i64` without the newline.
     "write_i64",
+    // LANG83 PR6a: the module-local '__iir_write_f64'/2 (float_to_list
+    // [short] digits, Python / JavaScript layout).
+    "write_f64_py", "write_f64_js",
 ];
 
 const UNSUPPORTED_OPS: &[&str] = &[
@@ -192,6 +195,7 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///     language: "test".into(),
 ///     exports: vec![],
 ///     imports: vec![],
+///     release: None,
 /// };
 /// assert!(validate_for_beam(&module).is_empty());
 /// ```
@@ -703,6 +707,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         }
     }
 
@@ -715,6 +720,7 @@ mod tests {
             language: "test".into(),
             exports: vec![],
             imports: vec![],
+            release: None,
         };
         let errs = validate_for_beam(&module);
         assert!(!errs.is_empty(), "should reject empty module");

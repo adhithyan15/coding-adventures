@@ -19,6 +19,74 @@ explicitly partial token and grammar pairs. Historical archives provide
 the source for each candidate; the shared parser probes validate only the
 bounded decimal `print` arithmetic subset.
 
+## LANG84 schema (phase 2b)
+
+Since LANG84 phase 2b, `releases.csv` has the common LANG84 header
+(`release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_stage,grammar_subset,iir_status,backend_status,profile`)
+followed by two Perl columns, `perlhist_line` (the LANG82 column, unchanged)
+and `lineage`. `python3 code/scripts/release_inventory.py check --matrix`
+validates it in CI. The migration was mechanical. It changed no release ID and
+no `grammar_status`, and it filled the new columns as follows:
+
+- **`date`**: perlhist's `1987-Dec-18` becomes ISO `1987-12-18`. An unknown day
+  (`1991-Jan-??`) becomes `1991-01`, and an unknown month (`1993-???-??`)
+  becomes `1993`. perlhist's own `?` (5.000gamma and 5.000o) is kept as a
+  suffix.
+- **Row order** is chronological. Rows are sorted by date, and rows with the
+  same date keep their perlhist order. A reduced-precision date stays where
+  perlhist lists it when that position falls inside its period. For example,
+  `5.000alpha4 1993` stays after alpha3 (1993-10-10) and is not moved to the
+  start of 1993. The checker accepts a row if some day inside its period keeps
+  the dates non-decreasing. 164 of the 776 rows moved, mostly where
+  maintenance tracks interleave (5.004_04 trials among 5.004_5x development
+  releases, and 1.0.15 and 1.0_16 among the 2002 and 2003 releases).
+- **`channel`** is derived from the release ID, using perlhist's own track
+  notes ("The 5.004 maintenance track", "The 5.005 development track"):
+  - `-RCn` and `p54rcN` are `rc`.
+  - `-TRIALn`, `-tN`, `-TN`, `-mN`, `-MTn`, `-foolish`, and the 5.004/5.005
+    sub-patches such as `5.004_01_01` are `trial`.
+  - 5.000/5.002 `alphaN`/`aNx` are `alpha`, and `betaN`/`bN[x]` are `beta`.
+  - `gamma` and `delta` have no LANG84 channel of their own and are `preview`.
+  - The 5.000/5.001 letter patches (`5.001a`..`5.001n`) and the Perl 1–4
+    patch levels (`1.001`..`4.036`) are `patch`.
+  - `5.004_01`..`5.004_49` and `5.005_01`..`5.005_49` are maintenance
+    releases, so they are `patch`.
+  - Every other `5.00X_YY` (5.002_01, 5.003_xx, 5.004_5x+, 5.005_5x+,
+    `5.5.6x0`) is `dev`, as is `1.0_16`.
+  - `5.N.M` is `dev` for odd N and `final` for even N. 5.000 through 5.005,
+    `N.000`, and 1.0.15 are `final`.
+- **`source_ref` / `source_sha`**: when a `Perl/perl5` tag names the release
+  (`v<release>`, `perl-<release>`, or one of five spellings that the pair
+  headers already cite: `perl-1.0`, `perl-1.0.16`, `perl-2.0`, `perl-4.0.00`
+  and `perl-4.0.36`), the cell is the tag URL and the commit the tag names
+  (`git ls-remote --tags`, 2026-10-20). There are 493 such rows. Every other
+  row cites its `perlhist.pod` line at commit
+  `d97e2dc0ca5fcae83ac557cf21372672cd497510`, the commit that introduced the
+  pinned blob `2a0c30fc6f1b3e48af6b408cf02cb20e62fe3855`, and that commit is
+  its `source_sha`.
+- **`predecessor` / `lineage`**: every release is assigned to a line by its
+  ID: Perl 1, 2, 3, 4; 5.000 through 5.005; the 5.00X development tracks
+  (`5.00X_5x` and up, all of 5.002_01 and 5.003_xx, `5.5.6x0`); and `5.N`.
+  The predecessor is the previous row on the same line (`line`). The first
+  row of a line takes the latest earlier row of the nearest lower line
+  (`branch-point`). For example, 5.005 follows 5.004_76, 5.6.0-RC1 follows
+  the last 5.5.6x0, and 5.38.0-RC1 follows 5.37.11. Ruby's and Python's
+  lineage is checked against git ancestry, but this lineage comes from the
+  release IDs. `release_evidence.py` (LANG84 phase 2c) is expected to confirm
+  it.
+- **Status columns**: `partial` rows become `grammar_stage=P` with
+  `grammar_subset=pl-decimal-print`, and `pending` rows become `none` and `-`.
+  `iir_status`, `backend_status` and `profile` are `-` everywhere. Stage
+  I(`pl-int-print`) needs the corpus under `corpus/pl-int-print/` and the
+  `release_subsets` test, which arrive in phase 4c.
+
+`subsets.csv` declares the subsets the CSV may name:
+
+| Subset | Meaning | Spec |
+| --- | --- | --- |
+| `pl-decimal-print` | The bounded plain-decimal arithmetic `print` subset that every partial pair parses | LANG82 |
+| `pl-int-print` | LANG81's integer `print` subset, lowered to IIR and run on the LANG83 backends | LANG81 |
+
 The user requested a **separate `.tokens` and `.grammar` file for every
 release**, including maintenance and development versions. The filenames are
 `perl<V>.tokens` and `perl<V>.grammar`, with `<V>` from the `release` column.
@@ -462,6 +530,21 @@ Current pairs:
   Its `perly.y` matches 5.004_01_02; `toke.c` changes debugger line
   hooks outside this plain-decimal `print` subset. It retains the tested
   250-digit decimal bound and claims no full-release syntax coverage.
+- `perl5.38.0.*` is a distinct **partial** pair checked against its own
+  [`v5.38.0` source tag] (tag object `f47267bec592…`, commit
+  `76298ae68aa7…`; full IDs in the pair headers). It is the Perl frontend's
+  `DEFAULT_RELEASE` since LANG84 phase 4b. Its rules come from that tag's
+  own blobs: `keywords.h` `KEY_print`, `toke.c`'s `LOP(OP_PRINT)` and
+  `yyl_hyphen` (adjacent `--` is a decrement token, refused), `perly.y`'s
+  `FUNC ( optexpr )`, `ADDOP`, `MULOP` and `%prec UMINUS` rules, and
+  `scan_num`'s decimal path, which copies into `parser.h`'s 256-byte
+  `tokenbuf` with six bytes reserved and so croaks `Number too long` on the
+  251st digit. A carriage return is whitespace because `PERL_STRICT_CR` is
+  unset by default; form feed and vertical tab are whitespace upstream but
+  outside this subset. The token and grammar rules equal 5.004_72's, so
+  the compiled tables share one class. Retrieved 2026-10-20: the
+  `perly.y`, `toke.c` and `keywords.h` blobs of `v5.38.0` and `v5.38.2`
+  are identical (and `perly.y`/`keywords.h` match `v5.37.11`).
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -589,4 +672,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz
 [historical 5.004_01_02 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_02.tar.gz
 [historical 5.004_01_03 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_03.tar.gz
+[`v5.38.0` source tag]: https://github.com/Perl/perl5/tree/v5.38.0
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2

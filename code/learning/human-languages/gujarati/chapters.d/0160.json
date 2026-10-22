@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "Bedding, swing and light",
+  "label": "ch:gu-bedding-swing-and-light",
+  "canDo": "I can talk about making the bed and putting out the light.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C160-holavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: I can talk about making the bed and putting out the light.",
+    "assesses": [
+      "GU-LEX-C160-BED160-03",
+      "GU-LEX-C160-BED160-04",
+      "GU-LEX-C160-BED160-05"
+    ]
+  }
+}

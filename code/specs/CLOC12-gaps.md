@@ -1427,6 +1427,56 @@ after a `break` inside a loop is unreachable (`while (c) { break; y(); }` →
 inside switch-case consequents (`is_case_terminator`), so the loop-body `y()`
 survives. Placeholder: `drops_code_after_break_in_loop_block`.
 
+### CCR-087 (#15924) — WHITESPACE_ONLY unwraps a single-statement labeled block
+
+**Resolved (WHITESPACE_ONLY).** Upstream prints a label's body through
+`addNonEmptyStatement`. That drops the braces of a block holding one
+statement, prints an empty block as `;`, and keeps the braces when the one
+statement is a lexical or function declaration. gap-067 had unwrapped only
+bodies starting with `break`/`continue`/`return`/`throw`. It now also
+unwraps:
+
+- any single statement with no nested `{` whose first token isn't
+  `let`/`const`/`class`/`function`/`async`/`using`/`await`;
+- a label at the start of a function or control body (a `{` after `)`).
+
+Block facts (matching `}`, nested `{`, top-level `;`) come from one linear
+pass (`brace_facts`), so nested labels are never rescanned.
+
+Probes against the v20260915 jar at WHITESPACE_ONLY:
+
+| Input | Upstream | closurec now |
+|---|---|---|
+| `lbl:{a()}` | `lbl:a();` | same |
+| `lbl:{}` | `lbl:;` | `lbl:{};` (kept, see below) |
+| `lbl:{a();b()}` | `lbl:{a();b()};` | same |
+| `{a()}` | `{a()};` | same |
+| `lbl:{function g(){}}` | `lbl:{function g(){}};` | same |
+| `lbl:{let x=1}` / `const` / `class` / `async function` | braces kept | same |
+| `lbl:{var x=1}` | `lbl:var x=1;` | same |
+| `lbl:{if(a())break lbl}` | `lbl:if(a())break lbl;` | same |
+
+A `break lbl` inside the body is unaffected: the label still names the
+unwrapped statement.
+
+**Still open:**
+
+- **Empty bodies.** Upstream prints `l:{}` as `l:;`. closurec keeps the
+  braces, because that `;` is the label's whole statement and three later
+  passes drop a `;` before `}`: gap-030 Rule A, the gap-074/079 body
+  flatten, and gap-032. `if(x){l:{}}` would end as `if(x)l:}`, which the
+  security review found. Matching upstream needs one "this `;` is a
+  statement" marker that every `;`-dropping pass honours.
+- **Nested braces and stacked labels.** Upstream also unwraps bodies with a
+  nested `{`, such as `lbl:{a=function(){}}`, `lbl:{{a()}}` and
+  `a:b:{c()}`. From tokens alone closurec can't tell an object literal from
+  a block there, so it keeps the braces. The output is valid, only larger.
+  `tests/regression_ws_label_block.rs` lists these under `KEPT`.
+- **SIMPLE/ADVANCED.** Upstream removes a label nothing breaks to
+  (`lbl:{a()}` → `a();` at SIMPLE) and unwraps the bare block. closurec
+  keeps both (`lbl:{a()};`). That belongs to an AST pass, not to this
+  token-level printer.
+
 ### #17842 — the switch collapse retargeted a nested `break`
 
 **Resolved (soundness).** The gap-014 constant-switch collapse now declines
@@ -1450,6 +1500,56 @@ deleted:
 `tail_is_safe_to_truncate`. The `let`/`const` case also needs DCE to keep
 such tails, which is the CCR-082 review fix.
 
+### #17877 — a `function`/`class` declaration in a block parsed as an expression
+
+**Resolved (soundness).** The ECMAScript grammars gave `block`,
+`case_clause` and `default_clause` only `{ statement }`. The declaration
+alternatives were in `source_element`, which only `program` and
+`function_body` use. Inside a block, `function g(){}` and `class C{}`
+matched `expression_statement`. The output re-emitted them as
+`(function g(){})` and `(class C{})`, which bind nothing, so any later use
+threw `ReferenceError`. Without a newline after the declaration
+(`{function g(){} g()}`), the parse failed instead.
+
+ES2015–ES2025 now give the three rules an inline group: the declarations
+that version's `source_element` lists, minus `import`/`export`, followed by
+`statement`. That is ECMA-262's StatementListItem. The group is inlined, so
+a block that holds only statements has the same CST as before. The bridge's
+`convert_statement_list_item` lowers a function or class declaration to
+`Statement::Declaration`, the node a function body already holds. ES1, ES3
+and ES5 are unchanged: block-level function declarations were not standard
+before ES2015.
+
+**Redeclaration early errors (added).** Blocks that hold declarations need
+§14.2.1's early errors, or programs every engine rejects would parse.
+`javascript_parser::early_errors` rejects duplicate lexical names in a block
+or case block, apart from Annex B's sloppy duplicate plain functions, and a
+lexical name that is also `var`-declared there. test262 shows 165 new passes
+and none lost. Function-body and program-level redeclarations are not
+checked yet.
+
+**Still open:**
+
+- **Annex B.** In sloppy mode, a block-level function is also assigned to a
+  `var` of the same name in the enclosing function when the block runs.
+  closurec now keeps the source's behaviour. Upstream treats the function as
+  strictly block-scoped: for `function f(){ {function g(){}} return typeof g }`
+  it returns `"undefined"` where `node` returns `"function"`, and at ADVANCED
+  it reports `JSC_UNDEFINED_VARIABLE` for a later `g()`. Matching that is a
+  parity decision; it is not taken here.
+- **Switch cases (#17879).** DCE's case truncation and constant-switch
+  collapse drop declarations that the whole switch body can see. For `var`
+  this already happens on main. With this fix, a `function`/`class` in a case
+  is a real declaration and reaches the same bug.
+- **Size.** Upstream inlines or unwraps these functions and blocks, for
+  example `if(true){function g(){return 7}g()}` becomes `function(){return
+  7}()` at SIMPLE and `7` at ADVANCED. closurec keeps the block.
+- **TypeScript grammars.** `code/grammars/typescript` has the same `block`
+  rule. closurec doesn't use it.
+- **Other languages' compiled grammars.** Rust (`javascript-parser`) and Ruby
+  (`javascript_parser`, which CI checks for drift) are regenerated. The Lua
+  `_grammar_es*.lua` files are not checked by CI and need a separate refresh.
+
 ### #17879 — DCE dropped declarations a switch body shares
 
 **Resolved (soundness).** A switch body is one scope: a `var` in any case is
@@ -1462,6 +1562,42 @@ drop.
 **Still open (size):** upstream folds these further. For example,
 `switch(2){case 1: var x=1; break; case 2: return typeof x}` becomes
 `return"undefined"`. closurec keeps the switch.
+
+### #17886 / #17888 / #17887 — token patterns that ran past the token's end
+
+**Resolved (soundness).** In every ES `.tokens` file:
+
+| Token | Was | Problem | Now |
+|---|---|---|---|
+| templates (HEAD, NO_SUB, MIDDLE, TAIL) | `([^`\\$]\|\\.\|\$[^{])*` | `\$[^{]` ate `$` plus the backtick, so `` `$` `` didn't end | `([^`\\$]\|\\.\|\$+([^{`\\$]\|\\.))*\$*` |
+| `BLOCK_COMMENT` | `\/\*([^*]\|\*[^\/])*\*\/` | ate the `*` of `*/`, so `/***/` wasn't a comment | `\/\*[^*]*\*+([^\/*][^*]*\*+)*\/` |
+| `LINE_COMMENT`, `HASHBANG` | `[^\n]*` | ran past `\r` | `[^\n\r]*` |
+| `REGEX` body | `[^\/\\\n]\|\\.` | could hold `\r` | `[^\/\\\n\r]\|\\[^\n\r]` |
+
+Each mismatch let comment or string text be lexed as code, or swallowed
+code. At SIMPLE, `` var x = `$` // `; f() `` ran `f()`.
+
+**Still open:**
+
+- U+2028 and U+2029 also end lines. They are not in these patterns, because
+  every language's lexer reads the shared `.tokens` files and their regex
+  engines disagree on those escapes. A raw U+2028 or U+2029 in a regex is
+  handled by the javascript-lexer refusal check (#17875 follow-up).
+- A regex vs. division after `}` (#17886 review) is a lexer-mode problem,
+  not a pattern problem.
+- **Copies still on the old patterns.** CI doesn't check these for drift, so
+  they keep the old exploitable patterns until regenerated:
+  - the TypeScript and Go compiled JavaScript grammars;
+  - the Perl JavaScript lexer's `_Grammar_es20*.pm`;
+  - every TypeScript lexer: `code/grammars/typescript/ts*.tokens` and their
+    Rust, Perl, TypeScript and Go compiled copies.
+
+  closurec uses only the Rust javascript-lexer.
+- **Line continuation.** A `$` directly before a template line continuation
+  (`` `$\⏎` ``) no longer lexes. The new `$` alternative uses `\\.`, and `.`
+  doesn't match a newline. This fails closed, as `` `a\⏎` `` already did.
+  The fix is `\\[\s\S]` in the template bodies, once the Lua pattern
+  converter is confirmed to accept it.
 
 ## CLOC12.149 — `FunctionExpression` (function in value position)
 

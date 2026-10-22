@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:2fa1310661a50f50",
+  "lessonIds": [
+    "GU-C153-ordo",
+    "GU-C153-rasodu",
+    "GU-C153-agasi",
+    "GU-C153-osri",
+    "GU-C153-dadar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch153.txt",
+  "json": "gujarati/narration/ch153.json",
+  "textHash": "fnv1a64:36c39a33a299ee11",
+  "jsonHash": "fnv1a64:215cbf64ba0fc649",
+  "findings": []
+}

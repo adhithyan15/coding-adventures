@@ -1,0 +1,11 @@
+{
+  "id": "JA-C230-kouhai",
+  "pathSegment": "JA-PATH-230-BOSS230",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-230-BOSS230",
+      "order": 3
+    }
+  ]
+}

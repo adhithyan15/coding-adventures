@@ -12,9 +12,12 @@
 #   top_stmts : none | top_stmt | top_stmts terms top_stmt ;  terms : term | terms ';'
 #   paren_args: '(' opt_call_args rparen ;  rparen : opt_nl ')'
 #   command   : operation command_args          (`puts 1 + 2`)
-#   arg       : arg '+' arg | arg '-' arg | arg '*' arg | arg '/' arg
+#   arg       : arg '+' arg | arg '-' arg | arg '*' arg | arg '/' arg | arg '%' arg
 #             | tUMINUS arg | tUMINUS_NUM simple_numeric | primary
 #   primary   : tLPAREN compstmt ')' | literal | method_call
+#
+# `%` binds like `*` and `/` (`%left '*' '/' '%'` at parse.y line 2185;
+# `arg '%' arg` at line 3396). LANG84 phase 5 added it to rb-int-puts.
 #
 # The lexer ignores a newline in EXPR_BEG (after an operator, `(`, `,`, `;`
 # or another newline), so NEWLINE is accepted in exactly those places, plus
@@ -49,6 +52,6 @@ logical_not = comparison ;
 comparison  = shift ;
 shift       = sum ;
 sum         = term { ( PLUS | MINUS ) { NEWLINE } term } ;
-term        = factor { ( STAR | SLASH ) { NEWLINE } factor } ;
+term        = factor { ( STAR | SLASH | PERCENT ) { NEWLINE } factor } ;
 factor      = NUMBER | LPAREN { NEWLINE } expression { NEWLINE } RPAREN | unary_minus ;
 unary_minus = MINUS { NEWLINE } factor ;

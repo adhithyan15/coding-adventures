@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C251-dhyan-apvu",
+    "language": "gujarati",
+    "chapter": 251,
+    "sequence": 13640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35b2f00027d6f219"
+  },
+  "findings": []
+}

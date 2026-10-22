@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:58c911d503cc72b5",
+  "lessonIds": [
+    "GU-C271-namra",
+    "GU-C271-udar",
+    "GU-C271-svarthi",
+    "GU-C271-murkh",
+    "GU-C271-jiddi"
+  ],
+  "tex": "gujarati/book/chapters/ch271-polite-or-selfish.tex"
+}

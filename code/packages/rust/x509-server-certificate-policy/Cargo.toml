@@ -1,0 +1,12 @@
+[package]
+name = "x509-server-certificate-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Exact-certificate server identity, validity, purpose, role, and algorithm policy composition"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+tls-server-identity = { path = "../tls-server-identity" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-certificate = { path = "../x509-certificate" }
+x509-time = { path = "../x509-time" }

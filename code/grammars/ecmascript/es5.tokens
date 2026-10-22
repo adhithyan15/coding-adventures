@@ -58,7 +58,7 @@ STRING_SQ = /'([^'\\]|\\.)*'/ -> STRING
 
 # Regular expression literals: same as ES3 (g, i, m flags).
 
-REGEX = /\/([^\/\\\n]|\\.)+\/[gim]*/
+REGEX = /\/([^\/\\\n\r]|\\[^\n\r])+\/[gim]*/
 
 # ============================================================================
 # Multi-character operators
@@ -189,8 +189,8 @@ reserved:
 
 skip:
   WHITESPACE    = /[ \t\r\n\v\f]+/
-  LINE_COMMENT  = /\/\/[^\n]*/
-  BLOCK_COMMENT = /\/\*([^*]|\*[^\/])*\*\//
+  LINE_COMMENT  = /\/\/[^\n\r]*/
+  BLOCK_COMMENT = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
 
 # ============================================================================
 # Error recovery tokens

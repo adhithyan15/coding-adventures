@@ -1,0 +1,11 @@
+{
+  "id": "GU-C169-dhaknu",
+  "pathSegment": "GU-PATH-169-DISH169",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-169-DISH169",
+      "order": 4
+    }
+  ]
+}

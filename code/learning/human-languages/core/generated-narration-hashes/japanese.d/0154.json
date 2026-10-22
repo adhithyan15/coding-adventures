@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:c7007cb21c573591",
+  "lessonIds": [
+    "JA-C154-fudan",
+    "JA-C154-kuse",
+    "JA-C154-nichijou",
+    "JA-C154-kurasu",
+    "JA-C154-nareru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch154.txt",
+  "json": "japanese/narration/ch154.json",
+  "textHash": "fnv1a64:0f37a63e576a75ae",
+  "jsonHash": "fnv1a64:666acf8363980890",
+  "findings": []
+}

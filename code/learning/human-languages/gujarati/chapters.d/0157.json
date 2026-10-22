@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Putting things in their place",
+  "label": "ch:gu-putting-things-in-their-place",
+  "canDo": "I can say where I put and hang things at home.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C157-chajli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: I can say where I put and hang things at home.",
+    "assesses": [
+      "GU-LEX-C157-PLACE157-03",
+      "GU-LEX-C157-PLACE157-04",
+      "GU-LEX-C157-PLACE157-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Sleeping Soundly and Waking Up",
+  "label": "ch:ja-sleeping-soundly-and-waking-up",
+  "canDo": "I can talk about how I sleep and wake up.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C146-suimin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: I can talk about how I sleep and wake up.",
+    "assesses": [
+      "JA-LEX-C146-SLEEP146-03",
+      "JA-LEX-C146-SLEEP146-04",
+      "JA-LEX-C146-SLEEP146-05"
+    ]
+  }
+}

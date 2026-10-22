@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C245-sabishii",
+    "language": "japanese",
+    "chapter": 245,
+    "sequence": 14690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b36f85db433986a5"
+  },
+  "findings": []
+}

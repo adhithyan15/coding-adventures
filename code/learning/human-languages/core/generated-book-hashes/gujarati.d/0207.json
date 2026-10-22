@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:41458abe495adb13",
+  "lessonIds": [
+    "GU-C207-gadi",
+    "GU-C207-teksi",
+    "GU-C207-draivar",
+    "GU-C207-petrol",
+    "GU-C207-bhade-levu"
+  ],
+  "tex": "gujarati/book/chapters/ch207-taking-a-taxi.tex"
+}

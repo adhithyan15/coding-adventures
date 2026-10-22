@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:77afd7f757490c7b",
+  "lessonIds": [
+    "GU-C190-khatu",
+    "GU-C190-jama-karvu",
+    "GU-C190-cek",
+    "GU-C190-vatavvu",
+    "GU-C190-udhar-levu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch190.txt",
+  "json": "gujarati/narration/ch190.json",
+  "textHash": "fnv1a64:138f267676f2be38",
+  "jsonHash": "fnv1a64:591901d4ffb4b1b4",
+  "findings": []
+}

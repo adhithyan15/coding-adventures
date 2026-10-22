@@ -1,0 +1,11 @@
+{
+  "id": "JA-C175-mazeru",
+  "pathSegment": "JA-PATH-175-COOK175",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-175-COOK175",
+      "order": 2
+    }
+  ]
+}

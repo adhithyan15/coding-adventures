@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Keys, Windows and Lights",
+  "label": "ch:ja-keys-windows-and-lights",
+  "canDo": "I can talk about locking up, opening windows and switching off lights.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "JA-C158-kurai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: I can talk about locking up, opening windows and switching off lights.",
+    "assesses": [
+      "JA-LEX-C158-LIGHTS158-03",
+      "JA-LEX-C158-LIGHTS158-04",
+      "JA-LEX-C158-LIGHTS158-05"
+    ]
+  }
+}

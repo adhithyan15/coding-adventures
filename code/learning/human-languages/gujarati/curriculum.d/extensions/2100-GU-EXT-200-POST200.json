@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-200-POST200",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can post a parcel and register a letter.",
+  "prerequisites": []
+}

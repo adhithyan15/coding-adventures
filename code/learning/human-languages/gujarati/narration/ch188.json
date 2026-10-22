@@ -1,0 +1,820 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 188,
+  "title": "Genuine goods and fakes",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5460eb81b1202c86",
+  "lessons": [
+    {
+      "id": "GU-C188-maphat",
+      "sequence": 10250,
+      "title": "મફત (maphat) — free of charge",
+      "headword": "મફત",
+      "romanization": "maphat",
+      "gloss": "free of charge",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d29bcd3fa24d67be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for per cent, then the Gujarati for discount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: મફત",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મફત — maphat — \"free of charge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અહીં પાણી મફત છે. — ahī̃ pāṇī maphat che — \"Water is free here.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મફત (maphat) is a loan, usually traced to Persian muft, \"free, gratis\". CDIAL has no entry for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maphat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maphat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maphat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maphat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahī̃ pāṇī maphat che — Water is free here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahī̃ pāṇī maphat che* — Water is free here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for per cent, then the Gujarati for discount, then say maphat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for per cent, then the Gujarati for discount, then say *maphat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does મફત (maphat) mean? (\"Free of charge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C188-nakli",
+      "sequence": 10260,
+      "title": "નકલી (naklī) — fake, counterfeit",
+      "headword": "નકલી",
+      "romanization": "naklī",
+      "gloss": "fake, counterfeit",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cdd825fb9c0b979d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for discount, then the Gujarati for free of charge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: નકલી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નકલી — naklī — \"fake, counterfeit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ નોટ નકલી છે. — ā noṭ naklī che — \"This note is fake.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "નકલી (naklī) is built on nakal, \"a copy\", a loan from Arabic naql, \"transfer, copying\", which reached Gujarati through Persian; the ending -ī makes the adjective. Its Arabic root is n-q-l (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naklī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naklī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naklī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naklī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā noṭ naklī che — This note is fake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā noṭ naklī che* — This note is fake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for discount, then the Gujarati for free of charge, then say naklī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for discount, then the Gujarati for free of charge, then say *naklī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does નકલી (naklī) mean? (\"Fake, counterfeit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C188-asli",
+      "sequence": 10270,
+      "title": "અસલી (aslī) — genuine, real",
+      "headword": "અસલી",
+      "romanization": "aslī",
+      "gloss": "genuine, real",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a3430e666ec4503",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for free of charge, then the Gujarati for fake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: અસલી",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અસલી — aslī — \"genuine, real\"."
+            },
+            {
+              "kind": "speech",
+              "text": "શું આ નોટ અસલી છે? — śũ ā noṭ aslī che? — \"Is this note genuine?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "અસલી (aslī) is built on asal, \"original\", a loan from Arabic aṣl, \"root, origin\", which reached Gujarati through Persian; the ending -ī makes the adjective. Its Arabic root is ʾ-ṣ-l (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aslī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aslī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aslī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aslī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śũ ā noṭ aslī che? — Is this note genuine?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śũ ā noṭ aslī che?* — Is this note genuine?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for free of charge, then the Gujarati for fake, then say aslī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for free of charge, then the Gujarati for fake, then say *aslī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does અસલી (aslī) mean? (\"Genuine, real\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C188-mal",
+      "sequence": 10280,
+      "title": "માલ (māl) — goods, stock",
+      "headword": "માલ",
+      "romanization": "māl",
+      "gloss": "goods, stock",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb95f56faaa9fa97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for fake, then the Gujarati for genuine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: માલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માલ — māl — \"goods, stock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાનમાં નવો માલ આવ્યો. — dukānmā̃ navo māl āvyo — \"New stock has come into the shop.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "માલ (māl) is a loan from Arabic māl, \"property, wealth, whatever one owns\", which reached Gujarati through Persian. Its Arabic root is m-w-l (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukānmā̃ navo māl āvyo — New stock has come into the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukānmā̃ navo māl āvyo* — New stock has come into the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for fake, then the Gujarati for genuine, then say māl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for fake, then the Gujarati for genuine, then say *māl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does માલ (māl) mean? (\"Goods, stock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C188-vastu",
+      "sequence": 10290,
+      "title": "વસ્તુ (vastu) — thing, item",
+      "headword": "વસ્તુ",
+      "romanization": "vastu",
+      "gloss": "thing, item",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1b3a85c09238f00",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for genuine, then the Gujarati for goods."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: વસ્તુ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વસ્તુ — vastu — \"thing, item\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આ દુકાનમાં દરેક વસ્તુ સસ્તી છે. — ā dukānmā̃ darek vastu sastī che — \"Everything in this shop is cheap.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "વસ્તુ (vastu) is Sanskrit vástu, \"existing thing; affair\", taken over whole as a learned loan, a tatsama (CDIAL 11449)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vastu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vastu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vastu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vastu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā dukānmā̃ darek vastu sastī che — Everything in this shop is cheap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā dukānmā̃ darek vastu sastī che* — Everything in this shop is cheap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for genuine, then the Gujarati for goods, then say vastu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for genuine, then the Gujarati for goods, then say *vastu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does વસ્તુ (vastu) mean? (\"Thing, item\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R188-review-183-188",
+      "sequence": 10300,
+      "title": "Shopping and prices: a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 183-188",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70099cea1514ed23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for customer and shopkeeper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "customer, shopkeeper, groceries, to weigh, kilo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: customer, shopkeeper, groceries, to weigh, kilo]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rate, to cost, weight, to measure, to ask for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rate, to cost, weight, to measure, to ask for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to haggle, deal, less, pair, to test",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to haggle, deal, less, pair, to test]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pay, cash, small change, banknote, receipt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pay, cash, small change, banknote, receipt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go up, to go down, more, per cent, discount",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go up, to go down, more, per cent, discount]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "free of charge, fake, genuine, goods, thing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: free of charge, fake, genuine, goods, thing]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Customer? (ગ્રાહક.) Shopkeeper? (દુકાનદાર.) Groceries? (કરિયાણું.) To weigh? (તોલવું.) Kilo? (કિલો.) Rate? (ભાવ.) To cost? (લાગવું.) Weight? (વજન.) To measure? (માપવું.) To ask for? (માગવું.) To haggle? (ભાવતાલ કરવો.) Deal? (સોદો.) Less? (ઓછું.) Pair? (જોડી.) To test? (પારખવું.) To pay? (ચૂકવવું.) Cash? (રોકડ.) Small change? (પરચૂરણ.) Banknote? (નોટ.) Receipt? (રસીદ.) To go up? (વધવું.) To go down? (ઘટવું.) More? (વધારે.) Per cent? (ટકો.) Discount? (છૂટ.) Free of charge? (મફત (maphat).) Fake? (નકલી (naklī).) Genuine? (અસલી (aslī).) Goods? (માલ (māl).) Thing? (વસ્તુ (vastu).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

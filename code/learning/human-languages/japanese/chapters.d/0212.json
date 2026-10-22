@@ -1,0 +1,19 @@
+{
+  "chapter": 212,
+  "title": "Cold Nights and Warm Afternoons",
+  "label": "ch:ja-cold-nights-and-warm-afternoons",
+  "canDo": "I can say how hot or cold it will get.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "JA-C212-tokeru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 212: I can say how hot or cold it will get.",
+    "assesses": [
+      "JA-LEX-C212-TEMP212-03",
+      "JA-LEX-C212-TEMP212-04",
+      "JA-LEX-C212-TEMP212-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C200-tapali",
+  "pathSegment": "GU-PATH-200-POST200",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-200-POST200",
+      "order": 0
+    }
+  ]
+}

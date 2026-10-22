@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C268-vadhvu-scold",
+    "language": "gujarati",
+    "chapter": 268,
+    "sequence": 14500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12375e14ac25511b"
+  },
+  "findings": []
+}

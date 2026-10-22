@@ -1,0 +1,19 @@
+{
+  "chapter": 252,
+  "title": "Duties and responsibility",
+  "label": "ch:gu-duties-and-responsibility",
+  "canDo": "I can talk about duty, responsibility and retiring from work.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C252-nivrtt-thavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can talk about duty, responsibility and retiring from work.",
+    "assesses": [
+      "GU-LEX-C252-DUTY252-03",
+      "GU-LEX-C252-DUTY252-04",
+      "GU-LEX-C252-DUTY252-05"
+    ]
+  }
+}

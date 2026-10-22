@@ -1,0 +1,19 @@
+{
+  "chapter": 205,
+  "title": "At the Ticket Window",
+  "label": "ch:ja-at-the-ticket-window",
+  "canDo": "I can buy a ticket and find the ticket gate.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "JA-C205-oufuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 205: I can buy a ticket and find the ticket gate.",
+    "assesses": [
+      "JA-LEX-C205-TICKET205-03",
+      "JA-LEX-C205-TICKET205-04",
+      "JA-LEX-C205-TICKET205-05"
+    ]
+  }
+}

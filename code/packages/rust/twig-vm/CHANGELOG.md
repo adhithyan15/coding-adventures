@@ -1,5 +1,11 @@
 # Changelog — twig-vm
 
+## Unreleased — LANG84 phase 4b — `IIRModule::release`
+
+- Every `IIRModule { .. }` struct literal (code, tests and doc examples)
+  names the new `release: None` field from interpreter-ir (LANG84 phase 4b). No
+  behaviour change: backends do not read the field.
+
 ## [0.25.0] — 2026-07-14 (E6d-6b — `box` opcode: identity on the VM)
 
 The dispatcher now handles the `box` opcode. E6d-6b made the Twig union

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C237-shashin",
+    "language": "japanese",
+    "chapter": 237,
+    "sequence": 14270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c470c7da92514cd5"
+  },
+  "findings": []
+}

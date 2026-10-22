@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C241-sasou",
+    "language": "japanese",
+    "chapter": 241,
+    "sequence": 14470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c886e731248b600c"
+  },
+  "findings": []
+}

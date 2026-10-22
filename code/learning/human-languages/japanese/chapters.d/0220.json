@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Weight and Staying Healthy",
+  "label": "ch:ja-weight-and-staying-healthy",
+  "canDo": "I can talk about health, weight and appetite.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-C220-shokuyoku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 220: I can talk about health, weight and appetite.",
+    "assesses": [
+      "JA-LEX-C220-WEIGHT220-03",
+      "JA-LEX-C220-WEIGHT220-04",
+      "JA-LEX-C220-WEIGHT220-05"
+    ]
+  }
+}

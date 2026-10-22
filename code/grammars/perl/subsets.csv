@@ -1,0 +1,3 @@
+subset,description,corpus_dir,spec
+pl-decimal-print,LANG82 bounded plain-decimal arithmetic print subset that every partial Perl pair parses,corpus/pl-decimal-print,LANG82
+pl-int-print,LANG81 integer print subset lowered to IIR and run on the LANG83 backends,corpus/pl-int-print,LANG81

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:6d88308bcca0384b",
+  "lessonIds": [
+    "JA-C176-shouyu",
+    "JA-C176-miso",
+    "JA-C176-waru",
+    "JA-C176-musu",
+    "JA-C176-itameru"
+  ],
+  "tex": "japanese/book/chapters/ch176-frying-steaming-and-seasoning.tex"
+}

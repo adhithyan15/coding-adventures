@@ -13,7 +13,7 @@
   "actions": {
     "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
     "setup_ocaml": "15d660006c1d3110d77c34b7faa3bddefe8b82f0",
-    "upload_artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a"
+    "upload_artifact": "cf430e030ddbb5b0abf93d22962f4752f3646cd9"
   },
   "opam_repository_commit": "ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff",
   "coverage_minimum_basis_points": 9500,
@@ -127,5 +127,5 @@
     "code/packages/ocaml/ca-capability-analyzer": "8f05989174e59c95d1b61eecaae0d97d2071a189c127e5039ce988d76af1b55f",
     "code/specs/fixtures/ocaml-representative-downstream-v1": "9fca51a47cacd9dc92f41e117eb1282b182b707472d9ef8f4fe58b188b550a40"
   },
-  "workflow_sha256": "f00dbbcb1f1b4fa4504b4770f0e6899aae31ee0429905f6e2db54df94c515ed4"
+  "workflow_sha256": "f6167bf933ee2ca7809595594ce15ab087cdc77f6bb8ffbf3f42d4ed9bdbed34"
 }

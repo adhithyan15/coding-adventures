@@ -1,0 +1,20 @@
+{
+  "language": "japanese",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:c1dcfd61c2374c34",
+  "lessonIds": [
+    "JA-C247-homeru",
+    "JA-C247-shikaru",
+    "JA-C247-hazukashii",
+    "JA-C247-komaru",
+    "JA-C247-yuuki",
+    "JA-R247-review-242-247"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "japanese/narration/ch247.txt",
+  "json": "japanese/narration/ch247.json",
+  "textHash": "fnv1a64:aead892ce2283e89",
+  "jsonHash": "fnv1a64:42e8a4460578cdbf",
+  "findings": []
+}

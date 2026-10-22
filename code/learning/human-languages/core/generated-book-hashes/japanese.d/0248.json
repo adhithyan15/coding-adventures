@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:ba8a12ec0b5a1057",
+  "lessonIds": [
+    "JA-C248-shinjiru",
+    "JA-C248-uso",
+    "JA-C248-yakusoku",
+    "JA-C248-himitsu",
+    "JA-C248-utagau"
+  ],
+  "tex": "japanese/book/chapters/ch248-promises-lies-and-secrets.tex"
+}

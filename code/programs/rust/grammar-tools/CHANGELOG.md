@@ -1,5 +1,20 @@
 # Changelog — grammar-tools (Rust program)
 
+## Unreleased
+
+### Changed
+- LANG84 phase 2b: Perl's `releases.csv` now has the common LANG84 header
+  (`grammar_status` is the seventh of fourteen columns, `grammar_stage` the
+  eighth, and `perlhist_line` an extra). The Perl release family now reads
+  `grammar_stage` from its column like Ruby's, so
+  `RustReleaseFamilySpec.stage_source` and `StageSource::DerivedFromStatus`
+  (added in 2.3.0 only for the pre-schema file) are removed, and every family
+  requires the column again. The reader already refused rows whose field
+  count differs from the header's. New test
+  `release_inventory_reads_the_lang84_header`, which also checks that the old
+  four-column LANG82 header is refused. Regenerating `perl` gives the same
+  grammar classes; the release lists follow the new date order.
+
 ## [2.3.0] - 2026-10-20
 
 ### Added — Perl joins the LANG84 release families (phase 4a)
@@ -21,6 +36,24 @@
   field-count mismatches and unsafe IDs. A trailing `\r` is dropped so a
   CRLF checkout reads like an LF one. Ruby's generated tables are unchanged
   byte for byte.
+
+### Added — LANG84 phase 7a: Python joins the release families
+- `generate-rust-compiled-grammars python` now reads its release list from
+  `code/grammars/python/releases.csv`. The five phase-7a pairs (3.0a1,
+  3.11.17, 3.12.3, 3.13.16, 3.16.0a1) compile to three distinct token tables
+  and one parser table.
+- A release family can keep pre-LANG84 **minor-line** pairs
+  (`RustReleaseFamilySpec::legacy_versions`). Python's six (`python2.7` …
+  `python3.12`) are embedded in a generated `pub mod legacy_versions` with its
+  own `SUPPORTED_VERSIONS` and `token_grammar(version)` /
+  `parser_grammar(version)`, which the release selector cannot reach. A
+  legacy stem that is also a paired release, or a missing legacy file, is an
+  error.
+- Release pairs are now always validated and cross-validated (LANG84 stage G),
+  even when the package needs `force` for its legacy grammars, as
+  `python-parser` does. `force` applies only to the legacy modules.
+- New tests: `release_family_embeds_legacy_minor_lines_out_of_the_release_selector`
+  and `committed_python_release_tables_match_regeneration`.
 
 ## [2.2.0] - 2026-10-20
 

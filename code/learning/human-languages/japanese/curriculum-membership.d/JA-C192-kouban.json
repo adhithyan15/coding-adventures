@@ -1,0 +1,11 @@
+{
+  "id": "JA-C192-kouban",
+  "pathSegment": "JA-PATH-192-POLICE192",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-192-POLICE192",
+      "order": 0
+    }
+  ]
+}

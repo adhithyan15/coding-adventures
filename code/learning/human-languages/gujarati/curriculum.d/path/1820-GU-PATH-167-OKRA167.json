@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-167-OKRA167",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "GU-EXT-167-OKRA167"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C176-shouyu",
+    "language": "japanese",
+    "chapter": 176,
+    "sequence": 10600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d78717b4d9ea953d"
+  },
+  "findings": []
+}

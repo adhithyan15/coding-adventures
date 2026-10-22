@@ -1,0 +1,11 @@
+{
+  "id": "JA-C233-hashiru",
+  "pathSegment": "JA-PATH-233-SPORT233",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-233-SPORT233",
+      "order": 3
+    }
+  ]
+}

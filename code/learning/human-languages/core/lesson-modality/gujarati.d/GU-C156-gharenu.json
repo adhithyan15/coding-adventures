@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C156-gharenu",
+    "language": "gujarati",
+    "chapter": 156,
+    "sequence": 8550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32b2b8a0deab73f7"
+  },
+  "findings": []
+}

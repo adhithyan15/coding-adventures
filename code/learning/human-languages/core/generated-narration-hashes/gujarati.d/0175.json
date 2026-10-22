@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 175,
+  "sourceHash": "fnv1a64:b9c4ad83232e437a",
+  "lessonIds": [
+    "GU-C175-punam",
+    "GU-C175-amas",
+    "GU-C175-ant",
+    "GU-C175-addhu",
+    "GU-C175-satat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch175.txt",
+  "json": "gujarati/narration/ch175.json",
+  "textHash": "fnv1a64:71364a742ad76aa5",
+  "jsonHash": "fnv1a64:b87adabf54bd0c07",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 179,
+  "sourceHash": "fnv1a64:df42808bd9e6d477",
+  "lessonIds": [
+    "GU-C179-yojna",
+    "GU-C179-nakki-karvu",
+    "GU-C179-karyakram",
+    "GU-C179-pahelethi",
+    "GU-C179-cokkas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch179.txt",
+  "json": "gujarati/narration/ch179.json",
+  "textHash": "fnv1a64:63464cd35f3d1d80",
+  "jsonHash": "fnv1a64:4e3519f2aee2512f",
+  "findings": []
+}

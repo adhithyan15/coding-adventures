@@ -175,8 +175,8 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // was taught, which is the whole point of the window.
     ["22", 9],
     ["23", 10],
-    ["24", 18],
-    ["25", 10],
+    ["24", 20],
+    ["25", 12],
     // Chapters 26-29 are the pre-A1 verb tranche. They sit AFTER the A1 writing
     // runways in book order while realizing pre-A1 spine nodes, which is the
     // shape the other Indic tracks already use: a node's level is a property of

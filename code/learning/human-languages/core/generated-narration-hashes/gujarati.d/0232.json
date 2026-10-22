@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:a6451444c39d4569",
+  "lessonIds": [
+    "GU-C232-rog",
+    "GU-C232-cep",
+    "GU-C232-tandurast",
+    "GU-C232-kalji-levi",
+    "GU-C232-saju-thavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch232.txt",
+  "json": "gujarati/narration/ch232.json",
+  "textHash": "fnv1a64:2f594ab144241287",
+  "jsonHash": "fnv1a64:3ce00f1a8fd5c427",
+  "findings": []
+}

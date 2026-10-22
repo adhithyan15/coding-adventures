@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C234-shiai",
+    "language": "japanese",
+    "chapter": 234,
+    "sequence": 14110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:385386bd8e4c29de"
+  },
+  "findings": []
+}

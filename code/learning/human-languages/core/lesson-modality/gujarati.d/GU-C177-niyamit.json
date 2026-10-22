@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C177-niyamit",
+    "language": "gujarati",
+    "chapter": 177,
+    "sequence": 9670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6b1af0a3e2074f8"
+  },
+  "findings": []
+}

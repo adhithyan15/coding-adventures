@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:a29cef623f754150",
+  "lessonIds": [
+    "GU-C233-prani",
+    "GU-C233-ghodo",
+    "GU-C233-ut",
+    "GU-C233-balad",
+    "GU-C233-khedvu"
+  ],
+  "tex": "gujarati/book/chapters/ch233-animals-that-work.tex"
+}

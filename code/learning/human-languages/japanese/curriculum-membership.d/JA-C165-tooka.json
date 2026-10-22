@@ -1,0 +1,11 @@
+{
+  "id": "JA-C165-tooka",
+  "pathSegment": "JA-PATH-165-DATES165",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-165-DATES165",
+      "order": 2
+    }
+  ]
+}

@@ -2,10 +2,30 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [Unreleased] — 2026-10-07 — CV04a exact lexical intervals
+
+- Add `tokenize_javascript_typed_with_ranges`, delegating to the same generated
+  grammar and actual generic standard matcher with bounded source-range capture.
+- Preserve tokens/values/CVs/locations/ASI flags across all14 editions and actual
+  template/regex/division modes; capture skipped trivia and terminal EOF.
+- Expose generic owned interval types without adding dependencies or Token fields.
+  This is lexical input coverage, not CV/source identity or output-byte joins.
+- Record legacy bare LS/PS rejection as a grammar parity gap; do not change lexer
+  acceptance through a provenance-only wrapper.
+
 ## [Unreleased]
 
 ### Fixed
 
+- **Tokens end where JavaScript ends them (#17886, #17888, #17887).** The
+  ECMAScript `.tokens` patterns let a token run past its end, so comment or
+  string text was lexed as code:
+  - `` `$` `` didn't close a template (`\$[^{]` ate the backtick), so the
+    template ran on to the next backtick;
+  - `/***/` and `/* a **/` weren't block comments;
+  - line comments and hashbangs swallowed code after a `\r`;
+  - a regex could hold a `\r`.
+  `src/_grammar.rs` is regenerated. Four unit tests cover these.
 - Add explicit `tokenize_javascript_division_only` for subsets excluding regex
   literals, preserving comments, strings, token locations and version rules.
   Existing regex-capable entry points retain their behavior.

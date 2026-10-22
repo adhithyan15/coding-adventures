@@ -1237,12 +1237,14 @@ Normalized quoted Unicode lane
 and node labels, named and numeric label entities, and Flowchart-style Markdown strings on
 ownership lanes, nested groups, nodes, and edge labels preserve multiline text plus bold and italic
 spans through semantic and layout IR into backend-neutral glyph runs. Both authored line breaks and
-escaped `\\n` breaks remain semantic newlines,
+escaped `\\n` breaks remain semantic newlines. Edge-label bounds and positions survive layout IR,
+reserve rank clearance in either diagram orientation, and lower without renderer-specific sizing.
+Edge font size, weight, italic style, and Markdown emphasis participate in deterministic label measurement,
 directed/undirected/dotted/thick chained links, including open dotted and thick
 forms, point/circle/cross endpoint
 markers on solid, dotted, and thick links, bidirectional arrows, multiline edge continuations,
 invisible layout links,
-minimum link lengths with deterministic rank spacing,
+arbitrary minimum link lengths across plain and endpoint-marked forms with deterministic rank spacing,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited labels, Flowchart-style inline labels on solid,
 thick, and dotted links, including labeled links with independently selected point, circle, cross,
@@ -1327,7 +1329,17 @@ color, and typography fields through semantic and layout IR into backend-neutral
 `:::class` decorators on either subgraph form resolve through the same class pipeline.
 Nodes outside an explicit top-level subgraph are assigned to Mermaid's unlabeled
 `__swimlane_default__` ownership lane, which survives semantic IR, lane layout, and paint lowering.
+Flowchart-style `icon` node attributes preserve their fully qualified identity in semantic and layout
+IR. Integrator-registered glyphs resolve through layout options and lower above the node label as
+backend-neutral text paint, while scene metadata records both identity and resolution state. Icon
+nodes also preserve Mermaid's optional `square`, `circle`, and `rounded` background forms, top or
+bottom label position, and minimum 48-pixel `h` sizing through typed semantic IR, deterministic
+layout, and backend-neutral paint. Omitting `label` produces the upstream icon-only node.
+Flowchart-style `img` nodes preserve URI sources, width, height, aspect-ratio constraint, and label
+position in typed semantic and layout IR before lowering to backend-neutral `PaintImage` instructions;
+integrator-supplied intrinsic dimensions resolve omitted sizes and `constraint: on` aspect ratios during
+layout. URI fetching and decoding remain the responsibility of the selected paint backend.
 
-This is intentionally partial. Flowchart icons and images, additional link forms beyond the documented
+This is intentionally partial. Automatic external icon-pack loading and backend-specific URI decoding, additional link forms beyond the documented
 marker forms, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

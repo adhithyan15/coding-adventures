@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:580d014ab338fae6",
+  "lessonIds": [
+    "GU-C208-sadak",
+    "GU-C208-khado",
+    "GU-C208-traphik",
+    "GU-C208-paidu",
+    "GU-C208-phatak"
+  ],
+  "tex": "gujarati/book/chapters/ch208-out-on-the-highway.tex"
+}

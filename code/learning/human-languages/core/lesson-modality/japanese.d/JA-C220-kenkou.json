@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C220-kenkou",
+    "language": "japanese",
+    "chapter": 220,
+    "sequence": 13130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c91ec25cc347cfa4"
+  },
+  "findings": []
+}

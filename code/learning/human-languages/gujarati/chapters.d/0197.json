@@ -1,0 +1,19 @@
+{
+  "chapter": 197,
+  "title": "The watchman at the gate",
+  "label": "ch:gu-the-watchman-at-the-gate",
+  "canDo": "I can read opening times and show my card at the gate.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C197-khulvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 197: I can read opening times and show my card at the gate.",
+    "assesses": [
+      "GU-LEX-C197-GATE197-03",
+      "GU-LEX-C197-GATE197-04",
+      "GU-LEX-C197-GATE197-05"
+    ]
+  }
+}

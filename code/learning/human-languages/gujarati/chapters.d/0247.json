@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Earning a living",
+  "label": "ch:gu-earning-a-living",
+  "canDo": "I can talk about bosses, employees and earning money.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C247-mahenatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can talk about bosses, employees and earning money.",
+    "assesses": [
+      "GU-LEX-C247-LIVING247-03",
+      "GU-LEX-C247-LIVING247-04",
+      "GU-LEX-C247-LIVING247-05"
+    ]
+  }
+}

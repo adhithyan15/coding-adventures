@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 208,
+  "sourceHash": "fnv1a64:21a082018bddf067",
+  "lessonIds": [
+    "JA-C208-hare",
+    "JA-C208-kumori",
+    "JA-C208-tenkiyohou",
+    "JA-C208-sora",
+    "JA-C208-taifuu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch208.txt",
+  "json": "japanese/narration/ch208.json",
+  "textHash": "fnv1a64:8b20a33fff26665c",
+  "jsonHash": "fnv1a64:3a51c97ea93a3991",
+  "findings": []
+}

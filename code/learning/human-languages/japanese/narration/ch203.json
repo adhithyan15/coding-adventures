@@ -1,0 +1,948 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 203,
+  "title": "Planes, Airports and Seats",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6b10cb676d60b0bb",
+  "lessons": [
+    {
+      "id": "JA-C203-hikouki",
+      "sequence": 12250,
+      "title": "ひこうき (hikōki) — a plane; an aeroplane",
+      "headword": "ひこうき",
+      "romanization": "hikōki",
+      "gloss": "a plane; an aeroplane",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cdffcceb6300c6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to halt, then the Japanese for a car park."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひこうき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひこうき — hikōki — \"a plane; an aeroplane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひこうきで しまに いきます。 — hikōki de shima ni ikimasu — \"I go to the island by plane.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひこうき (hikōki) is Sino-Japanese (kango): three Chinese characters read with their on'yomi, readings borrowed from Chinese. They are hi, \"to fly\" (Middle Chinese pj+j), kō, \"to go\" (haeng) and ki, \"machine\" (kj+j) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōki de shima ni ikimasu — I go to the island by plane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōki de shima ni ikimasu* — I go to the island by plane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to halt, then the Japanese for a car park, then say hikōki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to halt, then the Japanese for a car park, then say *hikōki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひこうき (hikōki) mean? (\"A plane; an aeroplane\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C203-hikouki-type",
+              "prompt": "Say the Japanese for 'a plane'.",
+              "assesses": [
+                "JA-LEX-C203-FLY203-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひこうき",
+                "hikōki",
+                "hikouki",
+                "hikooki",
+                "hikoki"
+              ],
+              "feedback": {
+                "correct": "Right: ひこうき (hikōki) is 'a plane; an aeroplane'.",
+                "incorrect": "'A plane' is ひこうき (hikōki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C203-kuukou",
+      "sequence": 12260,
+      "title": "くうこう (kūkō) — an airport",
+      "headword": "くうこう",
+      "romanization": "kūkō",
+      "gloss": "an airport",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3b5f40952ff2b25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a car park, then the Japanese for a plane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くうこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くうこう — kūkō — \"an airport\"."
+            },
+            {
+              "kind": "speech",
+              "text": "くうこうまで ちかてつで いきます。 — kūkō made chikatetsu de ikimasu — \"I go to the airport by subway.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くうこう (kūkō) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are kū, \"empty, sky\" (Middle Chinese khuwng) and kō, \"harbour\" (kaewngX) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkō made chikatetsu de ikimasu — I go to the airport by subway.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkō made chikatetsu de ikimasu* — I go to the airport by subway.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a car park, then the Japanese for a plane, then say kūkō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a car park, then the Japanese for a plane, then say *kūkō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くうこう (kūkō) mean? (\"An airport\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C203-kuukou-type",
+              "prompt": "Say the Japanese for 'an airport'.",
+              "assesses": [
+                "JA-LEX-C203-FLY203-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くうこう",
+                "kūkō",
+                "kuukou",
+                "kūkoo",
+                "kuko"
+              ],
+              "feedback": {
+                "correct": "Right: くうこう (kūkō) is 'an airport'.",
+                "incorrect": "'An airport' is くうこう (kūkō)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C203-tobu",
+      "sequence": 12270,
+      "title": "とぶ (tobu) — to fly through the air; to fly",
+      "headword": "とぶ",
+      "romanization": "tobu",
+      "gloss": "to fly through the air; to fly",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cc5c5ac5b72af465",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a plane, then the Japanese for an airport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とぶ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とぶ — tobu — \"to fly through the air; to fly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ひこうきが うみの うえを とびます。 — hikōki ga umi no ue o tobimasu — \"The plane flies over the sea.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite とびます, tobimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とぶ (tobu) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tobu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tobu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tobu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tobu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikōki ga umi no ue o tobimasu — The plane flies over the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikōki ga umi no ue o tobimasu* — The plane flies over the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a plane, then the Japanese for an airport, then say tobu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a plane, then the Japanese for an airport, then say *tobu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とぶ (tobu) mean? (\"To fly through the air; to fly\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C203-tobu-type",
+              "prompt": "Say the Japanese for 'to fly through the air'.",
+              "assesses": [
+                "JA-LEX-C203-FLY203-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とぶ",
+                "tobu"
+              ],
+              "feedback": {
+                "correct": "Right: とぶ (tobu) is 'to fly through the air; to fly'.",
+                "incorrect": "'To fly through the air' is とぶ (tobu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C203-zaseki",
+      "sequence": 12280,
+      "title": "ざせき (zaseki) — a seat",
+      "headword": "ざせき",
+      "romanization": "zaseki",
+      "gloss": "a seat",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88bc7a8ed69edee8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an airport, then the Japanese for to fly through the air."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ざせき",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざせき — zaseki — \"a seat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ざせきは まどの ちかくです。 — zaseki wa mado no chikaku desu — \"The seat is near the window.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ざせき (zaseki) is Sino-Japanese (kango): two Chinese characters read with their on'yomi, readings borrowed from Chinese. They are za, \"to sit\" (Middle Chinese dzwaH) and seki, \"mat, seat\" (zjek) (KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaseki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaseki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaseki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaseki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zaseki wa mado no chikaku desu — The seat is near the window.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zaseki wa mado no chikaku desu* — The seat is near the window.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an airport, then the Japanese for to fly through the air, then say zaseki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an airport, then the Japanese for to fly through the air, then say *zaseki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ざせき (zaseki) mean? (\"A seat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C203-zaseki-type",
+              "prompt": "Say the Japanese for 'a seat'.",
+              "assesses": [
+                "JA-LEX-C203-FLY203-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ざせき",
+                "zaseki"
+              ],
+              "feedback": {
+                "correct": "Right: ざせき (zaseki) is 'a seat'.",
+                "incorrect": "'A seat' is ざせき (zaseki)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C203-yuzuru",
+      "sequence": 12290,
+      "title": "ゆずる (yuzuru) — to give up (a seat); to hand over",
+      "headword": "ゆずる",
+      "romanization": "yuzuru",
+      "gloss": "to give up (a seat); to hand over",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca78d8e1875285ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to fly through the air, then the Japanese for a seat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ゆずる",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆずる — yuzuru — \"to give up (a seat); to hand over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "でんしゃで ざせきを ゆずります。 — densha de zaseki o yuzurimasu — \"I give up my seat on the train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Polite ゆずります, yuzurimasu; a godan verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ゆずる (yuzuru) is a native Japanese word (wago), inherited rather than borrowed from Chinese; its kanji was attached later as a kun'yomi, and its older origin is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuzuru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuzuru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuzuru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuzuru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "densha de zaseki o yuzurimasu — I give up my seat on the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *densha de zaseki o yuzurimasu* — I give up my seat on the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to fly through the air, then the Japanese for a seat, then say yuzuru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to fly through the air, then the Japanese for a seat, then say *yuzuru* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ゆずる (yuzuru) mean? (\"To give up (a seat); to hand over\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C203-yuzuru-type",
+              "prompt": "Say the Japanese for 'to give up'.",
+              "assesses": [
+                "JA-LEX-C203-FLY203-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆずる",
+                "yuzuru"
+              ],
+              "feedback": {
+                "correct": "Right: ゆずる (yuzuru) is 'to give up (a seat); to hand over'.",
+                "incorrect": "'To give up' is ゆずる (yuzuru)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R203-review-198-203",
+      "sequence": 12300,
+      "title": "Trains, Roads and Planes - a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 198-203",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcad5cdcee9d2b7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Japanese for to ride and to get off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to ride, to get off, a bicycle, a subway, to get to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to ride, to get off, a bicycle, a subway, to get to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "departure, arrival, a limited express, to come to a stop, an express",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: departure, arrival, a limited express, to come to a stop, an express]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to change trains, to leave, a railway, a boarding point, a bus stop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to change trains, to leave, a railway, a boarding point, a bus stop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cross, to be crowded, to cut across, to rush out, to bump into",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cross, to be crowded, to cut across, to rush out, to bump into]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an automobile, driving, a driver, to halt, a car park",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an automobile, driving, a driver, to halt, a car park]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plane, an airport, to fly through the air, a seat, to give up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plane, an airport, to fly through the air, a seat, to give up]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To ride? (のる, noru.) To get off? (おりる, oriru.) A bicycle? (じてんしゃ, jitensha.) A subway? (ちかてつ, chikatetsu.) To get to? (つく, tsuku.) Departure? (しゅっぱつ, shuppatsu.) Arrival? (とうちゃく, tōchaku.) A limited express? (とっきゅう, tokkyū.) To come to a stop? (とまる, tomaru.) An express? (きゅうこう, kyūkō.) To change trains? (のりかえる, norikaeru.) To leave? (でる, deru.) A railway? (てつどう, tetsudō.) A boarding point? (のりば, noriba.) A bus stop? (ていりゅうじょ, teiryūjo.) To cross? (わたる, wataru.) To be crowded? (こむ, komu.) To cut across? (よこぎる, yokogiru.) To rush out? (とびだす, tobidasu.) To bump into? (ぶつかる, butsukaru.) An automobile? (じどうしゃ, jidōsha.) Driving? (うんてん, unten.) A driver? (うんてんしゅ, untenshu.) To halt? (とめる, tomeru.) A car park? (ちゅうしゃじょう, chūshajō.) A plane? (ひこうき, hikōki.) An airport? (くうこう, kūkō.) To fly through the air? (とぶ, tobu.) A seat? (ざせき, zaseki.) To give up? (ゆずる, yuzuru.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-R203-review-198-203-type",
+              "prompt": "Say the Japanese for 'to ride'.",
+              "assesses": [
+                "JA-LEX-C198-RIDE198-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "のる",
+                "noru"
+              ],
+              "feedback": {
+                "correct": "Right: のる (noru) is 'to ride; to get on (a train or bus)'.",
+                "incorrect": "'To ride' is のる (noru)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C239-shougi",
+    "language": "japanese",
+    "chapter": 239,
+    "sequence": 14410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77e514973dc63bee"
+  },
+  "findings": []
+}

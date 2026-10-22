@@ -1,0 +1,11 @@
+{
+  "id": "JA-C204-kenbutsu",
+  "pathSegment": "JA-PATH-204-TRIP204",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-204-TRIP204",
+      "order": 2
+    }
+  ]
+}

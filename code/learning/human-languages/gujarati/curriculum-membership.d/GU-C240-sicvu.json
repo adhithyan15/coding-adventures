@@ -1,0 +1,11 @@
+{
+  "id": "GU-C240-sicvu",
+  "pathSegment": "GU-PATH-240-GARDEN240",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-240-GARDEN240",
+      "order": 3
+    }
+  ]
+}

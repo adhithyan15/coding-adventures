@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "Housework and the doorbell",
+  "label": "ch:gu-housework-and-the-doorbell",
+  "canDo": "I can talk about housework and things around the house.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C162-khuno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: I can talk about housework and things around the house.",
+    "assesses": [
+      "GU-LEX-C162-CHORE162-03",
+      "GU-LEX-C162-CHORE162-04",
+      "GU-LEX-C162-CHORE162-05"
+    ]
+  }
+}

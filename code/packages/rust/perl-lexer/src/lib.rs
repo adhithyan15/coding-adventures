@@ -12,8 +12,9 @@
 //! | per-release | `perl<release>.tokens`, one per non-pending row of `releases.csv` | [`release_token_grammar`] |
 //! | unversioned | `perl.tokens`, LANG81's bounded execution grammar | [`tokenize_perl`] |
 //!
-//! The 117 checked release pairs collapse to a handful of distinct grammars,
-//! so the generated `_grammar.rs` holds one module per distinct grammar and a
+//! The checked release pairs (118 since LANG84 phase 4b) collapse to a
+//! handful of distinct grammars, so the generated `_grammar.rs` holds one
+//! module per distinct grammar and a
 //! `match` from release ID to module. A release that is pending, or not in the
 //! inventory at all, has no table: [`release_token_grammar`] returns `None`
 //! and never substitutes a neighbour or the unversioned pair (LANG84 C4.3).

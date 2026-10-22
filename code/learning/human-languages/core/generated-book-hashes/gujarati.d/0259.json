@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:b01e349ae087d574",
+  "lessonIds": [
+    "GU-C259-mec",
+    "GU-C259-haravvu",
+    "GU-C259-dodvu",
+    "GU-C259-kasrat",
+    "GU-C259-kusti"
+  ],
+  "tex": "gujarati/book/chapters/ch259-matches-and-wrestling.tex"
+}

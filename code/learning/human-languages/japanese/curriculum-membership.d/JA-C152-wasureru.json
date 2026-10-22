@@ -1,0 +1,11 @@
+{
+  "id": "JA-C152-wasureru",
+  "pathSegment": "JA-PATH-152-READY152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-152-READY152",
+      "order": 3
+    }
+  ]
+}

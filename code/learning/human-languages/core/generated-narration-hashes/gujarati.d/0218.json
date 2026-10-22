@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:6533d901d2312294",
+  "lessonIds": [
+    "GU-C218-ugvu",
+    "GU-C218-suryoday",
+    "GU-C218-athamvu",
+    "GU-C218-suryast",
+    "GU-C218-ajvalu",
+    "GU-R218-review-213-218"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch218.txt",
+  "json": "gujarati/narration/ch218.json",
+  "textHash": "fnv1a64:32a5fe5b7f90f465",
+  "jsonHash": "fnv1a64:5bdeb93850b36a76",
+  "findings": []
+}

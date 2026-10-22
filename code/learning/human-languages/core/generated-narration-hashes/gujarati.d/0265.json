@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 265,
+  "sourceHash": "fnv1a64:d109f925734a74c0",
+  "lessonIds": [
+    "GU-C265-prem-karvo",
+    "GU-C265-paranvu",
+    "GU-C265-sagai",
+    "GU-C265-vahu",
+    "GU-C265-vishvas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch265.txt",
+  "json": "gujarati/narration/ch265.json",
+  "textHash": "fnv1a64:84c0d1f68cdfb886",
+  "jsonHash": "fnv1a64:2479537caac4ac91",
+  "findings": []
+}

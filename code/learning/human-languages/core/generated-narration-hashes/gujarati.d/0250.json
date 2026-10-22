@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:fcaf9bf201fd7aaf",
+  "lessonIds": [
+    "GU-C250-kampyutar",
+    "GU-C250-skrin",
+    "GU-C250-dabavvu",
+    "GU-C250-sacavvu",
+    "GU-C250-chapvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch250.txt",
+  "json": "gujarati/narration/ch250.json",
+  "textHash": "fnv1a64:49a667109110c51a",
+  "jsonHash": "fnv1a64:492234ea9998b3f2",
+  "findings": []
+}

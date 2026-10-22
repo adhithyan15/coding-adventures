@@ -1,0 +1,11 @@
+{
+  "id": "JA-C191-ichiba",
+  "pathSegment": "JA-PATH-191-SHUT191",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-191-SHUT191",
+      "order": 1
+    }
+  ]
+}

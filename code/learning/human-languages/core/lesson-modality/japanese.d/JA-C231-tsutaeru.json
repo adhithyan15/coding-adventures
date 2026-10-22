@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C231-tsutaeru",
+    "language": "japanese",
+    "chapter": 231,
+    "sequence": 14000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ccaa4bf9e2ff33e"
+  },
+  "findings": []
+}

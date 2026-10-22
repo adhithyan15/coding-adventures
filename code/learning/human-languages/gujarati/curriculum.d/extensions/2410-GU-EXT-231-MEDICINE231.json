@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-231-MEDICINE231",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask about pills, ointment and treatment.",
+  "prerequisites": []
+}

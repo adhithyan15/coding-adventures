@@ -1,0 +1,11 @@
+{
+  "id": "JA-C214-hi-fire",
+  "pathSegment": "JA-PATH-214-STORM214",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-214-STORM214",
+      "order": 2
+    }
+  ]
+}

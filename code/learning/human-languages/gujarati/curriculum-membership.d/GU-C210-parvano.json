@@ -1,0 +1,11 @@
+{
+  "id": "GU-C210-parvano",
+  "pathSegment": "GU-PATH-210-PAPERS210",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-210-PAPERS210",
+      "order": 2
+    }
+  ]
+}

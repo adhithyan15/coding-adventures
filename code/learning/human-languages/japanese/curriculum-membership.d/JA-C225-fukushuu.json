@@ -1,0 +1,11 @@
+{
+  "id": "JA-C225-fukushuu",
+  "pathSegment": "JA-PATH-225-STUDY225",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-225-STUDY225",
+      "order": 2
+    }
+  ]
+}

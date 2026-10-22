@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 215,
+  "title": "A cold foggy morning",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d353b152bdee6b7f",
+  "lessons": [
+    {
+      "id": "GU-C215-tharvu",
+      "sequence": 11700,
+      "title": "ઠરવું (ṭharvũ) — to freeze, to cool down",
+      "headword": "ઠરવું",
+      "romanization": "ṭharvũ",
+      "gloss": "to freeze, to cool down",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5cf2d712685e4a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to drip, then the Gujarati for to get soaked."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઠરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠરવું — ṭharvũ — \"to freeze, to cool down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "રાત્રે પાણી ઠરશે. — rātre pāṇī ṭharśe — \"The water will freeze at night.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઠરવું (ṭharvũ) is a tadbhava. It comes from stharati, \"is firm\", a reconstructed form; CDIAL glosses the Gujarati verb \"to become fixed, be settled, freeze, congeal\" (CDIAL 13742)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭharvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭharvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭharvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭharvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātre pāṇī ṭharśe — The water will freeze at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātre pāṇī ṭharśe* — The water will freeze at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to drip, then the Gujarati for to get soaked, then say ṭharvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to drip, then the Gujarati for to get soaked, then say *ṭharvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઠરવું (ṭharvũ) mean? (\"To freeze, to cool down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C215-him",
+      "sequence": 11710,
+      "title": "હિમ (him) — frost, snow",
+      "headword": "હિમ",
+      "romanization": "him",
+      "gloss": "frost, snow",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c6eadde42fbdc735",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to get soaked, then the Gujarati for to freeze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હિમ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હિમ — him — \"frost, snow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "આવતીકાલે સવારે હિમ પડશે. — āvtīkāle savāre him paḍśe — \"There will be frost tomorrow morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હિમ (him) is Sanskrit hima, \"cold, frost, snow\", taken over almost whole, a tatsama. CDIAL lists Gujarati him, \"hoarfrost, dew\" (CDIAL 14096)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "him",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *him*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "him, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *him*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āvtīkāle savāre him paḍśe — There will be frost tomorrow morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āvtīkāle savāre him paḍśe* — There will be frost tomorrow morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to get soaked, then the Gujarati for to freeze, then say him again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to get soaked, then the Gujarati for to freeze, then say *him* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હિમ (him) mean? (\"Frost, snow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C215-os",
+      "sequence": 11720,
+      "title": "ઓસ (os) — dew",
+      "headword": "ઓસ",
+      "romanization": "os",
+      "gloss": "dew",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33b4fabf0db2f168",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to freeze, then the Gujarati for frost."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઓસ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઓસ — os — \"dew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "સવારે ઓસ પડશે. — savāre os paḍśe — \"Dew will fall in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઓસ (os) is a tadbhava, a word inherited from Sanskrit and reshaped by sound change. It comes from avaśyā, \"hoarfrost, dew\" (CDIAL 855)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "os",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *os*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "os, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *os*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savāre os paḍśe — Dew will fall in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savāre os paḍśe* — Dew will fall in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to freeze, then the Gujarati for frost, then say os again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to freeze, then the Gujarati for frost, then say *os* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઓસ (os) mean? (\"Dew\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C215-gadh",
+      "sequence": 11730,
+      "title": "ગાઢ (gāḍh) — thick, dense",
+      "headword": "ગાઢ",
+      "romanization": "gāḍh",
+      "gloss": "thick, dense",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f5be6d400ef9b3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for frost, then the Gujarati for dew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ગાઢ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગાઢ — gāḍh — \"thick, dense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "કાલે સવારે ગાઢ ધુમ્મસ હશે. — kāle savāre gāḍh dhummas haśe — \"There will be thick fog tomorrow morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change for gender."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ગાઢ (gāḍh) comes from Sanskrit gāḍha, \"pressed together, thick, firm\". CDIAL lists Gujarati gāḍh, \"thick, sound (of sleep)\" (CDIAL 4118)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḍh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḍh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāḍh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāḍh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāle savāre gāḍh dhummas haśe — There will be thick fog tomorrow morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāle savāre gāḍh dhummas haśe* — There will be thick fog tomorrow morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for frost, then the Gujarati for dew, then say gāḍh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for frost, then the Gujarati for dew, then say *gāḍh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ગાઢ (gāḍh) mean? (\"Thick, dense\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C215-huphalu",
+      "sequence": 11740,
+      "title": "હૂંફાળું (hū̃phāḷũ) — lukewarm, pleasantly warm",
+      "headword": "હૂંફાળું",
+      "romanization": "hū̃phāḷũ",
+      "gloss": "lukewarm, pleasantly warm",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48f794293b94376c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for dew, then the Gujarati for thick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: હૂંફાળું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હૂંફાળું — hū̃phāḷũ — \"lukewarm, pleasantly warm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "હું હૂંફાળું પાણી પીશ. — hũ hū̃phāḷũ pāṇī pīś — \"I will drink warm water.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "હૂંફાળું (hū̃phāḷũ) is built on hū̃ph, \"warmth\", a tadbhava: CDIAL lists Gujarati hũph, \"genial warmth\", under Sanskrit ūṣman, \"heat, steam\" (CDIAL 2441). The next entry, ūṣmāyate, \"emits heat\", holds the close Gujarati ũphāylũ, \"lukewarm, tepid\" (CDIAL 2442)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃phāḷũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃phāḷũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃phāḷũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃phāḷũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ hū̃phāḷũ pāṇī pīś — I will drink warm water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ hū̃phāḷũ pāṇī pīś* — I will drink warm water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for dew, then the Gujarati for thick, then say hū̃phāḷũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for dew, then the Gujarati for thick, then say *hū̃phāḷũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does હૂંફાળું (hū̃phāḷũ) mean? (\"Lukewarm, pleasantly warm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

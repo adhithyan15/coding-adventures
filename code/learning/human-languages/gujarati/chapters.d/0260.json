@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Cards, chess and toys",
+  "label": "ch:gu-cards-chess-and-toys",
+  "canDo": "I can say which games I chose and what I guessed.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-R260-review-255-260",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say which games I chose and what I guessed.",
+    "assesses": [
+      "GU-LEX-C260-GAMES260-03",
+      "GU-LEX-C260-GAMES260-04",
+      "GU-LEX-C260-GAMES260-05"
+    ]
+  }
+}

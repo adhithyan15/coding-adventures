@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-197-GATE197",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read opening times and show my card at the gate.",
+  "prerequisites": []
+}

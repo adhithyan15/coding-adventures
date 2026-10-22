@@ -1,0 +1,805 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 165,
+  "title": "The Seventh, the Tenth and a Birthday",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e3821ef2814e612a",
+  "lessons": [
+    {
+      "id": "JA-C165-nanoka",
+      "sequence": 9780,
+      "title": "なのか (nanoka) — the seventh of the month; seven days",
+      "headword": "なのか",
+      "romanization": "nanoka",
+      "gloss": "the seventh of the month; seven days",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:20ff114b8326fc11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for Friday, then the Japanese for Sunday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: なのか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なのか — nanoka — \"the seventh of the month; seven days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "らいげつの なのかに うみに いきます。 — raigetsu no nanoka ni umi ni ikimasu — \"I will go to the sea on the seventh of next month.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "なのか (nanoka) is native Japanese, built from nano-, a form of nana, \"seven\", and ka, \"day\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanoka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanoka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nanoka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nanoka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raigetsu no nanoka ni umi ni ikimasu — I will go to the sea on the seventh of next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raigetsu no nanoka ni umi ni ikimasu* — I will go to the sea on the seventh of next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for Friday, then the Japanese for Sunday, then say nanoka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for Friday, then the Japanese for Sunday, then say *nanoka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does なのか (nanoka) mean? (\"The seventh of the month; seven days\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C165-nanoka-type",
+              "prompt": "Say the Japanese for 'the seventh of the month'.",
+              "assesses": [
+                "JA-LEX-C165-DATES165-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "なのか",
+                "nanoka"
+              ],
+              "feedback": {
+                "correct": "Right: なのか (nanoka) is 'the seventh of the month; seven days'.",
+                "incorrect": "'The seventh of the month' is なのか (nanoka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C165-youka",
+      "sequence": 9790,
+      "title": "ようか (yōka) — the eighth of the month; eight days",
+      "headword": "ようか",
+      "romanization": "yōka",
+      "gloss": "the eighth of the month; eight days",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:654de05ebf441d26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for Sunday, then the Japanese for the seventh of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ようか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようか — yōka — \"the eighth of the month; eight days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ようかは にちようびでしょう。 — yōka wa nichiyōbi deshō — \"The eighth is probably a Sunday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ようか (yōka) is native Japanese, built from ya, \"eight\", which takes the form yō here, and ka, \"day\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yōka wa nichiyōbi deshō — The eighth is probably a Sunday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yōka wa nichiyōbi deshō* — The eighth is probably a Sunday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for Sunday, then the Japanese for the seventh of the month, then say yōka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for Sunday, then the Japanese for the seventh of the month, then say *yōka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ようか (yōka) mean? (\"The eighth of the month; eight days\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C165-youka-type",
+              "prompt": "Say the Japanese for 'the eighth of the month'.",
+              "assesses": [
+                "JA-LEX-C165-DATES165-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ようか",
+                "yōka",
+                "youka",
+                "yooka",
+                "yoka"
+              ],
+              "feedback": {
+                "correct": "Right: ようか (yōka) is 'the eighth of the month; eight days'.",
+                "incorrect": "'The eighth of the month' is ようか (yōka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C165-tooka",
+      "sequence": 9800,
+      "title": "とおか (tōka) — the tenth of the month; ten days",
+      "headword": "とおか",
+      "romanization": "tōka",
+      "gloss": "the tenth of the month; ten days",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae424ed2870e428a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the seventh of the month, then the Japanese for the eighth of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とおか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とおか — tōka — \"the tenth of the month; ten days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "とおかに ともだちと あう つもりです。 — tōka ni tomodachi to au tsumori desu — \"I plan to meet a friend on the tenth.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とおか (tōka) is native Japanese, built from tō, \"ten\", and ka, \"day\", both inherited rather than borrowed (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōka ni tomodachi to au tsumori desu — I plan to meet a friend on the tenth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōka ni tomodachi to au tsumori desu* — I plan to meet a friend on the tenth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the seventh of the month, then the Japanese for the eighth of the month, then say tōka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the seventh of the month, then the Japanese for the eighth of the month, then say *tōka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とおか (tōka) mean? (\"The tenth of the month; ten days\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C165-tooka-type",
+              "prompt": "Say the Japanese for 'the tenth of the month'.",
+              "assesses": [
+                "JA-LEX-C165-DATES165-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とおか",
+                "tōka",
+                "touka",
+                "tooka",
+                "toka"
+              ],
+              "feedback": {
+                "correct": "Right: とおか (tōka) is 'the tenth of the month; ten days'.",
+                "incorrect": "'The tenth of the month' is とおか (tōka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C165-hatsuka",
+      "sequence": 9810,
+      "title": "はつか (hatsuka) — the twentieth of the month; twenty days",
+      "headword": "はつか",
+      "romanization": "hatsuka",
+      "gloss": "the twentieth of the month; twenty days",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9ac95b95dbf9b3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the eighth of the month, then the Japanese for the tenth of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はつか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はつか — hatsuka — \"the twentieth of the month; twenty days\"."
+            },
+            {
+              "kind": "speech",
+              "text": "はつかに いなかに かえります。 — hatsuka ni inaka ni kaerimasu — \"I will go back to the countryside on the twentieth.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はつか (hatsuka) is native Japanese, built from an old native word for \"twenty\" and ka, \"day\", both inherited rather than borrowed; the older origin of the first part is not settled (JMdict, KANJIDIC2)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatsuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hatsuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatsuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hatsuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hatsuka ni inaka ni kaerimasu — I will go back to the countryside on the twentieth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hatsuka ni inaka ni kaerimasu* — I will go back to the countryside on the twentieth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the eighth of the month, then the Japanese for the tenth of the month, then say hatsuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the eighth of the month, then the Japanese for the tenth of the month, then say *hatsuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はつか (hatsuka) mean? (\"The twentieth of the month; twenty days\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C165-hatsuka-type",
+              "prompt": "Say the Japanese for 'the twentieth of the month'.",
+              "assesses": [
+                "JA-LEX-C165-DATES165-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はつか",
+                "hatsuka"
+              ],
+              "feedback": {
+                "correct": "Right: はつか (hatsuka) is 'the twentieth of the month; twenty days'.",
+                "incorrect": "'The twentieth of the month' is はつか (hatsuka)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C165-tanjoubi",
+      "sequence": 9820,
+      "title": "たんじょうび (tanjōbi) — a birthday",
+      "headword": "たんじょうび",
+      "romanization": "tanjōbi",
+      "gloss": "a birthday",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2aeaec6725052b4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for the tenth of the month, then the Japanese for the twentieth of the month."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たんじょうび",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たんじょうび — tanjōbi — \"a birthday\"."
+            },
+            {
+              "kind": "speech",
+              "text": "あしたは いもうとの たんじょうびです。 — ashita wa imōto no tanjōbi desu — \"Tomorrow is my younger sister's birthday.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たんじょうび (tanjōbi) is a mixed word: Sino-Japanese tan, \"birth\" (Middle Chinese danX), and jō, \"life, be born\" (srjaeng), borrowed from Chinese, with native hi, \"day\", voiced to bi (JMdict, KANJIDIC2; Middle Chinese in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanjōbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanjōbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanjōbi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanjōbi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ashita wa imōto no tanjōbi desu — Tomorrow is my younger sister's birthday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ashita wa imōto no tanjōbi desu* — Tomorrow is my younger sister's birthday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for the tenth of the month, then the Japanese for the twentieth of the month, then say tanjōbi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for the tenth of the month, then the Japanese for the twentieth of the month, then say *tanjōbi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たんじょうび (tanjōbi) mean? (\"A birthday\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "JA-C165-tanjoubi-type",
+              "prompt": "Say the Japanese for 'a birthday'.",
+              "assesses": [
+                "JA-LEX-C165-DATES165-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たんじょうび",
+                "tanjōbi",
+                "tanjoubi",
+                "tanjoobi",
+                "tanjobi"
+              ],
+              "feedback": {
+                "correct": "Right: たんじょうび (tanjōbi) is 'a birthday'.",
+                "incorrect": "'A birthday' is たんじょうび (tanjōbi)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

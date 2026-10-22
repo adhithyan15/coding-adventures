@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:5ee492cde8801a0c",
+  "lessonIds": [
+    "GU-C206-pahocvu",
+    "GU-C206-thakvu",
+    "GU-C206-pravasi",
+    "GU-C206-mukam",
+    "GU-C206-gati",
+    "GU-R206-review-201-206"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch206.txt",
+  "json": "gujarati/narration/ch206.json",
+  "textHash": "fnv1a64:ac8a40420a692ec4",
+  "jsonHash": "fnv1a64:683087be8a4adb36",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:a119ff12eac2377a",
+  "lessonIds": [
+    "GU-C177-varavar",
+    "GU-C177-avarnavar",
+    "GU-C177-vakhat",
+    "GU-C177-niyamit",
+    "GU-C177-rojindu"
+  ],
+  "tex": "gujarati/book/chapters/ch177-again-and-again.tex"
+}

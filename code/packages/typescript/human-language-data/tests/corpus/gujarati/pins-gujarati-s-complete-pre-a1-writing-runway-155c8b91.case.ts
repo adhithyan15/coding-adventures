@@ -244,5 +244,17 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
     // Chapter 144 removes the model and the clock, then asks for the first
     // independently connected 70–90 word message for a named reader.
     "connected-composition",
+    // 204 -> 213. The A2 core's three letters, each on the full three-stage
+    // ladder and each written from a word read one lesson earlier: ઓ from તેઓ
+    // (chapter 145), ડ from મોડું (147) and ઊ from ઊંઘ (149).
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
   ]);
 });

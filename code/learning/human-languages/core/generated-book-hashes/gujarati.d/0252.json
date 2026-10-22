@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:b6ede5bd9451453d",
+  "lessonIds": [
+    "GU-C252-pharaj",
+    "GU-C252-javabdari",
+    "GU-C252-acarya",
+    "GU-C252-ganvesh",
+    "GU-C252-nivrtt-thavu"
+  ],
+  "tex": "gujarati/book/chapters/ch252-duties-and-responsibility.tex"
+}

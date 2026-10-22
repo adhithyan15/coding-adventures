@@ -1,0 +1,11 @@
+{
+  "id": "JA-C184-shinamono",
+  "pathSegment": "JA-PATH-184-GOODS184",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-184-GOODS184",
+      "order": 0
+    }
+  ]
+}

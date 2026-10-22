@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 212,
+  "sourceHash": "fnv1a64:7cc003add96fb653",
+  "lessonIds": [
+    "GU-C212-dharmasala",
+    "GU-C212-bhomiyo",
+    "GU-C212-rahdari",
+    "GU-C212-surang",
+    "GU-C212-musapharkhanu",
+    "GU-R212-review-207-212",
+    "GU-R212-review-final-212"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch212.txt",
+  "json": "gujarati/narration/ch212.json",
+  "textHash": "fnv1a64:0945fec2fbc306c1",
+  "jsonHash": "fnv1a64:a3a52791f90d25a2",
+  "findings": []
+}

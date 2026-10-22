@@ -1,0 +1,19 @@
+{
+  "chapter": 215,
+  "title": "Arms, Fingers and Necks",
+  "label": "ch:ja-arms-fingers-and-necks",
+  "canDo": "I can ask and answer about parts of the body.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-R215-review-210-215",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 215: I can ask and answer about parts of the body.",
+    "assesses": [
+      "JA-LEX-C215-BODY215-03",
+      "JA-LEX-C215-BODY215-04",
+      "JA-LEX-C215-BODY215-05"
+    ]
+  }
+}

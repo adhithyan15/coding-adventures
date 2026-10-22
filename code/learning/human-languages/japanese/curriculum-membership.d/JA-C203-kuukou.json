@@ -1,0 +1,11 @@
+{
+  "id": "JA-C203-kuukou",
+  "pathSegment": "JA-PATH-203-FLY203",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-203-FLY203",
+      "order": 1
+    }
+  ]
+}

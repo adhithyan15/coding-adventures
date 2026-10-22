@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:319de9f494c08fda",
+  "lessonIds": [
+    "JA-C184-shinamono",
+    "JA-C184-retsu",
+    "JA-C184-torikaeru",
+    "JA-C184-zenbu",
+    "JA-C184-choudo"
+  ],
+  "tex": "japanese/book/chapters/ch184-goods-queues-and-exchanges.tex"
+}

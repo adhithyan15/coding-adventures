@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C156-oshiire",
+    "language": "japanese",
+    "chapter": 156,
+    "sequence": 9310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ecb547a8c91929e"
+  },
+  "findings": []
+}

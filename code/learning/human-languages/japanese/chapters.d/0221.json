@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "Fever, Pain and Treatment",
+  "label": "ch:ja-fever-pain-and-treatment",
+  "canDo": "I can ask about a fever and say where it aches.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "JA-R221-review-216-221",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 221: I can ask about a fever and say where it aches.",
+    "assesses": [
+      "JA-LEX-C221-FEVER221-03",
+      "JA-LEX-C221-FEVER221-04",
+      "JA-LEX-C221-FEVER221-05"
+    ]
+  }
+}

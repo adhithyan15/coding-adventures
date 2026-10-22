@@ -17,6 +17,7 @@ it("pins Gujarati-owned objective activities", () => {
     .map((activity) => activity.id)
     .sort();
   expect(ids).toEqual([
+    // Gujarati A2 core (chapters 145-152): +20 -- fifteen grammar and practice checks, two reading tasks, three letter recalls.
     "GU-C01-aabhaar-script-retrieval",
     "GU-C01-aavjo-script-retrieval",
     "GU-C01-haa-naa-script-retrieval",
@@ -31,6 +32,23 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-C03-majaa-vocalic-r-retrieval",
     "GU-C03-tame-kem-chho-dha-retrieval",
     "GU-C06-number-histories-be-source",
+    "GU-C145-nathi-bolto-r1",
+    "GU-C145-not-practice-turn",
+    "GU-C146-ask-practice-reply",
+    "GU-C146-maaro-r1",
+    "GU-C146-shun-polar-ask",
+    "GU-C146-tamaro-r1",
+    "GU-C147-gayo-r1",
+    "GU-C147-past-practice-day",
+    "GU-C148-did-practice-turn",
+    "GU-C148-lidhun-r1",
+    "GU-C148-me-pidhi-r1",
+    "GU-C149-bolish-r1",
+    "GU-C149-future-practice-plan",
+    "GU-C150-javano-r1",
+    "GU-C150-plans-practice-reply",
+    "GU-C151-dukan-notis-tuesday",
+    "GU-C152-malik-chiththi-when",
     "GU-C20-bajar-copy",
     "GU-C20-ghar-write",
     "GU-C20-hear-bajar-recall",
@@ -315,6 +333,9 @@ it("pins Gujarati-owned objective activities", () => {
     "GU-W07-uu-matra-recall",
     "GU-W20-gha-copy",
     "GU-W21-ai-matra-copy",
-    "GU-W22-ttha-recall"
+    "GU-W22-ttha-recall",
+    "GU-W46-o-recall",
+    "GU-W47-dda-recall",
+    "GU-W48-uu-recall"
   ]);
 });

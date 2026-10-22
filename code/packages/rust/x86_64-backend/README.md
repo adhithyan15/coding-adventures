@@ -159,3 +159,5 @@ module that uses a refused op at compile time, with a typed error. Since LANG83 
 overflow-checked `i64_add_ovf`/`i64_sub_ovf`/`i64_mul_ovf`/`i64_neg_ovf`: one
 flag-setting `add`/`sub`/`imul`/`neg`, then `jno` over a `Trap.Overflow` trap
 call, then the store (a wrapped value never reaches the destination).
+
+LANG83 PR6a adds `write_f64_py` / `write_f64_js`: plain V1 builtin calls to the native runtime's `__twig_write_f64_py` / `__twig_write_f64_js`, with the f64 slot's raw bits in `rdi`. Those functions print Python's `repr` or JavaScript's `toString` of the value: shortest round-trip digits, no newline.

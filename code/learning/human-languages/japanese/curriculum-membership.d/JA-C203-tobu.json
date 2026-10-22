@@ -1,0 +1,11 @@
+{
+  "id": "JA-C203-tobu",
+  "pathSegment": "JA-PATH-203-FLY203",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-203-FLY203",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C150-uwagi",
+  "pathSegment": "JA-PATH-150-GLOVES150",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-150-GLOVES150",
+      "order": 0
+    }
+  ]
+}

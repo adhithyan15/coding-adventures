@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-250-COMPUTER250",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about using a computer: pressing keys, saving and printing.",
+  "prerequisites": []
+}

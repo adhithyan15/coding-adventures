@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:958a191bdd495fa0",
+  "lessonIds": [
+    "GU-C247-saheb",
+    "GU-C247-karmacari",
+    "GU-C247-dhandho",
+    "GU-C247-kamavu",
+    "GU-C247-mahenatu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch247.txt",
+  "json": "gujarati/narration/ch247.json",
+  "textHash": "fnv1a64:13451be4362918e1",
+  "jsonHash": "fnv1a64:1b369435217e8660",
+  "findings": []
+}
