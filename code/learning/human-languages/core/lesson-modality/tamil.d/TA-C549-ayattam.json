@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C549-ayattam",
+    "language": "tamil",
+    "chapter": 549,
+    "sequence": 31330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cbaf824b3895ffb"
+  },
+  "findings": []
+}

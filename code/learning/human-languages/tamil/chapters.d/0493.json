@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "In-Laws",
+  "label": "ch:ta-in-laws",
+  "canDo": "I can name in-laws on both sides of a marriage.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C493-citti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can name in-laws on both sides of a marriage.",
+    "assesses": [
+      "TA-LEX-C493-URAVU493-03",
+      "TA-LEX-C493-URAVU493-04",
+      "TA-LEX-C493-URAVU493-05"
+    ]
+  }
+}

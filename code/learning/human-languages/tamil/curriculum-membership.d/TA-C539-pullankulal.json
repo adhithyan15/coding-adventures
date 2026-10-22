@@ -1,0 +1,11 @@
+{
+  "id": "TA-C539-pullankulal",
+  "pathSegment": "TA-PATH-539-ISAI539",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-539-ISAI539",
+      "order": 0
+    }
+  ]
+}

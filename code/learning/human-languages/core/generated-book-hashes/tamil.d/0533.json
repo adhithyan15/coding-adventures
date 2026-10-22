@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:19d8ad1e6c9fb9ef",
+  "lessonIds": [
+    "TA-C533-pantayam",
+    "TA-C533-turattu",
+    "TA-C533-carukku",
+    "TA-C533-tavu",
+    "TA-C533-mukkuli"
+  ],
+  "tex": "tamil/book/chapters/ch533-the-race.tex"
+}

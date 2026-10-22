@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C360-aram",
+    "language": "tamil",
+    "chapter": 360,
+    "sequence": 20780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7acf07a9db8afcd9"
+  },
+  "findings": []
+}

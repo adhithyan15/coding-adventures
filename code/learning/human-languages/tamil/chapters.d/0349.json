@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "Thinking It Through",
+  "label": "ch:ta-thinking-it-through",
+  "canDo": "I can say that I guess, assume or think something over.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C349-palar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say that I guess, assume or think something over.",
+    "assesses": [
+      "TA-LEX-C349-CINTI349-03",
+      "TA-LEX-C349-CINTI349-04",
+      "TA-LEX-C349-CINTI349-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:a2270f2d1cd717e6",
+  "lessonIds": [
+    "TA-C530-kannamucci",
+    "TA-C530-pamparam",
+    "TA-C530-koli",
+    "TA-C530-keram",
+    "TA-C530-karrati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch530.txt",
+  "json": "tamil/narration/ch530.json",
+  "textHash": "fnv1a64:6231d7be1c9d3582",
+  "jsonHash": "fnv1a64:16d10c6fe514f649",
+  "findings": []
+}

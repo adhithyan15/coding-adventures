@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 383,
+  "title": "What Might Happen",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:104511976bc572b8",
+  "lessons": [
+    {
+      "id": "TA-C383-cattiyam",
+      "sequence": 21940,
+      "title": "சாத்தியம் (cāttiyam) — a possibility; possible",
+      "headword": "சாத்தியம்",
+      "romanization": "cāttiyam",
+      "gloss": "a possibility; possible",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14cd19e79a21dbf8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an exception, then the Tamil for if need be."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சாத்தியம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாத்தியம் — cāttiyam — \"a possibility; possible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த வேலையை ஒரே நாளில் முடிப்பது சாத்தியம் இல்லை. inta vēlaiyai orē nāḷil muṭippatu cāttiyam illai. It is not possible to finish this work in one day."
+            },
+            {
+              "kind": "speech",
+              "text": "சாத்தியமான, possible; சாத்தியமில்லை, it is not possible."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாத்தியம் (cāttiyam) is borrowed from Sanskrit sādhya, \"to be accomplished; practicable, feasible, attainable\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāttiyam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāttiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāttiyam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāttiyam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta vēlaiyai orē nāḷil muṭippatu cāttiyam illai. — It is not possible to finish this work in one day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta vēlaiyai orē nāḷil muṭippatu cāttiyam illai.* — It is not possible to finish this work in one day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an exception, then the Tamil for if need be, then say cāttiyam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an exception, then the Tamil for if need be, then say *cāttiyam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சாத்தியம் (cāttiyam) mean? (\"A possibility; possible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C383-nikaltakavu",
+      "sequence": 21950,
+      "title": "நிகழ்தகவு (nikaḻtakavu) — probability",
+      "headword": "நிகழ்தகவு",
+      "romanization": "nikaḻtakavu",
+      "gloss": "probability",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eda9a2a62bb754b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for if need be, then the Tamil for a possibility."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிகழ்தகவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிகழ்தகவு — nikaḻtakavu — \"probability\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாளை மழை பெய்வதற்கான நிகழ்தகவு அதிகம். nāḷai maḻai peyvataṟkāṉa nikaḻtakavu atikam. The probability of rain tomorrow is high."
+            },
+            {
+              "kind": "speech",
+              "text": "A word of mathematics; everyday speech says வாய்ப்பு, chance."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிகழ்தகவு (nikaḻtakavu) is a modern native coinage: nikaḻ, \"to happen, occur\" (DEDR 3661), and takavu, \"fitness, proportion\", from taku (DEDR 3005): the measure of happening."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikaḻtakavu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikaḻtakavu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikaḻtakavu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikaḻtakavu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷai maḻai peyvataṟkāṉa nikaḻtakavu atikam. — The probability of rain tomorrow is high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷai maḻai peyvataṟkāṉa nikaḻtakavu atikam.* — The probability of rain tomorrow is high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for if need be, then the Tamil for a possibility, then say nikaḻtakavu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for if need be, then the Tamil for a possibility, then say *nikaḻtakavu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிகழ்தகவு (nikaḻtakavu) mean? (\"Probability\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C383-anekamaka",
+      "sequence": 21960,
+      "title": "அநேகமாக (anēkamāka) — probably",
+      "headword": "அநேகமாக",
+      "romanization": "anēkamāka",
+      "gloss": "probably",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f8dd0ab910f432c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a possibility, then the Tamil for probability."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அநேகமாக",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அநேகமாக — anēkamāka — \"probably\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அநேகமாக அவர் நாளை வருவார். anēkamāka avar nāḷai varuvār. He will probably come tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "அநேக, many + -ஆக: in most ways, probably."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அநேகமாக (anēkamāka) is built on Sanskrit aneka, \"not one, many\" (Monier-Williams), with the adverb ending -ஆக: \"in many ways\", so \"most likely\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anēkamāka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anēkamāka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anēkamāka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anēkamāka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anēkamāka avar nāḷai varuvār. — He will probably come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anēkamāka avar nāḷai varuvār.* — He will probably come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a possibility, then the Tamil for probability, then say anēkamāka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a possibility, then the Tamil for probability, then say *anēkamāka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அநேகமாக (anēkamāka) mean? (\"Probably\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C383-cantarppam",
+      "sequence": 21970,
+      "title": "சந்தர்ப்பம் (cantarppam) — an occasion; an opportunity",
+      "headword": "சந்தர்ப்பம்",
+      "romanization": "cantarppam",
+      "gloss": "an occasion; an opportunity",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59257301b3dbf023",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for probability, then the Tamil for probably."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சந்தர்ப்பம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்தர்ப்பம் — cantarppam — \"an occasion; an opportunity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சந்தர்ப்பம் கிடைத்தால் நான் அவரிடம் பேசுவேன். cantarppam kiṭaittāl nāṉ avariṭam pēcuvēṉ. If I get the chance, I will speak to him."
+            },
+            {
+              "kind": "speech",
+              "text": "சந்தர்ப்பம் (cantarppam) கிடை, to get the chance; இந்தச் சந்தர்ப்பத்தில், on this occasion."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்தர்ப்பம் (cantarppam) is borrowed from Sanskrit saṃdarbha, \"stringing or binding together, arranging\" (Monier-Williams); Tamil uses it for the moment when things come together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantarppam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantarppam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantarppam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantarppam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantarppam kiṭaittāl nāṉ avariṭam pēcuvēṉ. — If I get the chance, I will speak to him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantarppam kiṭaittāl nāṉ avariṭam pēcuvēṉ.* — If I get the chance, I will speak to him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for probability, then the Tamil for probably, then say cantarppam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for probability, then the Tamil for probably, then say *cantarppam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சந்தர்ப்பம் (cantarppam) mean? (\"An occasion; an opportunity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C383-illaiyel",
+      "sequence": 21980,
+      "title": "இல்லையேல் (illaiyēl) — or else; otherwise",
+      "headword": "இல்லையேல்",
+      "romanization": "illaiyēl",
+      "gloss": "or else; otherwise",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11b8680177923bb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for probably, then the Tamil for an occasion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இல்லையேல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இல்லையேல் — illaiyēl — \"or else; otherwise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாம் சீக்கிரம் புறப்பட வேண்டும், இல்லையேல் பேருந்தைத் தவறவிடுவோம். nām cīkkiram puṟappaṭa vēṇṭum, illaiyēl pēruntait tavaṟaviṭuvōm. We must leave early, or else we will miss the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal written word; the everyday one is இல்லாவிட்டால்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இல்லையேல் (illaiyēl) is native: illai, \"it is not\" (DEDR 2559), with the old conditional ending -ஏல், \"if\": \"if it is not so\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "illaiyēl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *illaiyēl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "illaiyēl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *illaiyēl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nām cīkkiram puṟappaṭa vēṇṭum, illaiyēl pēruntait tavaṟaviṭuvōm. — We must leave early, or else we will miss the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nām cīkkiram puṟappaṭa vēṇṭum, illaiyēl pēruntait tavaṟaviṭuvōm.* — We must leave early, or else we will miss the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for probably, then the Tamil for an occasion, then say illaiyēl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for probably, then the Tamil for an occasion, then say *illaiyēl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இல்லையேல் (illaiyēl) mean? (\"Or else; otherwise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

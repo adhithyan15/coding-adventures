@@ -1,0 +1,11 @@
+{
+  "id": "TA-C465-pacam",
+  "pathSegment": "TA-PATH-465-ANPU465",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-465-ANPU465",
+      "order": 1
+    }
+  ]
+}

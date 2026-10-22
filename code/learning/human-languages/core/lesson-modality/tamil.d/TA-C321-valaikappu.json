@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C321-valaikappu",
+    "language": "tamil",
+    "chapter": 321,
+    "sequence": 18510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebd6dd3e984ace5f"
+  },
+  "findings": []
+}

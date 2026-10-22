@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:3421e2f7d95d8ae7",
+  "lessonIds": [
+    "TA-C473-vacikaram",
+    "TA-C473-kampiram",
+    "TA-C473-taralam",
+    "TA-C473-tannampikkai",
+    "TA-C473-meccu"
+  ],
+  "tex": "tamil/book/chapters/ch473-charm-and-confidence.tex"
+}

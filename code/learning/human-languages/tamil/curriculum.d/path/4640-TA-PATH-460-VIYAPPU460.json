@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-460-VIYAPPU460",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-460-VIYAPPU460"
+  ],
+  "after": []
+}

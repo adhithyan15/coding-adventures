@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C518-ropo",
+    "language": "tamil",
+    "chapter": 518,
+    "sequence": 29740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c380245abf86feaf"
+  },
+  "findings": []
+}

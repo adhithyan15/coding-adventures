@@ -1,0 +1,11 @@
+{
+  "id": "TA-C378-cankam",
+  "pathSegment": "TA-PATH-378-AMAIPPU378",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-378-AMAIPPU378",
+      "order": 1
+    }
+  ]
+}

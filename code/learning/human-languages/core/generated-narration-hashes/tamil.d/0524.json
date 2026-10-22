@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:62df61b6647c097e",
+  "lessonIds": [
+    "TA-C524-callatai",
+    "TA-C524-ural",
+    "TA-C524-ulakkai",
+    "TA-C524-kottu",
+    "TA-C524-cuttikari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch524.txt",
+  "json": "tamil/narration/ch524.json",
+  "textHash": "fnv1a64:5ed4a33a3f09b761",
+  "jsonHash": "fnv1a64:1beccd2bc3ed7640",
+  "findings": []
+}

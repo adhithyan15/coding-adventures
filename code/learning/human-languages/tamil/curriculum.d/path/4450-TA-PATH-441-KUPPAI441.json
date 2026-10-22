@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-441-KUPPAI441",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-441-KUPPAI441"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C459-inpam",
+  "pathSegment": "TA-PATH-459-MAKIZHCCI459",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-459-MAKIZHCCI459",
+      "order": 1
+    }
+  ]
+}

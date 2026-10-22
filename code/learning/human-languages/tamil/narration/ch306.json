@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 306,
+  "title": "Front Page News",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ff5acc8d1a6794b4",
+  "lessons": [
+    {
+      "id": "TA-C306-talaippuc-ceyti",
+      "sequence": 17710,
+      "title": "தலைப்புச் செய்தி (talaippuc ceyti) — a headline",
+      "headword": "தலைப்புச் செய்தி",
+      "romanization": "talaippuc ceyti",
+      "gloss": "a headline",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2ce5848f486c79a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a presenter, then the Tamil for a cameraman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தலைப்புச் செய்தி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தலைப்புச் செய்தி — talaippuc ceyti — \"a headline\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இன்றைய தலைப்புச் செய்தி அந்த விபத்துதான். iṉṟaiya talaippuc ceyti anta vipattutāṉ. Today's headline is that very accident."
+            },
+            {
+              "kind": "speech",
+              "text": "The ச் is the doubled stop of sandhi before செய்தி, news."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தலைப்புச் செய்தி (talaippuc ceyti) is a Tamil phrase built from தலைப்பு, \"beginning, title\", from தலை, \"head\" (DEDR 3103), and செய்தி, \"news\", at root \"a deed\" (DEDR 1957)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talaippuc ceyti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talaippuc ceyti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talaippuc ceyti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talaippuc ceyti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṉṟaiya talaippuc ceyti anta vipattutāṉ. — Today's headline is that very accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṉṟaiya talaippuc ceyti anta vipattutāṉ.* — Today's headline is that very accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a presenter, then the Tamil for a cameraman, then say talaippuc ceyti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a presenter, then the Tamil for a cameraman, then say *talaippuc ceyti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தலைப்புச் செய்தி (talaippuc ceyti) mean? (\"A headline\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C306-mutal-pakkam",
+      "sequence": 17720,
+      "title": "முதல் பக்கம் (mutal pakkam) — the front page",
+      "headword": "முதல் பக்கம்",
+      "romanization": "mutal pakkam",
+      "gloss": "the front page",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d947695c49e8b5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a cameraman, then the Tamil for a headline."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முதல் பக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதல் பக்கம் — mutal pakkam — \"the front page\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருடைய படம் முதல் பக்கத்தில் வந்தது. avaruṭaiya paṭam mutal pakkattil vantatu. His photo appeared on the front page."
+            },
+            {
+              "kind": "speech",
+              "text": "முதல் பக்கத்தில், on the front page."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முதல் பக்கம் (mutal pakkam) joins native முதல், \"first\" (DEDR 4950), and பக்கம், \"side, page\", borrowed from Sanskrit pakṣa, \"wing, side\" (CDIAL 7627)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutal pakkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutal pakkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutal pakkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutal pakkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭaiya paṭam mutal pakkattil vantatu. — His photo appeared on the front page.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭaiya paṭam mutal pakkattil vantatu.* — His photo appeared on the front page.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a cameraman, then the Tamil for a headline, then say mutal pakkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a cameraman, then the Tamil for a headline, then say *mutal pakkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முதல் பக்கம் (mutal pakkam) mean? (\"The front page\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C306-ital",
+      "sequence": 17730,
+      "title": "இதழ் (itaḻ) — an issue; a magazine",
+      "headword": "இதழ்",
+      "romanization": "itaḻ",
+      "gloss": "an issue; a magazine",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e32b4bccada58250",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a headline, then the Tamil for the front page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இதழ்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இதழ் — itaḻ — \"an issue; a magazine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த வார இதழில் ஒரு நல்ல கதை வந்தது. inta vāra itaḻil oru nalla katai vantatu. A good story appeared in this week's issue."
+            },
+            {
+              "kind": "speech",
+              "text": "In older Tamil இதழ் (itaḻ) is a petal or a palm leaf; நாளிதழ், a daily paper, is நாள் + இதழ் (itaḻ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இதழ் (itaḻ) is native Dravidian (DEDR 459): a petal or a palmyra leaf, the leaf people once wrote on, and so an issue of a paper."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itaḻ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itaḻ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itaḻ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itaḻ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta vāra itaḻil oru nalla katai vantatu. — A good story appeared in this week's issue.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta vāra itaḻil oru nalla katai vantatu.* — A good story appeared in this week's issue.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a headline, then the Tamil for the front page, then say itaḻ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a headline, then the Tamil for the front page, then say *itaḻ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இதழ் (itaḻ) mean? (\"An issue; a magazine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C306-patippu",
+      "sequence": 17740,
+      "title": "பதிப்பு (patippu) — an edition",
+      "headword": "பதிப்பு",
+      "romanization": "patippu",
+      "gloss": "an edition",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bceabde86085239",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the front page, then the Tamil for an issue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பதிப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதிப்பு — patippu — \"an edition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புத்தகத்தின் இரண்டாம் பதிப்பு வெளிவந்தது. puttakattiṉ iraṇṭām patippu veḷivantatu. The book's second edition came out."
+            },
+            {
+              "kind": "speech",
+              "text": "From பதி, to imprint."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதிப்பு (patippu) is native Dravidian (DEDR 3911): from பதி, \"to be imprinted\", an imprinting, and so a printing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patippu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patippu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patippu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patippu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puttakattiṉ iraṇṭām patippu veḷivantatu. — The book's second edition came out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puttakattiṉ iraṇṭām patippu veḷivantatu.* — The book's second edition came out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the front page, then the Tamil for an issue, then say patippu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the front page, then the Tamil for an issue, then say *patippu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பதிப்பு (patippu) mean? (\"An edition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C306-veliyitu",
+      "sequence": 17750,
+      "title": "வெளியிடு (veḷiyiṭu) — to bring out; to publish; to release",
+      "headword": "வெளியிடு",
+      "romanization": "veḷiyiṭu",
+      "gloss": "to bring out; to publish; to release",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10f7a775c344c216",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an issue, then the Tamil for an edition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வெளியிடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெளியிடு — veḷiyiṭu — \"to bring out; to publish; to release\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாளிதழ் அவருடைய கடிதத்தை வெளியிட்டது. nāḷitaḻ avaruṭaiya kaṭitattai veḷiyiṭṭatu. The newspaper published his letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): வெளியிட்டேன், veḷiyiṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "வெளி, outside + இடு, to put: to put out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெளியிடு (veḷiyiṭu) is a Tamil compound built from வெளி, \"outside, the open, public\" (DEDR 5498), and இடு, \"to put\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷiyiṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷiyiṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷiyiṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷiyiṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāḷitaḻ avaruṭaiya kaṭitattai veḷiyiṭṭatu. — The newspaper published his letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāḷitaḻ avaruṭaiya kaṭitattai veḷiyiṭṭatu.* — The newspaper published his letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an issue, then the Tamil for an edition, then say veḷiyiṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an issue, then the Tamil for an edition, then say *veḷiyiṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வெளியிடு (veḷiyiṭu) mean? (\"To bring out; to publish; to release\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

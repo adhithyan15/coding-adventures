@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:2e427777f48f26a7",
+  "lessonIds": [
+    "TA-C416-patakotti",
+    "TA-C416-tutuppu",
+    "TA-C416-toni",
+    "TA-C416-kattumaram",
+    "TA-C416-valai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch416.txt",
+  "json": "tamil/narration/ch416.json",
+  "textHash": "fnv1a64:c53e34df50dfb6ce",
+  "jsonHash": "fnv1a64:242deb1cbd54fbb2",
+  "findings": []
+}

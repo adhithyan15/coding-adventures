@@ -1,0 +1,11 @@
+{
+  "id": "TA-C546-takkuppiti",
+  "pathSegment": "TA-PATH-546-THADANGAL546",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-546-THADANGAL546",
+      "order": 4
+    }
+  ]
+}

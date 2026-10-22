@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "A Road Accident",
+  "label": "ch:ta-a-road-accident",
+  "canDo": "I can describe a road accident.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C298-mutalutavi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can describe a road accident.",
+    "assesses": [
+      "TA-LEX-C298-VIBATHU298-03",
+      "TA-LEX-C298-VIBATHU298-04",
+      "TA-LEX-C298-VIBATHU298-05"
+    ]
+  }
+}

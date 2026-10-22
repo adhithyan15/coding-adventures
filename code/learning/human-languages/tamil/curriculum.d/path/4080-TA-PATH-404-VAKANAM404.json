@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-404-VAKANAM404",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-404-VAKANAM404"
+  ],
+  "after": []
+}

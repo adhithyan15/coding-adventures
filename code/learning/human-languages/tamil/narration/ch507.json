@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 507,
+  "title": "At the Office Desk",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a5e664cb28cd6503",
+  "lessons": [
+    {
+      "id": "TA-C507-paniyitam",
+      "sequence": 29150,
+      "title": "பணியிடம் (paṇiyiṭam) — a workplace",
+      "headword": "பணியிடம்",
+      "romanization": "paṇiyiṭam",
+      "gloss": "a workplace",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e599cd986dc891f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for full-time, then the Tamil for an assistant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பணியிடம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணியிடம் — paṇiyiṭam — \"a workplace\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் பணியிடம் வீட்டிலிருந்து தூரமாக இருக்கிறது. eṉ paṇiyiṭam vīṭṭiliruntu tūramāka irukkiṟatu. My workplace is far from home."
+            },
+            {
+              "kind": "speech",
+              "text": "Like any -அம் noun it takes -அத்து- before an ending: பணியிடத்தில், at the workplace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணியிடம் (paṇiyiṭam) is a native compound of பணி (paṇi), \"work, service\" (DEDR 3884), and இடம் (iṭam), \"place\" (DEDR 434)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇiyiṭam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇiyiṭam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇiyiṭam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇiyiṭam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ paṇiyiṭam vīṭṭiliruntu tūramāka irukkiṟatu. — My workplace is far from home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ paṇiyiṭam vīṭṭiliruntu tūramāka irukkiṟatu.* — My workplace is far from home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for full-time, then the Tamil for an assistant, then say paṇiyiṭam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for full-time, then the Tamil for an assistant, then say *paṇiyiṭam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பணியிடம் (paṇiyiṭam) mean? (\"A workplace\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C507-panipuri",
+      "sequence": 29160,
+      "title": "பணிபுரி (paṇipuri) — to be employed; to work",
+      "headword": "பணிபுரி",
+      "romanization": "paṇipuri",
+      "gloss": "to be employed; to work",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f986ddb5583282c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an assistant, then the Tamil for a workplace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பணிபுரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிபுரி — paṇipuri — \"to be employed; to work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் அப்பா முப்பது ஆண்டுகள் ரயில் நிலையத்தில் பணிபுரிந்தார். eṉ appā muppatu āṇṭukaḷ rayil nilaiyattil paṇipurintār. My father worked at the railway station for thirty years."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பணிபுரிந்தேன், paṇipurintēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "A formal verb beside வேலை செய் (vēlai cey). Where someone works takes -இல்: வங்கியில் பணிபுரிகிறார்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிபுரி (paṇipuri) is a native compound: பணி (paṇi), \"work, service\" (DEDR 3884), with புரி (puri), \"to do, to perform\", as the verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇipuri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇipuri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇipuri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇipuri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ appā muppatu āṇṭukaḷ rayil nilaiyattil paṇipurintār. — My father worked at the railway station for thirty years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ appā muppatu āṇṭukaḷ rayil nilaiyattil paṇipurintār.* — My father worked at the railway station for thirty years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an assistant, then the Tamil for a workplace, then say paṇipuri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an assistant, then the Tamil for a workplace, then say *paṇipuri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பணிபுரி (paṇipuri) mean? (\"To be employed; to work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C507-ceyalalar",
+      "sequence": 29170,
+      "title": "செயலாளர் (ceyalāḷar) — a secretary",
+      "headword": "செயலாளர்",
+      "romanization": "ceyalāḷar",
+      "gloss": "a secretary",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac0d8b462a03e5bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a workplace, then the Tamil for to be employed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: செயலாளர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செயலாளர் — ceyalāḷar — \"a secretary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சங்கத்தின் செயலாளர் கூட்டத்தை நடத்தினார். caṅkattiṉ ceyalāḷar kūṭṭattai naṭattiṉār. The association's secretary ran the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: செயலாளர்கள், ceyalāḷarkaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Built like உதவியாளர் (utaviyāḷar): செயல் \"work, action\" + -ஆளர் \"one who …\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செயலாளர் (ceyalāḷar) is built from native parts: செயல் (ceyal), \"action\", from செய் (cey), \"to do\" (DEDR 1957), and -ஆளர், \"one who does it\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceyalāḷar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceyalāḷar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ceyalāḷar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ceyalāḷar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṅkattiṉ ceyalāḷar kūṭṭattai naṭattiṉār. — The association's secretary ran the meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṅkattiṉ ceyalāḷar kūṭṭattai naṭattiṉār.* — The association's secretary ran the meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a workplace, then the Tamil for to be employed, then say ceyalāḷar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a workplace, then the Tamil for to be employed, then say *ceyalāḷar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does செயலாளர் (ceyalāḷar) mean? (\"A secretary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C507-koppu",
+      "sequence": 29180,
+      "title": "கோப்பு (kōppu) — a file; a folder",
+      "headword": "கோப்பு",
+      "romanization": "kōppu",
+      "gloss": "a file; a folder",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2747144302ee0c25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to be employed, then the Tamil for a secretary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கோப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோப்பு — kōppu — \"a file; a folder\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மேலாளர் அந்தக் கோப்பை என் மேசையில் வைத்தார். mēlāḷar antak kōppai eṉ mēcaiyil vaittār. The manager put that file on my desk."
+            },
+            {
+              "kind": "speech",
+              "text": "It names a paper folder and a computer file alike: கோப்பைத் திற, to open a file."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கோப்பு (kōppu) is native Dravidian: DEDR 2176 gives கோ (kō) and கோர் (kōr), \"to string, to thread\", and lists கோப்பு for a stringing, a threading. The office sense, a file of papers, is a later use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēlāḷar antak kōppai eṉ mēcaiyil vaittār. — The manager put that file on my desk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēlāḷar antak kōppai eṉ mēcaiyil vaittār.* — The manager put that file on my desk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to be employed, then the Tamil for a secretary, then say kōppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to be employed, then the Tamil for a secretary, then say *kōppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கோப்பு (kōppu) mean? (\"A file; a folder\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C507-merparvaiyitu",
+      "sequence": 29190,
+      "title": "மேற்பார்வையிடு (mēṟpārvaiyiṭu) — to supervise",
+      "headword": "மேற்பார்வையிடு",
+      "romanization": "mēṟpārvaiyiṭu",
+      "gloss": "to supervise",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bd56dc5768df66f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a secretary, then the Tamil for a file."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மேற்பார்வையிடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேற்பார்வையிடு — mēṟpārvaiyiṭu — \"to supervise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு மூத்த பொறியாளர் எங்கள் வேலையை மேற்பார்வையிடுகிறார். oru mūtta poṟiyāḷar eṅkaḷ vēlaiyai mēṟpārvaiyiṭukiṟār. A senior engineer supervises our work."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மேற்பார்வையிட்டேன், mēṟpārvaiyiṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The work watched over takes -ஐ: வேலையை மேற்பார்வையிடு (mēṟpārvaiyiṭu). The noun is மேற்பார்வை (mēṟpārvai), supervision."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மேற்பார்வையிடு (mēṟpārvaiyiṭu) is a native compound: மேல் (mēl), \"above\", பார்வை (pārvai), \"a look\", from பார் (pār), \"to see\" (DEDR 4091), and the light verb இடு, \"to put\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēṟpārvaiyiṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēṟpārvaiyiṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēṟpārvaiyiṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēṟpārvaiyiṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru mūtta poṟiyāḷar eṅkaḷ vēlaiyai mēṟpārvaiyiṭukiṟār. — A senior engineer supervises our work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru mūtta poṟiyāḷar eṅkaḷ vēlaiyai mēṟpārvaiyiṭukiṟār.* — A senior engineer supervises our work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a secretary, then the Tamil for a file, then say mēṟpārvaiyiṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a secretary, then the Tamil for a file, then say *mēṟpārvaiyiṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மேற்பார்வையிடு (mēṟpārvaiyiṭu) mean? (\"To supervise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

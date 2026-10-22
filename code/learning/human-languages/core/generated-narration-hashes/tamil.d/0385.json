@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:26849752070e2960",
+  "lessonIds": [
+    "TA-C385-culnilai",
+    "TA-C385-nilaimai",
+    "TA-C385-pinnani",
+    "TA-C385-cikkal",
+    "TA-C385-kaiyal",
+    "TA-R385-review-379-385"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch385.txt",
+  "json": "tamil/narration/ch385.json",
+  "textHash": "fnv1a64:b9d767b2fa5ca16b",
+  "jsonHash": "fnv1a64:5bfb8b45a0aeb90a",
+  "findings": []
+}

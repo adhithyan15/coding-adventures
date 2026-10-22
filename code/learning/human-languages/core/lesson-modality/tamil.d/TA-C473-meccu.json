@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C473-meccu",
+    "language": "tamil",
+    "chapter": 473,
+    "sequence": 27160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ba53f8132a9b27c"
+  },
+  "findings": []
+}

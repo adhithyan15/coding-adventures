@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:a2a8d8ccde1d1e9d",
+  "lessonIds": [
+    "TA-C419-kulirutti",
+    "TA-C419-vennir",
+    "TA-C419-porttu",
+    "TA-C419-ilaipparu",
+    "TA-C419-viruntompal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch419.txt",
+  "json": "tamil/narration/ch419.json",
+  "textHash": "fnv1a64:650a31520221ad06",
+  "jsonHash": "fnv1a64:1e3e63fc932ec0d6",
+  "findings": []
+}

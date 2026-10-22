@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C450-acal",
+    "language": "tamil",
+    "chapter": 450,
+    "sequence": 25660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a97a75027e64ab09"
+  },
+  "findings": []
+}

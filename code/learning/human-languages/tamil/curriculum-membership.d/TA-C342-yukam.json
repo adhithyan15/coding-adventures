@@ -1,0 +1,11 @@
+{
+  "id": "TA-C342-yukam",
+  "pathSegment": "TA-PATH-342-PANDAIYA342",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-342-PANDAIYA342",
+      "order": 3
+    }
+  ]
+}

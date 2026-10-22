@@ -1,0 +1,11 @@
+{
+  "id": "TA-C407-valittatam",
+  "pathSegment": "TA-PATH-407-URIMAM407",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-407-URIMAM407",
+      "order": 3
+    }
+  ]
+}

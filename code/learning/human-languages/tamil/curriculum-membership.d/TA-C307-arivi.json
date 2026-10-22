@@ -1,0 +1,11 @@
+{
+  "id": "TA-C307-arivi",
+  "pathSegment": "TA-PATH-307-SEYTHI307",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-307-SEYTHI307",
+      "order": 4
+    }
+  ]
+}

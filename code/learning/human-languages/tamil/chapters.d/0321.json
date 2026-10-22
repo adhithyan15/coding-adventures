@@ -1,0 +1,19 @@
+{
+  "chapter": 321,
+  "title": "Customs and Rituals",
+  "label": "ch:ta-customs-and-rituals",
+  "canDo": "I can talk about family customs and ceremonies.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C321-putumanai-pukuvila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can talk about family customs and ceremonies.",
+    "assesses": [
+      "TA-LEX-C321-SADANGU321-03",
+      "TA-LEX-C321-SADANGU321-04",
+      "TA-LEX-C321-SADANGU321-05"
+    ]
+  }
+}

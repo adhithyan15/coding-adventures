@@ -1,0 +1,19 @@
+{
+  "chapter": 546,
+  "title": "When Plans Go Wrong",
+  "label": "ch:ta-when-plans-go-wrong",
+  "canDo": "I can talk about setbacks and obstacles.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C546-takkuppiti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 546: I can talk about setbacks and obstacles.",
+    "assesses": [
+      "TA-LEX-C546-THADANGAL546-03",
+      "TA-LEX-C546-THADANGAL546-04",
+      "TA-LEX-C546-THADANGAL546-05"
+    ]
+  }
+}

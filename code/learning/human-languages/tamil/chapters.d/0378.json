@@ -1,0 +1,21 @@
+{
+  "chapter": 378,
+  "title": "Organisations",
+  "label": "ch:ta-organisations",
+  "canDo": "I can talk about an organisation and the people who run it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-R378-review-371-378",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about an organisation and the people who run it.",
+    "assesses": [
+      "TA-LEX-C378-AMAIPPU378-01",
+      "TA-LEX-C378-AMAIPPU378-02",
+      "TA-LEX-C378-AMAIPPU378-03",
+      "TA-LEX-C378-AMAIPPU378-04",
+      "TA-LEX-C378-AMAIPPU378-05"
+    ]
+  }
+}

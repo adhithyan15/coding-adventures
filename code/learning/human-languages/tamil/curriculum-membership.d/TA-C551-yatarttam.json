@@ -1,0 +1,11 @@
+{
+  "id": "TA-C551-yatarttam",
+  "pathSegment": "TA-PATH-551-VADIVAM551",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-551-VADIVAM551",
+      "order": 4
+    }
+  ]
+}

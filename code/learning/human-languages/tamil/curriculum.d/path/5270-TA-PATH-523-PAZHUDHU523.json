@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-523-PAZHUDHU523",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-523-PAZHUDHU523"
+  ],
+  "after": []
+}

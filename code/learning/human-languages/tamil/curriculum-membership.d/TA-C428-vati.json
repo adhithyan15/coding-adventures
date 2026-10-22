@@ -1,0 +1,11 @@
+{
+  "id": "TA-C428-vati",
+  "pathSegment": "TA-PATH-428-SARAL428",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-428-SARAL428",
+      "order": 4
+    }
+  ]
+}

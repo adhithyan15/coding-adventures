@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:55f4bb4475ab855b",
+  "lessonIds": [
+    "TA-C445-minvettu",
+    "TA-C445-pancam",
+    "TA-C445-turu-rust",
+    "TA-C445-ciramam",
+    "TA-C445-atir",
+    "TA-R445-review-439-445"
+  ],
+  "tex": "tamil/book/chapters/ch445-power-cuts-and-shortages.tex"
+}

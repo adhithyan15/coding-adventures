@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:c74b7408fbd205dd",
+  "lessonIds": [
+    "TA-C520-ceyarkaikkol",
+    "TA-C520-taniyanki",
+    "TA-C520-calavai-iyantiram",
+    "TA-C520-mincatanam",
+    "TA-C520-istiri-potu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch520.txt",
+  "json": "tamil/narration/ch520.json",
+  "textHash": "fnv1a64:266008d741973579",
+  "jsonHash": "fnv1a64:d154a1a893330ac2",
+  "findings": []
+}

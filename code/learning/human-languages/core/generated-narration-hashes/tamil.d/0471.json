@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:0f02e4af94e9518b",
+  "lessonIds": [
+    "TA-C471-panpu",
+    "TA-C471-cupavam",
+    "TA-C471-iyalpu",
+    "TA-C471-pakkuvam",
+    "TA-C471-alatciyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch471.txt",
+  "json": "tamil/narration/ch471.json",
+  "textHash": "fnv1a64:6586508bef2dd0dc",
+  "jsonHash": "fnv1a64:f087ddf86aac8893",
+  "findings": []
+}

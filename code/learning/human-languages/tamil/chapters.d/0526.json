@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Cooking Steps",
+  "label": "ch:ta-cooking-steps",
+  "canDo": "I can describe how a South Indian dish is made.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C526-tuvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can describe how a South Indian dish is made.",
+    "assesses": [
+      "TA-LEX-C526-THALIPPU526-03",
+      "TA-LEX-C526-THALIPPU526-04",
+      "TA-LEX-C526-THALIPPU526-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C512-itamarram",
+    "language": "tamil",
+    "chapter": 512,
+    "sequence": 29430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79ef2eaa207b3058"
+  },
+  "findings": []
+}

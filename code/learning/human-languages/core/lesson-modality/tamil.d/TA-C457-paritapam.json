@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C457-paritapam",
+    "language": "tamil",
+    "chapter": 457,
+    "sequence": 26330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1b6886ba015a215"
+  },
+  "findings": []
+}

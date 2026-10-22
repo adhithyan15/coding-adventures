@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C313-utanatiyaka",
+    "language": "tamil",
+    "chapter": 313,
+    "sequence": 18080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d8838b6cccbfa6f"
+  },
+  "findings": []
+}

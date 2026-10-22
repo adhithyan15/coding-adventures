@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:c160b688c89450b7",
+  "lessonIds": [
+    "TA-C488-paruman",
+    "TA-C488-toppai",
+    "TA-C488-meli",
+    "TA-C488-kun",
+    "TA-C488-pattini"
+  ],
+  "tex": "tamil/book/chapters/ch488-weight-and-shape.tex"
+}

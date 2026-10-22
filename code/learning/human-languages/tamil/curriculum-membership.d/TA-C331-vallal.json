@@ -1,0 +1,11 @@
+{
+  "id": "TA-C331-vallal",
+  "pathSegment": "TA-PATH-331-KODAI331",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-331-KODAI331",
+      "order": 2
+    }
+  ]
+}

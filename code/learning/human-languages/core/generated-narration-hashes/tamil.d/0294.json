@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:73cdfa1cb62d35b5",
+  "lessonIds": [
+    "TA-C294-catci",
+    "TA-C294-campavam",
+    "TA-C294-tirutu",
+    "TA-C294-kollai",
+    "TA-C294-nikal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch294.txt",
+  "json": "tamil/narration/ch294.json",
+  "textHash": "fnv1a64:9abbcf06ff26e478",
+  "jsonHash": "fnv1a64:070a58aa69a125a7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:3a96f0e47de59774",
+  "lessonIds": [
+    "TA-C356-kalanturaiyatu",
+    "TA-C356-peccuvarttai",
+    "TA-C356-kurukkitu",
+    "TA-C356-camaracam",
+    "TA-C356-vakkuvatam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch356.txt",
+  "json": "tamil/narration/ch356.json",
+  "textHash": "fnv1a64:d1d8d2fcc0a2c8c5",
+  "jsonHash": "fnv1a64:369b928825d4bab1",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "Learning for Everyone",
+  "label": "ch:ta-learning-for-everyone",
+  "canDo": "I can talk about literacy, awareness and scholarships.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C368-vina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can talk about literacy, awareness and scholarships.",
+    "assesses": [
+      "TA-LEX-C368-KALVIYARIVU368-03",
+      "TA-LEX-C368-KALVIYARIVU368-04",
+      "TA-LEX-C368-KALVIYARIVU368-05"
+    ]
+  }
+}

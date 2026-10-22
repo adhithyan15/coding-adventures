@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C412-munneru",
+    "language": "tamil",
+    "chapter": 412,
+    "sequence": 23740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2c1e34dda39a7b6"
+  },
+  "findings": []
+}

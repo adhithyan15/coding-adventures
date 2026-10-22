@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 304,
+  "title": "Shaken and Shattered",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:950d272b2da7e3be",
+  "lessons": [
+    {
+      "id": "TA-C304-pataru",
+      "sequence": 17610,
+      "title": "பதறு (pataṟu) — to get flustered",
+      "headword": "பதறு",
+      "romanization": "pataṟu",
+      "gloss": "to get flustered",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2897c4f661f3cb07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for refuge, then the Tamil for to drive away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பதறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதறு — pataṟu — \"to get flustered\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சத்தம் கேட்டதும் எல்லோரும் பதறினார்கள். cattam kēṭṭatum ellōrum pataṟiṉārkaḷ. Everyone got flustered when they heard the noise."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பதறினேன், pataṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "பதறாதே, do not panic: a common way to calm someone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதறு (pataṟu) is native Dravidian (DEDR 3910): to be flurried, confused, overhasty."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pataṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pataṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pataṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pataṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cattam kēṭṭatum ellōrum pataṟiṉārkaḷ. — Everyone got flustered when they heard the noise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cattam kēṭṭatum ellōrum pataṟiṉārkaḷ.* — Everyone got flustered when they heard the noise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for refuge, then the Tamil for to drive away, then say pataṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for refuge, then the Tamil for to drive away, then say *pataṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பதறு (pataṟu) mean? (\"To get flustered\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C304-pitunku",
+      "sequence": 17620,
+      "title": "பிடுங்கு (piṭuṅku) — to snatch; to pull out",
+      "headword": "பிடுங்கு",
+      "romanization": "piṭuṅku",
+      "gloss": "to snatch; to pull out",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f9b2253f5fdc9ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to drive away, then the Tamil for to get flustered."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பிடுங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிடுங்கு — piṭuṅku — \"to snatch; to pull out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒருவன் அவளுடைய கைப்பையைப் பிடுங்கிக்கொண்டு ஓடினான். oruvaṉ avaḷuṭaiya kaippaiyaip piṭuṅkikkoṇṭu ōṭiṉāṉ. A man snatched her handbag and ran off."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பிடுங்கினேன், piṭuṅkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to pull out a weed or a tooth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிடுங்கு (piṭuṅku) is native Dravidian (DEDR 4152): to pull out, pluck up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṭuṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṭuṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṭuṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṭuṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oruvaṉ avaḷuṭaiya kaippaiyaip piṭuṅkikkoṇṭu ōṭiṉāṉ. — A man snatched her handbag and ran off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oruvaṉ avaḷuṭaiya kaippaiyaip piṭuṅkikkoṇṭu ōṭiṉāṉ.* — A man snatched her handbag and ran off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to drive away, then the Tamil for to get flustered, then say piṭuṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to drive away, then the Tamil for to get flustered, then say *piṭuṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பிடுங்கு (piṭuṅku) mean? (\"To snatch; to pull out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C304-takar",
+      "sequence": 17630,
+      "title": "தகர் (takar) — to smash; to shatter",
+      "headword": "தகர்",
+      "romanization": "takar",
+      "gloss": "to smash; to shatter",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dfa7bc5ee2b88de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to get flustered, then the Tamil for to snatch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தகர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தகர் — takar — \"to smash; to shatter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "திருடர்கள் கதவின் பூட்டைத் தகர்த்தார்கள். tiruṭarkaḷ kataviṉ pūṭṭait takarttārkaḷ. The thieves smashed the lock of the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தகர்த்தேன், takarttēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Without an object: தகர்ந்தது, it was shattered."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தகர் (takar) is native Dravidian (DEDR 2999): to be broken to pieces, and with -த்த- to smash."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiruṭarkaḷ kataviṉ pūṭṭait takarttārkaḷ. — The thieves smashed the lock of the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiruṭarkaḷ kataviṉ pūṭṭait takarttārkaḷ.* — The thieves smashed the lock of the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to get flustered, then the Tamil for to snatch, then say takar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to get flustered, then the Tamil for to snatch, then say *takar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தகர் (takar) mean? (\"To smash; to shatter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C304-ulukku",
+      "sequence": 17640,
+      "title": "உலுக்கு (ulukku) — to shake up",
+      "headword": "உலுக்கு",
+      "romanization": "ulukku",
+      "gloss": "to shake up",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66a83c2cde852340",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to snatch, then the Tamil for to smash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உலுக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உலுக்கு — ulukku — \"to shake up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தச் செய்தி ஊர் முழுவதையும் உலுக்கியது. antac ceyti ūr muḻuvataiyum ulukkiyatu. That news shook up the whole town."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): உலுக்கினேன், ulukkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also literally: மரத்தை உலுக்கு (ulukku), to shake a tree."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உலுக்கு (ulukku) is native Dravidian (DEDR 1003): to shake, as a tree, or to tremble, as in an earthquake."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulukku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulukku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulukku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulukku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antac ceyti ūr muḻuvataiyum ulukkiyatu. — That news shook up the whole town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antac ceyti ūr muḻuvataiyum ulukkiyatu.* — That news shook up the whole town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to snatch, then the Tamil for to smash, then say ulukku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to snatch, then the Tamil for to smash, then say *ulukku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உலுக்கு (ulukku) mean? (\"To shake up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C304-citai",
+      "sequence": 17650,
+      "title": "சிதை (citai) — to ruin; to shatter",
+      "headword": "சிதை",
+      "romanization": "citai",
+      "gloss": "to ruin; to shatter",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4453a25a54fc0035",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to smash, then the Tamil for to shake up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிதை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிதை — citai — \"to ruin; to shatter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வெள்ளம் விவசாயிகளின் கனவுகளைச் சிதைத்தது. veḷḷam vivacāyikaḷiṉ kaṉavukaḷaic citaittatu. The flood ruined the farmers' dreams."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சிதைத்தேன், citaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Without an object: சிதைந்தது, it was ruined or broke apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிதை (citai) is native Dravidian (DEDR 2526): to be spoiled or broken, and with -த்த- to spoil, to ruin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veḷḷam vivacāyikaḷiṉ kaṉavukaḷaic citaittatu. — The flood ruined the farmers' dreams.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veḷḷam vivacāyikaḷiṉ kaṉavukaḷaic citaittatu.* — The flood ruined the farmers' dreams.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to smash, then the Tamil for to shake up, then say citai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to smash, then the Tamil for to shake up, then say *citai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிதை (citai) mean? (\"To ruin; to shatter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

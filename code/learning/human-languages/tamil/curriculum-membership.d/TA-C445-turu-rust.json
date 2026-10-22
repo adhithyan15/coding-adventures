@@ -1,0 +1,11 @@
+{
+  "id": "TA-C445-turu-rust",
+  "pathSegment": "TA-PATH-445-MINVETTU445",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-445-MINVETTU445",
+      "order": 2
+    }
+  ]
+}

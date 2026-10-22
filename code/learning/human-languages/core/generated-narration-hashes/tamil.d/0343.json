@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:45605c3f20a17d27",
+  "lessonIds": [
+    "TA-C343-palankatai",
+    "TA-C343-puranam",
+    "TA-C343-kattukkatai",
+    "TA-C343-punai",
+    "TA-C343-palamoli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch343.txt",
+  "json": "tamil/narration/ch343.json",
+  "textHash": "fnv1a64:14e6adc75f96366b",
+  "jsonHash": "fnv1a64:41b17a782e8a393c",
+  "findings": []
+}

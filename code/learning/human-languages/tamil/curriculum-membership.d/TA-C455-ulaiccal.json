@@ -1,0 +1,11 @@
+{
+  "id": "TA-C455-ulaiccal",
+  "pathSegment": "TA-PATH-455-KAVALAI455",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-455-KAVALAI455",
+      "order": 1
+    }
+  ]
+}

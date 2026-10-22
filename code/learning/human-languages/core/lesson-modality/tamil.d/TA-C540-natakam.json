@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C540-natakam",
+    "language": "tamil",
+    "chapter": 540,
+    "sequence": 30850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f5214464f5dfc24"
+  },
+  "findings": []
+}

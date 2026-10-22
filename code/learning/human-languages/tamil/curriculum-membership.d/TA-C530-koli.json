@@ -1,0 +1,11 @@
+{
+  "id": "TA-C530-koli",
+  "pathSegment": "TA-PATH-530-KUZHANTHAI530",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-530-KUZHANTHAI530",
+      "order": 2
+    }
+  ]
+}

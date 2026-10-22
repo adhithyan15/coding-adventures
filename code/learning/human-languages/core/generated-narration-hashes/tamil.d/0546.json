@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:de45850215f9e075",
+  "lessonIds": [
+    "TA-C546-pinnataivu",
+    "TA-C546-itaiyuru",
+    "TA-C546-kurukkitu",
+    "TA-C546-muttukkattai",
+    "TA-C546-takkuppiti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch546.txt",
+  "json": "tamil/narration/ch546.json",
+  "textHash": "fnv1a64:d414096a18b0a8af",
+  "jsonHash": "fnv1a64:ba8452c58e8aee85",
+  "findings": []
+}

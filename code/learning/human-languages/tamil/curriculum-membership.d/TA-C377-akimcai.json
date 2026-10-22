@@ -1,0 +1,11 @@
+{
+  "id": "TA-C377-akimcai",
+  "pathSegment": "TA-PATH-377-VANMURAI377",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-377-VANMURAI377",
+      "order": 1
+    }
+  ]
+}

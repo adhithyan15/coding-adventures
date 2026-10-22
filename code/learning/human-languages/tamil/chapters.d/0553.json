@@ -1,0 +1,19 @@
+{
+  "chapter": 553,
+  "title": "For Now or For Good",
+  "label": "ch:ta-for-now-or-for-good",
+  "canDo": "I can say whether something is temporary, permanent or essential.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C553-torayamaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 553: I can say whether something is temporary, permanent or essential.",
+    "assesses": [
+      "TA-LEX-C553-THARKALIKAM553-03",
+      "TA-LEX-C553-THARKALIKAM553-04",
+      "TA-LEX-C553-THARKALIKAM553-05"
+    ]
+  }
+}

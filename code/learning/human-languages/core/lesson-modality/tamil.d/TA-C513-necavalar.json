@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C513-necavalar",
+    "language": "tamil",
+    "chapter": 513,
+    "sequence": 29480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6b6b262cb3c188b"
+  },
+  "findings": []
+}

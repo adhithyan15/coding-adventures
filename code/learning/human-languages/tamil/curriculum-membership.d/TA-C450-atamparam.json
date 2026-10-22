@@ -1,0 +1,11 @@
+{
+  "id": "TA-C450-atamparam",
+  "pathSegment": "TA-PATH-450-ASAL450",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-450-ASAL450",
+      "order": 2
+    }
+  ]
+}

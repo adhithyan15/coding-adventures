@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-499-MANAM499",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-499-MANAM499"
+  ],
+  "after": []
+}

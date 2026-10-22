@@ -1,0 +1,11 @@
+{
+  "id": "TA-C518-ropo",
+  "pathSegment": "TA-PATH-518-NIRAL518",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-518-NIRAL518",
+      "order": 3
+    }
+  ]
+}

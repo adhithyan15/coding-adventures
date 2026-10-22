@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:42978a075bc3b942",
+  "lessonIds": [
+    "TA-C430-utayam",
+    "TA-C430-veliccam",
+    "TA-C430-ativanam",
+    "TA-C430-minnu",
+    "TA-C430-oli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch430.txt",
+  "json": "tamil/narration/ch430.json",
+  "textHash": "fnv1a64:d22ff59fc0788c57",
+  "jsonHash": "fnv1a64:294f01efeb0b5d0e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C396-etirvinai",
+    "language": "tamil",
+    "chapter": 396,
+    "sequence": 22620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:165c7d9d4371d7d4"
+  },
+  "findings": []
+}

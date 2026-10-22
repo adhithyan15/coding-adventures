@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:8daadbb27fcfb629",
+  "lessonIds": [
+    "TA-C399-eppatiyum",
+    "TA-C399-kututal",
+    "TA-C399-mulam",
+    "TA-C399-ullatakku",
+    "TA-C399-kariyam",
+    "TA-R399-review-393-399",
+    "TA-R399-review-final-399"
+  ],
+  "tex": "tamil/book/chapters/ch399-whatever-happens.tex"
+}

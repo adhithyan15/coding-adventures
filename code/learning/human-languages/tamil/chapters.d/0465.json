@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Longing and Fondness",
+  "label": "ch:ta-longing-and-fondness",
+  "canDo": "I can talk about longing, family affection, fondness and being moved.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C465-nekil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can talk about longing, family affection, fondness and being moved.",
+    "assesses": [
+      "TA-LEX-C465-ANPU465-03",
+      "TA-LEX-C465-ANPU465-04",
+      "TA-LEX-C465-ANPU465-05"
+    ]
+  }
+}

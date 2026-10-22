@@ -1,0 +1,11 @@
+{
+  "id": "TA-C484-narai",
+  "pathSegment": "TA-PATH-484-MUTI484",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-484-MUTI484",
+      "order": 4
+    }
+  ]
+}

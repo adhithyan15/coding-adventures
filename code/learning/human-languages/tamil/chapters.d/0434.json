@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Meadows and Groves",
+  "label": "ch:ta-meadows-and-groves",
+  "canDo": "I can talk about meadows, groves, palmyra palms and bushes, and animals grazing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C434-putar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about meadows, groves, palmyra palms and bushes, and animals grazing.",
+    "assesses": [
+      "TA-LEX-C434-THOPPU434-03",
+      "TA-LEX-C434-THOPPU434-04",
+      "TA-LEX-C434-THOPPU434-05"
+    ]
+  }
+}

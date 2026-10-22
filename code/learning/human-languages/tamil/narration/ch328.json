@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 328,
+  "title": "Kings and Queens",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:57fad53ce0036e43",
+  "lessons": [
+    {
+      "id": "TA-C328-mannar",
+      "sequence": 18840,
+      "title": "மன்னர் (maṉṉar) — a king",
+      "headword": "மன்னர்",
+      "romanization": "maṉṉar",
+      "gloss": "a king",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f149739fb9c52d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a long time, then the Tamil for ancestral roots."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மன்னர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மன்னர் — maṉṉar — \"a king\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மன்னர் தன் மக்களை நன்றாகக் கவனித்துக்கொண்டார். maṉṉar taṉ makkaḷai naṉṟākak kavaṉittukkoṇṭār. The king took good care of his people."
+            },
+            {
+              "kind": "speech",
+              "text": "A respectful form; மன்னன் is the plain one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மன்னர் (maṉṉar) is native Dravidian: DEDR 4774 gives மன் and மன்னன், \"king, lord, chief\", and மன்னர் is its respectful form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṉṉar taṉ makkaḷai naṉṟākak kavaṉittukkoṇṭār. — The king took good care of his people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṉṉar taṉ makkaḷai naṉṟākak kavaṉittukkoṇṭār.* — The king took good care of his people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a long time, then the Tamil for ancestral roots, then say maṉṉar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a long time, then the Tamil for ancestral roots, then say *maṉṉar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மன்னர் (maṉṉar) mean? (\"A king\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C328-rani",
+      "sequence": 18850,
+      "title": "ராணி (rāṇi) — a queen",
+      "headword": "ராணி",
+      "romanization": "rāṇi",
+      "gloss": "a queen",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39671f14700bd9a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for ancestral roots, then the Tamil for a king."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ராணி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ராணி — rāṇi — \"a queen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ராணி அழகான தோட்டத்தில் நடந்தாள். rāṇi aḻakāṉa tōṭṭattil naṭantāḷ. The queen walked in a beautiful garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the queen in chess and in cards."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ராணி (rāṇi) is borrowed from Sanskrit rājñī, \"queen\" (CDIAL 10692), through a Prakrit form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāṇi aḻakāṉa tōṭṭattil naṭantāḷ. — The queen walked in a beautiful garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāṇi aḻakāṉa tōṭṭattil naṭantāḷ.* — The queen walked in a beautiful garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for ancestral roots, then the Tamil for a king, then say rāṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for ancestral roots, then the Tamil for a king, then say *rāṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ராணி (rāṇi) mean? (\"A queen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C328-ilavaracan",
+      "sequence": 18860,
+      "title": "இளவரசன் (iḷavaracaṉ) — a prince",
+      "headword": "இளவரசன்",
+      "romanization": "iḷavaracaṉ",
+      "gloss": "a prince",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50f587be4fdb725c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a king, then the Tamil for a queen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இளவரசன்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இளவரசன் — iḷavaracaṉ — \"a prince\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இளவரசன் குதிரையில் காட்டுக்குப் போனான். iḷavaracaṉ kutiraiyil kāṭṭukkup pōṉāṉ. The prince rode to the forest on a horse."
+            },
+            {
+              "kind": "speech",
+              "text": "இள, young + அரசன், king."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இளவரசன் (iḷavaracaṉ) is a Tamil compound built from இள, \"young\" (DEDR 513), and அரசன், \"king\", which DEDR 201 traces to Sanskrit rājan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷavaracaṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷavaracaṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷavaracaṉ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷavaracaṉ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷavaracaṉ kutiraiyil kāṭṭukkup pōṉāṉ. — The prince rode to the forest on a horse.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷavaracaṉ kutiraiyil kāṭṭukkup pōṉāṉ.* — The prince rode to the forest on a horse.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a king, then the Tamil for a queen, then say iḷavaracaṉ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a king, then the Tamil for a queen, then say *iḷavaracaṉ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இளவரசன் (iḷavaracaṉ) mean? (\"A prince\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C328-ilavaraci",
+      "sequence": 18870,
+      "title": "இளவரசி (iḷavaraci) — a princess",
+      "headword": "இளவரசி",
+      "romanization": "iḷavaraci",
+      "gloss": "a princess",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd38f067b03b974e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a queen, then the Tamil for a prince."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இளவரசி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இளவரசி — iḷavaraci — \"a princess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இளவரசி அரண்மனையில் வாழ்ந்தாள். iḷavaraci araṇmaṉaiyil vāḻntāḷ. The princess lived in the palace."
+            },
+            {
+              "kind": "speech",
+              "text": "The -இ marks a woman, as in அரசன் and அரசி."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இளவரசி (iḷavaraci) is a Tamil compound built from இள, \"young\" (DEDR 513), and அரசி, \"queen\", the feminine of அரசன், which DEDR 201 traces to Sanskrit rājan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷavaraci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷavaraci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷavaraci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷavaraci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iḷavaraci araṇmaṉaiyil vāḻntāḷ. — The princess lived in the palace.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iḷavaraci araṇmaṉaiyil vāḻntāḷ.* — The princess lived in the palace.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a queen, then the Tamil for a prince, then say iḷavaraci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a queen, then the Tamil for a prince, then say *iḷavaraci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இளவரசி (iḷavaraci) mean? (\"A princess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C328-ariyanai",
+      "sequence": 18880,
+      "title": "அரியணை (ariyaṇai) — a throne",
+      "headword": "அரியணை",
+      "romanization": "ariyaṇai",
+      "gloss": "a throne",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d2e2b7bb9f24b1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a prince, then the Tamil for a princess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அரியணை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரியணை — ariyaṇai — \"a throne\"."
+            },
+            {
+              "kind": "speech",
+              "text": "புதிய மன்னர் அரியணையில் அமர்ந்தார். putiya maṉṉar ariyaṇaiyil amarntār. The new king sat on the throne."
+            },
+            {
+              "kind": "speech",
+              "text": "அரியணை (ariyaṇai) ஏறு, to come to the throne."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரியணை (ariyaṇai) is a Tamil compound built from அரி, \"lion\", and அணை, \"support, prop\" (DEDR 123): a lion seat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ariyaṇai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ariyaṇai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ariyaṇai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ariyaṇai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya maṉṉar ariyaṇaiyil amarntār. — The new king sat on the throne.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya maṉṉar ariyaṇaiyil amarntār.* — The new king sat on the throne.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a prince, then the Tamil for a princess, then say ariyaṇai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a prince, then the Tamil for a princess, then say *ariyaṇai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அரியணை (ariyaṇai) mean? (\"A throne\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

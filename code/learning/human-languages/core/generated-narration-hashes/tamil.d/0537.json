@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:75351436ba6aaf13",
+  "lessonIds": [
+    "TA-C537-cirpam",
+    "TA-C537-cetukku",
+    "TA-C537-uli",
+    "TA-C537-merukerru",
+    "TA-C537-cutu",
+    "TA-R537-review-530-537"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch537.txt",
+  "json": "tamil/narration/ch537.json",
+  "textHash": "fnv1a64:d828d21b528bc160",
+  "jsonHash": "fnv1a64:4f0991b2d64289b8",
+  "findings": []
+}

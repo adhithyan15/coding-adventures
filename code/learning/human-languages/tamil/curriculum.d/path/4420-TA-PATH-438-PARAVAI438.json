@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-438-PARAVAI438",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-438-PARAVAI438"
+  ],
+  "after": []
+}

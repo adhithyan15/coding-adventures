@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:da444b423fdc6508",
+  "lessonIds": [
+    "TA-C392-ulal",
+    "TA-C392-lancam",
+    "TA-C392-velippataiyaka",
+    "TA-C392-maraimukamaka",
+    "TA-C392-kankani",
+    "TA-R392-review-386-392"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch392.txt",
+  "json": "tamil/narration/ch392.json",
+  "textHash": "fnv1a64:ec2770745e4cd770",
+  "jsonHash": "fnv1a64:3b5ad84aebe133a8",
+  "findings": []
+}

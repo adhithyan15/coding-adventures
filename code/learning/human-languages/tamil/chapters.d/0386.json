@@ -1,0 +1,19 @@
+{
+  "chapter": 386,
+  "title": "Planning Ahead",
+  "label": "ch:ta-planning-ahead",
+  "canDo": "I can talk about a strategy, a precaution and a goal.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C386-kurikkol",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can talk about a strategy, a precaution and a goal.",
+    "assesses": [
+      "TA-LEX-C386-UTTI386-03",
+      "TA-LEX-C386-UTTI386-04",
+      "TA-LEX-C386-UTTI386-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:aab8226e7280222c",
+  "lessonIds": [
+    "TA-C353-catakam",
+    "TA-C353-patakam",
+    "TA-C353-nanmai",
+    "TA-C353-timai",
+    "TA-C353-palan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch353.txt",
+  "json": "tamil/narration/ch353.json",
+  "textHash": "fnv1a64:925fdeaed1fd436b",
+  "jsonHash": "fnv1a64:2377b747abdfcbdf",
+  "findings": []
+}

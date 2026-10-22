@@ -1,0 +1,11 @@
+{
+  "id": "TA-C501-manastapam",
+  "pathSegment": "TA-PATH-501-CANTAI501",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-501-CANTAI501",
+      "order": 2
+    }
+  ]
+}

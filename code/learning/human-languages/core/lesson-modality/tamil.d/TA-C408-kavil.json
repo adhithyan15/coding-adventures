@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C408-kavil",
+    "language": "tamil",
+    "chapter": 408,
+    "sequence": 23540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44e9f56ecb06da2d"
+  },
+  "findings": []
+}

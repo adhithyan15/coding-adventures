@@ -1,0 +1,19 @@
+{
+  "chapter": 504,
+  "title": "Growing Old",
+  "label": "ch:ta-growing-old",
+  "canDo": "I can talk about old age, the elderly, memory, fading eyesight and wrinkles.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C504-curunku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 504: I can talk about old age, the elderly, memory, fading eyesight and wrinkles.",
+    "assesses": [
+      "TA-LEX-C504-MUTUMAI504-03",
+      "TA-LEX-C504-MUTUMAI504-04",
+      "TA-LEX-C504-MUTUMAI504-05"
+    ]
+  }
+}

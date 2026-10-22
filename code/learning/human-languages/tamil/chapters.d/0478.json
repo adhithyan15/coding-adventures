@@ -1,0 +1,19 @@
+{
+  "chapter": 478,
+  "title": "Inside the Body",
+  "label": "ch:ta-inside-the-body",
+  "canDo": "I can name organs such as the lungs, the liver and the kidneys.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C478-kutal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 478: I can name organs such as the lungs, the liver and the kidneys.",
+    "assesses": [
+      "TA-LEX-C478-UTAL478-03",
+      "TA-LEX-C478-UTAL478-04",
+      "TA-LEX-C478-UTAL478-05"
+    ]
+  }
+}

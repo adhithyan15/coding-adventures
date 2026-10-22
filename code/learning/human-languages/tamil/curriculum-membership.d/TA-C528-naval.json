@@ -1,0 +1,11 @@
+{
+  "id": "TA-C528-naval",
+  "pathSegment": "TA-PATH-528-VASIPPU528",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-528-VASIPPU528",
+      "order": 1
+    }
+  ]
+}

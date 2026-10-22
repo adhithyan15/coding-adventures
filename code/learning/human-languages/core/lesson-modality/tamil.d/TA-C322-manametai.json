@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C322-manametai",
+    "language": "tamil",
+    "chapter": 322,
+    "sequence": 18560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3117b9468482d9f8"
+  },
+  "findings": []
+}

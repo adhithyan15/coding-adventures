@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:ff7a8ccccc9525fc",
+  "lessonIds": [
+    "TA-C403-netuncalai",
+    "TA-C403-mempalam",
+    "TA-C403-curruvali",
+    "TA-C403-cantippu",
+    "TA-C403-virai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch403.txt",
+  "json": "tamil/narration/ch403.json",
+  "textHash": "fnv1a64:0ddf32b203f2fadb",
+  "jsonHash": "fnv1a64:f609805f61afd179",
+  "findings": []
+}

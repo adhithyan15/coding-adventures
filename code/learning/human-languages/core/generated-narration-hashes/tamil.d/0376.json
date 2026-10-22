@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:f36b84ab997e6fff",
+  "lessonIds": [
+    "TA-C376-poratu",
+    "TA-C376-arppattam",
+    "TA-C376-perani",
+    "TA-C376-koru",
+    "TA-C376-manu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch376.txt",
+  "json": "tamil/narration/ch376.json",
+  "textHash": "fnv1a64:9b9b7d55d1226331",
+  "jsonHash": "fnv1a64:4b8afb9f20760ac1",
+  "findings": []
+}

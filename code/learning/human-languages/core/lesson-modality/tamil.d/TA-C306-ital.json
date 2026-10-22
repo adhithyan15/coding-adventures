@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C306-ital",
+    "language": "tamil",
+    "chapter": 306,
+    "sequence": 17730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e32b4bccada58250"
+  },
+  "findings": []
+}

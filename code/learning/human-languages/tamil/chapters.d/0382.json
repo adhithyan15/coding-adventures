@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "On One Condition",
+  "label": "ch:ta-on-one-condition",
+  "canDo": "I can set a condition and say what is subject to it.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C382-ventumanal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can set a condition and say what is subject to it.",
+    "assesses": [
+      "TA-LEX-C382-NIPANTANAI382-03",
+      "TA-LEX-C382-NIPANTANAI382-04",
+      "TA-LEX-C382-NIPANTANAI382-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Ball Games",
+  "label": "ch:ta-ball-games",
+  "canDo": "I can name ball games.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C531-kapati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can name ball games.",
+    "assesses": [
+      "TA-LEX-C531-PANTHU531-03",
+      "TA-LEX-C531-PANTHU531-04",
+      "TA-LEX-C531-PANTHU531-05"
+    ]
+  }
+}

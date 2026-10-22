@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 295,
+  "title": "Clues and Suspects",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9daf268afb7b4987",
+  "lessons": [
+    {
+      "id": "TA-C295-tuppu",
+      "sequence": 17150,
+      "title": "துப்பு (tuppu) — a clue; a lead",
+      "headword": "துப்பு",
+      "romanization": "tuppu",
+      "gloss": "a clue; a lead",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:949e2f61653e14c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a robbery, then the Tamil for to happen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துப்பு — tuppu — \"a clue; a lead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு துப்பு கிடைத்திருந்தால், காவலர்கள் அவனைப் பிடித்திருப்பார்கள். oru tuppu kiṭaittiruntāl, kāvalarkaḷ avaṉaip piṭittiruppārkaḷ. If a clue had turned up, the police would have caught him."
+            },
+            {
+              "kind": "speech",
+              "text": "The finder takes -க்கு: அவர்களுக்குத் துப்பு (tuppu) கிடைத்தது, they found a clue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துப்பு (tuppu), \"a clue, a lead\", is native Dravidian: DEDR 3347 gives துப்பு, \"spying, a trace, evidence of a crime\", under துருவு, \"to search out, trace\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru tuppu kiṭaittiruntāl, kāvalarkaḷ avaṉaip piṭittiruppārkaḷ. — If a clue had turned up, the police would have caught him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru tuppu kiṭaittiruntāl, kāvalarkaḷ avaṉaip piṭittiruppārkaḷ.* — If a clue had turned up, the police would have caught him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a robbery, then the Tamil for to happen, then say tuppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a robbery, then the Tamil for to happen, then say *tuppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துப்பு (tuppu) mean? (\"A clue; a lead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C295-tatayam",
+      "sequence": 17160,
+      "title": "தடயம் (taṭayam) — a trace; a mark left behind",
+      "headword": "தடயம்",
+      "romanization": "taṭayam",
+      "gloss": "a trace; a mark left behind",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1ca8b9bbafe95a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to happen, then the Tamil for a clue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தடயம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தடயம் — taṭayam — \"a trace; a mark left behind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "திருடன் எந்தத் தடயமும் விட்டுச் செல்லவில்லை. tiruṭaṉ entat taṭayamum viṭṭuc cellavillai. The thief left no trace behind."
+            },
+            {
+              "kind": "speech",
+              "text": "With -உம் and a negative verb it means not a single one: எந்தத் தடயமும் இல்லை."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தடயம் (taṭayam), \"a trace, a mark left behind\", is a Tamil word whose origin is not settled in the sources at hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭayam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭayam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭayam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭayam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiruṭaṉ entat taṭayamum viṭṭuc cellavillai. — The thief left no trace behind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiruṭaṉ entat taṭayamum viṭṭuc cellavillai.* — The thief left no trace behind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to happen, then the Tamil for a clue, then say taṭayam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to happen, then the Tamil for a clue, then say *taṭayam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தடயம் (taṭayam) mean? (\"A trace; a mark left behind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C295-canteki",
+      "sequence": 17170,
+      "title": "சந்தேகி (cantēki) — to suspect",
+      "headword": "சந்தேகி",
+      "romanization": "cantēki",
+      "gloss": "to suspect",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23225cb4c49c9b75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a clue, then the Tamil for a trace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சந்தேகி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்தேகி — cantēki — \"to suspect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காவலர்கள் அவனுடைய நண்பனைச் சந்தேகித்தார்கள். kāvalarkaḷ avaṉuṭaiya naṇpaṉaic cantēkittārkaḷ. The police suspected his friend."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சந்தேகித்தேன், cantēkittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The one suspected takes -ஐ; the noun is சந்தேகம், a doubt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சந்தேகி (cantēki) is a Tamil verb built on சந்தேகம், \"doubt\", which is borrowed from Sanskrit saṃdeha, \"doubt, uncertainty\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantēki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantēki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cantēki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cantēki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāvalarkaḷ avaṉuṭaiya naṇpaṉaic cantēkittārkaḷ. — The police suspected his friend.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāvalarkaḷ avaṉuṭaiya naṇpaṉaic cantēkittārkaḷ.* — The police suspected his friend.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a clue, then the Tamil for a trace, then say cantēki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a clue, then the Tamil for a trace, then say *cantēki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சந்தேகி (cantēki) mean? (\"To suspect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C295-kurram",
+      "sequence": 17180,
+      "title": "குற்றம் (kuṟṟam) — a crime; a fault",
+      "headword": "குற்றம்",
+      "romanization": "kuṟṟam",
+      "gloss": "a crime; a fault",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:495e3a8e8b6a138a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a trace, then the Tamil for to suspect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குற்றம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குற்றம் — kuṟṟam — \"a crime; a fault\"."
+            },
+            {
+              "kind": "speech",
+              "text": "திருடுவது ஒரு குற்றம். tiruṭuvatu oru kuṟṟam. Stealing is a crime."
+            },
+            {
+              "kind": "speech",
+              "text": "A -அம் noun: the plural is குற்றங்கள், crimes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குற்றம் (kuṟṟam) is native Dravidian: DEDR 1851 lists it with குறு, \"short, defective\", so a crime is at root a fault, a falling short."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiruṭuvatu oru kuṟṟam. — Stealing is a crime.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiruṭuvatu oru kuṟṟam.* — Stealing is a crime.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a trace, then the Tamil for to suspect, then say kuṟṟam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a trace, then the Tamil for to suspect, then say *kuṟṟam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குற்றம் (kuṟṟam) mean? (\"A crime; a fault\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C295-kurravali",
+      "sequence": 17190,
+      "title": "குற்றவாளி (kuṟṟavāḷi) — a culprit; a guilty person",
+      "headword": "குற்றவாளி",
+      "romanization": "kuṟṟavāḷi",
+      "gloss": "a culprit; a guilty person",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fa29af4f891042c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to suspect, then the Tamil for a crime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குற்றவாளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குற்றவாளி — kuṟṟavāḷi — \"a culprit; a guilty person\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நீதிபதி அவனைக் குற்றவாளி என்று சொன்னார். nītipati avaṉaik kuṟṟavāḷi eṉṟu coṉṉār. The judge said he was the culprit."
+            },
+            {
+              "kind": "speech",
+              "text": "-ஆளி marks a person: குற்றம் (kuṟṟam) + ஆளி, one who has the fault."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குற்றவாளி (kuṟṟavāḷi) is a Tamil compound built from குற்றம் (kuṟṟam), \"fault, crime\" (DEDR 1851), and -ஆளி, \"a person who has or does\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟavāḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟavāḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟṟavāḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟṟavāḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nītipati avaṉaik kuṟṟavāḷi eṉṟu coṉṉār. — The judge said he was the culprit.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nītipati avaṉaik kuṟṟavāḷi eṉṟu coṉṉār.* — The judge said he was the culprit.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to suspect, then the Tamil for a crime, then say kuṟṟavāḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to suspect, then the Tamil for a crime, then say *kuṟṟavāḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குற்றவாளி (kuṟṟavāḷi) mean? (\"A culprit; a guilty person\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

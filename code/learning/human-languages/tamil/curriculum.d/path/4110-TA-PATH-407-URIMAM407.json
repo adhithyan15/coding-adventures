@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-407-URIMAM407",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "TA-EXT-407-URIMAM407"
+  ],
+  "after": []
+}

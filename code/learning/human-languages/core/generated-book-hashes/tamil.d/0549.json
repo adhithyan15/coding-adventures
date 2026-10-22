@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:bc5e848691bbf990",
+  "lessonIds": [
+    "TA-C549-mantapam",
+    "TA-C549-nikalcciniral",
+    "TA-C549-munnottam",
+    "TA-C549-ayattam",
+    "TA-C549-naluvu"
+  ],
+  "tex": "tamil/book/chapters/ch549-planning-a-function.tex"
+}

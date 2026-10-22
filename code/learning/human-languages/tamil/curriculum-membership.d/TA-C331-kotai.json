@@ -1,0 +1,11 @@
+{
+  "id": "TA-C331-kotai",
+  "pathSegment": "TA-PATH-331-KODAI331",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-331-KODAI331",
+      "order": 3
+    }
+  ]
+}

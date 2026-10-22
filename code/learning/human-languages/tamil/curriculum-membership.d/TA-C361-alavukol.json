@@ -1,0 +1,11 @@
+{
+  "id": "TA-C361-alavukol",
+  "pathSegment": "TA-PATH-361-TIRMANI361",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-361-TIRMANI361",
+      "order": 2
+    }
+  ]
+}

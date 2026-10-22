@@ -1,0 +1,11 @@
+{
+  "id": "TA-C497-kilppati",
+  "pathSegment": "TA-PATH-497-VALARPPU497",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-497-VALARPPU497",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:0c1f487f0d92910c",
+  "lessonIds": [
+    "TA-C535-panketu",
+    "TA-C535-atukalam",
+    "TA-C535-kol",
+    "TA-C535-kurivai",
+    "TA-C535-mattai"
+  ],
+  "tex": "tamil/book/chapters/ch535-on-the-field.tex"
+}

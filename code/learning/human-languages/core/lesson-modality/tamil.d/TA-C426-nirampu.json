@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C426-nirampu",
+    "language": "tamil",
+    "chapter": 426,
+    "sequence": 24460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:813395e450f495c5"
+  },
+  "findings": []
+}

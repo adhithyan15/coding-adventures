@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-496-PIRAPPU496",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-496-PIRAPPU496"
+  ],
+  "after": []
+}

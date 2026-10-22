@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:70b06076d9af8e95",
+  "lessonIds": [
+    "TA-C508-utiyam",
+    "TA-C508-vituppu",
+    "TA-C508-kututal-neram",
+    "TA-C508-kanakkalar",
+    "TA-C508-eluttar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch508.txt",
+  "json": "tamil/narration/ch508.json",
+  "textHash": "fnv1a64:fd083f0f5912e124",
+  "jsonHash": "fnv1a64:9922abe46ccbc3ef",
+  "findings": []
+}

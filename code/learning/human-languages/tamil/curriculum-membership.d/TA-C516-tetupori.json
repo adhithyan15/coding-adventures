@@ -1,0 +1,11 @@
+{
+  "id": "TA-C516-tetupori",
+  "pathSegment": "TA-PATH-516-INAIYAM516",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-516-INAIYAM516",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C394-kurittu",
+    "language": "tamil",
+    "chapter": 394,
+    "sequence": 22550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e13a88735010fd3e"
+  },
+  "findings": []
+}

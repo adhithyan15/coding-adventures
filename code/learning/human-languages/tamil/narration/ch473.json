@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 473,
+  "title": "Charm and Confidence",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:875d75d35269f92d",
+  "lessons": [
+    {
+      "id": "TA-C473-vacikaram",
+      "sequence": 27120,
+      "title": "வசீகரம் (vacīkaram) — charm; attractiveness",
+      "headword": "வசீகரம்",
+      "romanization": "vacīkaram",
+      "gloss": "charm; attractiveness",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8862a7d1d714dc29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a miser, then the Tamil for a spendthrift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வசீகரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வசீகரம் — vacīkaram — \"charm; attractiveness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவருடைய புன்னகையில் ஒரு வசீகரம் இருந்தது. avaruṭaiya puṉṉakaiyil oru vacīkaram iruntatu. There was a charm in his smile."
+            },
+            {
+              "kind": "speech",
+              "text": "வசீகரமான, charming."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வசீகரம் (vacīkaram) is borrowed from Sanskrit vaśīkaraṇa, \"bringing under control; bewitching\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vacīkaram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vacīkaram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vacīkaram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vacīkaram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaruṭaiya puṉṉakaiyil oru vacīkaram iruntatu. — There was a charm in his smile.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaruṭaiya puṉṉakaiyil oru vacīkaram iruntatu.* — There was a charm in his smile.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a miser, then the Tamil for a spendthrift, then say vacīkaram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a miser, then the Tamil for a spendthrift, then say *vacīkaram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வசீகரம் (vacīkaram) mean? (\"Charm; attractiveness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C473-kampiram",
+      "sequence": 27130,
+      "title": "கம்பீரம் (kampīram) — majesty; a dignified bearing",
+      "headword": "கம்பீரம்",
+      "romanization": "kampīram",
+      "gloss": "majesty; a dignified bearing",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efe4cc17993254bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a spendthrift, then the Tamil for charm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கம்பீரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கம்பீரம் — kampīram — \"majesty; a dignified bearing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "யானை கம்பீரமாக நடந்தது. yāṉai kampīramāka naṭantatu. The elephant walked majestically."
+            },
+            {
+              "kind": "speech",
+              "text": "கம்பீரமான குரல், a commanding voice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கம்பீரம் (kampīram) is borrowed from Sanskrit gambhīra, \"deep\" (CDIAL 4031); Tamil writes the g and bh with க and ப."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampīram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampīram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampīram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampīram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yāṉai kampīramāka naṭantatu. — The elephant walked majestically.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yāṉai kampīramāka naṭantatu.* — The elephant walked majestically.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a spendthrift, then the Tamil for charm, then say kampīram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a spendthrift, then the Tamil for charm, then say *kampīram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கம்பீரம் (kampīram) mean? (\"Majesty; a dignified bearing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C473-taralam",
+      "sequence": 27140,
+      "title": "தாராளம் (tārāḷam) — generosity; plenty",
+      "headword": "தாராளம்",
+      "romanization": "tārāḷam",
+      "gloss": "generosity; plenty",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:583c07cb6c208659",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for charm, then the Tamil for majesty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தாராளம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தாராளம் — tārāḷam — \"generosity; plenty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் ஏழைகளுக்குத் தாராளமாக உதவினார். avar ēḻaikaḷukkut tārāḷamāka utaviṉār. He helped the poor generously."
+            },
+            {
+              "kind": "speech",
+              "text": "தாராளமாக, generously; also plenty: தாராளமாக இடம் இருக்கிறது, there is plenty of room."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of தாராளம் (tārāḷam) is not settled; none of our sources lists it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārāḷam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārāḷam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tārāḷam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tārāḷam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar ēḻaikaḷukkut tārāḷamāka utaviṉār. — He helped the poor generously.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar ēḻaikaḷukkut tārāḷamāka utaviṉār.* — He helped the poor generously.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for charm, then the Tamil for majesty, then say tārāḷam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for charm, then the Tamil for majesty, then say *tārāḷam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தாராளம் (tārāḷam) mean? (\"Generosity; plenty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C473-tannampikkai",
+      "sequence": 27150,
+      "title": "தன்னம்பிக்கை (taṉṉampikkai) — self-confidence",
+      "headword": "தன்னம்பிக்கை",
+      "romanization": "taṉṉampikkai",
+      "gloss": "self-confidence",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a52701b4c64d2b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for majesty, then the Tamil for generosity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தன்னம்பிக்கை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தன்னம்பிக்கை — taṉṉampikkai — \"self-confidence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தேர்வுக்கு முன் அவளுக்கு நிறைய தன்னம்பிக்கை இருந்தது. tērvukku muṉ avaḷukku niṟaiya taṉṉampikkai iruntatu. Before the exam she had plenty of self-confidence."
+            },
+            {
+              "kind": "speech",
+              "text": "தன் \"oneself\" + நம்பிக்கை \"trust\": after ன் the ந becomes ன, so the join is written ன்ன."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தன்னம்பிக்கை (taṉṉampikkai) is a native compound of தன் taṉ, \"oneself\" (DEDR 3196), and நம்பிக்கை, the noun of நம்பு \"to trust\" (DEDR 3600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṉṉampikkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṉṉampikkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṉṉampikkai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṉṉampikkai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tērvukku muṉ avaḷukku niṟaiya taṉṉampikkai iruntatu. — Before the exam she had plenty of self-confidence.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tērvukku muṉ avaḷukku niṟaiya taṉṉampikkai iruntatu.* — Before the exam she had plenty of self-confidence.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for majesty, then the Tamil for generosity, then say taṉṉampikkai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for majesty, then the Tamil for generosity, then say *taṉṉampikkai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தன்னம்பிக்கை (taṉṉampikkai) mean? (\"Self-confidence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C473-meccu",
+      "sequence": 27160,
+      "title": "மெச்சு (meccu) — to admire; to commend",
+      "headword": "மெச்சு",
+      "romanization": "meccu",
+      "gloss": "to admire; to commend",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ba53f8132a9b27c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for generosity, then the Tamil for self-confidence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மெச்சு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மெச்சு — meccu — \"to admire; to commend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவனுடைய நேர்மையை எல்லோரும் மெச்சினார்கள். avaṉuṭaiya nērmaiyai ellōrum mecciṉārkaḷ. Everyone admired his honesty."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மெச்சினேன், mecciṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The quality admired takes -ஐ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மெச்சு (meccu) is native Dravidian (DEDR 4722), where it means to praise and to admire greatly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meccu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meccu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meccu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meccu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaṉuṭaiya nērmaiyai ellōrum mecciṉārkaḷ. — Everyone admired his honesty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaṉuṭaiya nērmaiyai ellōrum mecciṉārkaḷ.* — Everyone admired his honesty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for generosity, then the Tamil for self-confidence, then say meccu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for generosity, then the Tamil for self-confidence, then say *meccu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மெச்சு (meccu) mean? (\"To admire; to commend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

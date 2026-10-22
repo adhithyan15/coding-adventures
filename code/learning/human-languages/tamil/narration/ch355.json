@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 355,
+  "title": "Advice and Proposals",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1544743f7ae8539c",
+  "lessons": [
+    {
+      "id": "TA-C355-parinturai",
+      "sequence": 20510,
+      "title": "பரிந்துரை (parinturai) — to recommend",
+      "headword": "பரிந்துரை",
+      "romanization": "parinturai",
+      "gloss": "to recommend",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94dc355f8e6589a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a need, then the Tamil for to stress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பரிந்துரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரிந்துரை — parinturai — \"to recommend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மருத்துவர் இந்த மருந்தைப் பரிந்துரைத்தார். maruttuvar inta maruntaip parinturaittār. The doctor recommended this medicine."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பரிந்துரைத்தேன், parinturaittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word is the noun a recommendation: அவருடைய பரிந்துரை (parinturai)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பரிந்துரை (parinturai) is native: parintu, \"having felt for\", from pari, \"to be affectionate\" (DEDR 3964), joined to urai, \"to speak\" (DEDR 648): to speak up for someone or something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parinturai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parinturai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parinturai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parinturai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maruttuvar inta maruntaip parinturaittār. — The doctor recommended this medicine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maruttuvar inta maruntaip parinturaittār.* — The doctor recommended this medicine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a need, then the Tamil for to stress, then say parinturai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a need, then the Tamil for to stress, then say *parinturai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பரிந்துரை (parinturai) mean? (\"To recommend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C355-arivurai",
+      "sequence": 20520,
+      "title": "அறிவுரை (aṟivurai) — advice",
+      "headword": "அறிவுரை",
+      "romanization": "aṟivurai",
+      "gloss": "advice",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dea5e3d2f786c19b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to stress, then the Tamil for to recommend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அறிவுரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறிவுரை — aṟivurai — \"advice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் அப்பா எனக்கு நல்ல அறிவுரை சொன்னார். eṉ appā eṉakku nalla aṟivurai coṉṉār. My father gave me good advice."
+            },
+            {
+              "kind": "speech",
+              "text": "X-க்கு அறிவுரை (aṟivurai) சொல் or கூறு, to advise X."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறிவுரை (aṟivurai) is native: aṟivu, \"knowledge, wisdom\" (DEDR 314), and urai, \"word, utterance\" (DEDR 648): words of wisdom."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟivurai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟivurai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟivurai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟivurai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ appā eṉakku nalla aṟivurai coṉṉār. — My father gave me good advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ appā eṉakku nalla aṟivurai coṉṉār.* — My father gave me good advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to stress, then the Tamil for to recommend, then say aṟivurai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to stress, then the Tamil for to recommend, then say *aṟivurai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அறிவுரை (aṟivurai) mean? (\"Advice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C355-arivuruttu",
+      "sequence": 20530,
+      "title": "அறிவுறுத்து (aṟivuṟuttu) — to advise; to instruct",
+      "headword": "அறிவுறுத்து",
+      "romanization": "aṟivuṟuttu",
+      "gloss": "to advise; to instruct",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb9f85589cc5461a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to recommend, then the Tamil for advice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அறிவுறுத்து",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறிவுறுத்து — aṟivuṟuttu — \"to advise; to instruct\"."
+            },
+            {
+              "kind": "speech",
+              "text": "காவலர்கள் மக்களை வீட்டிலேயே இருக்குமாறு அறிவுறுத்தினார்கள். kāvalarkaḷ makkaḷai vīṭṭilēyē irukkumāṟu aṟivuṟuttiṉārkaḷ. The police advised people to stay at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): அறிவுறுத்தினேன், aṟivuṟuttiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ஐ and the action -உமாறு: இருக்குமாறு அறிவுறுத்து (aṟivuṟuttu), to advise to stay."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அறிவுறுத்து (aṟivuṟuttu) is native: aṟivu, \"knowledge\" (DEDR 314), and uṟuttu, \"to impress strongly upon the mind\" (DEDR 712): to press knowledge on someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟivuṟuttu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟivuṟuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟivuṟuttu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟivuṟuttu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāvalarkaḷ makkaḷai vīṭṭilēyē irukkumāṟu aṟivuṟuttiṉārkaḷ. — The police advised people to stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāvalarkaḷ makkaḷai vīṭṭilēyē irukkumāṟu aṟivuṟuttiṉārkaḷ.* — The police advised people to stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to recommend, then the Tamil for advice, then say aṟivuṟuttu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to recommend, then the Tamil for advice, then say *aṟivuṟuttu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அறிவுறுத்து (aṟivuṟuttu) mean? (\"To advise; to instruct\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C355-aloci",
+      "sequence": 20540,
+      "title": "ஆலோசி (ālōci) — to consult; to deliberate",
+      "headword": "ஆலோசி",
+      "romanization": "ālōci",
+      "gloss": "to consult; to deliberate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5404f271e61f9c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for advice, then the Tamil for to advise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆலோசி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆலோசி — ālōci — \"to consult; to deliberate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "முடிவு எடுப்பதற்கு முன் குடும்பத்துடன் ஆலோசித்தேன். muṭivu eṭuppataṟku muṉ kuṭumpattuṭaṉ ālōcittēṉ. I consulted my family before making a decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஆலோசித்தேன், ālōcittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Who is consulted takes -உடன் or -இடம்: மருத்துவரிடம் ஆலோசி (ālōci)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆலோசி (ālōci) is a verb built on Sanskrit ālocana, \"seeing; considering, reflection\" (Monier-Williams), with the loan-verb ending -இ. The noun ஆலோசனை means \"advice\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālōci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālōci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālōci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālōci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭivu eṭuppataṟku muṉ kuṭumpattuṭaṉ ālōcittēṉ. — I consulted my family before making a decision.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭivu eṭuppataṟku muṉ kuṭumpattuṭaṉ ālōcittēṉ.* — I consulted my family before making a decision.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for advice, then the Tamil for to advise, then say ālōci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for advice, then the Tamil for to advise, then say *ālōci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆலோசி (ālōci) mean? (\"To consult; to deliberate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C355-munmoli",
+      "sequence": 20550,
+      "title": "முன்மொழி (muṉmoḻi) — to propose",
+      "headword": "முன்மொழி",
+      "romanization": "muṉmoḻi",
+      "gloss": "to propose",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aee9e326a4d25b5c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to advise, then the Tamil for to consult."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்மொழி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்மொழி — muṉmoḻi — \"to propose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் ஒரு புதிய யோசனையை முன்மொழிந்தார். avar oru putiya yōcaṉaiyai muṉmoḻintār. He proposed a new idea."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): முன்மொழிந்தேன், muṉmoḻintēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What is proposed takes -ஐ. In a meeting, one person proposes and another seconds."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்மொழி (muṉmoḻi) is native: muṉ, \"in front, before\" (DEDR 5020), and moḻi, \"to say, speak\" (DEDR 4989): to say something first, before the others."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉmoḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉmoḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉmoḻi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉmoḻi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar oru putiya yōcaṉaiyai muṉmoḻintār. — He proposed a new idea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar oru putiya yōcaṉaiyai muṉmoḻintār.* — He proposed a new idea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to advise, then the Tamil for to consult, then say muṉmoḻi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to advise, then the Tamil for to consult, then say *muṉmoḻi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்மொழி (muṉmoḻi) mean? (\"To propose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

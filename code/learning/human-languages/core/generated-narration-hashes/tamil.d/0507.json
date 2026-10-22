@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:a5e664cb28cd6503",
+  "lessonIds": [
+    "TA-C507-paniyitam",
+    "TA-C507-panipuri",
+    "TA-C507-ceyalalar",
+    "TA-C507-koppu",
+    "TA-C507-merparvaiyitu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch507.txt",
+  "json": "tamil/narration/ch507.json",
+  "textHash": "fnv1a64:eee88d79da309b10",
+  "jsonHash": "fnv1a64:0410450f0ea398f2",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C382-ventumanal",
+  "pathSegment": "TA-PATH-382-NIPANTANAI382",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-382-NIPANTANAI382",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "A Wedding Day",
+  "label": "ch:ta-a-wedding-day",
+  "canDo": "I can describe a wedding day.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C322-pantal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can describe a wedding day.",
+    "assesses": [
+      "TA-LEX-C322-MANAM322-03",
+      "TA-LEX-C322-MANAM322-04",
+      "TA-LEX-C322-MANAM322-05"
+    ]
+  }
+}

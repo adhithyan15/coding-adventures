@@ -1,0 +1,11 @@
+{
+  "id": "TA-C375-celvakku",
+  "pathSegment": "TA-PATH-375-KATCI375",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-375-KATCI375",
+      "order": 3
+    }
+  ]
+}

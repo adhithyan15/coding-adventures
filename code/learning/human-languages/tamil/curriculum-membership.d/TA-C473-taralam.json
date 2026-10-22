@@ -1,0 +1,11 @@
+{
+  "id": "TA-C473-taralam",
+  "pathSegment": "TA-PATH-473-AZHAKU473",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-473-AZHAKU473",
+      "order": 2
+    }
+  ]
+}

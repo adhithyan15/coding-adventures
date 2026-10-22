@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C407-mailkal",
+    "language": "tamil",
+    "chapter": 407,
+    "sequence": 23470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f47a60606ca48e6"
+  },
+  "findings": []
+}

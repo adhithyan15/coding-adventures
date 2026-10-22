@@ -1,0 +1,11 @@
+{
+  "id": "TA-C406-tayar",
+  "pathSegment": "TA-PATH-406-PETROL406",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-406-PETROL406",
+      "order": 2
+    }
+  ]
+}

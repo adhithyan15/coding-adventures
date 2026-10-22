@@ -1,0 +1,19 @@
+{
+  "chapter": 456,
+  "title": "Breath and Relief",
+  "label": "ch:ta-breath-and-relief",
+  "canDo": "I can talk about breathing, sighing and feeling relieved.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C456-tani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 456: I can talk about breathing, sighing and feeling relieved.",
+    "assesses": [
+      "TA-LEX-C456-NIMMATI456-03",
+      "TA-LEX-C456-NIMMATI456-04",
+      "TA-LEX-C456-NIMMATI456-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Dust and Pollution",
+  "label": "ch:ta-dust-and-pollution",
+  "canDo": "I can talk about pollution, the environment, dust, waste and plastic.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C440-nekili",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can talk about pollution, the environment, dust, waste and plastic.",
+    "assesses": [
+      "TA-LEX-C440-MASU440-03",
+      "TA-LEX-C440-MASU440-04",
+      "TA-LEX-C440-MASU440-05"
+    ]
+  }
+}

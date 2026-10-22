@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:8661e99a37f327d9",
+  "lessonIds": [
+    "TA-C325-olaiccuvati",
+    "TA-C325-kalvettu",
+    "TA-C325-pulavar",
+    "TA-C325-kaviyam",
+    "TA-C325-iyarru",
+    "TA-R325-review-318-325"
+  ],
+  "tex": "tamil/book/chapters/ch325-old-writings.tex"
+}

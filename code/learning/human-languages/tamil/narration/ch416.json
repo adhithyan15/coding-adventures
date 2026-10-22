@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 416,
+  "title": "Boats and Oars",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2e427777f48f26a7",
+  "lessons": [
+    {
+      "id": "TA-C416-patakotti",
+      "sequence": 23920,
+      "title": "படகோட்டி (paṭakōṭṭi) — a boatman",
+      "headword": "படகோட்டி",
+      "romanization": "paṭakōṭṭi",
+      "gloss": "a boatman",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d4cb9db44655547",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an acknowledgement, then the Tamil for to arrange."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: படகோட்டி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படகோட்டி — paṭakōṭṭi — \"a boatman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "படகோட்டி எங்களைத் தீவுக்குக் கொண்டு போனார். paṭakōṭṭi eṅkaḷait tīvukkuk koṇṭu pōṉār. The boatman took us to the island."
+            },
+            {
+              "kind": "speech",
+              "text": "படகு, a boat, + ஓட்டி, one who drives."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "படகோட்டி (paṭakōṭṭi) is built from படகு, \"a boat\" (DEDR 3838), and ஓட்டி, \"one who drives\", from ஓட்டு (DEDR 1041)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭakōṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭakōṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭakōṭṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭakōṭṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭakōṭṭi eṅkaḷait tīvukkuk koṇṭu pōṉār. — The boatman took us to the island.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭakōṭṭi eṅkaḷait tīvukkuk koṇṭu pōṉār.* — The boatman took us to the island.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an acknowledgement, then the Tamil for to arrange, then say paṭakōṭṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an acknowledgement, then the Tamil for to arrange, then say *paṭakōṭṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does படகோட்டி (paṭakōṭṭi) mean? (\"A boatman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C416-tutuppu",
+      "sequence": 23930,
+      "title": "துடுப்பு (tuṭuppu) — an oar; a paddle",
+      "headword": "துடுப்பு",
+      "romanization": "tuṭuppu",
+      "gloss": "an oar; a paddle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d89bbadeadb7c39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to arrange, then the Tamil for a boatman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துடுப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துடுப்பு — tuṭuppu — \"an oar; a paddle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "துடுப்பு இல்லாமல் படகு நகராது. tuṭuppu illāmal paṭaku nakarātu. Without an oar the boat will not move."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a ladle or a flat spoon for stirring."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துடுப்பு (tuṭuppu) is native Dravidian (DEDR 3299), \"a ladle, a spatula, an oar\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭuppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭuppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭuppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭuppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭuppu illāmal paṭaku nakarātu. — Without an oar the boat will not move.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭuppu illāmal paṭaku nakarātu.* — Without an oar the boat will not move.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to arrange, then the Tamil for a boatman, then say tuṭuppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to arrange, then the Tamil for a boatman, then say *tuṭuppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துடுப்பு (tuṭuppu) mean? (\"An oar; a paddle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C416-toni",
+      "sequence": 23940,
+      "title": "தோணி (tōṇi) — a dinghy; a small boat",
+      "headword": "தோணி",
+      "romanization": "tōṇi",
+      "gloss": "a dinghy; a small boat",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08976bc8880e6d3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a boatman, then the Tamil for an oar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தோணி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோணி — tōṇi — \"a dinghy; a small boat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மீனவர்கள் தோணியில் கடலுக்குப் போனார்கள். mīṉavarkaḷ tōṇiyil kaṭalukkup pōṉārkaḷ. The fishermen went to sea in a small boat."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural is தோணிகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தோணி (tōṇi) is usually traced to Sanskrit droṇī, \"a wooden trough, a tub\" (CDIAL 6641)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṉavarkaḷ tōṇiyil kaṭalukkup pōṉārkaḷ. — The fishermen went to sea in a small boat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṉavarkaḷ tōṇiyil kaṭalukkup pōṉārkaḷ.* — The fishermen went to sea in a small boat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a boatman, then the Tamil for an oar, then say tōṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a boatman, then the Tamil for an oar, then say *tōṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தோணி (tōṇi) mean? (\"A dinghy; a small boat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C416-kattumaram",
+      "sequence": 23950,
+      "title": "கட்டுமரம் (kaṭṭumaram) — a catamaran; a log raft",
+      "headword": "கட்டுமரம்",
+      "romanization": "kaṭṭumaram",
+      "gloss": "a catamaran; a log raft",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3643997c295016e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an oar, then the Tamil for a dinghy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கட்டுமரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கட்டுமரம் — kaṭṭumaram — \"a catamaran; a log raft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கட்டுமரம் அலைகளின் மேல் மிதந்தது. kaṭṭumaram alaikaḷiṉ mēl mitantatu. The log raft floated on the waves."
+            },
+            {
+              "kind": "speech",
+              "text": "English catamaran comes from this word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கட்டுமரம் (kaṭṭumaram) is built from கட்டு, \"to tie\" (DEDR 1147), and மரம், \"a tree, wood\" (DEDR 4711): logs tied together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭṭumaram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭṭumaram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭṭumaram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭṭumaram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭṭumaram alaikaḷiṉ mēl mitantatu. — The log raft floated on the waves.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭṭumaram alaikaḷiṉ mēl mitantatu.* — The log raft floated on the waves.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an oar, then the Tamil for a dinghy, then say kaṭṭumaram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an oar, then the Tamil for a dinghy, then say *kaṭṭumaram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கட்டுமரம் (kaṭṭumaram) mean? (\"A catamaran; a log raft\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C416-valai",
+      "sequence": 23960,
+      "title": "வலை (valai) — a net",
+      "headword": "வலை",
+      "romanization": "valai",
+      "gloss": "a net",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:071f9579ac757aab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a dinghy, then the Tamil for a catamaran."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வலை — valai — \"a net\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மீனவர்கள் கடலில் வலை வீசினார்கள். mīṉavarkaḷ kaṭalil valai vīciṉārkaḷ. The fishermen cast a net into the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "வலை (valai) வீசு is to cast a net; கொசுவலை, a mosquito net."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வலை (valai) is native Dravidian (DEDR 5288), \"a net\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṉavarkaḷ kaṭalil valai vīciṉārkaḷ. — The fishermen cast a net into the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṉavarkaḷ kaṭalil valai vīciṉārkaḷ.* — The fishermen cast a net into the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a dinghy, then the Tamil for a catamaran, then say valai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a dinghy, then the Tamil for a catamaran, then say *valai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வலை (valai) mean? (\"A net\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

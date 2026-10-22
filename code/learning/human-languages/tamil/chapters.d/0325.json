@@ -1,0 +1,21 @@
+{
+  "chapter": 325,
+  "title": "Old Writings",
+  "label": "ch:ta-old-writings",
+  "canDo": "I can talk about old manuscripts, inscriptions and poets.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R325-review-318-325",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can talk about old manuscripts, inscriptions and poets.",
+    "assesses": [
+      "TA-LEX-C325-OLAI325-01",
+      "TA-LEX-C325-OLAI325-02",
+      "TA-LEX-C325-OLAI325-03",
+      "TA-LEX-C325-OLAI325-04",
+      "TA-LEX-C325-OLAI325-05"
+    ]
+  }
+}

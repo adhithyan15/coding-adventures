@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C516-payanar",
+    "language": "tamil",
+    "chapter": 516,
+    "sequence": 29650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:109e36157470444a"
+  },
+  "findings": []
+}

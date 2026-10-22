@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:88b255444b2bc339",
+  "lessonIds": [
+    "TA-C315-nataiperu",
+    "TA-C315-erpatu",
+    "TA-C315-nikalvu",
+    "TA-C315-tarpotu",
+    "TA-C315-eppotavatu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch315.txt",
+  "json": "tamil/narration/ch315.json",
+  "textHash": "fnv1a64:767d3224c6d2184d",
+  "jsonHash": "fnv1a64:a4509d786ec552ed",
+  "findings": []
+}

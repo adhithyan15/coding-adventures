@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:47895d3be7ed8c84",
+  "lessonIds": [
+    "TA-C495-cicu",
+    "TA-C495-malalai",
+    "TA-C495-taval",
+    "TA-C495-talattu",
+    "TA-C495-uttu"
+  ],
+  "tex": "tamil/book/chapters/ch495-babies.tex"
+}

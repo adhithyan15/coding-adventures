@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C327-vamcam",
+    "language": "tamil",
+    "chapter": 327,
+    "sequence": 18800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0af348b4625006f9"
+  },
+  "findings": []
+}

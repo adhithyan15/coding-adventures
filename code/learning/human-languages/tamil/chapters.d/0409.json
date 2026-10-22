@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Potholes and Shortcuts",
+  "label": "ch:ta-potholes-and-shortcuts",
+  "canDo": "I can talk about pits, potholes, a level crossing and a shortcut, and getting stuck.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C409-cikku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can talk about pits, potholes, a level crossing and a shortcut, and getting stuck.",
+    "assesses": [
+      "TA-LEX-C409-KUZHI409-03",
+      "TA-LEX-C409-KUZHI409-04",
+      "TA-LEX-C409-KUZHI409-05"
+    ]
+  }
+}

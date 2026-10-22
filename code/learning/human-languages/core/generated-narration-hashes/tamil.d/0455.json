@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:414347cfae74b67f",
+  "lessonIds": [
+    "TA-C455-cancalam",
+    "TA-C455-ulaiccal",
+    "TA-C455-atankam",
+    "TA-C455-ankalay",
+    "TA-C455-tavi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch455.txt",
+  "json": "tamil/narration/ch455.json",
+  "textHash": "fnv1a64:186a81ede3f2364c",
+  "jsonHash": "fnv1a64:0dd351038d7e4227",
+  "findings": []
+}

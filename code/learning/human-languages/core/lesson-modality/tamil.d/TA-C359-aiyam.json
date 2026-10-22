@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C359-aiyam",
+    "language": "tamil",
+    "chapter": 359,
+    "sequence": 20740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2ed06500596aae8"
+  },
+  "findings": []
+}

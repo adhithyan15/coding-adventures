@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "On Stage",
+  "label": "ch:ta-on-stage",
+  "canDo": "I can talk about concerts, plays and rehearsals.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C540-oppanai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can talk about concerts, plays and rehearsals.",
+    "assesses": [
+      "TA-LEX-C540-MEDAI540-03",
+      "TA-LEX-C540-MEDAI540-04",
+      "TA-LEX-C540-MEDAI540-05"
+    ]
+  }
+}

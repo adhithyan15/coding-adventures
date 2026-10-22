@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 545,
+  "sourceHash": "fnv1a64:82f53b8fa17aea8b",
+  "lessonIds": [
+    "TA-C545-pankuccantai",
+    "TA-C545-tarakar",
+    "TA-C545-uyarttu",
+    "TA-C545-kanicamaka",
+    "TA-C545-matiri"
+  ],
+  "tex": "tamil/book/chapters/ch545-stocks-and-brokers.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:e59d6274147a93c2",
+  "lessonIds": [
+    "TA-C344-arakkan",
+    "TA-C344-tevatai",
+    "TA-C344-mantiravati",
+    "TA-C344-capi",
+    "TA-C344-urumaru"
+  ],
+  "tex": "tamil/book/chapters/ch344-magic-and-monsters.tex"
+}

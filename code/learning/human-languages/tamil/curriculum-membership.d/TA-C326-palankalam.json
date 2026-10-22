@@ -1,0 +1,11 @@
+{
+  "id": "TA-C326-palankalam",
+  "pathSegment": "TA-PATH-326-VARALARU326",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-326-VARALARU326",
+      "order": 2
+    }
+  ]
+}

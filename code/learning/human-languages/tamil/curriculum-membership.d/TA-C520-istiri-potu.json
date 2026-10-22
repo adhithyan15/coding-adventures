@@ -1,0 +1,11 @@
+{
+  "id": "TA-C520-istiri-potu",
+  "pathSegment": "TA-PATH-520-KARUVI520",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-520-KARUVI520",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 362,
+  "title": "Doing Research",
+  "label": "ch:ta-doing-research",
+  "canDo": "I can talk about research, data and analysis.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-R362-review-355-362",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can talk about research, data and analysis.",
+    "assesses": [
+      "TA-LEX-C362-ARAYCCI362-01",
+      "TA-LEX-C362-ARAYCCI362-02",
+      "TA-LEX-C362-ARAYCCI362-03",
+      "TA-LEX-C362-ARAYCCI362-04",
+      "TA-LEX-C362-ARAYCCI362-05"
+    ]
+  }
+}

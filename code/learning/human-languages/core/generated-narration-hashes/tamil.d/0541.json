@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:dd4a6b1a82aa25f5",
+  "lessonIds": [
+    "TA-C541-kappitu",
+    "TA-C541-itar",
+    "TA-C541-apayam",
+    "TA-C541-mukavar",
+    "TA-C541-pinai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch541.txt",
+  "json": "tamil/narration/ch541.json",
+  "textHash": "fnv1a64:61dc6fc290145a01",
+  "jsonHash": "fnv1a64:694b28e42bd1c6e1",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C331-celi",
+    "language": "tamil",
+    "chapter": 331,
+    "sequence": 19030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd7c39d275d1dd75"
+  },
+  "findings": []
+}

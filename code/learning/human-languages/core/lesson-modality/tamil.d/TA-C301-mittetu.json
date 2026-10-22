@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C301-mittetu",
+    "language": "tamil",
+    "chapter": 301,
+    "sequence": 17490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b999927e2635afdf"
+  },
+  "findings": []
+}

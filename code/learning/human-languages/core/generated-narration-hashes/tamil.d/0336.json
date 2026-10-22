@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:0ca5c6fda004362c",
+  "lessonIds": [
+    "TA-C336-vilttu",
+    "TA-C336-kaipparru",
+    "TA-C336-caranatai",
+    "TA-C336-atipani",
+    "TA-C336-akkirami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch336.txt",
+  "json": "tamil/narration/ch336.json",
+  "textHash": "fnv1a64:fb8302d8d21d9b77",
+  "jsonHash": "fnv1a64:7d9e81491b12509a",
+  "findings": []
+}

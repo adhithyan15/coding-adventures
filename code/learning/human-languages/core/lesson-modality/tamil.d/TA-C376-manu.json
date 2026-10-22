@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C376-manu",
+    "language": "tamil",
+    "chapter": 376,
+    "sequence": 21620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b143f3c23bc6fe8b"
+  },
+  "findings": []
+}

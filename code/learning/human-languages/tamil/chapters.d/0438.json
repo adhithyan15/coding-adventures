@@ -1,0 +1,21 @@
+{
+  "chapter": 438,
+  "title": "Herons and Koels",
+  "label": "ch:ta-herons-and-koels",
+  "canDo": "I can talk about herons, koels, mongooses, lizards and scorpions.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R438-review-432-438",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about herons, koels, mongooses, lizards and scorpions.",
+    "assesses": [
+      "TA-LEX-C438-PARAVAI438-01",
+      "TA-LEX-C438-PARAVAI438-02",
+      "TA-LEX-C438-PARAVAI438-03",
+      "TA-LEX-C438-PARAVAI438-04",
+      "TA-LEX-C438-PARAVAI438-05"
+    ]
+  }
+}

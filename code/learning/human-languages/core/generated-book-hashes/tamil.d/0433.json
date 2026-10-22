@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:f3af0989c1a91b68",
+  "lessonIds": [
+    "TA-C433-cikaram",
+    "TA-C433-malaiyeru",
+    "TA-C433-erimalai",
+    "TA-C433-panipparai",
+    "TA-C433-camaveli"
+  ],
+  "tex": "tamil/book/chapters/ch433-peaks-and-plains.tex"
+}

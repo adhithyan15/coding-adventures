@@ -1,0 +1,11 @@
+{
+  "id": "TA-C310-utakam",
+  "pathSegment": "TA-PATH-310-OODAKAM310",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-310-OODAKAM310",
+      "order": 4
+    }
+  ]
+}

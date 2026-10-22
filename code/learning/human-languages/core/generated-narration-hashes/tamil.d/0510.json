@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:51f27b9d675cfaa1",
+  "lessonIds": [
+    "TA-C510-urpatti",
+    "TA-C510-poruttu",
+    "TA-C510-orunkinai",
+    "TA-C510-atukku",
+    "TA-C510-ala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch510.txt",
+  "json": "tamil/narration/ch510.json",
+  "textHash": "fnv1a64:ec07146cc5a8b39b",
+  "jsonHash": "fnv1a64:95630a3904c30f64",
+  "findings": []
+}

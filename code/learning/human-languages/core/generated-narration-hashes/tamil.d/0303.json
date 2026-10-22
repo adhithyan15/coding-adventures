@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:ea6f29f6e8a1f496",
+  "lessonIds": [
+    "TA-C303-kuccal",
+    "TA-C303-amali",
+    "TA-C303-kuttanerical",
+    "TA-C303-tancam",
+    "TA-C303-virattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch303.txt",
+  "json": "tamil/narration/ch303.json",
+  "textHash": "fnv1a64:9157745a47d571d8",
+  "jsonHash": "fnv1a64:34a432f04143b4c2",
+  "findings": []
+}

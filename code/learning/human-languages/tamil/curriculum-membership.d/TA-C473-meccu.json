@@ -1,0 +1,11 @@
+{
+  "id": "TA-C473-meccu",
+  "pathSegment": "TA-PATH-473-AZHAKU473",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-473-AZHAKU473",
+      "order": 4
+    }
+  ]
+}

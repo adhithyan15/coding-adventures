@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:23231131e6ce3e11",
+  "lessonIds": [
+    "TA-C468-tempu",
+    "TA-C468-cali",
+    "TA-C468-tuval",
+    "TA-C468-talar",
+    "TA-C468-kannayar",
+    "TA-R468-review-461-468"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch468.txt",
+  "json": "tamil/narration/ch468.json",
+  "textHash": "fnv1a64:bbdb905e5a3a11fb",
+  "jsonHash": "fnv1a64:515d5be8ab9b145c",
+  "findings": []
+}

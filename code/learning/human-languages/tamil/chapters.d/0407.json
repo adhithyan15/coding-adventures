@@ -1,0 +1,21 @@
+{
+  "chapter": 407,
+  "title": "Licences and Milestones",
+  "label": "ch:ta-licences-and-milestones",
+  "canDo": "I can talk about a licence, kilometres, milestones and a route, and pulling over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R407-review-400-407",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about a licence, kilometres, milestones and a route, and pulling over.",
+    "assesses": [
+      "TA-LEX-C407-URIMAM407-01",
+      "TA-LEX-C407-URIMAM407-02",
+      "TA-LEX-C407-URIMAM407-03",
+      "TA-LEX-C407-URIMAM407-04",
+      "TA-LEX-C407-URIMAM407-05"
+    ]
+  }
+}

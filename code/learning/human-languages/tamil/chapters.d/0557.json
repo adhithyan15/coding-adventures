@@ -1,0 +1,19 @@
+{
+  "chapter": 557,
+  "title": "Cloth and Instruments for a Fair",
+  "label": "ch:ta-cloth-and-instruments-for-a-fair",
+  "canDo": "I can talk about cloth, wool and Western instruments.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-C557-vayalin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 557: I can talk about cloth, wool and Western instruments.",
+    "assesses": [
+      "TA-LEX-C557-KAMPALI557-03",
+      "TA-LEX-C557-KAMPALI557-04",
+      "TA-LEX-C557-KAMPALI557-05"
+    ]
+  }
+}

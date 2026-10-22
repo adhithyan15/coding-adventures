@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-351-KURIPPITU351",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "TA-EXT-351-KURIPPITU351"
+  ],
+  "after": []
+}

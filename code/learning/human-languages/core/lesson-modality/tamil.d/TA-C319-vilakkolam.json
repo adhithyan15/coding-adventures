@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C319-vilakkolam",
+    "language": "tamil",
+    "chapter": 319,
+    "sequence": 18410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b500855db179e1e"
+  },
+  "findings": []
+}

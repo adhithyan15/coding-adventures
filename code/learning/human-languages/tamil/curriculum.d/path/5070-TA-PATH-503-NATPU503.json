@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-503-NATPU503",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-503-NATPU503"
+  ],
+  "after": []
+}

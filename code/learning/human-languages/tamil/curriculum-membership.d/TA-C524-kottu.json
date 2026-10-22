@@ -1,0 +1,11 @@
+{
+  "id": "TA-C524-kottu",
+  "pathSegment": "TA-PATH-524-SAMAIYAL524",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-524-SAMAIYAL524",
+      "order": 3
+    }
+  ]
+}

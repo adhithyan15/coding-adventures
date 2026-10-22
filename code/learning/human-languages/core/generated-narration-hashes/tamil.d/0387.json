@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:95abbc5d859a39f9",
+  "lessonIds": [
+    "TA-C387-oppantam",
+    "TA-C387-utanpatikkai",
+    "TA-C387-vakkuruti",
+    "TA-C387-urutimoli",
+    "TA-C387-niraiverru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch387.txt",
+  "json": "tamil/narration/ch387.json",
+  "textHash": "fnv1a64:75757d71cea88315",
+  "jsonHash": "fnv1a64:2145a7a19914e34f",
+  "findings": []
+}

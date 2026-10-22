@@ -1,0 +1,11 @@
+{
+  "id": "TA-C422-tolainokki",
+  "pathSegment": "TA-PATH-422-MUKAM422",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-422-MUKAM422",
+      "order": 3
+    }
+  ]
+}

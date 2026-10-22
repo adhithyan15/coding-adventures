@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 305,
+  "title": "On Air",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2fe3b130f2c9c40a",
+  "lessons": [
+    {
+      "id": "TA-C305-nirupar",
+      "sequence": 17660,
+      "title": "நிருபர் (nirupar) — a reporter",
+      "headword": "நிருபர்",
+      "romanization": "nirupar",
+      "gloss": "a reporter",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd74a422670082b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to shake up, then the Tamil for to ruin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நிருபர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிருபர் — nirupar — \"a reporter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு நிருபர் விபத்து நடந்த இடத்துக்கு வந்தார். oru nirupar vipattu naṭanta iṭattukku vantār. A reporter came to the place where the accident happened."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural நிருபர்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நிருபர் (nirupar), \"a reporter, a correspondent\", is a Tamil word whose origin is not settled in the sources at hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirupar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirupar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nirupar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nirupar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oru nirupar vipattu naṭanta iṭattukku vantār. — A reporter came to the place where the accident happened.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oru nirupar vipattu naṭanta iṭattukku vantār.* — A reporter came to the place where the accident happened.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to shake up, then the Tamil for to ruin, then say nirupar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to shake up, then the Tamil for to ruin, then say *nirupar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நிருபர் (nirupar) mean? (\"A reporter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C305-neralai",
+      "sequence": 17670,
+      "title": "நேரலை (nēralai) — a live broadcast",
+      "headword": "நேரலை",
+      "romanization": "nēralai",
+      "gloss": "a live broadcast",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bff6158765366f7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to ruin, then the Tamil for a reporter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நேரலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேரலை — nēralai — \"a live broadcast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தொலைக்காட்சியில் போட்டியை நேரலையில் பார்த்தோம். tolaikkāṭciyil pōṭṭiyai nēralaiyil pārttōm. We watched the match live on television."
+            },
+            {
+              "kind": "speech",
+              "text": "நேரலையில், live (on air)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேரலை (nēralai) is a Tamil compound built from நேர், \"straightness, directness\" (DEDR 3772), and அலை, \"a wave\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēralai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēralai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēralai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēralai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolaikkāṭciyil pōṭṭiyai nēralaiyil pārttōm. — We watched the match live on television.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolaikkāṭciyil pōṭṭiyai nēralaiyil pārttōm.* — We watched the match live on television.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to ruin, then the Tamil for a reporter, then say nēralai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to ruin, then the Tamil for a reporter, then say *nēralai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நேரலை (nēralai) mean? (\"A live broadcast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C305-oliparappu",
+      "sequence": 17680,
+      "title": "ஒளிபரப்பு (oḷiparappu) — to broadcast",
+      "headword": "ஒளிபரப்பு",
+      "romanization": "oḷiparappu",
+      "gloss": "to broadcast",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c3eff9992985de6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a reporter, then the Tamil for a live broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒளிபரப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒளிபரப்பு — oḷiparappu — \"to broadcast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தொலைக்காட்சி அந்தச் செய்தியை உடனே ஒளிபரப்பியது. tolaikkāṭci antac ceytiyai uṭaṉē oḷiparappiyatu. Television broadcast that news at once."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஒளிபரப்பினேன், oḷiparappiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒளி, light + பரப்பு, to spread: said of television."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒளிபரப்பு (oḷiparappu) is a Tamil compound built from ஒளி, \"light, brightness\" (DEDR 1016), and பரப்பு, \"to spread, disseminate news\" (DEDR 3949)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷiparappu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷiparappu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷiparappu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷiparappu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolaikkāṭci antac ceytiyai uṭaṉē oḷiparappiyatu. — Television broadcast that news at once.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolaikkāṭci antac ceytiyai uṭaṉē oḷiparappiyatu.* — Television broadcast that news at once.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a reporter, then the Tamil for a live broadcast, then say oḷiparappu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a reporter, then the Tamil for a live broadcast, then say *oḷiparappu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒளிபரப்பு (oḷiparappu) mean? (\"To broadcast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C305-tokuppalar",
+      "sequence": 17690,
+      "title": "தொகுப்பாளர் (tokuppāḷar) — a presenter; a host",
+      "headword": "தொகுப்பாளர்",
+      "romanization": "tokuppāḷar",
+      "gloss": "a presenter; a host",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e45e0f455738009",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a live broadcast, then the Tamil for to broadcast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொகுப்பாளர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொகுப்பாளர் — tokuppāḷar — \"a presenter; a host\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தொகுப்பாளர் நிருபரிடம் ஒரு கேள்வி கேட்டார். tokuppāḷar nirupariṭam oru kēḷvi kēṭṭār. The presenter asked the reporter a question."
+            },
+            {
+              "kind": "speech",
+              "text": "-ஆளர் marks one who does a job: the one who puts a programme together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொகுப்பாளர் (tokuppāḷar) is built from தொகுப்பு, \"a putting together\", from native தொகு, \"to collect, assemble\" (DEDR 3476), with -ஆளர், \"one who\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokuppāḷar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokuppāḷar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokuppāḷar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokuppāḷar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tokuppāḷar nirupariṭam oru kēḷvi kēṭṭār. — The presenter asked the reporter a question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tokuppāḷar nirupariṭam oru kēḷvi kēṭṭār.* — The presenter asked the reporter a question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a live broadcast, then the Tamil for to broadcast, then say tokuppāḷar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a live broadcast, then the Tamil for to broadcast, then say *tokuppāḷar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொகுப்பாளர் (tokuppāḷar) mean? (\"A presenter; a host\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C305-olippativalar",
+      "sequence": 17700,
+      "title": "ஒளிப்பதிவாளர் (oḷippativāḷar) — a cameraman",
+      "headword": "ஒளிப்பதிவாளர்",
+      "romanization": "oḷippativāḷar",
+      "gloss": "a cameraman",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b1e8fa3e41644ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to broadcast, then the Tamil for a presenter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒளிப்பதிவாளர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒளிப்பதிவாளர் — oḷippativāḷar — \"a cameraman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நிருபருடன் ஒரு ஒளிப்பதிவாளரும் வந்தார். niruparuṭaṉ oru oḷippativāḷarum vantār. A cameraman came along with the reporter."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒளிப்பதிவு, video recording + -ஆளர், one who."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒளிப்பதிவாளர் (oḷippativāḷar) is built from ஒளி, \"light\" (DEDR 1016), and பதிவு, \"an impression, a record\" (DEDR 3911), with -ஆளர், \"one who\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷippativāḷar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷippativāḷar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷippativāḷar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷippativāḷar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niruparuṭaṉ oru oḷippativāḷarum vantār. — A cameraman came along with the reporter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niruparuṭaṉ oru oḷippativāḷarum vantār.* — A cameraman came along with the reporter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to broadcast, then the Tamil for a presenter, then say oḷippativāḷar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to broadcast, then the Tamil for a presenter, then say *oḷippativāḷar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒளிப்பதிவாளர் (oḷippativāḷar) mean? (\"A cameraman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

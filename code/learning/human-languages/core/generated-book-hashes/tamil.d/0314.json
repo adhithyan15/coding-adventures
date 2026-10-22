@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:0bd0b59169c62a91",
+  "lessonIds": [
+    "TA-C314-tarunam",
+    "TA-C314-ninaivukur",
+    "TA-C314-nalataivil",
+    "TA-C314-atarkul",
+    "TA-C314-itaiyatuttu"
+  ],
+  "tex": "tamil/book/chapters/ch314-a-moment-to-remember.tex"
+}

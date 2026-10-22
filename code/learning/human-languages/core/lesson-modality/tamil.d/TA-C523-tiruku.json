@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C523-tiruku",
+    "language": "tamil",
+    "chapter": 523,
+    "sequence": 29970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45af85e7185f70dc"
+  },
+  "findings": []
+}

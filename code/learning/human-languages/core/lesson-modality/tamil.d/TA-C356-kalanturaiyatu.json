@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C356-kalanturaiyatu",
+    "language": "tamil",
+    "chapter": 356,
+    "sequence": 20560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:581733d8e1d595e4"
+  },
+  "findings": []
+}

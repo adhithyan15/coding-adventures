@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:6dc4f84b608750f7",
+  "lessonIds": [
+    "TA-C390-cirtiruttam",
+    "TA-C390-munnerram",
+    "TA-C390-mempatuttu",
+    "TA-C390-ciramai",
+    "TA-C390-valuppatuttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch390.txt",
+  "json": "tamil/narration/ch390.json",
+  "textHash": "fnv1a64:2d7deab7d00cf215",
+  "jsonHash": "fnv1a64:4fd432d01ed62ee8",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C531-kaippantu",
+  "pathSegment": "TA-PATH-531-PANTHU531",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-531-PANTHU531",
+      "order": 2
+    }
+  ]
+}

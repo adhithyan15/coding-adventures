@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C417-karai",
+    "language": "tamil",
+    "chapter": 417,
+    "sequence": 24010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efa0f1667a83550a"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:34248da51a0a692e",
+  "lessonIds": [
+    "TA-C505-ayul",
+    "TA-C505-maranam",
+    "TA-C505-uyil",
+    "TA-C505-vitavai",
+    "TA-C505-anatai",
+    "TA-R505-review-499-505",
+    "TA-R505-review-final-505"
+  ],
+  "tex": "tamil/book/chapters/ch505-the-end-of-life.tex"
+}

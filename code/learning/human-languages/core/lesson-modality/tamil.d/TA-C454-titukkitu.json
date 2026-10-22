@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C454-titukkitu",
+    "language": "tamil",
+    "chapter": 454,
+    "sequence": 26180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:310bb115120563f9"
+  },
+  "findings": []
+}

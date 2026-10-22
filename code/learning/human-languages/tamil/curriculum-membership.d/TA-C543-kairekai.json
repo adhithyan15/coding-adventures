@@ -1,0 +1,11 @@
+{
+  "id": "TA-C543-kairekai",
+  "pathSegment": "TA-PATH-543-KATTALAI543",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-543-KATTALAI543",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C445-atir",
+  "pathSegment": "TA-PATH-445-MINVETTU445",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-445-MINVETTU445",
+      "order": 4
+    }
+  ]
+}

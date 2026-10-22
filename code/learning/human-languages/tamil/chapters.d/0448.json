@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "Saving and Spending",
+  "label": "ch:ta-saving-and-spending",
+  "canDo": "I can talk about saving, spending and wasting money, what is left over, and income.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C448-varumanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can talk about saving, spending and wasting money, what is left over, and income.",
+    "assesses": [
+      "TA-LEX-C448-SEMI448-03",
+      "TA-LEX-C448-SEMI448-04",
+      "TA-LEX-C448-SEMI448-05"
+    ]
+  }
+}

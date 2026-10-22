@@ -1,0 +1,870 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 537,
+  "title": "Clay and Stone",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:75351436ba6aaf13",
+  "lessons": [
+    {
+      "id": "TA-C537-cirpam",
+      "sequence": 30680,
+      "title": "சிற்பம் (ciṟpam) — a sculpture",
+      "headword": "சிற்பம்",
+      "romanization": "ciṟpam",
+      "gloss": "a sculpture",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a829bedc8d0e3c0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to paint a picture, then the Tamil for an exhibition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சிற்பம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிற்பம் — ciṟpam — \"a sculpture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கோயிலின் சுவர்களில் பல சிற்பங்கள் இருக்கின்றன. kōyiliṉ cuvarkaḷil pala ciṟpaṅkaḷ irukkiṉṟaṉa. There are many sculptures on the walls of the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "A sculptor is a சிற்பி. The plural is சிற்பங்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சிற்பம் (ciṟpam) is borrowed from Sanskrit śilpa, \"artistic work, a manual craft\" (CDIAL 12470); Tamil wrote the lp as ற்ப."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟpam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟpam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟpam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōyiliṉ cuvarkaḷil pala ciṟpaṅkaḷ irukkiṉṟaṉa. — There are many sculptures on the walls of the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōyiliṉ cuvarkaḷil pala ciṟpaṅkaḷ irukkiṉṟaṉa.* — There are many sculptures on the walls of the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to paint a picture, then the Tamil for an exhibition, then say ciṟpam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to paint a picture, then the Tamil for an exhibition, then say *ciṟpam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சிற்பம் (ciṟpam) mean? (\"A sculpture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C537-cetukku",
+      "sequence": 30690,
+      "title": "செதுக்கு (cetukku) — to carve",
+      "headword": "செதுக்கு",
+      "romanization": "cetukku",
+      "gloss": "to carve",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8899b7b8724b74fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an exhibition, then the Tamil for a sculpture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: செதுக்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செதுக்கு — cetukku — \"to carve\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சிற்பி கல்லில் ஒரு யானையைச் செதுக்கினார். ciṟpi kallil oru yāṉaiyaic cetukkiṉār. The sculptor carved an elephant in stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): செதுக்கினேன், cetukkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The material takes -இல், the figure -ஐ: கல்லில் யானையைச் செதுக்கு (cetukku)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "செதுக்கு (cetukku) is native Dravidian: DEDR 1953 gives செதுக்கு (cetukku), \"to cut off a surface, to pare, to hew with a tool\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cetukku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cetukku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cetukku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cetukku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṟpi kallil oru yāṉaiyaic cetukkiṉār. — The sculptor carved an elephant in stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṟpi kallil oru yāṉaiyaic cetukkiṉār.* — The sculptor carved an elephant in stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an exhibition, then the Tamil for a sculpture, then say cetukku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an exhibition, then the Tamil for a sculpture, then say *cetukku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does செதுக்கு (cetukku) mean? (\"To carve\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C537-uli",
+      "sequence": 30700,
+      "title": "உளி (uḷi) — a chisel",
+      "headword": "உளி",
+      "romanization": "uḷi",
+      "gloss": "a chisel",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2be4219daa786fac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a sculpture, then the Tamil for to carve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: உளி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உளி — uḷi — \"a chisel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தச்சர் உளியால் மரத்தைச் செதுக்கினார். taccar uḷiyāl marattaic cetukkiṉār. The carpenter carved the wood with a chisel."
+            },
+            {
+              "kind": "speech",
+              "text": "The tool takes -ஆல், \"with\": உளியால்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உளி (uḷi) is native Dravidian: DEDR 699 gives உளி (uḷi), \"a chisel\", with cognates in Malayalam, Kota and Kannada."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḷi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḷi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taccar uḷiyāl marattaic cetukkiṉār. — The carpenter carved the wood with a chisel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taccar uḷiyāl marattaic cetukkiṉār.* — The carpenter carved the wood with a chisel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a sculpture, then the Tamil for to carve, then say uḷi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a sculpture, then the Tamil for to carve, then say *uḷi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does உளி (uḷi) mean? (\"A chisel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C537-merukerru",
+      "sequence": 30710,
+      "title": "மெருகேற்று (merukēṟṟu) — to polish; to give a shine",
+      "headword": "மெருகேற்று",
+      "romanization": "merukēṟṟu",
+      "gloss": "to polish; to give a shine",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70e453bb6a942835",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to carve, then the Tamil for a chisel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: மெருகேற்று",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மெருகேற்று — merukēṟṟu — \"to polish; to give a shine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பொற்கொல்லர் வளையலை மெருகேற்றினார். poṟkollar vaḷaiyalai merukēṟṟiṉār. The goldsmith polished the bangle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): மெருகேற்றினேன், merukēṟṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of skills: திறமையை மெருகேற்று (merukēṟṟu), to polish a skill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மெருகேற்று (merukēṟṟu) is a native compound: மெருகு (meruku), \"smoothness, lustre, polish\" (DEDR 5074), and ஏற்று (ēṟṟu), \"to raise, to put on\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merukēṟṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merukēṟṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merukēṟṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merukēṟṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "poṟkollar vaḷaiyalai merukēṟṟiṉār. — The goldsmith polished the bangle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *poṟkollar vaḷaiyalai merukēṟṟiṉār.* — The goldsmith polished the bangle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to carve, then the Tamil for a chisel, then say merukēṟṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to carve, then the Tamil for a chisel, then say *merukēṟṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does மெருகேற்று (merukēṟṟu) mean? (\"To polish; to give a shine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C537-cutu",
+      "sequence": 30720,
+      "title": "சுடு (cuṭu) — to bake; to fire (clay)",
+      "headword": "சுடு",
+      "romanization": "cuṭu",
+      "gloss": "to bake; to fire (clay)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1917f478ff605708",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a chisel, then the Tamil for to polish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுடு — cuṭu — \"to bake; to fire (clay)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குயவர் பானைகளைச் சூளையில் சுட்டார். kuyavar pāṉaikaḷaic cūḷaiyil cuṭṭār. The potter fired the pots in the kiln."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): சுட்டேன், cuṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The past doubles the stop: சுட்டேன். The same verb means \"to be hot\", as in சூடு (cūṭu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுடு (cuṭu) is native Dravidian: DEDR 2654 gives சுடு (cuṭu), \"to be hot, to burn, to roast, to bake, to burn bricks in a kiln\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuyavar pāṉaikaḷaic cūḷaiyil cuṭṭār. — The potter fired the pots in the kiln.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuyavar pāṉaikaḷaic cūḷaiyil cuṭṭār.* — The potter fired the pots in the kiln.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a chisel, then the Tamil for to polish, then say cuṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a chisel, then the Tamil for to polish, then say *cuṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுடு (cuṭu) mean? (\"To bake; to fire (clay)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R537-review-530-537",
+      "sequence": 30730,
+      "title": "Looking back: from Children's Games to Clay and Stone",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Children's Games to Clay and Stone",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b69454de08cfd2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for hide and seek and a spinning top."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hide and seek, a spinning top, marbles, carrom, a pinwheel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hide and seek, a spinning top, marbles, carrom, a pinwheel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "basketball, badminton, volleyball, tennis, kabaddi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: basketball, badminton, volleyball, tennis, kabaddi]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boxing, wrestling, stick fencing, to kick, to hurl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: boxing, wrestling, stick fencing, to kick, to hurl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a race, to chase, to slide, to leap, to dive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a race, to chase, to slide, to leap, to dive]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to beat a rival, a draw, a referee, a medal, a champion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to beat a rival, a draw, a referee, a medal, a champion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take part, a pitch, a goal in sport, to take aim, a bat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take part, a pitch, a goal in sport, to take aim, a bat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an art, a painting, a paintbrush, to paint a picture, an exhibition",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an art, a painting, a paintbrush, to paint a picture, an exhibition]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sculpture, to carve, a chisel, to polish, to bake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sculpture, to carve, a chisel, to polish, to bake]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hide and seek? (கண்ணாமூச்சி, kaṇṇāmūcci.) A spinning top? (பம்பரம், pamparam.) Marbles? (கோலி, kōli.) Carrom? (கேரம், kēram.) A pinwheel? (காற்றாடி, kāṟṟāṭi.) Basketball? (கூடைப்பந்து, kūṭaippantu.) Badminton? (இறகுப்பந்து, iṟakuppantu.) Volleyball? (கைப்பந்து, kaippantu.) Tennis? (டென்னிஸ், ṭeṉṉis.) Kabaddi? (கபடி, kapaṭi.) Boxing? (குத்துச்சண்டை, kuttuccaṇṭai.) Wrestling? (மல்யுத்தம், malyuttam.) Stick fencing? (சிலம்பம், cilampam.) To kick? (உதை, utai.) To hurl? (எறி, eṟi.) A race? (பந்தயம், pantayam.) To chase? (துரத்து, turattu.) To slide? (சறுக்கு, caṟukku.) To leap? (தாவு, tāvu.) To dive? (முக்குளி, mukkuḷi.) To beat a rival? (தோற்கடி, tōṟkaṭi.) A draw? (சமநிலை, camanilai.) A referee? (நடுவர், naṭuvar.) A medal? (பதக்கம், patakkam.) A champion? (வாகையாளர், vākaiyāḷar.) To take part? (பங்கெடு, paṅkeṭu.) A pitch? (ஆடுகளம், āṭukaḷam.) A goal in sport? (கோல், kōl.) To take aim? (குறிவை, kuṟivai.) A bat? (மட்டை, maṭṭai.) An art? (கலை, kalai.) A painting? (ஓவியம், ōviyam.) A paintbrush? (தூரிகை, tūrikai.) To paint a picture? (தீட்டு, tīṭṭu.) An exhibition? (கண்காட்சி, kaṇkāṭci.) A sculpture? (சிற்பம், ciṟpam.) To carve? (செதுக்கு, cetukku.) A chisel? (உளி, uḷi.) To polish? (மெருகேற்று, merukēṟṟu.) To bake? (சுடு, cuṭu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

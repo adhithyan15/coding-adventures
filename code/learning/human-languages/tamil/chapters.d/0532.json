@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Fighting Sports",
+  "label": "ch:ta-fighting-sports",
+  "canDo": "I can talk about boxing, wrestling and stick fencing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C532-eri-throw",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about boxing, wrestling and stick fencing.",
+    "assesses": [
+      "TA-LEX-C532-SANDAI532-03",
+      "TA-LEX-C532-SANDAI532-04",
+      "TA-LEX-C532-SANDAI532-05"
+    ]
+  }
+}

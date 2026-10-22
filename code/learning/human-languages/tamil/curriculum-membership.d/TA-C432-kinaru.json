@@ -1,0 +1,11 @@
+{
+  "id": "TA-C432-kinaru",
+  "pathSegment": "TA-PATH-432-NEER432",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-432-NEER432",
+      "order": 3
+    }
+  ]
+}

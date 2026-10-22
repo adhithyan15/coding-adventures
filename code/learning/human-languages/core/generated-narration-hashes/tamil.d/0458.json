@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:0b19a2995c90dc0b",
+  "lessonIds": [
+    "TA-C458-kataru",
+    "TA-C458-vimmu",
+    "TA-C458-vicumpu",
+    "TA-C458-pulampu",
+    "TA-C458-alaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch458.txt",
+  "json": "tamil/narration/ch458.json",
+  "textHash": "fnv1a64:44216771d9b079af",
+  "jsonHash": "fnv1a64:e75deb3922846289",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Statues and Monuments",
+  "label": "ch:ta-statues-and-monuments",
+  "canDo": "I can talk about a town square, statues, monuments, a mansion and an embassy.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C424-tutarakam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about a town square, statues, monuments, a mansion and an embassy.",
+    "assesses": [
+      "TA-LEX-C424-SILAI424-03",
+      "TA-LEX-C424-SILAI424-04",
+      "TA-LEX-C424-SILAI424-05"
+    ]
+  }
+}

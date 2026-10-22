@@ -1,0 +1,11 @@
+{
+  "id": "TA-C499-mana",
+  "pathSegment": "TA-PATH-499-MANAM499",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-499-MANAM499",
+      "order": 2
+    }
+  ]
+}

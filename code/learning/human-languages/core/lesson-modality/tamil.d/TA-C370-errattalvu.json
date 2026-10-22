@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C370-errattalvu",
+    "language": "tamil",
+    "chapter": 370,
+    "sequence": 21290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a149cfc007ecf96"
+  },
+  "findings": []
+}

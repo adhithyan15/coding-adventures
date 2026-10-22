@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "A Spray of Rain",
+  "label": "ch:ta-a-spray-of-rain",
+  "canDo": "I can talk about drizzle and downpours, and water collecting and draining away.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-C428-vati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can talk about drizzle and downpours, and water collecting and draining away.",
+    "assesses": [
+      "TA-LEX-C428-SARAL428-03",
+      "TA-LEX-C428-SARAL428-04",
+      "TA-LEX-C428-SARAL428-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-495-KUZHANTAI495",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-495-KUZHANTAI495"
+  ],
+  "after": []
+}

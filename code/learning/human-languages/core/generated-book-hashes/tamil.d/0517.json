@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:4eba586e8eec120b",
+  "lessonIds": [
+    "TA-C517-minkalam",
+    "TA-C517-minnerru",
+    "TA-C517-kampi",
+    "TA-C517-tunti",
+    "TA-C517-olir"
+  ],
+  "tex": "tamil/book/chapters/ch517-cables-and-power.tex"
+}

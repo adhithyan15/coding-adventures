@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C412-ataiyalam",
+    "language": "tamil",
+    "chapter": 412,
+    "sequence": 23710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c513b0eb34c1fc55"
+  },
+  "findings": []
+}

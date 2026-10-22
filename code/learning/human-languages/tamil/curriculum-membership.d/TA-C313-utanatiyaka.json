@@ -1,0 +1,11 @@
+{
+  "id": "TA-C313-utanatiyaka",
+  "pathSegment": "TA-PATH-313-NERAM313",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-313-NERAM313",
+      "order": 1
+    }
+  ]
+}

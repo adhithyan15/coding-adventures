@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "Winning and Losing",
+  "label": "ch:ta-winning-and-losing",
+  "canDo": "I can talk about results, referees and medals.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C534-vakaiyalar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can talk about results, referees and medals.",
+    "assesses": [
+      "TA-LEX-C534-VETRI534-03",
+      "TA-LEX-C534-VETRI534-04",
+      "TA-LEX-C534-VETRI534-05"
+    ]
+  }
+}

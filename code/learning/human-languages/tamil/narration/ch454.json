@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 454,
+  "title": "Fear and Shock",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8702a7634f5bcc39",
+  "lessons": [
+    {
+      "id": "TA-C454-tikil",
+      "sequence": 26150,
+      "title": "திகில் (tikil) — terror; horror",
+      "headword": "திகில்",
+      "romanization": "tikil",
+      "gloss": "terror; horror",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e90e5eff829483b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to seethe, then the Tamil for to mutter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திகில்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திகில் — tikil — \"terror; horror\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தக் கதையைக் கேட்டு எனக்குத் திகிலாக இருந்தது. antak kataiyaik kēṭṭu eṉakkut tikilāka iruntatu. Hearing that story, I felt terrified."
+            },
+            {
+              "kind": "speech",
+              "text": "With இரு: திகிலாக இருந்தது, it was terrifying. A horror film is a திகில் (tikil) படம்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திகில் (tikil) is native Dravidian (DEDR 3202); Kota in the same entry has a verb for being thunderstruck."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tikil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tikil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antak kataiyaik kēṭṭu eṉakkut tikilāka iruntatu. — Hearing that story, I felt terrified.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antak kataiyaik kēṭṭu eṉakkut tikilāka iruntatu.* — Hearing that story, I felt terrified.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to seethe, then the Tamil for to mutter, then say tikil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to seethe, then the Tamil for to mutter, then say *tikil* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திகில் (tikil) mean? (\"Terror; horror\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C454-piti",
+      "sequence": 26160,
+      "title": "பீதி (pīti) — panic; dread",
+      "headword": "பீதி",
+      "romanization": "pīti",
+      "gloss": "panic; dread",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:132759825cfda511",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to mutter, then the Tamil for terror."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பீதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பீதி — pīti — \"panic; dread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நிலநடுக்கத்தின்போது மக்களிடம் பீதி பரவியது. nilanaṭukkattiṉpōtu makkaḷiṭam pīti paraviyatu. During the earthquake panic spread among the people."
+            },
+            {
+              "kind": "speech",
+              "text": "பீதி (pīti) அடை, to panic (literally to reach panic)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பீதி (pīti) is borrowed from Sanskrit bhīti, \"fear\" (CDIAL 9512); Tamil writes the bh as ப."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pīti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pīti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nilanaṭukkattiṉpōtu makkaḷiṭam pīti paraviyatu. — During the earthquake panic spread among the people.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nilanaṭukkattiṉpōtu makkaḷiṭam pīti paraviyatu.* — During the earthquake panic spread among the people.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to mutter, then the Tamil for terror, then say pīti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to mutter, then the Tamil for terror, then say *pīti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பீதி (pīti) mean? (\"Panic; dread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C454-atircci",
+      "sequence": 26170,
+      "title": "அதிர்ச்சி (atircci) — shock",
+      "headword": "அதிர்ச்சி",
+      "romanization": "atircci",
+      "gloss": "shock",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0f8663e91c064e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for terror, then the Tamil for panic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அதிர்ச்சி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அதிர்ச்சி — atircci — \"shock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தச் செய்தி எனக்குப் பெரிய அதிர்ச்சியாக இருந்தது. antac ceyti eṉakkup periya atircciyāka iruntatu. That news was a big shock to me."
+            },
+            {
+              "kind": "speech",
+              "text": "From the verb அதிர் \"to shake, to quake\": a shock is a shaking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அதிர்ச்சி (atircci) is native Dravidian, a noun from அதிர் atir, \"to shake, to quake\" (DEDR 137), which lists it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atircci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atircci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atircci, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atircci*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antac ceyti eṉakkup periya atircciyāka iruntatu. — That news was a big shock to me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antac ceyti eṉakkup periya atircciyāka iruntatu.* — That news was a big shock to me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for terror, then the Tamil for panic, then say atircci again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for terror, then the Tamil for panic, then say *atircci* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அதிர்ச்சி (atircci) mean? (\"Shock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C454-titukkitu",
+      "sequence": 26180,
+      "title": "திடுக்கிடு (tiṭukkiṭu) — to be startled",
+      "headword": "திடுக்கிடு",
+      "romanization": "tiṭukkiṭu",
+      "gloss": "to be startled",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:310bb115120563f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for panic, then the Tamil for shock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: திடுக்கிடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திடுக்கிடு — tiṭukkiṭu — \"to be startled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கதவு திடீரென்று திறந்தது, நான் திடுக்கிட்டேன். katavu tiṭīreṉṟu tiṟantatu, nāṉ tiṭukkiṭṭēṉ. The door opened suddenly and I was startled."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): திடுக்கிட்டேன், tiṭukkiṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Built with இடு \"to put\", so its past runs like இட்டேன்: திடுக்கிட்டேன்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "திடுக்கிடு (tiṭukkiṭu) is a native compound of திடுக்கு tiṭukku, \"a sudden fright\" (DEDR 3216), and the verb இடு \"to put\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiṭukkiṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiṭukkiṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiṭukkiṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiṭukkiṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katavu tiṭīreṉṟu tiṟantatu, nāṉ tiṭukkiṭṭēṉ. — The door opened suddenly and I was startled.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katavu tiṭīreṉṟu tiṟantatu, nāṉ tiṭukkiṭṭēṉ.* — The door opened suddenly and I was startled.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for panic, then the Tamil for shock, then say tiṭukkiṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for panic, then the Tamil for shock, then say *tiṭukkiṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does திடுக்கிடு (tiṭukkiṭu) mean? (\"To be startled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C454-natunku",
+      "sequence": 26190,
+      "title": "நடுங்கு (naṭuṅku) — to tremble; to shiver",
+      "headword": "நடுங்கு",
+      "romanization": "naṭuṅku",
+      "gloss": "to tremble; to shiver",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbe556af8eed5ba0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for shock, then the Tamil for to be startled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நடுங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நடுங்கு — naṭuṅku — \"to tremble; to shiver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "குளிரில் குழந்தை நடுங்கியது. kuḷiril kuḻantai naṭuṅkiyatu. The child shivered in the cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): நடுங்கினேன், naṭuṅkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "From cold or from fear: பயத்தில் நடுங்கினேன், I trembled with fear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நடுங்கு (naṭuṅku) is native Dravidian (DEDR 3585), from cold, fear or weakness alike."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭuṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭuṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṭuṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṭuṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḷiril kuḻantai naṭuṅkiyatu. — The child shivered in the cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḷiril kuḻantai naṭuṅkiyatu.* — The child shivered in the cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for shock, then the Tamil for to be startled, then say naṭuṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for shock, then the Tamil for to be startled, then say *naṭuṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நடுங்கு (naṭuṅku) mean? (\"To tremble; to shiver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

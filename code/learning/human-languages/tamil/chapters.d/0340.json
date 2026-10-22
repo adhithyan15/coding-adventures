@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "Rise and Fall",
+  "label": "ch:ta-rise-and-fall",
+  "canDo": "I can say how kingdoms rose and fell.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C340-nakarikam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can say how kingdoms rose and fell.",
+    "assesses": [
+      "TA-LEX-C340-VEEZHCHI340-03",
+      "TA-LEX-C340-VEEZHCHI340-04",
+      "TA-LEX-C340-VEEZHCHI340-05"
+    ]
+  }
+}

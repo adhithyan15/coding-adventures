@@ -1,0 +1,11 @@
+{
+  "id": "TA-C439-acai",
+  "pathSegment": "TA-PATH-439-MULAI439",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-439-MULAI439",
+      "order": 4
+    }
+  ]
+}

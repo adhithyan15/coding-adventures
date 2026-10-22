@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C558-piyano",
+    "language": "tamil",
+    "chapter": 558,
+    "sequence": 31800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce17b096bf692764"
+  },
+  "findings": []
+}

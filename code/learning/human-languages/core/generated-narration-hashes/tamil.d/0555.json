@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:2af8d45fef548952",
+  "lessonIds": [
+    "TA-C555-kaittattal",
+    "TA-C555-arankam",
+    "TA-C555-virutu",
+    "TA-C555-vimarcanam",
+    "TA-C555-katapattiram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch555.txt",
+  "json": "tamil/narration/ch555.json",
+  "textHash": "fnv1a64:8cb16632bd219e3f",
+  "jsonHash": "fnv1a64:6276f02f79a9f391",
+  "findings": []
+}

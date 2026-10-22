@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:672a6f81175cadc4",
+  "lessonIds": [
+    "TA-C396-tuntu",
+    "TA-C396-etirvinai",
+    "TA-C396-cumattu",
+    "TA-C396-piratipali",
+    "TA-C396-porutpatuttu"
+  ],
+  "tex": "tamil/book/chapters/ch396-pressure-and-response.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:980aa43c2dc3a719",
+  "lessonIds": [
+    "TA-C528-eluttalar",
+    "TA-C528-naval",
+    "TA-C528-kavitai",
+    "TA-C528-patippi",
+    "TA-C528-toku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch528.txt",
+  "json": "tamil/narration/ch528.json",
+  "textHash": "fnv1a64:637445718b99747e",
+  "jsonHash": "fnv1a64:34d18e1a0cf7474e",
+  "findings": []
+}

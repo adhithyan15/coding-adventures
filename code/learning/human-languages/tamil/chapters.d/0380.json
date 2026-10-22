@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Duty and Commitment",
+  "label": "ch:ta-duty-and-commitment",
+  "canDo": "I can talk about responsibility, obligation and contribution.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C380-ottulai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can talk about responsibility, obligation and contribution.",
+    "assesses": [
+      "TA-LEX-C380-PORUPPU380-03",
+      "TA-LEX-C380-PORUPPU380-04",
+      "TA-LEX-C380-PORUPPU380-05"
+    ]
+  }
+}

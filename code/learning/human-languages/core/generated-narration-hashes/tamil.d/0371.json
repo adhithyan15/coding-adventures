@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:2487bf85afe628eb",
+  "lessonIds": [
+    "TA-C371-camattuvam",
+    "TA-C371-pakupatu",
+    "TA-C371-cirupanmai",
+    "TA-C371-perumpanmai",
+    "TA-C371-otukku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch371.txt",
+  "json": "tamil/narration/ch371.json",
+  "textHash": "fnv1a64:30bbf557bc9e85e4",
+  "jsonHash": "fnv1a64:cb9c03852c8bba17",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 556,
+  "sourceHash": "fnv1a64:4e3b27b6e3f71067",
+  "lessonIds": [
+    "TA-C556-cirukatai",
+    "TA-C556-ilakkiyam",
+    "TA-C556-kaivinai",
+    "TA-C556-necavu",
+    "TA-C556-carikai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch556.txt",
+  "json": "tamil/narration/ch556.json",
+  "textHash": "fnv1a64:0bb5226c60b0cd66",
+  "jsonHash": "fnv1a64:fae8bf4a9e19a772",
+  "findings": []
+}

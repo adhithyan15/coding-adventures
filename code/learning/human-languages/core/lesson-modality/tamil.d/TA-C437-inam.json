@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C437-inam",
+    "language": "tamil",
+    "chapter": 437,
+    "sequence": 25030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b640ad96d12f895"
+  },
+  "findings": []
+}

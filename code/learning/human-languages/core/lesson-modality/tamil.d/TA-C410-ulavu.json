@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C410-ulavu",
+    "language": "tamil",
+    "chapter": 410,
+    "sequence": 23640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:335831f72279b7ee"
+  },
+  "findings": []
+}

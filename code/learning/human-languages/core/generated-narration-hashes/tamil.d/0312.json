@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:4170cb3bf8ca17c3",
+  "lessonIds": [
+    "TA-C312-virivaka",
+    "TA-C312-neratiyaka",
+    "TA-C312-varni",
+    "TA-C312-oppi",
+    "TA-C312-vaymoli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch312.txt",
+  "json": "tamil/narration/ch312.json",
+  "textHash": "fnv1a64:262cca20b25d3a97",
+  "jsonHash": "fnv1a64:7963ec80e397a7a5",
+  "findings": []
+}

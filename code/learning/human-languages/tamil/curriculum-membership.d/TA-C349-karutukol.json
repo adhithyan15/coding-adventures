@@ -1,0 +1,11 @@
+{
+  "id": "TA-C349-karutukol",
+  "pathSegment": "TA-PATH-349-CINTI349",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-349-CINTI349",
+      "order": 3
+    }
+  ]
+}

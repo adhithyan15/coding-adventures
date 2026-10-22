@@ -1,0 +1,11 @@
+{
+  "id": "TA-C422-kutuvai",
+  "pathSegment": "TA-PATH-422-MUKAM422",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-422-MUKAM422",
+      "order": 2
+    }
+  ]
+}

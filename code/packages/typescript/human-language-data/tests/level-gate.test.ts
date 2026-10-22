@@ -366,6 +366,11 @@ describe("the gate that would have caught the A2 claim", () => {
     // the future, comparison, idhā and law, realizing all five B1 nodes, plus
     // letter lessons for ؤ and ئ) and chapters 293-552 (1,300 headwords, 507
     // verbs).
+    // Tamil followed as the tenth, with chapters 284-293 (the B1 core: the
+    // past by person and -கொண்டிருந்தேன், reasons, travel, experience, -ஆல்
+    // and the unreal -இருந்தால் … -இருப்பேன், realizing all five B1 nodes,
+    // plus a letter lesson for ஈ) and chapters 294-558 (1,325 headwords, 399
+    // verbs), which moved it from the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

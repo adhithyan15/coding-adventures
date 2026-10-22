@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:dea1fda76f635f5e",
+  "lessonIds": [
+    "TA-C513-tolilmunaivor",
+    "TA-C513-alocakar",
+    "TA-C513-kollar",
+    "TA-C513-necavalar",
+    "TA-C513-panippen",
+    "TA-R513-review-506-513"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch513.txt",
+  "json": "tamil/narration/ch513.json",
+  "textHash": "fnv1a64:d5752f4aa1cf05ba",
+  "jsonHash": "fnv1a64:e5abda9420b1307b",
+  "findings": []
+}

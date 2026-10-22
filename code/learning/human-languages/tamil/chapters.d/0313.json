@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Time Words for a Story",
+  "label": "ch:ta-time-words-for-a-story",
+  "canDo": "I can link the events of a story in time.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C313-munnataka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can link the events of a story in time.",
+    "assesses": [
+      "TA-LEX-C313-NERAM313-03",
+      "TA-LEX-C313-NERAM313-04",
+      "TA-LEX-C313-NERAM313-05"
+    ]
+  }
+}

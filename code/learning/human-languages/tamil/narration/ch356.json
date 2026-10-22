@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 356,
+  "title": "Talking Things Over",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3a96f0e47de59774",
+  "lessons": [
+    {
+      "id": "TA-C356-kalanturaiyatu",
+      "sequence": 20560,
+      "title": "கலந்துரையாடு (kalanturaiyāṭu) — to talk over; to discuss together",
+      "headword": "கலந்துரையாடு",
+      "romanization": "kalanturaiyāṭu",
+      "gloss": "to talk over; to discuss together",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:581733d8e1d595e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to consult, then the Tamil for to propose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கலந்துரையாடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கலந்துரையாடு — kalanturaiyāṭu — \"to talk over; to discuss together\"."
+            },
+            {
+              "kind": "speech",
+              "text": "மாணவர்கள் இந்தத் தலைப்பைப் பற்றிக் கலந்துரையாடினார்கள். māṇavarkaḷ intat talaippaip paṟṟik kalanturaiyāṭiṉārkaḷ. The students talked over this topic."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கலந்துரையாடினேன், kalanturaiyāṭiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The topic takes -ஐப் பற்றி; the others -உடன்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கலந்துரையாடு (kalanturaiyāṭu) is native: kalantu, \"having mixed, joined\", from kala (DEDR 1299), urai, \"word\" (DEDR 648), and āṭu, \"to move, play\" (DEDR 347): to exchange words together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalanturaiyāṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalanturaiyāṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalanturaiyāṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalanturaiyāṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māṇavarkaḷ intat talaippaip paṟṟik kalanturaiyāṭiṉārkaḷ. — The students talked over this topic.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māṇavarkaḷ intat talaippaip paṟṟik kalanturaiyāṭiṉārkaḷ.* — The students talked over this topic.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to consult, then the Tamil for to propose, then say kalanturaiyāṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to consult, then the Tamil for to propose, then say *kalanturaiyāṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கலந்துரையாடு (kalanturaiyāṭu) mean? (\"To talk over; to discuss together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C356-peccuvarttai",
+      "sequence": 20570,
+      "title": "பேச்சுவார்த்தை (pēccuvārttai) — negotiations; talks",
+      "headword": "பேச்சுவார்த்தை",
+      "romanization": "pēccuvārttai",
+      "gloss": "negotiations; talks",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c66342aaf8adbae0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to propose, then the Tamil for to talk over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பேச்சுவார்த்தை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேச்சுவார்த்தை — pēccuvārttai — \"negotiations; talks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இரண்டு நாடுகளுக்கும் இடையே பேச்சுவார்த்தை நடக்கிறது. iraṇṭu nāṭukaḷukkum iṭaiyē pēccuvārttai naṭakkiṟatu. Talks are going on between the two countries."
+            },
+            {
+              "kind": "speech",
+              "text": "பேச்சுவார்த்தை (pēccuvārttai) நடக்கிறது, talks are under way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேச்சுவார்த்தை (pēccuvārttai) joins native pēccu, \"speech\", from pēcu, \"to talk\" (DEDR 4430), and vārttai, \"word\", borrowed from Sanskrit vārttā, \"talk, tidings\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēccuvārttai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēccuvārttai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pēccuvārttai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pēccuvārttai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iraṇṭu nāṭukaḷukkum iṭaiyē pēccuvārttai naṭakkiṟatu. — Talks are going on between the two countries.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iraṇṭu nāṭukaḷukkum iṭaiyē pēccuvārttai naṭakkiṟatu.* — Talks are going on between the two countries.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to propose, then the Tamil for to talk over, then say pēccuvārttai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to propose, then the Tamil for to talk over, then say *pēccuvārttai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பேச்சுவார்த்தை (pēccuvārttai) mean? (\"Negotiations; talks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C356-kurukkitu",
+      "sequence": 20580,
+      "title": "குறுக்கிடு (kuṟukkiṭu) — to interrupt; to intervene",
+      "headword": "குறுக்கிடு",
+      "romanization": "kuṟukkiṭu",
+      "gloss": "to interrupt; to intervene",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a073336d642c947",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to talk over, then the Tamil for negotiations."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குறுக்கிடு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறுக்கிடு — kuṟukkiṭu — \"to interrupt; to intervene\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் பேசும்போது அவன் குறுக்கிட்டான். nāṉ pēcumpōtu avaṉ kuṟukkiṭṭāṉ. He interrupted while I was speaking."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): குறுக்கிட்டேன், kuṟukkiṭṭēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Polite: குறுக்கிடுவதற்கு மன்னிக்கவும், sorry to interrupt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குறுக்கிடு (kuṟukkiṭu) is native: kuṟukku, \"shortness, crossing\", from kuṟu, \"short\" (DEDR 1851), and iṭu, \"to put\" (DEDR 442): to put oneself across someone's path."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟukkiṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟukkiṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟukkiṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟukkiṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṉ pēcumpōtu avaṉ kuṟukkiṭṭāṉ. — He interrupted while I was speaking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṉ pēcumpōtu avaṉ kuṟukkiṭṭāṉ.* — He interrupted while I was speaking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to talk over, then the Tamil for negotiations, then say kuṟukkiṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to talk over, then the Tamil for negotiations, then say *kuṟukkiṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குறுக்கிடு (kuṟukkiṭu) mean? (\"To interrupt; to intervene\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C356-camaracam",
+      "sequence": 20590,
+      "title": "சமரசம் (camaracam) — a compromise",
+      "headword": "சமரசம்",
+      "romanization": "camaracam",
+      "gloss": "a compromise",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a8ea77bb32c18ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for negotiations, then the Tamil for to interrupt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சமரசம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சமரசம் — camaracam — \"a compromise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நீண்ட பேச்சுக்குப் பிறகு இருவரும் சமரசத்துக்கு வந்தார்கள். nīṇṭa pēccukkup piṟaku iruvarum camaracattukku vantārkaḷ. After a long talk, the two reached a compromise."
+            },
+            {
+              "kind": "speech",
+              "text": "சமரசத்துக்கு வா, to come to a compromise; சமரசம் (camaracam) செய், to make peace."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சமரசம் (camaracam) is borrowed from Sanskrit samarasa, \"having equal feelings\" (Monier-Williams), from sama, \"equal\", and rasa, \"taste, feeling\": a state where both sides feel alike."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camaracam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camaracam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camaracam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camaracam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīṇṭa pēccukkup piṟaku iruvarum camaracattukku vantārkaḷ. — After a long talk, the two reached a compromise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīṇṭa pēccukkup piṟaku iruvarum camaracattukku vantārkaḷ.* — After a long talk, the two reached a compromise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for negotiations, then the Tamil for to interrupt, then say camaracam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for negotiations, then the Tamil for to interrupt, then say *camaracam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சமரசம் (camaracam) mean? (\"A compromise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C356-vakkuvatam",
+      "sequence": 20600,
+      "title": "வாக்குவாதம் (vākkuvātam) — a heated argument; a quarrel",
+      "headword": "வாக்குவாதம்",
+      "romanization": "vākkuvātam",
+      "gloss": "a heated argument; a quarrel",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f0017e395f214f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to interrupt, then the Tamil for a compromise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வாக்குவாதம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாக்குவாதம் — vākkuvātam — \"a heated argument; a quarrel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சின்ன விஷயத்துக்காக அவர்களிடையே வாக்குவாதம் ஏற்பட்டது. ciṉṉa viṣayattukkāka avarkaḷiṭaiyē vākkuvātam ēṟpaṭṭatu. An argument broke out between them over a small thing."
+            },
+            {
+              "kind": "speech",
+              "text": "வாக்குவாதம் (vākkuvātam) செய், to argue heatedly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வாக்குவாதம் (vākkuvātam) is built from two Sanskrit loans: vākku, \"word\", from vāc, \"speech\" (Monier-Williams), and vātam, \"argument\", from vāda (CDIAL 11507): a war of words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vākkuvātam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vākkuvātam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vākkuvātam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vākkuvātam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṉṉa viṣayattukkāka avarkaḷiṭaiyē vākkuvātam ēṟpaṭṭatu. — An argument broke out between them over a small thing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṉṉa viṣayattukkāka avarkaḷiṭaiyē vākkuvātam ēṟpaṭṭatu.* — An argument broke out between them over a small thing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to interrupt, then the Tamil for a compromise, then say vākkuvātam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to interrupt, then the Tamil for a compromise, then say *vākkuvātam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வாக்குவாதம் (vākkuvātam) mean? (\"A heated argument; a quarrel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

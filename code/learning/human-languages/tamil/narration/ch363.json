@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 363,
+  "title": "Numbers in an Argument",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f12bccf72dcc728a",
+  "lessons": [
+    {
+      "id": "TA-C363-pullivivaram",
+      "sequence": 20920,
+      "title": "புள்ளிவிவரம் (puḷḷivivaram) — statistics",
+      "headword": "புள்ளிவிவரம்",
+      "romanization": "puḷḷivivaram",
+      "gloss": "statistics",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:649561d1c1347bcd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an analysis, then the Tamil for to analyse closely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புள்ளிவிவரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புள்ளிவிவரம் — puḷḷivivaram — \"statistics\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தப் புள்ளிவிவரங்கள் எதைக் காட்டுகின்றன? intap puḷḷivivaraṅkaḷ etaik kāṭṭukiṉṟaṉa? What do these statistics show?"
+            },
+            {
+              "kind": "speech",
+              "text": "Usually plural: புள்ளிவிவரங்கள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புள்ளிவிவரம் (puḷḷivivaram) joins native puḷḷi, \"mark, dot\" (DEDR 4327), and vivaram, \"details\", borrowed from Sanskrit vivaraṇa, \"laying open, explanation\" (Monier-Williams): details by the point."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḷḷivivaram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḷḷivivaram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puḷḷivivaram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puḷḷivivaram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intap puḷḷivivaraṅkaḷ etaik kāṭṭukiṉṟaṉa? — What do these statistics show?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intap puḷḷivivaraṅkaḷ etaik kāṭṭukiṉṟaṉa?* — What do these statistics show?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an analysis, then the Tamil for to analyse closely, then say puḷḷivivaram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an analysis, then the Tamil for to analyse closely, then say *puḷḷivivaram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புள்ளிவிவரம் (puḷḷivivaram) mean? (\"Statistics\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C363-catavitam",
+      "sequence": 20930,
+      "title": "சதவீதம் (catavītam) — a percentage; per cent",
+      "headword": "சதவீதம்",
+      "romanization": "catavītam",
+      "gloss": "a percentage; per cent",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e923b38a03ce9fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to analyse closely, then the Tamil for statistics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சதவீதம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சதவீதம் — catavītam — \"a percentage; per cent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எண்பது சதவீதம் மாணவர்கள் தேர்வில் தேர்ச்சி பெற்றார்கள். eṇpatu catavītam māṇavarkaḷ tērvil tērcci peṟṟārkaḷ. Eighty per cent of the students passed the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Numbers are spelled out: பத்து சதவீதம் (catavītam), ten per cent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சதவீதம் (catavītam) joins catam, \"a hundred\", borrowed from Sanskrit śata (CDIAL 12278), and vītam, \"a rate, a share\", whose origin is not settled: so much per hundred."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "catavītam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *catavītam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "catavītam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *catavītam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇpatu catavītam māṇavarkaḷ tērvil tērcci peṟṟārkaḷ. — Eighty per cent of the students passed the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇpatu catavītam māṇavarkaḷ tērvil tērcci peṟṟārkaḷ.* — Eighty per cent of the students passed the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to analyse closely, then the Tamil for statistics, then say catavītam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to analyse closely, then the Tamil for statistics, then say *catavītam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சதவீதம் (catavītam) mean? (\"A percentage; per cent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C363-caracari",
+      "sequence": 20940,
+      "title": "சராசரி (carācari) — an average",
+      "headword": "சராசரி",
+      "romanization": "carācari",
+      "gloss": "an average",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e045734fc34692e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for statistics, then the Tamil for a percentage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சராசரி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சராசரி — carācari — \"an average\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த வகுப்பின் சராசரி மதிப்பெண் எழுபது. inta vakuppiṉ carācari matippeṇ eḻupatu. The average mark in this class is seventy."
+            },
+            {
+              "kind": "speech",
+              "text": "சராசரியாக, on average."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சராசரி (carācari) is usually traced to Persian sarāsar, \"from end to end, throughout\", which reached Tamil through Hindustani: a figure taken across the whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carācari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carācari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carācari, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carācari*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta vakuppiṉ carācari matippeṇ eḻupatu. — The average mark in this class is seventy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta vakuppiṉ carācari matippeṇ eḻupatu.* — The average mark in this class is seventy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for statistics, then the Tamil for a percentage, then say carācari again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for statistics, then the Tamil for a percentage, then say *carācari* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சராசரி (carācari) mean? (\"An average\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C363-vikitam",
+      "sequence": 20950,
+      "title": "விகிதம் (vikitam) — a ratio; a rate",
+      "headword": "விகிதம்",
+      "romanization": "vikitam",
+      "gloss": "a ratio; a rate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c7b1edbce726d4f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a percentage, then the Tamil for an average."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விகிதம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விகிதம் — vikitam — \"a ratio; a rate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த ஊரில் ஆண் பெண் விகிதம் சமமாக இருக்கிறது. inta ūril āṇ peṇ vikitam camamāka irukkiṟatu. In this town the ratio of men to women is equal."
+            },
+            {
+              "kind": "speech",
+              "text": "என்ற விகிதத்தில், in the ratio of: ஒன்றுக்கு இரண்டு என்ற விகிதத்தில், one to two."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விகிதம் (vikitam) is borrowed from Sanskrit vihita, \"distributed, apportioned, fixed\" (Monier-Williams). Tamil writes the Sanskrit h between vowels as க."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikitam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikitam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vikitam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vikitam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta ūril āṇ peṇ vikitam camamāka irukkiṟatu. — In this town the ratio of men to women is equal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta ūril āṇ peṇ vikitam camamāka irukkiṟatu.* — In this town the ratio of men to women is equal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a percentage, then the Tamil for an average, then say vikitam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a percentage, then the Tamil for an average, then say *vikitam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விகிதம் (vikitam) mean? (\"A ratio; a rate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C363-kani",
+      "sequence": 20960,
+      "title": "கணி (kaṇi) — to predict; to calculate",
+      "headword": "கணி",
+      "romanization": "kaṇi",
+      "gloss": "to predict; to calculate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5b731381c48e6676",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an average, then the Tamil for a ratio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கணி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கணி — kaṇi — \"to predict; to calculate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அடுத்த ஆண்டு விலைகள் உயரும் என்று அவர்கள் கணித்தார்கள். aṭutta āṇṭu vilaikaḷ uyarum eṉṟu avarkaḷ kaṇittārkaḷ. They predicted that prices would rise next year."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): கணித்தேன், kaṇittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The prediction is a clause with என்று. கணிதம், mathematics, comes from the same Sanskrit root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கணி (kaṇi) is a verb built on Sanskrit gaṇayati, \"counts, takes notice of\" (CDIAL 3993), the source of கணிதம், \"mathematics\". Tamil writes the Sanskrit g as க."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭutta āṇṭu vilaikaḷ uyarum eṉṟu avarkaḷ kaṇittārkaḷ. — They predicted that prices would rise next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭutta āṇṭu vilaikaḷ uyarum eṉṟu avarkaḷ kaṇittārkaḷ.* — They predicted that prices would rise next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an average, then the Tamil for a ratio, then say kaṇi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an average, then the Tamil for a ratio, then say *kaṇi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கணி (kaṇi) mean? (\"To predict; to calculate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

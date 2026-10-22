@@ -1,0 +1,21 @@
+{
+  "chapter": 431,
+  "title": "Drying Up",
+  "label": "ch:ta-drying-up",
+  "canDo": "I can talk about water drying up and evaporating, things getting scorched, and the water level.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "TA-R431-review-424-431",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 431: I can talk about water drying up and evaporating, things getting scorched, and the water level.",
+    "assesses": [
+      "TA-LEX-C431-VARATCHI431-01",
+      "TA-LEX-C431-VARATCHI431-02",
+      "TA-LEX-C431-VARATCHI431-03",
+      "TA-LEX-C431-VARATCHI431-04",
+      "TA-LEX-C431-VARATCHI431-05"
+    ]
+  }
+}

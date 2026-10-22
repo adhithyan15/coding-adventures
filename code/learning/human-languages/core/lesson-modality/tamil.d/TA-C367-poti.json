@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C367-poti",
+    "language": "tamil",
+    "chapter": 367,
+    "sequence": 21160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:729504bfd2858872"
+  },
+  "findings": []
+}

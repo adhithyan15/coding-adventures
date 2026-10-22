@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C468-tempu",
+    "language": "tamil",
+    "chapter": 468,
+    "sequence": 26860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6d99e0d26a0ce51"
+  },
+  "findings": []
+}

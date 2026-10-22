@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Telling It Clearly",
+  "label": "ch:ta-telling-it-clearly",
+  "canDo": "I can tell a story in detail and in my own words.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C312-vaymoli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can tell a story in detail and in my own words.",
+    "assesses": [
+      "TA-LEX-C312-VIRIVAKA312-03",
+      "TA-LEX-C312-VIRIVAKA312-04",
+      "TA-LEX-C312-VIRIVAKA312-05"
+    ]
+  }
+}

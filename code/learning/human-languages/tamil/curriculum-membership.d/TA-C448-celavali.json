@@ -1,0 +1,11 @@
+{
+  "id": "TA-C448-celavali",
+  "pathSegment": "TA-PATH-448-SEMI448",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-448-SEMI448",
+      "order": 1
+    }
+  ]
+}

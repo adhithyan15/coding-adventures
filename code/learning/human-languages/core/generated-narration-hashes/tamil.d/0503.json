@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:13b9c53462c4a3cf",
+  "lessonIds": [
+    "TA-C503-toli",
+    "TA-C503-anniyar",
+    "TA-C503-arimukam",
+    "TA-C503-upacari",
+    "TA-C503-piriyavitai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch503.txt",
+  "json": "tamil/narration/ch503.json",
+  "textHash": "fnv1a64:674e9d1dc291a8ed",
+  "jsonHash": "fnv1a64:7a3fc5ace2e545a5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "After the Disaster",
+  "label": "ch:ta-after-the-disaster",
+  "canDo": "I can talk about a disaster and what came after it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C302-curaiyatu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can talk about a disaster and what came after it.",
+    "assesses": [
+      "TA-LEX-C302-AZHIVU302-03",
+      "TA-LEX-C302-AZHIVU302-04",
+      "TA-LEX-C302-AZHIVU302-05"
+    ]
+  }
+}

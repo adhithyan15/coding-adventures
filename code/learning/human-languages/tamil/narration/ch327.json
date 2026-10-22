@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 327,
+  "title": "Ancestors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9a1b3722f7329cc0",
+  "lessons": [
+    {
+      "id": "TA-C327-munnor",
+      "sequence": 18790,
+      "title": "முன்னோர் (muṉṉōr) — ancestors; forebears",
+      "headword": "முன்னோர்",
+      "romanization": "muṉṉōr",
+      "gloss": "ancestors; forebears",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:587bff3746895cdd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a period, then the Tamil for a decade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: முன்னோர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னோர் — muṉṉōr — \"ancestors; forebears\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் முன்னோர் இந்த ஊரில் வாழ்ந்தார்கள். eṅkaḷ muṉṉōr inta ūril vāḻntārkaḷ. Our ancestors lived in this village."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural in sense; முன்னோர்கள் is also heard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "முன்னோர் (muṉṉōr) is native Dravidian: those who were before, from முன், \"in front, before\" (DEDR 5020)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉōr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉōr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṉṉōr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṉṉōr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṅkaḷ muṉṉōr inta ūril vāḻntārkaḷ. — Our ancestors lived in this village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṅkaḷ muṉṉōr inta ūril vāḻntārkaḷ.* — Our ancestors lived in this village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a period, then the Tamil for a decade, then say muṉṉōr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a period, then the Tamil for a decade, then say *muṉṉōr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does முன்னோர் (muṉṉōr) mean? (\"Ancestors; forebears\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C327-vamcam",
+      "sequence": 18800,
+      "title": "வம்சம் (vamcam) — a dynasty; a family line",
+      "headword": "வம்சம்",
+      "romanization": "vamcam",
+      "gloss": "a dynasty; a family line",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0af348b4625006f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a decade, then the Tamil for ancestors."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வம்சம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வம்சம் — vamcam — \"a dynasty; a family line\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் ஒரு பழைய வம்சத்தைச் சேர்ந்தவர். avar oru paḻaiya vamcattaic cērntavar. He belongs to an old family line."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a royal line."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வம்சம் (vamcam) is borrowed from Sanskrit vaṃśa, \"bamboo\", and so \"family, lineage\" (CDIAL 11175), a line that grows joint by joint."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vamcam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vamcam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vamcam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vamcam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avar oru paḻaiya vamcattaic cērntavar. — He belongs to an old family line.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avar oru paḻaiya vamcattaic cērntavar.* — He belongs to an old family line.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a decade, then the Tamil for ancestors, then say vamcam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a decade, then the Tamil for ancestors, then say *vamcam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வம்சம் (vamcam) mean? (\"A dynasty; a family line\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C327-kutiyeru",
+      "sequence": 18810,
+      "title": "குடியேறு (kuṭiyēṟu) — to settle; to move in",
+      "headword": "குடியேறு",
+      "romanization": "kuṭiyēṟu",
+      "gloss": "to settle; to move in",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a09d963d8a92b15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for ancestors, then the Tamil for a dynasty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குடியேறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குடியேறு — kuṭiyēṟu — \"to settle; to move in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் தாத்தா இளம் வயதில் இந்த நகரத்தில் குடியேறினார். eṉ tāttā iḷam vayatil inta nakarattil kuṭiyēṟiṉār. My grandfather settled in this city when he was young."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): குடியேறினேன், kuṭiyēṟiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "The place takes -இல்; குடி, home + ஏறு, to go up into."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குடியேறு (kuṭiyēṟu) is a Tamil compound built from குடி, \"house, home, family\" (DEDR 1655), and ஏறு, \"to rise, go up into\" (DEDR 916)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭiyēṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭiyēṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭiyēṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭiyēṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ tāttā iḷam vayatil inta nakarattil kuṭiyēṟiṉār. — My grandfather settled in this city when he was young.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ tāttā iḷam vayatil inta nakarattil kuṭiyēṟiṉār.* — My grandfather settled in this city when he was young.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for ancestors, then the Tamil for a dynasty, then say kuṭiyēṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for ancestors, then the Tamil for a dynasty, then say *kuṭiyēṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குடியேறு (kuṭiyēṟu) mean? (\"To settle; to move in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C327-netunkalam",
+      "sequence": 18820,
+      "title": "நெடுங்காலம் (neṭuṅkālam) — a long time; ages",
+      "headword": "நெடுங்காலம்",
+      "romanization": "neṭuṅkālam",
+      "gloss": "a long time; ages",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f9862f96939e508",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a dynasty, then the Tamil for to settle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நெடுங்காலம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெடுங்காலம் — neṭuṅkālam — \"a long time; ages\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்தக் கோயில் நெடுங்காலமாக இங்கே இருக்கிறது. intak kōyil neṭuṅkālamāka iṅkē irukkiṟatu. This temple has been here for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "With -ஆக, for a long time: நெடுங்காலமாக."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெடுங்காலம் (neṭuṅkālam) joins native நெடு, \"long\" (DEDR 3738), with காலம், \"time\", borrowed from Sanskrit kāla (CDIAL 3084)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neṭuṅkālam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neṭuṅkālam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neṭuṅkālam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neṭuṅkālam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "intak kōyil neṭuṅkālamāka iṅkē irukkiṟatu. — This temple has been here for a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *intak kōyil neṭuṅkālamāka iṅkē irukkiṟatu.* — This temple has been here for a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a dynasty, then the Tamil for to settle, then say neṭuṅkālam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a dynasty, then the Tamil for to settle, then say *neṭuṅkālam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நெடுங்காலம் (neṭuṅkālam) mean? (\"A long time; ages\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C327-purvikam",
+      "sequence": 18830,
+      "title": "பூர்வீகம் (pūrvīkam) — ancestral roots; native place",
+      "headword": "பூர்வீகம்",
+      "romanization": "pūrvīkam",
+      "gloss": "ancestral roots; native place",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5ec20ac66211794",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to settle, then the Tamil for a long time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பூர்வீகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பூர்வீகம் — pūrvīkam — \"ancestral roots; native place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் குடும்பத்தின் பூர்வீகம் ஒரு சிறிய கிராமம். eṅkaḷ kuṭumpattiṉ pūrvīkam oru ciṟiya kirāmam. Our family comes from a small village."
+            },
+            {
+              "kind": "speech",
+              "text": "The place a family comes from; பூர்வீக வீடு, the ancestral house."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பூர்வீகம் (pūrvīkam) is usually traced to Sanskrit pūrvika, \"former, ancient\" (Monier-Williams), with the Tamil -அம் of nouns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvīkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvīkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pūrvīkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pūrvīkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṅkaḷ kuṭumpattiṉ pūrvīkam oru ciṟiya kirāmam. — Our family comes from a small village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṅkaḷ kuṭumpattiṉ pūrvīkam oru ciṟiya kirāmam.* — Our family comes from a small village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to settle, then the Tamil for a long time, then say pūrvīkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to settle, then the Tamil for a long time, then say *pūrvīkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பூர்வீகம் (pūrvīkam) mean? (\"Ancestral roots; native place\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

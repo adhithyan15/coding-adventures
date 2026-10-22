@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:6b46705ca3afe5e1",
+  "lessonIds": [
+    "TA-C506-uttiyokam",
+    "TA-C506-cuyavivaram",
+    "TA-C506-amarttu",
+    "TA-C506-mulunera",
+    "TA-C506-utaviyalar"
+  ],
+  "tex": "tamil/book/chapters/ch506-getting-hired.tex"
+}

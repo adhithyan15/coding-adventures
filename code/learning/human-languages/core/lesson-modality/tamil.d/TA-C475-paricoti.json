@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C475-paricoti",
+    "language": "tamil",
+    "chapter": 475,
+    "sequence": 27230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:726bc54db553da24"
+  },
+  "findings": []
+}

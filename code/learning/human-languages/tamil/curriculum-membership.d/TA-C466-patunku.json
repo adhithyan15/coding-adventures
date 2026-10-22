@@ -1,0 +1,11 @@
+{
+  "id": "TA-C466-patunku",
+  "pathSegment": "TA-PATH-466-TUNIVU466",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-466-TUNIVU466",
+      "order": 3
+    }
+  ]
+}

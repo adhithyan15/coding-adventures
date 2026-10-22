@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:fb79e093c0747d11",
+  "lessonIds": [
+    "TA-C514-tolircankam",
+    "TA-C514-velainiruttam",
+    "TA-C514-panimanai",
+    "TA-C514-kitanku",
+    "TA-C514-perunar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch514.txt",
+  "json": "tamil/narration/ch514.json",
+  "textHash": "fnv1a64:90d20adf21748de2",
+  "jsonHash": "fnv1a64:0557dcd9cd9e3211",
+  "findings": []
+}

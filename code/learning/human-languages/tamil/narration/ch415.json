@@ -1,0 +1,870 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 415,
+  "title": "Renewing the Papers",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c231becfcdc3358c",
+  "lessons": [
+    {
+      "id": "TA-C415-kalavatiyaku",
+      "sequence": 23860,
+      "title": "காலாவதியாகு (kālāvatiyāku) — to expire; to lapse",
+      "headword": "காலாவதியாகு",
+      "romanization": "kālāvatiyāku",
+      "gloss": "to expire; to lapse",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:787e9521c170ff9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for an entrance, then the Tamil for to confiscate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: காலாவதியாகு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காலாவதியாகு — kālāvatiyāku — \"to expire; to lapse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் கடவுச்சீட்டு அடுத்த மாதம் காலாவதியாகும். eṉ kaṭavuccīṭṭu aṭutta mātam kālāvatiyākum. My passport expires next month."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): காலாவதியானது, kālāvatiyāṉatu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of food or medicine too: காலாவதியான மருந்து, expired medicine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காலாவதியாகு (kālāvatiyāku) is built from காலாவதி, \"the end of a term\", borrowed from Sanskrit kāla, \"time\" (CDIAL 3084), and avadhi, \"a limit\", with ஆகு, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālāvatiyāku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālāvatiyāku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kālāvatiyāku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kālāvatiyāku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ kaṭavuccīṭṭu aṭutta mātam kālāvatiyākum. — My passport expires next month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ kaṭavuccīṭṭu aṭutta mātam kālāvatiyākum.* — My passport expires next month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for an entrance, then the Tamil for to confiscate, then say kālāvatiyāku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for an entrance, then the Tamil for to confiscate, then say *kālāvatiyāku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does காலாவதியாகு (kālāvatiyāku) mean? (\"To expire; to lapse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C415-putuppi",
+      "sequence": 23870,
+      "title": "புதுப்பி (putuppi) — to renew; to renovate",
+      "headword": "புதுப்பி",
+      "romanization": "putuppi",
+      "gloss": "to renew; to renovate",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f40736fa01893976",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to confiscate, then the Tamil for to expire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: புதுப்பி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புதுப்பி — putuppi — \"to renew; to renovate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நேற்று நான் என் கடவுச்சீட்டைப் புதுப்பித்தேன். nēṟṟu nāṉ eṉ kaṭavuccīṭṭaip putuppittēṉ. Yesterday I renewed my passport."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): புதுப்பித்தேன், putuppittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on புது, new: to make new again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "புதுப்பி (putuppi) is built from புது, \"new\" (DEDR 4275), with a verb-making ending: to make new."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putuppi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putuppi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putuppi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putuppi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nēṟṟu nāṉ eṉ kaṭavuccīṭṭaip putuppittēṉ. — Yesterday I renewed my passport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nēṟṟu nāṉ eṉ kaṭavuccīṭṭaip putuppittēṉ.* — Yesterday I renewed my passport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to confiscate, then the Tamil for to expire, then say putuppi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to confiscate, then the Tamil for to expire, then say *putuppi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does புதுப்பி (putuppi) mean? (\"To renew; to renovate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C415-alaiccal",
+      "sequence": 23880,
+      "title": "அலைச்சல் (alaiccal) — running around; a weary chase",
+      "headword": "அலைச்சல்",
+      "romanization": "alaiccal",
+      "gloss": "running around; a weary chase",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f6d5926eab8acb5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to expire, then the Tamil for to renew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அலைச்சல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அலைச்சல் — alaiccal — \"running around; a weary chase\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அந்தச் சான்றிதழுக்காக எனக்கு ஒரு வாரம் அலைச்சல் இருந்தது. antac cāṉṟitaḻukkāka eṉakku oru vāram alaiccal iruntatu. Getting that certificate meant a week of running around for me."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on அலை, to wander; வீண் அலைச்சல் (alaiccal) is running around for nothing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அலைச்சல் (alaiccal) is native Dravidian: DEDR 240 lists it, \"wandering\", beside the verb அலை, \"to move about\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alaiccal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alaiccal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alaiccal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alaiccal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "antac cāṉṟitaḻukkāka eṉakku oru vāram alaiccal iruntatu. — Getting that certificate meant a week of running around for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *antac cāṉṟitaḻukkāka eṉakku oru vāram alaiccal iruntatu.* — Getting that certificate meant a week of running around for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to expire, then the Tamil for to renew, then say alaiccal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to expire, then the Tamil for to renew, then say *alaiccal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அலைச்சல் (alaiccal) mean? (\"Running around; a weary chase\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C415-oppukai",
+      "sequence": 23890,
+      "title": "ஒப்புகை (oppukai) — an acknowledgement; a receipt slip",
+      "headword": "ஒப்புகை",
+      "romanization": "oppukai",
+      "gloss": "an acknowledgement; a receipt slip",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d57fdce0e40b599a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to renew, then the Tamil for running around."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஒப்புகை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒப்புகை — oppukai — \"an acknowledgement; a receipt slip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அலுவலகம் என் விண்ணப்பத்துக்கு ஒப்புகை கொடுத்தது. aluvalakam eṉ viṇṇappattukku oppukai koṭuttatu. The office gave an acknowledgement for my application."
+            },
+            {
+              "kind": "speech",
+              "text": "ஒப்புகைச் சீட்டு is the slip you keep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒப்புகை (oppukai) is built from ஒப்பு, \"to agree, to accept\" (DEDR 924), with the noun ending -kai."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oppukai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oppukai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oppukai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oppukai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aluvalakam eṉ viṇṇappattukku oppukai koṭuttatu. — The office gave an acknowledgement for my application.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aluvalakam eṉ viṇṇappattukku oppukai koṭuttatu.* — The office gave an acknowledgement for my application.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to renew, then the Tamil for running around, then say oppukai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to renew, then the Tamil for running around, then say *oppukai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஒப்புகை (oppukai) mean? (\"An acknowledgement; a receipt slip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C415-erpatu-cey",
+      "sequence": 23900,
+      "title": "ஏற்பாடு செய் (ēṟpāṭu cey) — to arrange; to organise",
+      "headword": "ஏற்பாடு செய்",
+      "romanization": "ēṟpāṭu cey",
+      "gloss": "to arrange; to organise",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08315f9cc5abcc71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for running around, then the Tamil for an acknowledgement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஏற்பாடு செய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏற்பாடு செய் — ēṟpāṭu cey — \"to arrange; to organise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அப்பா பயணத்துக்கு எல்லாம் ஏற்பாடு செய்தார். appā payaṇattukku ellām ēṟpāṭu ceytār. Father arranged everything for the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஏற்பாடு செய்தேன், ēṟpāṭu ceytēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is arranged for takes -க்கு: பயணத்துக்கு ஏற்பாடு செய் (ēṟpāṭu cey), to make arrangements for a trip."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏற்பாடு செய் (ēṟpāṭu cey) joins ஏற்பாடு, \"an arrangement\", which is native Dravidian (DEDR 905), to செய், \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟpāṭu cey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟpāṭu cey*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ēṟpāṭu cey, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ēṟpāṭu cey*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appā payaṇattukku ellām ēṟpāṭu ceytār. — Father arranged everything for the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appā payaṇattukku ellām ēṟpāṭu ceytār.* — Father arranged everything for the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for running around, then the Tamil for an acknowledgement, then say ēṟpāṭu cey again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for running around, then the Tamil for an acknowledgement, then say *ēṟpāṭu cey* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஏற்பாடு செய் (ēṟpāṭu cey) mean? (\"To arrange; to organise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R415-review-408-415",
+      "sequence": 23910,
+      "title": "Looking back: from Bends and Slopes to Renewing the Papers",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Bends and Slopes to Renewing the Papers",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c31a094d9e839af1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Tamil for a curve and a slope."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a curve, a slope, an ascent, to overturn, to spin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a curve, a slope, an ascent, to overturn, to spin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pit, a pothole, a level crossing, a shortcut, to get stuck",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pit, a pothole, a level crossing, a shortcut, to get stuck]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pedestrian, a passer-by, a board, to stroll, to cross over",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pedestrian, a passer-by, a board, to stroll, to cross over]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fault, to stop working, to get dented, to scrape, to bump",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fault, to stop working, to get dented, to scrape, to bump]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a landmark, to lose one's way, to lag behind, to move forward, to move away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a landmark, to lose one's way, to lag behind, to move forward, to move away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pilot, to make a landing, a wing, customs, immigration",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pilot, to make a landing, a wing, customs, immigration]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a visa, a border, a checkpoint booth, an entrance, to confiscate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a visa, a border, a checkpoint booth, an entrance, to confiscate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to expire, to renew, running around, an acknowledgement, to arrange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to expire, to renew, running around, an acknowledgement, to arrange]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A curve? (வளைவு, vaḷaivu.) A slope? (சரிவு, carivu.) An ascent? (ஏற்றம், ēṟṟam.) To overturn? (கவிழ், kaviḻ.) To spin? (சுழல், cuḻal.) A pit? (குழி, kuḻi.) A pothole? (பள்ளம், paḷḷam.) A level crossing? (கடவை, kaṭavai.) A shortcut? (குறுக்குவழி, kuṟukkuvaḻi.) To get stuck? (சிக்கு, cikku.) A pedestrian? (பாதசாரி, pātacāri.) A passer-by? (வழிப்போக்கர், vaḻippōkkar.) A board? (பலகை, palakai.) To stroll? (உலாவு, ulāvu.) To cross over? (தாண்டு, tāṇṭu.) A fault? (கோளாறு, kōḷāṟu.) To stop working? (செயலிழ, ceyaliḻa.) To get dented? (நசுங்கு, nacuṅku.) To scrape? (உரசு, uracu.) To bump? (முட்டு, muṭṭu.) A landmark? (அடையாளம், aṭaiyāḷam.) To lose one's way? (வழிதவறு, vaḻitavaṟu.) To lag behind? (பின்தங்கு, piṉtaṅku.) To move forward? (முன்னேறு, muṉṉēṟu.) To move away? (விலகு, vilaku.) A pilot? (விமானி, vimāṉi.) To make a landing? (தரையிறங்கு, taraiyiṟaṅku.) A wing? (இறக்கை, iṟakkai.) Customs? (சுங்கம், cuṅkam.) Immigration? (குடிவரவு, kuṭivaravu.) A visa? (விசா, vicā.) A border? (எல்லை, ellai.) A checkpoint booth? (சாவடி, cāvaṭi.) An entrance? (நுழைவாயில், nuḻaivāyil.) To confiscate? (பறிமுதல் செய், paṟimutal cey.) To expire? (காலாவதியாகு, kālāvatiyāku.) To renew? (புதுப்பி, putuppi.) Running around? (அலைச்சல், alaiccal.) An acknowledgement? (ஒப்புகை, oppukai.) To arrange? (ஏற்பாடு செய், ēṟpāṭu cey.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

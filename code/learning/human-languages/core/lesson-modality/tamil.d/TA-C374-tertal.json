@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C374-tertal",
+    "language": "tamil",
+    "chapter": 374,
+    "sequence": 21480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e09d4f47b5edc9b7"
+  },
+  "findings": []
+}

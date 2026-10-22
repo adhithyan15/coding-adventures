@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C306-veliyitu",
+    "language": "tamil",
+    "chapter": 306,
+    "sequence": 17750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10f7a775c344c216"
+  },
+  "findings": []
+}

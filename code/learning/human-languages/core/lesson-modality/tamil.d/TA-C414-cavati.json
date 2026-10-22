@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C414-cavati",
+    "language": "tamil",
+    "chapter": 414,
+    "sequence": 23830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c8ad5dead0e89c9"
+  },
+  "findings": []
+}

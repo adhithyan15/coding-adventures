@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:168dcbd37e6b3290",
+  "lessonIds": [
+    "TA-C380-poruppu",
+    "TA-C380-katappatu",
+    "TA-C380-arppani",
+    "TA-C380-pankali",
+    "TA-C380-ottulai"
+  ],
+  "tex": "tamil/book/chapters/ch380-duty-and-commitment.tex"
+}

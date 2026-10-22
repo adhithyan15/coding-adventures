@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-405-METRO405",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about taxis, the metro, connections, a lounge and a break in a journey.",
+  "prerequisites": []
+}

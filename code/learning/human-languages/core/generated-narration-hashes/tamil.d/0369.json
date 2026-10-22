@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:710fec9de5d20b9b",
+  "lessonIds": [
+    "TA-C369-camukam",
+    "TA-C369-potumakkal",
+    "TA-C369-makkaltokai",
+    "TA-C369-kutimakan",
+    "TA-C369-vakaippatuttu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch369.txt",
+  "json": "tamil/narration/ch369.json",
+  "textHash": "fnv1a64:241ec71084b61b42",
+  "jsonHash": "fnv1a64:acfe8992dd693c79",
+  "findings": []
+}

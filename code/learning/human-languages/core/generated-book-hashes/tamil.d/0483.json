@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:d1059d7df4b3c28d",
+  "lessonIds": [
+    "TA-C483-pun",
+    "TA-C483-koppulam",
+    "TA-C483-paru",
+    "TA-C483-cori",
+    "TA-C483-maccam"
+  ],
+  "tex": "tamil/book/chapters/ch483-skin-troubles.tex"
+}

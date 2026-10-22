@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-301-MEETPU301",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-301-MEETPU301"
+  ],
+  "after": []
+}

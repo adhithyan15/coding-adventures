@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C470-mannippu",
+    "language": "tamil",
+    "chapter": 470,
+    "sequence": 27000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92dd0d6796d70052"
+  },
+  "findings": []
+}

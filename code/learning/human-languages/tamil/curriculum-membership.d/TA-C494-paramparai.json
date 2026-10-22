@@ -1,0 +1,11 @@
+{
+  "id": "TA-C494-paramparai",
+  "pathSegment": "TA-PATH-494-MARAPU494",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-494-MARAPU494",
+      "order": 1
+    }
+  ]
+}

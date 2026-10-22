@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "The Factory Floor",
+  "label": "ch:ta-the-factory-floor",
+  "canDo": "I can talk about making and measuring things at work.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C510-ala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can talk about making and measuring things at work.",
+    "assesses": [
+      "TA-LEX-C510-THOZHIRSALAI510-03",
+      "TA-LEX-C510-THOZHIRSALAI510-04",
+      "TA-LEX-C510-THOZHIRSALAI510-05"
+    ]
+  }
+}

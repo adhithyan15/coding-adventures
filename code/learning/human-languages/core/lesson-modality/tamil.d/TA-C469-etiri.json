@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C469-etiri",
+    "language": "tamil",
+    "chapter": 469,
+    "sequence": 26950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05bab5f2b89df325"
+  },
+  "findings": []
+}

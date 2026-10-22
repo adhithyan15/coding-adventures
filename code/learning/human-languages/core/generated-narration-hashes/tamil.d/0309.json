@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:040c499749f6b010",
+  "lessonIds": [
+    "TA-C309-vacakar",
+    "TA-C309-neyar",
+    "TA-C309-talaiyankam",
+    "TA-C309-kuru",
+    "TA-C309-kelvippatu",
+    "TA-R309-review-302-309"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch309.txt",
+  "json": "tamil/narration/ch309.json",
+  "textHash": "fnv1a64:d4963f87045cbe73",
+  "jsonHash": "fnv1a64:580b3f73e0f9229b",
+  "findings": []
+}

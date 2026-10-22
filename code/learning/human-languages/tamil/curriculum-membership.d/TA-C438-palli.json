@@ -1,0 +1,11 @@
+{
+  "id": "TA-C438-palli",
+  "pathSegment": "TA-PATH-438-PARAVAI438",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-438-PARAVAI438",
+      "order": 3
+    }
+  ]
+}

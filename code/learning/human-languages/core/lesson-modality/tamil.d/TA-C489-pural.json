@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C489-pural",
+    "language": "tamil",
+    "chapter": 489,
+    "sequence": 27960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2500586f4cb1b40e"
+  },
+  "findings": []
+}

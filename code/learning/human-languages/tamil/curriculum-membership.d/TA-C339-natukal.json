@@ -1,0 +1,11 @@
+{
+  "id": "TA-C339-natukal",
+  "pathSegment": "TA-PATH-339-VEERAM339",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-339-VEERAM339",
+      "order": 4
+    }
+  ]
+}

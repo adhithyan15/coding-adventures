@@ -1,0 +1,11 @@
+{
+  "id": "TA-C300-itintuvilu",
+  "pathSegment": "TA-PATH-300-AVASARAM300",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-300-AVASARAM300",
+      "order": 4
+    }
+  ]
+}

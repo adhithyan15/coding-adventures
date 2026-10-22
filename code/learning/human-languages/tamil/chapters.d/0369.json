@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Society and Its People",
+  "label": "ch:ta-society-and-its-people",
+  "canDo": "I can talk about society, the public and citizens.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C369-vakaippatuttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can talk about society, the public and citizens.",
+    "assesses": [
+      "TA-LEX-C369-CAMUKAM369-03",
+      "TA-LEX-C369-CAMUKAM369-04",
+      "TA-LEX-C369-CAMUKAM369-05"
+    ]
+  }
+}

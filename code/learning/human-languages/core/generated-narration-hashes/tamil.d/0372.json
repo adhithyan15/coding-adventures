@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:266dfb8e2f543ead",
+  "lessonIds": [
+    "TA-C372-cattam",
+    "TA-C372-miru",
+    "TA-C372-kataippiti",
+    "TA-C372-tanti",
+    "TA-C372-inanku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch372.txt",
+  "json": "tamil/narration/ch372.json",
+  "textHash": "fnv1a64:e8bc457140033d0e",
+  "jsonHash": "fnv1a64:1fbabe473a2527ff",
+  "findings": []
+}

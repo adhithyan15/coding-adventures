@@ -1,0 +1,11 @@
+{
+  "id": "TA-C400-nataimetai",
+  "pathSegment": "TA-PATH-400-RAYIL400",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-400-RAYIL400",
+      "order": 0
+    }
+  ]
+}

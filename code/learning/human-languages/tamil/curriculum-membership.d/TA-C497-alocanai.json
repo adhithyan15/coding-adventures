@@ -1,0 +1,11 @@
+{
+  "id": "TA-C497-alocanai",
+  "pathSegment": "TA-PATH-497-VALARPPU497",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-497-VALARPPU497",
+      "order": 4
+    }
+  ]
+}

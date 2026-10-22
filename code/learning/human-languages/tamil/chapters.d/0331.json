@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Decrees and Patrons",
+  "label": "ch:ta-decrees-and-patrons",
+  "canDo": "I can talk about royal orders and generous patrons.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C331-celi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can talk about royal orders and generous patrons.",
+    "assesses": [
+      "TA-LEX-C331-KODAI331-03",
+      "TA-LEX-C331-KODAI331-04",
+      "TA-LEX-C331-KODAI331-05"
+    ]
+  }
+}

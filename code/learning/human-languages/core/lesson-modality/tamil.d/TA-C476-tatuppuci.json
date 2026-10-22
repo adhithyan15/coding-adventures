@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C476-tatuppuci",
+    "language": "tamil",
+    "chapter": 476,
+    "sequence": 27280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec3125fd9cf5df4d"
+  },
+  "findings": []
+}

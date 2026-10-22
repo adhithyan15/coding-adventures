@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Freedom",
+  "label": "ch:ta-freedom",
+  "canDo": "I can talk about struggles for freedom.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C338-ciraiyilatai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can talk about struggles for freedom.",
+    "assesses": [
+      "TA-LEX-C338-VIDUTHALAI338-03",
+      "TA-LEX-C338-VIDUTHALAI338-04",
+      "TA-LEX-C338-VIDUTHALAI338-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C401-tallatu",
+    "language": "tamil",
+    "chapter": 401,
+    "sequence": 23180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8597333c74069cb"
+  },
+  "findings": []
+}

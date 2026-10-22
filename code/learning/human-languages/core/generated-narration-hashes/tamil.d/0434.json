@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:f17edab91c5ad2ba",
+  "lessonIds": [
+    "TA-C434-pulveli",
+    "TA-C434-mey",
+    "TA-C434-toppu",
+    "TA-C434-panai",
+    "TA-C434-putar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch434.txt",
+  "json": "tamil/narration/ch434.json",
+  "textHash": "fnv1a64:b7b4d276c7bb84a9",
+  "jsonHash": "fnv1a64:ad08946020c90c15",
+  "findings": []
+}

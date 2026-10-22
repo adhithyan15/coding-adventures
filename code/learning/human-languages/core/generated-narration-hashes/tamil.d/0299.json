@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:041be2dc5a85a92a",
+  "lessonIds": [
+    "TA-C299-tippiti",
+    "TA-C299-parriyeri",
+    "TA-C299-tikkiraiyaku",
+    "TA-C299-tiyanaippu-virar",
+    "TA-C299-muccuttinaru"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch299.txt",
+  "json": "tamil/narration/ch299.json",
+  "textHash": "fnv1a64:02a0d3edcc882407",
+  "jsonHash": "fnv1a64:31b70f5fa4e9e054",
+  "findings": []
+}

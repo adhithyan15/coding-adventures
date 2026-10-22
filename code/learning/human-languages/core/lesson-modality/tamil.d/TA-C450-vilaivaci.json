@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C450-vilaivaci",
+    "language": "tamil",
+    "chapter": 450,
+    "sequence": 25690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a3a75b044c97392"
+  },
+  "findings": []
+}

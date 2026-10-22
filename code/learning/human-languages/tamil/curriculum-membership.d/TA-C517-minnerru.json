@@ -1,0 +1,11 @@
+{
+  "id": "TA-C517-minnerru",
+  "pathSegment": "TA-PATH-517-MIN517",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-517-MIN517",
+      "order": 1
+    }
+  ]
+}

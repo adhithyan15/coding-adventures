@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 420,
+  "title": "Laundry and Porters",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a182fcf3a65b2d30",
+  "lessons": [
+    {
+      "id": "TA-C420-calavai",
+      "sequence": 24120,
+      "title": "சலவை (calavai) — laundry; washing",
+      "headword": "சலவை",
+      "romanization": "calavai",
+      "gloss": "laundry; washing",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:739b9e63afd47b39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to relax, then the Tamil for hospitality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சலவை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சலவை — calavai — \"laundry; washing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் சட்டைகளைச் சலவைக்குக் கொடுத்தேன். eṉ caṭṭaikaḷaic calavaikkuk koṭuttēṉ. I gave my shirts to the laundry."
+            },
+            {
+              "kind": "speech",
+              "text": "சலவைத் தொழிலாளி is a washerman."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சலவை (calavai) is native Dravidian (DEDR 2368), \"the washing or bleaching of cloth\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calavai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calavai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calavai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calavai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ caṭṭaikaḷaic calavaikkuk koṭuttēṉ. — I gave my shirts to the laundry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ caṭṭaikaḷaic calavaikkuk koṭuttēṉ.* — I gave my shirts to the laundry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to relax, then the Tamil for hospitality, then say calavai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to relax, then the Tamil for hospitality, then say *calavai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சலவை (calavai) mean? (\"Laundry; washing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C420-cevai",
+      "sequence": 24130,
+      "title": "சேவை (cēvai) — a service",
+      "headword": "சேவை",
+      "romanization": "cēvai",
+      "gloss": "a service",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63d7afa56aa52f93",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for hospitality, then the Tamil for laundry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சேவை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சேவை — cēvai — \"a service\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இந்த விடுதியின் சேவை மிக நன்றாக இருந்தது. inta viṭutiyiṉ cēvai mika naṉṟāka iruntatu. The service at this lodge was very good."
+            },
+            {
+              "kind": "speech",
+              "text": "பேருந்துச் சேவை (cēvai) is a bus service."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சேவை (cēvai) is borrowed from Sanskrit sevā, \"attendance, service\" (CDIAL 13595)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēvai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēvai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēvai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēvai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inta viṭutiyiṉ cēvai mika naṉṟāka iruntatu. — The service at this lodge was very good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inta viṭutiyiṉ cēvai mika naṉṟāka iruntatu.* — The service at this lodge was very good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for hospitality, then the Tamil for laundry, then say cēvai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for hospitality, then the Tamil for laundry, then say *cēvai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சேவை (cēvai) mean? (\"A service\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C420-cumaitukki",
+      "sequence": 24140,
+      "title": "சுமைதூக்கி (cumaitūkki) — a porter",
+      "headword": "சுமைதூக்கி",
+      "romanization": "cumaitūkki",
+      "gloss": "a porter",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eddc08cf0688a5a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for laundry, then the Tamil for a service."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சுமைதூக்கி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுமைதூக்கி — cumaitūkki — \"a porter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சுமைதூக்கி எங்கள் பெட்டிகளை ரயிலில் ஏற்றினார். cumaitūkki eṅkaḷ peṭṭikaḷai rayilil ēṟṟiṉār. The porter loaded our boxes onto the train."
+            },
+            {
+              "kind": "speech",
+              "text": "சுமை, a load, + தூக்கி, a lifter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சுமைதூக்கி (cumaitūkki) is built from சுமை, \"a load\" (DEDR 2677), and தூக்கி, \"one who lifts\", from தூக்கு (DEDR 3376)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumaitūkki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cumaitūkki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumaitūkki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cumaitūkki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumaitūkki eṅkaḷ peṭṭikaḷai rayilil ēṟṟiṉār. — The porter loaded our boxes onto the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cumaitūkki eṅkaḷ peṭṭikaḷai rayilil ēṟṟiṉār.* — The porter loaded our boxes onto the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for laundry, then the Tamil for a service, then say cumaitūkki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for laundry, then the Tamil for a service, then say *cumaitūkki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சுமைதூக்கி (cumaitūkki) mean? (\"A porter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C420-kuli-wage",
+      "sequence": 24150,
+      "title": "கூலி (kūli) — a wage; a fee for labour",
+      "headword": "கூலி",
+      "romanization": "kūli",
+      "gloss": "a wage; a fee for labour",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f928a9dc9b484a9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a service, then the Tamil for a porter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கூலி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூலி — kūli — \"a wage; a fee for labour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சுமைதூக்கிக்கு நூறு ரூபாய் கூலி கொடுத்தோம். cumaitūkkikku nūṟu rūpāy kūli koṭuttōm. We paid the porter a hundred rupees for his work."
+            },
+            {
+              "kind": "speech",
+              "text": "கூலித் தொழிலாளி is a daily-wage labourer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கூலி (kūli) is native Dravidian (DEDR 1905), \"wages, pay, hire\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumaitūkkikku nūṟu rūpāy kūli koṭuttōm. — We paid the porter a hundred rupees for his work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cumaitūkkikku nūṟu rūpāy kūli koṭuttōm.* — We paid the porter a hundred rupees for his work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a service, then the Tamil for a porter, then say kūli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a service, then the Tamil for a porter, then say *kūli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கூலி (kūli) mean? (\"A wage; a fee for labour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C420-tuppuravu",
+      "sequence": 24160,
+      "title": "துப்புரவு (tuppuravu) — cleaning; cleanliness",
+      "headword": "துப்புரவு",
+      "romanization": "tuppuravu",
+      "gloss": "cleaning; cleanliness",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4075c639aae0efc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a porter, then the Tamil for a wage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துப்புரவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துப்புரவு — tuppuravu — \"cleaning; cleanliness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "தினமும் காலையில் அறைகளில் துப்புரவு வேலை நடக்கிறது. tiṉamum kālaiyil aṟaikaḷil tuppuravu vēlai naṭakkiṟatu. Every morning the rooms are cleaned."
+            },
+            {
+              "kind": "speech",
+              "text": "துப்புரவுப் பணி is cleaning work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துப்புரவு (tuppuravu), \"cleaning, cleanliness\", is a Tamil word whose origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuppuravu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuppuravu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuppuravu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuppuravu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiṉamum kālaiyil aṟaikaḷil tuppuravu vēlai naṭakkiṟatu. — Every morning the rooms are cleaned.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiṉamum kālaiyil aṟaikaḷil tuppuravu vēlai naṭakkiṟatu.* — Every morning the rooms are cleaned.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a porter, then the Tamil for a wage, then say tuppuravu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a porter, then the Tamil for a wage, then say *tuppuravu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துப்புரவு (tuppuravu) mean? (\"Cleaning; cleanliness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

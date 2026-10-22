@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C295-canteki",
+    "language": "tamil",
+    "chapter": 295,
+    "sequence": 17170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23225cb4c49c9b75"
+  },
+  "findings": []
+}

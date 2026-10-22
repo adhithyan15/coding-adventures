@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-502-NERUKKAM502",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "TA-EXT-502-NERUKKAM502"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 346,
+  "title": "How It Ended",
+  "label": "ch:ta-how-it-ended",
+  "canDo": "I can bring a story to its end.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-R346-review-final-346",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can bring a story to its end.",
+    "assesses": [
+      "TA-LEX-C346-MUDIVU346-01",
+      "TA-LEX-C346-MUDIVU346-02",
+      "TA-LEX-C346-MUDIVU346-03",
+      "TA-LEX-C346-MUDIVU346-04",
+      "TA-LEX-C346-MUDIVU346-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:b569f7ad3aacb959",
+  "lessonIds": [
+    "TA-C438-kokku",
+    "TA-C438-kuyil",
+    "TA-C438-kiri",
+    "TA-C438-palli",
+    "TA-C438-tel",
+    "TA-R438-review-432-438"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch438.txt",
+  "json": "tamil/narration/ch438.json",
+  "textHash": "fnv1a64:61f91a946969462c",
+  "jsonHash": "fnv1a64:7ba0b9b96587a9ae",
+  "findings": []
+}

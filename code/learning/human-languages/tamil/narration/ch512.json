@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 512,
+  "title": "Leaving a Job",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dcd55ea546b0c0b0",
+  "lessons": [
+    {
+      "id": "TA-C512-paninikkam",
+      "sequence": 29400,
+      "title": "பணிநீக்கம் (paṇinīkkam) — dismissal; the sack",
+      "headword": "பணிநீக்கம்",
+      "romanization": "paṇinīkkam",
+      "gloss": "dismissal; the sack",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fd2bb74888e84e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a businessman, then the Tamil for a partner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பணிநீக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிநீக்கம் — paṇinīkkam — \"dismissal; the sack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நிறுவனம் நஷ்டம் அடைந்ததால் பலர் பணிநீக்கம் செய்யப்பட்டார்கள். niṟuvaṉam naṣṭam aṭaintatāl palar paṇinīkkam ceyyappaṭṭārkaḷ. Because the company made a loss, many people were dismissed."
+            },
+            {
+              "kind": "speech",
+              "text": "பணி \"work, service\" + நீக்கம் \"removal\". With செய் it is a verb: பணிநீக்கம் (paṇinīkkam) செய், to dismiss."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிநீக்கம் (paṇinīkkam) is a native compound: பணி (paṇi), \"work, service\" (DEDR 3884), and நீக்கம் (nīkkam), \"removal\", from நீக்கு, \"to remove\" (DEDR 3685)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇinīkkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇinīkkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇinīkkam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇinīkkam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṟuvaṉam naṣṭam aṭaintatāl palar paṇinīkkam ceyyappaṭṭārkaḷ. — Because the company made a loss, many people were dismissed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṟuvaṉam naṣṭam aṭaintatāl palar paṇinīkkam ceyyappaṭṭārkaḷ.* — Because the company made a loss, many people were dismissed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a businessman, then the Tamil for a partner, then say paṇinīkkam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a businessman, then the Tamil for a partner, then say *paṇinīkkam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பணிநீக்கம் (paṇinīkkam) mean? (\"Dismissal; the sack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C512-patavi-vilaku",
+      "sequence": 29410,
+      "title": "பதவி விலகு (patavi vilaku) — to resign",
+      "headword": "பதவி விலகு",
+      "romanization": "patavi vilaku",
+      "gloss": "to resign",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c4b6baaa3955976",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a partner, then the Tamil for dismissal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பதவி விலகு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதவி விலகு — patavi vilaku — \"to resign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உடல்நலம் சரியில்லாததால் தலைவர் பதவி விலகினார். uṭalnalam cariyillātatāl talaivar patavi vilakiṉār. The president resigned because of poor health."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): பதவி விலகினேன், patavi vilakiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word \"to step away from a post\". விலகு alone means \"to move aside\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பதவி விலகு (patavi vilaku) joins பதவி (patavi), \"a post\", from Sanskrit padavī (Monier-Williams), and the native verb விலகு (vilaku), \"to move away, to step aside\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patavi vilaku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patavi vilaku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patavi vilaku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patavi vilaku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭalnalam cariyillātatāl talaivar patavi vilakiṉār. — The president resigned because of poor health.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭalnalam cariyillātatāl talaivar patavi vilakiṉār.* — The president resigned because of poor health.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a partner, then the Tamil for dismissal, then say patavi vilaku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a partner, then the Tamil for dismissal, then say *patavi vilaku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பதவி விலகு (patavi vilaku) mean? (\"To resign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C512-oyvu-peru",
+      "sequence": 29420,
+      "title": "ஓய்வு பெறு (ōyvu peṟu) — to retire",
+      "headword": "ஓய்வு பெறு",
+      "romanization": "ōyvu peṟu",
+      "gloss": "to retire",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6295cc1c184caec9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for dismissal, then the Tamil for to resign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஓய்வு பெறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஓய்வு பெறு — ōyvu peṟu — \"to retire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் தாத்தா அறுபது வயதில் ஓய்வு பெற்றார். eṉ tāttā aṟupatu vayatil ōyvu peṟṟār. My grandfather retired at sixty."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ஓய்வு பெற்றேன், ōyvu peṟṟēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Not \"to get some rest\": ஓய்வு பெறு (ōyvu peṟu) means leaving one's working life. Rest after work is ஓய்வு எடு (ōyvu eṭu)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஓய்வு பெறு (ōyvu peṟu) joins ஓய்வு (ōyvu), \"rest\", and the native பெறு (peṟu), \"to get, to receive\" (DEDR 4422); together they mean receiving one's rest from working life."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōyvu peṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōyvu peṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōyvu peṟu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōyvu peṟu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ tāttā aṟupatu vayatil ōyvu peṟṟār. — My grandfather retired at sixty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ tāttā aṟupatu vayatil ōyvu peṟṟār.* — My grandfather retired at sixty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for dismissal, then the Tamil for to resign, then say ōyvu peṟu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for dismissal, then the Tamil for to resign, then say *ōyvu peṟu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஓய்வு பெறு (ōyvu peṟu) mean? (\"To retire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C512-itamarram",
+      "sequence": 29430,
+      "title": "இடமாற்றம் (iṭamāṟṟam) — a transfer",
+      "headword": "இடமாற்றம்",
+      "romanization": "iṭamāṟṟam",
+      "gloss": "a transfer",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79ef2eaa207b3058",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to resign, then the Tamil for to retire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இடமாற்றம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இடமாற்றம் — iṭamāṟṟam — \"a transfer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அப்பாவுக்கு வேறு ஊருக்கு இடமாற்றம் கிடைத்தது. appāvukku vēṟu ūrukku iṭamāṟṟam kiṭaittatu. Father got a transfer to another town."
+            },
+            {
+              "kind": "speech",
+              "text": "இடம் \"a place\" + மாற்றம் \"a change\": a change of posting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இடமாற்றம் (iṭamāṟṟam) is a native compound: இடம் (iṭam), \"a place\" (DEDR 434), and மாற்றம் (māṟṟam), \"a change\", from மாறு (māṟu), \"to change\" (DEDR 4834)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭamāṟṟam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭamāṟṟam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭamāṟṟam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭamāṟṟam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "appāvukku vēṟu ūrukku iṭamāṟṟam kiṭaittatu. — Father got a transfer to another town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *appāvukku vēṟu ūrukku iṭamāṟṟam kiṭaittatu.* — Father got a transfer to another town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to resign, then the Tamil for to retire, then say iṭamāṟṟam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to resign, then the Tamil for to retire, then say *iṭamāṟṟam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இடமாற்றம் (iṭamāṟṟam) mean? (\"A transfer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C512-totanku",
+      "sequence": 29440,
+      "title": "தொடங்கு (toṭaṅku) — to start; to begin",
+      "headword": "தொடங்கு",
+      "romanization": "toṭaṅku",
+      "gloss": "to start; to begin",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e52104da9082a29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to retire, then the Tamil for a transfer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தொடங்கு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொடங்கு — toṭaṅku — \"to start; to begin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவள் ஒரு சிறிய உணவகத்தைத் தொடங்கினாள். avaḷ oru ciṟiya uṇavakattait toṭaṅkiṉāḷ. She started a small restaurant."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): தொடங்கினேன், toṭaṅkiṉēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Both \"to start something\" (-ஐ) and \"to begin\" alone: கூட்டம் தொடங்கியது, the meeting began. A near twin is ஆரம்பி (ārampi), from Sanskrit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தொடங்கு (toṭaṅku) is native Dravidian: DEDR 3481 gives தொடங்கு (toṭaṅku), \"to begin, to undertake\", beside the older தொடு, \"to begin\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭaṅku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭaṅku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṭaṅku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṭaṅku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ oru ciṟiya uṇavakattait toṭaṅkiṉāḷ. — She started a small restaurant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ oru ciṟiya uṇavakattait toṭaṅkiṉāḷ.* — She started a small restaurant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to retire, then the Tamil for a transfer, then say toṭaṅku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to retire, then the Tamil for a transfer, then say *toṭaṅku* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தொடங்கு (toṭaṅku) mean? (\"To start; to begin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

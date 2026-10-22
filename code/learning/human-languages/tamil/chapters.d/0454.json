@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "Fear and Shock",
+  "label": "ch:ta-fear-and-shock",
+  "canDo": "I can talk about terror, panic and being startled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-C454-natunku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can talk about terror, panic and being startled.",
+    "assesses": [
+      "TA-LEX-C454-PAYAM454-03",
+      "TA-LEX-C454-PAYAM454-04",
+      "TA-LEX-C454-PAYAM454-05"
+    ]
+  }
+}

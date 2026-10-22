@@ -1,0 +1,11 @@
+{
+  "id": "TA-C422-tarc",
+  "pathSegment": "TA-PATH-422-MUKAM422",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-422-MUKAM422",
+      "order": 1
+    }
+  ]
+}

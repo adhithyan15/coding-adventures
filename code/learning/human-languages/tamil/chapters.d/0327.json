@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Ancestors",
+  "label": "ch:ta-ancestors",
+  "canDo": "I can talk about my ancestors and where they settled.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C327-purvikam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about my ancestors and where they settled.",
+    "assesses": [
+      "TA-LEX-C327-MUNNOR327-03",
+      "TA-LEX-C327-MUNNOR327-04",
+      "TA-LEX-C327-MUNNOR327-05"
+    ]
+  }
+}

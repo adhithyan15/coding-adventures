@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:36bb366f0bd9d2c9",
+  "lessonIds": [
+    "TA-C365-katturai",
+    "TA-C365-talaippu",
+    "TA-C365-munnurai",
+    "TA-C365-curukkam",
+    "TA-C365-merkol"
+  ],
+  "tex": "tamil/book/chapters/ch365-writing-an-essay.tex"
+}

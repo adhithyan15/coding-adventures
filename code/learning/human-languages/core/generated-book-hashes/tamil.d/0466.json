@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:257733a8b5ccd51d",
+  "lessonIds": [
+    "TA-C466-tuniccal",
+    "TA-C466-kolai",
+    "TA-C466-ancu",
+    "TA-C466-patunku",
+    "TA-C466-mirattu"
+  ],
+  "tex": "tamil/book/chapters/ch466-courage-and-cowardice.tex"
+}

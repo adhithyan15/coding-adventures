@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Points of View",
+  "label": "ch:ta-points-of-view",
+  "canDo": "I can talk about a point of view, a stand and an attitude.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C350-velippatuttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can talk about a point of view, a stand and an attitude.",
+    "assesses": [
+      "TA-LEX-C350-KANNOTTAM350-03",
+      "TA-LEX-C350-KANNOTTAM350-04",
+      "TA-LEX-C350-KANNOTTAM350-05"
+    ]
+  }
+}

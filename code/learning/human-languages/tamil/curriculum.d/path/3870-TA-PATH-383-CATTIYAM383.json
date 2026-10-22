@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-383-CATTIYAM383",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "TA-EXT-383-CATTIYAM383"
+  ],
+  "after": []
+}

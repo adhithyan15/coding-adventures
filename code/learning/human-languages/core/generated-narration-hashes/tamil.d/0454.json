@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:8702a7634f5bcc39",
+  "lessonIds": [
+    "TA-C454-tikil",
+    "TA-C454-piti",
+    "TA-C454-atircci",
+    "TA-C454-titukkitu",
+    "TA-C454-natunku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch454.txt",
+  "json": "tamil/narration/ch454.json",
+  "textHash": "fnv1a64:3bd0222284e4726d",
+  "jsonHash": "fnv1a64:d58743c4ea0c5266",
+  "findings": []
+}

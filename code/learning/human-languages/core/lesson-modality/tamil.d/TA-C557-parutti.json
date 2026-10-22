@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C557-parutti",
+    "language": "tamil",
+    "chapter": 557,
+    "sequence": 31710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca4920b0d2c6e39e"
+  },
+  "findings": []
+}

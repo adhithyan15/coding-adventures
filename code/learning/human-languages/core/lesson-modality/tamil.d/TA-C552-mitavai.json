@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C552-mitavai",
+    "language": "tamil",
+    "chapter": 552,
+    "sequence": 31480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ed08030689ecefa"
+  },
+  "findings": []
+}

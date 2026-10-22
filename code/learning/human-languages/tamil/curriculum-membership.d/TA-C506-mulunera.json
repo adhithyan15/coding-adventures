@@ -1,0 +1,11 @@
+{
+  "id": "TA-C506-mulunera",
+  "pathSegment": "TA-PATH-506-VELAI506",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-506-VELAI506",
+      "order": 3
+    }
+  ]
+}

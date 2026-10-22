@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:a740d74d1dec7345",
+  "lessonIds": [
+    "TA-C491-potai",
+    "TA-C491-pukaipiti",
+    "TA-C491-tiyanam",
+    "TA-C491-munaku",
+    "TA-C491-aruvai-cikiccai",
+    "TA-R491-review-485-491"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "tamil/narration/ch491.txt",
+  "json": "tamil/narration/ch491.json",
+  "textHash": "fnv1a64:d74637628c485a1e",
+  "jsonHash": "fnv1a64:2af255289f4c00ba",
+  "findings": []
+}

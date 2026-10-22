@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C351-kurippitu",
+    "language": "tamil",
+    "chapter": 351,
+    "sequence": 20300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0696be21c38763e5"
+  },
+  "findings": []
+}

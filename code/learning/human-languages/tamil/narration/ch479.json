@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 479,
+  "title": "Muscles and Nerves",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a4a3de14e838fc87",
+  "lessons": [
+    {
+      "id": "TA-C479-tacai",
+      "sequence": 27430,
+      "title": "தசை (tacai) — a muscle; flesh",
+      "headword": "தசை",
+      "romanization": "tacai",
+      "gloss": "a muscle; flesh",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eefba82cd8de688",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a kidney, then the Tamil for the intestines."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தசை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தசை — tacai — \"a muscle; flesh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "உடற்பயிற்சி செய்தால் தசைகள் உறுதியாகும். uṭaṟpayiṟci ceytāl tacaikaḷ uṟutiyākum. If you exercise, your muscles get firm."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: தசைகள், tacaikaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural தசைகள்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தசை (tacai) is native Dravidian (DEDR 3016), for flesh, muscle and the pulp of fruit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tacai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tacai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tacai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tacai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭaṟpayiṟci ceytāl tacaikaḷ uṟutiyākum. — If you exercise, your muscles get firm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭaṟpayiṟci ceytāl tacaikaḷ uṟutiyākum.* — If you exercise, your muscles get firm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a kidney, then the Tamil for the intestines, then say tacai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a kidney, then the Tamil for the intestines, then say *tacai* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தசை (tacai) mean? (\"A muscle; flesh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C479-narampu",
+      "sequence": 27440,
+      "title": "நரம்பு (narampu) — a nerve; a vein",
+      "headword": "நரம்பு",
+      "romanization": "narampu",
+      "gloss": "a nerve; a vein",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cc03f10c9fb41e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the intestines, then the Tamil for a muscle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நரம்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நரம்பு — narampu — \"a nerve; a vein\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கையில் உள்ள நரம்பில் ஊசி போட்டார்கள். kaiyil uḷḷa narampil ūci pōṭṭārkaḷ. They gave the injection into a vein in the arm."
+            },
+            {
+              "kind": "speech",
+              "text": "One word for nerve, sinew and vein."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நரம்பு (narampu) is native Dravidian (DEDR 2903), covering nerve, tendon and blood vessel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narampu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narampu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "narampu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *narampu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaiyil uḷḷa narampil ūci pōṭṭārkaḷ. — They gave the injection into a vein in the arm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaiyil uḷḷa narampil ūci pōṭṭārkaḷ.* — They gave the injection into a vein in the arm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the intestines, then the Tamil for a muscle, then say narampu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the intestines, then the Tamil for a muscle, then say *narampu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நரம்பு (narampu) mean? (\"A nerve; a vein\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C479-nencu",
+      "sequence": 27450,
+      "title": "நெஞ்சு (neñcu) — the bosom; the chest; the heart",
+      "headword": "நெஞ்சு",
+      "romanization": "neñcu",
+      "gloss": "the bosom; the chest; the heart",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ad39fb9c9480f0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a muscle, then the Tamil for a nerve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நெஞ்சு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெஞ்சு — neñcu — \"the bosom; the chest; the heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "படிக்கட்டு ஏறியதும் எனக்கு நெஞ்சு வலித்தது. paṭikkaṭṭu ēṟiyatum eṉakku neñcu valittatu. After climbing the stairs I had a pain in my chest."
+            },
+            {
+              "kind": "speech",
+              "text": "Also the heart as the seat of feeling: நெஞ்சு (neñcu) நிறைந்த நன்றி, heartfelt thanks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெஞ்சு (neñcu) is native Dravidian (DEDR 3736), for the chest and the heart as the seat of courage and feeling."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neñcu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neñcu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "neñcu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *neñcu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭikkaṭṭu ēṟiyatum eṉakku neñcu valittatu. — After climbing the stairs I had a pain in my chest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭikkaṭṭu ēṟiyatum eṉakku neñcu valittatu.* — After climbing the stairs I had a pain in my chest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a muscle, then the Tamil for a nerve, then say neñcu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a muscle, then the Tamil for a nerve, then say *neñcu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நெஞ்சு (neñcu) mean? (\"The bosom; the chest; the heart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C479-vila",
+      "sequence": 27460,
+      "title": "விலா (vilā) — a rib; the side of the body",
+      "headword": "விலா",
+      "romanization": "vilā",
+      "gloss": "a rib; the side of the body",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f82fe81dbb5cc7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a nerve, then the Tamil for the bosom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: விலா",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விலா — vilā — \"a rib; the side of the body\"."
+            },
+            {
+              "kind": "speech",
+              "text": "சிரித்துச் சிரித்து எனக்கு விலா வலித்தது. cirittuc cirittu eṉakku vilā valittatu. I laughed so much that my sides hurt."
+            },
+            {
+              "kind": "speech",
+              "text": "விலா (vilā) எலும்பு, a rib bone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விலா (vilā) is native Dravidian (DEDR 5425); Malayalam has the same word for the side and the chest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vilā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vilā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cirittuc cirittu eṉakku vilā valittatu. — I laughed so much that my sides hurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cirittuc cirittu eṉakku vilā valittatu.* — I laughed so much that my sides hurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a nerve, then the Tamil for the bosom, then say vilā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a nerve, then the Tamil for the bosom, then say *vilā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does விலா (vilā) mean? (\"A rib; the side of the body\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C479-tuti",
+      "sequence": 27470,
+      "title": "துடி (tuṭi) — to throb; to writhe",
+      "headword": "துடி",
+      "romanization": "tuṭi",
+      "gloss": "to throb; to writhe",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4059f4641390e9ef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for the bosom, then the Tamil for a rib."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துடி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துடி — tuṭi — \"to throb; to writhe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "வலியில் அவன் துடித்தான். valiyil avaṉ tuṭittāṉ. He writhed in pain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): துடித்தேன், tuṭittēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "Also of the heartbeat (இதயம் துடிக்கிறது) and of eagerness: போகத் துடித்தான், he was itching to go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துடி (tuṭi) is native Dravidian (DEDR 3294). DEDR keeps துடி \"lip\" and துடி \"a small drum\" apart as other entries."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "valiyil avaṉ tuṭittāṉ. — He writhed in pain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *valiyil avaṉ tuṭittāṉ.* — He writhed in pain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for the bosom, then the Tamil for a rib, then say tuṭi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for the bosom, then the Tamil for a rib, then say *tuṭi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துடி (tuṭi) mean? (\"To throb; to writhe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Magic and Monsters",
+  "label": "ch:ta-magic-and-monsters",
+  "canDo": "I can tell a fairy tale with magic in it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C344-urumaru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can tell a fairy tale with magic in it.",
+    "assesses": [
+      "TA-LEX-C344-MAYAM344-03",
+      "TA-LEX-C344-MAYAM344-04",
+      "TA-LEX-C344-MAYAM344-05"
+    ]
+  }
+}

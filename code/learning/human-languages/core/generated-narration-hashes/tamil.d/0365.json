@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:9e594b26ad358c5e",
+  "lessonIds": [
+    "TA-C365-katturai",
+    "TA-C365-talaippu",
+    "TA-C365-munnurai",
+    "TA-C365-curukkam",
+    "TA-C365-merkol"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch365.txt",
+  "json": "tamil/narration/ch365.json",
+  "textHash": "fnv1a64:668a2d5d77f37e5e",
+  "jsonHash": "fnv1a64:cd3063d9ca79f8be",
+  "findings": []
+}

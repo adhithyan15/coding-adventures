@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:53755d448cc1abe0",
+  "lessonIds": [
+    "TA-C381-tecam",
+    "TA-C381-akati",
+    "TA-C381-cinnam",
+    "TA-C381-onrinai",
+    "TA-C381-piratiniti"
+  ],
+  "tex": "tamil/book/chapters/ch381-one-nation.tex"
+}

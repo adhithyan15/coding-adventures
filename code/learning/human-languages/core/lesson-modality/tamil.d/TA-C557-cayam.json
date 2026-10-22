@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C557-cayam",
+    "language": "tamil",
+    "chapter": 557,
+    "sequence": 31730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a497d797301ffa79"
+  },
+  "findings": []
+}

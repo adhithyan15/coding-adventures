@@ -1,0 +1,11 @@
+{
+  "id": "TA-C557-kampali",
+  "pathSegment": "TA-PATH-557-KAMPALI557",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-557-KAMPALI557",
+      "order": 1
+    }
+  ]
+}

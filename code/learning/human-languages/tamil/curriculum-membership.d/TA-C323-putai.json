@@ -1,0 +1,11 @@
+{
+  "id": "TA-C323-putai",
+  "pathSegment": "TA-PATH-323-IRUTHI323",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-323-IRUTHI323",
+      "order": 3
+    }
+  ]
+}

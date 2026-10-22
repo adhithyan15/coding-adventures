@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:5a9582e46580b555",
+  "lessonIds": [
+    "TA-C527-vetikkai",
+    "TA-C527-kelikkai",
+    "TA-C527-arattai-ati",
+    "TA-C527-manram",
+    "TA-C527-atari"
+  ],
+  "tex": "tamil/book/chapters/ch527-free-time.tex"
+}

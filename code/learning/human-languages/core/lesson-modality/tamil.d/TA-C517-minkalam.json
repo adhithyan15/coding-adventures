@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C517-minkalam",
+    "language": "tamil",
+    "chapter": 517,
+    "sequence": 29660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30a6caf68a74b57d"
+  },
+  "findings": []
+}

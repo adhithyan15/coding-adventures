@@ -1,0 +1,11 @@
+{
+  "id": "TA-C469-etiri",
+  "pathSegment": "TA-PATH-469-PAKAI469",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-469-PAKAI469",
+      "order": 3
+    }
+  ]
+}

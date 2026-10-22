@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:75784213ec200b00",
+  "lessonIds": [
+    "TA-C487-koluppu",
+    "TA-C487-puratam",
+    "TA-C487-vaittamin",
+    "TA-C487-ceri",
+    "TA-C487-eppam-vitu"
+  ],
+  "tex": "tamil/book/chapters/ch487-food-and-digestion.tex"
+}

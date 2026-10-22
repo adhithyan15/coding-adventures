@@ -1,0 +1,11 @@
+{
+  "id": "TA-C347-tarkkam",
+  "pathSegment": "TA-PATH-347-ATARAM347",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-347-ATARAM347",
+      "order": 2
+    }
+  ]
+}

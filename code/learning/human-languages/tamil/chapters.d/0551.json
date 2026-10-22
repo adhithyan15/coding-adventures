@@ -1,0 +1,21 @@
+{
+  "chapter": 551,
+  "title": "Designs and Property",
+  "label": "ch:ta-designs-and-property",
+  "canDo": "I can talk about designs and property.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "TA-R551-review-545-551",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 551: I can talk about designs and property.",
+    "assesses": [
+      "TA-LEX-C551-VADIVAM551-01",
+      "TA-LEX-C551-VADIVAM551-02",
+      "TA-LEX-C551-VADIVAM551-03",
+      "TA-LEX-C551-VADIVAM551-04",
+      "TA-LEX-C551-VADIVAM551-05"
+    ]
+  }
+}

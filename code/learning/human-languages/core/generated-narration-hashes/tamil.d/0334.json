@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:c313648dd8a354d3",
+  "lessonIds": [
+    "TA-C334-ampu",
+    "TA-C334-ter",
+    "TA-C334-kutiraiviran",
+    "TA-C334-muracu",
+    "TA-C334-talapati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch334.txt",
+  "json": "tamil/narration/ch334.json",
+  "textHash": "fnv1a64:9c87ed25f2c1e38b",
+  "jsonHash": "fnv1a64:94e4000f2dc18228",
+  "findings": []
+}

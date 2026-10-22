@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C500-tunai",
+    "language": "tamil",
+    "chapter": 500,
+    "sequence": 28510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c08712d0f1929ec9"
+  },
+  "findings": []
+}

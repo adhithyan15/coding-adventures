@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C312-oppi",
+    "language": "tamil",
+    "chapter": 312,
+    "sequence": 18050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60f2913aee35f4e8"
+  },
+  "findings": []
+}

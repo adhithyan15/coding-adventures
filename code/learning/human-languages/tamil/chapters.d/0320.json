@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "Flags and Parades",
+  "label": "ch:ta-flags-and-parades",
+  "canDo": "I can describe a flag-raising and a parade.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "TA-C320-paraicarru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can describe a flag-raising and a parade.",
+    "assesses": [
+      "TA-LEX-C320-KODI320-03",
+      "TA-LEX-C320-KODI320-04",
+      "TA-LEX-C320-KODI320-05"
+    ]
+  }
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 373,
+  "title": "Government",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fc268cd5020d2947",
+  "lessons": [
+    {
+      "id": "TA-C373-araciyal",
+      "sequence": 21430,
+      "title": "அரசியல் (araciyal) — politics",
+      "headword": "அரசியல்",
+      "romanization": "araciyal",
+      "gloss": "politics",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e121fb101f645a0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to punish, then the Tamil for to comply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அரசியல்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரசியல் — araciyal — \"politics\"."
+            },
+            {
+              "kind": "speech",
+              "text": "என் தாத்தாவுக்கு அரசியல் பற்றிப் பேசப் பிடிக்கும். eṉ tāttāvukku araciyal paṟṟip pēcap piṭikkum. My grandfather likes to talk about politics."
+            },
+            {
+              "kind": "speech",
+              "text": "அரசு, government + -இயல், a field: அரசியல்வாதி, a politician."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அரசியல் (araciyal) is built from aracu, \"government\", which DEDR 201 traces to Sanskrit rājan, \"king\" (CDIAL 10679), and native iyal, \"nature, field of study\" (DEDR 471)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araciyal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araciyal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araciyal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araciyal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉ tāttāvukku araciyal paṟṟip pēcap piṭikkum. — My grandfather likes to talk about politics.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉ tāttāvukku araciyal paṟṟip pēcap piṭikkum.* — My grandfather likes to talk about politics.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to punish, then the Tamil for to comply, then say araciyal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to punish, then the Tamil for to comply, then say *araciyal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அரசியல் (araciyal) mean? (\"Politics\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C373-amaiccar",
+      "sequence": 21440,
+      "title": "அமைச்சர் (amaiccar) — a minister",
+      "headword": "அமைச்சர்",
+      "romanization": "amaiccar",
+      "gloss": "a minister",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9235c489ebcd7fb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for to comply, then the Tamil for politics."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அமைச்சர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அமைச்சர் — amaiccar — \"a minister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "கல்வி அமைச்சர் எங்கள் பள்ளிக்கு வந்தார். kalvi amaiccar eṅkaḷ paḷḷikku vantār. The education minister came to our school."
+            },
+            {
+              "kind": "speech",
+              "text": "அமைச்சகம், a ministry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அமைச்சர் (amaiccar) is usually traced to native amai, \"to be fitted, joined, settled\" (DEDR 162), through amaiccu, \"counsel\": one who sets the affairs of state in order."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amaiccar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amaiccar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amaiccar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amaiccar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalvi amaiccar eṅkaḷ paḷḷikku vantār. — The education minister came to our school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalvi amaiccar eṅkaḷ paḷḷikku vantār.* — The education minister came to our school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for to comply, then the Tamil for politics, then say amaiccar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for to comply, then the Tamil for politics, then say *amaiccar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அமைச்சர் (amaiccar) mean? (\"A minister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C373-piratamar",
+      "sequence": 21450,
+      "title": "பிரதமர் (piratamar) — a prime minister",
+      "headword": "பிரதமர்",
+      "romanization": "piratamar",
+      "gloss": "a prime minister",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c43056470a3e484a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for politics, then the Tamil for a minister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பிரதமர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரதமர் — piratamar — \"a prime minister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "பிரதமர் இன்று நாட்டு மக்களிடம் பேசினார். piratamar iṉṟu nāṭṭu makkaḷiṭam pēciṉār. The prime minister spoke to the nation today."
+            },
+            {
+              "kind": "speech",
+              "text": "பிரதம, chief, first + -அர், the person."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பிரதமர் (piratamar) is built on Sanskrit prathama, \"first\" (CDIAL 8648), with the personal ending -அர்: the first minister."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piratamar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piratamar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piratamar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piratamar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piratamar iṉṟu nāṭṭu makkaḷiṭam pēciṉār. — The prime minister spoke to the nation today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piratamar iṉṟu nāṭṭu makkaḷiṭam pēciṉār.* — The prime minister spoke to the nation today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for politics, then the Tamil for a minister, then say piratamar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for politics, then the Tamil for a minister, then say *piratamar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பிரதமர் (piratamar) mean? (\"A prime minister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C373-alunar",
+      "sequence": 21460,
+      "title": "ஆளுநர் (āḷunar) — a governor",
+      "headword": "ஆளுநர்",
+      "romanization": "āḷunar",
+      "gloss": "a governor",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a83c7a9ba33bfc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a minister, then the Tamil for a prime minister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஆளுநர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆளுநர் — āḷunar — \"a governor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆளுநர் இன்று விழாவில் கலந்துகொண்டார். āḷunar iṉṟu viḻāvil kalantukoṇṭār. The governor attended the ceremony today."
+            },
+            {
+              "kind": "speech",
+              "text": "ஆள், to rule + -நர், the one who."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஆளுநர் (āḷunar) is native: āḷ, \"to rule, govern\" (DEDR 5157), with the agent ending -நர்: \"one who governs\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḷunar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḷunar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḷunar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḷunar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḷunar iṉṟu viḻāvil kalantukoṇṭār. — The governor attended the ceremony today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḷunar iṉṟu viḻāvil kalantukoṇṭār.* — The governor attended the ceremony today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a minister, then the Tamil for a prime minister, then say āḷunar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a minister, then the Tamil for a prime minister, then say *āḷunar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஆளுநர் (āḷunar) mean? (\"A governor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C373-natalumanram",
+      "sequence": 21470,
+      "title": "நாடாளுமன்றம் (nāṭāḷumaṉṟam) — a parliament",
+      "headword": "நாடாளுமன்றம்",
+      "romanization": "nāṭāḷumaṉṟam",
+      "gloss": "a parliament",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e268dfb8d2233293",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a prime minister, then the Tamil for a governor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நாடாளுமன்றம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாடாளுமன்றம் — nāṭāḷumaṉṟam — \"a parliament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "நாடாளுமன்றத்தில் புதிய சட்டம் பற்றி விவாதித்தார்கள். nāṭāḷumaṉṟattil putiya caṭṭam paṟṟi vivātittārkaḷ. They debated the new law in parliament."
+            },
+            {
+              "kind": "speech",
+              "text": "நாடு, country, + ஆளும், ruling, + a word for a hall."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நாடாளுமன்றம் (nāṭāḷumaṉṟam) is a modern native coinage: nāṭu, \"country\" (DEDR 3638), āḷum, \"that rules\", from āḷ (DEDR 5157), and maṉṟam, \"hall, assembly\" (DEDR 4777)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭāḷumaṉṟam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭāḷumaṉṟam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭāḷumaṉṟam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭāḷumaṉṟam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭāḷumaṉṟattil putiya caṭṭam paṟṟi vivātittārkaḷ. — They debated the new law in parliament.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭāḷumaṉṟattil putiya caṭṭam paṟṟi vivātittārkaḷ.* — They debated the new law in parliament.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a prime minister, then the Tamil for a governor, then say nāṭāḷumaṉṟam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a prime minister, then the Tamil for a governor, then say *nāṭāḷumaṉṟam* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நாடாளுமன்றம் (nāṭāḷumaṉṟam) mean? (\"A parliament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
