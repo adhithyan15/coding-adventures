@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 501,
+  "title": "Gentle and Cruel",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8e803b238cd0ed34",
+  "lessons": [
+    {
+      "id": "KA-C501-saumya",
+      "sequence": 25560,
+      "title": "ಸೌಮ್ಯ (saumya) — gentle; mild",
+      "headword": "ಸೌಮ್ಯ",
+      "romanization": "saumya",
+      "gloss": "gentle; mild",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:424ffa3053d4e461",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for attitude, then the Kannada for to imitate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸೌಮ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೌಮ್ಯ — saumya — \"gentle; mild\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಮ್ಮ ವೈದ್ಯರು ತುಂಬಾ ಸೌಮ್ಯ ಸ್ವಭಾವದವರು. namma vaidyaru tumbā saumya svabhāvadavaru. Our doctor has a very gentle nature."
+            },
+            {
+              "kind": "speech",
+              "text": "Also mild weather or a mild taste."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೌಮ್ಯ (saumya) is borrowed from Sanskrit saumya, \"relating to soma\", and later \"cool and mild\" (CDIAL 13620)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saumya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saumya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saumya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saumya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namma vaidyaru tumbā saumya svabhāvadavaru. — Our doctor has a very gentle nature.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namma vaidyaru tumbā saumya svabhāvadavaru.* — Our doctor has a very gentle nature.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for attitude, then the Kannada for to imitate, then say saumya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for attitude, then the Kannada for to imitate, then say *saumya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸೌಮ್ಯ (saumya) mean? (\"Gentle; mild\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C501-mugdha",
+      "sequence": 25570,
+      "title": "ಮುಗ್ಧ (mugdha) — innocent; naive",
+      "headword": "ಮುಗ್ಧ",
+      "romanization": "mugdha",
+      "gloss": "innocent; naive",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e5c14c852188812",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to imitate, then the Kannada for gentle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮುಗ್ಧ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಗ್ಧ — mugdha — \"innocent; naive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಗುವಿನ ಮುಗ್ಧ ಪ್ರಶ್ನೆಗೆ ಎಲ್ಲರೂ ನಕ್ಕರು. maguvina mugdha praśnege ellarū nakkaru. Everyone laughed at the child's innocent question."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮುಗ್ಧತೆ, innocence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮುಗ್ಧ (mugdha) is borrowed from Sanskrit mugdha, \"gone astray, bewildered, foolish\" (CDIAL 10175). The sense softened in Kannada to \"artless, innocent\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mugdha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mugdha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mugdha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mugdha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maguvina mugdha praśnege ellarū nakkaru. — Everyone laughed at the child's innocent question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maguvina mugdha praśnege ellarū nakkaru.* — Everyone laughed at the child's innocent question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to imitate, then the Kannada for gentle, then say mugdha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to imitate, then the Kannada for gentle, then say *mugdha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮುಗ್ಧ (mugdha) mean? (\"Innocent; naive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C501-krura",
+      "sequence": 25580,
+      "title": "ಕ್ರೂರ (krūra) — cruel; fierce",
+      "headword": "ಕ್ರೂರ",
+      "romanization": "krūra",
+      "gloss": "cruel; fierce",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:da9fae4aa123aa9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for gentle, then the Kannada for innocent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕ್ರೂರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ರೂರ — krūra — \"cruel; fierce\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಕ್ರೂರ ಮನುಷ್ಯ ನಾಯಿಯನ್ನು ಹೊಡೆದನು. ā krūra manuṣya nāyiyannu hoḍedanu. That cruel man beat the dog."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕ್ರೂರ (krūra) ಪ್ರಾಣಿ, a fierce animal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ರೂರ (krūra) is borrowed whole from Sanskrit krūra, \"bloody, cruel\" (CDIAL 3602)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krūra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krūra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "krūra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *krūra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā krūra manuṣya nāyiyannu hoḍedanu. — That cruel man beat the dog.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā krūra manuṣya nāyiyannu hoḍedanu.* — That cruel man beat the dog.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for gentle, then the Kannada for innocent, then say krūra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for gentle, then the Kannada for innocent, then say *krūra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕ್ರೂರ (krūra) mean? (\"Cruel; fierce\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C501-nisthura",
+      "sequence": 25590,
+      "title": "ನಿಷ್ಠುರ (niṣṭhura) — harshly frank; unsparing",
+      "headword": "ನಿಷ್ಠುರ",
+      "romanization": "niṣṭhura",
+      "gloss": "harshly frank; unsparing",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba8452e3205a96c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for innocent, then the Kannada for cruel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿಷ್ಠುರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಷ್ಠುರ — niṣṭhura — \"harshly frank; unsparing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನು ನಿಷ್ಠುರವಾಗಿ ಸತ್ಯ ಹೇಳಿದನು. avanu niṣṭhuravāgi satya hēḷidanu. He told the truth bluntly."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಷ್ಠುರ (niṣṭhura) ಕಟ್ಟಿಕೊ, to make enemies by plain speaking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿಷ್ಠುರ (niṣṭhura) is borrowed from Sanskrit niṣṭhura, \"hard, cruel\" (CDIAL 7505); Kannada uses it most for hard, frank words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣṭhura",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣṭhura*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niṣṭhura, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niṣṭhura*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avanu niṣṭhuravāgi satya hēḷidanu. — He told the truth bluntly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avanu niṣṭhuravāgi satya hēḷidanu.* — He told the truth bluntly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for innocent, then the Kannada for cruel, then say niṣṭhura again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for innocent, then the Kannada for cruel, then say *niṣṭhura* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿಷ್ಠುರ (niṣṭhura) mean? (\"Harshly frank; unsparing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C501-anakisu",
+      "sequence": 25600,
+      "title": "ಅಣಕಿಸು (aṇakisu) — to mimic mockingly; to mock",
+      "headword": "ಅಣಕಿಸು",
+      "romanization": "aṇakisu",
+      "gloss": "to mimic mockingly; to mock",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a90600ed6065b79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for cruel, then the Kannada for harshly frank."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅಣಕಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಣಕಿಸು — aṇakisu — \"to mimic mockingly; to mock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹುಡುಗರು ಮುದುಕನ ನಡಿಗೆಯನ್ನು ಅಣಕಿಸಿದರು. huḍugaru mudukana naḍigeyannu aṇakisidaru. The boys mocked the old man's walk."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಅಣಕಿಸಿದೆ, aṇakiside."
+            },
+            {
+              "kind": "speech",
+              "text": "Mocking by copying someone's voice or walk; ಅಣಕ, mockery."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅಣಕಿಸು (aṇakisu) is native Dravidian: DEDR 111 lists Kannada aṇaka, \"mockery, derision\", and aṇakisu, \"to mock, deride\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇakisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇakisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṇakisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṇakisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huḍugaru mudukana naḍigeyannu aṇakisidaru. — The boys mocked the old man's walk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huḍugaru mudukana naḍigeyannu aṇakisidaru.* — The boys mocked the old man's walk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for cruel, then the Kannada for harshly frank, then say aṇakisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for cruel, then the Kannada for harshly frank, then say *aṇakisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅಣಕಿಸು (aṇakisu) mean? (\"To mimic mockingly; to mock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

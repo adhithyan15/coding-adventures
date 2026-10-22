@@ -1,0 +1,11 @@
+{
+  "id": "KA-C425-urjita",
+  "pathSegment": "KA-PATH-425-SVIKARISU425",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-425-SVIKARISU425",
+      "order": 3
+    }
+  ]
+}

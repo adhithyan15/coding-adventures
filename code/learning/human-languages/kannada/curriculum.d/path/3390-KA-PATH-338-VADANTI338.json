@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-338-VADANTI338",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-338-VADANTI338"
+  ],
+  "after": []
+}

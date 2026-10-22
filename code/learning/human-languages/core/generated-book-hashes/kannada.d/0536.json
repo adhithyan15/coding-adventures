@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:46b0f2b0211c107b",
+  "lessonIds": [
+    "KA-C536-nataka",
+    "KA-C536-rangabhumi",
+    "KA-C536-mukhavada",
+    "KA-C536-pradarsisu",
+    "KA-C536-abhinayisu"
+  ],
+  "tex": "kannada/book/chapters/ch536-on-stage.tex"
+}

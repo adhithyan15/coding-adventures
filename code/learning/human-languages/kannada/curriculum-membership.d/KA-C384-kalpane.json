@@ -1,0 +1,11 @@
+{
+  "id": "KA-C384-kalpane",
+  "pathSegment": "KA-PATH-384-GRAHISU384",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-384-GRAHISU384",
+      "order": 2
+    }
+  ]
+}

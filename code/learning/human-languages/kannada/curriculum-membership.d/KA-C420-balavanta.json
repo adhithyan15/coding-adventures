@@ -1,0 +1,11 @@
+{
+  "id": "KA-C420-balavanta",
+  "pathSegment": "KA-PATH-420-ALUKU420",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-420-ALUKU420",
+      "order": 2
+    }
+  ]
+}

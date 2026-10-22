@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C474-tyajya",
+    "language": "kannada",
+    "chapter": 474,
+    "sequence": 24100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:903f892ba0cb7748"
+  },
+  "findings": []
+}

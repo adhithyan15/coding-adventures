@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:e576a370e3f859bb",
+  "lessonIds": [
+    "KA-C429-asisu",
+    "KA-C429-apeksisu",
+    "KA-C429-prastapisu",
+    "KA-C429-sucisu",
+    "KA-C429-parihara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch429.txt",
+  "json": "kannada/narration/ch429.json",
+  "textHash": "fnv1a64:4c5774d59a32d476",
+  "jsonHash": "fnv1a64:442e4e5ef6396b00",
+  "findings": []
+}

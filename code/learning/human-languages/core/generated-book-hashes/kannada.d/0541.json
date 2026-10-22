@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:65e103c80fd1aa73",
+  "lessonIds": [
+    "KA-C541-kasarattu",
+    "KA-C541-sahisnute",
+    "KA-C541-parvatarohana",
+    "KA-C541-billugarike",
+    "KA-C541-huridumbisu"
+  ],
+  "tex": "kannada/book/chapters/ch541-fitness.tex"
+}

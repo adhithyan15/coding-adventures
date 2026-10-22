@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "In the Hotel Room",
+  "label": "ch:ka-in-the-hotel-room",
+  "canDo": "I can say a balcony, an elevator, a mosquito net, a heater and to creak.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C462-kiruguttu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can say a balcony, an elevator, a mosquito net, a heater and to creak.",
+    "assesses": [
+      "KA-LEX-C462-KOTHADI462-03",
+      "KA-LEX-C462-KOTHADI462-04",
+      "KA-LEX-C462-KOTHADI462-05"
+    ]
+  }
+}

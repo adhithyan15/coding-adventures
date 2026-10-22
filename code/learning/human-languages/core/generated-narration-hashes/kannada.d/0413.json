@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:9347b085c45a75b6",
+  "lessonIds": [
+    "KA-C413-latari",
+    "KA-C413-juju",
+    "KA-C413-pana",
+    "KA-C413-andajisu",
+    "KA-C413-sarasari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch413.txt",
+  "json": "kannada/narration/ch413.json",
+  "textHash": "fnv1a64:b5ebaac9ed8fec1d",
+  "jsonHash": "fnv1a64:391784a6b2e729ba",
+  "findings": []
+}

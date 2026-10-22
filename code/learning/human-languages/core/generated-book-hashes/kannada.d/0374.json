@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:11a166afcf62b2b7",
+  "lessonIds": [
+    "KA-C374-jadu-magic",
+    "KA-C374-pavada",
+    "KA-C374-husi",
+    "KA-C374-saddu",
+    "KA-C374-kollu"
+  ],
+  "tex": "kannada/book/chapters/ch374-magic-and-miracles.tex"
+}

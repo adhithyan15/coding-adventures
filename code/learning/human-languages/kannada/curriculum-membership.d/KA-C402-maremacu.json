@@ -1,0 +1,11 @@
+{
+  "id": "KA-C402-maremacu",
+  "pathSegment": "KA-PATH-402-LANCHA402",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-402-LANCHA402",
+      "order": 3
+    }
+  ]
+}

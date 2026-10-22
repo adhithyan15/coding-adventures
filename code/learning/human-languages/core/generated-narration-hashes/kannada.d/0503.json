@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:da585e8184793721",
+  "lessonIds": [
+    "KA-C503-curuku",
+    "KA-C503-pratibhe",
+    "KA-C503-dadda",
+    "KA-C503-marevu",
+    "KA-C503-ekagrate"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch503.txt",
+  "json": "kannada/narration/ch503.json",
+  "textHash": "fnv1a64:e29ece9f23a56ab0",
+  "jsonHash": "fnv1a64:848f06b817831f40",
+  "findings": []
+}

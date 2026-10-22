@@ -1,0 +1,11 @@
+{
+  "id": "KA-C417-vasuli-madu",
+  "pathSegment": "KA-PATH-417-KANTU417",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-417-KANTU417",
+      "order": 3
+    }
+  ]
+}

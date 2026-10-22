@@ -1,0 +1,19 @@
+{
+  "chapter": 351,
+  "title": "The Rescue Operation",
+  "label": "ch:ka-the-rescue-operation",
+  "canDo": "I can say a mission, a volunteer, to crash against, to engulf and to be washed away.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C351-koccihogu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can say a mission, a volunteer, to crash against, to engulf and to be washed away.",
+    "assesses": [
+      "KA-LEX-C351-KARYA351-03",
+      "KA-LEX-C351-KARYA351-04",
+      "KA-LEX-C351-KARYA351-05"
+    ]
+  }
+}

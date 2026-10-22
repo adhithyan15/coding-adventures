@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C538-vijeta",
+    "language": "kannada",
+    "chapter": 538,
+    "sequence": 27480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:198bda77a75470cc"
+  },
+  "findings": []
+}

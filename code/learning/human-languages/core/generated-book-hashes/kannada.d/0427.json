@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:664eb0791add6aef",
+  "lessonIds": [
+    "KA-C427-anupata",
+    "KA-C427-sekada",
+    "KA-C427-vargikarisu",
+    "KA-C427-parivartisu",
+    "KA-C427-samarpaka"
+  ],
+  "tex": "kannada/book/chapters/ch427-numbers-that-matter.tex"
+}

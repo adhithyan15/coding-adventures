@@ -1,0 +1,21 @@
+{
+  "chapter": 368,
+  "title": "Step by Step",
+  "label": "ch:ka-step-by-step",
+  "canDo": "I can say gradually, thereafter, a series, a turning point and to take place.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-R368-review-362-368",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say gradually, thereafter, a series, a turning point and to take place.",
+    "assesses": [
+      "KA-LEX-C368-KRAMA368-01",
+      "KA-LEX-C368-KRAMA368-02",
+      "KA-LEX-C368-KRAMA368-03",
+      "KA-LEX-C368-KRAMA368-04",
+      "KA-LEX-C368-KRAMA368-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C341-arasa",
+    "language": "kannada",
+    "chapter": 341,
+    "sequence": 17170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f5aecab00d3bd281"
+  },
+  "findings": []
+}

@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 419,
+  "title": "Success and Failure",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c9516def255f0744",
+  "lessons": [
+    {
+      "id": "KA-C419-viphalavagu",
+      "sequence": 21210,
+      "title": "ವಿಫಲವಾಗು (viphalavāgu) — to fall through; to fail",
+      "headword": "ವಿಫಲವಾಗು",
+      "romanization": "viphalavāgu",
+      "gloss": "to fall through; to fail",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c07cd1f964a7be8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for permanent, then the Kannada for to modify."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಫಲವಾಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಫಲವಾಗು — viphalavāgu — \"to fall through; to fail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಳೆ ಬಂದಿದ್ದರಿಂದ ನಮ್ಮ ಯೋಜನೆ ವಿಫಲವಾಯಿತು. maḷe bandiddarinda namma yōjane viphalavāyitu. Because it rained, our plan failed."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ವಿಫಲವಾಯಿತು, viphalavāyitu."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಫಲ, fruitless; ವಿಫಲತೆ, failure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಫಲವಾಗು (viphalavāgu) is built from Sanskrit viphala, \"fruitless, vain\" (CDIAL 11803), with native āgu, \"to become\" (DEDR 333)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viphalavāgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viphalavāgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viphalavāgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viphalavāgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷe bandiddarinda namma yōjane viphalavāyitu. — Because it rained, our plan failed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷe bandiddarinda namma yōjane viphalavāyitu.* — Because it rained, our plan failed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for permanent, then the Kannada for to modify, then say viphalavāgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for permanent, then the Kannada for to modify, then say *viphalavāgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಫಲವಾಗು (viphalavāgu) mean? (\"To fall through; to fail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C419-phalisu",
+      "sequence": 21220,
+      "title": "ಫಲಿಸು (phalisu) — to bear fruit",
+      "headword": "ಫಲಿಸು",
+      "romanization": "phalisu",
+      "gloss": "to bear fruit",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c3d9da4d9b7c14b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to modify, then the Kannada for to fall through."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಫಲಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಫಲಿಸು — phalisu — \"to bear fruit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳ ಪ್ರಯತ್ನ ಕೊನೆಗೆ ಫಲಿಸಿತು. avaḷa prayatna konege phalisitu. Her effort finally paid off."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಫಲಿಸಿತು, phalisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of efforts, prayers and trees."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಫಲಿಸು (phalisu) is built on Sanskrit phala, \"fruit\" (CDIAL 9051), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phalisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phalisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷa prayatna konege phalisitu. — Her effort finally paid off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷa prayatna konege phalisitu.* — Her effort finally paid off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to modify, then the Kannada for to fall through, then say phalisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to modify, then the Kannada for to fall through, then say *phalisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಫಲಿಸು (phalisu) mean? (\"To bear fruit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C419-kaigudu",
+      "sequence": 21230,
+      "title": "ಕೈಗೂಡು (kaigūḍu) — to come true; to work out",
+      "headword": "ಕೈಗೂಡು",
+      "romanization": "kaigūḍu",
+      "gloss": "to come true; to work out",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:008a97932480598d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to fall through, then the Kannada for to bear fruit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೈಗೂಡು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೈಗೂಡು — kaigūḍu — \"to come true; to work out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮನೆ ಕಟ್ಟುವ ಅವರ ಕನಸು ಕೈಗೂಡಿತು. mane kaṭṭuva avara kanasu kaigūḍitu. Their dream of building a house came true."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಕೈಗೂಡಿತು, kaigūḍitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of plans and wishes, never of people."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೈಗೂಡು (kaigūḍu) is native Dravidian, built from kai, \"hand\" (DEDR 2023), and kūḍu, \"to join\" (DEDR 1882): to come into the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigūḍu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigūḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaigūḍu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaigūḍu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mane kaṭṭuva avara kanasu kaigūḍitu. — Their dream of building a house came true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mane kaṭṭuva avara kanasu kaigūḍitu.* — Their dream of building a house came true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to fall through, then the Kannada for to bear fruit, then say kaigūḍu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to fall through, then the Kannada for to bear fruit, then say *kaigūḍu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕೈಗೂಡು (kaigūḍu) mean? (\"To come true; to work out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C419-bikkattu",
+      "sequence": 21240,
+      "title": "ಬಿಕ್ಕಟ್ಟು (bikkaṭṭu) — a crisis; a deadlock",
+      "headword": "ಬಿಕ್ಕಟ್ಟು",
+      "romanization": "bikkaṭṭu",
+      "gloss": "a crisis; a deadlock",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:419b2489950eb4c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to bear fruit, then the Kannada for to come true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಿಕ್ಕಟ್ಟು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಕ್ಕಟ್ಟು — bikkaṭṭu — \"a crisis; a deadlock\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೀರಿನ ಬಿಕ್ಕಟ್ಟಿನಿಂದ ಊರಿನ ಜನರು ಕಷ್ಟಪಟ್ಟರು. nīrina bikkaṭṭininda ūrina janaru kaṣṭapaṭṭaru. The townspeople suffered from the water crisis."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬಿಕ್ಕಟ್ಟಿಗೆ ಸಿಕ್ಕು, to land in a fix."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಿಕ್ಕಟ್ಟು (bikkaṭṭu) is a Kannada word whose origin is not settled: DEDR does not list it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikkaṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikkaṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bikkaṭṭu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bikkaṭṭu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīrina bikkaṭṭininda ūrina janaru kaṣṭapaṭṭaru. — The townspeople suffered from the water crisis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīrina bikkaṭṭininda ūrina janaru kaṣṭapaṭṭaru.* — The townspeople suffered from the water crisis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to bear fruit, then the Kannada for to come true, then say bikkaṭṭu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to bear fruit, then the Kannada for to come true, then say *bikkaṭṭu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಿಕ್ಕಟ್ಟು (bikkaṭṭu) mean? (\"A crisis; a deadlock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C419-anivarya",
+      "sequence": 21250,
+      "title": "ಅನಿವಾರ್ಯ (anivārya) — unavoidable",
+      "headword": "ಅನಿವಾರ್ಯ",
+      "romanization": "anivārya",
+      "gloss": "unavoidable",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22ee4006c6906f1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to come true, then the Kannada for a crisis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅನಿವಾರ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನಿವಾರ್ಯ — anivārya — \"unavoidable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಳೆ ಬಂದರೆ ಪಂದ್ಯ ಮುಂದೂಡುವುದು ಅನಿವಾರ್ಯ. maḷe bandare pandya mundūḍuvudu anivārya. If it rains, putting off the match is unavoidable."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅನಿವಾರ್ಯವಾಗಿ, of necessity."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನಿವಾರ್ಯ (anivārya) is borrowed from Sanskrit anivārya, \"not to be warded off, unavoidable\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anivārya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anivārya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anivārya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anivārya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḷe bandare pandya mundūḍuvudu anivārya. — If it rains, putting off the match is unavoidable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḷe bandare pandya mundūḍuvudu anivārya.* — If it rains, putting off the match is unavoidable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to come true, then the Kannada for a crisis, then say anivārya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to come true, then the Kannada for a crisis, then say *anivārya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅನಿವಾರ್ಯ (anivārya) mean? (\"Unavoidable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

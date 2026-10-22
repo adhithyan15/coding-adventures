@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "Praise and Prestige",
+  "label": "ch:ka-praise-and-prestige",
+  "canDo": "I can say to commend, to felicitate, prestige, to exaggerate and status.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C389-sthanamana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can say to commend, to felicitate, prestige, to exaggerate and status.",
+    "assesses": [
+      "KA-LEX-C389-SHLAGHISU389-03",
+      "KA-LEX-C389-SHLAGHISU389-04",
+      "KA-LEX-C389-SHLAGHISU389-05"
+    ]
+  }
+}

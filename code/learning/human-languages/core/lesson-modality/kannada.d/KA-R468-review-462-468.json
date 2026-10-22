@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R468-review-462-468",
+    "language": "kannada",
+    "chapter": 468,
+    "sequence": 23840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e537b0b472cd75d2"
+  },
+  "findings": []
+}

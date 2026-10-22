@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:8a0244dfa0162a34",
+  "lessonIds": [
+    "KA-C428-ondomme",
+    "KA-C428-illave",
+    "KA-C428-hegiddaru",
+    "KA-C428-anvaya",
+    "KA-C428-ottare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch428.txt",
+  "json": "kannada/narration/ch428.json",
+  "textHash": "fnv1a64:988eed43e5417163",
+  "jsonHash": "fnv1a64:6f3856d0d80aaea7",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-438-TUKA438",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "KA-EXT-438-TUKA438"
+  ],
+  "after": []
+}

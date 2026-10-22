@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:a5ed5204d55b5a95",
+  "lessonIds": [
+    "KA-C346-sphota",
+    "KA-C346-tattarisu",
+    "KA-C346-kampisu",
+    "KA-C346-pralaya",
+    "KA-C346-gayalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch346.txt",
+  "json": "kannada/narration/ch346.json",
+  "textHash": "fnv1a64:b6e7575a761f3ffb",
+  "jsonHash": "fnv1a64:2b7f57d359698559",
+  "findings": []
+}

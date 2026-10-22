@@ -1,0 +1,11 @@
+{
+  "id": "KA-C350-kirti",
+  "pathSegment": "KA-PATH-350-SANMANA350",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-350-SANMANA350",
+      "order": 3
+    }
+  ]
+}

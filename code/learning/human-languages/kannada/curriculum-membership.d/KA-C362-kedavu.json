@@ -1,0 +1,11 @@
+{
+  "id": "KA-C362-kedavu",
+  "pathSegment": "KA-PATH-362-NIRMANA362",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-362-NIRMANA362",
+      "order": 3
+    }
+  ]
+}

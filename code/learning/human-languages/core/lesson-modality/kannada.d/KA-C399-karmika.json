@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C399-karmika",
+    "language": "kannada",
+    "chapter": 399,
+    "sequence": 20190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df99c3d762b51714"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:7ac8e566c819b109",
+  "lessonIds": [
+    "KA-C477-tola",
+    "KA-C477-kaduhandi",
+    "KA-C477-gharjisu",
+    "KA-C477-meyu",
+    "KA-C477-geddalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch477.txt",
+  "json": "kannada/narration/ch477.json",
+  "textHash": "fnv1a64:dc889e4c8d13bb15",
+  "jsonHash": "fnv1a64:ed8d3b59481701d2",
+  "findings": []
+}

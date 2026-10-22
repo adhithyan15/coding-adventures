@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C448-disel",
+    "language": "kannada",
+    "chapter": 448,
+    "sequence": 22780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3dc108bcd830b11"
+  },
+  "findings": []
+}

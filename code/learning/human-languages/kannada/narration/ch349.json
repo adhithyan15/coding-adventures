@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 349,
+  "title": "Swords, Arrows and Armour",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6f361aa4c4facc01",
+  "lessons": [
+    {
+      "id": "KA-C349-khadga",
+      "sequence": 17540,
+      "title": "ಖಡ್ಗ (khaḍga) — a sword",
+      "headword": "ಖಡ್ಗ",
+      "romanization": "khaḍga",
+      "gloss": "a sword",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:554248ac3711e16f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a secret, then the Kannada for a sorcerer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಖಡ್ಗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖಡ್ಗ — khaḍga — \"a sword\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಯೋಧ ಖಡ್ಗ ಹಿಡಿದು ಮುಂದೆ ನಡೆದನು. ā yōdha khaḍga hiḍidu munde naḍedanu. That warrior walked ahead, sword in hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಖಡ್ಗಗಳು, khaḍgagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday word is ಕತ್ತಿ; ಖಡ್ಗ (khaḍga) belongs to stories and history."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖಡ್ಗ (khaḍga) is borrowed from Sanskrit khaḍga, \"a sword, a scimitar\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḍga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḍga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaḍga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaḍga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā yōdha khaḍga hiḍidu munde naḍedanu. — That warrior walked ahead, sword in hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā yōdha khaḍga hiḍidu munde naḍedanu.* — That warrior walked ahead, sword in hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a secret, then the Kannada for a sorcerer, then say khaḍga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a secret, then the Kannada for a sorcerer, then say *khaḍga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಖಡ್ಗ (khaḍga) mean? (\"A sword\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C349-bana",
+      "sequence": 17550,
+      "title": "ಬಾಣ (bāṇa) — an arrow",
+      "headword": "ಬಾಣ",
+      "romanization": "bāṇa",
+      "gloss": "an arrow",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9882e5a6ed8bc33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a sorcerer, then the Kannada for a sword."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬಾಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಣ — bāṇa — \"an arrow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೇಟೆಗಾರನ ಬಾಣ ಮರಕ್ಕೆ ತಾಗಿತು. bēṭegārana bāṇa marakke tāgitu. The hunter's arrow hit the tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಬಾಣಗಳು, bāṇagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A bow is ಬಿಲ್ಲು; arrows are shot: ಬಾಣ (bāṇa) ಬಿಡು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬಾಣ (bāṇa) is borrowed from Sanskrit bāṇa, \"a reed shaft, an arrow\" (CDIAL 9203)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēṭegārana bāṇa marakke tāgitu. — The hunter's arrow hit the tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēṭegārana bāṇa marakke tāgitu.* — The hunter's arrow hit the tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a sorcerer, then the Kannada for a sword, then say bāṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a sorcerer, then the Kannada for a sword, then say *bāṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬಾಣ (bāṇa) mean? (\"An arrow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C349-kavaca",
+      "sequence": 17560,
+      "title": "ಕವಚ (kavaca) — armour",
+      "headword": "ಕವಚ",
+      "romanization": "kavaca",
+      "gloss": "armour",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c030c20d0316cac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a sword, then the Kannada for an arrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕವಚ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕವಚ — kavaca — \"armour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸೈನಿಕರು ಕಬ್ಬಿಣದ ಕವಚ ತೊಟ್ಟಿದ್ದರು. sainikaru kabbiṇada kavaca toṭṭiddaru. The soldiers wore iron armour."
+            },
+            {
+              "kind": "speech",
+              "text": "Also any protective cover: a phone case is a ಕವಚ (kavaca) too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕವಚ (kavaca) is borrowed from Sanskrit kavaca, \"a coat of mail, a jacket\" (CDIAL 2957)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavaca",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavaca*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavaca, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavaca*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sainikaru kabbiṇada kavaca toṭṭiddaru. — The soldiers wore iron armour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sainikaru kabbiṇada kavaca toṭṭiddaru.* — The soldiers wore iron armour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a sword, then the Kannada for an arrow, then say kavaca again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a sword, then the Kannada for an arrow, then say *kavaca* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕವಚ (kavaca) mean? (\"Armour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C349-sarathi",
+      "sequence": 17570,
+      "title": "ಸಾರಥಿ (sārathi) — a charioteer",
+      "headword": "ಸಾರಥಿ",
+      "romanization": "sārathi",
+      "gloss": "a charioteer",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1672b9c164124b3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an arrow, then the Kannada for armour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಾರಥಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಾರಥಿ — sārathi — \"a charioteer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಾರಥಿ ರಥವನ್ನು ವೇಗವಾಗಿ ಓಡಿಸಿದನು. sārathi rathavannu vēgavāgi ōḍisidanu. The charioteer drove the chariot fast."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸಾರಥಿಗಳು, sārathigaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "Today also a leader who steers a group: ತಂಡದ ಸಾರಥಿ (sārathi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಾರಥಿ (sārathi) is borrowed from Sanskrit sārathi, \"a charioteer, the driver of a car\" (Monier-Williams), from sa-ratha, \"with the chariot\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārathi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārathi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārathi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārathi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārathi rathavannu vēgavāgi ōḍisidanu. — The charioteer drove the chariot fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārathi rathavannu vēgavāgi ōḍisidanu.* — The charioteer drove the chariot fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an arrow, then the Kannada for armour, then say sārathi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an arrow, then the Kannada for armour, then say *sārathi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಾರಥಿ (sārathi) mean? (\"A charioteer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C349-madi",
+      "sequence": 17580,
+      "title": "ಮಡಿ (maḍi) — to fall in battle; to die",
+      "headword": "ಮಡಿ",
+      "romanization": "maḍi",
+      "gloss": "to fall in battle; to die",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:90f1885337ce57ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for armour, then the Kannada for a charioteer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಡಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಡಿ — maḍi — \"to fall in battle; to die\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆ ಯುದ್ಧದಲ್ಲಿ ಸಾವಿರಾರು ಸೈನಿಕರು ಮಡಿದರು. ā yuddhadalli sāvirāru sainikaru maḍidaru. Thousands of soldiers fell in that war."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮಡಿದೆ, maḍide."
+            },
+            {
+              "kind": "speech",
+              "text": "A respectful verb for dying, used of soldiers and heroes. A different ಮಡಿ (maḍi) means ritual cleanness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಡಿ (maḍi) is native Dravidian: DEDR 4653 lists Kannada maḍi, \"to die\", and maḍuhu, \"to kill\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā yuddhadalli sāvirāru sainikaru maḍidaru. — Thousands of soldiers fell in that war.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā yuddhadalli sāvirāru sainikaru maḍidaru.* — Thousands of soldiers fell in that war.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for armour, then the Kannada for a charioteer, then say maḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for armour, then the Kannada for a charioteer, then say *maḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಡಿ (maḍi) mean? (\"To fall in battle; to die\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

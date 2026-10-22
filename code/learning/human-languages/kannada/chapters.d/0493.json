@@ -1,0 +1,19 @@
+{
+  "chapter": 493,
+  "title": "Anger and Mockery",
+  "label": "ch:ka-anger-and-mockery",
+  "canDo": "I can say to get annoyed, to provoke, to ridicule, frustration and agitation.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C493-udvega",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can say to get annoyed, to provoke, to ridicule, frustration and agitation.",
+    "assesses": [
+      "KA-LEX-C493-KOPA493-03",
+      "KA-LEX-C493-KOPA493-04",
+      "KA-LEX-C493-KOPA493-05"
+    ]
+  }
+}

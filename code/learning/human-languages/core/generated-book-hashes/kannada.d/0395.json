@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:f7cd70327ce8f91f",
+  "lessonIds": [
+    "KA-C395-adalita",
+    "KA-C395-sacivalaya",
+    "KA-C395-pancayiti",
+    "KA-C395-jarigolisu",
+    "KA-C395-samiti"
+  ],
+  "tex": "kannada/book/chapters/ch395-running-public-offices.tex"
+}

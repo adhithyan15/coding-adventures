@@ -1,0 +1,19 @@
+{
+  "chapter": 513,
+  "title": "Getting Better",
+  "label": "ch:ka-getting-better",
+  "canDo": "I can say to recover, to feed, a heartbeat, nursing and a herbal decoction.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C513-kasaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can say to recover, to feed, a heartbeat, nursing and a herbal decoction.",
+    "assesses": [
+      "KA-LEX-C513-CHETARIKE513-03",
+      "KA-LEX-C513-CHETARIKE513-04",
+      "KA-LEX-C513-CHETARIKE513-05"
+    ]
+  }
+}

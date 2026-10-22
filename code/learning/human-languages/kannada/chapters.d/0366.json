@@ -1,0 +1,19 @@
+{
+  "chapter": 366,
+  "title": "Disgrace and Dignity",
+  "label": "ch:ka-disgrace-and-dignity",
+  "canDo": "I can say an acquittal, a stain, dignity, an oath and to wail.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C366-goladu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 366: I can say an acquittal, a stain, dignity, an oath and to wail.",
+    "assesses": [
+      "KA-LEX-C366-GHANATE366-03",
+      "KA-LEX-C366-GHANATE366-04",
+      "KA-LEX-C366-GHANATE366-05"
+    ]
+  }
+}

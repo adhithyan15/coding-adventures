@@ -1,0 +1,11 @@
+{
+  "id": "KA-C516-arhate",
+  "pathSegment": "KA-PATH-516-VRITTI516",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-516-VRITTI516",
+      "order": 2
+    }
+  ]
+}

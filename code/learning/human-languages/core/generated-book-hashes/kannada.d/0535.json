@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:7f90e3dd045cb2f5",
+  "lessonIds": [
+    "KA-C535-vadya",
+    "KA-C535-vine",
+    "KA-C535-kolalu",
+    "KA-C535-pitilu",
+    "KA-C535-barisu"
+  ],
+  "tex": "kannada/book/chapters/ch535-instruments.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C343-prasanga",
+  "pathSegment": "KA-PATH-343-NIRUPANE343",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-343-NIRUPANE343",
+      "order": 3
+    }
+  ]
+}

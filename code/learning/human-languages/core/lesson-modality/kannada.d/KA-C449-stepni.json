@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C449-stepni",
+    "language": "kannada",
+    "chapter": 449,
+    "sequence": 22840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10f0176f2c2471af"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C456-viksisu",
+  "pathSegment": "KA-PATH-456-SMARAKA456",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-456-SMARAKA456",
+      "order": 4
+    }
+  ]
+}

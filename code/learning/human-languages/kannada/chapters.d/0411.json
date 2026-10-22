@@ -1,0 +1,21 @@
+{
+  "chapter": 411,
+  "title": "Terms and Conditions",
+  "label": "ch:ka-terms-and-conditions",
+  "canDo": "I can say a condition, an agreement, a pact, to fulfil and an obligation.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-R411-review-405-411",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can say a condition, an agreement, a pact, to fulfil and an obligation.",
+    "assesses": [
+      "KA-LEX-C411-SHARATTU411-01",
+      "KA-LEX-C411-SHARATTU411-02",
+      "KA-LEX-C411-SHARATTU411-03",
+      "KA-LEX-C411-SHARATTU411-04",
+      "KA-LEX-C411-SHARATTU411-05"
+    ]
+  }
+}

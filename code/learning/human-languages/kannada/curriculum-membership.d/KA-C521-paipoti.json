@@ -1,0 +1,11 @@
+{
+  "id": "KA-C521-paipoti",
+  "pathSegment": "KA-PATH-521-DUDIME521",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-521-DUDIME521",
+      "order": 4
+    }
+  ]
+}

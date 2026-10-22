@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "At the Garage",
+  "label": "ch:ka-at-the-garage",
+  "canDo": "I can say a mechanic, a garage, a spare part, to break down and repair work.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C450-riperi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can say a mechanic, a garage, a spare part, to break down and repair work.",
+    "assesses": [
+      "KA-LEX-C450-GARAGE450-03",
+      "KA-LEX-C450-GARAGE450-04",
+      "KA-LEX-C450-GARAGE450-05"
+    ]
+  }
+}

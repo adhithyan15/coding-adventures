@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 428,
+  "title": "If and Otherwise",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8a0244dfa0162a34",
+  "lessons": [
+    {
+      "id": "KA-C428-ondomme",
+      "sequence": 21670,
+      "title": "ಒಂದೊಮ್ಮೆ (ondomme) — if ever; should it happen",
+      "headword": "ಒಂದೊಮ್ಮೆ",
+      "romanization": "ondomme",
+      "gloss": "if ever; should it happen",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4f9b10ef7d45db5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to convert, then the Kannada for adequate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಂದೊಮ್ಮೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಂದೊಮ್ಮೆ — ondomme — \"if ever; should it happen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಂದೊಮ್ಮೆ ಬಸ್ ತಪ್ಪಿದರೆ ನಾನು ಆಟೋದಲ್ಲಿ ಬರುತ್ತೇನೆ. ondomme bas tappidare nānu āṭōdalli baruttēne. Should I miss the bus, I will come by auto."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes with a verb in -ದರೆ, as ಒಂದು ವೇಳೆ does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಂದೊಮ್ಮೆ (ondomme) is native Dravidian: ondu, \"one\", and omme, \"once\" (DEDR 990): at some one time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ondomme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ondomme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ondomme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ondomme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ondomme bas tappidare nānu āṭōdalli baruttēne. — Should I miss the bus, I will come by auto.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ondomme bas tappidare nānu āṭōdalli baruttēne.* — Should I miss the bus, I will come by auto.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to convert, then the Kannada for adequate, then say ondomme again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to convert, then the Kannada for adequate, then say *ondomme* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಂದೊಮ್ಮೆ (ondomme) mean? (\"If ever; should it happen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C428-illave",
+      "sequence": 21680,
+      "title": "ಇಲ್ಲವೇ (illavē) — or else; or",
+      "headword": "ಇಲ್ಲವೇ",
+      "romanization": "illavē",
+      "gloss": "or else; or",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98ce31eaee46bc49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for adequate, then the Kannada for if ever."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಇಲ್ಲವೇ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇಲ್ಲವೇ — illavē — \"or else; or\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಇಂದು ಇಲ್ಲವೇ ನಾಳೆ ಮಳೆ ಬರುತ್ತದೆ. indu illavē nāḷe maḷe baruttade. It will rain today or tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Like ಅಥವಾ, but stronger: one or the other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇಲ್ಲವೇ (illavē) is native Dravidian: illa, \"it is not\", with -ē; DEDR 2559 lists the Kannada family of illa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "illavē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *illavē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "illavē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *illavē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "indu illavē nāḷe maḷe baruttade. — It will rain today or tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *indu illavē nāḷe maḷe baruttade.* — It will rain today or tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for adequate, then the Kannada for if ever, then say illavē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for adequate, then the Kannada for if ever, then say *illavē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಇಲ್ಲವೇ (illavē) mean? (\"Or else; or\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C428-hegiddaru",
+      "sequence": 21690,
+      "title": "ಹೇಗಿದ್ದರೂ (hēgiddarū) — in any case; anyway",
+      "headword": "ಹೇಗಿದ್ದರೂ",
+      "romanization": "hēgiddarū",
+      "gloss": "in any case; anyway",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c014b92735fbd3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for if ever, then the Kannada for or else."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೇಗಿದ್ದರೂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೇಗಿದ್ದರೂ — hēgiddarū — \"in any case; anyway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೇಗಿದ್ದರೂ ನಾನು ಪೇಟೆಗೆ ಹೋಗುತ್ತೇನೆ, ನಿನ್ನ ಪುಸ್ತಕ ತರುತ್ತೇನೆ. hēgiddarū nānu pēṭege hōguttēne, ninna pustaka taruttēne. I am going to town anyway, so I will bring your book."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೇಗೆ (how) + ಇದ್ದರೂ (even if it is)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೇಗಿದ್ದರೂ (hēgiddarū) is native Dravidian: hēge, \"how\" (DEDR 5151), and iddarū, \"even if it is\": however it is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hēgiddarū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hēgiddarū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hēgiddarū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hēgiddarū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hēgiddarū nānu pēṭege hōguttēne, ninna pustaka taruttēne. — I am going to town anyway, so I will bring your book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hēgiddarū nānu pēṭege hōguttēne, ninna pustaka taruttēne.* — I am going to town anyway, so I will bring your book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for if ever, then the Kannada for or else, then say hēgiddarū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for if ever, then the Kannada for or else, then say *hēgiddarū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೇಗಿದ್ದರೂ (hēgiddarū) mean? (\"In any case; anyway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C428-anvaya",
+      "sequence": 21700,
+      "title": "ಅನ್ವಯ (anvaya) — applicability",
+      "headword": "ಅನ್ವಯ",
+      "romanization": "anvaya",
+      "gloss": "applicability",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:131a52590565068c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for or else, then the Kannada for in any case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಅನ್ವಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನ್ವಯ — anvaya — \"applicability\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ನಿಯಮ ಎಲ್ಲರಿಗೂ ಅನ್ವಯ ಆಗುತ್ತದೆ. ī niyama ellarigū anvaya āguttade. This rule applies to everyone."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅನ್ವಯ (anvaya) ಆಗು / ಅನ್ವಯಿಸು, to apply to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅನ್ವಯ (anvaya) is borrowed from Sanskrit anvaya, \"connection, being linked to or concerned with\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anvaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anvaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī niyama ellarigū anvaya āguttade. — This rule applies to everyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī niyama ellarigū anvaya āguttade.* — This rule applies to everyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for or else, then the Kannada for in any case, then say anvaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for or else, then the Kannada for in any case, then say *anvaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಅನ್ವಯ (anvaya) mean? (\"Applicability\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C428-ottare",
+      "sequence": 21710,
+      "title": "ಒಟ್ಟಾರೆ (oṭṭāre) — overall; on the whole",
+      "headword": "ಒಟ್ಟಾರೆ",
+      "romanization": "oṭṭāre",
+      "gloss": "overall; on the whole",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbbf5f75d9b76b16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for in any case, then the Kannada for applicability."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಒಟ್ಟಾರೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಟ್ಟಾರೆ — oṭṭāre — \"overall; on the whole\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಒಟ್ಟಾರೆ ಪ್ರವಾಸ ಚೆನ್ನಾಗಿತ್ತು. oṭṭāre pravāsa cennāgittu. Overall the trip was good."
+            },
+            {
+              "kind": "speech",
+              "text": "Built on ಒಟ್ಟು, the total."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಒಟ್ಟಾರೆ (oṭṭāre) is native Dravidian, built on oṭṭu, \"to come together; a mass, a union\" (DEDR 958)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭṭāre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭṭāre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭṭāre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭṭāre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭṭāre pravāsa cennāgittu. — Overall the trip was good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭṭāre pravāsa cennāgittu.* — Overall the trip was good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for in any case, then the Kannada for applicability, then say oṭṭāre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for in any case, then the Kannada for applicability, then say *oṭṭāre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಒಟ್ಟಾರೆ (oṭṭāre) mean? (\"Overall; on the whole\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

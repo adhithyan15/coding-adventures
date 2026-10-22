@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C369-kannare",
+    "language": "kannada",
+    "chapter": 369,
+    "sequence": 18580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d103e29fbbd4ab60"
+  },
+  "findings": []
+}

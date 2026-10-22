@@ -1,0 +1,11 @@
+{
+  "id": "KA-C403-vaividhya",
+  "pathSegment": "KA-PATH-403-SAMAJA403",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-403-SAMAJA403",
+      "order": 3
+    }
+  ]
+}

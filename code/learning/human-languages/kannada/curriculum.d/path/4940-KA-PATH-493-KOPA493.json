@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-493-KOPA493",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-493-KOPA493"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:51c98ad451bf83b0",
+  "lessonIds": [
+    "KA-C362-nagarikate",
+    "KA-C362-sthapisu",
+    "KA-C362-nirmisu",
+    "KA-C362-kedavu",
+    "KA-C362-pratime"
+  ],
+  "tex": "kannada/book/chapters/ch362-builders-of-old.tex"
+}

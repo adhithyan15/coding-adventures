@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C533-karakusala",
+    "language": "kannada",
+    "chapter": 533,
+    "sequence": 27220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64b67e1fdfeeb31d"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-536-NATAKA536",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "KA-EXT-536-NATAKA536"
+  ],
+  "after": []
+}

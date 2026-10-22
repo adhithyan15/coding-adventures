@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-324-BENKI324",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-324-BENKI324"
+  ],
+  "after": []
+}

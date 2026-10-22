@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C399-savalattu",
+    "language": "kannada",
+    "chapter": 399,
+    "sequence": 20200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78d140efd9e3c368"
+  },
+  "findings": []
+}

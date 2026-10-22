@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C435-bart",
+    "language": "kannada",
+    "chapter": 435,
+    "sequence": 22100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f30c04e1a16cb49a"
+  },
+  "findings": []
+}

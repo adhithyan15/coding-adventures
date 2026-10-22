@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:79eebd29a1d3b63f",
+  "lessonIds": [
+    "KA-C498-nambu",
+    "KA-C498-mannisu",
+    "KA-C498-samsaya",
+    "KA-C498-karune",
+    "KA-C498-sahanubhuti"
+  ],
+  "tex": "kannada/book/chapters/ch498-trust-and-sympathy.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:aac6e72cb3b3c261",
+  "lessonIds": [
+    "KA-C447-rastetade",
+    "KA-C447-teravugolisu",
+    "KA-C447-addipadisu",
+    "KA-C447-sthagitagollu",
+    "KA-C447-sancarisu",
+    "KA-R447-review-441-447"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch447.txt",
+  "json": "kannada/narration/ch447.json",
+  "textHash": "fnv1a64:63a807b0ff33e8ba",
+  "jsonHash": "fnv1a64:a7821181a9d4b093",
+  "findings": []
+}

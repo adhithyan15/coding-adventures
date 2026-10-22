@@ -1,0 +1,11 @@
+{
+  "id": "KA-C423-tantra",
+  "pathSegment": "KA-PATH-423-HANTA423",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-423-HANTA423",
+      "order": 2
+    }
+  ]
+}

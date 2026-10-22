@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C511-lasike",
+    "language": "kannada",
+    "chapter": 511,
+    "sequence": 26110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eeb1f8bfd7ad003d"
+  },
+  "findings": []
+}

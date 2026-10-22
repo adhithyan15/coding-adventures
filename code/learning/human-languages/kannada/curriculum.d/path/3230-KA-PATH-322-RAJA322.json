@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-322-RAJA322",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "KA-EXT-322-RAJA322"
+  ],
+  "after": []
+}

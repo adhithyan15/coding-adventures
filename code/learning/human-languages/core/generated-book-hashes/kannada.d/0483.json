@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:af92fbcce24a2200",
+  "lessonIds": [
+    "KA-C483-jalasaya",
+    "KA-C483-anekattu",
+    "KA-C483-hinniru",
+    "KA-C483-antarjala",
+    "KA-C483-aviyagu"
+  ],
+  "tex": "kannada/book/chapters/ch483-dams-and-groundwater.tex"
+}

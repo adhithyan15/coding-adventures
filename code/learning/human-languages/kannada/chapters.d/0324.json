@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Fire in the Market",
+  "label": "ch:ka-fire-in-the-market",
+  "canDo": "I can say a firefighter, to catch fire, presence of mind, to extinguish and to rescue.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C324-raksisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can say a firefighter, to catch fire, presence of mind, to extinguish and to rescue.",
+    "assesses": [
+      "KA-LEX-C324-BENKI324-03",
+      "KA-LEX-C324-BENKI324-04",
+      "KA-LEX-C324-BENKI324-05"
+    ]
+  }
+}

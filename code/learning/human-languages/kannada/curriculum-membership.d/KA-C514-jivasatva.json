@@ -1,0 +1,11 @@
+{
+  "id": "KA-C514-jivasatva",
+  "pathSegment": "KA-PATH-514-PATHYA514",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-514-PATHYA514",
+      "order": 1
+    }
+  ]
+}

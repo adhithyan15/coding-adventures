@@ -1,0 +1,11 @@
+{
+  "id": "KA-C392-mata",
+  "pathSegment": "KA-PATH-392-CHUNAVANE392",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-392-CHUNAVANE392",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-386-SAMAJAYISHI386",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "KA-EXT-386-SAMAJAYISHI386"
+  ],
+  "after": []
+}

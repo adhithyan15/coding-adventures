@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 458,
+  "title": "Pilgrims and Hill Stations",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3570feb0ec1bbf4d",
+  "lessons": [
+    {
+      "id": "KA-C458-yatre",
+      "sequence": 23280,
+      "title": "ಯಾತ್ರೆ (yātre) — a pilgrimage; a long journey",
+      "headword": "ಯಾತ್ರೆ",
+      "romanization": "yātre",
+      "gloss": "a pilgrimage; a long journey",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb82cd8fc380f43a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a spot, then the Kannada for to look splendid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಯಾತ್ರೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಯಾತ್ರೆ — yātre — \"a pilgrimage; a long journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅಜ್ಜಿ ಪ್ರತಿ ವರ್ಷ ಯಾತ್ರೆಗೆ ಹೋಗುತ್ತಾರೆ. ajji prati varṣa yātrege hōguttāre. Grandmother goes on a pilgrimage every year."
+            },
+            {
+              "kind": "speech",
+              "text": "ಯಾತ್ರೆ (yātre) alone can be any long journey; ಯಾತ್ರಿಕ is a pilgrim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಯಾತ್ರೆ (yātre) is borrowed from Sanskrit yātrā, \"a journey, a festival procession\" (CDIAL 10456), from yā, \"to go\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātre",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātre*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātre, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātre*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajji prati varṣa yātrege hōguttāre. — Grandmother goes on a pilgrimage every year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajji prati varṣa yātrege hōguttāre.* — Grandmother goes on a pilgrimage every year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a spot, then the Kannada for to look splendid, then say yātre again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a spot, then the Kannada for to look splendid, then say *yātre* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಯಾತ್ರೆ (yātre) mean? (\"A pilgrimage; a long journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C458-giridhama",
+      "sequence": 23290,
+      "title": "ಗಿರಿಧಾಮ (giridhāma) — a hill station",
+      "headword": "ಗಿರಿಧಾಮ",
+      "romanization": "giridhāma",
+      "gloss": "a hill station",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ddf6a5131bbdf673",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to look splendid, then the Kannada for a pilgrimage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗಿರಿಧಾಮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಿರಿಧಾಮ — giridhāma — \"a hill station\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೇಸಿಗೆಯಲ್ಲಿ ಗಿರಿಧಾಮದಲ್ಲಿ ತಣ್ಣಗೆ ಇರುತ್ತದೆ. bēsigeyalli giridhāmadalli taṇṇage iruttade. In summer it is cool at a hill station."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗಿರಿ, a hill, plus ಧಾಮ, a dwelling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗಿರಿಧಾಮ (giridhāma) is a modern compound built from Sanskrit words: giri, \"a rock, a mountain\" (CDIAL 4161), and dhāman, \"a dwelling place\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "giridhāma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *giridhāma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "giridhāma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *giridhāma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēsigeyalli giridhāmadalli taṇṇage iruttade. — In summer it is cool at a hill station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēsigeyalli giridhāmadalli taṇṇage iruttade.* — In summer it is cool at a hill station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to look splendid, then the Kannada for a pilgrimage, then say giridhāma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to look splendid, then the Kannada for a pilgrimage, then say *giridhāma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗಿರಿಧಾಮ (giridhāma) mean? (\"A hill station\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C458-karedoyyu",
+      "sequence": 23300,
+      "title": "ಕರೆದೊಯ್ಯು (karedoyyu) — to take along; to escort",
+      "headword": "ಕರೆದೊಯ್ಯು",
+      "romanization": "karedoyyu",
+      "gloss": "to take along; to escort",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4fecb9a6d3dd108",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a pilgrimage, then the Kannada for a hill station."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕರೆದೊಯ್ಯು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕರೆದೊಯ್ಯು — karedoyyu — \"to take along; to escort\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಅಜ್ಜಿಯನ್ನು ದೇವಸ್ಥಾನಕ್ಕೆ ಕರೆದೊಯ್ದೆ. nānu ajjiyannu dēvasthānakke karedoyde. I took grandmother to the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಕರೆದೊಯ್ದೆ, karedoyde."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕರೆ, to call, plus ಒಯ್ಯು, to take away: to call someone and take them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕರೆದೊಯ್ಯು (karedoyyu) is a native Dravidian compound: kare, \"to call\" (DEDR 1291), and oy, \"to carry off, to take along\" (DEDR 984)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karedoyyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karedoyyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karedoyyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karedoyyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu ajjiyannu dēvasthānakke karedoyde. — I took grandmother to the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu ajjiyannu dēvasthānakke karedoyde.* — I took grandmother to the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a pilgrimage, then the Kannada for a hill station, then say karedoyyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a pilgrimage, then the Kannada for a hill station, then say *karedoyyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕರೆದೊಯ್ಯು (karedoyyu) mean? (\"To take along; to escort\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C458-vapasagu",
+      "sequence": 23310,
+      "title": "ವಾಪಸಾಗು (vāpasāgu) — to get back; to return",
+      "headword": "ವಾಪಸಾಗು",
+      "romanization": "vāpasāgu",
+      "gloss": "to get back; to return",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87fa29d89e7564fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a hill station, then the Kannada for to take along."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಾಪಸಾಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಾಪಸಾಗು — vāpasāgu — \"to get back; to return\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಯಾತ್ರೆ ಮುಗಿಸಿ ನಾವು ಮನೆಗೆ ವಾಪಸಾದೆವು. yātre mugisi nāvu manege vāpasādevu. After the pilgrimage we got back home."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಾಪಸಾದೆ, vāpasāde."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಾಪಸ್, back, is common in speech: ವಾಪಸ್ ಕೊಡು, to give back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಾಪಸಾಗು (vāpasāgu) joins vāpas, \"back\", usually traced to Persian vāpas, \"back, returned\", through Hindustani, and the native verb ಆಗು, to become."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāpasāgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāpasāgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāpasāgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāpasāgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yātre mugisi nāvu manege vāpasādevu. — After the pilgrimage we got back home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yātre mugisi nāvu manege vāpasādevu.* — After the pilgrimage we got back home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a hill station, then the Kannada for to take along, then say vāpasāgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a hill station, then the Kannada for to take along, then say *vāpasāgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಾಪಸಾಗು (vāpasāgu) mean? (\"To get back; to return\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C458-tangu",
+      "sequence": 23320,
+      "title": "ತಂಗು (taṅgu) — to stay overnight; to halt",
+      "headword": "ತಂಗು",
+      "romanization": "taṅgu",
+      "gloss": "to stay overnight; to halt",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e1a0d9ed7d156ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to take along, then the Kannada for to get back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಂಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಂಗು — taṅgu — \"to stay overnight; to halt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ದಾರಿಯಲ್ಲಿ ನಾವು ಒಂದು ರಾತ್ರಿ ಹಳ್ಳಿಯಲ್ಲಿ ತಂಗಿದೆವು. dāriyalli nāvu ondu rātri haḷḷiyalli taṅgidevu. On the way we stayed one night in a village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ತಂಗಿದೆ, taṅgide."
+            },
+            {
+              "kind": "speech",
+              "text": "A stop on a journey; ಇರು is to stay in general."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಂಗು (taṅgu) is native Dravidian: DEDR 3014 lists Kannada taṅgu, \"to stop, to stay, to sojourn, to lodge\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṅgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṅgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṅgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṅgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāriyalli nāvu ondu rātri haḷḷiyalli taṅgidevu. — On the way we stayed one night in a village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāriyalli nāvu ondu rātri haḷḷiyalli taṅgidevu.* — On the way we stayed one night in a village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to take along, then the Kannada for to get back, then say taṅgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to take along, then the Kannada for to get back, then say *taṅgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಂಗು (taṅgu) mean? (\"To stay overnight; to halt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

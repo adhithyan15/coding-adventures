@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:0f3ccd6d78a244e5",
+  "lessonIds": [
+    "KA-C493-sittagu",
+    "KA-C493-kenaku",
+    "KA-C493-hiyalisu",
+    "KA-C493-hatase",
+    "KA-C493-udvega"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch493.txt",
+  "json": "kannada/narration/ch493.json",
+  "textHash": "fnv1a64:608657cb152e882c",
+  "jsonHash": "fnv1a64:00a58b9f9f3c780c",
+  "findings": []
+}

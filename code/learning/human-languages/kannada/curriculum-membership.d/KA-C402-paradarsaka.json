@@ -1,0 +1,11 @@
+{
+  "id": "KA-C402-paradarsaka",
+  "pathSegment": "KA-PATH-402-LANCHA402",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-402-LANCHA402",
+      "order": 2
+    }
+  ]
+}

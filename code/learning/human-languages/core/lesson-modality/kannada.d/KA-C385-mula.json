@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C385-mula",
+    "language": "kannada",
+    "chapter": 385,
+    "sequence": 19500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46a1ac6f9fd91cbf"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:02a07e61d73f6996",
+  "lessonIds": [
+    "KA-C410-higagi",
+    "KA-C410-adagyu",
+    "KA-C410-nimitta",
+    "KA-C410-melagi",
+    "KA-C410-matravallade"
+  ],
+  "tex": "kannada/book/chapters/ch410-linking-ideas.tex"
+}

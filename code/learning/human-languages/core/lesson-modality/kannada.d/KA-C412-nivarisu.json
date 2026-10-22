@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C412-nivarisu",
+    "language": "kannada",
+    "chapter": 412,
+    "sequence": 20890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d335795045a37bd7"
+  },
+  "findings": []
+}

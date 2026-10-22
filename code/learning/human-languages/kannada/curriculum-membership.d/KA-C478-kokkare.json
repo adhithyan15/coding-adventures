@@ -1,0 +1,11 @@
+{
+  "id": "KA-C478-kokkare",
+  "pathSegment": "KA-PATH-478-HADDU478",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-478-HADDU478",
+      "order": 1
+    }
+  ]
+}

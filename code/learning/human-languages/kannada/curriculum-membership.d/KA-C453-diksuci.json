@@ -1,0 +1,11 @@
+{
+  "id": "KA-C453-diksuci",
+  "pathSegment": "KA-PATH-453-HADAGU453",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-453-HADAGU453",
+      "order": 3
+    }
+  ]
+}

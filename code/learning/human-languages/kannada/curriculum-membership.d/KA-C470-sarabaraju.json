@@ -1,0 +1,11 @@
+{
+  "id": "KA-C470-sarabaraju",
+  "pathSegment": "KA-PATH-470-KAMAGARI470",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-470-KAMAGARI470",
+      "order": 3
+    }
+  ]
+}

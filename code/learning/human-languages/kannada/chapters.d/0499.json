@@ -1,0 +1,19 @@
+{
+  "chapter": 499,
+  "title": "Changing Moods",
+  "label": "ch:ka-changing-moods",
+  "canDo": "I can say to sulk, to smile, to hesitate, envy and self-confidence.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C499-atmavisvasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 499: I can say to sulk, to smile, to hesitate, envy and self-confidence.",
+    "assesses": [
+      "KA-LEX-C499-MANASTHITI499-03",
+      "KA-LEX-C499-MANASTHITI499-04",
+      "KA-LEX-C499-MANASTHITI499-05"
+    ]
+  }
+}

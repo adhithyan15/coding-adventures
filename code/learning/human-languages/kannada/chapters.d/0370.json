@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Journalism and Its Public",
+  "label": "ch:ka-journalism-and-its-public",
+  "canDo": "I can say journalism, a documentary, a reader, a listener and notorious.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C370-kukhyata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say journalism, a documentary, a reader, a listener and notorious.",
+    "assesses": [
+      "KA-LEX-C370-PATRIKODYAMA370-03",
+      "KA-LEX-C370-PATRIKODYAMA370-04",
+      "KA-LEX-C370-PATRIKODYAMA370-05"
+    ]
+  }
+}

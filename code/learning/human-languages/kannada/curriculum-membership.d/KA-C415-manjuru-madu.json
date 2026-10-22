@@ -1,0 +1,11 @@
+{
+  "id": "KA-C415-manjuru-madu",
+  "pathSegment": "KA-PATH-415-AMANATU415",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-415-AMANATU415",
+      "order": 3
+    }
+  ]
+}

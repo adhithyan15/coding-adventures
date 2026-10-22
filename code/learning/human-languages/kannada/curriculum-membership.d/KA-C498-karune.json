@@ -1,0 +1,11 @@
+{
+  "id": "KA-C498-karune",
+  "pathSegment": "KA-PATH-498-NAMBIKE498",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-498-NAMBIKE498",
+      "order": 3
+    }
+  ]
+}

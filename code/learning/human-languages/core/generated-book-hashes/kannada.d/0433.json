@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:9f7d63c4b3e2713b",
+  "lessonIds": [
+    "KA-C433-prayanika",
+    "KA-C433-platpharm",
+    "KA-C433-bogi",
+    "KA-C433-hali",
+    "KA-C433-talupu"
+  ],
+  "tex": "kannada/book/chapters/ch433-at-the-railway-station.tex"
+}

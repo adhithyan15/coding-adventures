@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "Parking and Turning",
+  "label": "ch:ka-parking-and-turning",
+  "canDo": "I can say to park a vehicle, to turn round, to wobble, to move and to approach.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C445-samipisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can say to park a vehicle, to turn round, to wobble, to move and to approach.",
+    "assesses": [
+      "KA-LEX-C445-PARK445-03",
+      "KA-LEX-C445-PARK445-04",
+      "KA-LEX-C445-PARK445-05"
+    ]
+  }
+}

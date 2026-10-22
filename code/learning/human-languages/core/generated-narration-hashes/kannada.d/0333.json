@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:2fe4a2e9673a501a",
+  "lessonIds": [
+    "KA-C333-neraverisu",
+    "KA-C333-samarambha",
+    "KA-C333-arpisu",
+    "KA-C333-erpadisu",
+    "KA-C333-amantrana",
+    "KA-R333-review-327-333"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "kannada/narration/ch333.txt",
+  "json": "kannada/narration/ch333.json",
+  "textHash": "fnv1a64:e15b029a1a293edf",
+  "jsonHash": "fnv1a64:956c296b0f87ccd8",
+  "findings": []
+}

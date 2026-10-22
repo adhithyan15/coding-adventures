@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 477,
+  "title": "Creatures of Forest and Field",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7ac8e566c819b109",
+  "lessons": [
+    {
+      "id": "KA-C477-tola",
+      "sequence": 24260,
+      "title": "ತೋಳ (tōḷa) — a wolf",
+      "headword": "ತೋಳ",
+      "romanization": "tōḷa",
+      "gloss": "a wolf",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c471ee5d157b9699",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for biodiversity, then the Kannada for to migrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತೋಳ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೋಳ — tōḷa — \"a wolf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ತೋಳಗಳು ರಾತ್ರಿ ಗುಂಪಿನಲ್ಲಿ ತಿರುಗುತ್ತವೆ. tōḷagaḷu rātri gumpinalli tiruguttave. Wolves roam about in packs at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ತೋಳಗಳು, tōḷagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "The plural takes -ಗಳು: ತೋಳಗಳು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತೋಳ (tōḷa) is native Dravidian: DEDR 3548 lists Kannada tōḷa, \"a wolf\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōḷa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōḷa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōḷagaḷu rātri gumpinalli tiruguttave. — Wolves roam about in packs at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōḷagaḷu rātri gumpinalli tiruguttave.* — Wolves roam about in packs at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for biodiversity, then the Kannada for to migrate, then say tōḷa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for biodiversity, then the Kannada for to migrate, then say *tōḷa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತೋಳ (tōḷa) mean? (\"A wolf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C477-kaduhandi",
+      "sequence": 24270,
+      "title": "ಕಾಡುಹಂದಿ (kāḍuhandi) — a wild boar",
+      "headword": "ಕಾಡುಹಂದಿ",
+      "romanization": "kāḍuhandi",
+      "gloss": "a wild boar",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:169fe915df2432a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to migrate, then the Kannada for a wolf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಾಡುಹಂದಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಡುಹಂದಿ — kāḍuhandi — \"a wild boar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾಡುಹಂದಿಗಳು ರೈತನ ಹೊಲವನ್ನು ಹಾಳು ಮಾಡಿದವು. kāḍuhandigaḷu raitana holavannu hāḷu māḍidavu. Wild boars ruined the farmer's field."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಾಡು, forest, plus ಹಂದಿ, a pig."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಾಡುಹಂದಿ (kāḍuhandi) is a native Kannada compound of ಕಾಡು, \"a forest\" (DEDR 1438), and ಹಂದಿ, \"a pig\" (DEDR 4039)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāḍuhandi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāḍuhandi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāḍuhandi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāḍuhandi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāḍuhandigaḷu raitana holavannu hāḷu māḍidavu. — Wild boars ruined the farmer's field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāḍuhandigaḷu raitana holavannu hāḷu māḍidavu.* — Wild boars ruined the farmer's field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to migrate, then the Kannada for a wolf, then say kāḍuhandi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to migrate, then the Kannada for a wolf, then say *kāḍuhandi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಾಡುಹಂದಿ (kāḍuhandi) mean? (\"A wild boar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C477-gharjisu",
+      "sequence": 24280,
+      "title": "ಘರ್ಜಿಸು (gharjisu) — to roar",
+      "headword": "ಘರ್ಜಿಸು",
+      "romanization": "gharjisu",
+      "gloss": "to roar",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:849dac6dbea997ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a wolf, then the Kannada for a wild boar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಘರ್ಜಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಘರ್ಜಿಸು — gharjisu — \"to roar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ರಾತ್ರಿ ಕಾಡಿನಲ್ಲಿ ಸಿಂಹ ಘರ್ಜಿಸಿತು. rātri kāḍinalli siṃha gharjisitu. At night a lion roared in the forest."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಘರ್ಜಿಸಿತು, gharjisitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of lions and tigers, and of thunder."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಘರ್ಜಿಸು (gharjisu) is built from Sanskrit garj, \"to thunder, to roar\" (CDIAL 4046, garjati), with the verb ending -isu; Kannada writes it with the aspirate ಘ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharjisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharjisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gharjisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gharjisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri kāḍinalli siṃha gharjisitu. — At night a lion roared in the forest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri kāḍinalli siṃha gharjisitu.* — At night a lion roared in the forest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a wolf, then the Kannada for a wild boar, then say gharjisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a wolf, then the Kannada for a wild boar, then say *gharjisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಘರ್ಜಿಸು (gharjisu) mean? (\"To roar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C477-meyu",
+      "sequence": 24290,
+      "title": "ಮೇಯು (mēyu) — to graze",
+      "headword": "ಮೇಯು",
+      "romanization": "mēyu",
+      "gloss": "to graze",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b68f324dabb06819",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a wild boar, then the Kannada for to roar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೇಯು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೇಯು — mēyu — \"to graze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಸುಗಳು ಹೊಲದಲ್ಲಿ ಹುಲ್ಲು ಮೇಯುತ್ತಿದ್ದವು. hasugaḷu holadalli hullu mēyuttiddavu. The cows were grazing on grass in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ಮೇಯಿತು, mēyitu."
+            },
+            {
+              "kind": "speech",
+              "text": "Of cattle and deer; ಮೇಯಿಸು is to take animals to graze."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೇಯು (mēyu) is native Dravidian: DEDR 5093 lists Kannada mē, mēyu, \"to graze, to eat grass\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēyu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēyu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mēyu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mēyu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasugaḷu holadalli hullu mēyuttiddavu. — The cows were grazing on grass in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasugaḷu holadalli hullu mēyuttiddavu.* — The cows were grazing on grass in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a wild boar, then the Kannada for to roar, then say mēyu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a wild boar, then the Kannada for to roar, then say *mēyu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೇಯು (mēyu) mean? (\"To graze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C477-geddalu",
+      "sequence": 24300,
+      "title": "ಗೆದ್ದಲು (geddalu) — a termite",
+      "headword": "ಗೆದ್ದಲು",
+      "romanization": "geddalu",
+      "gloss": "a termite",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bde110b71cab7e6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to roar, then the Kannada for to graze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗೆದ್ದಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೆದ್ದಲು — geddalu — \"a termite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗೆದ್ದಲು ಹಳೆಯ ಬಾಗಿಲನ್ನು ತಿಂದುಹಾಕಿತು. geddalu haḷeya bāgilannu tinduhākitu. Termites ate away the old door."
+            },
+            {
+              "kind": "speech",
+              "text": "Also called white ants; their mound is a ಹುತ್ತ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗೆದ್ದಲು (geddalu) is native Dravidian: DEDR 1548 lists Kannada gedal, geddalu, \"a termite, a white ant\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "geddalu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *geddalu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "geddalu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *geddalu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "geddalu haḷeya bāgilannu tinduhākitu. — Termites ate away the old door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *geddalu haḷeya bāgilannu tinduhākitu.* — Termites ate away the old door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to roar, then the Kannada for to graze, then say geddalu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to roar, then the Kannada for to graze, then say *geddalu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗೆದ್ದಲು (geddalu) mean? (\"A termite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

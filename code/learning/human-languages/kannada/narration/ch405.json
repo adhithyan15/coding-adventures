@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 405,
+  "title": "Settling Disputes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0d6a2bd128da9b5a",
+  "lessons": [
+    {
+      "id": "KA-C405-maitri",
+      "sequence": 20490,
+      "title": "ಮೈತ್ರಿ (maitri) — an alliance; friendship",
+      "headword": "ಮೈತ್ರಿ",
+      "romanization": "maitri",
+      "gloss": "an alliance; friendship",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c892b53309b96cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to coordinate, then the Kannada for goodwill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೈತ್ರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೈತ್ರಿ — maitri — \"an alliance; friendship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎರಡು ಊರುಗಳ ನಡುವೆ ಹಳೆಯ ಮೈತ್ರಿ ಇದೆ. eraḍu ūrugaḷa naḍuve haḷeya maitri ide. There is an old friendship between the two towns."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal; between groups or countries."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೈತ್ರಿ (maitri) is borrowed from Sanskrit maitrī, \"friendship, goodwill\" (Monier-Williams), from mitra, \"a friend\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maitri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maitri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maitri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maitri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu ūrugaḷa naḍuve haḷeya maitri ide. — There is an old friendship between the two towns.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu ūrugaḷa naḍuve haḷeya maitri ide.* — There is an old friendship between the two towns.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to coordinate, then the Kannada for goodwill, then say maitri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to coordinate, then the Kannada for goodwill, then say *maitri* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೈತ್ರಿ (maitri) mean? (\"An alliance; friendship\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C405-sandhana",
+      "sequence": 20500,
+      "title": "ಸಂಧಾನ (sandhāna) — a negotiation",
+      "headword": "ಸಂಧಾನ",
+      "romanization": "sandhāna",
+      "gloss": "a negotiation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2901692153a8dc87",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for goodwill, then the Kannada for an alliance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಧಾನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಧಾನ — sandhāna — \"a negotiation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಎರಡು ಕುಟುಂಬಗಳ ನಡುವೆ ಸಂಧಾನ ನಡೆಯಿತು. eraḍu kuṭumbagaḷa naḍuve sandhāna naḍeyitu. Talks took place between the two families."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಧಾನಕಾರ, a negotiator."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಧಾನ (sandhāna) is borrowed from Sanskrit saṃdhāna, \"joining, uniting\" (Monier-Williams): bringing two sides together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eraḍu kuṭumbagaḷa naḍuve sandhāna naḍeyitu. — Talks took place between the two families.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eraḍu kuṭumbagaḷa naḍuve sandhāna naḍeyitu.* — Talks took place between the two families.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for goodwill, then the Kannada for an alliance, then say sandhāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for goodwill, then the Kannada for an alliance, then say *sandhāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಧಾನ (sandhāna) mean? (\"A negotiation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C405-madhyasthike",
+      "sequence": 20510,
+      "title": "ಮಧ್ಯಸ್ಥಿಕೆ (madhyasthike) — mediation",
+      "headword": "ಮಧ್ಯಸ್ಥಿಕೆ",
+      "romanization": "madhyasthike",
+      "gloss": "mediation",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69721a8d9466564e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an alliance, then the Kannada for a negotiation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮಧ್ಯಸ್ಥಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಧ್ಯಸ್ಥಿಕೆ — madhyasthike — \"mediation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನ ಹಿರಿಯರ ಮಧ್ಯಸ್ಥಿಕೆಯಿಂದ ಜಗಳ ಮುಗಿಯಿತು. ūrina hiriyara madhyasthikeyinda jagaḷa mugiyitu. The quarrel ended through the village elders' mediation."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಧ್ಯಸ್ಥ, a mediator."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮಧ್ಯಸ್ಥಿಕೆ (madhyasthike) is built on Sanskrit madhyastha, \"being in the middle\" (Monier-Williams), with the Kannada noun ending -ike."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyasthike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyasthike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhyasthike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhyasthike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrina hiriyara madhyasthikeyinda jagaḷa mugiyitu. — The quarrel ended through the village elders' mediation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrina hiriyara madhyasthikeyinda jagaḷa mugiyitu.* — The quarrel ended through the village elders' mediation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an alliance, then the Kannada for a negotiation, then say madhyasthike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an alliance, then the Kannada for a negotiation, then say *madhyasthike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮಧ್ಯಸ್ಥಿಕೆ (madhyasthike) mean? (\"Mediation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C405-hondanike",
+      "sequence": 20520,
+      "title": "ಹೊಂದಾಣಿಕೆ (hondāṇike) — a compromise; an adjustment",
+      "headword": "ಹೊಂದಾಣಿಕೆ",
+      "romanization": "hondāṇike",
+      "gloss": "a compromise; an adjustment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4371350d149aab71",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a negotiation, then the Kannada for mediation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊಂದಾಣಿಕೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಂದಾಣಿಕೆ — hondāṇike — \"a compromise; an adjustment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸ್ವಲ್ಪ ಹೊಂದಾಣಿಕೆ ಮಾಡಿಕೊಂಡರೆ ಸಮಸ್ಯೆ ಮುಗಿಯುತ್ತದೆ. svalpa hondāṇike māḍikoṇḍare samasye mugiyuttade. If we compromise a little, the problem ends."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಂದಾಣಿಕೆ (hondāṇike) ಮಾಡಿಕೊ, to adjust, to compromise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಂದಾಣಿಕೆ (hondāṇike) is native Dravidian, built on hondu, \"to come together, to suit\" (DEDR 4541)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hondāṇike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hondāṇike*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hondāṇike, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hondāṇike*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "svalpa hondāṇike māḍikoṇḍare samasye mugiyuttade. — If we compromise a little, the problem ends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *svalpa hondāṇike māḍikoṇḍare samasye mugiyuttade.* — If we compromise a little, the problem ends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a negotiation, then the Kannada for mediation, then say hondāṇike again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a negotiation, then the Kannada for mediation, then say *hondāṇike* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊಂದಾಣಿಕೆ (hondāṇike) mean? (\"A compromise; an adjustment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C405-pracodisu",
+      "sequence": 20530,
+      "title": "ಪ್ರಚೋದಿಸು (pracōdisu) — to incite",
+      "headword": "ಪ್ರಚೋದಿಸು",
+      "romanization": "pracōdisu",
+      "gloss": "to incite",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dd8442071cc1f77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for mediation, then the Kannada for a compromise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಚೋದಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಚೋದಿಸು — pracōdisu — \"to incite\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಯಾರೋ ಜನರನ್ನು ಜಗಳಕ್ಕೆ ಪ್ರಚೋದಿಸಿದರು. yārō janarannu jagaḷakke pracōdisidaru. Someone incited the people to fight."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಪ್ರಚೋದಿಸಿದೆ, pracōdiside."
+            },
+            {
+              "kind": "speech",
+              "text": "The person takes -ಅನ್ನು, the aim -ಗೆ. ಪ್ರಚೋದನೆ, provocation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಚೋದಿಸು (pracōdisu) is built on Sanskrit pracodana, \"instigating, urging\" (Monier-Williams), with the Kannada verb ending -isu."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracōdisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracōdisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pracōdisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pracōdisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yārō janarannu jagaḷakke pracōdisidaru. — Someone incited the people to fight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yārō janarannu jagaḷakke pracōdisidaru.* — Someone incited the people to fight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for mediation, then the Kannada for a compromise, then say pracōdisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for mediation, then the Kannada for a compromise, then say *pracōdisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಚೋದಿಸು (pracōdisu) mean? (\"To incite\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

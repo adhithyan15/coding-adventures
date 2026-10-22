@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C521-ustuvari",
+    "language": "kannada",
+    "chapter": 521,
+    "sequence": 26600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:696ca8c19effc718"
+  },
+  "findings": []
+}

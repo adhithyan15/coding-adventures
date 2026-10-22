@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "Joy and Delight",
+  "label": "ch:ka-joy-and-delight",
+  "canDo": "I can say cheerfulness, to enjoy, zest, delight and satisfaction.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C492-trpti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can say cheerfulness, to enjoy, zest, delight and satisfaction.",
+    "assesses": [
+      "KA-LEX-C492-HARSHA492-03",
+      "KA-LEX-C492-HARSHA492-04",
+      "KA-LEX-C492-HARSHA492-05"
+    ]
+  }
+}

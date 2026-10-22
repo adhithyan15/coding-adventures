@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C409-mandisu",
+    "language": "kannada",
+    "chapter": 409,
+    "sequence": 20720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5897e5e42ca17d2c"
+  },
+  "findings": []
+}

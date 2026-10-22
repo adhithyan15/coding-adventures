@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:1f810048d0f8e523",
+  "lessonIds": [
+    "KA-C385-prabhava",
+    "KA-C385-badhisu",
+    "KA-C385-untagu",
+    "KA-C385-pravrtti",
+    "KA-C385-mula"
+  ],
+  "tex": "kannada/book/chapters/ch385-causes-and-effects.tex"
+}

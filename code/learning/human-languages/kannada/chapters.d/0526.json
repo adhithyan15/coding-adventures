@@ -1,0 +1,19 @@
+{
+  "chapter": 526,
+  "title": "Kin",
+  "label": "ch:ka-kin",
+  "canDo": "I can say kin, a woman's parental home, twins, a great-grandson and younger.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C526-kiriya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can say kin, a woman's parental home, twins, a great-grandson and younger.",
+    "assesses": [
+      "KA-LEX-C526-BALAGA526-03",
+      "KA-LEX-C526-BALAGA526-04",
+      "KA-LEX-C526-BALAGA526-05"
+    ]
+  }
+}

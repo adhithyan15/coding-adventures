@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C325-vivaha",
+    "language": "kannada",
+    "chapter": 325,
+    "sequence": 16300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b17fe9d858ab405"
+  },
+  "findings": []
+}

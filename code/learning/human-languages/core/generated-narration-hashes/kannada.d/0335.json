@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:477dcd2eccd24630",
+  "lessonIds": [
+    "KA-C335-sampadaka",
+    "KA-C335-lekhana",
+    "KA-C335-mukhaputa",
+    "KA-C335-karapatra",
+    "KA-C335-prakasaka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch335.txt",
+  "json": "kannada/narration/ch335.json",
+  "textHash": "fnv1a64:eab6053eb087898b",
+  "jsonHash": "fnv1a64:f746de76edc39c44",
+  "findings": []
+}

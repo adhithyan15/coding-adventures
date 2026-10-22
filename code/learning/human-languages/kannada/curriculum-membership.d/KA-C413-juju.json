@@ -1,0 +1,11 @@
+{
+  "id": "KA-C413-juju",
+  "pathSegment": "KA-PATH-413-PANA413",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-413-PANA413",
+      "order": 1
+    }
+  ]
+}

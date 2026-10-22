@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:1bfe3ddba1d2aba1",
+  "lessonIds": [
+    "KA-C345-adagu",
+    "KA-C345-talemaresiko",
+    "KA-C345-bennattu",
+    "KA-C345-gudhacara",
+    "KA-C345-nusulu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch345.txt",
+  "json": "kannada/narration/ch345.json",
+  "textHash": "fnv1a64:0b5d9009ca1789aa",
+  "jsonHash": "fnv1a64:bf83afa0e030e80f",
+  "findings": []
+}

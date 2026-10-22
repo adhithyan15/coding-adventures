@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:ab94f207d7c9c56b",
+  "lessonIds": [
+    "KA-C489-ibbani",
+    "KA-C489-kulirgali",
+    "KA-C489-manjugadde",
+    "KA-C489-heppugattu",
+    "KA-C489-minugu",
+    "KA-R489-review-483-489",
+    "KA-R489-review-final-489"
+  ],
+  "tex": "kannada/book/chapters/ch489-cold-nights-and-clear-skies.tex"
+}

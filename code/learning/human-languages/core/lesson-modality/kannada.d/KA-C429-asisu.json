@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C429-asisu",
+    "language": "kannada",
+    "chapter": 429,
+    "sequence": 21720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2504d711f10bf3d6"
+  },
+  "findings": []
+}

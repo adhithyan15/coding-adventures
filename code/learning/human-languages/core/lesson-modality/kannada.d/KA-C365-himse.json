@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C365-himse",
+    "language": "kannada",
+    "chapter": 365,
+    "sequence": 18370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66ddf46c9802fdd9"
+  },
+  "findings": []
+}

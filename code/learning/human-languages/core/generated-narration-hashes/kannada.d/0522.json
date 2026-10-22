@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:69495c4be6194d47",
+  "lessonIds": [
+    "KA-C522-kammara",
+    "KA-C522-akkasaliga",
+    "KA-C522-nekara",
+    "KA-C522-silpi",
+    "KA-C522-kettu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch522.txt",
+  "json": "kannada/narration/ch522.json",
+  "textHash": "fnv1a64:4252763a9cf2070f",
+  "jsonHash": "fnv1a64:c281747fa867cdbe",
+  "findings": []
+}

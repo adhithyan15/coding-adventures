@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:deeceb3312d1fe5d",
+  "lessonIds": [
+    "KA-C386-samajayisi",
+    "KA-C386-sabubu",
+    "KA-C386-akasmika",
+    "KA-C386-bimbisu",
+    "KA-C386-hone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch386.txt",
+  "json": "kannada/narration/ch386.json",
+  "textHash": "fnv1a64:d5aa92b55ed4f75e",
+  "jsonHash": "fnv1a64:21fe02127037a46c",
+  "findings": []
+}

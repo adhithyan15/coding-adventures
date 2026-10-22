@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C440-paravanagi",
+    "language": "kannada",
+    "chapter": 440,
+    "sequence": 22350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e32133e4e0c4b7b"
+  },
+  "findings": []
+}

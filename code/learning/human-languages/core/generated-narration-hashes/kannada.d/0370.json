@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:dbdaf36eaebc13fa",
+  "lessonIds": [
+    "KA-C370-patrikodyama",
+    "KA-C370-saksyacitra",
+    "KA-C370-oduga",
+    "KA-C370-keluga",
+    "KA-C370-kukhyata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch370.txt",
+  "json": "kannada/narration/ch370.json",
+  "textHash": "fnv1a64:39df7cddc6b676c0",
+  "jsonHash": "fnv1a64:564b1fbc4ef73896",
+  "findings": []
+}

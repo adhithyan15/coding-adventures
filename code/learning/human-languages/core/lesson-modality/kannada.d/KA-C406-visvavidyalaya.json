@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C406-visvavidyalaya",
+    "language": "kannada",
+    "chapter": 406,
+    "sequence": 20540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7a97100f2ca8c1c"
+  },
+  "findings": []
+}

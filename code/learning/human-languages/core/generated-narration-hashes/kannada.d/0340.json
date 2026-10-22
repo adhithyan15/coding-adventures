@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:7da919a28a93e24b",
+  "lessonIds": [
+    "KA-C340-dantakathe",
+    "KA-C340-purana",
+    "KA-C340-daitya",
+    "KA-C340-raksasa",
+    "KA-C340-sapa",
+    "KA-R340-review-334-340"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch340.txt",
+  "json": "kannada/narration/ch340.json",
+  "textHash": "fnv1a64:69186db437c19cf7",
+  "jsonHash": "fnv1a64:ed2c1d572c86329a",
+  "findings": []
+}

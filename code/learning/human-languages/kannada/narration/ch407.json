@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 407,
+  "title": "Doing Research",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2cbcf21a78b0ad97",
+  "lessons": [
+    {
+      "id": "KA-C407-samsodhane",
+      "sequence": 20590,
+      "title": "ಸಂಶೋಧನೆ (saṃśōdhane) — research",
+      "headword": "ಸಂಶೋಧನೆ",
+      "romanization": "saṃśōdhane",
+      "gloss": "research",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a106cc74ea06350c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a professor, then the Kannada for to instruct."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಂಶೋಧನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಶೋಧನೆ — saṃśōdhane — \"research\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವಳು ಕಾಡಿನ ಹಕ್ಕಿಗಳ ಬಗ್ಗೆ ಸಂಶೋಧನೆ ಮಾಡುತ್ತಾಳೆ. avaḷu kāḍina hakkigaḷa bagge saṃśōdhane māḍuttāḷe. She does research on forest birds."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಂಶೋಧಕ, a researcher."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಂಶೋಧನೆ (saṃśōdhane) is borrowed from Sanskrit saṃśodhana, \"completely purifying, correcting\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃśōdhane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃśōdhane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṃśōdhane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṃśōdhane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷu kāḍina hakkigaḷa bagge saṃśōdhane māḍuttāḷe. — She does research on forest birds.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷu kāḍina hakkigaḷa bagge saṃśōdhane māḍuttāḷe.* — She does research on forest birds.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a professor, then the Kannada for to instruct, then say saṃśōdhane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a professor, then the Kannada for to instruct, then say *saṃśōdhane* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಂಶೋಧನೆ (saṃśōdhane) mean? (\"Research\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C407-prayoga",
+      "sequence": 20600,
+      "title": "ಪ್ರಯೋಗ (prayōga) — an experiment",
+      "headword": "ಪ್ರಯೋಗ",
+      "romanization": "prayōga",
+      "gloss": "an experiment",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f04f1684bd983f0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to instruct, then the Kannada for research."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪ್ರಯೋಗ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಯೋಗ — prayōga — \"an experiment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮಕ್ಕಳು ಶಾಲೆಯಲ್ಲಿ ಸಣ್ಣ ಪ್ರಯೋಗ ಮಾಡಿದರು. makkaḷu śāleyalli saṇṇa prayōga māḍidaru. The children did a small experiment at school."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಯೋಗಾಲಯ, a laboratory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪ್ರಯೋಗ (prayōga) is borrowed from Sanskrit prayoga, \"joining, use, application\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayōga",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayōga*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prayōga, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prayōga*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkaḷu śāleyalli saṇṇa prayōga māḍidaru. — The children did a small experiment at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkaḷu śāleyalli saṇṇa prayōga māḍidaru.* — The children did a small experiment at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to instruct, then the Kannada for research, then say prayōga again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to instruct, then the Kannada for research, then say *prayōga* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪ್ರಯೋಗ (prayōga) mean? (\"An experiment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C407-siddhanta",
+      "sequence": 20610,
+      "title": "ಸಿದ್ಧಾಂತ (siddhānta) — a theory; a doctrine",
+      "headword": "ಸಿದ್ಧಾಂತ",
+      "romanization": "siddhānta",
+      "gloss": "a theory; a doctrine",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7d3498c5b523889",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for research, then the Kannada for an experiment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಿದ್ಧಾಂತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಿದ್ಧಾಂತ — siddhānta — \"a theory; a doctrine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ಸಿದ್ಧಾಂತ ಇನ್ನೂ ಸಾಬೀತಾಗಿಲ್ಲ. ī siddhānta innū sābītāgilla. This theory has not been proved yet."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸೈದ್ಧಾಂತಿಕ, theoretical."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಿದ್ಧಾಂತ (siddhānta) is borrowed from Sanskrit siddhānta, \"an established end, a conclusion\" (CDIAL 13404)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhānta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhānta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhānta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhānta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ī siddhānta innū sābītāgilla. — This theory has not been proved yet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ī siddhānta innū sābītāgilla.* — This theory has not been proved yet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for research, then the Kannada for an experiment, then say siddhānta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for research, then the Kannada for an experiment, then say *siddhānta* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಿದ್ಧಾಂತ (siddhānta) mean? (\"A theory; a doctrine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C407-vislesisu",
+      "sequence": 20620,
+      "title": "ವಿಶ್ಲೇಷಿಸು (viślēṣisu) — to analyse",
+      "headword": "ವಿಶ್ಲೇಷಿಸು",
+      "romanization": "viślēṣisu",
+      "gloss": "to analyse",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2d4313fe5a1d8a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an experiment, then the Kannada for a theory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿಶ್ಲೇಷಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಶ್ಲೇಷಿಸು — viślēṣisu — \"to analyse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಪರೀಕ್ಷೆಯ ಫಲಿತಾಂಶಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಿದೆ. nānu parīkṣeya phalitāṃśagaḷannu viślēṣiside. I analysed the exam results."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ವಿಶ್ಲೇಷಿಸಿದೆ, viślēṣiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ವಿಶ್ಲೇಷಣೆ, an analysis."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿಶ್ಲೇಷಿಸು (viślēṣisu) is built on Sanskrit viśleṣa, \"loosening, separation\" (Monier-Williams), with the Kannada verb ending -isu: to take apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viślēṣisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viślēṣisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viślēṣisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viślēṣisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānu parīkṣeya phalitāṃśagaḷannu viślēṣiside. — I analysed the exam results.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānu parīkṣeya phalitāṃśagaḷannu viślēṣiside.* — I analysed the exam results.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an experiment, then the Kannada for a theory, then say viślēṣisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an experiment, then the Kannada for a theory, then say *viślēṣisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿಶ್ಲೇಷಿಸು (viślēṣisu) mean? (\"To analyse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C407-samikse",
+      "sequence": 20630,
+      "title": "ಸಮೀಕ್ಷೆ (samīkṣe) — a survey",
+      "headword": "ಸಮೀಕ್ಷೆ",
+      "romanization": "samīkṣe",
+      "gloss": "a survey",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2796aaedfb076d54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a theory, then the Kannada for to analyse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮೀಕ್ಷೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮೀಕ್ಷೆ — samīkṣe — \"a survey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮೀಕ್ಷೆಯಲ್ಲಿ ನೂರು ಕುಟುಂಬಗಳು ಭಾಗವಹಿಸಿದವು. samīkṣeyalli nūru kuṭumbagaḷu bhāgavahisidavu. A hundred families took part in the survey."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮೀಕ್ಷೆ (samīkṣe) ನಡೆಸು, to conduct a survey."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮೀಕ್ಷೆ (samīkṣe) is borrowed from Sanskrit samīkṣā, \"thorough or close inspection\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīkṣe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīkṣe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīkṣe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīkṣe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīkṣeyalli nūru kuṭumbagaḷu bhāgavahisidavu. — A hundred families took part in the survey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīkṣeyalli nūru kuṭumbagaḷu bhāgavahisidavu.* — A hundred families took part in the survey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a theory, then the Kannada for to analyse, then say samīkṣe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a theory, then the Kannada for to analyse, then say *samīkṣe* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮೀಕ್ಷೆ (samīkṣe) mean? (\"A survey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

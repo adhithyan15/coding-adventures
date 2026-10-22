@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "Promises and Rewards",
+  "label": "ch:ka-promises-and-rewards",
+  "canDo": "I can say a written undertaking, a vow, a reward, to ask formally and an oath of office.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "KA-C416-pramanavacana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can say a written undertaking, a vow, a reward, to ask formally and an oath of office.",
+    "assesses": [
+      "KA-LEX-C416-PRATIJNE416-03",
+      "KA-LEX-C416-PRATIJNE416-04",
+      "KA-LEX-C416-PRATIJNE416-05"
+    ]
+  }
+}

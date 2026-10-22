@@ -1,0 +1,11 @@
+{
+  "id": "KA-C437-tarminal",
+  "pathSegment": "KA-PATH-437-VIMANA437",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-437-VIMANA437",
+      "order": 1
+    }
+  ]
+}

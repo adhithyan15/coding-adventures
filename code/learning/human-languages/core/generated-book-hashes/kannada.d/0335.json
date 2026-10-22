@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:548c94245f9ae1ee",
+  "lessonIds": [
+    "KA-C335-sampadaka",
+    "KA-C335-lekhana",
+    "KA-C335-mukhaputa",
+    "KA-C335-karapatra",
+    "KA-C335-prakasaka"
+  ],
+  "tex": "kannada/book/chapters/ch335-making-a-newspaper.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:ae22b56dc592be28",
+  "lessonIds": [
+    "KA-C504-siduku",
+    "KA-C504-matugara",
+    "KA-C504-mungopi",
+    "KA-C504-hedi",
+    "KA-C504-todalu",
+    "KA-R504-review-498-504"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "kannada/narration/ch504.txt",
+  "json": "kannada/narration/ch504.json",
+  "textHash": "fnv1a64:202ee06b96e0a939",
+  "jsonHash": "fnv1a64:ac7815181591f87f",
+  "findings": []
+}

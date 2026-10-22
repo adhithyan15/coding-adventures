@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:b2a6cd55fce1fcc4",
+  "lessonIds": [
+    "KA-C377-tarka",
+    "KA-C377-samarthisu",
+    "KA-C377-vivada",
+    "KA-C377-aksepisu",
+    "KA-C377-samanjasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch377.txt",
+  "json": "kannada/narration/ch377.json",
+  "textHash": "fnv1a64:243eb4e40674e521",
+  "jsonHash": "fnv1a64:0e02f6729eaca6ef",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C512-hrdayaghata",
+  "pathSegment": "KA-PATH-512-ROGA512",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-512-ROGA512",
+      "order": 1
+    }
+  ]
+}

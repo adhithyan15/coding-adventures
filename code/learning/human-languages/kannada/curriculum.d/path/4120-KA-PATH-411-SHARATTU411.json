@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-411-SHARATTU411",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "KA-EXT-411-SHARATTU411"
+  ],
+  "after": []
+}

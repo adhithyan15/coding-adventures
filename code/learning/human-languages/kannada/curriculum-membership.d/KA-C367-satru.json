@@ -1,0 +1,11 @@
+{
+  "id": "KA-C367-satru",
+  "pathSegment": "KA-PATH-367-KHALA367",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-367-KHALA367",
+      "order": 2
+    }
+  ]
+}

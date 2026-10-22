@@ -1,0 +1,19 @@
+{
+  "chapter": 521,
+  "title": "Hard Work",
+  "label": "ch:ka-hard-work",
+  "canDo": "I can say to toil, oversight, to insist, hard work and rivalry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C521-paipoti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 521: I can say to toil, oversight, to insist, hard work and rivalry.",
+    "assesses": [
+      "KA-LEX-C521-DUDIME521-03",
+      "KA-LEX-C521-DUDIME521-04",
+      "KA-LEX-C521-DUDIME521-05"
+    ]
+  }
+}

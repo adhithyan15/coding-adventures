@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 319,
+  "title": "A Thief and a War",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7816ebf89ac0394d",
+  "lessons": [
+    {
+      "id": "KA-C319-yuddha",
+      "sequence": 16000,
+      "title": "ಯುದ್ಧ (yuddha) — a war; a battle",
+      "headword": "ಯುದ್ಧ",
+      "romanization": "yuddha",
+      "gloss": "a war; a battle",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75f10e839b8d32e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for chalk, then the Kannada for a ruler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಯುದ್ಧ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಯುದ್ಧ — yuddha — \"a war; a battle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಯುದ್ಧದ ಫಲಿತಾಂಶ ಹವಾಮಾನದ ಮೇಲೆ ಅವಲಂಬಿಸಿತ್ತು. yuddhada phalitāṃśa havāmānada mēle avalambisittu. The outcome of the war depended on the weather."
+            },
+            {
+              "kind": "speech",
+              "text": "With ಮಾಡು it makes a verb: ಯುದ್ಧ (yuddha) ಮಾಡು, to fight a war."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಯುದ್ಧ (yuddha) is borrowed from Sanskrit yuddha, \"fought\", and as a noun \"a battle\", the past participle of the root yudh, \"to fight\" (CDIAL 10499). Kannada keeps the Sanskrit form whole, as it does many learned nouns."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddhada phalitāṃśa havāmānada mēle avalambisittu. — The outcome of the war depended on the weather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddhada phalitāṃśa havāmānada mēle avalambisittu.* — The outcome of the war depended on the weather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for chalk, then the Kannada for a ruler, then say yuddha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for chalk, then the Kannada for a ruler, then say *yuddha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಯುದ್ಧ (yuddha) mean? (\"A war; a battle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C319-sainika",
+      "sequence": 16010,
+      "title": "ಸೈನಿಕ (sainika) — a soldier",
+      "headword": "ಸೈನಿಕ",
+      "romanization": "sainika",
+      "gloss": "a soldier",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f788c0fe5173480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a ruler, then the Kannada for a war."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸೈನಿಕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೈನಿಕ — sainika — \"a soldier\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸೈನಿಕರು ಯುದ್ಧದಿಂದ ಮನೆಗೆ ಹಿಂತಿರುಗಿದರು. sainikaru yuddhadinda manege hintirugidaru. The soldiers came back home from the war."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಸೈನಿಕರು, sainikaru."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸೈನಿಕ (sainika) is borrowed from Sanskrit sainika, \"belonging to an army\", and as a noun \"a soldier\" (Monier-Williams). It is built on senā, \"an army\", with the ending -ika, \"one who belongs to\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sainika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sainika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sainika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sainika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sainikaru yuddhadinda manege hintirugidaru. — The soldiers came back home from the war.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sainikaru yuddhadinda manege hintirugidaru.* — The soldiers came back home from the war.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a ruler, then the Kannada for a war, then say sainika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a ruler, then the Kannada for a war, then say *sainika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸೈನಿಕ (sainika) mean? (\"A soldier\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C319-akramisu",
+      "sequence": 16020,
+      "title": "ಆಕ್ರಮಿಸು (ākramisu) — to invade; to attack",
+      "headword": "ಆಕ್ರಮಿಸು",
+      "romanization": "ākramisu",
+      "gloss": "to invade; to attack",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33170aa09827d048",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a war, then the Kannada for a soldier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆಕ್ರಮಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಕ್ರಮಿಸು — ākramisu — \"to invade; to attack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸೈನಿಕರು ಆ ದೇಶವನ್ನು ಆಕ್ರಮಿಸಿದರು. sainikaru ā dēśavannu ākramisidaru. The soldiers invaded that country."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಆಕ್ರಮಿಸಿದೆ, ākramiside."
+            },
+            {
+              "kind": "speech",
+              "text": "What is attacked takes -ಅನ್ನು: ದೇಶವನ್ನು ಆಕ್ರಮಿಸು (ākramisu), to invade a country."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಕ್ರಮಿಸು (ākramisu) is built from Sanskrit ākramaṇa, \"stepping on, an advance\" (CDIAL 1016), from ā- \"towards\" and kram \"to step\", with the Kannada ending -isu that turns a Sanskrit noun into a verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākramisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākramisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākramisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākramisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sainikaru ā dēśavannu ākramisidaru. — The soldiers invaded that country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sainikaru ā dēśavannu ākramisidaru.* — The soldiers invaded that country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a war, then the Kannada for a soldier, then say ākramisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a war, then the Kannada for a soldier, then say *ākramisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆಕ್ರಮಿಸು (ākramisu) mean? (\"To invade; to attack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C319-kalla",
+      "sequence": 16030,
+      "title": "ಕಳ್ಳ (kaḷḷa) — a thief",
+      "headword": "ಕಳ್ಳ",
+      "romanization": "kaḷḷa",
+      "gloss": "a thief",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9113663d6452f83b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a soldier, then the Kannada for to invade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಳ್ಳ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಳ್ಳ — kaḷḷa — \"a thief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕಳ್ಳ ನನ್ನ ಚೀಲವನ್ನು ಕದ್ದನು. kaḷḷa nanna cīlavannu kaddanu. The thief stole my bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಕಳ್ಳರು, kaḷḷaru."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman thief is ಕಳ್ಳಿ. The verb beside it is ಕದಿ, to steal: ಕದ್ದನು, he stole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಳ್ಳ (kaḷḷa) is native Dravidian: DEDR 1372 lists Kannada kaḷḷa \"a thief\" beside Tamil kaḷḷaṉ \"a thief, a robber\" and kaḷ \"to steal\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷa nanna cīlavannu kaddanu. — The thief stole my bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷa nanna cīlavannu kaddanu.* — The thief stole my bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a soldier, then the Kannada for to invade, then say kaḷḷa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a soldier, then the Kannada for to invade, then say *kaḷḷa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕಳ್ಳ (kaḷḷa) mean? (\"A thief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C319-odihogu",
+      "sequence": 16040,
+      "title": "ಓಡಿಹೋಗು (ōḍihōgu) — to run away; to escape",
+      "headword": "ಓಡಿಹೋಗು",
+      "romanization": "ōḍihōgu",
+      "gloss": "to run away; to escape",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc2f21f0b5c8f47a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to invade, then the Kannada for a thief."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಓಡಿಹೋಗು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಓಡಿಹೋಗು — ōḍihōgu — \"to run away; to escape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪೊಲೀಸರನ್ನು ನೋಡಿ ಕಳ್ಳ ಓಡಿಹೋದನು. polīsarannu nōḍi kaḷḷa ōḍihōdanu. Seeing the police, the thief ran away."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಓಡಿಹೋದೆ, ōḍihōde."
+            },
+            {
+              "kind": "speech",
+              "text": "ಓಡಿ is ಓಡು, to run, as \"having run\"; ಹೋಗು adds \"away\". Run and go make one verb."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಓಡಿಹೋಗು (ōḍihōgu) is a native Dravidian compound: ōḍu \"to run\" (DEDR 1041) and hōgu \"to go\" (DEDR 4572)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōḍihōgu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōḍihōgu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōḍihōgu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōḍihōgu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "polīsarannu nōḍi kaḷḷa ōḍihōdanu. — Seeing the police, the thief ran away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *polīsarannu nōḍi kaḷḷa ōḍihōdanu.* — Seeing the police, the thief ran away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to invade, then the Kannada for a thief, then say ōḍihōgu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to invade, then the Kannada for a thief, then say *ōḍihōgu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಓಡಿಹೋಗು (ōḍihōgu) mean? (\"To run away; to escape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

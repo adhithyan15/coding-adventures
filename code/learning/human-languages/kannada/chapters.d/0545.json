@@ -1,0 +1,19 @@
+{
+  "chapter": 545,
+  "title": "Laundry Day",
+  "label": "ch:ka-laundry-day",
+  "canDo": "I can say a rug, a quilt, to shake out, to wash clothes and starch.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "KA-C545-ganji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can say a rug, a quilt, to shake out, to wash clothes and starch.",
+    "assesses": [
+      "KA-LEX-C545-BATTE545-03",
+      "KA-LEX-C545-BATTE545-04",
+      "KA-LEX-C545-BATTE545-05"
+    ]
+  }
+}

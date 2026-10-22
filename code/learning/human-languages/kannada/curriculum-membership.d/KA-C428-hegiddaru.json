@@ -1,0 +1,11 @@
+{
+  "id": "KA-C428-hegiddaru",
+  "pathSegment": "KA-PATH-428-ONDOMME428",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-428-ONDOMME428",
+      "order": 2
+    }
+  ]
+}

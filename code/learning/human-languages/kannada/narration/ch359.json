@@ -1,0 +1,741 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 359,
+  "title": "The Town Festival",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:60832a57f9aa335c",
+  "lessons": [
+    {
+      "id": "KA-C359-utsava",
+      "sequence": 18050,
+      "title": "ಉತ್ಸವ (utsava) — a public festival; a celebration",
+      "headword": "ಉತ್ಸವ",
+      "romanization": "utsava",
+      "gloss": "a public festival; a celebration",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aee42485ef9a554b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for bail, then the Kannada for to confess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉತ್ಸವ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ಸವ — utsava — \"a public festival; a celebration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನ ಉತ್ಸವಕ್ಕೆ ಹಳ್ಳಿಗಳಿಂದ ಜನ ಬಂದರು. ūrina utsavakke haḷḷigaḷinda jana bandaru. People came from the villages to the town festival."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಉತ್ಸವಗಳು, utsavagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A public festival, often of a temple or a town; ಹಬ್ಬ is the family festival."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ಸವ (utsava) is borrowed from Sanskrit utsava, \"an enterprise\", and later \"a festival\" (CDIAL 1876)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsava",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsava*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsava, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsava*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrina utsavakke haḷḷigaḷinda jana bandaru. — People came from the villages to the town festival.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrina utsavakke haḷḷigaḷinda jana bandaru.* — People came from the villages to the town festival.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for bail, then the Kannada for to confess, then say utsava again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for bail, then the Kannada for to confess, then say *utsava* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಉತ್ಸವ (utsava) mean? (\"A public festival; a celebration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C359-meravanige",
+      "sequence": 18060,
+      "title": "ಮೆರವಣಿಗೆ (meravaṇige) — a procession",
+      "headword": "ಮೆರವಣಿಗೆ",
+      "romanization": "meravaṇige",
+      "gloss": "a procession",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64e49fea009a651d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to confess, then the Kannada for a public festival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೆರವಣಿಗೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆರವಣಿಗೆ — meravaṇige — \"a procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೆರವಣಿಗೆ ಮುಖ್ಯ ರಸ್ತೆಯಲ್ಲಿ ನಿಧಾನವಾಗಿ ಸಾಗಿತು. meravaṇige mukhya rasteyalli nidhānavāgi sāgitu. The procession moved slowly along the main road."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಮೆರವಣಿಗೆಗಳು, meravaṇigegaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A procession \"moves on\": ಮೆರವಣಿಗೆ (meravaṇige) ಸಾಗಿತು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆರವಣಿಗೆ (meravaṇige) is native Dravidian: DEDR 5074 lists Tamil meravaṇai, \"a procession\", with Kannada merugu, \"to shine\", and mere, \"to parade\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meravaṇige",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meravaṇige*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meravaṇige, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meravaṇige*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meravaṇige mukhya rasteyalli nidhānavāgi sāgitu. — The procession moved slowly along the main road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meravaṇige mukhya rasteyalli nidhānavāgi sāgitu.* — The procession moved slowly along the main road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to confess, then the Kannada for a public festival, then say meravaṇige again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to confess, then the Kannada for a public festival, then say *meravaṇige* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೆರವಣಿಗೆ (meravaṇige) mean? (\"A procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C359-ghosavakya",
+      "sequence": 18070,
+      "title": "ಘೋಷವಾಕ್ಯ (ghōṣavākya) — a slogan",
+      "headword": "ಘೋಷವಾಕ್ಯ",
+      "romanization": "ghōṣavākya",
+      "gloss": "a slogan",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3764e9fdc77a56c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a public festival, then the Kannada for a procession."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಘೋಷವಾಕ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಘೋಷವಾಕ್ಯ — ghōṣavākya — \"a slogan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಮೆರವಣಿಗೆಯಲ್ಲಿ ಜನ ಘೋಷವಾಕ್ಯ ಕೂಗಿದರು. meravaṇigeyalli jana ghōṣavākya kūgidaru. People shouted slogans in the procession."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಘೋಷವಾಕ್ಯಗಳು, ghōṣavākyagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "ಘೋಷ, a cry, and ವಾಕ್ಯ, a sentence."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಘೋಷವಾಕ್ಯ (ghōṣavākya) is borrowed from Sanskrit, a modern compound of ghoṣa, \"a noise, a cry\" (Monier-Williams), and vākya, \"speech, words\" (CDIAL 11468)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghōṣavākya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghōṣavākya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghōṣavākya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghōṣavākya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meravaṇigeyalli jana ghōṣavākya kūgidaru. — People shouted slogans in the procession.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meravaṇigeyalli jana ghōṣavākya kūgidaru.* — People shouted slogans in the procession.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a public festival, then the Kannada for a procession, then say ghōṣavākya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a public festival, then the Kannada for a procession, then say *ghōṣavākya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಘೋಷವಾಕ್ಯ (ghōṣavākya) mean? (\"A slogan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C359-meresu",
+      "sequence": 18080,
+      "title": "ಮೆರೆಸು (meresu) — to parade; to carry in procession",
+      "headword": "ಮೆರೆಸು",
+      "romanization": "meresu",
+      "gloss": "to parade; to carry in procession",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45cc6f60c202ea97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a procession, then the Kannada for a slogan."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮೆರೆಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆರೆಸು — meresu — \"to parade; to carry in procession\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜನರು ಗೆದ್ದ ಆಟಗಾರನನ್ನು ಬೀದಿಯಲ್ಲಿ ಮೆರೆಸಿದರು. janaru gedda āṭagāranannu bīdiyalli meresidaru. The people paraded the winning player through the streets."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಮೆರೆಸಿದೆ, mereside."
+            },
+            {
+              "kind": "speech",
+              "text": "Someone honoured is carried or led through the streets with music."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮೆರೆಸು (meresu) is native Dravidian: the causative of mere, \"to shine, to show off\", which DEDR 5074 lists with Kannada merugu, \"to shine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meresu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meresu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meresu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meresu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janaru gedda āṭagāranannu bīdiyalli meresidaru. — The people paraded the winning player through the streets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janaru gedda āṭagāranannu bīdiyalli meresidaru.* — The people paraded the winning player through the streets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a procession, then the Kannada for a slogan, then say meresu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a procession, then the Kannada for a slogan, then say *meresu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮೆರೆಸು (meresu) mean? (\"To parade; to carry in procession\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C359-dhvaja",
+      "sequence": 18090,
+      "title": "ಧ್ವಜ (dhvaja) — a flag; a banner",
+      "headword": "ಧ್ವಜ",
+      "romanization": "dhvaja",
+      "gloss": "a flag; a banner",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8352d21d1822cb9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a slogan, then the Kannada for to parade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಧ್ವಜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಧ್ವಜ — dhvaja — \"a flag; a banner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಉತ್ಸವದ ದಿನ ಎಲ್ಲ ಮನೆಗಳ ಮೇಲೆ ಧ್ವಜ ಹಾರುತ್ತಿತ್ತು. utsavada dina ella manegaḷa mēle dhvaja hāruttittu. On the festival day a flag flew on every house."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ಧ್ವಜಗಳು, dhvajagaḷu."
+            },
+            {
+              "kind": "speech",
+              "text": "A flag is \"hoisted\": ಧ್ವಜ (dhvaja) ಹಾರಿಸು. ರಾಷ್ಟ್ರಧ್ವಜ is the national flag."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಧ್ವಜ (dhvaja) is borrowed from Sanskrit dhvaja, \"a banner, a flag, a standard\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhvaja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhvaja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhvaja, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhvaja*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utsavada dina ella manegaḷa mēle dhvaja hāruttittu. — On the festival day a flag flew on every house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utsavada dina ella manegaḷa mēle dhvaja hāruttittu.* — On the festival day a flag flew on every house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a slogan, then the Kannada for to parade, then say dhvaja again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a slogan, then the Kannada for to parade, then say *dhvaja* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಧ್ವಜ (dhvaja) mean? (\"A flag; a banner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

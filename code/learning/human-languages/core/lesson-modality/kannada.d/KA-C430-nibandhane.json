@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C430-nibandhane",
+    "language": "kannada",
+    "chapter": 430,
+    "sequence": 21800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:086c044147a8e5a0"
+  },
+  "findings": []
+}

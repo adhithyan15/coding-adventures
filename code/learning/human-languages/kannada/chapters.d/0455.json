@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Planning a Trip",
+  "label": "ch:ka-planning-a-trip",
+  "canDo": "I can say tourism, a destination, to make a booking, a guide and worth seeing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C455-preksaniya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can say tourism, a destination, to make a booking, a guide and worth seeing.",
+    "assesses": [
+      "KA-LEX-C455-PRAVASA455-03",
+      "KA-LEX-C455-PRAVASA455-04",
+      "KA-LEX-C455-PRAVASA455-05"
+    ]
+  }
+}

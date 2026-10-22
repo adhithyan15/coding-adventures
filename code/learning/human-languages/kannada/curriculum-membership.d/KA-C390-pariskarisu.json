@@ -1,0 +1,11 @@
+{
+  "id": "KA-C390-pariskarisu",
+  "pathSegment": "KA-PATH-390-KANUNU390",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-390-KANUNU390",
+      "order": 2
+    }
+  ]
+}

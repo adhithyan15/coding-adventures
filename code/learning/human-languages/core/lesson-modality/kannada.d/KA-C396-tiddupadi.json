@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C396-tiddupadi",
+    "language": "kannada",
+    "chapter": 396,
+    "sequence": 20040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc3554aa06c1bc17"
+  },
+  "findings": []
+}

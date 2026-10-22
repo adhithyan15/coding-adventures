@@ -1,0 +1,11 @@
+{
+  "id": "KA-C404-dana-madu",
+  "pathSegment": "KA-PATH-404-SADASYA404",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-404-SADASYA404",
+      "order": 1
+    }
+  ]
+}

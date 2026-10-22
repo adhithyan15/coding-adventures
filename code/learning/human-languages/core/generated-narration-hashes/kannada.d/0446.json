@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:7f6eb39d6c77df12",
+  "lessonIds": [
+    "KA-C446-kaludari",
+    "KA-C446-oladari",
+    "KA-C446-suttudari",
+    "KA-C446-dari-tappu",
+    "KA-C446-hejje"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch446.txt",
+  "json": "kannada/narration/ch446.json",
+  "textHash": "fnv1a64:d112285409c1c6aa",
+  "jsonHash": "fnv1a64:6a9aa46c8cab7388",
+  "findings": []
+}

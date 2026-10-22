@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "All of a Sudden",
+  "label": "ch:ka-all-of-a-sudden",
+  "canDo": "I can say meanwhile, all of a sudden, at once, abruptly and to be startled.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "KA-C327-beccibilu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can say meanwhile, all of a sudden, at once, abruptly and to be startled.",
+    "assesses": [
+      "KA-LEX-C327-THATKSHANA327-03",
+      "KA-LEX-C327-THATKSHANA327-04",
+      "KA-LEX-C327-THATKSHANA327-05"
+    ]
+  }
+}

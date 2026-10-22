@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C423-karya",
+    "language": "kannada",
+    "chapter": 423,
+    "sequence": 21420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:499cbd37463e6c5b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C511-mamparu",
+  "pathSegment": "KA-PATH-511-SONKU511",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-511-SONKU511",
+      "order": 1
+    }
+  ]
+}

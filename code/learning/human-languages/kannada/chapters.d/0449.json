@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "A Flat Tyre",
+  "label": "ch:ka-a-flat-tyre",
+  "canDo": "I can say a wheel, a tyre, a spare tyre, to get a puncture and a brake.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C449-brek",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can say a wheel, a tyre, a spare tyre, to get a puncture and a brake.",
+    "assesses": [
+      "KA-LEX-C449-CAKRA449-03",
+      "KA-LEX-C449-CAKRA449-04",
+      "KA-LEX-C449-CAKRA449-05"
+    ]
+  }
+}

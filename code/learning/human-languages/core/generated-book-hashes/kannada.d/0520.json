@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:bea54141df36961d",
+  "lessonIds": [
+    "KA-C520-todagu",
+    "KA-C520-vahisu",
+    "KA-C520-palagu",
+    "KA-C520-melvicarane",
+    "KA-C520-samayapalane"
+  ],
+  "tex": "kannada/book/chapters/ch520-teamwork.tex"
+}

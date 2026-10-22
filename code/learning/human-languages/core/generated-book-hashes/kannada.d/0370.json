@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:1c7a5fdd07e41dfa",
+  "lessonIds": [
+    "KA-C370-patrikodyama",
+    "KA-C370-saksyacitra",
+    "KA-C370-oduga",
+    "KA-C370-keluga",
+    "KA-C370-kukhyata"
+  ],
+  "tex": "kannada/book/chapters/ch370-journalism-and-its-public.tex"
+}

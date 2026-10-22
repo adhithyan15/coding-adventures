@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Proof and Possibility",
+  "label": "ch:ka-proof-and-possibility",
+  "canDo": "I can say proof, to prove, a possibility, importance and to base on.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "KA-C376-adharisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can say proof, to prove, a possibility, importance and to base on.",
+    "assesses": [
+      "KA-LEX-C376-PURAVE376-03",
+      "KA-LEX-C376-PURAVE376-04",
+      "KA-LEX-C376-PURAVE376-05"
+    ]
+  }
+}

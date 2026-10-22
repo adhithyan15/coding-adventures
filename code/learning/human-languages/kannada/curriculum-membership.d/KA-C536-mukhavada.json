@@ -1,0 +1,11 @@
+{
+  "id": "KA-C536-mukhavada",
+  "pathSegment": "KA-PATH-536-NATAKA536",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-536-NATAKA536",
+      "order": 2
+    }
+  ]
+}

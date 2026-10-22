@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:d5be3aa64491e59a",
+  "lessonIds": [
+    "KA-C466-upanagara",
+    "KA-C466-vasisu",
+    "KA-C466-purasabhe",
+    "KA-C466-bididipa",
+    "KA-C466-carandi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch466.txt",
+  "json": "kannada/narration/ch466.json",
+  "textHash": "fnv1a64:2095c10f593ce78f",
+  "jsonHash": "fnv1a64:7d7b82f9c8c46dda",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C518-nirudyoga",
+    "language": "kannada",
+    "chapter": 518,
+    "sequence": 26450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbdc32d7a900e45a"
+  },
+  "findings": []
+}

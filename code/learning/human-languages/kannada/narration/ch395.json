@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 395,
+  "title": "Running Public Offices",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4dc42dbed04f2eed",
+  "lessons": [
+    {
+      "id": "KA-C395-adalita",
+      "sequence": 19970,
+      "title": "ಆಡಳಿತ (āḍaḷita) — administration",
+      "headword": "ಆಡಳಿತ",
+      "romanization": "āḍaḷita",
+      "gloss": "administration",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3815e9802a61cee6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for to boycott, then the Kannada for leadership."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆಡಳಿತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಡಳಿತ — āḍaḷita — \"administration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಊರಿನ ಆಡಳಿತ ಚೆನ್ನಾಗಿ ನಡೆಯುತ್ತಿದೆ. ūrina āḍaḷita cennāgi naḍeyuttide. The town's administration is running well."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆಡಳಿತ (āḍaḷita) ಪಕ್ಷ, the ruling party."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಡಳಿತ (āḍaḷita) is usually traced to the native Dravidian āḷ, \"to possess, to rule, to manage\" (DEDR 5157); DEDR does not list āḍaḷita itself, so how the word was formed is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḍaḷita",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḍaḷita*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āḍaḷita, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āḍaḷita*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūrina āḍaḷita cennāgi naḍeyuttide. — The town's administration is running well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūrina āḍaḷita cennāgi naḍeyuttide.* — The town's administration is running well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for to boycott, then the Kannada for leadership, then say āḍaḷita again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for to boycott, then the Kannada for leadership, then say *āḍaḷita* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆಡಳಿತ (āḍaḷita) mean? (\"Administration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C395-sacivalaya",
+      "sequence": 19980,
+      "title": "ಸಚಿವಾಲಯ (sacivālaya) — a ministry",
+      "headword": "ಸಚಿವಾಲಯ",
+      "romanization": "sacivālaya",
+      "gloss": "a ministry",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be7a04b4f0dc1a7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for leadership, then the Kannada for administration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಚಿವಾಲಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಚಿವಾಲಯ — sacivālaya — \"a ministry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನ ಅಪ್ಪ ಸಚಿವಾಲಯದಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತಾರೆ. avana appa sacivālayadalli kelasa māḍuttāre. His father works in the ministry."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಚಿವ (minister) + ಆಲಯ (house)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಚಿವಾಲಯ (sacivālaya) is built from Sanskrit saciva, \"a companion, a king's minister\" (Monier-Williams), and ālaya, \"a house\" (CDIAL 1366)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sacivālaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sacivālaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sacivālaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sacivālaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avana appa sacivālayadalli kelasa māḍuttāre. — His father works in the ministry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avana appa sacivālayadalli kelasa māḍuttāre.* — His father works in the ministry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for leadership, then the Kannada for administration, then say sacivālaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for leadership, then the Kannada for administration, then say *sacivālaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಚಿವಾಲಯ (sacivālaya) mean? (\"A ministry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C395-pancayiti",
+      "sequence": 19990,
+      "title": "ಪಂಚಾಯಿತಿ (pañcāyiti) — a village council",
+      "headword": "ಪಂಚಾಯಿತಿ",
+      "romanization": "pañcāyiti",
+      "gloss": "a village council",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b17ca2b09ee3acf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for administration, then the Kannada for a ministry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪಂಚಾಯಿತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಂಚಾಯಿತಿ — pañcāyiti — \"a village council\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪಂಚಾಯಿತಿ ಊರಿನಲ್ಲಿ ಹೊಸ ಶಾಲೆ ಕಟ್ಟಿಸಿತು. pañcāyiti ūrinalli hosa śāle kaṭṭisitu. The village council had a new school built."
+            },
+            {
+              "kind": "speech",
+              "text": "ಪಂಚಾಯಿತಿ (pañcāyiti) ಚುನಾವಣೆ, a council election."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪಂಚಾಯಿತಿ (pañcāyiti) is a loan from Hindustani pañcāyat, \"a council\", once a body of five elders, from Sanskrit pañca, \"five\" (CDIAL 7655)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pañcāyiti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pañcāyiti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pañcāyiti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pañcāyiti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pañcāyiti ūrinalli hosa śāle kaṭṭisitu. — The village council had a new school built.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pañcāyiti ūrinalli hosa śāle kaṭṭisitu.* — The village council had a new school built.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for administration, then the Kannada for a ministry, then say pañcāyiti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for administration, then the Kannada for a ministry, then say *pañcāyiti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪಂಚಾಯಿತಿ (pañcāyiti) mean? (\"A village council\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C395-jarigolisu",
+      "sequence": 20000,
+      "title": "ಜಾರಿಗೊಳಿಸು (jārigoḷisu) — to implement",
+      "headword": "ಜಾರಿಗೊಳಿಸು",
+      "romanization": "jārigoḷisu",
+      "gloss": "to implement",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5df3824dfb0e58b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a ministry, then the Kannada for a village council."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜಾರಿಗೊಳಿಸು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಾರಿಗೊಳಿಸು — jārigoḷisu — \"to implement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸರ್ಕಾರ ಹೊಸ ಯೋಜನೆಯನ್ನು ಜಾರಿಗೊಳಿಸಿತು. sarkāra hosa yōjaneyannu jārigoḷisitu. The government implemented the new scheme."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ಜಾರಿಗೊಳಿಸಿದೆ, jārigoḷiside."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜಾರಿಗೆ ಬರು, to come into force."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜಾರಿಗೊಳಿಸು (jārigoḷisu) is built on jārī, \"current, in force\", a loan from Hindustani that comes from Arabic jārī, \"flowing\", with the Kannada ending -goḷisu, \"to make\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jārigoḷisu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jārigoḷisu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jārigoḷisu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jārigoḷisu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkāra hosa yōjaneyannu jārigoḷisitu. — The government implemented the new scheme.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkāra hosa yōjaneyannu jārigoḷisitu.* — The government implemented the new scheme.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a ministry, then the Kannada for a village council, then say jārigoḷisu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a ministry, then the Kannada for a village council, then say *jārigoḷisu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜಾರಿಗೊಳಿಸು (jārigoḷisu) mean? (\"To implement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C395-samiti",
+      "sequence": 20010,
+      "title": "ಸಮಿತಿ (samiti) — a committee",
+      "headword": "ಸಮಿತಿ",
+      "romanization": "samiti",
+      "gloss": "a committee",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:909b8b9783151837",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for a village council, then the Kannada for to implement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಮಿತಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಿತಿ — samiti — \"a committee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಬ್ಬದ ಕೆಲಸಕ್ಕೆ ಒಂದು ಸಮಿತಿ ಮಾಡಿದರು. habbada kelasakke ondu samiti māḍidaru. They formed a committee for the festival work."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸಮಿತಿಯ ಅಧ್ಯಕ್ಷ, the chair of a committee."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಮಿತಿ (samiti) is borrowed from Sanskrit samiti, \"a meeting, an association\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samiti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samiti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samiti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samiti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habbada kelasakke ondu samiti māḍidaru. — They formed a committee for the festival work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habbada kelasakke ondu samiti māḍidaru.* — They formed a committee for the festival work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for a village council, then the Kannada for to implement, then say samiti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for a village council, then the Kannada for to implement, then say *samiti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಮಿತಿ (samiti) mean? (\"A committee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C508-mutrapinda",
+    "language": "kannada",
+    "chapter": 508,
+    "sequence": 25940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ad8c0cc969a22e9"
+  },
+  "findings": []
+}

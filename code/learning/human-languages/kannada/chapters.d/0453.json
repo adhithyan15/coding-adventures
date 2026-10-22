@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "By Sea",
+  "label": "ch:ka-by-sea",
+  "canDo": "I can say a ship, a sailor, an anchor, a compass and an ocean.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "KA-C453-sagara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can say a ship, a sailor, an anchor, a compass and an ocean.",
+    "assesses": [
+      "KA-LEX-C453-HADAGU453-03",
+      "KA-LEX-C453-HADAGU453-04",
+      "KA-LEX-C453-HADAGU453-05"
+    ]
+  }
+}

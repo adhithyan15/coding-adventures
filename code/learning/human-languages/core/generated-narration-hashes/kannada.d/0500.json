@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:a22c2d769c5e0711",
+  "lessonIds": [
+    "KA-C500-svabhava",
+    "KA-C500-vyaktitva",
+    "KA-C500-nadate",
+    "KA-C500-vartane",
+    "KA-C500-anukarisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch500.txt",
+  "json": "kannada/narration/ch500.json",
+  "textHash": "fnv1a64:7bdbe84ed7ddda4a",
+  "jsonHash": "fnv1a64:e58277e7e85d62f4",
+  "findings": []
+}
