@@ -859,6 +859,16 @@ non-DNS subtrees, evaluate a certificate name, bind the parsed bytes back to
 selected-anchor evidence, construct or validate a path, grant trust, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection.
+A separate bounded evaluator now validates every decoded permitted DNS subtree
+before matching caller-supplied DNS names. It enforces strict ASCII labels,
+case-insensitive label-boundary matching, the reviewed leading-dot semantics,
+and a complete-leftmost-label-only presented wildcard, then requires every
+supplied name to match at least one data-driven subtree. Both collections are
+capped at 256 and evaluation allocates nothing. The result retains only the
+evaluated count: it is not bound to certificate SAN evidence or the selected
+anchor, does not handle excluded or non-DNS subtrees, construct or validate a
+path, check trust or revocation, perform TLS or HTTP, authorize OAuth transport,
+or open a network connection. Concrete HTTPS therefore remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

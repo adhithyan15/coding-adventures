@@ -1,8 +1,8 @@
 //! # Reviewed-anchor DNS NameConstraints structure
 //!
-//! This crate decodes a narrow, bounded RFC 5280 structure. It deliberately
-//! grants no constraint-evaluation, certificate-path, trust-root, or TLS
-//! authority.
+//! This crate decodes a narrow, bounded RFC 5280 structure and evaluates its
+//! permitted DNS subtrees against caller-supplied DNS names. It deliberately
+//! grants no certificate-evidence, path, trust-root, or TLS authority.
 
 #![deny(unsafe_code)]
 
@@ -52,6 +52,10 @@ pub struct DnsConstraintError {
 }
 
 impl DnsConstraintError {
+    const fn new(kind: DnsConstraintErrorKind, item_index: usize) -> Self {
+        Self { kind, item_index }
+    }
+
     pub const fn kind(self) -> DnsConstraintErrorKind {
         self.kind
     }
@@ -202,10 +206,148 @@ impl<'a> NameConstraints<'a> {
 
 /// Evaluate presented DNS subjectAltName values against permitted subtrees.
 pub fn evaluate_permitted_dns_names(
-    _constraints: &NameConstraints<'_>,
-    _presented_dns_names: &[&str],
+    constraints: &NameConstraints<'_>,
+    presented_dns_names: &[&str],
 ) -> Result<PermittedDnsNames, DnsConstraintError> {
-    todo!("implemented after the test-first scaffold")
+    if presented_dns_names.len() > MAX_PRESENTED_DNS_NAMES {
+        return Err(DnsConstraintError::new(
+            DnsConstraintErrorKind::TooManyPresentedDnsNames,
+            MAX_PRESENTED_DNS_NAMES,
+        ));
+    }
+
+    let mut validated_constraints = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
+    for (index, subtree) in constraints.permitted_dns_subtrees().iter().enumerate() {
+        validated_constraints[index] = validate_constraint(subtree).map_err(|reason| {
+            DnsConstraintError::new(
+                DnsConstraintErrorKind::InvalidPermittedSubtree(reason),
+                index,
+            )
+        })?;
+    }
+
+    for (index, name) in presented_dns_names.iter().enumerate() {
+        validate_presented_name(name).map_err(|reason| {
+            DnsConstraintError::new(
+                DnsConstraintErrorKind::InvalidPresentedDnsName(reason),
+                index,
+            )
+        })?;
+
+        let permitted = validated_constraints[..constraints.len()]
+            .iter()
+            .any(|constraint| within_subtree(name, *constraint));
+        if !permitted {
+            return Err(DnsConstraintError::new(
+                DnsConstraintErrorKind::PresentedDnsNameNotPermitted,
+                index,
+            ));
+        }
+    }
+
+    Ok(PermittedDnsNames {
+        count: presented_dns_names.len(),
+    })
+}
+
+#[derive(Clone, Copy)]
+struct ValidConstraint<'a> {
+    base: &'a str,
+    subdomains_only: bool,
+}
+
+impl ValidConstraint<'_> {
+    const EMPTY: Self = Self {
+        base: "",
+        subdomains_only: false,
+    };
+}
+
+fn validate_constraint(subtree: &str) -> Result<ValidConstraint<'_>, DnsNameSyntaxError> {
+    let (base, subdomains_only) = match subtree.strip_prefix('.') {
+        Some(base) => (base, true),
+        None => (subtree, false),
+    };
+    validate_domain(base, WildcardPolicy::Reject)?;
+    Ok(ValidConstraint {
+        base,
+        subdomains_only,
+    })
+}
+
+fn validate_presented_name(name: &str) -> Result<(), DnsNameSyntaxError> {
+    validate_domain(name, WildcardPolicy::AllowPresented)
+}
+
+#[derive(Clone, Copy)]
+enum WildcardPolicy {
+    Reject,
+    AllowPresented,
+}
+
+fn validate_domain(name: &str, wildcard_policy: WildcardPolicy) -> Result<(), DnsNameSyntaxError> {
+    if name.is_empty() {
+        return Err(DnsNameSyntaxError::Empty);
+    }
+    if name.len() > 253 {
+        return Err(DnsNameSyntaxError::TooLong);
+    }
+    if !name.is_ascii() {
+        return Err(DnsNameSyntaxError::NonAscii);
+    }
+    if name.contains('*') {
+        match wildcard_policy {
+            WildcardPolicy::Reject => return Err(DnsNameSyntaxError::WildcardNotAllowed),
+            WildcardPolicy::AllowPresented => {
+                if !name.starts_with("*.") || name[2..].is_empty() || name[2..].contains('*') {
+                    return Err(DnsNameSyntaxError::InvalidWildcard);
+                }
+            }
+        }
+    }
+
+    for (index, label) in name.split('.').enumerate() {
+        if label.is_empty() {
+            return Err(DnsNameSyntaxError::EmptyLabel);
+        }
+        if label.len() > 63 {
+            return Err(DnsNameSyntaxError::LabelTooLong);
+        }
+        if label == "*" && index == 0 && matches!(wildcard_policy, WildcardPolicy::AllowPresented) {
+            continue;
+        }
+        if label.as_bytes()[0] == b'-' {
+            return Err(DnsNameSyntaxError::LeadingHyphen);
+        }
+        if label.as_bytes()[label.len() - 1] == b'-' {
+            return Err(DnsNameSyntaxError::TrailingHyphen);
+        }
+        if !label
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
+        {
+            return Err(if label.contains('*') {
+                DnsNameSyntaxError::InvalidWildcard
+            } else {
+                DnsNameSyntaxError::InvalidCharacter
+            });
+        }
+    }
+
+    Ok(())
+}
+
+fn within_subtree(name: &str, constraint: ValidConstraint<'_>) -> bool {
+    if name.eq_ignore_ascii_case(constraint.base) {
+        return !constraint.subdomains_only;
+    }
+    if name.len() <= constraint.base.len() {
+        return false;
+    }
+
+    let base_offset = name.len() - constraint.base.len();
+    name.as_bytes()[base_offset - 1] == b'.'
+        && name[base_offset..].eq_ignore_ascii_case(constraint.base)
 }
 
 /// Decode the supported DER contents of an RFC 5280 NameConstraints SEQUENCE.
