@@ -839,6 +839,15 @@ their bytes are never treated as understood merely because the root was
 selected. This gate adds no NameConstraints parser, constrained-root support,
 multi-hop path construction, revocation, TLS, HTTP, OAuth transport, or network
 authority.
+A smaller repository-owned DER prerequisite for that future parser now opens an
+exact context-specific constructed value selected by its schema tag as one
+bounded child cursor. The cursor reuses the same depth, total-element, and DER
+framing limits as SEQUENCE, SET, and explicit-wrapper traversal, while rejecting
+the wrong class, primitive form, or tag before exposing children. This is only
+the missing IMPLICIT-constructed traversal primitive required by the
+`permittedSubtrees [0]` and `excludedSubtrees [1]` NameConstraints fields; it
+does not recognize either field, decode GeneralSubtree, apply a constraint, or
+grant certificate-path, trust, TLS, HTTP, OAuth, or network authority.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
