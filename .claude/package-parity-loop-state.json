@@ -17204,9 +17204,13 @@
         "authoring_editor": "98.75%statements91.09%branches; fullinfo editing and empty payload retention",
         "terminal": "91.83%statements87.68%branches; canonical name/info and finalLF checks plus existing control filtering",
         "other_coverage": "Remaining changed runtime packages83.17%to100%statements; target95review remains open.",
-        "remaining": "Full74reverse/118prerequisite native closure;17missing logs; baseline verification for AsciiDoc/layout-block/nodecrypto issues; actual BUILD execution, final parity/diff/security/livePR overlap.",
-        "fixture_ci_gap": "Exact code/specs/gfm-fenced-block-v1/cases.json currently misses fixture-only Go selector. Add all/typescript native reader routing with union, missing-reader fail-closed and atomic plan tests; forced main is not evidence. Existing owner retains this work.",
-        "blocker": "C: space insufficient for full closure; partial space used only for already-installed focused checks and durable source checkpoint. No new installs, pushes or PR."
+        "remaining": "Full74reverse/118prerequisite native closure and actual BUILD fronts;17unvalidated targets have no local node_modules and need installs. Baseline verification for AsciiDoc/layout-block/nodecrypto candidates; coverage target review; full-scope final security and live main/PR overlap before publication.",
+        "fixture_ci_gap": "Repaired exact cases.json all/typescript native selection; RED then source, full Go module tests, go vet and executable build PASS. Three-platform facade propagation, source union, wrong-lane/missing-reader fail-closed, and atomic plan output regressions pass. Bounded security review: no findings.",
+        "blocker": "C: space insufficient for full closure; partial space used only for already-installed focused checks and durable source checkpoint. No new installs, pushes or PR.",
+        "metadata_validation": "Current executable all-language dry-run with BUILD validation and plan emission PASS at ccfa7c79eec;115affected roots, including prerequisite closure. Collision inventory PASS at same head; not native behavioral qualification.",
+        "validated_at": "2026-10-22T08:52:47.304402+00:00",
+        "go_coverage": "Final root package tests with production coverage PASS62.5%; all new selector blocks exercised. Internal package coverage run passed71.6%-97.7% except initial new-test map-order assertion; final main rerun and30focused repetitions pass after set-membership correction. Existing broad build-tool coverage remains below80%; no full coverage qualification claimed.",
+        "go_test_lesson": "Coverage exposed nondeterministic affected-array order. Test now compares sorted membership; dependency edges retain execution ordering. Recorded lesson; production scheduling unchanged."
       }
     },
     {
