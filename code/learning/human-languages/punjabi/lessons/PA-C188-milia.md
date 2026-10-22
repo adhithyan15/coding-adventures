@@ -34,10 +34,10 @@ reviews_of: [PA-C188-milde-review, PA-C03-main, PA-W02-aman, PA-C35-mainu]
 # One completed meeting
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-MAIN-03, PA-FORM-NAME-AMAN-01, PA-GRAM-NU-DATIVE, PA-FORM-MILDE-188] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-MAIN-03, PA-FORM-NAME-AMAN-01, PA-GRAM-NU-DATIVE, PA-FORM-MILNA-188, PA-FORM-MILDE-188] -->
 
-[PAUSE 2s] Retrieve **ਮੈਂ**, **ਅਮਨ**, and **ਨੂੰ**, then the regular-group
-meeting form from the last lesson.
+[PAUSE 2s] Retrieve **ਮੈਂ**, **ਅਮਨ**, and **ਨੂੰ**, then the action name and the
+regular-group meeting form from the last lessons.
 
 ## Grammar Lens: masculine singular completed form
 <!-- hl-knowledge: introduces=[PA-FORM-MILIA-188]; assesses=[PA-LEX-MAIN-03, PA-FORM-NAME-AMAN-01, PA-GRAM-NU-DATIVE] -->

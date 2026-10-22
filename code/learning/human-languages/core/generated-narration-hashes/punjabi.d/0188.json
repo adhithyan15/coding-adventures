@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 188,
-  "sourceHash": "fnv1a64:7dfa197261f6c25e",
+  "sourceHash": "fnv1a64:9fbe487eddb2a2ee",
   "lessonIds": [
     "PA-C188-meeting-return",
     "PA-C188-milna",
@@ -18,7 +18,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch188.txt",
   "json": "punjabi/narration/ch188.json",
-  "textHash": "fnv1a64:d74f0da31ba17ab1",
-  "jsonHash": "fnv1a64:7d3afe069723e6be",
+  "textHash": "fnv1a64:cd247c69c93ae235",
+  "jsonHash": "fnv1a64:78cfd12771814610",
   "findings": []
 }

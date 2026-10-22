@@ -34,7 +34,7 @@ reviews_of: [PA-C188-milna-milde-contrast, PA-C188-milia]
 # Contrast the three meeting jobs
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-MILNA-188, PA-FORM-MILDE-188, PA-FORM-MILIA-188] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-MILNA-188, PA-FORM-MILDE-188, PA-FORM-MILIA-188, PA-PRON-ASI-01, PA-GRAMMAR-MAIN-HAAN-03, PA-LEX-MAIN-03, PA-FORM-NAME-AMAN-01, PA-GRAM-NU-DATIVE] -->
 
 [PAUSE 3s] Prepare three meanings: to meet, we meet regularly, I met Aman.
 

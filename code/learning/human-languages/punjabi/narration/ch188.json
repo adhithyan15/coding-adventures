@@ -4,7 +4,7 @@
   "chapter": 188,
   "title": "To Meet; We Meet; I Met",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7dfa197261f6c25e",
+  "sourceHash": "fnv1a64:9fbe487eddb2a2ee",
   "lessons": [
     {
       "id": "PA-C188-meeting-return",
@@ -604,7 +604,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71c4097b45a01034",
+      "sourceHash": "fnv1a64:80081babc0c79bea",
       "notice": null,
       "blocks": [
         {
@@ -620,7 +620,7 @@
             },
             {
               "kind": "speech",
-              "text": "Retrieve ਮੈਂ, ਅਮਨ, and ਨੂੰ, then the regular-group meeting form from the last lesson."
+              "text": "Retrieve ਮੈਂ, ਅਮਨ, and ਨੂੰ, then the action name and the regular-group meeting form from the last lessons."
             }
           ]
         },
@@ -705,7 +705,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:3c52d028caa09674",
+      "sourceHash": "fnv1a64:0d65c3e9b3b182b4",
       "notice": {
         "modality": "sight",
         "needs": [
