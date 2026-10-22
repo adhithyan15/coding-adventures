@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 254,
+  "sourceHash": "fnv1a64:ff673fb4595f5738",
+  "lessonIds": [
+    "GU-C254-sangit",
+    "GU-C254-git",
+    "GU-C254-vagadvu",
+    "GU-C254-vasli",
+    "GU-C254-tablu",
+    "GU-R254-review-249-254"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch254.txt",
+  "json": "gujarati/narration/ch254.json",
+  "textHash": "fnv1a64:bd788ea2a464965b",
+  "jsonHash": "fnv1a64:c10519d65c008146",
+  "findings": []
+}

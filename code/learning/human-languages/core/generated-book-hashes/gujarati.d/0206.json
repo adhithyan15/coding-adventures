@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 206,
+  "sourceHash": "fnv1a64:95c1f533c713268f",
+  "lessonIds": [
+    "GU-C206-pahocvu",
+    "GU-C206-thakvu",
+    "GU-C206-pravasi",
+    "GU-C206-mukam",
+    "GU-C206-gati",
+    "GU-R206-review-201-206"
+  ],
+  "tex": "gujarati/book/chapters/ch206-arriving-at-last.tex"
+}

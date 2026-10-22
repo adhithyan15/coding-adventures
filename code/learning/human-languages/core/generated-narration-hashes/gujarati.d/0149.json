@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:c05cf8c564a39ffd",
+  "lessonIds": [
+    "GU-C149-bolish",
+    "GU-C149-bolshe",
+    "GU-C149-jaish",
+    "GU-C149-ungh",
+    "GU-W48-uu",
+    "GU-C149-future-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 4,
+  "text": "gujarati/narration/ch149.txt",
+  "json": "gujarati/narration/ch149.json",
+  "textHash": "fnv1a64:d6366a9f277a73aa",
+  "jsonHash": "fnv1a64:d03fdee8ade49603",
+  "findings": []
+}

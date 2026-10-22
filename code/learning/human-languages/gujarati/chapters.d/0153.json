@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Rooms, roof and veranda",
+  "label": "ch:gu-rooms-roof-and-veranda",
+  "canDo": "I can name the rooms and spaces of a Gujarati home.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C153-dadar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: I can name the rooms and spaces of a Gujarati home.",
+    "assesses": [
+      "GU-LEX-C153-ROOMS153-03",
+      "GU-LEX-C153-ROOMS153-04",
+      "GU-LEX-C153-ROOMS153-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:ed2253892cdbb7c3",
+  "lessonIds": [
+    "GU-C205-relve",
+    "GU-C205-jagya",
+    "GU-C205-utaru",
+    "GU-C205-thobhvu",
+    "GU-C205-uutarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch205.txt",
+  "json": "gujarati/narration/ch205.json",
+  "textHash": "fnv1a64:088fdbc9f5487378",
+  "jsonHash": "fnv1a64:c1bdf7f85544cb85",
+  "findings": []
+}

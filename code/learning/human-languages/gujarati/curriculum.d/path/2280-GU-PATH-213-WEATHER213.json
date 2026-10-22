@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-213-WEATHER213",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "GU-EXT-213-WEATHER213"
+  ],
+  "after": []
+}

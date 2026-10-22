@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 245,
+  "sourceHash": "fnv1a64:5a4dbc36c3429bc6",
+  "lessonIds": [
+    "GU-C245-grhkarya",
+    "GU-C245-jodni",
+    "GU-C245-bhusvu",
+    "GU-C245-rabar",
+    "GU-C245-uccarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch245-homework-and-spelling.tex"
+}

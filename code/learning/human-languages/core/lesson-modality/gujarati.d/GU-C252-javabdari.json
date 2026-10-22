@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C252-javabdari",
+    "language": "gujarati",
+    "chapter": 252,
+    "sequence": 13670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a661201197f527ca"
+  },
+  "findings": []
+}

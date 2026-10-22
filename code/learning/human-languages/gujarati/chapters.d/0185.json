@@ -1,0 +1,19 @@
+{
+  "chapter": 185,
+  "title": "Haggling over a deal",
+  "label": "ch:gu-haggling-over-a-deal",
+  "canDo": "I can haggle, ask for a lower rate and judge what I buy.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C185-parakhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 185: I can haggle, ask for a lower rate and judge what I buy.",
+    "assesses": [
+      "GU-LEX-C185-HAGGLE185-03",
+      "GU-LEX-C185-HAGGLE185-04",
+      "GU-LEX-C185-HAGGLE185-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Marks and results",
+  "label": "ch:gu-marks-and-results",
+  "canDo": "I can talk about marks, results and working hard for them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C246-mahenat-karvi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can talk about marks, results and working hard for them.",
+    "assesses": [
+      "GU-LEX-C246-MARKS246-03",
+      "GU-LEX-C246-MARKS246-04",
+      "GU-LEX-C246-MARKS246-05"
+    ]
+  }
+}

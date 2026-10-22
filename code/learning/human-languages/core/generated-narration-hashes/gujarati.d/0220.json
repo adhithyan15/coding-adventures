@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:e91431044dbc71ed",
+  "lessonIds": [
+    "GU-C220-vahevu",
+    "GU-C220-chalkavu",
+    "GU-C220-pur",
+    "GU-C220-osarvu",
+    "GU-C220-ughadvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch220.txt",
+  "json": "gujarati/narration/ch220.json",
+  "textHash": "fnv1a64:dfc0d10949c15a1e",
+  "jsonHash": "fnv1a64:df00a44c12a271e5",
+  "findings": []
+}

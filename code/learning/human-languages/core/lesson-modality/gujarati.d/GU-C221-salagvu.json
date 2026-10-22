@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C221-salagvu",
+    "language": "gujarati",
+    "chapter": 221,
+    "sequence": 12040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a08e55ec383d6c1"
+  },
+  "findings": []
+}

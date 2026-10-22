@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:ab54cf505370b429",
+  "lessonIds": [
+    "GU-C222-prthvi",
+    "GU-C222-vatavaran",
+    "GU-C222-kudrat",
+    "GU-C222-bharti",
+    "GU-C222-ot"
+  ],
+  "tex": "gujarati/book/chapters/ch222-earth-air-and-sea.tex"
+}

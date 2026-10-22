@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 198,
+  "sourceHash": "fnv1a64:f7ea38790d5f4fd0",
+  "lessonIds": [
+    "GU-C198-patiyu",
+    "GU-C198-sucna",
+    "GU-C198-jaherat",
+    "GU-C198-manai",
+    "GU-C198-jokham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch198.txt",
+  "json": "gujarati/narration/ch198.json",
+  "textHash": "fnv1a64:0cabf0e05e6bb108",
+  "jsonHash": "fnv1a64:cbf0f22ef6a9d33f",
+  "findings": []
+}

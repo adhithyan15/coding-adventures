@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:d45a8fc545fe6e72",
+  "lessonIds": [
+    "GU-C166-samarvu",
+    "GU-C166-cholvu",
+    "GU-C166-dungli",
+    "GU-C166-kothmir",
+    "GU-C166-vatvu"
+  ],
+  "tex": "gujarati/book/chapters/ch166-chopping-peeling-and-grinding.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-R152-second-pass-core",
+  "pathSegment": "GU-PATH-152-READ152",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GU-EXT-152-READ152",
+      "order": 5
+    }
+  ]
+}

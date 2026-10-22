@@ -1,0 +1,930 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 149,
+  "title": "What will happen",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:c05cf8c564a39ffd",
+  "lessons": [
+    {
+      "id": "GU-C149-bolish",
+      "sequence": 7850,
+      "title": "હું બોલીશ — the future, built on મળીશું",
+      "headword": "…ીશ · …ીશું",
+      "romanization": "-īś · -īśũ",
+      "gloss": "I will, we will: the future is an ending, and maḷīśũ was the first one you owned",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e73cbec8f9cb03a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I drank tea and I ate rice. Then the goodbye from the first week: કાલે મળીશું, see you tomorrow, word for word tomorrow we will meet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -ીશું, we will",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "મળીશું is મળ-, meet, plus -ીશું, we will. Gujarati needs no separate word for will: the future is an ending on the stem."
+            },
+            {
+              "kind": "speech",
+              "text": "આપણે કાલે મળીશું. — āpṇe kāle maḷīśũ. — We'll meet tomorrow. અમે ગુજરાતી બોલીશું. — ame gujarātī bolīśũ. — We will speak Gujarati."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -ીશ, I will",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the last -ું off and you have I will:"
+            },
+            {
+              "kind": "speech",
+              "text": "હું ગુજરાતી બોલીશ. — hũ gujarātī bolīś. — I will speak Gujarati."
+            },
+            {
+              "kind": "speech",
+              "text": "The familiar you takes the same form in the standard language: તું બોલીશ, you will speak. There is no copula and no gender: a man and a woman both say હું બોલીશ."
+            },
+            {
+              "kind": "speech",
+              "text": "The -શ of these endings is usually traced to the old Sanskrit future, the -iṣya- of kariṣyati, \"will do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ bolīś, ame bolīśũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ bolīś*, *ame bolīśũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "હું આવતીકાલે લખીશ — hũ āvtīkāle lakhīś, I'll write tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **હું આવતીકાલે લખીશ** — *hũ āvtīkāle lakhīś*, I'll write tomorrow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "અમે ઘરે રહીશું — ame ghare rahīśũ, we'll stay at home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **અમે ઘરે રહીશું** — *ame ghare rahīśũ*, we'll stay at home]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "અમે કાલે આવીશું — ame kāle āvīśũ, we'll come tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **અમે કાલે આવીશું** — *ame kāle āvīśũ*, we'll come tomorrow]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C149-bolish-r1",
+              "prompt": "Say that tomorrow you will speak Gujarati, then that we, you and I, will meet.",
+              "assesses": [
+                "GU-GRAMMAR-C149-ISH-01",
+                "GU-GRAMMAR-C149-ISHUN-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "āvtīkāle hũ gujarātī bolīś; āpṇe maḷīśũ",
+                "આવતીકાલે હું ગુજરાતી બોલીશ. આપણે મળીશું.",
+                "āvtīkāle hũ gujarātī bolīś, āpṇe maḷīśũ"
+              ],
+              "feedback": {
+                "correct": "-īś for I, -īśũ for we: the future is the ending.",
+                "incorrect": "Stem, then the ending: bol-īś for I, maḷ-īśũ for we."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What word for will does Gujarati use? (None; the future is an ending.) Which ending did મળીશું teach you long ago? (-ીશું, we will.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C149-bolshe",
+      "sequence": 7860,
+      "title": "તે બોલશે — the future for everyone else",
+      "headword": "…શે · …શો",
+      "romanization": "-śe · -śo",
+      "gloss": "he, she or they will, and you will: -śe and -śo",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb102afdfddd56f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I will speak Gujarati, then we'll meet tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -શે",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તે આવતીકાલે આવશે. — te āvtīkāle āvśe. — He will come tomorrow. She will come tomorrow. તેઓ ગુજરાતી બોલશે. — teo gujarātī bolśe. — They will speak Gujarati."
+            },
+            {
+              "kind": "speech",
+              "text": "-શે sits on the bare stem, with no -ી- before it: બોલ-શે, આવ-શે."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -શો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તમે keeps the -ો it has in the present, બોલો છો:"
+            },
+            {
+              "kind": "speech",
+              "text": "તમે ક્યારે આવશો? — tame kyāre āvśo? — When will you come?"
+            },
+            {
+              "kind": "speech",
+              "text": "The future for one person:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "will speak"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "who: હું, તું. will speak: બોલીશ.",
+                "who: તે. will speak: બોલશે."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And for more than one, or for respect:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "will speak"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "who: અમે, આપણે. will speak: બોલીશું.",
+                "who: તમે. will speak: બોલશો.",
+                "who: તેઓ. will speak: બોલશે."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "te āvśe, then teo āvśe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *te āvśe*, then *teo āvśe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "tame kyāre āvśo?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: *tame kyāre āvśo?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "with હું … આવીશ — hũ … āvīś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: with **હું … આવીશ** — *hũ … āvīś*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two persons share -શે? (તે and તેઓ.) What does તમે take? (-શો.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C149-jaish",
+      "sequence": 7870,
+      "title": "જઈશ, થશે, હશે — the short verbs",
+      "headword": "જઈશ · લઈશ · થશે · હશે",
+      "romanization": "jaīś · laīś · thaśe · haśe",
+      "gloss": "the short verbs in the future: go, take, do, happen, and be",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96d128ab3d13217e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say she will come tomorrow, then ask when will you come? And two short verbs: જવું, to go, and લેવું, to take."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: જવું, લેવું, કરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "જવું and લેવું have short stems, and they put an ઈ where the long verbs have -ી-:"
+            },
+            {
+              "kind": "speech",
+              "text": "હું જઈશ — jaīś — I will go; અમે જઈશું; તે જશે; તમે જશો;"
+            },
+            {
+              "kind": "speech",
+              "text": "હું લઈશ — laīś — I will take; તે લેશે."
+            },
+            {
+              "kind": "speech",
+              "text": "કરવું is regular: હું કરીશ, અમે કરીશું, તે કરશે."
+            },
+            {
+              "kind": "speech",
+              "text": "હું આવતીકાલે બજાર જઈશ. — hũ āvtīkāle bajār jaīś. — I'll go to the market tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: થશે and હશે",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "થવું, to happen, and હોવું, to be, are heard most often with -શે:"
+            },
+            {
+              "kind": "speech",
+              "text": "મોડું થશે. — moḍũ thaśe. — It will be late, word for word lateness will happen. તે ઘરે હશે. — te ghare haśe. — She will be at home."
+            },
+            {
+              "kind": "speech",
+              "text": "હશે is the future of છે: છે now, હતો before, હશે later. With તમે it is હશો: શું તમે ઘરે હશો?, will you be at home? Said about right now, હશે is a guess: તે ઘરે હશે can also mean she must be at home."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hũ jaīś, te jaśe, tame jaśo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hũ jaīś*, *te jaśe*, *tame jaśo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "હું દવા લઈશ — hũ davā laīś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **હું દવા લઈશ** — *hũ davā laīś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "સાંજે તેઓ ઘરે હશે — sānje teo ghare haśe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **સાંજે તેઓ ઘરે હશે** — *sānje teo ghare haśe*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form is the future of છે? (હશે.) What do જવું and લેવું put before -શ? (ઈ: જઈશ, લઈશ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C149-ungh",
+      "sequence": 7880,
+      "title": "ઊંઘ (ūṅgh) — sleepiness, sleep",
+      "headword": "ઊંઘ",
+      "romanization": "ūṅgh",
+      "gloss": "sleepiness, sleep (the noun)",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe9c2a6783432d8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say I will go, then it will be late."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઊંઘ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊંઘ (ūṅgh) — \"sleepiness, sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Gujarati does not say I am sleepy. Sleep comes to you, the way a fever does:"
+            },
+            {
+              "kind": "speech",
+              "text": "મને ઊંઘ આવે છે. — mane ūṅgh āve che. — I'm sleepy. Word for word: to me, sleep comes. આજે રાત્રે સારી ઊંઘ આવશે. — āje rātre sārī ūṅgh āvśe. — Tonight there will be good sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "ઊંઘ (ūṅgh) is feminine, so good bends to સારી. સૂવું, to sleep, is lying down to sleep; ઊંઘ (ūṅgh) is the sleep itself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊંઘ (ūṅgh) is inherited. CDIAL reconstructs an Indo-Aryan uṅghā, \"sleep\", and lists the Gujarati word under it, beside Hindi ūṅgh (CDIAL 1633)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word, and sleep joins likes and fevers among the things that happen to someone."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṅgh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṅgh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mane ūṅgh āve che",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mane ūṅgh āve che*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "શું તમને ઊંઘ આવે છે? — śũ tamne ūṅgh āve che?, are you sleepy?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **શું તમને ઊંઘ આવે છે?** — *śũ tamne ūṅgh āve che?*, are you sleepy?]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઊંઘ (ūṅgh) mean? (Sleepiness, sleep.) Which letter in it have you read but never written? (ઊ (ū), the next lesson.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W48-uu",
+      "sequence": 7890,
+      "title": "ઊ — the standing vowel ū",
+      "headword": "ઊ",
+      "romanization": "ū",
+      "gloss": "the standing vowel ū, the letter that opens ઊંઘ",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:9ac7c96b1f8f7006",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Script — meet one form",
+          "Writing — recall after hiding",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script — meet one form, Writing — recall after hiding and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sleepiness — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sleepiness* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the standing vowel ઉ, and the sign ૂ that gives a consonant a long ū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the standing vowel **ઉ**, and the sign **ૂ** that gives a consonant a long *ū*]"
+            },
+            {
+              "kind": "speech",
+              "text": "ઊંઘ (ūṅgh) opens on a long ū with no consonant to carry it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉ with a long tail",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "after a consonant",
+                "standing alone"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "short u. after a consonant: ુ. standing alone: ઉ.",
+                "long ū. after a consonant: ૂ. standing alone: ?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The missing letter is built on ઉ: the whole of ઉ, then a tail that runs across the top and down the right side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — meet one form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઊ — ū."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep ઊ (ū) visible. Write ઉ first: the small upper bowl, the middle cusp, the broad lower bowl, and the tall curve on the outside. Do not lift. Carry on across the upper shoulder, come down the long tail on the right, and finish through its foot. One stroke, no lift."
+            },
+            {
+              "kind": "speech",
+              "text": "The tail is the whole difference. Stop before it and the letter reads ઉ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — notice and trace",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Finger-trace ઊ (ū) once, then air-trace it once. Notice where ઉ ends and the tail begins."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — copy with the model",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy visible ઊ (ū) once. Compare only two things: is all of ઉ there, and does the tail reach down the right side? Repair one landmark if needed."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "writing",
+          "title": "Writing — recall after hiding",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide the model and write the standing vowel ū once. Uncover ઊ, compare, and stop after one repair."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "GU-W48-uu-recall",
+              "prompt": "Hide the model and write the standing vowel long u from memory.",
+              "assesses": [
+                "GU-SCRIPT-C149-UU-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "ઊ"
+              ],
+              "feedback": {
+                "correct": "ઊ — the whole of ઉ, then the long tail.",
+                "incorrect": "Look once at ઊ, hide it, and repair only the landmark that differs."
+              }
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ઉ ઊ (ū) ઊંઘ (ūṅgh) aloud. What turns ઉ into ઊ (ū)? (The long tail.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C149-future-practice",
+      "sequence": 7900,
+      "title": "Tomorrow — a practice",
+      "headword": "આવતીકાલે",
+      "romanization": "āvtīkāle",
+      "gloss": "tomorrow told in five lines, then a question about someone else's tomorrow",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a9499779c31d5b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say I'm sleepy."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ઊ (ū) once from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ઊ** once from memory]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: tomorrow, from morning to night",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આવતીકાલે (āvtīkāle) સવારે હું વહેલો ઉઠીશ. બપોરે હું બજાર જઈશ. સાંજે મારી બહેન આવશે. અમે ઘરે ચા પીશું. રાત્રે મને ઊંઘ (ūṅgh) આવશે."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the five lines aloud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the five lines aloud]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same plan for your sister: te … uṭhśe, te … jaśe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same plan for your sister: *te … uṭhśe*, *te … jaśe*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "તમે આવતીકાલે શું કરશો? — tame āvtīkāle śũ karśo?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: **તમે આવતીકાલે શું કરશો?** — *tame āvtīkāle śũ karśo?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "મોડું થશે — moḍũ thaśe — and say whose tomorrow it might spoil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **મોડું થશે** — *moḍũ thaśe* — and say whose tomorrow it might spoil]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "GU-C149-future-practice-plan",
+              "prompt": "Ask someone, politely, when they will come, then say that you will stay at home.",
+              "assesses": [
+                "GU-GRAMMAR-C149-SHO-01",
+                "GU-GRAMMAR-C149-ISH-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "tame kyāre āvśo? hũ ghare rahīś",
+                "તમે ક્યારે આવશો? હું ઘરે રહીશ.",
+                "tame kyāre āvśo? hũ ghare rahīś."
+              ],
+              "feedback": {
+                "correct": "-śo for respectful you, -īś for yourself.",
+                "incorrect": "Ask with āv-śo, answer with rah-īś."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which line told someone else's future? (સાંજે મારી બહેન આવશે.) Which verb put an ઈ before its ending? (જવું: જઈશ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

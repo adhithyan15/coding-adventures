@@ -1,0 +1,20 @@
+{
+  "language": "gujarati",
+  "chapter": 188,
+  "sourceHash": "fnv1a64:5460eb81b1202c86",
+  "lessonIds": [
+    "GU-C188-maphat",
+    "GU-C188-nakli",
+    "GU-C188-asli",
+    "GU-C188-mal",
+    "GU-C188-vastu",
+    "GU-R188-review-183-188"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "gujarati/narration/ch188.txt",
+  "json": "gujarati/narration/ch188.json",
+  "textHash": "fnv1a64:c70d23d0d5aba551",
+  "jsonHash": "fnv1a64:858720de19f6f37d",
+  "findings": []
+}

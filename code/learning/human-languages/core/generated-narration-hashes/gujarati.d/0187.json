@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 187,
+  "sourceHash": "fnv1a64:abeaaa8468f1300d",
+  "lessonIds": [
+    "GU-C187-vadhvu",
+    "GU-C187-ghatvu",
+    "GU-C187-vadhare",
+    "GU-C187-tako",
+    "GU-C187-chut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch187.txt",
+  "json": "gujarati/narration/ch187.json",
+  "textHash": "fnv1a64:6616bd53033af245",
+  "jsonHash": "fnv1a64:63ccd5dbf651183b",
+  "findings": []
+}

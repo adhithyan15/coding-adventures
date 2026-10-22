@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-172-STALE172",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that food is bland, stale or burnt.",
+  "prerequisites": []
+}

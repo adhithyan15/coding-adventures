@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Harvest time",
+  "label": "ch:gu-harvest-time",
+  "canDo": "I can say what we harvested, picked and dug up.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-R242-review-final-242",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can say what we harvested, picked and dug up.",
+    "assesses": [
+      "GU-LEX-C242-HARVEST242-03",
+      "GU-LEX-C242-HARVEST242-04",
+      "GU-LEX-C242-HARVEST242-05"
+    ]
+  }
+}

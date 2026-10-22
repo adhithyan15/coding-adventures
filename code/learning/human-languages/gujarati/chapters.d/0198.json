@@ -1,0 +1,19 @@
+{
+  "chapter": 198,
+  "title": "Signs in the street",
+  "label": "ch:gu-signs-in-the-street",
+  "canDo": "I can read notices, adverts, bans and danger signs.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C198-jokham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 198: I can read notices, adverts, bans and danger signs.",
+    "assesses": [
+      "GU-LEX-C198-SIGNS198-03",
+      "GU-LEX-C198-SIGNS198-04",
+      "GU-LEX-C198-SIGNS198-05"
+    ]
+  }
+}

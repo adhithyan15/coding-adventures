@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C189-mangavvu",
+    "language": "gujarati",
+    "chapter": 189,
+    "sequence": 10320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd407681a4596930"
+  },
+  "findings": []
+}

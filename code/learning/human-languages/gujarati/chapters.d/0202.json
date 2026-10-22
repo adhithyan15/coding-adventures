@@ -1,0 +1,19 @@
+{
+  "chapter": 202,
+  "title": "A theft in the bazaar",
+  "label": "ch:gu-a-theft-in-the-bazaar",
+  "canDo": "I can report a theft at the police station.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C202-kadhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 202: I can report a theft at the police station.",
+    "assesses": [
+      "GU-LEX-C202-THEFT202-03",
+      "GU-LEX-C202-THEFT202-04",
+      "GU-LEX-C202-THEFT202-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:79a7aed06e582e6d",
+  "lessonIds": [
+    "GU-C271-namra",
+    "GU-C271-udar",
+    "GU-C271-svarthi",
+    "GU-C271-murkh",
+    "GU-C271-jiddi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch271.txt",
+  "json": "gujarati/narration/ch271.json",
+  "textHash": "fnv1a64:b964e1f7a248ad74",
+  "jsonHash": "fnv1a64:921d141f0d1049a6",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 188,
+  "title": "Genuine goods and fakes",
+  "label": "ch:gu-genuine-goods-and-fakes",
+  "canDo": "I can say whether goods are free, fake or genuine.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-R188-review-183-188",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 188: I can say whether goods are free, fake or genuine.",
+    "assesses": [
+      "GU-LEX-C188-GOODS188-03",
+      "GU-LEX-C188-GOODS188-04",
+      "GU-LEX-C188-GOODS188-05"
+    ]
+  }
+}

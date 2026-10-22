@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C153-dadar",
+    "language": "gujarati",
+    "chapter": 153,
+    "sequence": 8440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1c5df8666477568"
+  },
+  "findings": []
+}

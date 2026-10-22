@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:23351a1a7062768c",
+  "lessonIds": [
+    "GU-C252-pharaj",
+    "GU-C252-javabdari",
+    "GU-C252-acarya",
+    "GU-C252-ganvesh",
+    "GU-C252-nivrtt-thavu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch252.txt",
+  "json": "gujarati/narration/ch252.json",
+  "textHash": "fnv1a64:9071b06d245e8f2b",
+  "jsonHash": "fnv1a64:1481a9afe4804199",
+  "findings": []
+}

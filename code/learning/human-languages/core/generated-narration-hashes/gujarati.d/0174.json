@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 174,
+  "sourceHash": "fnv1a64:9933c2447382e24a",
+  "lessonIds": [
+    "GU-C174-oktobar",
+    "GU-C174-disembar",
+    "GU-C174-maha",
+    "GU-C174-tarikhiyu",
+    "GU-C174-saruat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch174.txt",
+  "json": "gujarati/narration/ch174.json",
+  "textHash": "fnv1a64:c9a205bf8d25f68e",
+  "jsonHash": "fnv1a64:33e334887d88a612",
+  "findings": []
+}

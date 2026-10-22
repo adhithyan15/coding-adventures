@@ -1,0 +1,19 @@
+{
+  "chapter": 176,
+  "title": "Hours and quarters",
+  "label": "ch:gu-hours-and-quarters",
+  "canDo": "I can say how long something will take in hours and quarters.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-R176-review-171-176",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 176: I can say how long something will take in hours and quarters.",
+    "assesses": [
+      "GU-LEX-C176-CLOCK176-03",
+      "GU-LEX-C176-CLOCK176-04",
+      "GU-LEX-C176-CLOCK176-05"
+    ]
+  }
+}

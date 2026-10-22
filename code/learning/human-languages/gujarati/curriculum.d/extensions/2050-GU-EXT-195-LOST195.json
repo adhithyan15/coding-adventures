@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-195-LOST195",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I am lost and that someone showed me the way.",
+  "prerequisites": []
+}

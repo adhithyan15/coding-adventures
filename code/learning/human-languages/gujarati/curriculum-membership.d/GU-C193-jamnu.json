@@ -1,0 +1,11 @@
+{
+  "id": "GU-C193-jamnu",
+  "pathSegment": "GU-PATH-193-WAY193",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-193-WAY193",
+      "order": 2
+    }
+  ]
+}

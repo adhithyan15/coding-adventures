@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R266-review-261-266",
+    "language": "gujarati",
+    "chapter": 266,
+    "sequence": 14430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9bf38a62dde15286"
+  },
+  "findings": []
+}

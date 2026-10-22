@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-163-MEAL163",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "GU-EXT-163-MEAL163"
+  ],
+  "after": []
+}

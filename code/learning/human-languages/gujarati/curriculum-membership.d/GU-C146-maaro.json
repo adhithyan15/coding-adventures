@@ -1,0 +1,11 @@
+{
+  "id": "GU-C146-maaro",
+  "pathSegment": "GU-PATH-146-ASK146",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-146-ASK146",
+      "order": 3
+    }
+  ]
+}

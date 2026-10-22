@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C154-odhvu",
+    "language": "gujarati",
+    "chapter": 154,
+    "sequence": 8490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0603d07cbbf1f05"
+  },
+  "findings": []
+}

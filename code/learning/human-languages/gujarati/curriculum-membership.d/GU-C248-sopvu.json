@@ -1,0 +1,11 @@
+{
+  "id": "GU-C248-sopvu",
+  "pathSegment": "GU-PATH-248-OFFICE248",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-248-OFFICE248",
+      "order": 3
+    }
+  ]
+}

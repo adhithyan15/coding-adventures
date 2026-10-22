@@ -1,0 +1,11 @@
+{
+  "id": "GU-C193-sidhu",
+  "pathSegment": "GU-PATH-193-WAY193",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-193-WAY193",
+      "order": 3
+    }
+  ]
+}

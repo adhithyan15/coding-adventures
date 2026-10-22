@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:62fd7bd88f8f5f06",
+  "lessonIds": [
+    "GU-C214-padvu",
+    "GU-C214-dhodhmar",
+    "GU-C214-tipu",
+    "GU-C214-tapakvu",
+    "GU-C214-palalvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch214.txt",
+  "json": "gujarati/narration/ch214.json",
+  "textHash": "fnv1a64:c0cb2a1b2cdf7109",
+  "jsonHash": "fnv1a64:dc0023f0d363e86a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 267,
+  "title": "Upset and disappointed",
+  "label": "ch:gu-upset-and-disappointed",
+  "canDo": "I can ask whether someone is upset and say that I am not disappointed.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "GU-C267-risavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 267: I can ask whether someone is upset and say that I am not disappointed.",
+    "assesses": [
+      "GU-LEX-C267-UPSET267-03",
+      "GU-LEX-C267-UPSET267-04",
+      "GU-LEX-C267-UPSET267-05"
+    ]
+  }
+}

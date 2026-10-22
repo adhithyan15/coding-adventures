@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:4afb2ddb7987ba77",
+  "lessonIds": [
+    "GU-C221-dukal",
+    "GU-C221-kharvu",
+    "GU-C221-ag",
+    "GU-C221-salagvu",
+    "GU-C221-bhukamp"
+  ],
+  "tex": "gujarati/book/chapters/ch221-drought-fire-and-earthquake.tex"
+}

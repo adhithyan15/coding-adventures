@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C214-tipu",
+    "language": "gujarati",
+    "chapter": 214,
+    "sequence": 11670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:376f57d311f4b802"
+  },
+  "findings": []
+}

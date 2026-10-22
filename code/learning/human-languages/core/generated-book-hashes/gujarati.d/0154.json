@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:b57498dfceafac0c",
+  "lessonIds": [
+    "GU-C154-kapdu",
+    "GU-C154-sadi",
+    "GU-C154-dupatto",
+    "GU-C154-utarvu",
+    "GU-C154-odhvu"
+  ],
+  "tex": "gujarati/book/chapters/ch154-saris-scarves-and-cloth.tex"
+}

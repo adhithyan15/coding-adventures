@@ -1,0 +1,11 @@
+{
+  "id": "GU-C173-avtu",
+  "pathSegment": "GU-PATH-173-WEEK173",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-173-WEEK173",
+      "order": 2
+    }
+  ]
+}

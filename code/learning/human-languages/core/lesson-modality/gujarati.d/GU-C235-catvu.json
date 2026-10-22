@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C235-catvu",
+    "language": "gujarati",
+    "chapter": 235,
+    "sequence": 12760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ca6728dfbded1fa"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:9b21692cc6475fca",
+  "lessonIds": [
+    "GU-C193-disa",
+    "GU-C193-dabu",
+    "GU-C193-jamnu",
+    "GU-C193-sidhu",
+    "GU-C193-valvu-turn"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch193.txt",
+  "json": "gujarati/narration/ch193.json",
+  "textHash": "fnv1a64:ba9c5fc7379732fe",
+  "jsonHash": "fnv1a64:aca6a9433765597c",
+  "findings": []
+}

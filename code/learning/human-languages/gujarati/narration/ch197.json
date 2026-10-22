@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 197,
+  "title": "The watchman at the gate",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:95bce975e9101918",
+  "lessons": [
+    {
+      "id": "GU-C197-cokidar",
+      "sequence": 10720,
+      "title": "ચોકીદાર (cokīdār) — watchman, guard",
+      "headword": "ચોકીદાર",
+      "romanization": "cokīdār",
+      "gloss": "watchman, guard",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67e72072571bb429",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to go in, then the Gujarati for entry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચોકીદાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચોકીદાર — cokīdār — \"watchman, guard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ચોકીદાર રાત્રે જાગે છે. — cokīdār rātre jāge che — \"The watchman stays awake at night.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચોકીદાર (cokīdār) is built from cokī, \"guard post\", and the Persian suffix -dār, \"holder, keeper\". CDIAL lists Gujarati cokī, \"square low seat\", with cok, \"square\", under Sanskrit catuṣka, \"set of four\" (CDIAL 4629)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cokīdār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cokīdār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cokīdār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cokīdār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cokīdār rātre jāge che — The watchman stays awake at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cokīdār rātre jāge che* — The watchman stays awake at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to go in, then the Gujarati for entry, then say cokīdār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to go in, then the Gujarati for entry, then say *cokīdār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ચોકીદાર (cokīdār) mean? (\"Watchman, guard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C197-tapasvu",
+      "sequence": 10730,
+      "title": "તપાસવું (tapāsvũ) — to check, to examine",
+      "headword": "તપાસવું",
+      "romanization": "tapāsvũ",
+      "gloss": "to check, to examine",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:049237755c9f3957",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for entry, then the Gujarati for watchman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: તપાસવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "તપાસવું — tapāsvũ — \"to check, to examine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ચોકીદાર દરેક થેલી તપાસે છે. — cokīdār darek thelī tapāse che — \"The watchman checks every bag.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The origin of તપાસવું (tapāsvũ) is not settled. EtymDB links it to an Arabic verb for examining and lists Marathi tapāsṇe beside it, but CDIAL has no entry for it, so the Arabic link is unconfirmed (EtymDB)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapāsvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapāsvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapāsvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapāsvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cokīdār darek thelī tapāse che — The watchman checks every bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cokīdār darek thelī tapāse che* — The watchman checks every bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for entry, then the Gujarati for watchman, then say tapāsvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for entry, then the Gujarati for watchman, then say *tapāsvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does તપાસવું (tapāsvũ) mean? (\"To check, to examine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C197-olakhpatra",
+      "sequence": 10740,
+      "title": "ઓળખપત્ર (oḷakhpatra) — identity card",
+      "headword": "ઓળખપત્ર",
+      "romanization": "oḷakhpatra",
+      "gloss": "identity card",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1874bbd72c7b9364",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for watchman, then the Gujarati for to check."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઓળખપત્ર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઓળખપત્ર — oḷakhpatra — \"identity card\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ચોકીદારે મારું ઓળખપત્ર જોયું. — cokīdāre mārũ oḷakhpatra joyũ — \"The watchman saw my identity card.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A neuter noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઓળખપત્ર (oḷakhpatra) is built from oḷakh, \"identity, recognition\", and patra, \"leaf, letter\". CDIAL lists the verb oḷakhvũ, \"to know, distinguish\", under Sanskrit upalakṣayati, \"beholds\" (CDIAL 2226), and patra is Sanskrit páttra, \"leaf\" (CDIAL 7733)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷakhpatra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷakhpatra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oḷakhpatra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oḷakhpatra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cokīdāre mārũ oḷakhpatra joyũ — The watchman saw my identity card.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cokīdāre mārũ oḷakhpatra joyũ* — The watchman saw my identity card.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for watchman, then the Gujarati for to check, then say oḷakhpatra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for watchman, then the Gujarati for to check, then say *oḷakhpatra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ઓળખપત્ર (oḷakhpatra) mean? (\"Identity card\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C197-bandh",
+      "sequence": 10750,
+      "title": "બંધ (bandh) — closed, shut",
+      "headword": "બંધ",
+      "romanization": "bandh",
+      "gloss": "closed, shut",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:235a37ef6ffd8b2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for to check, then the Gujarati for identity card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બંધ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બંધ — bandh — \"closed, shut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દુકાન રવિવારે બંધ છે. — dukān ravivāre bandh che — \"The shop is closed on Sundays.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બંધ (bandh) is Sanskrit bandhá, \"bond, damming, custody\", taken over whole, a tatsama; CDIAL lists its inherited cousin bā̃dh, \"dam\" (CDIAL 9136). CDIAL does not give the sense \"shut\", which also matches Persian band, and the two words may have run together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukān ravivāre bandh che — The shop is closed on Sundays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukān ravivāre bandh che* — The shop is closed on Sundays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for to check, then the Gujarati for identity card, then say bandh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for to check, then the Gujarati for identity card, then say *bandh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does બંધ (bandh) mean? (\"Closed, shut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C197-khulvu",
+      "sequence": 10760,
+      "title": "ખૂલવું (khūlvũ) — to open up, to come open",
+      "headword": "ખૂલવું",
+      "romanization": "khūlvũ",
+      "gloss": "to open up, to come open",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1cecb6d6c33876d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for identity card, then the Gujarati for closed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ખૂલવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખૂલવું — khūlvũ — \"to open up, to come open\"."
+            },
+            {
+              "kind": "speech",
+              "text": "બેંક સવારે ખૂલે છે. — bẽk savāre khūle che — \"The bank opens in the morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ખોલવું opens a thing; ખૂલવું (khūlvũ) is the thing opening."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ખૂલવું (khūlvũ) is a tadbhava. CDIAL lists it, glossed \"to be open\", under khull, \"to be open\", a reconstructed form; the taught kholvũ, \"to open\", is its partner from khōll (CDIAL 3945)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khūlvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khūlvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khūlvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khūlvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bẽk savāre khūle che — The bank opens in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bẽk savāre khūle che* — The bank opens in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for identity card, then the Gujarati for closed, then say khūlvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for identity card, then the Gujarati for closed, then say *khūlvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ખૂલવું (khūlvũ) mean? (\"To open up, to come open\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

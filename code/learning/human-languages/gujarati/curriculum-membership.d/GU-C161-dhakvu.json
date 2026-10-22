@@ -1,0 +1,11 @@
+{
+  "id": "GU-C161-dhakvu",
+  "pathSegment": "GU-PATH-161-SHIFT161",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-161-SHIFT161",
+      "order": 2
+    }
+  ]
+}

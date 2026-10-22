@@ -1,0 +1,14 @@
+{
+  "language": "gujarati",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:f96c04e2f5ea1a7a",
+  "lessonIds": [
+    "GU-C176-ghadiyal",
+    "GU-C176-sada",
+    "GU-C176-sava",
+    "GU-C176-ponu",
+    "GU-C176-lagbhag",
+    "GU-R176-review-171-176"
+  ],
+  "tex": "gujarati/book/chapters/ch176-hours-and-quarters.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 150,
+  "title": "Plans and perhaps",
+  "label": "ch:gu-plans-and-perhaps",
+  "canDo": "I can say what I am going to do as a plan already made, ask other people about their plans, call a plan off, and say what will perhaps happen.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "GU-C150-plans-practice",
+    "kind": "dialogue",
+    "summary": "Carry a short exchange about tomorrow that holds a plan, a plan called off, a guess and a promise.",
+    "assesses": [
+      "GU-GRAMMAR-C150-VAANO-01",
+      "GU-GRAMMAR-C150-VAANO-Q-01",
+      "GU-GRAMMAR-C150-VAANO-NEG-01",
+      "GU-LEX-C150-FUT150-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C160-patharvu",
+  "pathSegment": "GU-PATH-160-BED160",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-160-BED160",
+      "order": 1
+    }
+  ]
+}

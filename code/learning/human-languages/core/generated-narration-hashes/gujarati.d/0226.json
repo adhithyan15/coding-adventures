@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:1894e953560216b3",
+  "lessonIds": [
+    "GU-C226-dhrujvu",
+    "GU-C226-haphvu",
+    "GU-C226-sughvu",
+    "GU-C226-galvu",
+    "GU-C226-phephsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch226.txt",
+  "json": "gujarati/narration/ch226.json",
+  "textHash": "fnv1a64:48a878b96d184ef9",
+  "jsonHash": "fnv1a64:b180316d0124050c",
+  "findings": []
+}

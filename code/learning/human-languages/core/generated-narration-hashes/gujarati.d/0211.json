@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:038dc7110ca442d5",
+  "lessonIds": [
+    "GU-C211-hodi",
+    "GU-C211-savari-karvi",
+    "GU-C211-hankarvu",
+    "GU-C211-yatra",
+    "GU-C211-vahan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch211.txt",
+  "json": "gujarati/narration/ch211.json",
+  "textHash": "fnv1a64:ec0fb889ed73ee7a",
+  "jsonHash": "fnv1a64:8bb02f8e46517f71",
+  "findings": []
+}

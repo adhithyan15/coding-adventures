@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C207-petrol",
+    "language": "gujarati",
+    "chapter": 207,
+    "sequence": 11270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0db5dde82706daf9"
+  },
+  "findings": []
+}

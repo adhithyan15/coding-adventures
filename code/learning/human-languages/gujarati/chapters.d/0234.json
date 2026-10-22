@@ -1,0 +1,19 @@
+{
+  "chapter": 234,
+  "title": "Milking time",
+  "label": "ch:gu-milking-time",
+  "canDo": "I can say who milked the cow and where the sheep grazed.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C234-carvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 234: I can say who milked the cow and where the sheep grazed.",
+    "assesses": [
+      "GU-LEX-C234-MILK234-03",
+      "GU-LEX-C234-MILK234-04",
+      "GU-LEX-C234-MILK234-05"
+    ]
+  }
+}

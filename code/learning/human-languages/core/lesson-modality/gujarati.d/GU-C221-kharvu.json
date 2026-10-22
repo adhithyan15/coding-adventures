@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C221-kharvu",
+    "language": "gujarati",
+    "chapter": 221,
+    "sequence": 12020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:184f42a5f8d0a4a1"
+  },
+  "findings": []
+}

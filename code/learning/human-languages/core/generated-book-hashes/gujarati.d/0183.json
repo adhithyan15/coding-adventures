@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 183,
+  "sourceHash": "fnv1a64:06cdc60452c4c2ab",
+  "lessonIds": [
+    "GU-C183-grahak",
+    "GU-C183-dukandar",
+    "GU-C183-kariyanu",
+    "GU-C183-tolvu",
+    "GU-C183-kilo"
+  ],
+  "tex": "gujarati/book/chapters/ch183-at-the-grocer-s-counter.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:9503db7f24e22fa8",
+  "lessonIds": [
+    "GU-C255-varta",
+    "GU-C255-kavita",
+    "GU-C255-navalkatha",
+    "GU-C255-natak",
+    "GU-C255-philm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch255.txt",
+  "json": "gujarati/narration/ch255.json",
+  "textHash": "fnv1a64:65f3390fd5806dc4",
+  "jsonHash": "fnv1a64:c6f031a2dde8450b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C156-badhvu",
+    "language": "gujarati",
+    "chapter": 156,
+    "sequence": 8590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ed1a5d1740d9ce2"
+  },
+  "findings": []
+}

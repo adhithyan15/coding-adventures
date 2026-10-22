@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 205,
+  "sourceHash": "fnv1a64:93f2bfcd9f0a6d99",
+  "lessonIds": [
+    "GU-C205-relve",
+    "GU-C205-jagya",
+    "GU-C205-utaru",
+    "GU-C205-thobhvu",
+    "GU-C205-uutarvu"
+  ],
+  "tex": "gujarati/book/chapters/ch205-a-seat-on-the-railway.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 184,
+  "sourceHash": "fnv1a64:c404246220b885d2",
+  "lessonIds": [
+    "GU-C184-bhav",
+    "GU-C184-lagvu",
+    "GU-C184-vajan",
+    "GU-C184-mapvu",
+    "GU-C184-magvu"
+  ],
+  "tex": "gujarati/book/chapters/ch184-what-it-costs.tex"
+}
