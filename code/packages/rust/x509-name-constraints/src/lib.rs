@@ -17,6 +17,77 @@ const DNS_NAME_TAG: u32 = 2;
 
 /// Maximum DNS GeneralSubtree values retained from one constraints value.
 pub const MAX_DNS_SUBTREES: usize = 256;
+/// Maximum presented DNS names evaluated against one constraints value.
+pub const MAX_PRESENTED_DNS_NAMES: usize = 256;
+
+/// Stable syntax failures for DNS constraints and presented DNS names.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum DnsNameSyntaxError {
+    Empty,
+    TooLong,
+    NonAscii,
+    EmptyLabel,
+    LabelTooLong,
+    InvalidCharacter,
+    LeadingHyphen,
+    TrailingHyphen,
+    WildcardNotAllowed,
+    InvalidWildcard,
+}
+
+/// Stable payload-free DNS constraint evaluation failures.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum DnsConstraintErrorKind {
+    TooManyPresentedDnsNames,
+    InvalidPermittedSubtree(DnsNameSyntaxError),
+    InvalidPresentedDnsName(DnsNameSyntaxError),
+    PresentedDnsNameNotPermitted,
+}
+
+/// One redacted evaluation failure and its relevant collection index.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct DnsConstraintError {
+    kind: DnsConstraintErrorKind,
+    item_index: usize,
+}
+
+impl DnsConstraintError {
+    pub const fn kind(self) -> DnsConstraintErrorKind {
+        self.kind
+    }
+
+    pub const fn item_index(self) -> usize {
+        self.item_index
+    }
+}
+
+impl fmt::Display for DnsConstraintError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 DNS constraint error {:?} at item {}",
+            self.kind, self.item_index
+        )
+    }
+}
+
+impl Error for DnsConstraintError {}
+
+/// Payload-free evidence that all supplied DNS names were permitted.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct PermittedDnsNames {
+    count: usize,
+}
+
+impl PermittedDnsNames {
+    pub const fn count(self) -> usize {
+        self.count
+    }
+
+    pub const fn is_empty(self) -> bool {
+        self.count == 0
+    }
+}
 
 /// Stable payload-free failure categories.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -127,6 +198,14 @@ impl<'a> NameConstraints<'a> {
     pub const fn is_empty(&self) -> bool {
         self.len == 0
     }
+}
+
+/// Evaluate presented DNS subjectAltName values against permitted subtrees.
+pub fn evaluate_permitted_dns_names(
+    _constraints: &NameConstraints<'_>,
+    _presented_dns_names: &[&str],
+) -> Result<PermittedDnsNames, DnsConstraintError> {
+    todo!("implemented after the test-first scaffold")
 }
 
 /// Decode the supported DER contents of an RFC 5280 NameConstraints SEQUENCE.
