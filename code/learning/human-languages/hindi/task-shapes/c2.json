@@ -68,7 +68,7 @@
       "skill": "listening", "minutes": 60,
       "parts": [
         {
-          "id": "c2-listening-rapid-multiparty-interaction", "promptModes": ["recorded Hindi at a natural 165-200 words per minute with variation", "multiple overlapping speakers"],
+          "id": "c2-listening-rapid-multiparty-interaction", "promptModes": ["recorded Hindi at a natural 165-200 words per minute with variation", "multiple overlapping speakers including one documented regional Hindi voice"],
           "promptGenres": ["rapid multiparty interaction with overlap, repair, irony, and implicit alignment"],
           "responseModes": ["selection", "speaker-alignment match", "interaction-function match", "irony match"], "items": 8,
           "stimulusLength": {"unit": "seconds", "minimum": 360, "maximum": 480, "approximate": false},
@@ -101,7 +101,7 @@
           "notPublished": [], "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-hindi-assessment"]
         },
         {
-          "id": "c2-listening-culturally-dense-media", "promptModes": ["recorded Hindi at a natural 165-200 words per minute with variation", "multiple speakers"],
+          "id": "c2-listening-culturally-dense-media", "promptModes": ["recorded Hindi at a natural 165-200 words per minute with variation", "multiple speakers including a second documented regional Hindi voice"],
           "promptGenres": ["culturally dense broadcast, documentary, or hybrid media extract"],
           "responseModes": ["selection", "reference match", "stance-shift match", "cultural-inference match"], "items": 8,
           "stimulusLength": {"unit": "seconds", "minimum": 420, "maximum": 540, "approximate": false},
