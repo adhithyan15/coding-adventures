@@ -989,7 +989,7 @@ noted.
 | Maxima | re-exports Macsyma | — | CST | none of its own | No grammar of its own | Own `maxima<release>` pairs from Maxima tags before any `Language::Maxima`. Until then `--lang maxima` is an error, not a silent Macsyma alias |
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
-| Python | GL (indentation mode) | GP | CST | 5 release pairs (3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I for all five, `Language::Python` on all nine backends; `--lang python@<release>` since 7b slice 1). LANG79's float pilot still uses the legacy `"3.12"` minor line | 7b/7c |
+| Python | GL (indentation mode) | GP | CST | 5 release pairs (3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I for all five, `Language::Python` on all nine backends; `--lang python@<release>` since 7b slice 1; release sweep and B for all five in 7b slice 2). LANG79's float pilot still uses the legacy `"3.12"` minor line | 7c |
 | Perl | GL | GP | CST | 118 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is the inventory release `5.38.0` and the unversioned pair is off the IIR path (4b); `IIRModule.release` recorded; `Language::Perl` on all nine backends with `--lang perl@<release>` (4a, 4b) | Phase 4c |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
@@ -998,7 +998,7 @@ noted.
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_division_only`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). Still non-compliant under C2: the runtime `REGEX` deletion in the lexer and `asi.rs`, which is longer than a small hook, remain until 6a/6b replace them | Phase 6c CST rewrite done; 6a, 6b, 6d, 6e remain |
-| Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends, `--lang ruby@<release>` since 5b slice 1. The hand-written lexer remains only for non-IIR consumers | 5b slice 2; R1–R7 (phase 3) |
+| Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends, `--lang ruby@<release>` since 5b slice 1; release sweep and B for 3.3.5 and 3.3.7 in 5b slice 2. The hand-written lexer remains only for non-IIR consumers | R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
 
@@ -1195,6 +1195,56 @@ every release that claims I:
 - **CSV.** `backend_status` gains `rb-int-puts` for 3.3.5 and 3.3.7 once
   `release_inventory.py check --matrix` shows that every case is covered,
   either directly or through the class representative.
+
+**Phases 5b and 7b slice 2 result (2026-10-22).** Every release that claims
+I(`rb-int-puts`) or I(`py-int-print`) now claims B. `check --matrix` and a
+named test prove each claim.
+
+- **Ruby sweep.** One class, `728c8484ef39b2e5`, holds 3.3.5, 3.3.6 and
+  3.3.7. Its representative is 3.3.5. `release_classes.csv` has 42 rows
+  (14 positive cases × 3 releases) and no `rejected` cell.
+- **Python sweep.** Two classes, which differ only in the cases they
+  accept. Every release that accepts a case lowers it to the same IIR
+  digest. `release_classes.csv` has 90 rows (18 × 5), and one is `rejected`.
+
+  | Representative | Members | Not accepted |
+  | --- | --- | --- |
+  | `3.0a1` | 1 (`e6a72b170747738e`) | `int_underscores` |
+  | `3.12.3` | 4: 3.12.3, 3.13.16, 3.11.17, 3.16.0a1 (`5afb074f1e9583ba`) | — |
+- **Matrix.** There are 14 new Ruby rows on 3.3.5, so Ruby has 28 rows and
+  224 cells. There are 35 new Python rows, 17 on 3.0a1 and 18 on 3.12.3,
+  so Python has 53 rows and 424 cells. All rows use all eight columns.
+  `check --matrix` reports 3 Ruby claims: 28 cells direct and 14 by IIR
+  class. It reports 5 Python claims: 53 direct, 36 by IIR class and 1 not
+  applicable. Dropping one representative row fails the check for every
+  release in that class. The authoring host had no `dotnet` or `erl`, so
+  CLR and BEAM ran only in CI. Locally, Ruby ran 168 cells and Python 318,
+  and the host ruby 3.3.6 and CPython 3.13.16 oracles agree with every row.
+
+Divergences from this spec in 5b/7b slice 2:
+
+- **The default keeps its own rows.** The default release is in the
+  representative's class in both languages, but it is not the
+  representative. CI bounding step 3 lists the default as a boundary
+  release, so its rows stay: 14 Ruby rows on 3.3.6 and 18 Python rows on
+  3.13.16. Identical IIR makes those cells redundant with the
+  representative's. Perl avoids this only because its default, 5.38.0,
+  is a representative.
+- **Only claiming releases are swept.** Perl sweeps every checked release,
+  because every checked release claims I. The Ruby and Python sweeps take
+  the releases whose `iir_status` claims the subset. Ruby's 0.49 and 0.50
+  have pairs but no profile, so they have no IIR to class.
+- **No newest-release rows.** 3.3.7 and 3.16.0a1 get no rows of their own.
+  Their class representative's rows stand for them, as 5.45.3's do in Perl.
+- **One oracle for every row.** The host ruby and CPython oracles check
+  each row's expectation regardless of the row's release. The
+  representatives' rows carry the default rows' expectations, so the 3.0a1
+  and 3.12.3 rows are re-checked on CPython 3.13. Per-release host oracles
+  stay in `python-iir-compiler`'s `release_subsets.rs`, for 3.11.17,
+  3.12.3 and 3.13.16.
+- **CI triggering** is the same as in 4c. A change confined to
+  `code/grammars/ruby/` or `code/grammars/python/` runs `check --matrix`,
+  but not the frontends' `release_sweep`.
 
 ### JavaScript: rewrite to walk the CST
 
@@ -1803,6 +1853,10 @@ API exactly as Ruby does in 5b slice 1, in the same change:
   "only the default claims B" to "B is claimed by exactly the releases that
   claim I".
 
+The result (two classes, 53 rows, B for all five releases) is recorded
+with 5b slice 2's, under "Phases 5b and 7b slice 2 result" in the Ruby
+section above.
+
 7c is the rest of the 7b/7c row in the phase table: Python 2, more
 releases, and the float subset.
 
@@ -1885,9 +1939,9 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.9 | E7 goal-directed lexing and binding predicates (largest; may split into lattice and bindings) | ~2,500 lines over 2–3 PRs |
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
 | 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c done:** `pl-int-print` corpus, `ReleaseProfile`s, release sweep (3 IIR-identity classes), `Prog.release`/`case`, I and B for all 118 checked releases. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
-| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b slice 1 done:** lang-aot release selection (`--lang ruby@<release>`, `IIRModule.release`). **5b slice 2:** the boundary-release sweep (B for 3.3.5, 3.3.7) | ~1,200 lines over 2 PRs |
+| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b slice 1 done:** lang-aot release selection (`--lang ruby@<release>`, `IIRModule.release`). **5b slice 2 done:** release sweep (one IIR-identity class, representative 3.3.5), matrix rows on it, B for 3.3.5 and 3.3.7 | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
-| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b/7c:** the boundary sweep, Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
+| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c:** Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 
