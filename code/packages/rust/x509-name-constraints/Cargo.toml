@@ -1,0 +1,9 @@
+[package]
+name = "x509-name-constraints"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded reviewed-anchor DNS NameConstraints decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+der-tlv = { path = "../der-tlv" }
