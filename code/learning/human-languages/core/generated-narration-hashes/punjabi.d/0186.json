@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 186,
-  "sourceHash": "fnv1a64:2713c3eec66f6bbb",
+  "sourceHash": "fnv1a64:2bf38428acf20c3c",
   "lessonIds": [
     "PA-C186-future-return",
     "PA-C186-hovega",
@@ -17,6 +17,6 @@
   "text": "punjabi/narration/ch186.txt",
   "json": "punjabi/narration/ch186.json",
   "textHash": "fnv1a64:d2fb95b701c4f169",
-  "jsonHash": "fnv1a64:06952a42f14cf2a4",
+  "jsonHash": "fnv1a64:94f3641496a61ff5",
   "findings": []
 }

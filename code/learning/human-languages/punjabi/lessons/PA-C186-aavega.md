@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-FORM-AAVEGA-186, PA-FORM-HOVEGA-186, PA-FORM-HOVEGI-186, PA-LEX-AUNA, PA-FORM-NAME-AMAN-01]
+  knowledge: [PA-FORM-AAVEGA-186, PA-FORM-HOVEGA-186, PA-LEX-AUNA, PA-FORM-NAME-AMAN-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]

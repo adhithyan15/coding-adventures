@@ -39,7 +39,7 @@ reviews_of: [PA-C186-aavega, PA-C181-yatra]
 [PAUSE 2s] Say **ਆਵੇਗਾ**, then say **ਰੇਲ**.
 
 ## Grammar Lens: transfer the feminine future
-<!-- hl-knowledge: introduces=[PA-FORM-AAVEGI-186]; assesses=[PA-FORM-AAVEGA-186] -->
+<!-- hl-knowledge: introduces=[PA-FORM-AAVEGI-186]; assesses=[PA-FORM-AAVEGA-186, PA-LEX-AUNA] -->
 
 > **ਆਵੇਗੀ** — *aavegii* — she or it will come
 

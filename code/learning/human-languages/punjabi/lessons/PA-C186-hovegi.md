@@ -39,7 +39,7 @@ reviews_of: [PA-C186-hovega, PA-C181-yatra]
 [PAUSE 2s] Say **ਹੋਵੇਗਾ**, then say **ਯਾਤਰਾ**.
 
 ## Grammar Lens: change only the agreement ending
-<!-- hl-knowledge: introduces=[PA-FORM-HOVEGI-186]; assesses=[PA-FORM-HOVEGA-186] -->
+<!-- hl-knowledge: introduces=[PA-FORM-HOVEGI-186]; assesses=[PA-FORM-HOVEGA-186, PA-LEX-HONA] -->
 
 > **ਹੋਵੇਗੀ** — *hovegii* — it will be or happen, feminine singular
 
