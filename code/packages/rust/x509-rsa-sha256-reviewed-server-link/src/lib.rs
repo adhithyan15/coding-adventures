@@ -235,4 +235,26 @@ mod tests {
             "X.509 RSA SHA-256 reviewed server link error EvidenceMismatch"
         );
     }
+
+    #[test]
+    fn anchor_policy_accepts_only_absent_name_constraints() {
+        assert!(selected_anchor_has_no_name_constraints(None));
+        assert!(!selected_anchor_has_no_name_constraints(Some(&[
+            0x30, 0x00,
+        ])));
+    }
+
+    #[test]
+    fn unsupported_anchor_name_constraints_error_is_payload_free() {
+        let error = X509RsaSha256ReviewedServerLinkError::unsupported_anchor_name_constraints();
+
+        assert_eq!(
+            error.kind(),
+            X509RsaSha256ReviewedServerLinkErrorKind::UnsupportedAnchorNameConstraints
+        );
+        assert_eq!(
+            error.to_string(),
+            "X.509 RSA SHA-256 reviewed server link error UnsupportedAnchorNameConstraints"
+        );
+    }
 }
