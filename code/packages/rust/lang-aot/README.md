@@ -682,9 +682,14 @@ generic `GrammarLexer`/`GrammarParser` build from `ruby3.3.6.tokens` and
 divisor stops the program the LANG83 way: the output so far, then
 `Trap.DivZero`.
 
-Thirteen `lang_matrix` rows (each a case of
-`code/grammars/ruby/corpus/rb-int-puts/`) declare all eight executable
-columns. Four of them are the matrix's first `Expect::StdoutThenTrap` rows,
+Twenty-eight `lang_matrix` rows declare all eight executable columns. Each
+runs one case of `code/grammars/ruby/corpus/rb-int-puts/` under one release
+(`Prog`'s `release` and `case` fields): the fourteen positive cases on the
+default 3.3.6, and again on 3.3.5. Since phase 5b slice 2, 3.3.5 is the
+representative of the one IIR-identity class `ruby-iir-compiler`'s release
+sweep finds (3.3.5, 3.3.6, 3.3.7: `code/grammars/ruby/release_classes.csv`),
+so these rows prove stage B for all three releases (`release_inventory.py
+check --matrix`). The cases' `StdoutThenTrap` rows were the matrix's first,
 which check the output written before the trap *and* the kind each column
 reports (stderr on native/LLVM/JVM/CLR, `env.__trap` on WASM,
 `VMError::Trap` on the VM and JIT, a caught `erlang:error` on BEAM):
@@ -695,9 +700,11 @@ cargo test -p lang-aot --test lang_matrix ruby_rows_ -- --nocapture
 
 `ruby_rows_agree_with_the_host_ruby_oracle` re-checks every expectation
 against a host ruby 3.3 (the compiled programs never run on it),
-`ruby_rows_are_rb_int_puts_corpus_cases` ties the rows to the corpus, and
-`ruby_rows_pass_the_lang83_check_on_all_nine_backends` runs
-`check_module_for` on all nine backends.
+`ruby_rows_are_rb_int_puts_corpus_cases` ties the rows to the corpus,
+`ruby_rows_run_their_corpus_case` checks that the rows are exactly the
+sweep's boundary set, and
+`ruby_rows_pass_the_lang83_check_on_all_nine_backends` compiles each row at
+its own release and runs `check_module_for` on all nine backends.
 
 Since phase 5b, `--lang ruby@<release>` selects any profiled release of
 `code/grammars/ruby/releases.csv` exactly, through the same release API as
@@ -1326,10 +1333,17 @@ has so far and stops with `Trap.Overflow`: a stated divergence, with bignum
 promotion left for later. A zero divisor stops it with `Trap.DivZero`, like
 `ZeroDivisionError`.
 
-The eighteen `lang_matrix` Python rows are every accepted case of
-`code/grammars/python/corpus/py-int-print/`, and they declare all eight
-executable columns. Nine of them are `StdoutThenTrap` rows, which check the
-output written before the trap *and* the kind each column reports. LANG79's
+Fifty-three `lang_matrix` Python rows declare all eight executable columns:
+every accepted case of `code/grammars/python/corpus/py-int-print/` on the
+default 3.13.16 (eighteen), and, since phase 7b slice 2, every case each
+IIR-identity class representative of `python-iir-compiler`'s release sweep
+accepts: 3.0a1 (seventeen; it refuses `int_underscores`) and 3.12.3
+(eighteen; its class also holds 3.13.16, 3.11.17 and 3.16.0a1). So they
+prove stage B for all five releases (`release_inventory.py check --matrix`),
+and `python_rows_run_their_corpus_case` checks that they are exactly the
+sweep's boundary set in `code/grammars/python/release_classes.csv`. Nine
+cases are `StdoutThenTrap` rows, which check the output written before the
+trap *and* the kind each column reports. LANG79's
 float pilot (`python_iir_compiler::compile_source`) is a separate API and is
 not reachable from `lang-aot`.
 

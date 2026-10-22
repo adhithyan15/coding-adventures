@@ -28,6 +28,11 @@
   `tests/common/mod.rs`, shared with the sweep. They now fail on an override
   other than `.reject@<release>` (an `.expect@<x>` would otherwise be
   ignored).
+- `the_default_release_claims_py_int_print_on_the_backends` no longer
+  requires the default to be the only `backend_status` claim. It requires
+  the default to claim B, and the releases claiming B to be exactly the
+  releases claiming I. `releases.csv` now claims B for all five releases,
+  because `lang-aot`'s matrix runs the corpus on each class representative.
 
 ## Unreleased — LANG84 phase 7b, slice 1: release recorded and selectable through lang-aot
 

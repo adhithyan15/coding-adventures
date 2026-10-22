@@ -117,8 +117,20 @@ Python 3. These five releases have a pair:
 | 3.16.0a1 | newest inventory row | as 3.12.3 | pinned source at the tag |
 
 Every row is `partial`, stage `P`, `grammar_subset` `py-int-print`,
-`iir_status` `py-int-print` and profile `py3`. Only 3.13.16 claims
-`backend_status`, because the `lang_matrix` rows compile that release.
+`iir_status` `py-int-print` and profile `py3`. Since LANG84 phase 7b slice 2
+every row also claims `backend_status`. `python-iir-compiler`'s
+`tests/release_sweep.rs` groups the five releases into IIR-identity classes
+and writes `release_classes.csv` (`subset,case,release,class`, one row per
+positive case and release; `class` is a 16-hex digest of the release's IIR
+for the whole corpus, or `rejected` where a `.reject@<release>` override
+applies). There are two classes. 3.0a1 is alone, because it refuses
+`int_underscores`. 3.12.3, 3.13.16, 3.11.17 and 3.16.0a1 form the other,
+with 3.12.3 as its representative, the first of them in this file.
+`lang_matrix` runs every case each representative accepts on every backend,
+plus the whole corpus on the default 3.13.16. `check --matrix` credits the
+3.12.3 rows to 3.11.17 and 3.16.0a1. After a deliberate change,
+`PYTHON_RELEASE_SWEEP_WRITE=1 cargo test -p python-iir-compiler --test
+release_sweep` rewrites the CSV.
 
 **How each pair was written.** Every pair is `reviewed`: no two releases have
 identical syntax blobs, so none is a mechanical copy. `pair-evidence.csv`

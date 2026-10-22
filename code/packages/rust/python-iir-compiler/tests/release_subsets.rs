@@ -45,8 +45,11 @@ fn profiles_match_the_inventory() {
     assert_eq!(profiled, 5, "3.0a1, 3.11.17, 3.12.3, 3.13.16 and 3.16.0a1");
 }
 
-/// LANG84 C4.4: the default is an exact row that claims an IIR subset, and
-/// the only row claiming `backend_status` (the matrix compiles it).
+/// LANG84 C4.4: the default is an exact row that claims an IIR subset. It
+/// claims `backend_status` too, and since phase 7b slice 2 so does every
+/// other claiming release: `lang_matrix` runs the corpus on each IIR-identity
+/// class representative, and `release_inventory.py check --matrix` verifies
+/// each B claim case by case. B is never claimed without I.
 #[test]
 fn the_default_release_claims_py_int_print_on_the_backends() {
     assert!(claiming_releases().iter().any(|r| r == DEFAULT_RELEASE), "{DEFAULT_RELEASE}");
@@ -55,7 +58,8 @@ fn the_default_release_claims_py_int_print_on_the_backends() {
         .filter(|row| row["backend_status"].split(';').any(|s| s == SUBSET))
         .map(|row| row["release"].clone())
         .collect();
-    assert_eq!(backend, [DEFAULT_RELEASE]);
+    assert!(backend.iter().any(|r| r == DEFAULT_RELEASE), "{DEFAULT_RELEASE}: {backend:?}");
+    assert_eq!(backend, claiming_releases());
 }
 
 #[test]

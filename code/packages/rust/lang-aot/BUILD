@@ -73,7 +73,7 @@ cargo test -p lang-aot --test lang_matrix macrooct -- --nocapture
 # LANG-VM-FEATURE-COVERAGE.md and the corpus could diverge in CI without
 # anything noticing, which is exactly the failure the test was written to stop.
 cargo test -p lang-aot --test lang_matrix feature_coverage_doc_counts_match_programs_source -- --exact
-# LANG84 phase 5a (= LANG83 PR2): Ruby on every backend. The fourteen Ruby rows
+# LANG84 phase 5a (= LANG83 PR2): Ruby on every backend. The Ruby rows
 # also run in the full-corpus aggregate above; these name the Ruby-specific
 # claims so a Ruby regression is reported as one. The oracle compares every
 # expectation with a host ruby 3.3 (skips without one); the corpus test ties
@@ -83,6 +83,10 @@ cargo test -p lang-aot --test lang_matrix ruby_rows_run_on_every_available_backe
 cargo test -p lang-aot --test lang_matrix ruby_rows_are_rb_int_puts_corpus_cases -- --exact
 cargo test -p lang-aot --test lang_matrix ruby_rows_agree_with_the_host_ruby_oracle -- --exact
 cargo test -p lang-aot --test lang_matrix ruby_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+# LANG84 phase 5b slice 2: the Ruby rows (now 28: the corpus on the default 3.3.6
+# and on 3.3.5, the IIR-identity class representative) are exactly the release
+# sweep's boundary set in code/grammars/ruby/release_classes.csv.
+cargo test -p lang-aot --test lang_matrix ruby_rows_run_their_corpus_case -- --exact
 cargo test -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact
 #
 # VM-065 AUDIT (2026-09-21): `lang_matrix` is run BY NAME FILTER here, because
@@ -131,8 +135,8 @@ cargo test -p lang-aot --test lang_matrix perl_rows_run_on_every_available_backe
 cargo test -p lang-aot --test lang_matrix perl_rows_agree_with_the_host_perl_oracle -- --exact
 cargo test -p lang-aot --test lang_matrix perl_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
 cargo test -p lang-aot --test lang_matrix perl_rows_run_their_corpus_case -- --exact
-# LANG84 phase 7a: Python's py-int-print on every backend. The eighteen Python
-# rows also run in the full-corpus aggregate above; these name the
+# LANG84 phase 7a: Python's py-int-print on every backend. The Python rows
+# also run in the full-corpus aggregate above; these name the
 # Python-specific claims so a Python regression is reported as one. The oracle
 # compares every expectation with a host python3 3.13 (skips without one); the
 # corpus test ties the rows to code/grammars/python/corpus/py-int-print in both
@@ -143,4 +147,8 @@ cargo test -p lang-aot --test lang_matrix python_rows_run_on_every_available_bac
 cargo test -p lang-aot --test lang_matrix python_rows_are_py_int_print_corpus_cases -- --exact
 cargo test -p lang-aot --test lang_matrix python_rows_agree_with_the_host_python_oracle -- --exact
 cargo test -p lang-aot --test lang_matrix python_rows_pass_the_lang83_check_on_all_nine_backends -- --exact
+# LANG84 phase 7b slice 2: the Python rows (now 53: the corpus on the default
+# 3.13.16 and on the class representatives 3.0a1 and 3.12.3) are exactly the
+# release sweep's boundary set in code/grammars/python/release_classes.csv.
+cargo test -p lang-aot --test lang_matrix python_rows_run_their_corpus_case -- --exact
 cargo test -p lang-aot --test lang_matrix trap_kinds_are_read_from_every_columns_stderr -- --exact
