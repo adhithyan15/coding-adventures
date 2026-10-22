@@ -396,3 +396,21 @@ before RED tests, then source, then package changelogs/README metadata.
 Reference: [CommonMark 0.31.2 fenced code blocks](https://spec.commonmark.org/0.31.2/#fenced-code-blocks).
 CommonMark permits implementation-specific info treatment; this section fixes
 the additional TE04 metadata normalization contract.
+
+### Fenced repair fixture CI selection
+
+An exact repository-relative change to
+`code/specs/gfm-fenced-block-v1/cases.json` selects the actual
+`typescript/gfm-parser` reader for `all` and `typescript` lanes. Use both the
+canonical package name and language; a missing or mismatched reader fails
+closed before publishing a build plan. Other language filters ignore this
+TypeScript component fixture. Selection unions with ordinary package edits;
+normal dependency propagation includes its real consumers.
+
+Do not stat the fixture: deletion and rename-old paths must still select its
+reader. Near paths, alternate case, nested files and backslash lookalikes do
+not qualify as this exact fixture. Preserve nil versus empty changed-file
+inputs, `Force=false`, platform-specific selection for Linux/macOS/Windows,
+required TypeScript toolchain detection and atomic plan publication: failure
+must neither create nor replace an output file. The forced main build is not
+evidence of fixture-only routing.
