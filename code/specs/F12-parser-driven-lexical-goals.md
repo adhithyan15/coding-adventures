@@ -1,6 +1,7 @@
 # F12 — Parser-driven lexical goals
 
-**Status:** proposed (2026-10-21). Builds on [F04](F04-lexer-pattern-groups.md)
+**Status:** accepted (2026-10-22). Proposed 2026-10-21; the open questions
+were settled with their recommended answers (see *Decisions* at the end). Builds on [F04](F04-lexer-pattern-groups.md)
 (pattern groups) and [F10](F10-declarative-lexer-modes.md) (declarative modes),
 and resolves F10's "Residual Hard Cases". It replaces the heuristic context
 stack tried on the local branch `claude/closurec-regex-after-brace`, which was
@@ -216,15 +217,19 @@ One PR each, every one under about 1,500 lines:
 5. **Optional:** template relex rules; the other editions (ES5–ES2024 have no
    `div` mode; give them one, or let them rely on re-lexing).
 
-## Open questions
+## Decisions
 
-1. **Keep the F10 guess (recommended), or always scan division like Closure?**
-   Always-division is the simpler model. But every regex then costs a re-lex,
-   and any consumer that still reads raw tokens is wrong on every regex.
-2. **WHITESPACE_ONLY on input that does not parse:** fail closed (recommended)
-   or keep today's token-only output?
-3. **Other grammar-tools ports (Ruby, …):** they ignore the `relex:` section
-   and keep today's behaviour until they implement it. Rust goes first, since
-   closurec is the consumer that needs it.
-4. **Module goal** (top-level `await`, `export`) stays out of scope. The
+These were open questions when the spec was proposed. They were settled on
+2026-10-22 with the recommended answers, which also follow the owner's
+standing direction to match Closure's observable behavior.
+
+1. **Keep the F10 guess as the first guess.** The parser corrects it by
+   re-lexing. Always scanning `/` as division, as Closure does, is simpler,
+   but every regex would then need a re-lex, and any consumer still reading
+   raw tokens would be wrong on every regex.
+2. **WHITESPACE_ONLY fails closed on input that does not parse.** Closure's
+   WHITESPACE_ONLY parses too, so this is parity.
+3. **Rust goes first.** Other grammar-tools ports ignore the `relex:` section
+   and keep today's behavior until they implement it.
+4. **The module goal stays out of scope** (top-level `await`, `export`). The
    parser reads scripts.

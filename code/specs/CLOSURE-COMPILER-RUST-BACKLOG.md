@@ -60,10 +60,19 @@ stop and ask the owner. Don't stretch the PR to satisfy both.
    gates unless the PR adds `unsafe`.
 5. **Short status, in the right place.** The PR description says what changed
    and how it was tested, in plain prose. Progress notes go in issue
-   *comments*, never in issue or epic descriptions. This file changes only when
-   an item is selected, merged or added.
-6. **Timebox.** If a PR has gone 24 hours or three CI rounds without turning
-   green, stop and report to the owner instead of widening its scope.
+   *comments*, never in issue or epic descriptions. Record merges in this file
+   at least once a day, as a small docs-only PR of its own: mark each merged
+   row done with its PR number and close its issue. Don't edit this file
+   inside item PRs, because concurrent PRs would conflict on it.
+6. **Timebox an item, never the loop.** An item that has gone 24 hours, three
+   CI rounds or three security-review rounds without converging is *parked*:
+   - Push its branch as is.
+   - Post one comment on its issue saying where it stands and what blocks it.
+   - Mark its row `Parked`, and tell the owner in one line.
+   - Then take the next row.
+   If the way forward is a design question, write the spec as its own docs PR
+   and mark the row `Decision`. The loop itself never goes idle while any
+   queue row is Ready.
 7. **No hidden gates.** An item waits only when its row says `Blocked by` and
    names the blocking item.
 8. **Shared crates.** At most one open PR at a time may touch a given shared
@@ -71,6 +80,10 @@ stop and ask the owner. Don't stretch the PR to satisfy both.
    `closure-pass-pipeline`, `cli-builder`). Other PRs may proceed.
 9. **Owner decisions.** Items marked `Decision` need the owner's answer before
    any code. Ask once, then skip to the next item until it arrives.
+10. **Near-root crates need the full build.** A PR that changes `lexer`,
+    `parser` or `grammar-tools` rebuilds almost the whole repository, and one
+    CI runner runs out of disk doing that. Add the `ci-full-build` label when
+    you open such a PR, so CI shards the build.
 
 Standing owner directions remain in force:
 
@@ -120,6 +133,7 @@ CCR IDs live in the GitHub issue tracker. Every item is an issue titled
 CCR-011–014, 016–021, 023–026, 028–030 and 032–040 predate that rule and exist
 only as rows in the pre-reset file.
 
+
 ## Ordered queue
 
 Work top to bottom. When an item merges, mark it done, then re-check whether
@@ -127,66 +141,74 @@ anything newly found outranks the next row.
 
 Ranking:
 1. Miscompiles, crashes and security.
-2. Fake success: output that claims more than the compiler did.
+2. Rejecting valid JavaScript that Closure compiles, and fake success (output
+   that claims more than the compiler did).
 3. Cheap ladder wins.
 4. Front-end and output contract.
 5. ADVANCED semantics.
 6. Workflows and flags.
 
-### Q0 — miscompiles, crashes, broken tooling
+### Q0 — miscompiles and wrong output
 
-| # | ID | Item | Acceptance | Status |
-|---:|---|---|---|---|
-| 1 | #16008 | A top-level binding shadowed by a `for`-head binding is deleted, so the output throws a `ReferenceError`. | A ladder rung or regression test that fails before the fix; the output runs. | In review — #17829 |
-| 2 | #16009 | Stack overflow (SIGABRT) on a long binary-expression chain, about 60 KB of input. | Parsing, the passes and emit stay iterative or bounded, and the hostile input compiles or fails cleanly with a diagnostic. | In review |
-| 3 | #15939 | `cargo clippy -- -D warnings` can't pass: `Cargo.toml` allows a lint that clippy 0.1.94 doesn't know. | Strict clippy passes on `closurec`. | Ready |
-| 4 | #15942 | Add a ladder rung for an array spread before an index read, the gap the CLOC28 miscompile slipped through. | The rung is committed and agrees at every level. | Ready |
-| 5 | CCR-078 #15863 | At SIMPLE, closurec propagates a const that upstream keeps. This output has never been validated. | Either match upstream, or record the divergence as intentional with runtime-equivalence evidence. | Ready |
-| 5.5 | CCR-075 #15860 | closurec compiles input that upstream refuses, starting with private class elements. Refuse it the same way upstream does. | The `private_field` rungs and the CCR-081 `upstream_refuses` fixtures produce upstream's diagnostic key and message, location and exit status 2, with no output or sidecars. The ladder harness gains a "both declined identically" verdict that counts as agreement. | Ready |
+| # | ID | Item | Status |
+|---:|---|---|---|
+| 1 | F12 phase 0 | Add the ExpressionStatement lookahead to the ES grammars (ECMA-262 §14.5), so `{ a }⏎/foo/g.exec(s)` fails to parse instead of compiling to a different program. See [F12](F12-parser-driven-lexical-goals.md) §5. | Ready |
+| 2 | #17907 | The emitter turns non-directives (`"use\x20strict"`, `` `use strict` ``, `("use strict")`) into a real `"use strict"` directive. | Ready |
+| 3 | #17940 | A function declaration in a class `static {}` block parses as an expression (same family as #17877). | Ready |
+| 4 | #17939 | WHITESPACE_ONLY drops the restricted-production line break after `yield`. | Ready |
+| 5 | #17887 | The emitter prints `a<!--b`, line comments swallow `\r`, and WHITESPACE_ONLY drops a line break after the identifier `yield`. One PR per bug. | Ready |
+| 6 | #17883 | WHITESPACE_ONLY drops the empty-statement `;` after `with(...)` or a label before `}`, so the output no longer parses. | Ready |
+| 7 | #17888 | The BLOCK_COMMENT pattern misses comments ending in `**/`, and REGEX admits line terminators. | Ready |
+| 8 | #17882 | ASI insertion takes tens of seconds on about 400 labeled blocks. Make it linear or bounded. | Ready |
+
+### Q0.5 — valid JavaScript that closurec rejects
+
+| # | ID | Item | Status |
+|---:|---|---|---|
+| 9 | #17854 | Any template literal with a substitution fails the typed parse at SIMPLE/ADVANCED. | Ready |
+| 10 | #17941 | Object method shorthand and async function expressions fail to parse. | Ready |
+| 11 | #17852 | Adjacent class members and reserved-word property names fail to parse. | Ready |
+| 12 | F12 phases 1–4 | Parser-driven lexical goals, so regex vs. division is decided by the parser. Phase 1 `lexer` (snapshot, mode override, deferred errors); phase 2 `parser`/`grammar-tools` (`relex:` section, token source, undo, memo); phase 3 `javascript-parser` (relex rules, byte-offset ASI, fix B's inputs as fixtures); phase 4 `closurec` (resolved token stream; WHITESPACE_ONLY parses). One PR per phase; phases 1–3 need `ci-full-build`. | Ready after #1 |
+| 13 | #17884 | Support Annex B HTML-like comments (`<!--` and line-leading `-->`) instead of refusing them. Coordinate with #17914, another session's fix for the `-->` test262 regression. | Ready after #17914 merges |
+| 14 | CCR-075 #15860 | Refuse what Closure refuses. Slice 1 (private class elements) merged as #17876; find and ship the remaining upstream refusals. | Ready |
 
 ### Q1 — cheap ladder wins (emitter and DCE parity)
 
-Each of these is a small change to the emitter or DCE. Each also has to check
+Each of these is a small change to the emitter or DCE, and each has to check
 its blast radius across the 462 goldens.
 
 | # | ID | Item | Status |
 |---:|---|---|---|
-| 6 | CCR-080 #15867 | The WHITESPACE_ONLY path drops the program's final terminator after `do…while`. | Ready |
-| 7 | CCR-084 #15919 | Keep the `;` on a block-final `throw`. | Ready |
-| 8 | CCR-083 #15918 | Brace-wrap a `do…while` used as a substatement. | Ready |
-| 9 | CCR-087 #15924 | Unwrap a single-statement block under a label. | Ready |
-| 10 | CCR-088 #15925 | Unwrap single-statement substatement blocks for every statement kind, not just expression statements. | Ready |
-| 11 | CCR-076 #15861 | Drop braces around a single-statement body. | Ready |
-| 12 | CCR-077 #15862 | Match upstream spacing and class-body punctuation. | Ready |
-| 13 | CCR-085 #15920 | Strip `"use strict"` unless `--emit_use_strict` is set; re-emit it single-quoted. | Ready |
-| 14 | CCR-082 #15878 | Truncate dead code after `continue`. | Ready |
-| 15 | CCR-086 #15923 | `dce_program` truncates the dead tail after a top-level `throw`. | Ready |
-| 16 | CCR-074 #15855 | The `while`→`for` rewrite hoists the preceding initializer into the `for` header. | Ready |
+| 15 | CCR-088 #15925 | Unwrap single-statement substatement blocks for every statement kind, not just expression statements. | Ready |
+| 16 | CCR-076 #15861 | Drop braces around a single-statement body. | Ready |
+| 17 | CCR-077 #15862 | Match upstream spacing and class-body punctuation. | Ready |
+| 18 | CCR-085 #15920 | Strip `"use strict"` unless `--emit_use_strict` is set; re-emit it single-quoted. Do it after #17907. | Ready |
+| 19 | CCR-074 #15855 | The `while`→`for` rewrite hoists the preceding initializer into the `for` header. | Ready |
+| 20 | CCR-084, CCR-083, CCR-087, CCR-086 | Their fixes merged (see below), but the issues are still open. Check that each is fully done, close it or file what's left. | Ready |
 
 ### Q2 — front end and output contract
 
 | # | ID | Item | Status |
 |---:|---|---|---|
-| 17 | CCR-065 #16970 | Exact lexical source intervals in `lexer` and `javascript-lexer`. | In review — #17803 |
-| 18 | CCR-007 #15624 | Real VLQ source maps through parser spans, passes, emitter and outputs. Build on #17803's intervals; ship parser spans, emitter mappings and multi-file/wrapper support as separate slices. | Blocked by #17803 |
-| 19 | CCR-006 #15611 | An execution-backed capability matrix, so users can tell parse-only flags from implemented ones. | Ready |
-| 20 | CCR-015 #15674 | Diagnostics plumbing: levels, groups, formatting, counts, streams and exit codes. Slice it. | Ready |
-| 21 | CCR-042 #15571 | Match the legacy-octal warning diagnostics. | Blocked by CCR-015 |
-| 22 | CCR-008 #15626 | Enforce `language_in` syntax boundaries. | Ready |
-| 23 | CCR-079 #15866 | Derive the ladder's divergence ledger from captured oracle runs. | Ready |
-| 24 | CCR-089 #15935 | Recapture the upstream-refusal evidence on the pinned JVM. | Ready |
+| 21 | CCR-007 #15624 | Real VLQ source maps through parser spans, passes, emitter and outputs, building on #17803's intervals. Ship parser spans, emitter mappings and multi-file/wrapper support as separate slices. | Ready |
+| 22 | CCR-006 #15611 | An execution-backed capability matrix, so users can tell parse-only flags from implemented ones. | Ready |
+| 23 | CCR-015 #15674 | Diagnostics plumbing: levels, groups, formatting, counts, streams and exit codes. Slice it. | Ready |
+| 24 | CCR-042 #15571 | Match the legacy-octal warning diagnostics. | Blocked by CCR-015 |
+| 25 | CCR-008 #15626 | Enforce `language_in` syntax boundaries. | Ready |
+| 26 | CCR-079 #15866 | Derive the ladder's divergence ledger from captured oracle runs. | Ready |
+| 27 | CCR-089 #15935 | Recapture the upstream-refusal evidence on the pinned JVM. | Ready |
 
 ### Q3 — ADVANCED semantics
 
 | # | ID | Item | Status |
 |---:|---|---|---|
-| 25 | CCR-068 follow-up #15940 | Literal-property propagation should fire on more than one binding per program. | Ready |
-| 26 | CCR-022 #15856 | Renaming covers loop locals, catch parameters and labels. | Ready |
-| 27 | CCR-067 #15840 | ESTree migration: retire the hand-written bridge, one node family per PR. | Ready (spec first) |
-| 28 | CCR-010 #15628 | Destructuring binding targets end to end. | Blocked by CCR-067 for the bridge part |
-| 29 | CCR-065 #16875 | Connect the remaining call and composite fold lineage. | Ready |
-| 30 | CCR-065 epic #15830 | Provenance slices P2–P6 from the epic: typed edges, per-node contributions, per-pass adoption (`inline` and `rename` first), a query surface, and a join with source maps. One slice per PR. | Ready after #29; P6 needs CCR-007 |
-| 31 | CCR-009 #15627 | `language_out` lowering and TRANSPILE_ONLY, starting with optional chaining and nullish coalescing. | Ready |
+| 28 | CCR-068 follow-up #15940 | Literal-property propagation should fire on more than one binding per program. | Ready |
+| 29 | CCR-022 #15856 | Renaming covers loop locals, catch parameters and labels. | Ready |
+| 30 | CCR-067 #15840 | ESTree migration: retire the hand-written bridge, one node family per PR. | Ready (spec first) |
+| 31 | CCR-010 #15628 | Destructuring binding targets end to end. | Blocked by CCR-067 for the bridge part |
+| 32 | CCR-065 #16875 | Connect the remaining call and composite fold lineage. | Ready |
+| 33 | CCR-065 epic #15830 | Provenance slices P2–P6 from the epic: typed edges, per-node contributions, per-pass adoption (`inline` and `rename` first), a query surface, and a join with source maps. One slice per PR. | Ready after #32; P6 needs CCR-007 |
+| 34 | CCR-009 #15627 | `language_out` lowering and TRANSPILE_ONLY, starting with optional chaining and nullish coalescing. | Ready |
 
 ### Q4 — workflows and flags
 
@@ -207,7 +229,8 @@ migration trial). Each one starts with a survey PR that splits it into issues.
 
 ### Decisions needed from the owner
 
-None open.
+None open. F12's open questions were settled on 2026-10-22 with their
+recommended answers (see the spec's *Decisions* section).
 
 ### Filler (only while waiting on CI)
 
@@ -221,14 +244,40 @@ CCR-069 #15843 (remove serde), CCR-070 #15845 (in-repo regex), CCR-072 #15832
   - CCR-068 slices #15964, #16011 and #16019.
   - CCR-081.
   - The CCR-065 foundations: #16866, #16881, #16905 and #16964.
-- **Since the reset:** none yet.
+- **Since the reset (2026-10-19 to 2026-10-22):**
+  - **Miscompiles:**
+    - #16008 for-head scope (#17829)
+    - #17836 switch-case scope (#17859)
+    - #17840 WHITESPACE_ONLY newline ASI (#17875, which also completes CCR-080)
+    - #17841 hoisted declarations after `return` (#17845)
+    - #17842 nested `break` in a collapsed switch (#17861)
+    - #17877 declarations in blocks (#17899)
+    - #17879 shared switch declarations (#17894)
+    - #17886 template, comment and regex token ends (#17901)
+  - **Crash and tooling:**
+    - #16009 bounded expression chains (#17833)
+    - #15939 strict clippy (#17835)
+  - **Parity:**
+    - #15942 spread ladder rung (#17846)
+    - CCR-078 SIMPLE `const` (#17848)
+    - CCR-075 slice 1 (#17876)
+    - CCR-082 (#17844)
+    - CCR-083 (#17860)
+    - CCR-084 (#17839, #17900)
+    - CCR-086 (#17874)
+    - CCR-087 (#17916)
+  - **Front end:** CCR-065 #16970 exact lexical source intervals (#17803).
+- **Parked:** fix B, a lexer-only regex-vs-division context stack on local
+  branch `claude/closurec-regex-after-brace`. It was abandoned after three
+  non-converging security-review rounds, and F12 replaces it.
 
 ## Loop record
 
-Add one line per selection or merge.
+Add one line per batch of merges or selections.
 
 | Date | Event |
 |---|---|
 | 2026-10-19 | Backlog reset. #17288 closed; lexer intervals salvaged as #17803. Provenance is no longer a gate. Next: #16008. |
 | 2026-10-19 | Owner decided CCR-075: refuse what Closure refuses. Added to Q0 as rank 5.5. |
 | 2026-10-19 | Selected #16008 (PR #17829) and #16009 (bounded chains, CLOC42). |
+| 2026-10-22 | Recorded 20 Closure PRs merged since the reset. The loop had stopped after parking fix B, so rule 6 now parks the item, not the loop. Merges are recorded in a daily docs PR (rule 5), and near-root crate PRs use `ci-full-build` (rule 10). F12 accepted. New front-end findings ranked into Q0/Q0.5. Next: F12 phase 0. |
