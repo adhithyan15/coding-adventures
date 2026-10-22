@@ -400,7 +400,7 @@ def corpus_cases(
         stems.setdefault(stem, set()).add(suffix if dot else "")
     cases: set[str] = set()
     for stem, suffixes in sorted(stems.items()):
-        where = f"corpus/{subset}/{stem}"
+        where = f"corpus/{subset}/{printable(stem)}"
         if not CASE_RE.match(stem):
             report.error(f"{where}: case name must match [A-Za-z0-9_-]+")
             continue
