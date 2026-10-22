@@ -13507,15 +13507,21 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut nodes: Vec<StructuralNode> = Vec::new();
     let mut node_indices: HashMap<String, usize> = HashMap::new();
     let mut relationships = Vec::new();
+    let mut direction = None;
 
     while !cursor.at_eof() {
-        if cursor.current().type_ == TokenType::Keyword {
+        if matches!(cursor.current().value.as_str(), "title" | "direction" | "classDef" | "class" | "style") {
             match cursor.current().value.as_str() {
                 "title" => {
                     cursor.advance();
                     title = Some(parse_er_line_text(&mut cursor));
                 }
-                "direction" | "classDef" | "class" | "style" => {
+                "direction" => {
+                    cursor.advance();
+                    direction = Some(direction_from_token(cursor.current())?);
+                    cursor.advance();
+                }
+                "classDef" | "class" | "style" => {
                     while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
                         cursor.advance();
                     }
@@ -13646,7 +13652,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         title,
         accessibility_title: None,
         accessibility_description: None,
-        direction: None,
+        direction,
         alignments: Vec::new(),
         nodes,
         groups: vec![],
