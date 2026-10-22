@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:00bc7d4d8bc997c2",
+  "lessonIds": [
+    "AR-C347-ikhtatafa",
+    "AR-C347-lahiqa",
+    "AR-C347-rahina",
+    "AR-C347-fidya",
+    "AR-C347-khatif"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch347.txt",
+  "json": "arabic/narration/ch347.json",
+  "textHash": "fnv1a64:54155f1caf664241",
+  "jsonHash": "fnv1a64:0a8fc6c31f3968a4",
+  "findings": []
+}

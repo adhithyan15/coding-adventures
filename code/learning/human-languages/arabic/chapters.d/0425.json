@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "On board",
+  "label": "ch:ar-on-board",
+  "canDo": "I can say a flight attendant, a passenger, a destination, to tighten and arrival.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C425-wusul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can say a flight attendant, a passenger, a destination, to tighten and arrival.",
+    "assesses": [
+      "AR-LEX-C425-RAKIB425-03",
+      "AR-LEX-C425-RAKIB425-04",
+      "AR-LEX-C425-RAKIB425-05"
+    ]
+  }
+}

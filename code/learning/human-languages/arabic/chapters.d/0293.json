@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Reporters and statements",
+  "label": "ch:ar-reporters-and-statements",
+  "canDo": "I can say a correspondent, a statement, a newspaper, to announce and to declare.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C293-sarraha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can say a correspondent, a statement, a newspaper, to announce and to declare.",
+    "assesses": [
+      "AR-LEX-C293-AKHBAR293-03",
+      "AR-LEX-C293-AKHBAR293-04",
+      "AR-LEX-C293-AKHBAR293-05"
+    ]
+  }
+}

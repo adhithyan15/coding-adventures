@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C522-bashara",
+    "language": "arabic",
+    "chapter": 522,
+    "sequence": 28940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46e90d0f22b02545"
+  },
+  "findings": []
+}

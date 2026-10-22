@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C470-yanbu",
+    "language": "arabic",
+    "chapter": 470,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1189fe312b8d2172"
+  },
+  "findings": []
+}

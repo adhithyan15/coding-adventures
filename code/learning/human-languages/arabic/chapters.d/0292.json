@@ -1,0 +1,21 @@
+{
+  "chapter": 292,
+  "title": "Would, And Six Lines About A Trip",
+  "label": "ch:ar-would-and-six-lines",
+  "canDo": "I can say what I would do if things were different, say that a plan depends on something, and write six connected lines about a trip.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-R292-would-and-depends",
+    "kind": "production",
+    "summary": "Complete AR-R292-would-and-depends: an unreal condition with law, a wish with layta, and a plan that depends on something, with ʿalā ḥasab and the condition word.",
+    "assesses": [
+      "AR-LEX-C292-SHART292-01",
+      "AR-GRAMMAR-C292-DEPENDS-01",
+      "AR-GRAMMAR-C292-HASABA-01",
+      "AR-GRAMMAR-C292-LAW-01",
+      "AR-GRAMMAR-C292-LAYTA-01"
+    ]
+  }
+}

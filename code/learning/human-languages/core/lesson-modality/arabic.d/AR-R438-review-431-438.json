@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R438-review-431-438",
+    "language": "arabic",
+    "chapter": 438,
+    "sequence": 24610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d2c7dd18506225c"
+  },
+  "findings": []
+}

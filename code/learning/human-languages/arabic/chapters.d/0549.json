@@ -1,0 +1,19 @@
+{
+  "chapter": 549,
+  "title": "The attic and the door",
+  "label": "ch:ar-the-attic-and-the-door",
+  "canDo": "I can name an attic, a bell, a handle, a bolt and a drain.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C549-balua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 549: I can name an attic, a bell, a handle, a bolt and a drain.",
+    "assesses": [
+      "AR-LEX-C549-BAB549-03",
+      "AR-LEX-C549-BAB549-04",
+      "AR-LEX-C549-BAB549-05"
+    ]
+  }
+}

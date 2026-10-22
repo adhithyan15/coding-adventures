@@ -1,0 +1,11 @@
+{
+  "id": "AR-C483-qaris",
+  "pathSegment": "AR-PATH-483-BARD483",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-483-BARD483",
+      "order": 2
+    }
+  ]
+}

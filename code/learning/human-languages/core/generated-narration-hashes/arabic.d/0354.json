@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:0c6dc168b1f02631",
+  "lessonIds": [
+    "AR-C354-hutam",
+    "AR-C354-ramad",
+    "AR-C354-sharara",
+    "AR-C354-lahab",
+    "AR-C354-tasarraba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch354.txt",
+  "json": "arabic/narration/ch354.json",
+  "textHash": "fnv1a64:200504d5434640d3",
+  "jsonHash": "fnv1a64:dbde7e334b0ca45a",
+  "findings": []
+}

@@ -5,6 +5,27 @@ All notable changes to the node-bridge crate will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed — addons now link on Windows
+
+On `x86_64-pc-windows-msvc` every addon built on node-bridge failed to
+link with `undefined symbol: napi_*` (42 of them for conduit): a PE/COFF
+DLL must name the module behind each import, and nothing told the linker
+that the N-API functions live in `node.exe`.  The `extern "C"` block is
+now marked
+
+```rust
+#[cfg_attr(windows, link(name = "node.exe", kind = "raw-dylib", modifiers = "+verbatim"))]
+```
+
+so rustc writes the `node.exe` import table itself — the same imports
+node-gyp's `node.lib` provides, with no download and no Node.js install
+lookup.  Linux and macOS are unchanged (the attribute is Windows-only).
+A cross-link of conduit for Windows went from 42 unresolved `napi_*`
+symbols to none.  Limitation: the import is bound to a host executable
+named `node.exe` (no delay-load hook for renamed hosts such as Electron).
+
 ## [0.2.0] - 2026-05-18
 
 ### Added — Buffer helpers

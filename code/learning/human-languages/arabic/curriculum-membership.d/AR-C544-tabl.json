@@ -1,0 +1,11 @@
+{
+  "id": "AR-C544-tabl",
+  "pathSegment": "AR-PATH-544-ALAT544",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-544-ALAT544",
+      "order": 2
+    }
+  ]
+}

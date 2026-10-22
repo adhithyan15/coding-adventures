@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 325,
+  "title": "Witnesses and oaths",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a0a070fe6ee47cea",
+  "lessons": [
+    {
+      "id": "AR-C325-shahida",
+      "sequence": 18640,
+      "title": "شهد (shahida) — to witness; to testify",
+      "headword": "شهد",
+      "romanization": "shahida",
+      "gloss": "to witness; to testify",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ee06522292041e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a whistle, then the Arabic for chaos."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شهد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شهد — shahida — \"to witness; to testify\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شهدت المدينة مطرا شديدا أمس. shahidat al-madīna maṭaran shadīdan ams. The city saw heavy rain yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشهد, yashhad."
+            },
+            {
+              "kind": "speech",
+              "text": "شهد (shahida) على or شهد (shahida) بـ: to testify. A witness is شاهد."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شهد (shahida) is built on the native Arabic root sh-h-d (Lane), \"to be present at a thing and see it\"; shahāda is testimony, and a certificate."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahida, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahida*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahidat al-madīna maṭaran shadīdan ams. — The city saw heavy rain yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahidat al-madīna maṭaran shadīdan ams.* — The city saw heavy rain yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a whistle, then the Arabic for chaos, then say shahida again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a whistle, then the Arabic for chaos, then say *shahida* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شهد (shahida) mean? (\"To witness; to testify\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C325-aqsama",
+      "sequence": 18650,
+      "title": "أقسم (aqsama) — to swear",
+      "headword": "أقسم",
+      "romanization": "aqsama",
+      "gloss": "to swear",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aaf5adaed9b83cd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for chaos, then the Arabic for to witness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أقسم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أقسم — aqsama — \"to swear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أقسم الشاهد أن كلامه صحيح. aqsama ash-shāhid anna kalāmahu ṣaḥīḥ. The witness swore that what he said was true."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقسم, yuqsim."
+            },
+            {
+              "kind": "speech",
+              "text": "The oath itself is قسم, qasam."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أقسم (aqsama) is built on the native Arabic root q-s-m (Lane), \"to divide\", the root of qism, a part. Lane gives qasam as an oath, and Form IV aqsama, to swear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aqsama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aqsama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aqsama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aqsama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aqsama ash-shāhid anna kalāmahu ṣaḥīḥ. — The witness swore that what he said was true.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aqsama ash-shāhid anna kalāmahu ṣaḥīḥ.* — The witness swore that what he said was true.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for chaos, then the Arabic for to witness, then say aqsama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for chaos, then the Arabic for to witness, then say *aqsama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أقسم (aqsama) mean? (\"To swear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C325-halafa",
+      "sequence": 18660,
+      "title": "حلف (ḥalafa) — to take an oath",
+      "headword": "حلف",
+      "romanization": "ḥalafa",
+      "gloss": "to take an oath",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f551a998e2166258",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to witness, then the Arabic for to swear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حلف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حلف — ḥalafa — \"to take an oath\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حلف الموظف أمام المحكمة. ḥalafa al-muwaẓẓaf amāma al-maḥkama. The employee took an oath before the court."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحلف, yaḥlif."
+            },
+            {
+              "kind": "speech",
+              "text": "An ally, one bound by oath, is حليف."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حلف (ḥalafa) is built on the native Arabic root ḥ-l-f (Lane), \"to swear\"; ḥilf is a pact sworn between tribes, and ḥalīf an ally."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥalafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥalafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥalafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥalafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥalafa al-muwaẓẓaf amāma al-maḥkama. — The employee took an oath before the court.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥalafa al-muwaẓẓaf amāma al-maḥkama.* — The employee took an oath before the court.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to witness, then the Arabic for to swear, then say ḥalafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to witness, then the Arabic for to swear, then say *ḥalafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حلف (ḥalafa) mean? (\"To take an oath\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C325-itarafa",
+      "sequence": 18670,
+      "title": "اعترف (iʿtarafa) — to confess, to admit",
+      "headword": "اعترف",
+      "romanization": "iʿtarafa",
+      "gloss": "to confess, to admit",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e189509c71da44b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to swear, then the Arabic for to take an oath."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اعترف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعترف — iʿtarafa — \"to confess, to admit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اعترف اللص بالسرقة. iʿtarafa al-liṣṣ bi-s-sariqa. The thief confessed to the theft."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعترف, yaʿtarif."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes بـ: اعترف (iʿtarafa) بالخطأ, he admitted the mistake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعترف (iʿtarafa) is built on the native Arabic root ʿ-r-f (Lane), \"to know\", the root of the taught ʿarafa. It is Form VIII, \"to own that one knows\": to admit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿtarafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿtarafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿtarafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿtarafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿtarafa al-liṣṣ bi-s-sariqa. — The thief confessed to the theft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿtarafa al-liṣṣ bi-s-sariqa.* — The thief confessed to the theft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to swear, then the Arabic for to take an oath, then say iʿtarafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to swear, then the Arabic for to take an oath, then say *iʿtarafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اعترف (iʿtarafa) mean? (\"To confess, to admit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C325-ankara",
+      "sequence": 18680,
+      "title": "أنكر (ankara) — to deny",
+      "headword": "أنكر",
+      "romanization": "ankara",
+      "gloss": "to deny",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b361fc3fc3120b53",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to take an oath, then the Arabic for to confess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أنكر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنكر — ankara — \"to deny\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أنكر المتهم كل شيء. ankara al-muttaham kull shayʾ. The defendant denied everything."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينكر, yunkir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنكر (ankara) is built on the native Arabic root n-k-r (Lane), \"not to know a thing\"; nakira is \"to find strange\". It is Form IV, \"to disown\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ankara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ankara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ankara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ankara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ankara al-muttaham kull shayʾ. — The defendant denied everything.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ankara al-muttaham kull shayʾ.* — The defendant denied everything.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to take an oath, then the Arabic for to confess, then say ankara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to take an oath, then the Arabic for to confess, then say *ankara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أنكر (ankara) mean? (\"To deny\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

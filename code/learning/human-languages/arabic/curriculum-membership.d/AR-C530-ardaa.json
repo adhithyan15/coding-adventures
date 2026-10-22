@@ -1,0 +1,11 @@
+{
+  "id": "AR-C530-ardaa",
+  "pathSegment": "AR-PATH-530-ATFAL530",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-530-ATFAL530",
+      "order": 2
+    }
+  ]
+}

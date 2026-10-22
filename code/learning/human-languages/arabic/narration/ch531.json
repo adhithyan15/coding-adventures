@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 531,
+  "title": "Growing up and growing old",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cf385cdcb21f9899",
+  "lessons": [
+    {
+      "id": "AR-C531-murahiq",
+      "sequence": 29400,
+      "title": "مراهق (murāhiq) — a teenager",
+      "headword": "مراهق",
+      "romanization": "murāhiq",
+      "gloss": "a teenager",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:706fce6bb216f338",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to wean, then the Arabic for to bring up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مراهق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مراهق — murāhiq — \"a teenager\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ابن جارنا مراهق ويحب الموسيقى العالية. ibn jārinā murāhiq wa-yuḥibbu al-mūsīqā al-ʿāliya. Our neighbour's son is a teenager and loves loud music."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مراهق (murāhiq) is built on the native Arabic root r-h-q, \"to come near\" (Lane). Murāhiq is the Form III participle: one coming near to manhood."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murāhiq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murāhiq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murāhiq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murāhiq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibn jārinā murāhiq wa-yuḥibbu al-mūsīqā al-ʿāliya. — Our neighbour's son is a teenager and loves loud music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibn jārinā murāhiq wa-yuḥibbu al-mūsīqā al-ʿāliya.* — Our neighbour's son is a teenager and loves loud music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to wean, then the Arabic for to bring up, then say murāhiq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to wean, then the Arabic for to bring up, then say *murāhiq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مراهق (murāhiq) mean? (\"A teenager\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C531-kabira",
+      "sequence": 29410,
+      "title": "كبر (kabira) — to get older; to grow up",
+      "headword": "كبر",
+      "romanization": "kabira",
+      "gloss": "to get older; to grow up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c77ef5bd962d8f59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to bring up, then the Arabic for a teenager."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كبر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كبر — kabira — \"to get older; to grow up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كبر الأطفال وسافروا إلى المدينة. kabira al-aṭfāl wa-sāfarū ilā al-madīna. The children grew up and went off to the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يكبر, yakbar."
+            },
+            {
+              "kind": "speech",
+              "text": "Kabira, yakbaru, is to grow older; kabura, yakburu, with the same letters, is to be big or great."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كبر (kabira) is built on the native Arabic root k-b-r, \"to be big, great\" (Lane). Kabīr, big, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabira, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabira*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kabira al-aṭfāl wa-sāfarū ilā al-madīna. — The children grew up and went off to the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kabira al-aṭfāl wa-sāfarū ilā al-madīna.* — The children grew up and went off to the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to bring up, then the Arabic for a teenager, then say kabira again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to bring up, then the Arabic for a teenager, then say *kabira* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كبر (kabira) mean? (\"To get older; to grow up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C531-nadija",
+      "sequence": 29420,
+      "title": "نضج (naḍija) — to ripen; to mature",
+      "headword": "نضج",
+      "romanization": "naḍija",
+      "gloss": "to ripen; to mature",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:999647eb159549aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a teenager, then the Arabic for to get older."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نضج",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نضج — naḍija — \"to ripen; to mature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نضج التين في آخر الصيف. naḍija at-tīn fī ākhir aṣ-ṣayf. The figs ripened at the end of the summer."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينضج, yanḍaj."
+            },
+            {
+              "kind": "speech",
+              "text": "Of a person it means to grow mature."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نضج (naḍija) is built on the native Arabic root n-ḍ-j, \"to be ripe, to be well cooked\" (Lane). Nāḍij, ripe, which you know, is its participle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḍija",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḍija*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḍija, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḍija*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naḍija at-tīn fī ākhir aṣ-ṣayf. — The figs ripened at the end of the summer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naḍija at-tīn fī ākhir aṣ-ṣayf.* — The figs ripened at the end of the summer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a teenager, then the Arabic for to get older, then say naḍija again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a teenager, then the Arabic for to get older, then say *naḍija* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نضج (naḍija) mean? (\"To ripen; to mature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C531-shaykhukha",
+      "sequence": 29430,
+      "title": "شيخوخة (shaykhūkha) — old age",
+      "headword": "شيخوخة",
+      "romanization": "shaykhūkha",
+      "gloss": "old age",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d47e734051ad32c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to get older, then the Arabic for to ripen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شيخوخة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شيخوخة — shaykhūkha — \"old age\"."
+            },
+            {
+              "kind": "speech",
+              "text": "في الشيخوخة يحتاج الإنسان إلى الراحة. fī ash-shaykhūkha yaḥtāju al-insān ilā ar-rāḥa. In old age a person needs rest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شيخوخة (shaykhūkha) is built on the native Arabic root sh-y-kh, \"to grow old\" (Lane). Shaykh, an old man and an elder, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shaykhūkha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shaykhūkha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shaykhūkha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shaykhūkha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fī ash-shaykhūkha yaḥtāju al-insān ilā ar-rāḥa. — In old age a person needs rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fī ash-shaykhūkha yaḥtāju al-insān ilā ar-rāḥa.* — In old age a person needs rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to get older, then the Arabic for to ripen, then say shaykhūkha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to get older, then the Arabic for to ripen, then say *shaykhūkha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شيخوخة (shaykhūkha) mean? (\"Old age\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C531-murabbiya",
+      "sequence": 29440,
+      "title": "مربية (murabbiya) — a nanny",
+      "headword": "مربية",
+      "romanization": "murabbiya",
+      "gloss": "a nanny",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:725eecbd9c3dc4c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to ripen, then the Arabic for old age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مربية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مربية — murabbiya — \"a nanny\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعتني المربية بالأطفال في النهار. taʿtanī al-murabbiya bi-l-aṭfāl fī an-nahār. The nanny looks after the children during the day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مربية (murabbiya) is built on the native Arabic root r-b-w, \"to grow, to increase\" (Lane). Murabbiya is the feminine participle of rabbā, to bring up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murabbiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murabbiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "murabbiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *murabbiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿtanī al-murabbiya bi-l-aṭfāl fī an-nahār. — The nanny looks after the children during the day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿtanī al-murabbiya bi-l-aṭfāl fī an-nahār.* — The nanny looks after the children during the day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to ripen, then the Arabic for old age, then say murabbiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to ripen, then the Arabic for old age, then say *murabbiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مربية (murabbiya) mean? (\"A nanny\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

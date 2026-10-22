@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Arguments and proof",
+  "label": "ch:ar-arguments-and-proof",
+  "canDo": "I can talk about an argument, a principle and a proof, and say that someone proved or convinced.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C358-aqnaa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about an argument, a principle and a proof, and say that someone proved or convinced.",
+    "assesses": [
+      "AR-LEX-C358-HUJJA358-03",
+      "AR-LEX-C358-HUJJA358-04",
+      "AR-LEX-C358-HUJJA358-05"
+    ]
+  }
+}

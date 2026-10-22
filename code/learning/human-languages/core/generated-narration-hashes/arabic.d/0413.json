@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:e4cfca3447f3775d",
+  "lessonIds": [
+    "AR-C413-tatawwara",
+    "AR-C413-nama-grow",
+    "AR-C413-tafaqama",
+    "AR-C413-takarrara",
+    "AR-C413-dama",
+    "AR-R413-review-406-413"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch413.txt",
+  "json": "arabic/narration/ch413.json",
+  "textHash": "fnv1a64:02ea0a2c07ab542e",
+  "jsonHash": "fnv1a64:ea29a3447235ebad",
+  "findings": []
+}

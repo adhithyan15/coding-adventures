@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "The press",
+  "label": "ch:ar-the-press",
+  "canDo": "I can say the press, an editor, an article, to edit and a bulletin.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C296-nashra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say the press, an editor, an article, to edit and a bulletin.",
+    "assesses": [
+      "AR-LEX-C296-SAHAFA296-03",
+      "AR-LEX-C296-SAHAFA296-04",
+      "AR-LEX-C296-SAHAFA296-05"
+    ]
+  }
+}

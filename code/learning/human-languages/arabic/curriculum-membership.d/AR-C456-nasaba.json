@@ -1,0 +1,11 @@
+{
+  "id": "AR-C456-nasaba",
+  "pathSegment": "AR-PATH-456-HAJM456",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-456-HAJM456",
+      "order": 3
+    }
+  ]
+}

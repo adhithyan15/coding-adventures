@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C511-jura",
+    "language": "arabic",
+    "chapter": 511,
+    "sequence": 28370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a81bcdc7c25689b"
+  },
+  "findings": []
+}

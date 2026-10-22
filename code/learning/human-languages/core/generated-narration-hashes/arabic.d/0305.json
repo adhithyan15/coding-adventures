@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:cda92266ffc31bf9",
+  "lessonIds": [
+    "AR-C305-mahkama",
+    "AR-C305-shahid-iyan",
+    "AR-C305-ittahama",
+    "AR-C305-muttaham",
+    "AR-C305-hakama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch305.txt",
+  "json": "arabic/narration/ch305.json",
+  "textHash": "fnv1a64:f0e275bc4b938f36",
+  "jsonHash": "fnv1a64:a921ddb789d34bd1",
+  "findings": []
+}

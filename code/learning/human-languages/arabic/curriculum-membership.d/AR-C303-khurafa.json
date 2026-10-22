@@ -1,0 +1,11 @@
+{
+  "id": "AR-C303-khurafa",
+  "pathSegment": "AR-PATH-303-USTURA303",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-303-USTURA303",
+      "order": 1
+    }
+  ]
+}

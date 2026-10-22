@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "Revolts and independence",
+  "label": "ch:ar-revolts-and-independence",
+  "canDo": "I can say a revolution, to revolt, to become independent, independence and a people.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C329-shab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can say a revolution, to revolt, to become independent, independence and a people.",
+    "assesses": [
+      "AR-LEX-C329-THAWRA329-03",
+      "AR-LEX-C329-THAWRA329-04",
+      "AR-LEX-C329-THAWRA329-05"
+    ]
+  }
+}

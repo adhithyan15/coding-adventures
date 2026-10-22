@@ -1,0 +1,11 @@
+{
+  "id": "AR-C307-haraba-war",
+  "pathSegment": "AR-PATH-307-JAYSH307",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-307-JAYSH307",
+      "order": 4
+    }
+  ]
+}

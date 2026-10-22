@@ -1,0 +1,11 @@
+{
+  "id": "AR-C454-mujammaa-tijari",
+  "pathSegment": "AR-PATH-454-IMARA454",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-454-IMARA454",
+      "order": 4
+    }
+  ]
+}

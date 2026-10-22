@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C376-akadimi",
+    "language": "arabic",
+    "chapter": 376,
+    "sequence": 21360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd11bfe8686ead4d"
+  },
+  "findings": []
+}

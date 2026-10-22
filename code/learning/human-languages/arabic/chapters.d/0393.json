@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Tests and admission",
+  "label": "ch:ar-tests-and-admission",
+  "canDo": "I can talk about a test, admission and an average, and say that someone excelled or evaluated.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C393-qayyama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can talk about a test, admission and an average, and say that someone excelled or evaluated.",
+    "assesses": [
+      "AR-LEX-C393-TAQYIM393-03",
+      "AR-LEX-C393-TAQYIM393-04",
+      "AR-LEX-C393-TAQYIM393-05"
+    ]
+  }
+}

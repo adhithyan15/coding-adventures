@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:4c9704d28251fc33",
+  "lessonIds": [
+    "AR-C404-shart",
+    "AR-C404-ishtarata",
+    "AR-C404-hatta-law",
+    "AR-C404-kama-law",
+    "AR-C404-damina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch404.txt",
+  "json": "arabic/narration/ch404.json",
+  "textHash": "fnv1a64:eeffed370b757826",
+  "jsonHash": "fnv1a64:ed3b72798e0f543d",
+  "findings": []
+}

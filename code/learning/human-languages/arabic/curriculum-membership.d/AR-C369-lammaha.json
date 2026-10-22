@@ -1,0 +1,11 @@
+{
+  "id": "AR-C369-lammaha",
+  "pathSegment": "AR-PATH-369-NASIHA369",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-369-NASIHA369",
+      "order": 1
+    }
+  ]
+}

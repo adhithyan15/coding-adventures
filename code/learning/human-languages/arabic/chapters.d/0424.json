@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Takeoff and landing",
+  "label": "ch:ar-takeoff-and-landing",
+  "canDo": "I can say to lift off, to land, takeoff, a seat belt and a crew.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C424-taqam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can say to lift off, to land, takeoff, a seat belt and a crew.",
+    "assesses": [
+      "AR-LEX-C424-IQLA424-03",
+      "AR-LEX-C424-IQLA424-04",
+      "AR-LEX-C424-IQLA424-05"
+    ]
+  }
+}

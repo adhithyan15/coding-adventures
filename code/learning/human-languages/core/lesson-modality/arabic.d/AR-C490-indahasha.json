@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C490-indahasha",
+    "language": "arabic",
+    "chapter": 490,
+    "sequence": 27320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f13d368e629b30a0"
+  },
+  "findings": []
+}

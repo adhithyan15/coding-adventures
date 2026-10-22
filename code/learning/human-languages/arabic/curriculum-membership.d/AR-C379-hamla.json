@@ -1,0 +1,11 @@
+{
+  "id": "AR-C379-hamla",
+  "pathSegment": "AR-PATH-379-HIZB379",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-379-HIZB379",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "arabic",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:cf613e504aa8192b",
+  "lessonIds": [
+    "AR-C357-khitab",
+    "AR-C357-alqa",
+    "AR-C357-inaqada",
+    "AR-C357-iftataha",
+    "AR-C357-ikhtatama",
+    "AR-R357-review-357-357",
+    "AR-R357-review-final-357"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "arabic/narration/ch357.txt",
+  "json": "arabic/narration/ch357.json",
+  "textHash": "fnv1a64:dd711a54926a29a5",
+  "jsonHash": "fnv1a64:9e5af6e15fbe2a4e",
+  "findings": []
+}

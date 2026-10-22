@@ -35,7 +35,7 @@ DIRECT_VERSIONS = {
 ACTIONS = {
     "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
     "setup_ocaml": "15d660006c1d3110d77c34b7faa3bddefe8b82f0",
-    "upload_artifact": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    "upload_artifact": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
 }
 GIT_MAINTENANCE_ENVIRONMENT = {
     "GIT_CONFIG_COUNT": "1",

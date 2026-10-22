@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C286-yajibu-an",
+    "language": "arabic",
+    "chapter": 286,
+    "sequence": 16570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43f8af96bdf55961"
+  },
+  "findings": []
+}

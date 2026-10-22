@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C306-khutuba",
+    "language": "arabic",
+    "chapter": 306,
+    "sequence": 17680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d47622d1f580f430"
+  },
+  "findings": []
+}

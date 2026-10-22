@@ -86,10 +86,8 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // Qt expresses this through the container chosen (RowLayout /
     // ColumnLayout / Flow), not through a property on a built element.
     (Backend::Qt, "flex-grow"),
-    //
-    // a percentage width has no direct QML analogue; the emitter declines
-    // rather than collapsing it.
-    (Backend::Qt, "width"),
+    // (`width` left this list when #17915 taught the Qt emitter to map a
+    // percentage width to `Layout.fillWidth` and a px width to `width`.)
     // ---- Flutter (#12022) ----
     // These pre-existing losses became measurable when Flutter gained drop
     // reporting. Each pin is checked below and must disappear with its gap.

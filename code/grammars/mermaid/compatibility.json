@@ -212,7 +212,7 @@
     {
       "id": "swimlane",
       "headers": ["swimlane-beta"],
-      "status": "partial",
+      "status": "full",
       "ir": "swimlane",
       "smoke_source": "swimlane-beta\nsubgraph A\n  task[Task]\nend"
     },

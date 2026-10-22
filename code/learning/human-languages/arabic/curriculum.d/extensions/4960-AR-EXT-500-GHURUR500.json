@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-500-GHURUR500",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can describe a person as conceited, arrogant, selfish, cowardly or bold.",
+  "prerequisites": []
+}

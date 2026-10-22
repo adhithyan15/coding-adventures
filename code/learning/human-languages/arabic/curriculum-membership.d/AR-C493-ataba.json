@@ -1,0 +1,11 @@
+{
+  "id": "AR-C493-ataba",
+  "pathSegment": "AR-PATH-493-NADAM493",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-493-NADAM493",
+      "order": 3
+    }
+  ]
+}

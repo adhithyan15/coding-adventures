@@ -1,0 +1,11 @@
+{
+  "id": "AR-C527-iddakhara",
+  "pathSegment": "AR-PATH-527-MAL527",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-527-MAL527",
+      "order": 4
+    }
+  ]
+}

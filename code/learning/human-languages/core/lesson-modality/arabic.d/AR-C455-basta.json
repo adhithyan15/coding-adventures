@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C455-basta",
+    "language": "arabic",
+    "chapter": 455,
+    "sequence": 25480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:189c5855609c812d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:c39790eafb586e6f",
+  "lessonIds": [
+    "AR-C502-tharthar",
+    "AR-C502-mutahaffiz",
+    "AR-C502-fuduli",
+    "AR-C502-hanun",
+    "AR-C502-wadud"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch502.txt",
+  "json": "arabic/narration/ch502.json",
+  "textHash": "fnv1a64:5012f4b6f5873b09",
+  "jsonHash": "fnv1a64:b36d11f4cb01e665",
+  "findings": []
+}

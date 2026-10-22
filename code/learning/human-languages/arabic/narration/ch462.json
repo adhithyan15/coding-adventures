@@ -1,0 +1,862 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 462,
+  "title": "Getting ready to go",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:dc1856db78b03b47",
+  "lessons": [
+    {
+      "id": "AR-C462-istaadda",
+      "sequence": 25790,
+      "title": "استعد (istaʿadda) — to get ready",
+      "headword": "استعد",
+      "romanization": "istaʿadda",
+      "gloss": "to get ready",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed1d6dc210d968e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to miss, then the Arabic for to waste time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استعد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استعد — istaʿadda — \"to get ready\"."
+            },
+            {
+              "kind": "speech",
+              "text": "استعد المسافرون للرحلة. istaʿadda al-musāfirūn li-r-riḥla. The travellers got ready for the trip."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستعد, yastaʿidd."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes li-: istaʿadda li-, \"to get ready for\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استعد (istaʿadda) is built on the native Arabic root ʿ-d-d, \"to count\" (Lane). It is Form X, \"to make oneself ready\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʿadda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʿadda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʿadda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʿadda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istaʿadda al-musāfirūn li-r-riḥla. — The travellers got ready for the trip.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istaʿadda al-musāfirūn li-r-riḥla.* — The travellers got ready for the trip.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to miss, then the Arabic for to waste time, then say istaʿadda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to miss, then the Arabic for to waste time, then say *istaʿadda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استعد (istaʿadda) mean? (\"To get ready\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C462-ikhtasara",
+      "sequence": 25800,
+      "title": "اختصر (ikhtaṣara) — to shorten; to cut short",
+      "headword": "اختصر",
+      "romanization": "ikhtaṣara",
+      "gloss": "to shorten; to cut short",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e45de4a224b7394a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to waste time, then the Arabic for to get ready."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اختصر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اختصر — ikhtaṣara — \"to shorten; to cut short\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اختصرنا الرحلة بسبب المطر. ikhtaṣarnā ar-riḥla bi-sabab al-maṭar. We cut the trip short because of the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يختصر, yakhtaṣir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اختصر (ikhtaṣara) is built on the native Arabic root kh-ṣ-r, \"the waist\" (Lane). It is Form VIII, \"to take in, to make short\", beside khaṣr, \"a waist\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtaṣara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtaṣara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtaṣara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtaṣara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikhtaṣarnā ar-riḥla bi-sabab al-maṭar. — We cut the trip short because of the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikhtaṣarnā ar-riḥla bi-sabab al-maṭar.* — We cut the trip short because of the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to waste time, then the Arabic for to get ready, then say ikhtaṣara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to waste time, then the Arabic for to get ready, then say *ikhtaṣara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اختصر (ikhtaṣara) mean? (\"To shorten; to cut short\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C462-nafida",
+      "sequence": 25810,
+      "title": "نفد (nafida) — to run out",
+      "headword": "نفد",
+      "romanization": "nafida",
+      "gloss": "to run out",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b66edf7ca323b2ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to get ready, then the Arabic for to shorten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نفد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نفد — nafida — \"to run out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نفد الماء في منتصف الطريق. nafida al-māʾ fī muntaṣaf aṭ-ṭarīq. The water ran out halfway along the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينفد, yanfad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نفد (nafida) is built on the native Arabic root n-f-d, \"to come to an end\" (Lane). It is the plain verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nafida",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nafida*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nafida, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nafida*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nafida al-māʾ fī muntaṣaf aṭ-ṭarīq. — The water ran out halfway along the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nafida al-māʾ fī muntaṣaf aṭ-ṭarīq.* — The water ran out halfway along the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to get ready, then the Arabic for to shorten, then say nafida again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to get ready, then the Arabic for to shorten, then say *nafida* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نفد (nafida) mean? (\"To run out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C462-ittasaa",
+      "sequence": 25820,
+      "title": "اتسع (ittasaʿa) — to have room for; to widen",
+      "headword": "اتسع",
+      "romanization": "ittasaʿa",
+      "gloss": "to have room for; to widen",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7adddb4ec5b20930",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to shorten, then the Arabic for to run out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اتسع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اتسع — ittasaʿa — \"to have room for; to widen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لم تتسع السيارة لكل الأمتعة. lam tattasiʿ as-sayyāra li-kull al-amtiʿa. The car did not have room for all the luggage."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتسع, yattasiʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اتسع (ittasaʿa) is built on the native Arabic root w-s-ʿ, \"to be wide\" (Lane). It is Form VIII; wāsiʿ, \"spacious\", shares the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ittasaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ittasaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ittasaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ittasaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lam tattasiʿ as-sayyāra li-kull al-amtiʿa. — The car did not have room for all the luggage.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lam tattasiʿ as-sayyāra li-kull al-amtiʿa.* — The car did not have room for all the luggage.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to shorten, then the Arabic for to run out, then say ittasaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to shorten, then the Arabic for to run out, then say *ittasaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اتسع (ittasaʿa) mean? (\"To have room for; to widen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C462-rafaa",
+      "sequence": 25830,
+      "title": "رفع (rafaʿa) — to raise; to lift up",
+      "headword": "رفع",
+      "romanization": "rafaʿa",
+      "gloss": "to raise; to lift up",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c41c4af8f714bce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to run out, then the Arabic for to have room for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رفع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رفع — rafaʿa — \"to raise; to lift up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رفع الحمال الحقيبة الثقيلة. rafaʿa al-ḥammāl al-ḥaqība ath-thaqīla. The porter lifted the heavy bag."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرفع, yarfaʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رفع (rafaʿa) is built on the native Arabic root r-f-ʿ, \"to raise\" (Lane). It is the plain verb; murtafiʿ, \"high\", shares the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rafaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rafaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rafaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rafaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rafaʿa al-ḥammāl al-ḥaqība ath-thaqīla. — The porter lifted the heavy bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rafaʿa al-ḥammāl al-ḥaqība ath-thaqīla.* — The porter lifted the heavy bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to run out, then the Arabic for to have room for, then say rafaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to run out, then the Arabic for to have room for, then say *rafaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رفع (rafaʿa) mean? (\"To raise; to lift up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R462-review-455-462",
+      "sequence": 25840,
+      "title": "Words from chapters 455–462 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 455-462",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac558dcf34fb3a6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for a product and a brand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a product, a brand, a shop window, to display, a market stall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a product, a brand, a shop window, to display, a market stall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "volume, a variety, a sample, to fit, to be too tight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: volume, a variety, a sample, to fit, to be too tight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a price cut, a voucher, to lower, to get cheaper, to spend money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a price cut, a voucher, to lower, to get cheaper, to spend money]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a guarantee, a rate, a commodity, to take back, to barter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a guarantee, a rate, a commodity, to take back, to barter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a consumer, a budget, expenses, purchases, to economise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a consumer, a budget, expenses, purchases, to economise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a breakdown, a malfunction, to get broken, to go bad, to suffer damage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a breakdown, a malfunction, to get broken, to go bad, to suffer damage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cancellation, a postponement, to cancel, to miss, to waste time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cancellation, a postponement, to cancel, to miss, to waste time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get ready, to shorten, to run out, to have room for, to raise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get ready, to shorten, to run out, to have room for, to raise]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A product? (منتج, muntaj.) A brand? (ماركة, mārka.) A shop window? (واجهة, wājiha.) To display? (عرض, ʿaraḍa.) A market stall? (بسطة, basṭa.) Volume? (حجم, ḥajm.) A variety? (صنف, ṣinf.) A sample? (عينة, ʿayyina.) To fit? (ناسب, nāsaba.) To be too tight? (ضاق, ḍāqa.) A price cut? (تخفيض, takhfīḍ.) A voucher? (قسيمة, qasīma.) To lower? (خفض, khaffaḍa.) To get cheaper? (رخص, rakhuṣa.) To spend money? (أنفق, anfaqa.) A guarantee? (ضمان, ḍamān.) A rate? (سعر, siʿr.) A commodity? (سلعة, silʿa.) To take back? (أرجع, arjaʿa.) To barter? (قايض, qāyaḍa.) A consumer? (مستهلك, mustahlik.) A budget? (ميزانية, mīzāniyya.) Expenses? (مصاريف, maṣārīf.) Purchases? (مشتريات, mushtarayāt.) To economise? (اقتصد, iqtaṣada.) A breakdown? (عطل, ʿuṭl.) A malfunction? (خلل, khalal.) To get broken? (انكسر, inkasara.) To go bad? (تلف, talifa.) To suffer damage? (تضرر, taḍarrara.) A cancellation? (إلغاء, ilghāʾ.) A postponement? (تأجيل, taʾjīl.) To cancel? (ألغى, alghā.) To miss? (فوت, fawwata.) To waste time? (ضيع, ḍayyaʿa.) To get ready? (استعد, istaʿadda.) To shorten? (اختصر, ikhtaṣara.) To run out? (نفد, nafida.) To have room for? (اتسع, ittasaʿa.) To raise? (رفع, rafaʿa.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

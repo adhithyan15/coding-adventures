@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:e1ef3842dcf1ad96",
+  "lessonIds": [
+    "AR-C356-mutabi",
+    "AR-C356-mushahid",
+    "AR-C356-mustami",
+    "AR-C356-musawwir",
+    "AR-C356-ghatta",
+    "AR-R356-review-349-356"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch356.txt",
+  "json": "arabic/narration/ch356.json",
+  "textHash": "fnv1a64:7a07aeeaee950eb6",
+  "jsonHash": "fnv1a64:23f20b888e1d7cf7",
+  "findings": []
+}

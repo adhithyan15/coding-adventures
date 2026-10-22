@@ -1,0 +1,11 @@
+{
+  "id": "AR-C369-taraddada",
+  "pathSegment": "AR-PATH-369-NASIHA369",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-369-NASIHA369",
+      "order": 3
+    }
+  ]
+}

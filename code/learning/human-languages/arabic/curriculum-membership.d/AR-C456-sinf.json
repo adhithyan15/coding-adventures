@@ -1,0 +1,11 @@
+{
+  "id": "AR-C456-sinf",
+  "pathSegment": "AR-PATH-456-HAJM456",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-456-HAJM456",
+      "order": 1
+    }
+  ]
+}

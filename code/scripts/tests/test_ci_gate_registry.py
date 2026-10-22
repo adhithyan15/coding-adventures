@@ -276,7 +276,7 @@ class CIGateRegistryTests(unittest.TestCase):
         verdict = self._job_body("forme-release-verdict")
         self.assertIn("pattern: forme-release-*", verdict)
         self.assertIn("forme_release_gate.py verdict", verdict)
-        self.assertIn("actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c", verdict)
+        self.assertIn("actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333", verdict)
         final_gate = self._job_body("ci-gate")
         self.assertIn("forme-release-platform", final_gate)
         self.assertIn("forme-release-verdict", final_gate)

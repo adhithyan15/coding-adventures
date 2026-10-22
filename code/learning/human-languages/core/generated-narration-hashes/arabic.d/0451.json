@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:dc54ae5d96fc9d2d",
+  "lessonIds": [
+    "AR-C451-makhfar",
+    "AR-C451-maktaba",
+    "AR-C451-istafsara",
+    "AR-C451-rajaa-check",
+    "AR-C451-hazara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch451.txt",
+  "json": "arabic/narration/ch451.json",
+  "textHash": "fnv1a64:8e879318fdcd207e",
+  "jsonHash": "fnv1a64:29f76602b3cc5057",
+  "findings": []
+}

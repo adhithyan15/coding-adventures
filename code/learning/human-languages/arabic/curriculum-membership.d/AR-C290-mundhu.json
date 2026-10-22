@@ -1,0 +1,11 @@
+{
+  "id": "AR-C290-mundhu",
+  "pathSegment": "AR-PATH-290-COMPARE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-290-COMPARE",
+      "order": 1
+    }
+  ]
+}

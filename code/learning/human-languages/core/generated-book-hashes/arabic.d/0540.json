@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:69a1156abd32c28e",
+  "lessonIds": [
+    "AR-C540-qiraa",
+    "AR-C540-ishtaraka",
+    "AR-C540-iltaqa",
+    "AR-C540-shaghaf",
+    "AR-C540-wala"
+  ],
+  "tex": "arabic/book/chapters/ch540-reading-clubs-and-passions.tex"
+}

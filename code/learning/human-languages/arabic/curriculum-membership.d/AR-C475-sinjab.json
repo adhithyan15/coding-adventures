@@ -1,0 +1,11 @@
+{
+  "id": "AR-C475-sinjab",
+  "pathSegment": "AR-PATH-475-DABU475",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-475-DABU475",
+      "order": 3
+    }
+  ]
+}

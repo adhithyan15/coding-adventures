@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Terms and theses",
+  "label": "ch:ar-terms-and-theses",
+  "canDo": "I can talk about a term, a definition, an index, a thesis and a curriculum.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C396-manhaj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about a term, a definition, an index, a thesis and a curriculum.",
+    "assesses": [
+      "AR-LEX-C396-MUSTALAH396-03",
+      "AR-LEX-C396-MUSTALAH396-04",
+      "AR-LEX-C396-MUSTALAH396-05"
+    ]
+  }
+}

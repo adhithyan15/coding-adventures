@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:22982cd8bf286963",
+  "lessonIds": [
+    "AR-C504-kabid",
+    "AR-C504-tihal",
+    "AR-C504-mida",
+    "AR-C504-ama",
+    "AR-C504-nabd"
+  ],
+  "tex": "arabic/book/chapters/ch504-inside-the-body.tex"
+}
