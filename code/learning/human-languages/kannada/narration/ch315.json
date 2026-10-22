@@ -1,0 +1,698 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 315,
+  "title": "Feelings and Hopes",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:754c2361514b8418",
+  "lessons": [
+    {
+      "id": "KA-C315-khusi",
+      "sequence": 15250,
+      "title": "ಖುಷಿ (khuṣi) — gladness, happiness",
+      "headword": "ಖುಷಿ",
+      "romanization": "khuṣi",
+      "gloss": "gladness, happiness",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bb08c083a5bc9e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"joy\", \"sadness\" and \"fear\". (santōṣa, duḥkha, bhaya.) Then \"My bag is lost.\" (nanna cīla kaḷeduhōyitu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಖುಷಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖುಷಿ — khuṣi — \"gladness, happiness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಮ್ಮನ್ನು ನೋಡಿ ನನಗೆ ತುಂಬಾ ಖುಷಿ ಆಯಿತು. nimmannu nōḍi nanage tumbā khuṣi āyitu. — \"I was very glad to see you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಮ್ಮನ್ನು (nimmannu, \"you\"), as the one seen; ನೋಡಿ, \"having seen\". The gladness \"happened\" to me: ನನಗೆ … ಖುಷಿ (khuṣi) ಆಯಿತು, with the ನನಗೆ of ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು."
+            },
+            {
+              "kind": "speech",
+              "text": "ಖುಷಿ (khuṣi) and ಸಂತೋಷ both mean happiness. ಸಂತೋಷ is also the word you say on meeting someone; in everyday talk about how you feel you will hear ಖುಷಿ (khuṣi) a great deal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಖುಷಿ (khuṣi) is a loan, usually traced to Persian khushī, \"happiness\", from khush, \"glad, pleasant\". The same word is everyday Hindi and Urdu. It is not the only Persian piece in words you know: the havā of ಹವಾಮಾನ, \"weather\", is Persian for \"air\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khuṣi, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khuṣi*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was very glad to see you\" — nimmannu nōḍi nanage tumbā khuṣi āyitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was very glad to see you\" — *nimmannu nōḍi nanage tumbā khuṣi āyitu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was glad\" — nanage khuṣi āyitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was glad\" — *nanage khuṣi āyitu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಖುಷಿ (khuṣi) mean? (Gladness, happiness.) \"I was glad\"? (ನನಗೆ ಖುಷಿ (khuṣi) ಆಯಿತು.) Who takes ನನಗೆ? (The one the feeling happens to.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C315-santosavayitu",
+      "sequence": 15260,
+      "title": "ನನಗೆ ಸಂತೋಷವಾಯಿತು (nanage santōṣavāyitu) — how you felt",
+      "headword": "ನನಗೆ ಸಂತೋಷವಾಯಿತು",
+      "romanization": "nanage santōṣavāyitu",
+      "gloss": "I was happy — a feeling that comes to you, and a feeling you are in",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e3afd1c13535a7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was very glad to see you\". (nimmannu nōḍi nanage tumbā khuṣi āyitu.) Then \"I know Kannada\". (nanage kannaḍa gottu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: a feeling that comes to you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿನ್ನೆ ನನಗೆ ತುಂಬಾ ಸಂತೋಷವಾಯಿತು. ninne nanage tumbā santōṣavāyitu. — \"Yesterday I was very happy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada builds most feelings the way it builds ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು: the person takes ನನಗೆ, \"to me\", and the feeling happens to them. ಸಂತೋಷ + ಆಯಿತು becomes ಸಂತೋಷವಾಯಿತು, with the -ವ- you met in ಸ್ವಚ್ಛವಾಗಿದೆ. Any feeling word fits the frame:"
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಭಯವಾಯಿತು (nanage bhayavāyitu) — I got scared."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಬೇಸರವಾಯಿತು (nanage bēsaravāyitu) — I felt low; I got bored."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ದುಃಖವಾಯಿತು (nanage duḥkhavāyitu) — I felt sad."
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಕೋಪ ಬಂತು (nanage kōpa bantu) — I got angry: anger \"came\" to me."
+            },
+            {
+              "kind": "speech",
+              "text": "For what happens time after time, ಆಗುತ್ತದೆ:"
+            },
+            {
+              "kind": "speech",
+              "text": "ರಾತ್ರಿ ನನಗೆ ಭಯವಾಗುತ್ತದೆ. rātri nanage bhayavāguttade. — \"I get scared at night.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: a feeling you are in",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಅವಳು ಈಗ ಖುಷಿಯಾಗಿದ್ದಾಳೆ. avaḷu īga khuṣiyāgiddāḷe. — \"She is happy now.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಖುಷಿಯಾಗಿದ್ದಾಳೆ is ಖುಷಿ (khuṣi) + ಆಗಿ, \"having become glad\", + ಇದ್ದಾಳೆ (iddāḷe, \"she is\"). For \"I\": ನಾನು ಖುಷಿಯಾಗಿದ್ದೇನೆ (nānu khuṣiyāgiddēne), \"I am happy\", with the ಇದ್ದೇನೆ of ನಾನು ಚೆನ್ನಾಗಿದ್ದೇನೆ."
+            },
+            {
+              "kind": "speech",
+              "text": "Here the person is the subject, in ನಾನು or ಅವಳು. The ನನಗೆ frame says what came over you; the -ಆಗಿದ್ದೇನೆ frame says the state you are in. And when you cannot name the feeling, ನನಗೆ ಹಾಗೆ ಅನಿಸಿತು (nanage hāge anisitu, \"that's how I felt\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Yesterday I was very happy\" — ninne nanage tumbā santōṣavāyitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Yesterday I was very happy\" — *ninne nanage tumbā santōṣavāyitu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I got angry\" — nanage kōpa bantu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I got angry\" — *nanage kōpa bantu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I get scared at night\" — rātri nanage bhayavāguttade",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I get scared at night\" — *rātri nanage bhayavāguttade*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am happy now\" — nānu īga khuṣiyāgiddēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am happy now\" — *nānu īga khuṣiyāgiddēne*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was happy\"? (ನನಗೆ ಸಂತೋಷವಾಯಿತು (nanage santōṣavāyitu).) \"I got scared\"? (ನನಗೆ ಭಯವಾಯಿತು.) \"I got angry\"? (ನನಗೆ ಕೋಪ ಬಂತು.) \"She is happy\"? (ಅವಳು ಖುಷಿಯಾಗಿದ್ದಾಳೆ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C315-guri",
+      "sequence": 15270,
+      "title": "ಗುರಿ (guri) — a goal, an aim",
+      "headword": "ಗುರಿ",
+      "romanization": "guri",
+      "gloss": "a goal, an aim",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:942ea95484cc60af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"a wish\" and \"a dream\". (āse, kanasu.) Then \"She is happy now.\" (avaḷu īga khuṣiyāgiddāḷe.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಗುರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುರಿ — guri — \"a goal, an aim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಈ ವರ್ಷ ನನಗೆ ಒಂದು ಗುರಿ ಇದೆ: ಪ್ರತಿದಿನ ಕನ್ನಡ ಪತ್ರಿಕೆ ಓದಬೇಕು. ī varṣa nanage ondu guri ide: pratidina kannaḍa patrike ōdabēku. — \"This year I have a goal: I must read a Kannada newspaper every day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ವರ್ಷ (varṣa, \"a year\"). ನನಗೆ … ಇದೆ is \"I have\", the way ನನಗೆ ಜ್ವರ ಇದೆ is \"I have a fever\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಗುರಿ (guri) is also the mark an archer aims at, and the aim itself:"
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನ ಗುರಿ ತಪ್ಪಿತು. avana guri tappitu. — \"His aim missed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ಅವನ (avana, \"his\"); ತಪ್ಪಿತು, \"it slipped, it went astray\", the verb of ಬಸ್ ತಪ್ಪಿಹೋಯಿತು."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಗುರಿ (guri) is native Dravidian. DEDR 1847 lists Kannada kuṟi and guṟi, \"a mark, sign, aim, object of aim\", in an older spelling, with a letter for ṟ that modern Kannada no longer writes; beside it are Tamil kuṟi, \"mark, aim, goal\", and Telugu guṟi, \"an aim\". A mark you aim at became the goal you aim for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guri, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guri*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"This year I have a goal\" — ī varṣa nanage ondu guri ide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"This year I have a goal\" — *ī varṣa nanage ondu guri ide*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"His aim missed\" — avana guri tappitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"His aim missed\" — *avana guri tappitu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಗುರಿ (guri) mean? (A goal, an aim; also the mark you aim at.) \"I have a goal\"? (ನನಗೆ ಒಂದು ಗುರಿ (guri) ಇದೆ.) Is it a native word or a loan? (Native Dravidian: Tamil and Telugu have it too.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C315-hogabeku-anta-ase",
+      "sequence": 15280,
+      "title": "ಹೋಗಬೇಕು ಅಂತ ಆಸೆ ಇದೆ (hōgabēku anta āse ide) — wishes and hopes",
+      "headword": "ಹೋಗಬೇಕು ಅಂತ ಆಸೆ ಇದೆ",
+      "romanization": "hōgabēku anta āse ide",
+      "gloss": "I would love to go — a wish, a dream or a goal with -ಬೇಕು ಅಂತ",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0a56483f9a942e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a goal\" (guri), \"I must go\" (nānu hōgabēku) and the word that closes a quotation (anta). Today all three go into one sentence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ಬೇಕು ಅಂತ ಆಸೆ ಇದೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಒಂದು ದಿನ ಮೈಸೂರಿಗೆ ಹೋಗಬೇಕು ಅಂತ ಆಸೆ ಇದೆ. nanage ondu dina maisūrige hōgabēku anta āse ide. — \"I would love to go to Mysuru one day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Taken apart: \"to me there is a wish (that says) 'I must go to Mysuru one day'\". The wish is a little quotation: the -ಬೇಕು of \"must\", closed by ಅಂತ, then ಆಸೆ ಇದೆ, \"there is a wish\". In writing you will meet ಬೇಕೆಂದು in place of ಬೇಕು ಅಂತ: ಎಂದು is the written twin of ಅಂತ."
+            },
+            {
+              "kind": "speech",
+              "text": "Swap ಆಸೆ for ಕನಸು, \"a dream\", and it becomes a dream: … ಅಂತ ಕನಸು ಇದೆ. For a wish you had then, ಇತ್ತು: ನನಗೆ ವಿಮಾನದಲ್ಲಿ ಹೋಗಬೇಕು ಅಂತ ಆಸೆ ಇತ್ತು (nanage vimānadalli hōgabēku anta āse ittu, \"I used to long to go by plane\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: what you want to become",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನನ್ನ ತಂಗಿಗೆ ವೈದ್ಯೆ ಆಗಬೇಕು ಅಂತ ಕನಸು ಇದೆ. nanna taṅgige vaidye āgabēku anta kanasu ide. — \"My younger sister dreams of becoming a doctor.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ತಂಗಿಗೆ (taṅgige, \"to my younger sister\"); ವೈದ್ಯೆ (vaidye, \"a woman doctor\"), ವೈದ್ಯ with -ಎ. ಆಗಬೇಕು is ಆಗು, \"to become\", with -ಬೇಕು: \"must become\". The job you want to be needs no ending:"
+            },
+            {
+              "kind": "speech",
+              "text": "ನನಗೆ ಶಿಕ್ಷಕ ಆಗಬೇಕು ಅಂತ ಆಸೆ ಇದೆ. nanage śikṣaka āgabēku anta āse ide. — \"I would like to become a teacher.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I would love to go to Mysuru one day\" — nanage ondu dina maisūrige hōgabēku anta āse ide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I would love to go to Mysuru one day\" — *nanage ondu dina maisūrige hōgabēku anta āse ide*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My younger sister dreams of becoming a doctor\" — nanna taṅgige vaidye āgabēku anta kanasu ide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My younger sister dreams of becoming a doctor\" — *nanna taṅgige vaidye āgabēku anta kanasu ide*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I would like to become a teacher\" — nanage śikṣaka āgabēku anta āse ide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I would like to become a teacher\" — *nanage śikṣaka āgabēku anta āse ide*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one place you would love to go, and one thing you would like to become",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one place you would love to go, and one thing you would like to become]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I would love to go\"? (ನನಗೆ ಹೋಗಬೇಕು ಅಂತ ಆಸೆ ಇದೆ (hōgabēku anta āse ide).) Which word closes the wish? (ಅಂತ.) \"To become\"? (ಆಗಬೇಕು.) The written twin of ಬೇಕು ಅಂತ? (ಬೇಕೆಂದು.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R315-feelings-and-hopes",
+      "sequence": 15290,
+      "title": "Review — feelings and hopes",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "how you felt, how you are, and what you hope for",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:1f00ea98c68163f2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read ಔಷಧ and ಸ್ವಚ್ಛ aloud. (auṣadha, svaccha.) Which letter opens the first, and which sits small inside the second? (ಔ; ಛ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I was very glad to see you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I was very glad to see you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When the bus got away, I got angry. Then I felt low.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When the bus got away, I got angry. Then I felt low.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I am happy now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I am happy now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "This year I have a goal: I would love to go to Mysuru.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: This year I have a goal: I would love to go to Mysuru.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My younger sister dreams of becoming a teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My younger sister dreams of becoming a teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ಖುಷಿ (khuṣi) and ಗುರಿ (guri)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ಖುಷಿ** and **ಗುರಿ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was glad\"? (ನನಗೆ ಖುಷಿ (khuṣi) ಆಯಿತು.) \"I got scared\"? (ನನಗೆ ಭಯವಾಯಿತು.) \"I am happy\"? (ನಾನು ಖುಷಿಯಾಗಿದ್ದೇನೆ.) \"A goal\"? (ಗುರಿ (guri).) \"I would love to go\"? (ಹೋಗಬೇಕು ಅಂತ ಆಸೆ ಇದೆ (hōgabēku anta āse ide).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

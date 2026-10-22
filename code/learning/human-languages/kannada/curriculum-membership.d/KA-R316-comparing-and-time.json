@@ -1,0 +1,11 @@
+{
+  "id": "KA-R316-comparing-and-time",
+  "pathSegment": "KA-PATH-316-COMPARE-DURATION",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-316-COMPARE-DURATION",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:754c2361514b8418",
+  "lessonIds": [
+    "KA-C315-khusi",
+    "KA-C315-santosavayitu",
+    "KA-C315-guri",
+    "KA-C315-hogabeku-anta-ase",
+    "KA-R315-feelings-and-hopes"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "kannada/narration/ch315.txt",
+  "json": "kannada/narration/ch315.json",
+  "textHash": "fnv1a64:e6ee961ca5a3747d",
+  "jsonHash": "fnv1a64:bf9f37ab2da2d192",
+  "findings": []
+}

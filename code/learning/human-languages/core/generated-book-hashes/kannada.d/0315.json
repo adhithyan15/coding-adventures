@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:2a1545add122322e",
+  "lessonIds": [
+    "KA-C315-khusi",
+    "KA-C315-santosavayitu",
+    "KA-C315-guri",
+    "KA-C315-hogabeku-anta-ase",
+    "KA-R315-feelings-and-hopes"
+  ],
+  "tex": "kannada/book/chapters/ch315-feelings-and-hopes.tex"
+}

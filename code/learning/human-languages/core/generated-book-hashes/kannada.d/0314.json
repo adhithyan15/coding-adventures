@@ -1,0 +1,14 @@
+{
+  "language": "kannada",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:11620576e0160a77",
+  "lessonIds": [
+    "KA-C314-situ",
+    "KA-C314-tiket-kodi",
+    "KA-C314-ausadha",
+    "KA-S175-letter-au",
+    "KA-C314-kaleduhoyitu",
+    "KA-R314-at-the-station"
+  ],
+  "tex": "kannada/book/chapters/ch314-tickets-seats-and-trouble.tex"
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S175-letter-au",
+    "language": "kannada",
+    "chapter": 314,
+    "sequence": 15220,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3418ae77d8948f87",
+    "detachableSegments": [
+      "Script you'll notice: ಔ",
+      "Writing: ಔ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

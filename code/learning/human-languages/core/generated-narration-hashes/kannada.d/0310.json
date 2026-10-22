@@ -1,0 +1,20 @@
+{
+  "language": "kannada",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:6a91304ddf38a878",
+  "lessonIds": [
+    "KA-C310-svaccha",
+    "KA-S174-letter-chha",
+    "KA-C310-adara-nantara",
+    "KA-C310-bandu",
+    "KA-C310-atithigalu",
+    "KA-R310-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "kannada/narration/ch310.txt",
+  "json": "kannada/narration/ch310.json",
+  "textHash": "fnv1a64:30538f0527f9138f",
+  "jsonHash": "fnv1a64:31562a3345ad0466",
+  "findings": []
+}

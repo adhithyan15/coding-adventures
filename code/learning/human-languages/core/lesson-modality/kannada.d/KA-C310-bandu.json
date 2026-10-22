@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C310-bandu",
+    "language": "kannada",
+    "chapter": 310,
+    "sequence": 15070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c598171a45104ca0"
+  },
+  "findings": []
+}

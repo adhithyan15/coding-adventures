@@ -1,0 +1,11 @@
+{
+  "id": "KA-C313-neravagi-hogi",
+  "pathSegment": "KA-PATH-313-ASK-THE-WAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-313-ASK-THE-WAY",
+      "order": 1
+    }
+  ]
+}

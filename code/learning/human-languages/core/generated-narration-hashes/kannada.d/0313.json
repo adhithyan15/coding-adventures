@@ -1,0 +1,17 @@
+{
+  "language": "kannada",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:70417c972a286a7f",
+  "lessonIds": [
+    "KA-C313-hege-hogabeku",
+    "KA-C313-neravagi-hogi",
+    "KA-R313-asking-the-way"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "kannada/narration/ch313.txt",
+  "json": "kannada/narration/ch313.json",
+  "textHash": "fnv1a64:fd6a0b836ccc33b0",
+  "jsonHash": "fnv1a64:c58b1b9bbed7b1c5",
+  "findings": []
+}

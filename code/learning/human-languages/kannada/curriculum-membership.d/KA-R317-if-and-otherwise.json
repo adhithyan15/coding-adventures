@@ -1,0 +1,11 @@
+{
+  "id": "KA-R317-if-and-otherwise",
+  "pathSegment": "KA-PATH-317-IF-REAL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-317-IF-REAL",
+      "order": 2
+    }
+  ]
+}

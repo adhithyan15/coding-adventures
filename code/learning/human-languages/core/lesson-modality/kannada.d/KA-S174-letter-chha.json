@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "KA-S174-letter-chha",
+    "language": "kannada",
+    "chapter": 310,
+    "sequence": 15050,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6174c2d276d8c9e3",
+    "detachableSegments": [
+      "Script you'll notice: ಛ",
+      "Writing: ಛ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
