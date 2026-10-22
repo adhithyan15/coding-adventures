@@ -1,5 +1,9 @@
 # Changelog — @coding-adventures/forme-transform-typography
 
+## Unreleased
+
+- Treats fenced metadata and payload as opaque, preserving them in the existing fresh-tree transform contract.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

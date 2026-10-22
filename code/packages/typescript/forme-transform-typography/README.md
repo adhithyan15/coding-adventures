@@ -188,3 +188,12 @@ divergences.
 - **No abbreviation protection.**  `Mr...` becomes `Mr…`.
   Common abbreviations should use a hard space or trailing
   zero-width joiner if needed.
+
+## TE04 fenced-block compatibility
+
+Treats fenced metadata and payload as opaque, preserving them in the existing fresh-tree transform contract.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

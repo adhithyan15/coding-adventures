@@ -160,7 +160,7 @@ export interface SanitizationPolicy {
   readonly dropBlockquotes?: boolean;
 
   /**
-   * If true, CodeBlockNode instances are dropped.
+   * If true, legacy CodeBlockNode and TE04 FencedBlockNode instances are dropped.
    * Default: false
    */
   readonly dropCodeBlocks?: boolean;

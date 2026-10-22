@@ -87,3 +87,12 @@ and runs browser-oriented component and hostile-input tests with greater than
 95% statement/line and 90% branch coverage. See
 [FM09](../../../specs/FM09-forme-authoring-shell.md) for the normative editor
 and authority contract.
+
+## TE04 fenced-block compatibility
+
+Recognizes and edits existing fenced blocks using the complete Fence info field. Saving recomputes the name token and preserves the discriminator and empty payload; default new code-block creation remains unchanged.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

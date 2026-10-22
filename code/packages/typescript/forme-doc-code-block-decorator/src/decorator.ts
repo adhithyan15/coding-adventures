@@ -48,6 +48,7 @@ import type {
   DocumentNode,
   BlockNode,
   CodeBlockNode,
+  FencedBlockNode,
   BlockquoteNode,
   ListNode,
   ListItemNode,
@@ -57,7 +58,7 @@ import type {
 
 import { extractFilenameHint } from "./filename.js";
 import { languageLabel } from "./language-labels.js";
-import type { DecoratedCodeBlockNode, DecorateOptions } from "./types.js";
+import type { DecoratedCodeBlockNode, DecoratedFencedBlockNode, DecorateOptions } from "./types.js";
 
 // ─────────────────────────────────────────────────────────────────────
 // Public entry
@@ -97,6 +98,7 @@ export function decorateCodeBlocks(
  */
 function walkBlock(block: BlockNode, lineNumbers: boolean): BlockNode {
   switch (block.type) {
+    case "fenced_block":
     case "code_block":
       return decorate(block, lineNumbers);
     case "blockquote":
@@ -168,14 +170,15 @@ function walkTaskItem(node: TaskItemNode, lineNumbers: boolean): TaskItemNode {
  *   3. Combine into the decorated node, preserving `type`/`language`
  *      and using the (possibly stripped) `value`.
  */
-function decorate(block: CodeBlockNode, lineNumbers: boolean): DecoratedCodeBlockNode {
+function decorate(block: CodeBlockNode | FencedBlockNode, lineNumbers: boolean): DecoratedCodeBlockNode | DecoratedFencedBlockNode {
+  const language = block.type === "fenced_block" ? block.name : block.language;
   const { filename, strippedValue } = extractFilenameHint(block.value);
   return {
-    type: "code_block",
-    language: block.language,
+    // Retain both source metadata and fields supplied by earlier transforms.
+    ...block,
     value: strippedValue,
     copyable: true,
-    languageLabel: languageLabel(block.language),
+    languageLabel: languageLabel(language),
     filename,
     lineNumbers,
   };

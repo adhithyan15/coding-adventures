@@ -58,6 +58,7 @@ import type {
   HeadingNode,
   ParagraphNode,
   CodeBlockNode,
+  FencedBlockNode,
   BlockquoteNode,
   ListNode,
   ListItemNode,
@@ -216,6 +217,7 @@ function sanitizeBlock(block: BlockNode, policy: ResolvedPolicy): BlockNode | nu
     case "paragraph":
       return sanitizeParagraph(block, policy);
 
+    case "fenced_block":
     case "code_block":
       return sanitizeCodeBlock(block, policy);
 
@@ -325,7 +327,7 @@ function sanitizeParagraph(node: ParagraphNode, policy: ResolvedPolicy): BlockNo
  * value itself (the HTML renderer escapes it). The risk, if any, is in
  * whether to show code blocks at all in a given context.
  */
-function sanitizeCodeBlock(node: CodeBlockNode, policy: ResolvedPolicy): BlockNode | null {
+function sanitizeCodeBlock(node: CodeBlockNode | FencedBlockNode, policy: ResolvedPolicy): BlockNode | null {
   if (policy.dropCodeBlocks) {
     return null;
   }

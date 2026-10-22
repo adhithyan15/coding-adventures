@@ -147,3 +147,12 @@ bash BUILD
 The gate compiles the public declarations and runs 95%+ statement/line and
 90%+ branch coverage. See [FM09](../../../specs/FM09-forme-authoring-shell.md)
 for the complete authoring path.
+
+## TE04 fenced-block compatibility
+
+Imports and serializes canonical fenced nodes with existing object/string/Unicode/work budgets. Info/name must agree without a second entity/backslash decode; empty payload is valid and nonempty payload requires final LF.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

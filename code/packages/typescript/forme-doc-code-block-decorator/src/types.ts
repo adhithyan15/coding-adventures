@@ -4,7 +4,7 @@
  * @module types
  */
 
-import type { CodeBlockNode } from "@coding-adventures/document-ast";
+import type { CodeBlockNode, FencedBlockNode } from "@coding-adventures/document-ast";
 
 /**
  * A `CodeBlockNode` augmented with presentation metadata.
@@ -62,4 +62,12 @@ export interface DecorateOptions {
    * and we'd rather not invent one prematurely.
    */
   readonly lineNumbers?: boolean;
+}
+
+/** Source-preserving TE04 variant; legacy code interfaces remain unchanged. */
+export interface DecoratedFencedBlockNode extends FencedBlockNode {
+  readonly copyable: true;
+  readonly languageLabel: string | null;
+  readonly filename: string | null;
+  readonly lineNumbers: boolean;
 }

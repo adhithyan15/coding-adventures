@@ -194,3 +194,12 @@ emit richer span sequences for supported languages. Specifically:
 5. Add `extensions` field to `HighlightedCodeBlockNode` for
    richer-than-`TokenType` info (e.g. full scope path) — purely
    additive, doesn't break v0 consumers.
+
+## TE04 fenced-block compatibility
+
+Highlights both code variants without losing fenced name/info or prior decoration. `HighlightedFencedBlockNode` complements the unchanged legacy interface; v0 still emits plain spans and executes no language plugins.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

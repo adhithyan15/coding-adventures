@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "scope": "TE04 fenced metadata repair component; not full GFM conformance",
+  "cases": [
+    {
+      "id": "metadata-a",
+      "markdown": "```typescript linenos\n<script>&x</script>\n```\n",
+      "expected": {
+        "type": "fenced_block",
+        "name": "typescript",
+        "info": "typescript linenos",
+        "value": "<script>&x</script>\n"
+      }
+    },
+    {
+      "id": "metadata-b",
+      "markdown": "```typescript theme=dark\n<script>&x</script>\n```\n",
+      "expected": {
+        "type": "fenced_block",
+        "name": "typescript",
+        "info": "typescript theme=dark",
+        "value": "<script>&x</script>\n"
+      }
+    },
+    {
+      "id": "anonymous",
+      "markdown": "```\nx\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": null,
+        "info": null,
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "empty",
+      "markdown": "```\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": null,
+        "info": null,
+        "value": ""
+      }
+    },
+    {
+      "id": "tilde",
+      "markdown": "~~~ ruby startline=3\nx\n~~~",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ruby",
+        "info": "ruby startline=3",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "crlf",
+      "markdown": "```ts\r\nx\r\n```\r\n",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ts",
+        "info": "ts",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "indent",
+      "markdown": "  ```ts\n  x\n  ```",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ts",
+        "info": "ts",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "escape",
+      "markdown": "```foo\\+bar rest\nx\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": "foo+bar",
+        "info": "foo+bar rest",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "entity",
+      "markdown": "```f&amp;o extra\nx\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": "f&o",
+        "info": "f&o extra",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "decoded-space",
+      "markdown": "```foo&#32;bar extra\nx\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": "foo",
+        "info": "foo bar extra",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "one-decode",
+      "markdown": "```foo&amp;#32;bar rest\nx\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": "foo&#32;bar",
+        "info": "foo&#32;bar rest",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "interior-space",
+      "markdown": "```  ts\t  linenos  \nx\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ts",
+        "info": "ts\t  linenos",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "whitespace-only",
+      "markdown": "``` \t\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": null,
+        "info": null,
+        "value": ""
+      }
+    },
+    {
+      "id": "short-close",
+      "markdown": "````ts\nx\n```\ny\n````",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ts",
+        "info": "ts",
+        "value": "x\n```\ny\n"
+      }
+    },
+    {
+      "id": "unclosed",
+      "markdown": "~~~ts extra\nx",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ts",
+        "info": "ts extra",
+        "value": "x\n"
+      }
+    },
+    {
+      "id": "named-empty",
+      "markdown": "```ts extra\n```",
+      "expected": {
+        "type": "fenced_block",
+        "name": "ts",
+        "info": "ts extra",
+        "value": ""
+      }
+    }
+  ]
+}

@@ -115,3 +115,12 @@ Every node type is handled explicitly (no silent pass-through):
 ## Spec
 
 TE02 — Document Sanitization
+
+## TE04 fenced-block compatibility
+
+Applies `dropCodeBlocks` to both code variants. Retained fenced nodes preserve inert name/info/payload fields; no fence-specific execution or broader sanitization guarantee is introduced.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

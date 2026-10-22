@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Imports and serializes canonical fenced nodes with existing object/string/Unicode/work budgets. Info/name must agree without a second entity/backslash decode; empty payload is valid and nonempty payload requires final LF.
+
 All notable changes to this package will be documented in this file.
 
 ## 1.0.0 — 2026-10-05

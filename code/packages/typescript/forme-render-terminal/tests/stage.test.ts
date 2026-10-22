@@ -352,3 +352,23 @@ describe("package-terminal stage", () => {
     expect(artifact.manifest.routes).toEqual([]);
   });
 });
+
+it("renders inert canonical fences and rejects unknown or wrongly typed metadata", async () => {
+ const consume=async (fence:unknown) => {
+  const input={...node(),assetRefs:[],document:{type:"document",children:[fence]}};
+  const result:TerminalBuffer[]=[];
+  for await (const item of renderTerminal.run(values([input]) as never,{style:emptyStyleDocument()} as never,context()) as AsyncIterable<TerminalBuffer>) result.push(item);
+  return result[0]!;
+ };
+ const fence={type:"fenced_block",name:"C++",info:"C++ <script>",value:"x\u001b[31m\n"};
+ const result=await consume(fence);
+ expect(result.text).toContain("x[31m");
+ expect(result.text).not.toContain("\u001b");
+ expect(result.text).not.toContain("<script>");
+ expect((await consume({...fence,name:null,info:null,value:""})).text).toBeDefined();
+ for (const [name,info] of [["ts","ts\u00a0linenos"],["ts","ts\ufefflinenos"],["ts","ts\nlinenos"],["lang&#32;meta","lang&#32;meta"],["x\\!","x\\!"],["𝒳","𝒳  metadata"]]) {
+  const accepted=await consume({...fence,name,info,value:"x\n"});
+  expect(accepted.text).toContain("x"); expect(accepted.text).not.toContain(info!);
+ }
+ for (const bad of [{...fence,name:"other"},{...fence,name:"",info:null},{...fence,info:" C++ <script> "},{...fence,info:""},{...fence,name:null},{...fence,value:"no LF"},{...fence,info:42},{...fence,name:{}},{...fence,value:null},{...fence,extra:true}]) await expect(consume(bad)).rejects.toThrow();
+});

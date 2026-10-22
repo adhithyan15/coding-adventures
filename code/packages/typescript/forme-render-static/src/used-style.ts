@@ -97,6 +97,7 @@ function appendDocumentNode(node: Node, parent: MutableMatchNode, tight: boolean
     case "paragraph":
       if (tight) return node.children.some((child) => appendDocumentNode(child, parent, false));
       return node.children.some((child) => appendDocumentNode(child, append(parent, "p"), false));
+    case "fenced_block":
     case "code_block": {
       append(append(parent, "pre"), "code");
       return false;

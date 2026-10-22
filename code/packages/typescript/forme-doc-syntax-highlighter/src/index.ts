@@ -51,6 +51,7 @@ export { SUPPORTED_LANGUAGES, isSupportedLanguage } from "./supported-languages.
 export type {
   HighlightSpan,
   HighlightedCodeBlockNode,
+  HighlightedFencedBlockNode,
   HighlightOptions,
   TokenType,
 } from "./types.js";

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- The GFM facade exposes the corrected fenced AST through `parse`, re-exports `FencedBlockNode`, and uses the shared HTML renderer. Callers matching fenced input as `code_block` must handle `fenced_block`; indented and legacy producer nodes are unchanged.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.2.0] — 2026-03-24

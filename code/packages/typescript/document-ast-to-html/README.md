@@ -95,3 +95,12 @@ toHtml(doc);
 - [`@coding-adventures/document-ast`](../document-ast/) — the Document AST type definitions
 - [`@coding-adventures/commonmark-parser`](../commonmark-parser/) — Markdown → Document AST
 - [`@coding-adventures/commonmark`](../commonmark/) — convenience pipeline (parse + render)
+
+## TE04 fenced-block compatibility
+
+Renders `fenced_block` through the existing escaped pre/code fallback. Only escaped `name` is a language class hint; full `info` is never interpolated into HTML and named fences execute no plugins.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

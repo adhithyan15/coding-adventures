@@ -53,7 +53,7 @@ export type {
   DocumentNode,
   HeadingNode,
   ParagraphNode,
-  CodeBlockNode,
+  CodeBlockNode, FencedBlockNode,
   BlockquoteNode,
   ListNode,
   ListItemNode,

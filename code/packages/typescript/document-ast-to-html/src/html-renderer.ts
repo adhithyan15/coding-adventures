@@ -52,7 +52,7 @@
 
 import type {
   DocumentNode, BlockNode, InlineNode,
-  HeadingNode, ParagraphNode, CodeBlockNode, BlockquoteNode,
+  HeadingNode, ParagraphNode, CodeBlockNode, FencedBlockNode, BlockquoteNode,
   ListNode, ListItemNode, TaskItemNode, RawBlockNode,
   TableNode, TableRowNode, TableCellNode,
   TextNode,
@@ -160,6 +160,7 @@ function renderBlock(block: BlockNode, tight: boolean, options: RenderOptions): 
     case "paragraph":
       return renderParagraph(block, tight, options);
 
+    case "fenced_block":
     case "code_block":
       return renderCodeBlock(block);
 
@@ -240,10 +241,12 @@ function renderParagraph(node: ParagraphNode, tight: boolean, options: RenderOpt
  * → <pre><code class="language-ts">const x = 1;\n</code></pre>\n
  * ```
  */
-function renderCodeBlock(node: CodeBlockNode): string {
+function renderCodeBlock(node: CodeBlockNode | FencedBlockNode): string {
+  // Full info is never HTML: only the escaped language hint enters an attribute.
+  const language = node.type === "fenced_block" ? node.name : node.language;
   const escaped = escapeHtml(node.value);
-  if (node.language) {
-    return `<pre><code class="language-${escapeHtml(node.language)}">${escaped}</code></pre>\n`;
+  if (language) {
+    return `<pre><code class="language-${escapeHtml(language)}">${escaped}</code></pre>\n`;
   }
   return `<pre><code>${escaped}</code></pre>\n`;
 }

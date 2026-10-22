@@ -55,4 +55,4 @@
 export { decorateCodeBlocks } from "./decorator.js";
 export { extractFilenameHint } from "./filename.js";
 export { languageLabel } from "./language-labels.js";
-export type { DecoratedCodeBlockNode, DecorateOptions } from "./types.js";
+export type { DecoratedCodeBlockNode, DecoratedFencedBlockNode, DecorateOptions } from "./types.js";

@@ -455,3 +455,23 @@ describe("AuthoringEditor", () => {
     />)).toThrow(/timeout/);
   });
 });
+
+it("edits full fence info while preserving its discriminator and empty payload", async () => {
+ for (const initial of [{name:"ts",info:"ts linenos",value:"x\n"},{name:null,info:null,value:""}]) {
+  const {session,storage}=await sessionFixture();
+  await session.dispatch({type:"replace-document-body",documentId:FIRST_DOCUMENT_ID,body:{type:"document",children:[{type:"fenced_block",...initial}]}});
+  const view=render(<AuthoringEditor session={session} themeOptions={themes} createDocumentIdentity={() => SECOND_DOCUMENT_ID} />);
+  expect(screen.getByLabelText("Fence info")).toHaveValue(initial.info ?? "");
+  fireEvent.change(screen.getByLabelText("Fence info"),{target:{value:"C++ theme=dark"}});
+  fireEvent.change(screen.getByLabelText("Code"),{target:{value:""}});
+  fireEvent.click(screen.getByRole("button",{name:"Save code block"}));
+  await screen.findByText("Code block saved.");
+  expect(session.project.documents[0]!.body.children[0]).toEqual({type:"fenced_block",name:"C++",info:"C++ theme=dark",value:""});
+  expect(storage.writes).toBeGreaterThan(0);
+  fireEvent.change(screen.getByLabelText("Fence info"),{target:{value:""}});
+  fireEvent.change(screen.getByLabelText("Code"),{target:{value:"<script>"}});
+  fireEvent.click(screen.getByRole("button",{name:"Save code block"}));
+  await waitFor(() => expect(session.project.documents[0]!.body.children[0]).toEqual({type:"fenced_block",name:null,info:null,value:"<script>\n"}));
+  view.unmount();
+ }
+});

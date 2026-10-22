@@ -54,7 +54,7 @@ export type {
   // Node union types
   Node, BlockNode, InlineNode,
   // Block node types
-  DocumentNode, HeadingNode, ParagraphNode, CodeBlockNode,
+  DocumentNode, HeadingNode, ParagraphNode, CodeBlockNode, FencedBlockNode,
   BlockquoteNode, ListNode, ListItemNode, TaskItemNode, ThematicBreakNode,
   RawBlockNode, TableNode, TableRowNode, TableCellNode, TableAlignment,
   // Inline node types

@@ -17192,7 +17192,22 @@
       "worktree": "C:/Users/adhit/.codex/worktrees/parity-post17905-20261022/coding-adventures",
       "started_at": "2026-10-22T03:57:23.488746+00:00",
       "base_revision": "df4354995b29f2e04cb78abf360962ef551dd3ef",
-      "selection_notes": "Selected exactly one dependency-ready foundation after external Go merge, fresh15-lane collision inventory, two new X509 memberships and205+7 saved audits incorporated. Live25-PR source overlap review clear; shared journal/lock PR17185 remains potential rebase surface. Five direct dependents; preserve HTML/layout/sanitizer/Forme consumers, no language ports or full neutral GFM closure."
+      "selection_notes": "Selected exactly one dependency-ready foundation after external Go merge, fresh15-lane collision inventory, two new X509 memberships and205+7 saved audits incorporated. Live25-PR source overlap review clear; shared journal/lock PR17185 remains potential rebase surface. Five direct dependents; preserve HTML/layout/sanitizer/Forme consumers, no language ports or full neutral GFM closure.",
+      "local_validation_partial": {
+        "status": "incomplete; no parity qualification or ready PR",
+        "changed_packages": 15,
+        "fronts": "Actual local build scripts where provided and Vitest production-coverage fronts exit0; package-local installs, full production include globs retained. document-ast is types-only0/0.",
+        "fixture_cases": 16,
+        "parser": "738 tests including unchanged652literalCommonMark corpus;89.03%production statements",
+        "html_renderer": "46tests;98.59%statements97.66%branches",
+        "authoring_core": "95.39%statements93.7%branches; canonical metadata roundtrip and hostile-input negatives",
+        "authoring_editor": "98.75%statements91.09%branches; fullinfo editing and empty payload retention",
+        "terminal": "91.83%statements87.68%branches; canonical name/info and finalLF checks plus existing control filtering",
+        "other_coverage": "Remaining changed runtime packages83.17%to100%statements; target95review remains open.",
+        "remaining": "Full74reverse/118prerequisite native closure;17missing logs; baseline verification for AsciiDoc/layout-block/nodecrypto issues; actual BUILD execution, final parity/diff/security/livePR overlap.",
+        "fixture_ci_gap": "Exact code/specs/gfm-fenced-block-v1/cases.json currently misses fixture-only Go selector. Add all/typescript native reader routing with union, missing-reader fail-closed and atomic plan tests; forced main is not evidence. Existing owner retains this work.",
+        "blocker": "C: space insufficient for full closure; partial space used only for already-installed focused checks and durable source checkpoint. No new installs, pushes or PR."
+      }
     },
     {
       "id": "gfm-language-neutral-conformance-fixture",

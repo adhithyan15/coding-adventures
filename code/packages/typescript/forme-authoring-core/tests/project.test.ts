@@ -359,3 +359,19 @@ describe("the authoring project codec", () => {
     invalid({ ...project(), documents: [{ ...project().documents[0]!, body: { type: "document", children: [{ type: "paragraph", children: [{ type: "mystery" }] }] } }] });
   });
 });
+
+it("roundtrips canonical fences and rejects malformed fields under existing bounds", () => {
+ const base=project();
+ const withNode=(node:unknown) => ({...base,documents:[{...base.documents[0]!,body:{type:"document",children:[node]}}]});
+ const metadata=[{name:null,info:null},{name:"C++",info:"C++\t linenos"},{name:"ts",info:"ts\u00a0linenos"},{name:"ts",info:"ts\ufefflinenos"},{name:"ts",info:"ts\nlinenos"},{name:"lang&#32;meta",info:"lang&#32;meta"},{name:"x\\!",info:"x\\!"},{name:"𝒳",info:"𝒳  metadata"}];
+ for (const value of ["", "<script>&x</script>\n"]) for (const {name,info} of metadata) {
+  const node={type:"fenced_block",name,info,value};
+  const input=withNode(node);
+  expect(validateAuthoringProject(input).documents[0]!.body.children[0]).toEqual(node);
+  expect(JSON.parse(canonicalAuthoringProject(input)).documents[0].body.children[0]).toEqual(node);
+ }
+ const good={type:"fenced_block",name:"ts",info:"ts extra",value:"x\n"};
+ for (const bad of [{...good,name:"other"},{...good,name:"",info:null},{...good,info:" ts extra "},{...good,info:""},{...good,name:null},{...good,name:42},{...good,info:{}},{...good,value:"missing LF"},{...good,extra:true},{...good,info:"\u001b"},{...good,info:"x".repeat(HARD_AUTHORING_LIMITS.maxStringScalars+1)}]) {
+  expect(() => validateAuthoringProject(withNode(bad))).toThrow(AuthoringError);
+ }
+});

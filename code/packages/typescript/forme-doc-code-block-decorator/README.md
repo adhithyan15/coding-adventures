@@ -156,3 +156,12 @@ Sits between the parser and the syntax highlighter:
 Next DOC00 v0 packages: `forme-doc-syntax-highlighter`,
 `forme-doc-sidebar-builder`, `forme-doc-page-shell`,
 `forme-doc-search-*`, `forme-doc-site-emitter`.
+
+## TE04 fenced-block compatibility
+
+Decorates both code variants while retaining the fenced discriminator and complete metadata. The existing explicit filename-hint transform can strip a hint line from payload. `DecoratedFencedBlockNode` is exported alongside the unchanged legacy interface.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

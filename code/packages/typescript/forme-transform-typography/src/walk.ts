@@ -128,6 +128,8 @@ function transformBlock(b: BlockNode, options: TypographyOptions): BlockNode {
     case "table_cell":
       return transformTableCell(b, options);
     // Pass-through (no prose text to typeset).
+    case "fenced_block":
+      return { ...b }; // Opaque source metadata and payload; fresh-tree contract.
     case "code_block":
       return passthroughCodeBlock(b);
     case "thematic_break":

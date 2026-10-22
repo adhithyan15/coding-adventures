@@ -53,6 +53,7 @@ import type {
   DocumentNode,
   BlockNode,
   CodeBlockNode,
+  FencedBlockNode,
   BlockquoteNode,
   ListNode,
   ListItemNode,
@@ -62,6 +63,7 @@ import type {
 
 import type {
   HighlightedCodeBlockNode,
+  HighlightedFencedBlockNode,
   HighlightSpan,
   HighlightOptions,
 } from "./types.js";
@@ -121,6 +123,7 @@ export function highlight(value: string, language: string | null = null): Highli
 
 function walkBlock(block: BlockNode): BlockNode {
   switch (block.type) {
+    case "fenced_block":
     case "code_block":
       return decorate(block);
     case "blockquote":
@@ -175,12 +178,12 @@ function walkTaskItem(node: TaskItemNode): TaskItemNode {
  * (including subtypes like `DecoratedCodeBlockNode` — the spread
  * preserves their added fields).
  */
-function decorate(block: CodeBlockNode): HighlightedCodeBlockNode {
+function decorate(block: CodeBlockNode | FencedBlockNode): HighlightedCodeBlockNode | HighlightedFencedBlockNode {
   return {
     // Preserve every field on the input node (incl. decorator fields
     // like `copyable`, `languageLabel`, `filename`, `lineNumbers`).
     ...block,
     // Add (or overwrite) the highlighted span sequence.
-    highlighted: highlight(block.value, block.language),
+    highlighted: highlight(block.value, block.type === "fenced_block" ? block.name : block.language),
   };
 }

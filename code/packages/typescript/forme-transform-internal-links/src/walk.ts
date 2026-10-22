@@ -128,6 +128,8 @@ function transformBlock(
       return transformTableRow(b, resolver, unresolved);
     case "table_cell":
       return transformTableCell(b, resolver, unresolved);
+    case "fenced_block":
+      return { ...b }; // Opaque source metadata and payload; fresh-tree contract.
     case "code_block":
       return passthroughCodeBlock(b);
     case "thematic_break":

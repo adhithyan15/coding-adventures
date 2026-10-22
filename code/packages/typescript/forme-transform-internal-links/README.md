@@ -227,3 +227,12 @@ divergences.
 - **No batch / multi-document optimisation.**  Each call
   re-walks the document.  Pipelines processing many docs share
   the resolver but not the walk state.
+
+## TE04 fenced-block compatibility
+
+Treats fenced metadata and payload as opaque. Link-like code text never invokes the slug resolver, and the fresh-tree transform preserves all fence fields.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

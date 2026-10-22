@@ -344,6 +344,7 @@ function renderNode(node: Node, path: readonly number[], parent: MatchNode, stat
     case "document": output = children(); break;
     case "heading": output = boundedConcat([children(), "\n\n"]); break;
     case "paragraph": output = boundedConcat([children(), "\n\n"]); break;
+    case "fenced_block":
     case "code_block": output = boundedConcat([safeText(node.value), "\n\n"]); break;
     case "blockquote": output = boundedConcat([boundedJoin(children().trimEnd().split("\n").map(line => boundedConcat(["> ", line])), "\n"), "\n\n"]); break;
     case "list": output = boundedConcat([boundedJoin(node.children.map((child, index) => boundedConcat([node.ordered ? `${(node.start ?? 1) + index}.` : "-", " ", renderNode(child, [...path, index], current, state, depth + 1).trim(), "\n"]))), "\n"]); break;
@@ -429,6 +430,7 @@ function matchNode(node: Node, parent: MatchNode): MatchNode | null {
     case "document": return null;
     case "heading": return { type: `h${node.level}`, level: node.level, parent };
     case "paragraph": return { type: "p", parent };
+    case "fenced_block":
     case "code_block": return { type: "pre", parent };
     case "blockquote": return { type: "blockquote", parent };
     case "list": return { type: node.ordered ? "ol" : "ul", parent };
@@ -558,6 +560,19 @@ function validateDocumentNode(value: unknown, path: string, depth: number): void
       children(["level", "children"]);
       if (!Number.isInteger(node.level) || (node.level as number) < 1 || (node.level as number) > 6) throw new TypeError(`forme-render-terminal: ${path}.level is invalid`);
       break;
+    case "fenced_block": {
+      assertOnlyKeys(node, ["type", "name", "info", "value"], path);
+      nullableString("name"); nullableString("info"); string("value");
+      const info = node.info as string | null;
+      const value = node.value as string;
+      // Snapshot/type/size checks have already run. Metadata is already decoded;
+      // reject contradictory dispatch hints instead of normalizing on import.
+      if (info === null ? node.name !== null : info === "" || info.trim() !== info || node.name !== info.split(/\s/u, 1)[0]) {
+        throw new TypeError(`forme-render-terminal: ${path} fenced metadata is not canonical`);
+      }
+      if (value !== "" && !value.endsWith("\n")) throw new TypeError(`forme-render-terminal: ${path}.value must end with a newline`);
+      break;
+    }
     case "code_block": assertOnlyKeys(node, ["type", "language", "value"], path); nullableString("language"); string("value"); break;
     case "list":
       children(["ordered", "start", "tight", "children"]);

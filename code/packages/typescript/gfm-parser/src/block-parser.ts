@@ -50,7 +50,8 @@
 import { ModalStateMachine, DFA, transitionKey } from "@coding-adventures/state-machine";
 import type {
   DocumentNode, BlockNode, HeadingNode, ParagraphNode,
-  CodeBlockNode, BlockquoteNode, ListNode, ListItemNode, TaskItemNode,
+  CodeBlockNode,
+  FencedBlockNode, BlockquoteNode, ListNode, ListItemNode, TaskItemNode,
   TableNode, TableRowNode, TableCellNode, TableAlignment,
   ThematicBreakNode, RawBlockNode,
 } from "@coding-adventures/document-ast";
@@ -402,10 +403,10 @@ function extractInfoString(line: string): string {
   // Strip the fence characters and leading whitespace from the info string
   const m = line.match(/^[`~]+\s*(.*)$/);
   if (!m) return "";
-  // Per CommonMark: only the first word is the language
-  const raw = m[1]!.trim().split(/\s+/)[0] ?? "";
-  // Apply backslash escapes (punctuation only) and entity decoding to the info string
-  return decodeEntities(applyBackslashEscapes(raw));
+  // TE04 retains the complete normalized info, including extra options.
+  // Preserve the whole info string before conversion; extracting its first
+  // token here used to irreversibly discard TE04 metadata.
+  return decodeEntities(applyBackslashEscapes(m[1]!.trim())).trim();
 }
 
 // ─── ATX Heading Detection ────────────────────────────────────────────────────
@@ -964,7 +965,7 @@ export function parseBlocks(input: string): {
       const fenceChar = fenceMatch[1]![0]!;
       const fenceLen = fenceMatch[1]!.length;
       const infoLine = lineContent.trimStart().slice(fenceLen);
-      const infoString = extractInfoString(lineContent);
+      const infoString = extractInfoString(lineContent.trimStart());
 
       // Backtick fences cannot have backticks in info string
       if (fenceChar === "`" && infoLine.includes("`")) {
@@ -1551,10 +1552,11 @@ export function convertToAst(
       case "fenced_code": {
         const fc = block as MutableFencedCode;
         return {
-          type: "code_block",
-          language: fc.infoString || null,
+          type: "fenced_block",
+          name: fc.infoString.split(/\s+/)[0] || null,
+          info: fc.infoString || null,
           value: fc.lines.join("\n") + (fc.lines.length > 0 ? "\n" : ""),
-        } as CodeBlockNode;
+        } as FencedBlockNode;
       }
 
       case "indented_code": {
