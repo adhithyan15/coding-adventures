@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:8c12661636b3d38e",
+  "lessonIds": [
+    "TA-C288-eppatip-poka-ventum",
+    "TA-C288-nerakap-ponkal",
+    "TA-R288-asking-the-way"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
+  "text": "tamil/narration/ch288.txt",
+  "json": "tamil/narration/ch288.json",
+  "textHash": "fnv1a64:03125eb3d9f81d51",
+  "jsonHash": "fnv1a64:27edbf62f48ac3f1",
+  "findings": []
+}

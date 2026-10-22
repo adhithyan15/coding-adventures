@@ -1,0 +1,450 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 287,
+  "title": "Must, Must Not and Because",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:940ee774354ad0cc",
+  "lessons": [
+    {
+      "id": "TA-C287-poka-ventum",
+      "sequence": 16230,
+      "title": "போக வேண்டும் (pōka vēṇṭum) — must, must not, no need",
+      "headword": "போக வேண்டும்",
+      "romanization": "pōka vēṇṭum",
+      "gloss": "I must go — a verb's to-form with வேண்டும், கூடாது and வேண்டாம்",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:986bd5ad874dc6d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want water\". (eṉakkut taṇṇīr vēṇṭum.) Then \"let's go\". (pōkalām.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both hold a piece this lesson takes out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the to-form and வேண்டும்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போகலாம் is போக, \"to go\", with -லாம், \"may\". போக is the to-form of போ. Put வேண்டும் after it and you have \"must\":"
+            },
+            {
+              "kind": "speech",
+              "text": "நான் இன்று மருத்துவரைப் பார்க்க வேண்டும். nāṉ iṉṟu maruttuvaraip pārkka vēṇṭum. — \"I have to see a doctor today.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The same வேண்டும் as எனக்குத் தண்ணீர் வேண்டும்: there \"is wanted\" takes a thing, and the one who wants takes -க்கு. Here it takes an action, and the person stands in front plainly: நான், நீங்கள்."
+            },
+            {
+              "kind": "speech",
+              "text": "Learn each to-form with its verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "போ becomes போக (pōka); வா becomes வர (vara); இரு becomes இருக்க (irukka)."
+            },
+            {
+              "kind": "speech",
+              "text": "பார் becomes பார்க்க (pārkka); படி becomes படிக்க (paṭikka); கொடு becomes கொடுக்க (koṭukka)."
+            },
+            {
+              "kind": "speech",
+              "text": "செய் becomes செய்ய (ceyya); சாப்பிடு becomes சாப்பிட (cāppiṭa); பேசு becomes பேச (pēca)."
+            },
+            {
+              "kind": "speech",
+              "text": "In speech, போக வேண்டும் (pōka vēṇṭum) shrinks to போகணும்; the written form keeps the long one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: கூடாது and வேண்டாம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இரவில் தனியாகப் போகக் கூடாது. iravil taṉiyākap pōkak kūṭātu. — \"You must not go alone at night.\""
+            },
+            {
+              "kind": "speech",
+              "text": "கூடாது (kūṭātu, \"must not, it is not right\") forbids, and it does not change for the person. After the to-form the first letter doubles in writing: போகக் கூடாது, சாப்பிடக் கூடாது."
+            },
+            {
+              "kind": "speech",
+              "text": "நீங்கள் நாளை வர வேண்டாம். nīṅkaḷ nāḷai vara vēṇṭām. — \"You don't need to come tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "வேண்டாம், \"is not wanted\", releases: \"no need to\", or a gentle \"don't\". கூடாது is a ban; வேண்டாம் is advice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have to see a doctor today\" — nāṉ iṉṟu maruttuvaraip pārkka vēṇṭum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have to see a doctor today\" — *nāṉ iṉṟu maruttuvaraip pārkka vēṇṭum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You must not go alone at night\" — iravil taṉiyākap pōkak kūṭātu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You must not go alone at night\" — *iravil taṉiyākap pōkak kūṭātu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You don't need to come tomorrow\" — nīṅkaḷ nāḷai vara vēṇṭām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You don't need to come tomorrow\" — *nīṅkaḷ nāḷai vara vēṇṭām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing you must do this week, and one thing you must not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing you must do this week, and one thing you must not]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I must go\"? (நான் போக வேண்டும் (pōka vēṇṭum).) \"You must not eat\"? (சாப்பிடக் கூடாது.) \"No need to come\"? (வர வேண்டாம்.) Which one forbids, and which one advises? (கூடாது forbids; வேண்டாம் advises.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C287-vantatal",
+      "sequence": 16240,
+      "title": "வந்ததால் (vantatāl) — because it happened",
+      "headword": "வந்ததால்",
+      "romanization": "vantatāl",
+      "gloss": "because (someone) came — the reason before the result, and ஏனென்றால் after it",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab0d0c688c98ce35",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I have to see a doctor today.\" (nāṉ iṉṟu maruttuvaraip pārkka vēṇṭum.) Then \"So I stayed at home.\" (ataṉāl nāṉ vīṭṭil iruntēṉ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ததால், 'because (it) did'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மழை பெய்ததால் நான் வரவில்லை. maḻai peytatāl nāṉ varavillai. — \"Because it rained, I did not come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "பெய்ததால் is three pieces. பெய்த is the past with -அ, the piece you met in வந்த போது; அது, \"it\", turns the event into a thing; -ஆல், \"because of\", is the -ஆல் of அதனால். \"Because of its having rained.\""
+            },
+            {
+              "kind": "speech",
+              "text": "எனக்குக் காய்ச்சல் இருந்ததால் நான் பள்ளிக்குப் போகவில்லை. eṉakkuk kāyccal iruntatāl nāṉ paḷḷikkup pōkavillai. — \"Because I had a fever, I did not go to school.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The reason comes first and the result after it, in one sentence: வந்ததால் (vantatāl), போனதால், இருந்ததால்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the reason after: ஏனென்றால், and காரணம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் வரவில்லை. ஏனென்றால் மழை பெய்தது. nāṉ varavillai. ēṉeṉṟāl maḻai peytatu. — \"I did not come. Because it rained.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The same reason in the other order: the result first, then ஏனென்றால் opens a second sentence with the cause. In speech you hear ஏன்னா."
+            },
+            {
+              "kind": "speech",
+              "text": "அதற்குக் காரணம் மழை. ataṟkuk kāraṇam maḻai. — \"The reason for that is the rain.\""
+            },
+            {
+              "kind": "speech",
+              "text": "அதற்கு (ataṟku, \"for that\") is அது with -க்கு; காரணம், \"the reason\", stands in the middle, and the reason itself comes last."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because it rained, I did not come\" — maḻai peytatāl nāṉ varavillai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because it rained, I did not come\" — *maḻai peytatāl nāṉ varavillai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Because I had a fever, I did not go to school\" — eṉakkuk kāyccal iruntatāl nāṉ paḷḷikkup pōkavillai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Because I had a fever, I did not go to school\" — *eṉakkuk kāyccal iruntatāl nāṉ paḷḷikkup pōkavillai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I did not come. Because it rained.\" — nāṉ varavillai. ēṉeṉṟāl maḻai peytatu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I did not come. Because it rained.\" — *nāṉ varavillai. ēṉeṉṟāl maḻai peytatu.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The reason for that is the rain\" — ataṟkuk kāraṇam maḻai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The reason for that is the rain\" — *ataṟkuk kāraṇam maḻai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Because it rained\"? (மழை பெய்ததால்.) \"Because he came\"? (அவன் வந்ததால் (vantatāl).) Which word puts the reason after the result? (ஏனென்றால்.) \"The reason for that\"? (அதற்குக் காரணம்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R287-advice-and-reasons",
+      "sequence": 16250,
+      "title": "Review — advice and reasons",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "must, must not, and the reasons for them",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:81d4411c4a254153",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I must go\" and \"You must not go alone at night.\" Then read ஈரம் aloud. (īram.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You must not eat now. Because you have a fever.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You must not eat now. Because you have a fever.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Because the bus did not come, we walked.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Because the bus did not come, we walked.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my opinion, you must see a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my opinion, you must see a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You don't need to come tomorrow. So you may stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You don't need to come tomorrow. So you may stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one piece of advice for a friend, with வேண்டும் or கூடாது, and the reason, with -ததால் or ஏனென்றால்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one piece of advice for a friend, with வேண்டும் or கூடாது, and the reason, with -ததால் or ஏனென்றால்]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Must\"? (to-form + வேண்டும்.) \"Must not\"? (to-form + கூடாது.) \"Because it rained\"? (மழை பெய்ததால்.) \"I did not come, because …\"? (நான் வரவில்லை. ஏனென்றால் …)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

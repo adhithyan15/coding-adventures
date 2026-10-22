@@ -1,0 +1,20 @@
+{
+  "language": "tamil",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:c5c715b9620f812d",
+  "lessonIds": [
+    "TA-C285-iram",
+    "TA-S141-letter-ii",
+    "TA-C285-atan-piraku",
+    "TA-C285-vantu",
+    "TA-C285-mazhai-naal",
+    "TA-R285-a-story-in-order"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch285.txt",
+  "json": "tamil/narration/ch285.json",
+  "textHash": "fnv1a64:3e5549a78b10b92b",
+  "jsonHash": "fnv1a64:51ec6b93bd1ad4ad",
+  "findings": []
+}

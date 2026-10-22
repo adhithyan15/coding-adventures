@@ -1,0 +1,20 @@
+{
+  "chapter": 291,
+  "title": "Bigger, Best and How Long",
+  "label": "ch:ta-bigger-best-and-how-long",
+  "canDo": "I can compare two things with -aiviṭa, say what I like most with ellāvaṟṟaiyumviṭa, and say how long with mūṉṟu mātamāka, -iliruntu … varai and evvaḷavu nēram.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "TA-R291-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: compare two things, name the most, and say how long something has gone on.",
+    "assesses": [
+      "TA-GRAMMAR-C291-THAN-01",
+      "TA-GRAMMAR-C291-SPAN-01",
+      "TA-GRAMMAR-C291-MOST-01",
+      "TA-GRAMMAR-C291-FROM-UNTIL-01"
+    ]
+  }
+}

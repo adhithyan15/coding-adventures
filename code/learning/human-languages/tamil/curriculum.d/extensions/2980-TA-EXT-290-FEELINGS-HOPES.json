@@ -1,0 +1,10 @@
+{
+  "id": "TA-EXT-290-FEELINGS-HOPES",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say how I felt with eṉakkuk kōpam vantatu and eṉakkuc cantōṣamāka iruntatu, say what I long for with ācai and virumpukiṟēṉ, and name a goal (ilakku) and what I want to become.",
+  "prerequisites": [
+    "TA-EXT-289-TICKETS-TROUBLE"
+  ]
+}

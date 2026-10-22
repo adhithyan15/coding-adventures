@@ -1,0 +1,600 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 284,
+  "title": "What Happened and What Was Going On",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:a824ce56c328ef3d",
+  "lessons": [
+    {
+      "id": "TA-C284-vanten",
+      "sequence": 16100,
+      "title": "வந்தேன் (vantēṉ) — the past, person by person",
+      "headword": "வந்தேன்",
+      "romanization": "vantēṉ",
+      "gloss": "I came — the past for every person, for the events of a story",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2ded70c5825a94d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the last two things you named, a complaint and an athlete. (pukār, vīrar.) Then \"I came\", with the past bead you met beside வருகிறேன். (vantēṉ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: the italics from here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "From here on, the italics spell the letters: க is k, ட ṭ, த t, ப p, wherever they stand. Between vowels and after a nasal these letters soften as you say them, the way paḍi showed it: வந்தேன் is spelled vantēṉ and said with a d."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the past, person by person",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேற்று நான் ஊருக்குப் போனேன். nēṟṟu nāṉ ūrukkup pōṉēṉ. — \"Yesterday I went to my home town.\""
+            },
+            {
+              "kind": "speech",
+              "text": "போனேன், \"I went\", is three pieces: the stem, the past bead, and -ஏன் for \"I\". Hold the first two still and change only the ending:"
+            },
+            {
+              "kind": "speech",
+              "text": "நான் வந்தேன் (vantēṉ) — I came."
+            },
+            {
+              "kind": "speech",
+              "text": "நீ வந்தாய் (vantāy) — you came, to a friend or a child."
+            },
+            {
+              "kind": "speech",
+              "text": "அவன் வந்தான் (vantāṉ) — he came; அவள் வந்தாள் (vantāḷ) — she came."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர் வந்தார் (vantār) — he or she came, with respect."
+            },
+            {
+              "kind": "speech",
+              "text": "அது வந்தது (vantatu) — it came."
+            },
+            {
+              "kind": "speech",
+              "text": "நாங்கள் வந்தோம் (vantōm) — we came."
+            },
+            {
+              "kind": "speech",
+              "text": "நீங்கள் வந்தீர்கள் (vantīrkaḷ) — you came, to several, or with respect."
+            },
+            {
+              "kind": "speech",
+              "text": "அவர்கள் வந்தார்கள் (vantārkaḷ) — they came."
+            },
+            {
+              "kind": "speech",
+              "text": "-ஆன் echoes அவன், -ஆள் அவள், -ஆர் அவர். The ending carries the person, so வந்தான் alone is \"he came\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "You'll want to know: the past stems",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The middle bead differs from verb to verb, so learn each verb with its \"I\" past, as you learned வா with வரு-:"
+            },
+            {
+              "kind": "speech",
+              "text": "போ becomes போனேன் (pōṉēṉ); இரு becomes இருந்தேன் (iruntēṉ); பார் becomes பார்த்தேன் (pārttēṉ); படி becomes படித்தேன் (paṭittēṉ)."
+            },
+            {
+              "kind": "speech",
+              "text": "கொடு becomes கொடுத்தேன் (koṭuttēṉ); செய் becomes செய்தேன் (ceytēṉ); சாப்பிடு becomes சாப்பிட்டேன் (cāppiṭṭēṉ)."
+            },
+            {
+              "kind": "speech",
+              "text": "பேசு becomes பேசினேன் (pēciṉēṉ); வாங்கு becomes வாங்கினேன் (vāṅkiṉēṉ); எழுது becomes எழுதினேன் (eḻutiṉēṉ)."
+            },
+            {
+              "kind": "speech",
+              "text": "From the \"I\" form, every other person comes free: பார்த்தான், பேசினார்கள். And \"it was\": இருந்தது (iruntatu)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Yesterday I went to my home town\" — nēṟṟu nāṉ ūrukkup pōṉēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Yesterday I went to my home town\" — *nēṟṟu nāṉ ūrukkup pōṉēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We drank tea in the evening\" — nāṅkaḷ mālaiyil tēnīr kuṭittōm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We drank tea in the evening\" — *nāṅkaḷ mālaiyil tēnīr kuṭittōm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I read a book. Afterwards I ate.\" — nāṉ oru puttakam paṭittēṉ. piṟaku cāppiṭṭēṉ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I read a book. Afterwards I ate.\" — *nāṉ oru puttakam paṭittēṉ. piṟaku cāppiṭṭēṉ.*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I went\"? (போனேன்.) \"He came\"? (வந்தான்.) \"She gave\"? (கொடுத்தாள்.) \"It was\"? (இருந்தது.) Which ending says \"he\" or \"she\" with respect? (-ஆர்: வந்தார்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C284-patittukkontirunten",
+      "sequence": 16110,
+      "title": "படித்துக்கொண்டிருந்தேன் (paṭittukkoṇṭiruntēṉ) — what was going on",
+      "headword": "படித்துக்கொண்டிருந்தேன்",
+      "romanization": "paṭittukkoṇṭiruntēṉ",
+      "gloss": "I was reading — the past of what was going on",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bebfe17a6f955431",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I read a book\". (nāṉ oru puttakam paṭittēṉ.) Then \"I was\", on its own. (iruntēṉ.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The first is an event: it happened and it was over. A story also needs what was going on at the time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -கொண்டிருந்தேன், 'I was doing'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேற்று இரவு ஒன்பது மணிக்கு நான் ஒரு புத்தகம் படித்துக்கொண்டிருந்தேன். nēṟṟu iravu oṉpatu maṇikku nāṉ oru puttakam paṭittukkoṇṭiruntēṉ. — \"At nine last night I was reading a book.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It is three short words in one: படித்து, \"having read\"; கொண்டு, \"holding\"; இருந்தேன், \"I was\". The person ending is the ending of இருந்தேன், so it changes the same way: அவன் படித்துக்கொண்டிருந்தான், \"he was reading\"; அவள் பேசிக்கொண்டிருந்தாள் (pēcikkoṇṭiruntāḷ), \"she was talking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "For \"it\": மழை பெய்துகொண்டிருந்தது (maḻai peytukoṇṭiruntatu), \"it was raining\". மழை (maḻai, \"rain\") பெய் (pey, \"falls\")."
+            },
+            {
+              "kind": "speech",
+              "text": "The first piece ends in -உ or -இ: படித்து, பேசி. Take each one whole for now; the story lessons that follow take it apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the scene and the event",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் படித்துக்கொண்டிருந்தேன். அப்போது அம்மா வந்தார். nāṉ paṭittukkoṇṭiruntēṉ. appōtu ammā vantār. — \"I was reading. At that moment, Mother came.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The first sentence is the scene: it was going on. வந்தார் is the event: it happened once and cut into the scene. அப்போது, \"at that time\", hooks one onto the other. A told story moves on this rhythm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She was talking\" — avaḷ pēcikkoṇṭiruntāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She was talking\" — *avaḷ pēcikkoṇṭiruntāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was raining\" — maḻai peytukoṇṭiruntatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was raining\" — *maḻai peytukoṇṭiruntatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was reading. At that moment, Mother came.\" — nāṉ paṭittukkoṇṭiruntēṉ. appōtu ammā vantār.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was reading. At that moment, Mother came.\" — *nāṉ paṭittukkoṇṭiruntēṉ. appōtu ammā vantār.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I was reading\"? (படித்துக்கொண்டிருந்தேன் (paṭittukkoṇṭiruntēṉ).) \"It was raining\"? (மழை பெய்துகொண்டிருந்தது.) Which three words make the long one? (படித்து, கொண்டு, இருந்தேன்.) Which past is the scene? (-கொண்டிருந்தேன்.) Which is the event? (The plain past: வந்தார்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C284-vanta-potu",
+      "sequence": 16120,
+      "title": "வந்த போது (vanta pōtu) — when it happened, and what was there",
+      "headword": "வந்த போது",
+      "romanization": "vanta pōtu",
+      "gloss": "when (someone) came — the past scene, and இருந்தது, 'there was'",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35328607740c6063",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"when you come\", with the joining you know. (nīṅkaḷ varum pōtu.) Then \"I was reading\". (paṭittukkoṇṭiruntēṉ.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "வரும் போது looks ahead. A story needs the same joint looking back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -த போது, 'when, back then'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் வீட்டுக்கு வந்த போது அம்மா சமைத்துக்கொண்டிருந்தார். nāṉ vīṭṭukku vanta pōtu ammā camaittukkoṇṭiruntār. — \"When I came home, Mother was cooking.\""
+            },
+            {
+              "kind": "speech",
+              "text": "வந்த is the past with -அ in place of the person ending: வந்தேன் (vantēṉ) becomes வந்த. Before போது, \"time\", it is \"when (someone) came\", the same for every person: அவள் வந்த போது (vanta pōtu). So போன போது, \"when (someone) went\". With -கொண்டிருந்த it is \"while\": நான் சாப்பிட்டுக்கொண்டிருந்த போது (nāṉ cāppiṭṭukkoṇṭirunta pōtu), \"while I was eating\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: இருந்தது, 'there was'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எங்கள் ஊரில் ஒரு சிறிய கடை இருந்தது. eṅkaḷ ūril oru ciṟiya kaṭai iruntatu. — \"There was a small shop in our town.\""
+            },
+            {
+              "kind": "speech",
+              "text": "எங்கள் (eṅkaḷ, \"our\"); ஊரில் (ūril, \"in the town\"). இருந்தது, \"it was\", is also \"there was\". Set it against the present:"
+            },
+            {
+              "kind": "speech",
+              "text": "இப்போது அங்கே ஒரு பெரிய கடை இருக்கிறது. ippōtu aṅkē oru periya kaṭai irukkiṟatu. — \"Now there is a big shop there.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The past \"did not\" is one form for every person: -வில்லை, the ending of புரியவில்லை, on the verb's to-form, a form the lesson on \"must\" takes out. அவன் வரவில்லை (avaṉ varavillai, \"he did not come\"), நான் போகவில்லை (nāṉ pōkavillai, \"I did not go\"), அவர்கள் சாப்பிடவில்லை (avarkaḷ cāppiṭavillai, \"they did not eat\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"When I came home, Mother was cooking\" — nāṉ vīṭṭukku vanta pōtu ammā camaittukkoṇṭiruntār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"When I came home, Mother was cooking\" — *nāṉ vīṭṭukku vanta pōtu ammā camaittukkoṇṭiruntār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"While I was eating, he came\" — nāṉ cāppiṭṭukkoṇṭirunta pōtu avaṉ vantāṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"While I was eating, he came\" — *nāṉ cāppiṭṭukkoṇṭirunta pōtu avaṉ vantāṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There was a small shop in our town. Now there is a big shop there.\" — eṅkaḷ ūril oru ciṟiya kaṭai iruntatu. ippōtu aṅkē oru periya kaṭai irukkiṟatu.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There was a small shop in our town. Now there is a big shop there.\" — *eṅkaḷ ūril oru ciṟiya kaṭai iruntatu. ippōtu aṅkē oru periya kaṭai irukkiṟatu.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He did not come\" — avaṉ varavillai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He did not come\" — *avaṉ varavillai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"When I came\"? (நான் வந்த போது (vanta pōtu).) \"While I was eating\"? (சாப்பிட்டுக்கொண்டிருந்த போது.) \"There was\"? (இருந்தது.) \"He did not come\"? (அவன் வரவில்லை.) Does -வில்லை change for the person? (No.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R284-the-past-three-ways",
+      "sequence": 16130,
+      "title": "Review — the past three ways",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what happened, what was going on and what was there, in one breath",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d4d6a8afc9a9e7d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"Yesterday I went to my home town.\" (nēṟṟu nāṉ ūrukkup pōṉēṉ.) Then \"she gave\" and \"they came\". (koṭuttāḷ, vantārkaḷ.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "We drank tea, and afterwards we went to the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: We drank tea, and afterwards we went to the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "While I was reading a book, my friend came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: While I was reading a book, my friend came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "At nine last night it was raining.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: At nine last night it was raining.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "When I came home, Mother was cooking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: When I came home, Mother was cooking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "There was a small shop in our town. Now there is a big shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: There was a small shop in our town. Now there is a big shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing you were doing yesterday evening, with -கொண்டிருந்தேன், and one thing that cut into it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing you were doing yesterday evening, with -கொண்டிருந்தேன், and one thing that cut into it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which past is the event? (The plain past: போனேன், வந்தான்.) Which is the scene? (-கொண்டிருந்தேன், or -கொண்டிருந்த போது.) \"There was\"? (இருந்தது.) \"I did not go\"? (நான் போகவில்லை.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "TA-C285-mazhai-naal",
+    "language": "tamil",
+    "chapter": 285,
+    "sequence": 16180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f7f978ff2850486c"
+  },
+  "findings": []
+}

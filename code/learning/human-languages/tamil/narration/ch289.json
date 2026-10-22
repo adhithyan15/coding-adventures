@@ -1,0 +1,542 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 289,
+  "title": "Tickets, Seats and Trouble",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:3c9deb87d4073b8c",
+  "lessons": [
+    {
+      "id": "TA-C289-irukkai",
+      "sequence": 16290,
+      "title": "இருக்கை (irukkai) — a seat",
+      "headword": "இருக்கை",
+      "romanization": "irukkai",
+      "gloss": "a seat",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db18b138e603037b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the words for a bus, a train and a passenger. (pēruntu, rayil, payaṇi.) Then \"to be, to stay\". (iru.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: இருக்கை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இருக்கை — irukkai — \"a seat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "இது உங்கள் இருக்கையா? itu uṅkaḷ irukkaiyā? — \"Is this your seat?\""
+            },
+            {
+              "kind": "speech",
+              "text": "பேருந்தில் இருக்கை இல்லை. pēruntil irukkai illai. — \"There is no seat on the bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "You can hear இரு at its front: a seat is a place to be. On a bus, in a train, in a cinema or a hall, இருக்கை (irukkai) is the word for the place you sit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இருக்கை (irukkai) is native Dravidian. DEDR 480 lists Tamil irukkai, \"sitting, seat, residence\", under iru, which it glosses \"to exist, remain, sit down\". So the verb you know as \"to be, to stay\" also meant \"to sit\", and the seat is named from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "irukkai, slowly, then at speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *irukkai*, slowly, then at speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Is this your seat?\" — itu uṅkaḷ irukkaiyā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Is this your seat?\" — *itu uṅkaḷ irukkaiyā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"There is no seat on the bus\" — pēruntil irukkai illai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"There is no seat on the bus\" — *pēruntil irukkai illai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does இருக்கை (irukkai) mean? (A seat.) \"Is this your seat?\" (இது உங்கள் இருக்கையா?) Which verb can you hear inside it? (இரு.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C289-cittu-kotunkal",
+      "sequence": 16300,
+      "title": "ஒரு சீட்டு கொடுங்கள் (oru cīṭṭu koṭuṅkaḷ) — tickets and times",
+      "headword": "ஒரு சீட்டு கொடுங்கள்",
+      "romanization": "oru cīṭṭu koṭuṅkaḷ",
+      "gloss": "one ticket, please — buying a ticket, and asking when it leaves",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43b4d94baed14800",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a ticket\" (cīṭṭu) and \"a seat\" (irukkai). Then say \"dampness\". (īram.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: buying a ticket",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மதுரைக்கு இரண்டு சீட்டு கொடுங்கள். maturaikku iraṇṭu cīṭṭu koṭuṅkaḷ. — \"Two tickets to Madurai, please.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The place you are going takes -க்கு: மதுரைக்கு, \"to Madurai\", a city in the south of Tamil Nadu. கொடுங்கள் is கொடு with the polite -உங்கள்: \"give (me)\". After a number Tamil often leaves the noun as it is: இரண்டு சீட்டு. For seats side by side: இரண்டு இருக்கைகள் சேர்ந்து வேண்டும் (iraṇṭu irukkaikaḷ cērntu vēṇṭum, \"I need two seats together\"); சேர்ந்து is \"having joined\", from சேர்."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: when does it leave?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "மதுரைக்கு ரயில் எத்தனை மணிக்குப் புறப்படும்? maturaikku rayil ettaṉai maṇikkup puṟappaṭum? — \"What time does the train to Madurai leave?\""
+            },
+            {
+              "kind": "speech",
+              "text": "எத்தனை மணிக்கு, \"at what hour\". புறப்படும் is the \"it\" future of புறப்படு, \"to set out\": \"it will set out\". Tamil uses it for a timetable, where English says \"leaves\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ரயில் ஆறு மணிக்குப் புறப்படும். எட்டு மணிக்கு மதுரைக்குப் போய்ச் சேரும். rayil āṟu maṇikkup puṟappaṭum. eṭṭu maṇikku maturaikkup pōyc cērum. — \"The train leaves at six. It gets to Madurai at eight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "போய்ச் சேரும்: \"having gone, it will reach\", with சேர், \"to reach\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Two tickets to Madurai, please\" — maturaikku iraṇṭu cīṭṭu koṭuṅkaḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Two tickets to Madurai, please\" — *maturaikku iraṇṭu cīṭṭu koṭuṅkaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I need two seats together\" — iraṇṭu irukkaikaḷ cērntu vēṇṭum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I need two seats together\" — *iraṇṭu irukkaikaḷ cērntu vēṇṭum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What time does the train to Madurai leave?\" — maturaikku rayil ettaṉai maṇikkup puṟappaṭum?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What time does the train to Madurai leave?\" — *maturaikku rayil ettaṉai maṇikkup puṟappaṭum?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Two tickets, please\"? (இரண்டு சீட்டு கொடுங்கள்.) \"To Madurai\"? (மதுரைக்கு.) \"What time does it leave?\" (எத்தனை மணிக்குப் புறப்படும்?) \"It gets there at eight\"? (எட்டு மணிக்குப் போய்ச் சேரும்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C289-kanavillai",
+      "sequence": 16310,
+      "title": "காணவில்லை (kāṇavillai) — missing, lost, missed",
+      "headword": "காணவில்லை",
+      "romanization": "kāṇavillai",
+      "gloss": "(it) is missing — reporting a lost bag, a missed bus, and making a complaint",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:851443efd62fd3ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"One ticket, please.\" (oru cīṭṭu koṭuṅkaḷ.) Then the words for \"to miss\" and \"a complaint\". (tavaṟaviṭu, pukār.) Then \"it has got late\". (nēramākiviṭṭatu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: missing and lost",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "என் பையைக் காணவில்லை. eṉ paiyaik kāṇavillai. — \"My bag is missing.\""
+            },
+            {
+              "kind": "speech",
+              "text": "காணவில்லை (kāṇavillai) is \"not seen\": காண், \"to see\", the old verb inside கனவு காண், with the -வில்லை of புரியவில்லை. The missing thing takes -ஐ, as a thing you look for: பையை. A notice about someone or something lost is headed with this one word."
+            },
+            {
+              "kind": "speech",
+              "text": "என் கடவுச்சீட்டு தொலைந்துவிட்டது. eṉ kaṭavuccīṭṭu tolaintuviṭṭatu. — \"My passport has got lost.\""
+            },
+            {
+              "kind": "speech",
+              "text": "தொலை (tolai, \"to get lost\"). தொலைந்துவிட்டது is its -உ form with விட்டது, \"it has gone and …\", the same விட்டது as in நேரமாகிவிட்டது: the thing is gone, and that is that."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: what you missed, and the complaint",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் பேருந்தைத் தவறவிட்டேன். nāṉ pēruntait tavaṟaviṭṭēṉ. — \"I missed the bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "தவறவிடு in the plain past: தவறவிட்டேன். The bus takes -ஐ, and the first letter after it doubles in writing: பேருந்தைத் தவறவிட்டேன்."
+            },
+            {
+              "kind": "speech",
+              "text": "நான் புகார் கொடுக்க வேண்டும். காவல் நிலையம் எங்கே இருக்கிறது? nāṉ pukār koṭukka vēṇṭum. kāval nilaiyam eṅkē irukkiṟatu? — \"I need to make a complaint. Where is the police station?\""
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil \"gives\" a complaint: புகார் கொடு."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My bag is missing\" — eṉ paiyaik kāṇavillai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My bag is missing\" — *eṉ paiyaik kāṇavillai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My passport has got lost\" — eṉ kaṭavuccīṭṭu tolaintuviṭṭatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My passport has got lost\" — *eṉ kaṭavuccīṭṭu tolaintuviṭṭatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I missed the bus\" — nāṉ pēruntait tavaṟaviṭṭēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I missed the bus\" — *nāṉ pēruntait tavaṟaviṭṭēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I need to make a complaint. Where is the police station?\" — nāṉ pukār koṭukka vēṇṭum. kāval nilaiyam eṅkē irukkiṟatu?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I need to make a complaint. Where is the police station?\" — *nāṉ pukār koṭukka vēṇṭum. kāval nilaiyam eṅkē irukkiṟatu?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"My bag is missing\"? (என் பையைக் காணவில்லை (kāṇavillai).) \"It has got lost\"? (தொலைந்துவிட்டது.) \"I missed the bus\"? (பேருந்தைத் தவறவிட்டேன்.) \"To make a complaint\"? (புகார் கொடு.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R289-at-the-station",
+      "sequence": 16320,
+      "title": "Review — at the station",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "tickets, seats, times, and when something goes wrong",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:e7076a61d3f92332",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a seat\" and \"a ticket\". Then read ஈரம் aloud: which letter opens it? (ஈ, ī.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "இருக்கை (irukkai) and சீட்டு, once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **இருக்கை** and **சீட்டு**, once each]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "One ticket to Madurai, please. What time does the bus leave?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: One ticket to Madurai, please. What time does the bus leave?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Is this your seat? No, my seat is there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Is this your seat? No, my seat is there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I missed the train, because I came late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I missed the train, because I came late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My bag is missing. Where is the police station?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My bag is missing. Where is the police station?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing that went wrong on a journey of yours, and what you did",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing that went wrong on a journey of yours, and what you did]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A seat\"? (இருக்கை (irukkai).) \"What time does it leave?\" (எத்தனை மணிக்குப் புறப்படும்?) \"My bag is missing\"? (என் பையைக் காணவில்லை (kāṇavillai).) \"I missed the bus\"? (பேருந்தைத் தவறவிட்டேன்.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

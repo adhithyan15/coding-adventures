@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C288-nerakap-ponkal",
+    "language": "tamil",
+    "chapter": 288,
+    "sequence": 16270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:089ec8b7da3758c6"
+  },
+  "findings": []
+}

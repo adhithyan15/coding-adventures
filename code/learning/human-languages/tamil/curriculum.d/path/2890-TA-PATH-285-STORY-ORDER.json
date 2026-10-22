@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-285-STORY-ORDER",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "TA-EXT-285-STORY-ORDER"
+  ],
+  "after": []
+}

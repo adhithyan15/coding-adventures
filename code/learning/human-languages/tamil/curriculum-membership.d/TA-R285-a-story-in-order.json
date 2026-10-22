@@ -1,0 +1,11 @@
+{
+  "id": "TA-R285-a-story-in-order",
+  "pathSegment": "TA-PATH-285-STORY-ORDER",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-285-STORY-ORDER",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,428 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 291,
+  "title": "Bigger, Best and How Long",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:8721fa4c064d9824",
+  "lessons": [
+    {
+      "id": "TA-C291-aivita",
+      "sequence": 16380,
+      "title": "-ஐவிட (-aiviṭa) — bigger than, most of all",
+      "headword": "-ஐவிட",
+      "romanization": "-aiviṭa",
+      "gloss": "than — comparing two things, and the most of all",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd24dd3f1e575996",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"big\" and \"small\". (periya, ciṟiya.) Then \"a lot\" and \"less\". (niṟaiya, kuṟaivu.) Then say \"dampness\". (īram.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: X-ஐவிட Y …",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இந்த வீட்டைவிட அந்த வீடு பெரியது. inta vīṭṭaiviṭa anta vīṭu periyatu. — \"That house is bigger than this house.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil has no \"-er\" on the describing word. It says \"leaving this house aside, that house is big\": the thing you compare with takes -ஐ, then விட, the to-form of விடு, \"to leave\", joined on: வீட்டைவிட. அந்த (anta, \"that\") is the a- of அது in front of a noun, as இந்த is the i-. பெரியது (periyatu, \"a big one; big\") is பெரிய made into a thing, like நல்லது."
+            },
+            {
+              "kind": "speech",
+              "text": "பேருந்தைவிட ரயில் நல்லது. pēruntaiviṭa rayil nallatu. — \"The train is better than the bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "With an amount, அதிகம், \"more, a lot\", and குறைவு, \"less\", do the comparing: இங்கே விலை குறைவு (iṅkē vilai kuṟaivu, \"prices are lower here\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the most, எல்லாவற்றையும்விட",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எனக்கு எல்லாவற்றையும்விட தமிழ் பிடிக்கும். eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum. — \"I like Tamil most of all.\""
+            },
+            {
+              "kind": "speech",
+              "text": "\"Most\" is \"more than everything\": எல்லாம், \"everything\", takes -ஐ in the shape எல்லாவற்றை, then -உம், \"all of it\", then -விட. For people, எல்லோரையும்விட (ellōraiyumviṭa, \"than everyone\"):"
+            },
+            {
+              "kind": "speech",
+              "text": "அவள் எல்லோரையும்விட வேகமாக ஓடினாள். avaḷ ellōraiyumviṭa vēkamāka ōṭiṉāḷ. — \"She ran fastest of all.\""
+            },
+            {
+              "kind": "speech",
+              "text": "வேகமாக, \"fast\", is the -ஆக form of வேகமான."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"That house is bigger than this house\" — inta vīṭṭaiviṭa anta vīṭu periyatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"That house is bigger than this house\" — *inta vīṭṭaiviṭa anta vīṭu periyatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The train is better than the bus\" — pēruntaiviṭa rayil nallatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The train is better than the bus\" — *pēruntaiviṭa rayil nallatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I like Tamil most of all\" — eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I like Tamil most of all\" — *eṉakku ellāvaṟṟaiyumviṭa tamiḻ piṭikkum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two places you know, compared, with -ஐவிட (-aiviṭa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two places you know, compared, with -ஐவிட]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Than the bus\"? (பேருந்தைவிட.) Which case does the compared thing take? (-ஐ.) \"Most of all\"? (எல்லாவற்றையும்விட.) \"Than everyone\"? (எல்லோரையும்விட.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C291-matamaka",
+      "sequence": 16390,
+      "title": "மூன்று மாதமாக (mūṉṟu mātamāka) — for how long",
+      "headword": "மூன்று மாதமாக",
+      "romanization": "mūṉṟu mātamāka",
+      "gloss": "for three months — how long, from when, and until when",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb9d08e137f99816",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"The train is better than the bus.\" (pēruntaiviṭa rayil nallatu.) Then the words for a month, a year and \"until\". (mātam, āṇṭu, varai.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -ஆக for a span of time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நான் மூன்று மாதமாகத் தமிழ் படிக்கிறேன். nāṉ mūṉṟu mātamākat tamiḻ paṭikkiṟēṉ. — \"I have been learning Tamil for three months.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The span takes -ஆக, the -ஆக of நன்றாக: மூன்று மாதமாக (mūṉṟu mātamāka), \"for three months\". Tamil keeps the verb in the present, because the learning is still going on; English says \"have been\". After -ஆக the first letter of the next word doubles in writing: மாதமாகத் தமிழ்."
+            },
+            {
+              "kind": "speech",
+              "text": "வருடம் (varuṭam, \"a year\"), the everyday word beside ஆண்டு, works the same: இரண்டு வருடமாக (iraṇṭu varuṭamāka, \"for two years\")."
+            },
+            {
+              "kind": "speech",
+              "text": "For a span that is over, the past needs no -ஆக: நான் இரண்டு ஆண்டு மதுரையில் இருந்தேன் (nāṉ iraṇṭu āṇṭu maturaiyil iruntēṉ, \"I lived in Madurai for two years\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: from … until, and how long",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "காலையிலிருந்து மாலை வரை மழை பெய்தது. kālaiyiliruntu mālai varai maḻai peytatu. — \"It rained from morning until evening.\""
+            },
+            {
+              "kind": "speech",
+              "text": "காலையிலிருந்து (kālaiyiliruntu, \"from the morning\") is காலை with -இல் and -இருந்து, \"from\", the same இருந்து as in இங்கிருந்து. வரை closes the span."
+            },
+            {
+              "kind": "speech",
+              "text": "எவ்வளவு நேரம் ஆகும்? evvaḷavu nēram ākum? — \"How long will it take?\""
+            },
+            {
+              "kind": "speech",
+              "text": "ஒரு மணி நேரம் ஆகும். oru maṇi nēram ākum. — \"It will take an hour.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ஆகும் (ākum, \"it will become, it will take\"), the \"it\" future of ஆகு; மணி நேரம் is \"an hour\" of time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I have been learning Tamil for three months\" — nāṉ mūṉṟu mātamākat tamiḻ paṭikkiṟēṉ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I have been learning Tamil for three months\" — *nāṉ mūṉṟu mātamākat tamiḻ paṭikkiṟēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It rained from morning until evening\" — kālaiyiliruntu mālai varai maḻai peytatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It rained from morning until evening\" — *kālaiyiliruntu mālai varai maḻai peytatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How long will it take? It will take an hour.\" — evvaḷavu nēram ākum? oru maṇi nēram ākum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How long will it take? It will take an hour.\" — *evvaḷavu nēram ākum? oru maṇi nēram ākum.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how long you have lived where you live now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how long you have lived where you live now]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"For three months\"? (மூன்று மாதமாக (mūṉṟu mātamāka).) Which tense says \"have been learning\"? (The present.) \"From morning until evening\"? (காலையிலிருந்து மாலை வரை.) \"How long will it take?\" (எவ்வளவு நேரம் ஆகும்?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R291-comparing-and-time",
+      "sequence": 16400,
+      "title": "Review — comparing and time",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "bigger, best, and for how long",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:b9aad1826d312ec8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"The train is better than the bus.\" Then \"for three months\". Then read ஈரம் aloud. (īram.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "My town is smaller than Madurai.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: My town is smaller than Madurai.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I like tea most of all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I like tea most of all.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have been learning Tamil for two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have been learning Tamil for two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It rained from morning until evening. My shirt was wet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It rained from morning until evening. My shirt was wet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two things you have done for a long time, and for how long",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two things you have done for a long time, and for how long]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Bigger than this house\"? (இந்த வீட்டைவிட பெரியது.) \"Most of all\"? (எல்லாவற்றையும்விட.) \"For two years\"? (இரண்டு வருடமாக.) \"From … until\"? (-இலிருந்து … வரை.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

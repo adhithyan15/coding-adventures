@@ -1,0 +1,403 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 286,
+  "title": "What I Think and So",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:82bdf8491ad1b3b6",
+  "lessons": [
+    {
+      "id": "TA-C286-tonrukiratu",
+      "sequence": 16200,
+      "title": "… என்று தோன்றுகிறது (… eṉṟu tōṉṟukiṟatu) (eṉṟu tōṉṟukiṟatu) — it seems to me, in my opinion",
+      "headword": "… என்று தோன்றுகிறது",
+      "romanization": "… eṉṟu tōṉṟukiṟatu",
+      "gloss": "it seems to me that … — and என் கருத்தில், 'in my opinion'",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c85907f6dd2ca17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I think this is a good house.\" (itu nalla vīṭu eṉṟu niṉaikkiṟēṉ.) What closes the opinion before the verb? (என்று.) Then say \"dampness\". (īram.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: … என்று தோன்றுகிறது",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எனக்கு நாளை மழை பெய்யும் என்று தோன்றுகிறது. eṉakku nāḷai maḻai peyyum eṉṟu tōṉṟukiṟatu. — \"It seems to me it will rain tomorrow.\""
+            },
+            {
+              "kind": "speech",
+              "text": "தோன்றுகிறது (tōṉṟukiṟatu, \"it appears, it occurs\"). The person it occurs to takes -க்கு, as in எனக்குத் தமிழ் தெரியும்: \"to me, '(it) will rain tomorrow', so it appears\". பெய்யும் (peyyum, \"it will fall\") is the \"it\" form of the future."
+            },
+            {
+              "kind": "speech",
+              "text": "நினைக்கிறேன் says you have weighed it; தோன்றுகிறது says it is an impression, and sounds softer. Both take the whole opinion first, closed by என்று."
+            },
+            {
+              "kind": "speech",
+              "text": "Two more shapes of the same நினை: … என்று நினைத்தேன் (… eṉṟu niṉaittēṉ, \"I thought that …\"), and the negative, அவன் வருவான் என்று நான் நினைக்கவில்லை (avaṉ varuvāṉ eṉṟu nāṉ niṉaikkavillai, \"I don't think he will come\"). வருவான் (varuvāṉ, \"he will come\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: என் கருத்தில், 'in my opinion'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "என் கருத்தில், ரயில் பயணம் நல்லது. eṉ karuttil, rayil payaṇam nallatu. — \"In my opinion, travelling by train is good.\""
+            },
+            {
+              "kind": "speech",
+              "text": "கருத்து is \"an opinion\"; கருத்தில் is \"in (the) opinion\". நல்லது (nallatu, \"a good thing; good\") is நல்ல made into a thing you can point at. என் கருத்துப்படி (eṉ karuttuppaṭi, \"according to my opinion\") says the same with -படி, \"according to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "This one sits at the front, apart, so the listener knows that what follows is yours."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It seems to me it will rain tomorrow\" — eṉakku nāḷai maḻai peyyum eṉṟu tōṉṟukiṟatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It seems to me it will rain tomorrow\" — *eṉakku nāḷai maḻai peyyum eṉṟu tōṉṟukiṟatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I don't think he will come\" — avaṉ varuvāṉ eṉṟu nāṉ niṉaikkavillai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I don't think he will come\" — *avaṉ varuvāṉ eṉṟu nāṉ niṉaikkavillai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"In my opinion, travelling by train is good\" — eṉ karuttil, rayil payaṇam nallatu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"In my opinion, travelling by train is good\" — *eṉ karuttil, rayil payaṇam nallatu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one opinion of your own about the weather, with தோன்றுகிறது",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one opinion of your own about the weather, with தோன்றுகிறது]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It seems to me that …\"? (எனக்கு … என்று தோன்றுகிறது (… eṉṟu tōṉṟukiṟatu).) Who takes -க்கு? (The person it occurs to.) \"In my opinion\"? (என் கருத்தில்.) \"I thought that …\"? (… என்று நினைத்தேன்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C286-enave",
+      "sequence": 16210,
+      "title": "எனவே (eṉavē) — so, that is why, therefore",
+      "headword": "எனவே",
+      "romanization": "eṉavē",
+      "gloss": "therefore — the written partner of அதனால், and அதனால்தான், 'that is why'",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f678a42f734a427",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"so, because of that\". (ataṉāl.) Then \"It seems to me it will rain tomorrow.\" (eṉakku nāḷai maḻai peyyum eṉṟu tōṉṟukiṟatu.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அதனால் and அதனால்தான்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நேற்று மழை பெய்தது. அதனால் நான் வீட்டில் இருந்தேன். nēṟṟu maḻai peytatu. ataṉāl nāṉ vīṭṭil iruntēṉ. — \"It rained yesterday. So I stayed at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "அதனால் is அதன், the shape of அது that carries endings, with -ஆல், \"by, because of\": \"because of that\". The cause comes first, in its own sentence; அதனால் opens the result."
+            },
+            {
+              "kind": "speech",
+              "text": "Add -தான், \"exactly, that very\", and it points back hard: \"that is why\"."
+            },
+            {
+              "kind": "speech",
+              "text": "அவனுக்குக் காய்ச்சல். அதனால்தான் அவன் வரவில்லை. avaṉukkuk kāyccal. ataṉāltāṉ avaṉ varavillai. — \"He has a fever. That is why he did not come.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: எனவே and ஆகையால், the written 'therefore'",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பேருந்து வரவில்லை. எனவே நாங்கள் நடந்து போனோம். pēruntu varavillai. eṉavē nāṅkaḷ naṭantu pōṉōm. — \"The bus did not come. Therefore we walked.\""
+            },
+            {
+              "kind": "speech",
+              "text": "எனவே (eṉavē) and ஆகையால் (ākaiyāl, \"therefore\") do the job of அதனால் in written Tamil: a notice, a letter, the news. They are the formal side of the two Tamils. In talk, அதனால் carries the result."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It rained yesterday. So I stayed at home.\" — nēṟṟu maḻai peytatu. ataṉāl nāṉ vīṭṭil iruntēṉ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It rained yesterday. So I stayed at home.\" — *nēṟṟu maḻai peytatu. ataṉāl nāṉ vīṭṭil iruntēṉ.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"He has a fever. That is why he did not come.\" — avaṉukkuk kāyccal. ataṉāltāṉ avaṉ varavillai.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"He has a fever. That is why he did not come.\" — *avaṉukkuk kāyccal. ataṉāltāṉ avaṉ varavillai.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The bus did not come. Therefore we walked.\" — pēruntu varavillai. eṉavē nāṅkaḷ naṭantu pōṉōm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The bus did not come. Therefore we walked.\" — *pēruntu varavillai. eṉavē nāṅkaḷ naṭantu pōṉōm.*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"So\"? (அதனால்.) \"That is why\"? (அதனால்தான்.) \"Therefore\", in writing? (எனவே (eṉavē), or ஆகையால்.) Which comes first, the cause or the result? (The cause.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R286-opinion-and-result",
+      "sequence": 16220,
+      "title": "Review — opinion and result",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what I think, what it seems, and what followed from it",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:c2af89bdba7ddb91",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"It seems to me it will rain tomorrow.\" Then read ஈரம் aloud: which letter opens it? (ஈ, ī.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "In my opinion, this is a good shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: In my opinion, this is a good shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It seems to me he will not come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It seems to me he will not come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It rained. So I stayed at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It rained. So I stayed at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "The bus did not come. Therefore we walked to school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: The bus did not come. Therefore we walked to school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one thing that happened to you, and what you did because of it, with அதனால்",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one thing that happened to you, and what you did because of it, with அதனால்]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"It seems to me\"? (எனக்கு … என்று தோன்றுகிறது (… eṉṟu tōṉṟukiṟatu).) \"In my opinion\"? (என் கருத்தில்.) \"That is why\"? (அதனால்தான்.) \"Therefore\", in writing? (எனவே (eṉavē).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

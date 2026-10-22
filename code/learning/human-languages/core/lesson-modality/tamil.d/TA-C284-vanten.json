@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C284-vanten",
+    "language": "tamil",
+    "chapter": 284,
+    "sequence": 16100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2ded70c5825a94d"
+  },
+  "findings": []
+}
