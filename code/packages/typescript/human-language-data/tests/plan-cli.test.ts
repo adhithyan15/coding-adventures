@@ -52,7 +52,7 @@ afterEach(() => {
 //     hash ledgers, plus the book-generation targets.
 //
 // A list like this goes stale silently if the CLI later starts reading one of
-// these paths. So the first case below runs the plan on a pruned copy and on the
+// these paths. So the second case below runs the plan on a pruned copy and on the
 // real corpus, and requires byte-identical output. A pruning mistake fails there,
 // and is not left to look like a planner change in a later case.
 const NEVER_READ_TRACK_DIRS = new Set(["narration"]);
@@ -92,7 +92,7 @@ function copyInto(root: string, inventoriesOnly: boolean): void {
     // generated hash ledgers the plan never opens. Copying those (and then
     // deleting them in afterEach) was nearly all this fixture spent, and it
     // pushed the duplicated-inventory case past its budget on a loaded machine
-    // while the assertion itself had passed. The first case's identical-output
+    // while the assertion itself had passed. The second case's identical-output
     // check is what keeps this filter honest.
     for (const directory of ["core", "concepts", "data"]) {
       cpSync(join(defaultCurriculumRoot(), directory), join(root, directory), {
@@ -143,9 +143,9 @@ afterAll(() => {
 
 // The plan over the clean shared copy, computed at most once.
 //
-// The first case needs it at head 200 to compare against the real corpus; the
-// last case needs only its exit code, to show `--root` with a real value is fine
-// before showing `--root --format` is refused. The exit code does not depend on
+// The first two cases need it at head 200 (the second compares it against the
+// real corpus); the last case needs only its exit code, to show `--root` with a
+// real value is fine before showing `--root --format` is refused. The exit code does not depend on
 // the head size (it is non-zero only for an unreadable inventory), so the last
 // case reads the same run instead of planning the whole corpus again. Memoising
 // is safe because the shared copy is clean whenever no case is mid-edit, and the
@@ -202,14 +202,8 @@ describe("the plan CLI", () => {
     // HL16 adds one assessment-contract item per track ahead of content proxy
     // work. Ask for the complete enumerable queue so this test continues to
     // assert that the measured French/German exam gaps survive behind that gate.
-    const { code, out, err } = cleanSharedRun();
-    // This case also guards NEVER_READ_* above. The plan only reads, so running it
-    // on the committed corpus is safe, and the pruned copy must plan identically.
-    // If it ever differs, one of those directories has become an input and must
-    // come off the list.
-    vi.restoreAllMocks();
-    const real = run(defaultCurriculumRoot(), 200);
-    expect({ code, out, err }).toEqual(real);
+    // The NEVER_READ_* guard that used to sit here is the next case.
+    const { code, out } = cleanSharedRun();
     expect(code).toBe(0);
     expect(out).toMatch(/exam-point — french/);
     expect(out).toMatch(/exam-point — german/);
@@ -306,6 +300,24 @@ describe("the plan CLI", () => {
     const written = committedInventoryPairs();
     expect(written.size).toBeGreaterThan(0);
     expect(out).toMatch(new RegExp(`0 complete and ${written.size} partial of 138`));
+  }, 120_000);
+
+  // Split out of the case above, which used to plan the WHOLE corpus twice in
+  // one 120 s budget: once over the pruned shared copy (outside the real root,
+  // so the lesson cache cannot serve it and every lesson is parsed) and once
+  // over the committed corpus. On a 3-core macOS runner under full-suite load
+  // the pair overran the budget while every assertion held. Each case now runs
+  // one plan; the shared run is memoised, so whichever case runs first pays
+  // for it and either case alone still computes everything it needs.
+  it("plans the pruned shared copy exactly as it plans the committed corpus", () => {
+    // This guards NEVER_READ_* above. The plan only reads, so running it on the
+    // committed corpus is safe, and the pruned copy must plan identically. If it
+    // ever differs, one of those directories has become an input and must come
+    // off the list.
+    const pruned = cleanSharedRun();
+    vi.restoreAllMocks();
+    const real = run(defaultCurriculumRoot(), 200);
+    expect(pruned).toEqual(real);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
