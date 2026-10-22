@@ -43,7 +43,7 @@ reviews_of: [PA-C186-aavega, PA-C181-yatra]
 
 > **ਆਵੇਗੀ** — *aavegii* — she or it will come
 
-Change the final **ਾ** to **ੀ**, just as in the first future pair. The verb
+Change the final **ਾ** to **ੀ**, matching the first future pair. The verb
 still means “come”; agreement is now feminine singular.
 
 ## Guided Practice

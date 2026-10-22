@@ -4,7 +4,7 @@
   "chapter": 186,
   "title": "What Will Happen? Who Will Come?",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2bf38428acf20c3c",
+  "sourceHash": "fnv1a64:fca1f1a9b7f1fa45",
   "lessons": [
     {
       "id": "PA-C186-future-return",
@@ -529,7 +529,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67f5f8e6d4d1b854",
+      "sourceHash": "fnv1a64:dbd9993b36b31ad0",
       "notice": null,
       "blocks": [
         {
@@ -560,7 +560,7 @@
             },
             {
               "kind": "speech",
-              "text": "Change the final ਾ to ੀ, just as in the first future pair. The verb still means “come”; agreement is now feminine singular."
+              "text": "Change the final ਾ to ੀ, matching the first future pair. The verb still means “come”; agreement is now feminine singular."
             }
           ]
         },
