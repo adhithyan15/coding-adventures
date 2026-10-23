@@ -942,6 +942,17 @@ child-to-intermediate-to-reviewed-root chain for the fixed RSA SHA-256 path;
 it does not search or generalize paths, apply anchor name constraints, check
 revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
 connection.
+A bounded target-policy follow-up now consumes complete validated server
+certificate policy together with that reviewed two-link path. It fails closed
+unless the server-policy certificate and the authenticated path's target child
+refer to the same exact decoded certificate object, then returns distinct
+non-copyable evidence retaining both complete inputs. This prevents callers
+from attaching hostname, validity, purpose, end-entity role, critical-extension,
+and algorithm policy for one certificate to a separately authenticated target,
+including a byte-equal re-decode. The result does not apply the selected
+anchor's name constraints or other anchor policy, search or generalize paths,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
+network connection.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

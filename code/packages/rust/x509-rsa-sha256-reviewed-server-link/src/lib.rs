@@ -1,11 +1,12 @@
 //! # Exact server-policy and reviewed-link binding
 //!
 //! This crate closes one evidence-mixing gap between target-server policy and
-//! one authenticated RSA SHA-256 issuer link terminating at a reviewed root.
-//! It also applies selected reviewed-anchor DNS constraints to the exact target
-//! certificate's Subject Alternative Name values. It performs no new signature
-//! work, root lookup, path construction, revocation processing, or network
-//! effects.
+//! one authenticated RSA SHA-256 issuer link terminating at a reviewed root,
+//! or to one authenticated target-to-intermediate-to-reviewed-root path. It
+//! also applies selected reviewed-anchor DNS constraints to the exact target
+//! certificate's Subject Alternative Name values for the direct-link case. It
+//! performs no new signature work, root lookup, path search, revocation
+//! processing, or network effects.
 
 #![deny(unsafe_code)]
 
@@ -15,7 +16,9 @@ use x509_name_constraints::{
     decode_name_constraints_contents, evaluate_permitted_dns_names, DnsConstraintErrorKind,
     NameConstraintsErrorKind, PermittedDnsNames,
 };
-use x509_rsa_sha256_reviewed_anchor_link::BoundX509RsaSha256ReviewedAnchorLink;
+use x509_rsa_sha256_reviewed_anchor_link::{
+    BoundX509RsaSha256ReviewedAnchorLink, BoundX509RsaSha256ReviewedIntermediatePath,
+};
 use x509_server_certificate_policy::ValidatedX509ServerCertificatePolicy;
 use x509_subject_alt_name::{
     decode_subject_alt_name, SubjectAltNameErrorKind, SUBJECT_ALT_NAME_OID,
@@ -128,6 +131,95 @@ impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
 impl fmt::Debug for BoundX509RsaSha256ReviewedServerLink<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("BoundX509RsaSha256ReviewedServerLink")
+    }
+}
+
+/// Non-copyable evidence binding target-server policy to one reviewed
+/// target-to-intermediate-to-root path.
+///
+/// The retained target evidence covers caller-owned critical-extension and
+/// algorithm policy, end-entity role, SAN-only identity, explicit-time
+/// validity, and one exact Extended Key Usage purpose. The retained path keeps
+/// both authenticated RSA SHA-256 links, complete intermediate policy, the
+/// advanced path-length state, and exact reviewed-root selection. This wrapper
+/// does not apply anchor constraints, search or generalize paths, check
+/// revocation, or grant TLS, HTTP, OAuth, or network authority.
+pub struct BoundX509RsaSha256ReviewedIntermediateServerPath<
+    'server_certificate,
+    'path_child_certificate,
+    'child_encoded,
+    'intermediate_certificate,
+    'intermediate_encoded,
+    'parent_child_certificate,
+    'parent_child_encoded,
+    'root_certificate,
+    'root_encoded,
+> {
+    server_policy: ValidatedX509ServerCertificatePolicy<'server_certificate, 'child_encoded>,
+    reviewed_intermediate_path: BoundX509RsaSha256ReviewedIntermediatePath<
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+}
+
+impl<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >
+    BoundX509RsaSha256ReviewedIntermediateServerPath<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >
+{
+    /// Return the consumed exact-certificate target-server policy.
+    pub const fn server_policy(
+        &self,
+    ) -> &ValidatedX509ServerCertificatePolicy<'server_certificate, 'child_encoded> {
+        &self.server_policy
+    }
+
+    /// Return the consumed authenticated two-link path and reviewed root.
+    pub const fn reviewed_intermediate_path(
+        &self,
+    ) -> &BoundX509RsaSha256ReviewedIntermediatePath<
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    > {
+        &self.reviewed_intermediate_path
+    }
+}
+
+impl fmt::Debug
+    for BoundX509RsaSha256ReviewedIntermediateServerPath<'_, '_, '_, '_, '_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509RsaSha256ReviewedIntermediateServerPath")
     }
 }
 
@@ -286,6 +378,66 @@ pub fn bind_x509_rsa_sha256_reviewed_server_link<
     Ok(BoundX509RsaSha256ReviewedServerLink {
         server_policy,
         reviewed_anchor_link,
+    })
+}
+
+/// Bind target-server policy to a reviewed two-link path for the same exact
+/// decoded target certificate object.
+///
+/// Byte equality is deliberately insufficient. The server-policy certificate
+/// and the child authenticated by the target-to-intermediate step must be the
+/// same object. Success retains both complete non-copyable inputs but performs
+/// no additional certificate, anchor, path, or transport validation.
+pub fn bind_x509_rsa_sha256_reviewed_intermediate_server_path<
+    'server_certificate,
+    'path_child_certificate,
+    'child_encoded,
+    'intermediate_certificate,
+    'intermediate_encoded,
+    'parent_child_certificate,
+    'parent_child_encoded,
+    'root_certificate,
+    'root_encoded,
+>(
+    server_policy: ValidatedX509ServerCertificatePolicy<'server_certificate, 'child_encoded>,
+    reviewed_intermediate_path: BoundX509RsaSha256ReviewedIntermediatePath<
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+) -> Result<
+    BoundX509RsaSha256ReviewedIntermediateServerPath<
+        'server_certificate,
+        'path_child_certificate,
+        'child_encoded,
+        'intermediate_certificate,
+        'intermediate_encoded,
+        'parent_child_certificate,
+        'parent_child_encoded,
+        'root_certificate,
+        'root_encoded,
+    >,
+    X509RsaSha256ReviewedServerLinkError,
+> {
+    let authenticated_child = reviewed_intermediate_path
+        .authenticated_path()
+        .authenticated_intermediate()
+        .issuer_policy_link()
+        .role_policy_link()
+        .verified_link()
+        .child();
+    if !same_exact_object(server_policy.certificate(), authenticated_child) {
+        return Err(X509RsaSha256ReviewedServerLinkError::evidence_mismatch());
+    }
+
+    Ok(BoundX509RsaSha256ReviewedIntermediateServerPath {
+        server_policy,
+        reviewed_intermediate_path,
     })
 }
 
@@ -623,5 +775,46 @@ mod tests {
             san_error.kind(),
             X509RsaSha256ReviewedServerLinkErrorKind::InvalidTargetSubjectAlternativeName(_)
         ));
+    }
+
+    #[test]
+    fn reviewed_intermediate_server_path_api_retains_both_complete_inputs() {
+        type ServerPolicy = ValidatedX509ServerCertificatePolicy<'static, 'static>;
+        type ReviewedIntermediatePath =
+            x509_rsa_sha256_reviewed_anchor_link::BoundX509RsaSha256ReviewedIntermediatePath<
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+                'static,
+            >;
+        type ReviewedIntermediateServerPath = BoundX509RsaSha256ReviewedIntermediateServerPath<
+            'static,
+            'static,
+            'static,
+            'static,
+            'static,
+            'static,
+            'static,
+            'static,
+            'static,
+        >;
+
+        let _binder: fn(
+            ServerPolicy,
+            ReviewedIntermediatePath,
+        ) -> Result<
+            ReviewedIntermediateServerPath,
+            X509RsaSha256ReviewedServerLinkError,
+        > = bind_x509_rsa_sha256_reviewed_intermediate_server_path;
+
+        fn inspect(evidence: &ReviewedIntermediateServerPath) {
+            let _: &ServerPolicy = evidence.server_policy();
+            let _: &ReviewedIntermediatePath = evidence.reviewed_intermediate_path();
+        }
+        let _inspector: fn(&ReviewedIntermediateServerPath) = inspect;
     }
 }
