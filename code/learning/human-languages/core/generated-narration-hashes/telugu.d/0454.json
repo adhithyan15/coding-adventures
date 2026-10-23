@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 454,
-  "sourceHash": "fnv1a64:7e6e55e7a5f27bd4",
+  "sourceHash": "fnv1a64:da17b09592f0c040",
   "lessonIds": [
     "TE-C454-pailatu",
     "TE-C454-antarjatiya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch454.txt",
   "json": "telugu/narration/ch454.json",
-  "textHash": "fnv1a64:0ace1bb6c875c48c",
-  "jsonHash": "fnv1a64:4a386833396e7f89",
+  "textHash": "fnv1a64:ccbbb9574892fd6a",
+  "jsonHash": "fnv1a64:4011470cfaa92886",
   "findings": []
 }

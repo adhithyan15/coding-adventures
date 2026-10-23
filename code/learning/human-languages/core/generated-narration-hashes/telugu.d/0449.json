@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 449,
-  "sourceHash": "fnv1a64:96d3e4472284cf77",
+  "sourceHash": "fnv1a64:1454c89dcd6d0b42",
   "lessonIds": [
     "TE-C449-addanki",
     "TE-C449-mallimpu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch449.txt",
   "json": "telugu/narration/ch449.json",
-  "textHash": "fnv1a64:fbdd80032d6eac3e",
-  "jsonHash": "fnv1a64:e3995c1d50ce407f",
+  "textHash": "fnv1a64:6cfbe5c31734aa96",
+  "jsonHash": "fnv1a64:0d0f7c0665bb4560",
   "findings": []
 }

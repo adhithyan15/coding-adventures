@@ -50,7 +50,7 @@ reviews_of: [TE-C454-pailatu]
 >
 > There is a new international airport in our city.
 
-An adjective that stands before its noun and does not change: అంతర్జాతీయ విమానం, an international flight.
+An adjective: అంతర్జాతీయ విమానం, an international flight. It stands before its noun and does not change.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

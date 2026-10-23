@@ -4,7 +4,7 @@
   "chapter": 467,
   "title": "Buildings and Spaces",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:89a68522aba61aca",
+  "sourceHash": "fnv1a64:e2a1039725f43bc9",
   "lessons": [
     {
       "id": "TE-C467-antastu",
@@ -587,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:758a868d3bcffd9b",
+      "sourceHash": "fnv1a64:2159a4e5f94d27eb",
       "notice": null,
       "blocks": [
         {
@@ -622,7 +622,7 @@
             },
             {
               "kind": "speech",
-              "text": "నిర్, without, + మానుష్య, people. With ఉండు it takes -ంగా: నిర్మానుష్యంగా ఉంది."
+              "text": "నిర్, without, + మానుష్య, people. It takes -ంగా with ఉండు: నిర్మానుష్యంగా ఉంది."
             }
           ]
         },

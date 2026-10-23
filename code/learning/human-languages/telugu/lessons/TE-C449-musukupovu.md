@@ -52,7 +52,7 @@ reviews_of: [TE-C449-stambhincu]
 
 Past (it …): మూసుకుపోయింది, *mūsukupōyindi*.
 
-మూయు, to close, + -కో + పోవు. A blocked nose is ముక్కు మూసుకుపోయింది. Its subject is a thing, so the past shown is the third person: మూసుకుపోయింది, it got blocked.
+మూయు, to close, + -కో + పోవు. Its subject is a thing, so the past shown is the third person: మూసుకుపోయింది, it got blocked. A blocked nose is ముక్కు మూసుకుపోయింది.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

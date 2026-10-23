@@ -4,7 +4,7 @@
   "chapter": 449,
   "title": "Roads Blocked",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:96d3e4472284cf77",
+  "sourceHash": "fnv1a64:1454c89dcd6d0b42",
   "lessons": [
     {
       "id": "TE-C449-addanki",
@@ -595,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94ac8640962b86f5",
+      "sourceHash": "fnv1a64:4155ae2cda450145",
       "notice": null,
       "blocks": [
         {
@@ -634,7 +634,7 @@
             },
             {
               "kind": "speech",
-              "text": "మూయు, to close, + -కో + పోవు. A blocked nose is ముక్కు మూసుకుపోయింది. Its subject is a thing, so the past shown is the third person: మూసుకుపోయింది, it got blocked."
+              "text": "మూయు, to close, + -కో + పోవు. Its subject is a thing, so the past shown is the third person: మూసుకుపోయింది, it got blocked. A blocked nose is ముక్కు మూసుకుపోయింది."
             }
           ]
         },

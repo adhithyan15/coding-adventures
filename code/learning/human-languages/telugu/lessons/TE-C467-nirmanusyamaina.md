@@ -50,7 +50,7 @@ reviews_of: [TE-C467-visalamaina]
 >
 > At midnight I walked down a deserted street.
 
-నిర్, without, + మానుష్య, people. With ఉండు it takes -ంగా: నిర్మానుష్యంగా ఉంది.
+నిర్, without, + మానుష్య, people. It takes -ంగా with ఉండు: నిర్మానుష్యంగా ఉంది.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

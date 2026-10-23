@@ -4,7 +4,7 @@
   "chapter": 454,
   "title": "Flying Abroad",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7e6e55e7a5f27bd4",
+  "sourceHash": "fnv1a64:da17b09592f0c040",
   "lessons": [
     {
       "id": "TE-C454-pailatu",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:641df2dd53d79c93",
+      "sourceHash": "fnv1a64:3154af9843689c8b",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "An adjective that stands before its noun and does not change: అంతర్జాతీయ (antarjātīya) విమానం, an international flight."
+              "text": "An adjective: అంతర్జాతీయ (antarjātīya) విమానం, an international flight. It stands before its noun and does not change."
             }
           ]
         },
