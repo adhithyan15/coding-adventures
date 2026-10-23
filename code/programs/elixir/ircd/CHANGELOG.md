@@ -1,5 +1,18 @@
 # Changelog — ircd (Elixir)
 
+## [Unreleased]
+
+### Fixed
+
+- `test/coding_adventures/ircd_test.exs`: `unregister_driver_handler/0` no
+  longer checks `Process.whereis/1` and then unregisters. The handler is
+  linked to the test process, which ExUnit is shutting down while `on_exit`
+  runs in another process, so the handler can exit between the two calls,
+  releasing the name, and `Process.unregister/1` then raises `ArgumentError` ("not a
+  pid"). That failed `clients can join a channel and chat` from its
+  `on_exit` cleanup on CI (PR #18005, shard 15). The helper now unregisters
+  and treats `ArgumentError` as "already free".
+
 ## [0.1.0] — 2026-04-12
 
 ### Added
