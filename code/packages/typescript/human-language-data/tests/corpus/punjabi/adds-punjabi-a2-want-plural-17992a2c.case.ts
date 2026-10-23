@@ -105,7 +105,7 @@ it("adds a slow Punjabi A2 plural/polite want prerequisite without mock credit",
 
   const generatedBook = readFileSync(new URL(
     "../../../../../../learning/human-languages/punjabi/book/chapters/" +
-      "ch189-they-want-and-do-you-want.tex",
+      "ch189-they-want-do-you-want.tex",
     import.meta.url,
   ), "utf8");
   const ownerLabel = generatedBook.indexOf(`label{lesson:${ids[ownerIndex]}}`);
