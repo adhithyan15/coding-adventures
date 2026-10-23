@@ -1,0 +1,18 @@
+{
+  "chapter": 189,
+  "title": "They Want; Do You Want?",
+  "label": "ch:pa-a2-want-plural",
+  "canDo": "I can recognise and use the shared plural or respectful want form in a familiar statement and question.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C189-payoff",
+    "kind": "production",
+    "summary": "Retrieve the shared plural or respectful want form in a third-person plural statement and a second-person polite question across four skills.",
+    "assesses": [
+      "PA-FORM-CHAHUNDE-189"
+    ],
+    "note": "This twelfth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

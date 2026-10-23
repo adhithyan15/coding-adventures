@@ -1,0 +1,19 @@
+{
+  "chapter": 424,
+  "title": "Posts and Reforms",
+  "label": "ch:ml-posts-and-reforms",
+  "canDo": "I can say an appointment, democracy, authority, a leader and to reform.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C424-netavu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can say an appointment, democracy, authority, a leader and to reform.",
+    "assesses": [
+      "ML-LEX-C424-ADHIKARAM424-03",
+      "ML-LEX-C424-ADHIKARAM424-04",
+      "ML-LEX-C424-ADHIKARAM424-05"
+    ]
+  }
+}

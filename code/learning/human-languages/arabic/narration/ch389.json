@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 389,
+  "title": "Power and influence",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:018081c4c4c5a042",
+  "lessons": [
+    {
+      "id": "AR-C389-nufudh",
+      "sequence": 21980,
+      "title": "نفوذ (nufūdh) — influence",
+      "headword": "نفوذ",
+      "romanization": "nufūdh",
+      "gloss": "influence",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:193674eefe2ceb37",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to violate, then the Arabic for to exploit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نفوذ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نفوذ — nufūdh — \"influence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لهذا الرجل نفوذ كبير في المدينة. li-hādhā ar-rajul nufūdh kabīr fī al-madīna. This man has great influence in the city."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نفوذ (nufūdh) is built on the native Arabic root n-f-dh, \"to pass through, to pierce\" (Lane). Nufūdh is passing through: the power to make things happen, influence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nufūdh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nufūdh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nufūdh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nufūdh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "li-hādhā ar-rajul nufūdh kabīr fī al-madīna. — This man has great influence in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *li-hādhā ar-rajul nufūdh kabīr fī al-madīna.* — This man has great influence in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to violate, then the Arabic for to exploit, then say nufūdh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to violate, then the Arabic for to exploit, then say *nufūdh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نفوذ (nufūdh) mean? (\"Influence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C389-sada-prevail",
+      "sequence": 21990,
+      "title": "ساد (sāda) — to prevail",
+      "headword": "ساد",
+      "romanization": "sāda",
+      "gloss": "to prevail",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9701d0ba00db95f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to exploit, then the Arabic for influence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ساد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ساد — sāda — \"to prevail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ساد الخوف في المدينة. sāda al-khawf fī al-madīna. Fear prevailed in the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسود, yasūd."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ساد (sāda) is built on the native Arabic root s-w-d, \"to be lord, to be chief\" (Lane). Sāda is a Form I verb, to be master: to rule, to prevail. سيد, a lord, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāda*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāda, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāda*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāda al-khawf fī al-madīna. — Fear prevailed in the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāda al-khawf fī al-madīna.* — Fear prevailed in the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to exploit, then the Arabic for influence, then say sāda again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to exploit, then the Arabic for influence, then say *sāda* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ساد (sāda) mean? (\"To prevail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C389-indamma",
+      "sequence": 22000,
+      "title": "انضم (inḍamma) — to join",
+      "headword": "انضم",
+      "romanization": "inḍamma",
+      "gloss": "to join",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43502111faa51c0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for influence, then the Arabic for to prevail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انضم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انضم — inḍamma — \"to join\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انضم أخي إلى فريق المدرسة. inḍamma akhī ilā farīq al-madrasa. My brother joined the school team."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينضم, yanḍamm."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes إلى: انضم (inḍamma) إلى …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انضم (inḍamma) is built on the native Arabic root ḍ-m-m, \"to draw together\" (Lane). It is Form VII, to be drawn in with others: to join."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inḍamma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inḍamma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inḍamma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inḍamma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inḍamma akhī ilā farīq al-madrasa. — My brother joined the school team.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inḍamma akhī ilā farīq al-madrasa.* — My brother joined the school team.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for influence, then the Arabic for to prevail, then say inḍamma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for influence, then the Arabic for to prevail, then say *inḍamma* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انضم (inḍamma) mean? (\"To join\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C389-ajbara",
+      "sequence": 22010,
+      "title": "أجبر (ajbara) — to force",
+      "headword": "أجبر",
+      "romanization": "ajbara",
+      "gloss": "to force",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51d826125b016664",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to prevail, then the Arabic for to join."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أجبر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أجبر — ajbara — \"to force\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أجبر المطر الناس على البقاء في البيت. ajbara al-maṭar an-nās ʿalā al-baqāʾ fī al-bayt. The rain forced people to stay at home."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يجبر, yujbir."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: أجبره على …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أجبر (ajbara) is built on the native Arabic root j-b-r, \"to set a broken bone\" (Lane). It is Form IV; Lane gives it for compelling someone: to force."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajbara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajbara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajbara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajbara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajbara al-maṭar an-nās ʿalā al-baqāʾ fī al-bayt. — The rain forced people to stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajbara al-maṭar an-nās ʿalā al-baqāʾ fī al-bayt.* — The rain forced people to stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to prevail, then the Arabic for to join, then say ajbara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to prevail, then the Arabic for to join, then say *ajbara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أجبر (ajbara) mean? (\"To force\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C389-istiqrar",
+      "sequence": 22020,
+      "title": "استقرار (istiqrār) — stability",
+      "headword": "استقرار",
+      "romanization": "istiqrār",
+      "gloss": "stability",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1896594015325a90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to join, then the Arabic for to force."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استقرار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقرار — istiqrār — \"stability\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يحتاج الأطفال إلى الاستقرار. yaḥtāju al-aṭfāl ilā al-istiqrār. Children need stability."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استقرار (istiqrār) is built on the native Arabic root q-r-r, \"to settle, to be still\" (Lane). Istiqrār is the Form X verbal noun, settling in place: stability."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istiqrār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istiqrār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istiqrār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istiqrār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaḥtāju al-aṭfāl ilā al-istiqrār. — Children need stability.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaḥtāju al-aṭfāl ilā al-istiqrār.* — Children need stability.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to join, then the Arabic for to force, then say istiqrār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to join, then the Arabic for to force, then say *istiqrār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استقرار (istiqrār) mean? (\"Stability\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R389-review-382-389",
+      "sequence": 22030,
+      "title": "Words from chapters 382–389 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 382-389",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c7604de9bd9368a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for a protest and dignity."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a protest, dignity, to demonstrate, to protest, a strike",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a protest, dignity, to demonstrate, to protest, a strike]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the economy, a tax, a deficit, inflation, to invest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the economy, a tax, a deficit, inflation, to invest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fund, to allocate, industry, agriculture, development",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fund, to allocate, industry, agriculture, development]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an organization, an association, a trade union, a council, a member",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an organization, an association, a trade union, a council, a member]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cooperate, to negotiate, to ratify, a conflict, a crisis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cooperate, to negotiate, to ratify, a conflict, a crisis]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "migration, a nation, nationality, a majority, a minority",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: migration, a nation, nationality, a majority, a minority]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "corruption, a bribe, reform, to violate, to exploit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: corruption, a bribe, reform, to violate, to exploit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "influence, to prevail, to join, to force, stability",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: influence, to prevail, to join, to force, stability]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A protest? (احتجاج, iḥtijāj.) Dignity? (كرامة, karāma.) To demonstrate? (تظاهر, taẓāhara.) To protest? (احتج, iḥtajja.) A strike? (إضراب, iḍrāb.) The economy? (اقتصاد, iqtiṣād.) A tax? (ضريبة, ḍarība.) A deficit? (عجز, ʿajz.) Inflation? (تضخم, taḍakhkhum.) To invest? (استثمر, istathmara.) To fund? (مول, mawwala.) To allocate? (خصص, khaṣṣaṣa.) Industry? (صناعة, ṣināʿa.) Agriculture? (زراعة, zirāʿa.) Development? (تنمية, tanmiya.) An organization? (منظمة, munaẓẓama.) An association? (جمعية, jamʿiyya.) A trade union? (نقابة, niqāba.) A council? (مجلس, majlis.) A member? (عضو, ʿuḍw.) To cooperate? (تعاون, taʿāwana.) To negotiate? (تفاوض, tafāwaḍa.) To ratify? (صادق, ṣādaqa.) A conflict? (صراع, ṣirāʿ.) A crisis? (أزمة, azma.) Migration? (هجرة, hijra.) A nation? (أمة, umma.) Nationality? (جنسية, jinsiyya.) A majority? (أغلبية, aghlabiyya.) A minority? (أقلية, aqalliyya.) Corruption? (فساد, fasād.) A bribe? (رشوة, rashwa.) Reform? (إصلاح, iṣlāḥ.) To violate? (انتهك, intahaka.) To exploit? (استغل, istaghalla.) Influence? (نفوذ, nufūdh.) To prevail? (ساد, sāda.) To join? (انضم, inḍamma.) To force? (أجبر, ajbara.) Stability? (استقرار, istiqrār.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

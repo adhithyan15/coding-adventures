@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:17e748793ab1d5b1",
+  "lessonIds": [
+    "ML-C498-kantalkkatu",
+    "ML-C498-catuppu",
+    "ML-C498-pavilappurru",
+    "ML-C498-sravu",
+    "ML-C498-atinnukutuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch498.txt",
+  "json": "malayalam/narration/ch498.json",
+  "textHash": "fnv1a64:0066b34b476667e7",
+  "jsonHash": "fnv1a64:f37ab31416874cbd",
+  "findings": []
+}

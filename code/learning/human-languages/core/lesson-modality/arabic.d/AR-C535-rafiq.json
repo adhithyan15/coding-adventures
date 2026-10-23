@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C535-rafiq",
+    "language": "arabic",
+    "chapter": 535,
+    "sequence": 29600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56654a90d83e4305"
+  },
+  "findings": []
+}

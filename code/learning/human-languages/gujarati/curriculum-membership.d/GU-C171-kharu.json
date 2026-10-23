@@ -1,0 +1,11 @@
+{
+  "id": "GU-C171-kharu",
+  "pathSegment": "GU-PATH-171-TASTE171",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-171-TASTE171",
+      "order": 3
+    }
+  ]
+}

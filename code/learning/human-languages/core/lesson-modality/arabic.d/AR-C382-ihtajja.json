@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C382-ihtajja",
+    "language": "arabic",
+    "chapter": 382,
+    "sequence": 21660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5fd71c395ded85c"
+  },
+  "findings": []
+}

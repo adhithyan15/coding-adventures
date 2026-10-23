@@ -1,0 +1,11 @@
+{
+  "id": "GU-C272-vacan",
+  "pathSegment": "GU-PATH-272-PROMISE272",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-272-PROMISE272",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:3d1f42467399ed65",
+  "lessonIds": [
+    "AR-C454-imara",
+    "AR-C454-natihat-sahab",
+    "AR-C454-dahiya",
+    "AR-C454-masbah",
+    "AR-C454-mujammaa-tijari",
+    "AR-R454-review-447-454"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch454.txt",
+  "json": "arabic/narration/ch454.json",
+  "textHash": "fnv1a64:26d0a3c3b47eb653",
+  "jsonHash": "fnv1a64:ec0142d100976722",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-217-WIND217",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "GU-EXT-217-WIND217"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Taxes and Production",
+  "label": "ch:ml-taxes-and-production",
+  "canDo": "I can say to impose, to collect, to produce, local and national.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C459-desiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say to impose, to collect, to produce, local and national.",
+    "assesses": [
+      "ML-LEX-C459-NIKUTI459-03",
+      "ML-LEX-C459-NIKUTI459-04",
+      "ML-LEX-C459-NIKUTI459-05"
+    ]
+  }
+}

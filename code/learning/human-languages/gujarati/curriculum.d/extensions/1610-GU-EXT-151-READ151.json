@@ -1,0 +1,10 @@
+{
+  "id": "GU-EXT-151-READ151",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a shop's notice of opening days and times, with its advert, and decide when I can go.",
+  "prerequisites": [
+    "GU-EXT-150-FUT150"
+  ]
+}

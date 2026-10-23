@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C482-asafa",
+    "language": "arabic",
+    "chapter": 482,
+    "sequence": 26840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:743ed2efe33ab3d0"
+  },
+  "findings": []
+}

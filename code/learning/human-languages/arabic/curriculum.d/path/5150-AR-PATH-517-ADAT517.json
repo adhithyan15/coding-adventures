@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-517-ADAT517",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-517-ADAT517"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:ccdddaeab622e275",
+  "lessonIds": [
+    "GU-C258-kriket",
+    "GU-C258-dado",
+    "GU-C258-bet",
+    "GU-C258-maarvu",
+    "GU-C258-uchalvu"
+  ],
+  "tex": "gujarati/book/chapters/ch258-bat-and-ball.tex"
+}

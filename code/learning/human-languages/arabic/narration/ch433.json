@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 433,
+  "title": "A flat tyre",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5b709db5498a85b5",
+  "lessons": [
+    {
+      "id": "AR-C433-itar",
+      "sequence": 24310,
+      "title": "إطار (iṭār) — a tyre; a frame",
+      "headword": "إطار",
+      "romanization": "iṭār",
+      "gloss": "a tyre; a frame",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50ec3b4c33be92df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for brakes, then the Arabic for to supply."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إطار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إطار — iṭār — \"a tyre; a frame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان إطار الدراجة قديما. kāna iṭār ad-darrāja qadīman. The bicycle's tyre was old."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إطار (iṭār) is usually traced to the native Arabic root ʾ-ṭ-r, \"to bend round\". An iṭār is a ring or rim that goes round a thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna iṭār ad-darrāja qadīman. — The bicycle's tyre was old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna iṭār ad-darrāja qadīman.* — The bicycle's tyre was old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for brakes, then the Arabic for to supply, then say iṭār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for brakes, then the Arabic for to supply, then say *iṭār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إطار (iṭār) mean? (\"A tyre; a frame\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C433-ajala",
+      "sequence": 24320,
+      "title": "عجلة (ʿajala) — a wheel",
+      "headword": "عجلة",
+      "romanization": "ʿajala",
+      "gloss": "a wheel",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d429af0b6319b07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to supply, then the Arabic for a tyre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عجلة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عجلة — ʿajala — \"a wheel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غير أبي عجلة (ʿajala) السيارة على الطريق. ghayyara abī ʿajalat as-sayyāra ʿalā aṭ-ṭarīq. My father changed the car's wheel on the road."
+            },
+            {
+              "kind": "speech",
+              "text": "The same word means haste: fī ʿajala, \"in a hurry\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عجلة (ʿajala) is built on the native Arabic root ʿ-j-l, \"to hasten\" (Lane). It is the root of mustaʿjil, \"in a hurry\"; Lane lists ʿajala as a cart drawn by an ox, said to be named for its quick going, and modern Arabic uses it for a wheel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿajala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿajala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿajala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿajala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghayyara abī ʿajalat as-sayyāra ʿalā aṭ-ṭarīq. — My father changed the car's wheel on the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghayyara abī ʿajalat as-sayyāra ʿalā aṭ-ṭarīq.* — My father changed the car's wheel on the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to supply, then the Arabic for a tyre, then say ʿajala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to supply, then the Arabic for a tyre, then say *ʿajala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عجلة (ʿajala) mean? (\"A wheel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C433-thuqb",
+      "sequence": 24330,
+      "title": "ثقب (thuqb) — a hole; a puncture",
+      "headword": "ثقب",
+      "romanization": "thuqb",
+      "gloss": "a hole; a puncture",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c50c554c5fbd1d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a tyre, then the Arabic for a wheel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ثقب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثقب — thuqb — \"a hole; a puncture\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وجد العامل ثقبا صغيرا في الإطار. wajada al-ʿāmil thuqban ṣaghīran fī al-iṭār. The worker found a small hole in the tyre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثقب (thuqb) is built on the native Arabic root th-q-b, \"to pierce\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thuqb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thuqb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thuqb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thuqb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wajada al-ʿāmil thuqban ṣaghīran fī al-iṭār. — The worker found a small hole in the tyre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wajada al-ʿāmil thuqban ṣaghīran fī al-iṭār.* — The worker found a small hole in the tyre.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a tyre, then the Arabic for a wheel, then say thuqb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a tyre, then the Arabic for a wheel, then say *thuqb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ثقب (thuqb) mean? (\"A hole; a puncture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C433-midakhkha",
+      "sequence": 24340,
+      "title": "مضخة (miḍakhkha) — a pump",
+      "headword": "مضخة",
+      "romanization": "miḍakhkha",
+      "gloss": "a pump",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e44a4aa50b15174e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a wheel, then the Arabic for a hole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مضخة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مضخة — miḍakhkha — \"a pump\"."
+            },
+            {
+              "kind": "speech",
+              "text": "نفخ أخي الإطار بمضخة صغيرة. nafakha akhī al-iṭār bi-miḍakhkha ṣaghīra. My brother pumped up the tyre with a small pump."
+            },
+            {
+              "kind": "speech",
+              "text": "The pattern mifʿala names a tool."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مضخة (miḍakhkha) is usually traced to the native Arabic root ḍ-kh-kh, \"to spurt (of water)\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miḍakhkha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miḍakhkha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miḍakhkha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miḍakhkha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nafakha akhī al-iṭār bi-miḍakhkha ṣaghīra. — My brother pumped up the tyre with a small pump.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nafakha akhī al-iṭār bi-miḍakhkha ṣaghīra.* — My brother pumped up the tyre with a small pump.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a wheel, then the Arabic for a hole, then say miḍakhkha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a wheel, then the Arabic for a hole, then say *miḍakhkha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مضخة (miḍakhkha) mean? (\"A pump\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C433-jarra",
+      "sequence": 24350,
+      "title": "جر (jarra) — to tow; to drag",
+      "headword": "جر",
+      "romanization": "jarra",
+      "gloss": "to tow; to drag",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9efcfde794cb3f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a hole, then the Arabic for a pump."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جر — jarra — \"to tow; to drag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جر رجل سيارتنا إلى القرية. jarra rajul sayyāratanā ilā al-qarya. A man towed our car to the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يجر, yajurr."
+            },
+            {
+              "kind": "speech",
+              "text": "Grammarians call the genitive case al-jarr, \"the dragging\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جر (jarra) is built on the native Arabic root j-r-r, \"to drag, to pull\" (Lane). It is the plain verb of a doubled root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarra rajul sayyāratanā ilā al-qarya. — A man towed our car to the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarra rajul sayyāratanā ilā al-qarya.* — A man towed our car to the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a hole, then the Arabic for a pump, then say jarra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a hole, then the Arabic for a pump, then say *jarra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جر (jarra) mean? (\"To tow; to drag\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "Licences and rules",
+  "label": "ch:ar-licences-and-rules",
+  "canDo": "I can say a licence, a bend, to renew, to issue and to overtake.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C434-tajawaza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can say a licence, a bend, to renew, to issue and to overtake.",
+    "assesses": [
+      "AR-LEX-C434-RUKHSA434-03",
+      "AR-LEX-C434-RUKHSA434-04",
+      "AR-LEX-C434-RUKHSA434-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 544,
+  "title": "Starting a Venture",
+  "label": "ch:ml-starting-a-venture",
+  "canDo": "I can say overtime, a venture, an entrepreneur, a work shift and to be interrupted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C544-mutannuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 544: I can say overtime, a venture, an entrepreneur, a work shift and to be interrupted.",
+    "assesses": [
+      "ML-LEX-C544-SAMRAMBHAM544-03",
+      "ML-LEX-C544-SAMRAMBHAM544-04",
+      "ML-LEX-C544-SAMRAMBHAM544-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:17ea505c6354722d",
+  "lessonIds": [
+    "GU-C163-nasto",
+    "GU-C163-bhojan",
+    "GU-C163-jamvu",
+    "GU-C163-pirasvu",
+    "GU-C163-vahecvu"
+  ],
+  "tex": "gujarati/book/chapters/ch163-breakfast-and-the-family-meal.tex"
+}

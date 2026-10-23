@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:e09c7d60777360a3",
+  "lessonIds": [
+    "ML-C472-gatagatam",
+    "ML-C472-gatagatakkurukku",
+    "ML-C472-vegata",
+    "ML-C472-nirannuka",
+    "ML-C472-kulunnuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch472.txt",
+  "json": "malayalam/narration/ch472.json",
+  "textHash": "fnv1a64:a3a0e104479b9d33",
+  "jsonHash": "fnv1a64:075a0a445dacee4d",
+  "findings": []
+}

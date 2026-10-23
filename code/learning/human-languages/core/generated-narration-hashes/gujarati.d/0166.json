@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:e3a2e086640033a7",
+  "lessonIds": [
+    "GU-C166-samarvu",
+    "GU-C166-cholvu",
+    "GU-C166-dungli",
+    "GU-C166-kothmir",
+    "GU-C166-vatvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch166.txt",
+  "json": "gujarati/narration/ch166.json",
+  "textHash": "fnv1a64:4a5dbc29e138e779",
+  "jsonHash": "fnv1a64:295936839328ffe1",
+  "findings": []
+}

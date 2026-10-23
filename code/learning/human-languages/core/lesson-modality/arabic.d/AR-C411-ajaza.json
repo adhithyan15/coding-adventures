@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C411-ajaza",
+    "language": "arabic",
+    "chapter": 411,
+    "sequence": 23110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:136e6fb11ed80f83"
+  },
+  "findings": []
+}

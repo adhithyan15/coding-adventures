@@ -162,6 +162,10 @@ fn finish(
     let instructions = lower::Lowering::new(release, profile).lower_program(ast)?;
     let mut module = IIRModule::new(module_name, "ruby");
     module.entry_point = Some("main".into());
+    // LANG84 "Selection API": the module names the one release whose grammar
+    // produced it, so a backend, a cache key or a test can tell a 3.3.5
+    // module from a 3.3.7 one even when their instructions are identical.
+    module.release = Some(release.to_string());
     module.add_or_replace(IIRFunction::new("main", vec![], "i64", instructions));
     let errors = module.validate();
     if !errors.is_empty() {

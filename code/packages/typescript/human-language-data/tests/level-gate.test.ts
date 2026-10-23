@@ -323,6 +323,10 @@ describe("the gate that would have caught the A2 claim", () => {
     // Japanese followed, with chapters 146-249 (520 hiragana headwords, 210
     // verbs, on its already-realized A2 spine nodes), which moved it from the
     // A1 row of HELD to the A2 row.
+    // Gujarati followed, with chapters 145-152 (the negation and questions,
+    // past, future and practical-reading nodes, plus the letters ઓ ડ ઊ) and
+    // chapters 153-272 (600 headwords, 234 verbs), which moved it from the A1
+    // row of HELD to the A2 row.
     expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
@@ -357,7 +361,17 @@ describe("the gate that would have caught the A2 claim", () => {
     // subjunctive and the unreal condition, realizing all five B1 nodes, plus
     // letter lessons for ع غ ژ ث ذ ض ئ) and chapters 300-539 (1,200 headwords,
     // 358 verbs).
-    // Telugu followed at B1, with chapters 316-325 (the B1 core: the plain past
+    // Arabic followed as the ninth, with chapters 283-292 (the B1 core: the past
+    // and present for every person, kāna + imperfect, the subjunctive after an,
+    // the future, comparison, idhā and law, realizing all five B1 nodes, plus
+    // letter lessons for ؤ and ئ) and chapters 293-552 (1,300 headwords, 507
+    // verbs).
+    // Malayalam followed as the tenth, with chapters 339-348 (the B1 core: narrating with
+    // the past and -ഉമായിരുന്നു, reasons with കൊണ്ട് and കാരണം, travel, comparison
+    // with -ഏക്കാൾ, and the conditional -ആൽ / എങ്കിൽ, realizing all five B1 nodes,
+    // plus letter lessons for ഈ ഐ ഔ ഋ ഡ ഘ ൗ ഃ) and chapters 349-572 (1,120
+    // headwords).
+    // Telugu followed as the eleventh, with chapters 316-325 (the B1 core: the plain past
     // and the habitual -ఏవాడిని, reasons with కాబట్టి and అందుకే, the obligative
     // -ఆలి, travel, comparison with కంటే, and the conditional -తే with the unreal
     // -ఇ ఉంటే, realizing all five B1 nodes, plus letter lessons for ఈ ఓ ఊ ఔ ః)

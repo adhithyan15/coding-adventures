@@ -1,0 +1,11 @@
+{
+  "id": "GU-C264-olakhvu",
+  "pathSegment": "GU-PATH-264-FRIENDS264",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-264-FRIENDS264",
+      "order": 3
+    }
+  ]
+}

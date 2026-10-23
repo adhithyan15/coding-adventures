@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Service and Meals",
+  "label": "ch:ml-service-and-meals",
+  "canDo": "I can say a service, a mosquito net, hygiene, a menu and a waiter.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C483-veyirrar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can say a service, a mosquito net, hygiene, a menu and a waiter.",
+    "assesses": [
+      "ML-LEX-C483-SEVANAM483-03",
+      "ML-LEX-C483-SEVANAM483-04",
+      "ML-LEX-C483-SEVANAM483-05"
+    ]
+  }
+}

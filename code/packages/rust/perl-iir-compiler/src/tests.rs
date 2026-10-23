@@ -133,7 +133,7 @@ fn the_selected_release_decides_what_lexes() {
     // scanners have no such bound, so the literal lexes and is then refused
     // as out of range by the compiler instead.
     let long = format!("print({});", "1".repeat(251));
-    for release in [Some("5.004_72"), Some("5.38.0"), None] {
+    for release in [Some("5.004_72"), Some("5.38.0"), Some("5.38.2"), None] {
         assert!(
             matches!(
                 compile_source_at(&long, release, "long", &budgets),
@@ -146,6 +146,85 @@ fn the_selected_release_decides_what_lexes() {
         compile_source_at(&long, Some("1.000"), "long", &budgets),
         Err(FrontendError::Unsupported { .. })
     ));
+    // 5.44.0 and 5.45.3 have a 1024-byte tokenbuf (LANG84 4c): 1018 digits
+    // lex (and are then out of range), the 1019th does not.
+    for release in ["5.44.0", "5.45.3"] {
+        for (digits, lexes) in [(251, true), (1018, true), (1019, false)] {
+            let source = format!("print({});", "1".repeat(digits));
+            let outcome = compile_source_at(&source, Some(release), "long", &budgets);
+            assert_eq!(
+                matches!(outcome, Err(FrontendError::Unsupported { .. })),
+                lexes,
+                "{release} {digits}: {outcome:?}"
+            );
+            assert!(outcome.is_err());
+        }
+    }
+}
+
+/// The one profile switch (`profiles::Arithmetic`): under C-double arithmetic
+/// a printed IEEE negative zero is refused, because those releases print it
+/// as `0` or `-0` depending on folding and the platform. Every rule of
+/// `negative_zero_after` is exercised, and both directions of each.
+#[test]
+fn a_printed_negative_zero_is_refused_only_under_double_arithmetic() {
+    let budgets = FrontendBudgets::default();
+    // Each of these is `-0.0` when evaluated in C doubles.
+    let negative = [
+        "print(-0);",
+        "print(-(0));",
+        "print(- - -0);",
+        "print(0 * -3);",
+        "print(-3 * 0);",
+        "print(-0 * 3);",
+        "print(-0 + -0);",
+        "print(-0 - 0);",
+        "print(-(3 - 3));",
+        "print(1); print(2 * (0 * -1));",
+    ];
+    // And each of these is `+0.0`, so every release prints `0`.
+    let positive = [
+        "print(0);",
+        "print(- -0);",
+        "print(-0 + 0);",
+        "print(0 + -0);",
+        "print(0 - -0);",
+        "print(-0 - -0);",
+        "print(3 - 3);",
+        "print(-3 + 3);",
+        "print(-0 * -3);",
+        "print(0 * 3);",
+        "print(-(0 * -1));",
+    ];
+    for release in ["1.000", "5.000", "5.004_72", "5.004_05"] {
+        assert_eq!(profile_for(release), Some(&profiles::PERL_NV), "{release}");
+        for source in negative {
+            match compile_source_at(source, Some(release), "z", &budgets) {
+                Err(FrontendError::Unsupported { release: r, rule, message, .. }) => {
+                    assert_eq!(r, format!("Perl {release}"));
+                    assert_eq!(rule.as_deref(), Some(cst::EXPR), "{source}");
+                    assert!(message.contains("-0.0") && message.contains("perl_nv"), "{message}");
+                }
+                other => panic!("{release} {source}: {other:?}"),
+            }
+        }
+        for source in positive {
+            let module = compile_source_at(source, Some(release), "z", &budgets)
+                .unwrap_or_else(|error| panic!("{release} {source}: {error}"));
+            assert_eq!(run_source_at(source, Some(release)).unwrap(), "0", "{source}");
+            // The profile decides acceptance, never the code: the same
+            // program lowers identically under the integer profile.
+            let integer = compile_source_at(source, Some("5.38.0"), "z", &budgets).unwrap();
+            assert_eq!(format!("{:?}", module.functions), format!("{:?}", integer.functions));
+        }
+    }
+    for release in ["5.38.0", "5.38.2", "5.44.0", "5.45.3"] {
+        assert_eq!(profile_for(release), Some(&profiles::PERL_IV), "{release}");
+        for source in negative {
+            let printed = run_source_at(source, Some(release)).unwrap();
+            assert_eq!(printed.trim_start_matches('1'), "0", "{release} {source}");
+        }
+    }
 }
 
 /// LANG84 C4.1/C4.4/C4.5: naming no release compiles against the inventory
@@ -432,9 +511,11 @@ fn direct_ast_text_and_module_name_are_bounded() {
 /// on exists in that release's compiled grammar, and the subset corpus
 /// parses into exactly the shapes the compiler destructures.
 ///
-/// `iir_status` does not exist in Perl's `releases.csv` until the phase 2b
-/// schema migration, so "every release with a non-empty `iir_status`" is,
-/// for now, every checked (non-pending) release: all of them already lower
+/// Perl's `releases.csv` has had the `iir_status` column since the LANG84
+/// phase 2b migration, but every row is still `-`: the `pl-int-print`
+/// corpus and the `release_subsets` test that would prove stage I arrive in
+/// phase 4c. Until then "every release with a non-empty `iir_status`" is
+/// read as every checked (non-pending) release: all of them already lower
 /// the corpus (`every_supported_release_lowers_the_corpus_identically`).
 mod cst_contract {
     use super::*;
@@ -582,10 +663,6 @@ mod hostile_probes {
     const CHILD_TEST: &str = "tests::hostile_probes::child_runs_every_probe";
     const DONE_MARKER: &str = "perl-iir hostile probes passed:";
 
-    /// Instructions every program ends with: `main` returns the exit status
-    /// 0 (`const 0; ret`), so the probe counts include two epilogue ops.
-    const EPILOGUE: usize = 2;
-
     /// What a probe must end in.
     #[derive(Debug)]
     enum Expect {
@@ -617,6 +694,11 @@ mod hostile_probes {
         };
         assert!(ok, "{name}: expected {expect:?}, got {shown}");
     }
+
+    /// `main`'s closing `const 0; ret` (it returns the exit status 0 since
+    /// 4a's CLR/BEAM fix; it was a single `ret_void` when these counts were
+    /// first written).
+    const EPILOGUE: usize = 2;
 
     #[test]
     #[ignore = "run in a child process by hostile_inputs_end_in_typed_errors_in_a_child_process"]

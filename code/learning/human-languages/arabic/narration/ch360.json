@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 360,
+  "title": "Agreeing and objecting",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:48c729261f9f178f",
+  "lessons": [
+    {
+      "id": "AR-C360-wafaqa",
+      "sequence": 20500,
+      "title": "وافق (wāfaqa) — to approve; to agree to",
+      "headword": "وافق",
+      "romanization": "wāfaqa",
+      "gloss": "to approve; to agree to",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a58a0f0c7fa4960",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to suggest, then the Arabic for convincing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وافق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وافق — wāfaqa — \"to approve; to agree to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وافق المدير على الخطة الجديدة. wāfaqa al-mudīr ʿalā al-khiṭṭa al-jadīda. The manager approved the new plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يوافق, yuwāfiq."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: وافق (wāfaqa) على …. اتفق is two sides agreeing with each other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وافق (wāfaqa) is built on the native Arabic root w-f-q, \"to fit, to suit\" (Lane). It is Form III, to be in accord with: to agree to a thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wāfaqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wāfaqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wāfaqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wāfaqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wāfaqa al-mudīr ʿalā al-khiṭṭa al-jadīda. — The manager approved the new plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wāfaqa al-mudīr ʿalā al-khiṭṭa al-jadīda.* — The manager approved the new plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to suggest, then the Arabic for convincing, then say wāfaqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to suggest, then the Arabic for convincing, then say *wāfaqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وافق (wāfaqa) mean? (\"To approve; to agree to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C360-itarada",
+      "sequence": 20510,
+      "title": "اعترض (iʿtaraḍa) — to object",
+      "headword": "اعترض",
+      "romanization": "iʿtaraḍa",
+      "gloss": "to object",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f6b3bab1ae876fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for convincing, then the Arabic for to approve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اعترض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعترض — iʿtaraḍa — \"to object\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اعترض جارنا على الموسيقى العالية. iʿtaraḍa jārunā ʿalā al-mūsīqā al-ʿāliya. Our neighbour objected to the loud music."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعترض, yaʿtariḍ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: اعترض (iʿtaraḍa) على …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اعترض (iʿtaraḍa) is built on the native Arabic root ʿ-r-ḍ, \"to be broad; to lie across\" (Lane). It is Form VIII, to put oneself across the way: to object."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿtaraḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿtaraḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿtaraḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿtaraḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iʿtaraḍa jārunā ʿalā al-mūsīqā al-ʿāliya. — Our neighbour objected to the loud music.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iʿtaraḍa jārunā ʿalā al-mūsīqā al-ʿāliya.* — Our neighbour objected to the loud music.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for convincing, then the Arabic for to approve, then say iʿtaraḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for convincing, then the Arabic for to approve, then say *iʿtaraḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اعترض (iʿtaraḍa) mean? (\"To object\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C360-ijma",
+      "sequence": 20520,
+      "title": "إجماع (ijmāʿ) — consensus",
+      "headword": "إجماع",
+      "romanization": "ijmāʿ",
+      "gloss": "consensus",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dcabaa2ac7af2fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to approve, then the Arabic for to object."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إجماع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إجماع — ijmāʿ — \"consensus\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وصل الفريق إلى إجماع بعد نقاش طويل. waṣala al-farīq ilā ijmāʿ baʿda niqāsh ṭawīl. The team reached a consensus after a long discussion."
+            },
+            {
+              "kind": "speech",
+              "text": "بالإجماع, bi-l-ijmāʿ, unanimously."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إجماع (ijmāʿ) is built on the native Arabic root j-m-ʿ, \"to gather, to bring together\" (Lane). Ijmāʿ is the Form IV verbal noun, a bringing together: everyone gathered on one view."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijmāʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijmāʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ijmāʿ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ijmāʿ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waṣala al-farīq ilā ijmāʿ baʿda niqāsh ṭawīl. — The team reached a consensus after a long discussion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waṣala al-farīq ilā ijmāʿ baʿda niqāsh ṭawīl.* — The team reached a consensus after a long discussion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to approve, then the Arabic for to object, then say ijmāʿ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to approve, then the Arabic for to object, then say *ijmāʿ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إجماع (ijmāʿ) mean? (\"Consensus\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C360-jadala",
+      "sequence": 20530,
+      "title": "جادل (jādala) — to argue",
+      "headword": "جادل",
+      "romanization": "jādala",
+      "gloss": "to argue",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:598faa22a37227b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to object, then the Arabic for consensus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جادل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جادل — jādala — \"to argue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "جادل الولد أمه حول وقت النوم. jādala al-walad ummahu ḥawla waqt an-nawm. The boy argued with his mother about bedtime."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يجادل, yujādil."
+            },
+            {
+              "kind": "speech",
+              "text": "You argue with someone directly, with no preposition: جادله, argued with him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جادل (jādala) is built on the native Arabic root j-d-l, \"to twist firmly\" (Lane). It is Form III, to twist against someone: to argue with him."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jādala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jādala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jādala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jādala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jādala al-walad ummahu ḥawla waqt an-nawm. — The boy argued with his mother about bedtime.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jādala al-walad ummahu ḥawla waqt an-nawm.* — The boy argued with his mother about bedtime.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to object, then the Arabic for consensus, then say jādala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to object, then the Arabic for consensus, then say *jādala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جادل (jādala) mean? (\"To argue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C360-jadal",
+      "sequence": 20540,
+      "title": "جدل (jadal) — a controversy",
+      "headword": "جدل",
+      "romanization": "jadal",
+      "gloss": "a controversy",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0188e5c1ec2b260",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for consensus, then the Arabic for to argue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جدل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جدل — jadal — \"a controversy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان هناك جدل كبير حول الفيلم. kāna hunāka jadal kabīr ḥawla al-film. There was a big controversy about the film."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جدل (jadal) is built on the native Arabic root j-d-l, \"to twist firmly\" (Lane). Jadal is a verbal noun of the same root: arguing, and so a controversy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jadal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jadal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jadal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jadal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna hunāka jadal kabīr ḥawla al-film. — There was a big controversy about the film.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna hunāka jadal kabīr ḥawla al-film.* — There was a big controversy about the film.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for consensus, then the Arabic for to argue, then say jadal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for consensus, then the Arabic for to argue, then say *jadal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جدل (jadal) mean? (\"A controversy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

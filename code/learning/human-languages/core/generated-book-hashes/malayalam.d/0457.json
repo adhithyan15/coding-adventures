@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:2d6a0d7a03a0c7fe",
+  "lessonIds": [
+    "ML-C457-abhyartthikkuka",
+    "ML-C457-kramikarikkuka",
+    "ML-C457-nirvahikkuka",
+    "ML-C457-sthapikkuka",
+    "ML-C457-nilanirttuka"
+  ],
+  "tex": "malayalam/book/chapters/ch457-getting-things-done.tex"
+}

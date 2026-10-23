@@ -1,0 +1,19 @@
+{
+  "chapter": 190,
+  "title": "At the bank counter",
+  "label": "ch:gu-at-the-bank-counter",
+  "canDo": "I can read bank words for accounts, deposits and cheques.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C190-udhar-levu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 190: I can read bank words for accounts, deposits and cheques.",
+    "assesses": [
+      "GU-LEX-C190-BANK190-03",
+      "GU-LEX-C190-BANK190-04",
+      "GU-LEX-C190-BANK190-05"
+    ]
+  }
+}

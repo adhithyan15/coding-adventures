@@ -1,0 +1,11 @@
+{
+  "id": "GU-C198-manai",
+  "pathSegment": "GU-PATH-198-SIGNS198",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-198-SIGNS198",
+      "order": 3
+    }
+  ]
+}

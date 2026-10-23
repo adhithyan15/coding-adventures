@@ -1,0 +1,11 @@
+{
+  "id": "ML-C475-jetti",
+  "pathSegment": "ML-PATH-475-KAPPAL475",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-475-KAPPAL475",
+      "order": 2
+    }
+  ]
+}

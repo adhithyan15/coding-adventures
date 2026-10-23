@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C310-istaghatha",
+    "language": "arabic",
+    "chapter": 310,
+    "sequence": 17870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b484d4036e2770a6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R420-review-413-420",
+    "language": "malayalam",
+    "chapter": 420,
+    "sequence": 20810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30df6356fca89ad3"
+  },
+  "findings": []
+}

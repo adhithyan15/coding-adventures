@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "What it takes",
+  "label": "ch:ar-what-it-takes",
+  "canDo": "I can say that something requires, is available, suffices or is lacking, and talk about a procedure.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C406-ijra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can say that something requires, is available, suffices or is lacking, and talk about a procedure.",
+    "assesses": [
+      "AR-LEX-C406-TATALLUB406-03",
+      "AR-LEX-C406-TATALLUB406-04",
+      "AR-LEX-C406-TATALLUB406-05"
+    ]
+  }
+}

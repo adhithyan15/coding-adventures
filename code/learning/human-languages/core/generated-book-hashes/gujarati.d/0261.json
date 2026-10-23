@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:572fbf8d4e00897c",
+  "lessonIds": [
+    "GU-C261-patang",
+    "GU-C261-udadvu",
+    "GU-C261-melo",
+    "GU-C261-garbo",
+    "GU-C261-phatakdo"
+  ],
+  "tex": "gujarati/book/chapters/ch261-kites-and-fairs.tex"
+}

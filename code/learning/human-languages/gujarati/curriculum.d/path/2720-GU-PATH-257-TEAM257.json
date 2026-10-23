@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-257-TEAM257",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "GU-EXT-257-TEAM257"
+  ],
+  "after": []
+}

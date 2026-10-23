@@ -1,0 +1,11 @@
+{
+  "id": "ML-C488-tiriccariyalrekha",
+  "pathSegment": "ML-PATH-488-REKHA488",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-488-REKHA488",
+      "order": 2
+    }
+  ]
+}

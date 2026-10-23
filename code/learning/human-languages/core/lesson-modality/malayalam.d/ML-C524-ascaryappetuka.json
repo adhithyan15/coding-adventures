@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C524-ascaryappetuka",
+    "language": "malayalam",
+    "chapter": 524,
+    "sequence": 26380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f19e27df81c2f91c"
+  },
+  "findings": []
+}

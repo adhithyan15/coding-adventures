@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:72cc76511b071976",
+  "lessonIds": [
+    "GU-C234-vachardu",
+    "GU-C234-bhabharvu",
+    "GU-C234-dohvu",
+    "GU-C234-ghetu",
+    "GU-C234-carvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch234.txt",
+  "json": "gujarati/narration/ch234.json",
+  "textHash": "fnv1a64:d9f838a0b8aec7bf",
+  "jsonHash": "fnv1a64:7f93cd216a8628a5",
+  "findings": []
+}

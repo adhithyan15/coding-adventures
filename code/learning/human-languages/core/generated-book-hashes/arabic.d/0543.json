@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:fe5d276065888ce5",
+  "lessonIds": [
+    "AR-C543-lahn",
+    "AR-C543-iqa",
+    "AR-C543-azafa",
+    "AR-C543-mulahhin",
+    "AR-C543-jawqa",
+    "AR-R543-review-536-543"
+  ],
+  "tex": "arabic/book/chapters/ch543-making-music.tex"
+}

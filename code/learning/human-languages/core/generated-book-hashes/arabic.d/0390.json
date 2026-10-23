@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:39514b11aa1b6abf",
+  "lessonIds": [
+    "AR-C390-kulliyya",
+    "AR-C390-takhassus",
+    "AR-C390-amid",
+    "AR-C390-minha",
+    "AR-C390-iltahaqa"
+  ],
+  "tex": "arabic/book/chapters/ch390-university-life.tex"
+}

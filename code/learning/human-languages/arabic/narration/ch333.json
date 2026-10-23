@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 333,
+  "title": "Sailors and pirates",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:386d9a98de42327c",
+  "lessons": [
+    {
+      "id": "AR-C333-ghariqa",
+      "sequence": 19050,
+      "title": "غرق (ghariqa) — to go under; to drown",
+      "headword": "غرق",
+      "romanization": "ghariqa",
+      "gloss": "to go under; to drown",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad229a31c0c4d840",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to be displaced, then the Arabic for to bid farewell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غرق",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غرق — ghariqa — \"to go under; to drown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غرقت السفينة قرب الجزيرة. ghariqat as-safīna qurba al-jazīra. The ship sank near the island."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يغرق, yaghraq."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غرق (ghariqa) is built on the native Arabic root gh-r-q (Lane), \"to sink in water, to drown\"; gharīq is one who has drowned."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghariqa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghariqa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghariqa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghariqa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghariqat as-safīna qurba al-jazīra. — The ship sank near the island.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghariqat as-safīna qurba al-jazīra.* — The ship sank near the island.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to be displaced, then the Arabic for to bid farewell, then say ghariqa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to be displaced, then the Arabic for to bid farewell, then say *ghariqa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غرق (ghariqa) mean? (\"To go under; to drown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C333-bahhar",
+      "sequence": 19060,
+      "title": "بحار (baḥḥār) — a sailor",
+      "headword": "بحار",
+      "romanization": "baḥḥār",
+      "gloss": "a sailor",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52953c11c90b167b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to bid farewell, then the Arabic for to go under."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: بحار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بحار — baḥḥār — \"a sailor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عمل جدي بحارا ثلاثين سنة. ʿamila jaddī baḥḥāran thalāthīn sana. My grandfather worked as a sailor for thirty years."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: بحارة, baḥḥāra."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بحار (baḥḥār) is built on the native Arabic root b-ḥ-r (Lane), the root of the taught baḥr, the sea. The faʿʿāl pattern names a trade: \"the man of the sea\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḥḥār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḥḥār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baḥḥār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baḥḥār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿamila jaddī baḥḥāran thalāthīn sana. — My grandfather worked as a sailor for thirty years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿamila jaddī baḥḥāran thalāthīn sana.* — My grandfather worked as a sailor for thirty years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to bid farewell, then the Arabic for to go under, then say baḥḥār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to bid farewell, then the Arabic for to go under, then say *baḥḥār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does بحار (baḥḥār) mean? (\"A sailor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C333-ustul",
+      "sequence": 19070,
+      "title": "أسطول (usṭūl) — a fleet",
+      "headword": "أسطول",
+      "romanization": "usṭūl",
+      "gloss": "a fleet",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a197cd5581fde7e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to go under, then the Arabic for a sailor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أسطول",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أسطول — usṭūl — \"a fleet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أرسل الملك أسطولا إلى الجزيرة. arsala al-malik usṭūlan ilā al-jazīra. The king sent a fleet to the island."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أساطيل, asāṭīl."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a fleet of buses or lorries."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أسطول (usṭūl) is usually traced to Greek stolos, \"an expedition, a fleet\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usṭūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usṭūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usṭūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usṭūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arsala al-malik usṭūlan ilā al-jazīra. — The king sent a fleet to the island.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arsala al-malik usṭūlan ilā al-jazīra.* — The king sent a fleet to the island.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to go under, then the Arabic for a sailor, then say usṭūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to go under, then the Arabic for a sailor, then say *usṭūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أسطول (usṭūl) mean? (\"A fleet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C333-qursan",
+      "sequence": 19080,
+      "title": "قرصان (qurṣān) — a pirate",
+      "headword": "قرصان",
+      "romanization": "qurṣān",
+      "gloss": "a pirate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecebdb02df813543",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a sailor, then the Arabic for a fleet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قرصان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قرصان — qurṣān — \"a pirate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان القرصان يبحث عن الكنز. kāna al-qurṣān yabḥathu ʿan al-kanz. The pirate was looking for the treasure."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: قراصنة, qarāṣina."
+            },
+            {
+              "kind": "speech",
+              "text": "Today also a computer hacker: قرصان (qurṣān) إنترنت."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قرصان (qurṣān) is usually traced to Italian corsaro, \"a corsair\", the raider of the Mediterranean, from Latin cursus, a running."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qurṣān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qurṣān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qurṣān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qurṣān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna al-qurṣān yabḥathu ʿan al-kanz. — The pirate was looking for the treasure.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna al-qurṣān yabḥathu ʿan al-kanz.* — The pirate was looking for the treasure.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a sailor, then the Arabic for a fleet, then say qurṣān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a sailor, then the Arabic for a fleet, then say *qurṣān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قرصان (qurṣān) mean? (\"A pirate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C333-asara",
+      "sequence": 19090,
+      "title": "أسر (asara) — to capture, to take prisoner",
+      "headword": "أسر",
+      "romanization": "asara",
+      "gloss": "to capture, to take prisoner",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e7ea980dcbe945c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a fleet, then the Arabic for a pirate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أسر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أسر — asara — \"to capture, to take prisoner\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أسر القراصنة البحارة. asara al-qarāṣina al-baḥḥāra. The pirates took the sailors prisoner."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يأسر, yaʾsir."
+            },
+            {
+              "kind": "speech",
+              "text": "A prisoner of war is أسير. Of beauty: أسر (asara) قلبه, it captivated him."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أسر (asara) is built on the native Arabic root ʾ-s-r (Lane), \"to bind with a thong\". Lane links the taught usra, a family, to it: the kin who bind a man and stand with him."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asara al-qarāṣina al-baḥḥāra. — The pirates took the sailors prisoner.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asara al-qarāṣina al-baḥḥāra.* — The pirates took the sailors prisoner.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a fleet, then the Arabic for a pirate, then say asara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a fleet, then the Arabic for a pirate, then say *asara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أسر (asara) mean? (\"To capture, to take prisoner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

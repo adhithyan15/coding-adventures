@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "Earthquake and Landslide",
+  "label": "ch:ml-earthquake-and-landslide",
+  "canDo": "I can say an earthquake, a landslide, to be washed away, to be cut off and to go missing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C377-kanatakuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can say an earthquake, a landslide, to be washed away, to be cut off and to go missing.",
+    "assesses": [
+      "ML-LEX-C377-BHUKAMPAM377-03",
+      "ML-LEX-C377-BHUKAMPAM377-04",
+      "ML-LEX-C377-BHUKAMPAM377-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "Testimony",
+  "label": "ch:ml-testimony",
+  "canDo": "I can say testimony, an eyewitness, a lie, to testify and to swear an oath.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C370-satyam-ceyyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can say testimony, an eyewitness, a lie, to testify and to swear an oath.",
+    "assesses": [
+      "ML-LEX-C370-MOZHI370-03",
+      "ML-LEX-C370-MOZHI370-04",
+      "ML-LEX-C370-MOZHI370-05"
+    ]
+  }
+}

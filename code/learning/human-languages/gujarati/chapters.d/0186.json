@@ -1,0 +1,19 @@
+{
+  "chapter": 186,
+  "title": "Paying at the till",
+  "label": "ch:gu-paying-at-the-till",
+  "canDo": "I can pay in cash or in small change and get a receipt.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C186-rasid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 186: I can pay in cash or in small change and get a receipt.",
+    "assesses": [
+      "GU-LEX-C186-TILL186-03",
+      "GU-LEX-C186-TILL186-04",
+      "GU-LEX-C186-TILL186-05"
+    ]
+  }
+}

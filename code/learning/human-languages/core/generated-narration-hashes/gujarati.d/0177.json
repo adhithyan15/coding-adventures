@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 177,
+  "sourceHash": "fnv1a64:a5e5ef9278b2a9ae",
+  "lessonIds": [
+    "GU-C177-varavar",
+    "GU-C177-avarnavar",
+    "GU-C177-vakhat",
+    "GU-C177-niyamit",
+    "GU-C177-rojindu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch177.txt",
+  "json": "gujarati/narration/ch177.json",
+  "textHash": "fnv1a64:57142f368e0617be",
+  "jsonHash": "fnv1a64:a4aded88e7a84463",
+  "findings": []
+}

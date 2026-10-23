@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:eb3abab832411e19",
+  "lessonIds": [
+    "GU-C169-bhakhri",
+    "GU-C169-khicdi",
+    "GU-C169-papad",
+    "GU-C169-kadai",
+    "GU-C169-dhaknu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch169.txt",
+  "json": "gujarati/narration/ch169.json",
+  "textHash": "fnv1a64:fff63cf3a483ecf2",
+  "jsonHash": "fnv1a64:4e91bbe217ab7ed8",
+  "findings": []
+}

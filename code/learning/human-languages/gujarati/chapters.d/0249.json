@@ -1,0 +1,19 @@
+{
+  "chapter": 249,
+  "title": "Calls and messages",
+  "label": "ch:gu-calls-and-messages",
+  "canDo": "I can talk about my mobile phone, numbers, messages and voices.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C249-melavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 249: I can talk about my mobile phone, numbers, messages and voices.",
+    "assesses": [
+      "GU-LEX-C249-PHONE249-03",
+      "GU-LEX-C249-PHONE249-04",
+      "GU-LEX-C249-PHONE249-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C408-rafahiyya",
+  "pathSegment": "AR-PATH-408-MASLAHA408",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-408-MASLAHA408",
+      "order": 3
+    }
+  ]
+}

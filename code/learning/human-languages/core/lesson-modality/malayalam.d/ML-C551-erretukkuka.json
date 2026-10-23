@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C551-erretukkuka",
+    "language": "malayalam",
+    "chapter": 551,
+    "sequence": 27750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68f8b8ea08ec629c"
+  },
+  "findings": []
+}

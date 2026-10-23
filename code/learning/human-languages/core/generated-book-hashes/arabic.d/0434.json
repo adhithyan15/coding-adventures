@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:a73ffb990e94ae61",
+  "lessonIds": [
+    "AR-C434-rukhsa",
+    "AR-C434-munataf",
+    "AR-C434-jaddada",
+    "AR-C434-asdara",
+    "AR-C434-tajawaza"
+  ],
+  "tex": "arabic/book/chapters/ch434-licences-and-rules.tex"
+}

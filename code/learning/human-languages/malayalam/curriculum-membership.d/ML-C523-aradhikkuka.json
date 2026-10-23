@@ -1,0 +1,11 @@
+{
+  "id": "ML-C523-aradhikkuka",
+  "pathSegment": "ML-PATH-523-PAKA523",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-523-PAKA523",
+      "order": 4
+    }
+  ]
+}

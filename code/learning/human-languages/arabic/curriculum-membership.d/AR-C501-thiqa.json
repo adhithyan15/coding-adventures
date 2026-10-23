@@ -1,0 +1,11 @@
+{
+  "id": "AR-C501-thiqa",
+  "pathSegment": "AR-PATH-501-HIKMA501",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-501-HIKMA501",
+      "order": 4
+    }
+  ]
+}

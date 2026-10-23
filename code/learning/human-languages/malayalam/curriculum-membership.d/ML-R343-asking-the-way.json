@@ -1,0 +1,11 @@
+{
+  "id": "ML-R343-asking-the-way",
+  "pathSegment": "ML-PATH-343-ASK-THE-WAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-343-ASK-THE-WAY",
+      "order": 3
+    }
+  ]
+}

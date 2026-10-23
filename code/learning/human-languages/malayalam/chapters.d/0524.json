@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Shame and Surprise",
+  "label": "ch:ml-shame-and-surprise",
+  "canDo": "I can say humiliation, to stare, guilt, to be surprised and fretting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R524-review-517-524",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can say humiliation, to stare, guilt, to be surprised and fretting.",
+    "assesses": [
+      "ML-LEX-C524-APAMANAM524-03",
+      "ML-LEX-C524-APAMANAM524-04",
+      "ML-LEX-C524-APAMANAM524-05"
+    ]
+  }
+}

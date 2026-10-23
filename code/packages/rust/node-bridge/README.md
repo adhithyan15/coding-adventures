@@ -22,4 +22,22 @@ A ~350-line crate that wraps only the raw N-API functions needed to build Node.j
 
 ## Dependencies
 
-Only `napi-sys` — raw N-API bindings. Zero abstractions on top.
+None. The N-API functions are declared by hand as `extern "C"` in
+`src/lib.rs` — no `napi-sys`, no `napi-rs`, no bindgen.
+
+## How the N-API symbols get linked
+
+The `napi_*` functions live inside the Node.js process, not in any library
+on disk, so each platform needs a different answer at link time:
+
+| Platform | What makes the link succeed                                      |
+|----------|------------------------------------------------------------------|
+| Linux    | ELF shared objects may leave symbols undefined; `dlopen` fills them |
+| macOS    | `build.rs` passes `-undefined dynamic_lookup`                     |
+| Windows  | `#[link(name = "node.exe", kind = "raw-dylib")]` on the extern block |
+
+On Windows a DLL must name the module behind every import. `raw-dylib`
+lets rustc write that `node.exe` import table straight from the
+declarations, which is what node-gyp's `node.lib` would otherwise supply.
+The import is bound to a host named `node.exe`; renamed hosts such as
+Electron would need a delay-load hook, which this crate does not provide.

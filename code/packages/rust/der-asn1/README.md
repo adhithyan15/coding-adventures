@@ -26,9 +26,11 @@ reject alternate BER value encodings for BOOLEAN, INTEGER, BIT STRING, NULL,
 and OBJECT IDENTIFIER. OCTET STRING contents remain borrowed and IA5String
 contents must be ASCII. Schema-selected implicit BIT STRING, OCTET STRING,
 IA5String, and OBJECT IDENTIFIER values require an exact primitive
-context-specific tag while reusing the universal value checks. SEQUENCE, SET, and explicit context
-wrappers can be opened without recursion or allocation. Errors contain only a
-category and local byte offset.
+context-specific tag while reusing the universal value checks. SEQUENCE, SET,
+schema-selected context-specific IMPLICIT constructed values, and explicit
+context wrappers can be opened without recursion or allocation. Every
+constructed cursor shares the same depth and total-element budget. Errors
+contain only a category and local byte offset.
 
 This crate does not parse X.509 fields, time or string semantics, PEM, paths,
 signatures, trust roots, TLS, or network traffic. Successful decoding proves

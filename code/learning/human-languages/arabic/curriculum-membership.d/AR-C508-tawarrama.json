@@ -1,0 +1,11 @@
+{
+  "id": "AR-C508-tawarrama",
+  "pathSegment": "AR-PATH-508-JILD508",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-508-JILD508",
+      "order": 4
+    }
+  ]
+}

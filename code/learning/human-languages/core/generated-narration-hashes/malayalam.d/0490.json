@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:2959220119b30744",
+  "lessonIds": [
+    "ML-C490-tapalppetti",
+    "ML-C490-koriyar",
+    "ML-C490-kaipparruka",
+    "ML-C490-tiriccayaykkuka",
+    "ML-C490-bandhappetuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch490.txt",
+  "json": "malayalam/narration/ch490.json",
+  "textHash": "fnv1a64:ea91d7677912a8fc",
+  "jsonHash": "fnv1a64:fa4ce9c3f9cfe7e8",
+  "findings": []
+}

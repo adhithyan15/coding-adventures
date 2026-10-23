@@ -1,0 +1,11 @@
+{
+  "id": "PA-C185-tuhadi",
+  "pathSegment": "PA-PATH-185-A2-POSSESSIVE-AGREEMENT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-185-A2-POSSESSIVE-AGREEMENT",
+      "order": 3
+    }
+  ]
+}

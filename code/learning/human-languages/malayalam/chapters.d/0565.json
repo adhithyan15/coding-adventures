@@ -1,0 +1,19 @@
+{
+  "chapter": 565,
+  "title": "Painters, Dancers and Writers",
+  "label": "ch:ml-painters-dancers-and-writers",
+  "canDo": "I can say a painter, a musician, a dancer, a writer and to produce a film.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C565-nirmmikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 565: I can say a painter, a musician, a dancer, a writer and to produce a film.",
+    "assesses": [
+      "ML-LEX-C565-KALAKARAN565-03",
+      "ML-LEX-C565-KALAKARAN565-04",
+      "ML-LEX-C565-KALAKARAN565-05"
+    ]
+  }
+}

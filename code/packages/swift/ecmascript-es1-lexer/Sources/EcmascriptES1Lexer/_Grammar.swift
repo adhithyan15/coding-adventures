@@ -75,8 +75,8 @@ enum EmbeddedGrammar {
     escapeMode: nil,
     skipDefinitions: [
         TokenDefinition(name: "WHITESPACE", pattern: "[ \\t\\r\\n\\v\\f]+", isRegex: true, lineNumber: 182, alias: nil),
-        TokenDefinition(name: "LINE_COMMENT", pattern: "\\/\\/[^\\n]*", isRegex: true, lineNumber: 183, alias: nil),
-        TokenDefinition(name: "BLOCK_COMMENT", pattern: "\\/\\*([^*]|\\*[^\\/])*\\*\\/", isRegex: true, lineNumber: 184, alias: nil),
+        TokenDefinition(name: "LINE_COMMENT", pattern: "\\/\\/[^\\n\\r]*", isRegex: true, lineNumber: 183, alias: nil),
+        TokenDefinition(name: "BLOCK_COMMENT", pattern: "\\/\\*[^*]*\\*+([^\\/*][^*]*\\*+)*\\/", isRegex: true, lineNumber: 184, alias: nil),
     ],
     reservedKeywords: ["class", "const", "enum", "export", "extends", "import", "super"],
     contextKeywords: nil,

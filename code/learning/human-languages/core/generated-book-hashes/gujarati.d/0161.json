@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:e1dd63332567ced4",
+  "lessonIds": [
+    "GU-C161-khasedvu",
+    "GU-C161-khankhervu",
+    "GU-C161-dhakvu",
+    "GU-C161-tutvu",
+    "GU-C161-bhegu-karvu"
+  ],
+  "tex": "gujarati/book/chapters/ch161-moving-things-about.tex"
+}

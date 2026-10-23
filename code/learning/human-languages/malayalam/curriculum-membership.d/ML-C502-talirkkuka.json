@@ -1,0 +1,11 @@
+{
+  "id": "ML-C502-talirkkuka",
+  "pathSegment": "ML-PATH-502-TOTTAM502",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-502-TOTTAM502",
+      "order": 2
+    }
+  ]
+}

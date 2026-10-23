@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 407,
+  "title": "Avoiding trouble",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:21ee0f849e416b87",
+  "lessons": [
+    {
+      "id": "AR-C407-taadhdhara",
+      "sequence": 22910,
+      "title": "تعذر (taʿadhdhara) — to prove impossible",
+      "headword": "تعذر",
+      "romanization": "taʿadhdhara",
+      "gloss": "to prove impossible",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3f2967a9077d631",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to lack, then the Arabic for a procedure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعذر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعذر — taʿadhdhara — \"to prove impossible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعذر علينا السفر بسبب الطقس. taʿadhdhara ʿalaynā as-safar bi-sabab aṭ-ṭaqs. Travelling proved impossible for us because of the weather."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتعذر, yataʿadhdhar."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على for the person: تعذر (taʿadhdhara) عليه …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعذر (taʿadhdhara) is built on the native Arabic root ʿ-dh-r, \"to excuse\" (Lane). It is Form V; Lane gives it for an affair that became hard to bring about, and so impracticable: to prove impossible."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿadhdhara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿadhdhara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿadhdhara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿadhdhara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿadhdhara ʿalaynā as-safar bi-sabab aṭ-ṭaqs. — Travelling proved impossible for us because of the weather.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿadhdhara ʿalaynā as-safar bi-sabab aṭ-ṭaqs.* — Travelling proved impossible for us because of the weather.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to lack, then the Arabic for a procedure, then say taʿadhdhara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to lack, then the Arabic for a procedure, then say *taʿadhdhara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعذر (taʿadhdhara) mean? (\"To prove impossible\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C407-istalzama",
+      "sequence": 22920,
+      "title": "استلزم (istalzama) — to entail",
+      "headword": "استلزم",
+      "romanization": "istalzama",
+      "gloss": "to entail",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7ad53141e4dd5b88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a procedure, then the Arabic for to prove impossible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: استلزم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استلزم — istalzama — \"to entail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يستلزم المشروع وقتا طويلا. yastalzimu al-mashrūʿ waqtan ṭawīlan. The project entails a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يستلزم, yastalzim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "استلزم (istalzama) is built on the native Arabic root l-z-m, \"to cling, to stick to\" (Lane). It is Form X, to call for what must cling to a thing: to entail."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istalzama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istalzama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "istalzama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *istalzama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yastalzimu al-mashrūʿ waqtan ṭawīlan. — The project entails a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yastalzimu al-mashrūʿ waqtan ṭawīlan.* — The project entails a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a procedure, then the Arabic for to prove impossible, then say istalzama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a procedure, then the Arabic for to prove impossible, then say *istalzama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does استلزم (istalzama) mean? (\"To entail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C407-tajannaba",
+      "sequence": 22930,
+      "title": "تجنب (tajannaba) — to avoid",
+      "headword": "تجنب",
+      "romanization": "tajannaba",
+      "gloss": "to avoid",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b212d85f264077f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to prove impossible, then the Arabic for to entail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تجنب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تجنب — tajannaba — \"to avoid\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تجنب الرجل الطريق المزدحم. tajannaba ar-rajul aṭ-ṭarīq al-muzdaḥim. The man avoided the crowded road."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتجنب, yatajannab."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تجنب (tajannaba) is built on the native Arabic root j-n-b, \"to put aside, to turn away\" (Lane). It is Form V, to put oneself to one side of a thing: to avoid it. بجانب, beside, shares the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajannaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajannaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajannaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajannaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajannaba ar-rajul aṭ-ṭarīq al-muzdaḥim. — The man avoided the crowded road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajannaba ar-rajul aṭ-ṭarīq al-muzdaḥim.* — The man avoided the crowded road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to prove impossible, then the Arabic for to entail, then say tajannaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to prove impossible, then the Arabic for to entail, then say *tajannaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تجنب (tajannaba) mean? (\"To avoid\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C407-tafada",
+      "sequence": 22940,
+      "title": "تفادى (tafādā) — to avert",
+      "headword": "تفادى",
+      "romanization": "tafādā",
+      "gloss": "to avert",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:400e868edfa4f5f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to entail, then the Arabic for to avoid."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تفادى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تفادى — tafādā — \"to avert\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تفادى الطفل الكرة. tafādā aṭ-ṭifl al-kura. The child got out of the way of the ball."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتفادى, yatafādā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تفادى (tafādā) is built on the native Arabic root f-d-y, \"to ransom\" (Lane). It is Form VI. How its sense, keeping clear of a thing, grew from ransoming is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafādā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafādā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafādā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafādā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tafādā aṭ-ṭifl al-kura. — The child got out of the way of the ball.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tafādā aṭ-ṭifl al-kura.* — The child got out of the way of the ball.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to entail, then the Arabic for to avoid, then say tafādā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to entail, then the Arabic for to avoid, then say *tafādā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تفادى (tafādā) mean? (\"To avert\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C407-taraa",
+      "sequence": 22950,
+      "title": "طرأ (ṭaraʾa) — to arise unexpectedly",
+      "headword": "طرأ",
+      "romanization": "ṭaraʾa",
+      "gloss": "to arise unexpectedly",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22949c5b66eddcea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to avoid, then the Arabic for to avert."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: طرأ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طرأ — ṭaraʾa — \"to arise unexpectedly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "طرأ تغيير على الخطة. ṭaraʾa taghyīr ʿalā al-khiṭṭa. A change came up in the plan."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يطرأ, yaṭraʾ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: طرأ (ṭaraʾa) على …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طرأ (ṭaraʾa) is built on the native Arabic root ṭ-r-ʾ, \"to come upon unexpectedly\" (Lane). Ṭaraʾa is a Form I verb: to come from far off without warning, to arise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaraʾa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaraʾa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaraʾa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaraʾa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭaraʾa taghyīr ʿalā al-khiṭṭa. — A change came up in the plan.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭaraʾa taghyīr ʿalā al-khiṭṭa.* — A change came up in the plan.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to avoid, then the Arabic for to avert, then say ṭaraʾa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to avoid, then the Arabic for to avert, then say *ṭaraʾa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does طرأ (ṭaraʾa) mean? (\"To arise unexpectedly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

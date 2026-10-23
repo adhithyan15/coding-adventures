@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Right away",
+  "label": "ch:ar-right-away",
+  "canDo": "I can say on the spot, before long, gradually, anew and to regain.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C313-istaada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can say on the spot, before long, gradually, anew and to regain.",
+    "assesses": [
+      "AR-LEX-C313-FAWR313-03",
+      "AR-LEX-C313-FAWR313-04",
+      "AR-LEX-C313-FAWR313-05"
+    ]
+  }
+}

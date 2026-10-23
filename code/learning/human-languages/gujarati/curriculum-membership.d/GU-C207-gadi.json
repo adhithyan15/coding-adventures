@@ -1,0 +1,11 @@
+{
+  "id": "GU-C207-gadi",
+  "pathSegment": "GU-PATH-207-TAXI207",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-207-TAXI207",
+      "order": 0
+    }
+  ]
+}

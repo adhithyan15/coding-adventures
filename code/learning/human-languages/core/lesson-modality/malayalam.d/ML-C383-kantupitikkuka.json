@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C383-kantupitikkuka",
+    "language": "malayalam",
+    "chapter": 383,
+    "sequence": 18770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ad9286708fc1718"
+  },
+  "findings": []
+}

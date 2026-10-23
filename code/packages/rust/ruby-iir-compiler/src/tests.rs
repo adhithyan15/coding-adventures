@@ -224,9 +224,15 @@ fn syntax_outside_the_subset_is_a_parse_or_lex_error_with_a_position() {
 #[test]
 fn release_selection_is_exact_typed_and_never_falls_back() {
     let budgets = FrontendBudgets::default();
+    // Each profiled release compiles and the module records which one did
+    // (LANG84 phase 5b); `None` records the default.
     for release in ["3.3.5", "3.3.6", "3.3.7"] {
-        assert!(compile_source_at("puts(1)", Some(release), "t", &budgets).is_ok(), "{release}");
+        let module = compile_source_at("puts(1)", Some(release), "t", &budgets).unwrap();
+        assert_eq!(module.release.as_deref(), Some(release));
+        let ast = tree("puts(1)");
+        assert_eq!(compile_cst(&ast, Some(release), "t").unwrap().release.as_deref(), Some(release));
     }
+    assert_eq!(compile_source("puts(1)", "t").unwrap().release.as_deref(), Some(DEFAULT_RELEASE));
     // 0.49 parses the subset but has no profile (see profiles.rs).
     for release in ["0.49", "0.50"] {
         let error = compile_source_at("puts(1)", Some(release), "t", &budgets).unwrap_err();
@@ -236,10 +242,24 @@ fn release_selection_is_exact_typed_and_never_falls_back() {
         assert_eq!(named, release);
         assert!(stage.contains("no IIR profile"), "{stage}");
     }
-    assert!(matches!(
-        compile_source_at("puts(1)", Some("2.7.8"), "t", &budgets),
-        Err(FrontendError::ReleaseNotAvailable { .. })
-    ));
+    // A row with no grammar pair says so in its reason, which reads on its
+    // own (lang-aot shows it as `cannot compile yet (…)`).
+    match compile_source_at("puts(1)", Some("2.7.8"), "t", &budgets) {
+        Err(FrontendError::ReleaseNotAvailable { stage, .. }) => {
+            assert_eq!(stage, "no grammar pair: grammar_stage none");
+        }
+        other => panic!("2.7.8: {other:?}"),
+    }
+    // A regeneration-bug phrase already says what is wrong and is not
+    // relabelled as a `grammar_stage`.
+    let bug = FrontendError::from(coding_adventures_ruby_parser::RubyFrontendError::ReleaseNotAvailable {
+        release: "3.3.6".into(),
+        stage: "token table missing (regenerate ruby-lexer)".into(),
+    });
+    assert!(
+        matches!(&bug, FrontendError::ReleaseNotAvailable { stage, .. } if stage == "token table missing (regenerate ruby-lexer)"),
+        "{bug:?}"
+    );
     assert!(matches!(
         compile_source_at("puts(1)", Some(""), "t", &budgets),
         Err(FrontendError::UnknownRelease { .. })

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 538,
+  "title": "Injury and Recovery",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8a9ab814aa5df761",
+  "lessons": [
+    {
+      "id": "ML-C538-sukham-prapikkuka",
+      "sequence": 27070,
+      "title": "സുഖം പ്രാപിക്കുക (sukhaṁ prāpikkuka) — to get well; to recover",
+      "headword": "സുഖം പ്രാപിക്കുക",
+      "romanization": "sukhaṁ prāpikkuka",
+      "gloss": "to get well; to recover",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6a838d9e97a993f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to snore, then the Malayalam for to perspire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സുഖം പ്രാപിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സുഖം പ്രാപിക്കുക — sukhaṁ prāpikkuka — \"to get well; to recover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓപ്പറേഷന് ശേഷം അച്ഛൻ വേഗം സുഖം പ്രാപിച്ചു. ōppaṟēṣanŭ śēṣaṁ acchan vēgaṁ sukhaṁ prāpiccu. Father recovered quickly after the operation."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: സുഖം പ്രാപിച്ചു, sukhaṁ prāpiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal, common in hospital talk and the news; in speech one says അസുഖം മാറി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സുഖം പ്രാപിക്കുക (sukhaṁ prāpikkuka) is built from സുഖം, from Sanskrit sukha, \"pleasant, easy\" (CDIAL 13451), and പ്രാപിക്കുക, built on the Sanskrit verb prāp, \"to reach, to obtain\", whose noun prāpti means acquisition (CDIAL 8946): to reach well-being."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sukhaṁ prāpikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sukhaṁ prāpikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sukhaṁ prāpikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sukhaṁ prāpikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōppaṟēṣanŭ śēṣaṁ acchan vēgaṁ sukhaṁ prāpiccu. — Father recovered quickly after the operation.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōppaṟēṣanŭ śēṣaṁ acchan vēgaṁ sukhaṁ prāpiccu.* — Father recovered quickly after the operation.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to snore, then the Malayalam for to perspire, then say sukhaṁ prāpikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to snore, then the Malayalam for to perspire, then say *sukhaṁ prāpikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സുഖം പ്രാപിക്കുക (sukhaṁ prāpikkuka) mean? (\"To get well; to recover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C538-paricarikkuka",
+      "sequence": 27080,
+      "title": "പരിചരിക്കുക (paricarikkuka) — to tend (the sick); to nurse",
+      "headword": "പരിചരിക്കുക",
+      "romanization": "paricarikkuka",
+      "gloss": "to tend (the sick); to nurse",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32408bac9466e09c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to perspire, then the Malayalam for to get well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പരിചരിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിചരിക്കുക — paricarikkuka — \"to tend (the sick); to nurse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആശുപത്രിയിൽ ചേച്ചി അമ്മയെ പരിചരിച്ചു. āśupatriyil cēcci ammaye paricariccu. At the hospital my elder sister looked after Mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പരിചരിച്ചു, paricariccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is പരിചരണം, care. The one cared for takes -എ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പരിചരിക്കുക (paricarikkuka) is built from Sanskrit paricaraṇa, \"going about; an attendant\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricarikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricarikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricarikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricarikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āśupatriyil cēcci ammaye paricariccu. — At the hospital my elder sister looked after Mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āśupatriyil cēcci ammaye paricariccu.* — At the hospital my elder sister looked after Mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to perspire, then the Malayalam for to get well, then say paricarikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to perspire, then the Malayalam for to get well, then say *paricarikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പരിചരിക്കുക (paricarikkuka) mean? (\"To tend (the sick); to nurse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C538-vilceyar",
+      "sequence": 27090,
+      "title": "വീൽചെയർ (vīlceyar) — a wheelchair",
+      "headword": "വീൽചെയർ",
+      "romanization": "vīlceyar",
+      "gloss": "a wheelchair",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59292588f8e04ede",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to get well, then the Malayalam for to tend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വീൽചെയർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വീൽചെയർ — vīlceyar — \"a wheelchair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ശസ്ത്രക്രിയയ്ക്ക് ശേഷം അമ്മ കുറച്ച് ദിവസം വീൽചെയറിൽ ആയിരുന്നു. śastrakriyaykkŭ śēṣaṁ amma kuṟaccŭ divasaṁ vīlceyaṟil āyirunnu. After the surgery Mother was in a wheelchair for a few days."
+            },
+            {
+              "kind": "speech",
+              "text": "Before an ending it adds -ഇൽ straight on: വീൽചെയറിൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വീൽചെയർ (vīlceyar) was borrowed from English wheelchair."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlceyar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlceyar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlceyar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlceyar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śastrakriyaykkŭ śēṣaṁ amma kuṟaccŭ divasaṁ vīlceyaṟil āyirunnu. — After the surgery Mother was in a wheelchair for a few days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śastrakriyaykkŭ śēṣaṁ amma kuṟaccŭ divasaṁ vīlceyaṟil āyirunnu.* — After the surgery Mother was in a wheelchair for a few days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to get well, then the Malayalam for to tend, then say vīlceyar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to get well, then the Malayalam for to tend, then say *vīlceyar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വീൽചെയർ (vīlceyar) mean? (\"A wheelchair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C538-vedanikkuka",
+      "sequence": 27100,
+      "title": "വേദനിക്കുക (vēdanikkuka) — to hurt; to be painful",
+      "headword": "വേദനിക്കുക",
+      "romanization": "vēdanikkuka",
+      "gloss": "to hurt; to be painful",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00dd39dc2e392f5e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to tend, then the Malayalam for a wheelchair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേദനിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേദനിക്കുക — vēdanikkuka — \"to hurt; to be painful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഇന്നലെ കളിച്ചതുകൊണ്ട് കാൽ വേദനിക്കുന്നു. innale kaḷiccatukoṇṭŭ kāl vēdanikkunnu. My leg hurts because I played yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വേദനിച്ചു, vēdaniccu."
+            },
+            {
+              "kind": "speech",
+              "text": "The part that hurts is the subject: തല വേദനിക്കുന്നു, my head hurts."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേദനിക്കുക (vēdanikkuka) is built from വേദന, \"pain\", from Sanskrit vedanā, \"pain, agony\" (Monier-Williams), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēdanikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēdanikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēdanikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēdanikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "innale kaḷiccatukoṇṭŭ kāl vēdanikkunnu. — My leg hurts because I played yesterday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *innale kaḷiccatukoṇṭŭ kāl vēdanikkunnu.* — My leg hurts because I played yesterday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to tend, then the Malayalam for a wheelchair, then say vēdanikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to tend, then the Malayalam for a wheelchair, then say *vēdanikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വേദനിക്കുക (vēdanikkuka) mean? (\"To hurt; to be painful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C538-bodham-ketuka",
+      "sequence": 27110,
+      "title": "ബോധം കെടുക (bōdhaṁ keṭuka) — to pass out; to faint",
+      "headword": "ബോധം കെടുക",
+      "romanization": "bōdhaṁ keṭuka",
+      "gloss": "to pass out; to faint",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a432cccbdd5bda8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a wheelchair, then the Malayalam for to hurt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ബോധം കെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബോധം കെടുക — bōdhaṁ keṭuka — \"to pass out; to faint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വെയിലത്ത് നിന്ന ഒരു കുട്ടി ബോധം കെട്ടു വീണു. veyilattŭ ninna oru kuṭṭi bōdhaṁ keṭṭu vīṇu. A child standing in the sun fainted and fell."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ബോധം കെട്ടു, bōdhaṁ keṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "ബോധം awareness + കെടുക to go out, as a lamp does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ബോധം കെടുക (bōdhaṁ keṭuka) is built from Sanskrit bodha, \"waking, consciousness\" (Monier-Williams), and the native verb കെടുക, \"to be put out, to be spoilt\" (DEDR 1942)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōdhaṁ keṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōdhaṁ keṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bōdhaṁ keṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bōdhaṁ keṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veyilattŭ ninna oru kuṭṭi bōdhaṁ keṭṭu vīṇu. — A child standing in the sun fainted and fell.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veyilattŭ ninna oru kuṭṭi bōdhaṁ keṭṭu vīṇu.* — A child standing in the sun fainted and fell.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a wheelchair, then the Malayalam for to hurt, then say bōdhaṁ keṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a wheelchair, then the Malayalam for to hurt, then say *bōdhaṁ keṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ബോധം കെടുക (bōdhaṁ keṭuka) mean? (\"To pass out; to faint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

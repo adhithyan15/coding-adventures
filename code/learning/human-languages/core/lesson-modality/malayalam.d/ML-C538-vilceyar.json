@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C538-vilceyar",
+    "language": "malayalam",
+    "chapter": 538,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59292588f8e04ede"
+  },
+  "findings": []
+}

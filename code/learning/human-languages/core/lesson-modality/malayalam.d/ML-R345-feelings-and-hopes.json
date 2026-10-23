@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R345-feelings-and-hopes",
+    "language": "malayalam",
+    "chapter": 345,
+    "sequence": 16440,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:21f0420516171c80"
+  },
+  "findings": []
+}

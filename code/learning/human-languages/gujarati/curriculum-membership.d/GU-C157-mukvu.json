@@ -1,0 +1,11 @@
+{
+  "id": "GU-C157-mukvu",
+  "pathSegment": "GU-PATH-157-PLACE157",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-157-PLACE157",
+      "order": 1
+    }
+  ]
+}

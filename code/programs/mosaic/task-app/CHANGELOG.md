@@ -4,9 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
-Entries added after `task-app-v0.5.8` accumulate here until the next version is
+Entries added after `task-app-v0.5.9` accumulate here until the next version is
 cut.
 
+## [0.5.9] - 2026-10-22
+
+### Fixed — Qt text widths and Web Component input fidelity
+
+- Qt preserves the calendar heading's fill width and the timeline's 150/190
+  text column widths. Both themes now report 78 style drops instead of 81.
 - The Web Component acceptance test types into the task name with an `input`
   event. A Web Component text field now dispatches `onChange` per keystroke, as
   on every other backend, and keeps focus across the re-render that follows.

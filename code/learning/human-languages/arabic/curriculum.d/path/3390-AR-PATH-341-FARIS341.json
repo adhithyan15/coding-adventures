@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-341-FARIS341",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-341-FARIS341"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-400-SATRU400",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-400-SATRU400"
+  ],
+  "after": []
+}

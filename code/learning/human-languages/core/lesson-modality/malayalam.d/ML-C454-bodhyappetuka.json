@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C454-bodhyappetuka",
+    "language": "malayalam",
+    "chapter": 454,
+    "sequence": 22540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2875f5c46b881857"
+  },
+  "findings": []
+}

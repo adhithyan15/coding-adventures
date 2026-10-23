@@ -1,0 +1,19 @@
+{
+  "chapter": 550,
+  "title": "Managing and Consulting",
+  "label": "ch:ml-managing-and-consulting",
+  "canDo": "I can say a workplace, supervision, to coordinate, to consult and an interval.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C550-itavela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 550: I can say a workplace, supervision, to coordinate, to consult and an interval.",
+    "assesses": [
+      "ML-LEX-C550-NETTAM550-03",
+      "ML-LEX-C550-NETTAM550-04",
+      "ML-LEX-C550-NETTAM550-05"
+    ]
+  }
+}

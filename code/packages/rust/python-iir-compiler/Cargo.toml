@@ -1,8 +1,8 @@
 [package]
 name = "python-iir-compiler"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "Direct Python grammar-tree to InterpreterIR lowering for a native float pilot"
+description = "Python grammar-tree to InterpreterIR lowering: the LANG84 py-int-print release path (LANG83 ops, every backend) and the LANG79 float pilot"
 
 [dependencies]
 coding-adventures-python-parser = { path = "../python-parser" }
@@ -10,3 +10,13 @@ parser = { path = "../parser" }
 lexer = { path = "../lexer" }
 interpreter-ir = { path = "../interpreter-ir" }
 vm-core = { path = "../vm-core" }
+
+[dev-dependencies]
+# The cst_contract test (LANG84 C8) reads each release's compiled token
+# table, which lives in python-lexer's `releases` module, and walks the
+# grammar elements of the compiled parser table.
+coding-adventures-python-lexer = { path = "../python-lexer" }
+grammar-tools = { path = "../grammar-tools" }
+# The release sweep (tests/release_sweep.rs) names each IIR-identity class
+# by a SHA-256 digest.
+coding_adventures_sha256 = { path = "../sha256" }

@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:bf0434d634aa301b",
+  "lessonIds": [
+    "ML-C372-tattippu",
+    "ML-C372-tattippukaran",
+    "ML-C372-vancikkuka",
+    "ML-C372-parrikkuka",
+    "ML-C372-kabalippikkuka",
+    "ML-R372-review-365-372"
+  ],
+  "tex": "malayalam/book/chapters/ch372-fraud-and-tricks.tex"
+}

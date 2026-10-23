@@ -1,0 +1,19 @@
+{
+  "chapter": 207,
+  "title": "Taking a taxi",
+  "label": "ch:gu-taking-a-taxi",
+  "canDo": "I can say who drove, what we hired and what the car ran out of.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C207-bhade-levu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 207: I can say who drove, what we hired and what the car ran out of.",
+    "assesses": [
+      "GU-LEX-C207-TAXI207-03",
+      "GU-LEX-C207-TAXI207-04",
+      "GU-LEX-C207-TAXI207-05"
+    ]
+  }
+}

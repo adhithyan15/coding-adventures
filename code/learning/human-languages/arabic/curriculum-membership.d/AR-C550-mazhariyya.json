@@ -1,0 +1,11 @@
+{
+  "id": "AR-C550-mazhariyya",
+  "pathSegment": "AR-PATH-550-SIYANA550",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-550-SIYANA550",
+      "order": 1
+    }
+  ]
+}

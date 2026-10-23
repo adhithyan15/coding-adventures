@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 189,
+  "sourceHash": "fnv1a64:6baa85533afc6e56",
+  "lessonIds": [
+    "GU-C189-lapetvu",
+    "GU-C189-mangavvu",
+    "GU-C189-khutvu",
+    "GU-C189-bacvu",
+    "GU-C189-svikarvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch189.txt",
+  "json": "gujarati/narration/ch189.json",
+  "textHash": "fnv1a64:7b0475e0a36c5e10",
+  "jsonHash": "fnv1a64:18344f630b4a8112",
+  "findings": []
+}

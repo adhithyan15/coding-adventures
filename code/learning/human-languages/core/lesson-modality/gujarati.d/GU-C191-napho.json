@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C191-napho",
+    "language": "gujarati",
+    "chapter": 191,
+    "sequence": 10440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4616eaa687a9264a"
+  },
+  "findings": []
+}

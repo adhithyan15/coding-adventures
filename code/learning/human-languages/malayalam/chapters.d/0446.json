@@ -1,0 +1,19 @@
+{
+  "chapter": 446,
+  "title": "Clear and Reliable",
+  "label": "ch:ml-clear-and-reliable",
+  "canDo": "I can say clear, common, effective, logical and reliable.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C446-visvasaniyamaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can say clear, common, effective, logical and reliable.",
+    "assesses": [
+      "ML-LEX-C446-VYAKTAM446-03",
+      "ML-LEX-C446-VYAKTAM446-04",
+      "ML-LEX-C446-VYAKTAM446-05"
+    ]
+  }
+}

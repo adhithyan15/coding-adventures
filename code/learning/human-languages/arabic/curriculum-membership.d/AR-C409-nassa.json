@@ -1,0 +1,11 @@
+{
+  "id": "AR-C409-nassa",
+  "pathSegment": "AR-PATH-409-QANUN409",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-409-QANUN409",
+      "order": 3
+    }
+  ]
+}

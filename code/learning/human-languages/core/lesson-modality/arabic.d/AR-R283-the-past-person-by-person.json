@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R283-the-past-person-by-person",
+    "language": "arabic",
+    "chapter": 283,
+    "sequence": 16440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4183adb12a45827"
+  },
+  "findings": []
+}

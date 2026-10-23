@@ -1,0 +1,10 @@
+{
+  "id": "GU-EXT-145-NEG145",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can complete the present for every person, say that someone does not do something with nathī, na and nahī̃, and say nobody, nothing and never.",
+  "prerequisites": [
+    "GU-EXT-144-A2WRITING"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-286-REASONS",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "AR-EXT-286-REASONS"
+  ],
+  "after": []
+}

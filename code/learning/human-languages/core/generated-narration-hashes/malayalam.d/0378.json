@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:62b6fc559e31034e",
+  "lessonIds": [
+    "ML-C378-abhayam",
+    "ML-C378-abhayartthi",
+    "ML-C378-jivahani",
+    "ML-C378-palayanam-ceyyuka",
+    "ML-C378-tetuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch378.txt",
+  "json": "malayalam/narration/ch378.json",
+  "textHash": "fnv1a64:c19653045e4ddcef",
+  "jsonHash": "fnv1a64:0eac61452cb6d58a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 192,
+  "title": "Adding up the bill",
+  "label": "ch:gu-adding-up-the-bill",
+  "canDo": "I can read the total on a bill and the amount to pay.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "GU-C192-vedaphvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 192: I can read the total on a bill and the amount to pay.",
+    "assesses": [
+      "GU-LEX-C192-BILL192-03",
+      "GU-LEX-C192-BILL192-04",
+      "GU-LEX-C192-BILL192-05"
+    ]
+  }
+}

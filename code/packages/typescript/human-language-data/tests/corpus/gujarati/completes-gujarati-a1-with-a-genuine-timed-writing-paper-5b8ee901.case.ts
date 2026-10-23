@@ -12,10 +12,15 @@ it("completes Gujarati A1 with a genuine timed writing paper", () => {
   expect(lesson?.frontmatter.type).toBe("writing");
   expect(Number(lesson?.frontmatter.sequence)).toBe(7570);
   expect(Number(lesson?.frontmatter["duration.max_seconds"])).toBeLessThanOrEqual(280);
+  // The A2 core (chapters 145-152) now follows chapter 144, so the A1 paper and
+  // the A2 composition close the book up to chapter 144 rather than the whole book.
   expect(
-    lessons.toSorted(
-      (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
-    ).at(-1)?.realization.lessonId,
+    lessons
+      .filter((candidate) => Number(candidate.frontmatter.chapter) <= 144)
+      .toSorted(
+        (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
+      )
+      .at(-1)?.realization.lessonId,
   ).toBe("GU-W11-a2-connected-composition");
 
   const timed = lesson?.blocks.find(

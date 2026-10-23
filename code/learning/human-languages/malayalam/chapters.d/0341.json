@@ -1,0 +1,23 @@
+{
+  "chapter": 341,
+  "title": "What I Think, and So",
+  "label": "ch:ml-what-i-think-and-so",
+  "canDo": "I can say what I think with ennŭ ñān vicārikkunnu, karutunnu or enikkŭ tōnnunnu, and draw a result with atukoṇṭŭ.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-R341-opinion-and-result",
+    "kind": "production",
+    "summary": "Complete ML-R341-opinion-and-result: an opinion three ways, a reason before its result with atukoṇṭŭ, and the new letter ഐ.",
+    "assesses": [
+      "ML-LEX-C341-VICARIKKUKA-01",
+      "ML-LEX-C341-AIKYAM-01",
+      "ML-SCRIPT-C341-AI-01",
+      "ML-GRAMMAR-C341-THINK-THAT-01",
+      "ML-GRAMMAR-C341-TONNUNNU-01",
+      "ML-GRAMMAR-C341-SO-RESULT-01",
+      "ML-GRAMMAR-C341-ATHUKONDANU-01"
+    ]
+  }
+}

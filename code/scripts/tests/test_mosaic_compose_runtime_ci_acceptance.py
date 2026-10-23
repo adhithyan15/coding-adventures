@@ -170,12 +170,23 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('test -f "$dex/lib/x86_64/libjnidispatch.so"', block)
         # A failed check says which one, instead of a silent `grep -q`.
         self.assertIn("::error::the APK's badging has no line matching", block)
-        # The SDK survives the disk reclaim and is set up for this lane.
+        # The lane runs in its own job, which sets the SDK up for it...
+        lane_job = workflow.index("\n  mosaic-linux-runtime:\n")
+        self.assertLess(lane_job, start)
+        self.assertLess(start, workflow.index("\n  build:\n"))
+        setup = workflow.index("- name: Set up Android SDK", lane_job)
+        self.assertLess(setup, start)
+        self.assertIn(
+            "if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'",
+            workflow[setup:workflow.index("\n", setup + 40)],
+        )
+        # ...and the build job, whose Compose packages build Android
+        # projects too, keeps the SDK through its disk reclaim.
         self.assertIn('[ "$NEEDS_MOSAIC_COMPOSE" != "true" ]', workflow)
-        setup = workflow.index("- name: Set up Android SDK")
+        build_setup = workflow.index("- name: Set up Android SDK", workflow.index("\n  build:\n"))
         self.assertIn(
             "(needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')",
-            workflow[setup:workflow.index("\n", setup + 40)],
+            workflow[build_setup:workflow.index("\n", build_setup + 40)],
         )
 
     def test_trestle_android_apk_carries_the_rust_runtime(self) -> None:
@@ -886,6 +897,90 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertTrue((COMPOSE_PACKAGE / "mosaic-package.toml").is_file())
         for suffix in ("mil", "mll", "msl"):
             self.assertTrue((COMPOSE_PACKAGE / "src" / f"Counter.{suffix}").is_file())
+
+
+# The Linux Mosaic lanes (Qt, Flutter, Compose, Android) run in a job of their
+# own, `mosaic-linux-runtime`, not as steps of `build`. `build` is main's
+# 15-shard matrix, and a step there runs on every shard: these lanes used to
+# cost ~520 runner-minutes per merge and ~18 GB of disk on every shard. Moving
+# one back into `build` would still pass every test above, so this pins where
+# they live, and that CI gate still requires them.
+LINUX_LANE_STEPS = (
+    "Round-trip Rust engine through standard Qt binding",
+    "Round-trip Rust engine through standard Flutter binding",
+    "Round-trip Rust engine through standard Compose binding",
+    "Build Trestle for Android (UI89 step 4)",
+    "Build Trestle for Android with its Rust runtime (UI89 step 5)",
+    "Build Journal for Android with its Rust runtime (UI89 step 7)",
+    "Build Engram for Android with its Rust runtime (UI89 step 7)",
+    "Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)",
+    "Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)",
+)
+
+
+def job_text(workflow: str, job: str) -> str:
+    """The text of one top-level job: from its key to the next job's key."""
+
+    start = workflow.index(f"\n  {job}:\n")
+    following = re.search(r"\n  [a-z0-9-]+:\n", workflow[start + 1 :])
+    end = start + 1 + following.start() if following else len(workflow)
+    return workflow[start:end]
+
+
+class MosaicLinuxRuntimeJobTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.lane_job = job_text(self.workflow, "mosaic-linux-runtime")
+        self.build_job = job_text(self.workflow, "build")
+
+    def test_every_linux_lane_runs_in_its_own_job_not_in_the_shards(self) -> None:
+        for step in LINUX_LANE_STEPS:
+            with self.subTest(step=step):
+                self.assertEqual(self.lane_job.count(f"- name: {step}\n"), 1)
+                self.assertNotIn(f"- name: {step}\n", self.build_job)
+
+    def test_the_job_runs_when_any_linux_lane_is_required(self) -> None:
+        condition = re.search(r"\n    if: (.*)\n", self.lane_job)
+        self.assertIsNotNone(condition)
+        for lane in ("qt", "flutter", "compose"):
+            with self.subTest(lane=lane):
+                self.assertIn(
+                    f"needs.detect.outputs.needs_mosaic_{lane}_runtime == 'true'",
+                    condition.group(1),
+                )
+        self.assertNotIn("matrix.", self.lane_job)
+
+    def test_build_still_installs_what_flutter_on_linux_needs(self) -> None:
+        """Package builds run `flutter build linux` whenever Flutter is on
+        PATH, and that needs GTK 3's headers. The Flutter lane used to
+        install them inside `build`; when it moved out, venture-browser
+        failed on a shard with `gtk+-3.0` not found. So wherever `build`
+        installs Flutter on Linux, it must install GTK too, after Flutter
+        and before the package build."""
+
+        flutter = self.build_job.index("      - name: Set up Flutter\n")
+        install = self.build_job.index("      - name: Install Flutter Linux desktop dependencies\n")
+        step = self.build_job[install : self.build_job.index("\n      - name:", install)]
+        self.assertIn(
+            "if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' && runner.os == 'Linux'\n",
+            step,
+        )
+        self.assertIn("bash code/scripts/ci/apt-install.sh libgtk-3-dev xvfb", step)
+        self.assertLess(flutter, install)
+        self.assertLess(install, self.build_job.index("      - name: Full build on main merge\n"))
+        self.assertLess(install, self.build_job.index("      - name: Build and test affected packages\n"))
+
+    def test_ci_gate_requires_the_job(self) -> None:
+        gate = job_text(self.workflow, "ci-gate")
+        needs = re.search(r"\n    needs: \[(.*)\]\n", gate)
+        self.assertIsNotNone(needs)
+        self.assertIn("mosaic-linux-runtime", [n.strip() for n in needs.group(1).split(",")])
+        self.assertIn(
+            "MOSAIC_LINUX_RUNTIME_RESULT: ${{ needs['mosaic-linux-runtime'].result }}", gate
+        )
+        loop = re.search(r"\n          for r in (.*); do\n", gate)
+        self.assertIsNotNone(loop)
+        self.assertIn('"$MOSAIC_LINUX_RUNTIME_RESULT"', loop.group(1))
 
 
 if __name__ == "__main__":

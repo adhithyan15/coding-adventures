@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-450-BALADIYYA450",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "AR-EXT-450-BALADIYYA450"
+  ],
+  "after": []
+}

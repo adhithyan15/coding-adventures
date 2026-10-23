@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:238f92c21b0320e4",
+  "lessonIds": [
+    "ML-C450-talttuka",
+    "ML-C450-urappakkuka",
+    "ML-C450-samraksikkuka",
+    "ML-C450-meccappetuttuka",
+    "ML-C450-avasanippikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch450.txt",
+  "json": "malayalam/narration/ch450.json",
+  "textHash": "fnv1a64:d49ff4c296f2a2c3",
+  "jsonHash": "fnv1a64:27c716a7692344f0",
+  "findings": []
+}

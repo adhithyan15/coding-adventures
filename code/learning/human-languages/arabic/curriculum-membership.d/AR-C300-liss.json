@@ -1,0 +1,11 @@
+{
+  "id": "AR-C300-liss",
+  "pathSegment": "AR-PATH-300-JARIMA300",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-300-JARIMA300",
+      "order": 2
+    }
+  ]
+}

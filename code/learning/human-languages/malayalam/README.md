@@ -136,6 +136,42 @@ history owners.
 
 All forty-seven later lessons remain below five effective minutes.
 
+- **Chapters 339–348 — the B1 core** ([`lessons/`](./lessons/), `ML-C339-*` to
+  `ML-R348-*`): ten chapters, two for each of the five B1 spine nodes. Narrating:
+  **ആയിരുന്നു** "was", the past progressive **വായിക്കുകയായിരുന്നു** as the scene a
+  story stands in, **-ഉമായിരുന്നു** "used to", **എന്നിട്ട്**, **അതിനുശേഷം** and
+  **-അപ്പോൾ**, and a hundred-word reading told in all three pasts. Reasons:
+  **… എന്ന് ഞാൻ വിചാരിക്കുന്നു / കരുതുന്നു**, **അതുകൊണ്ട്**, the obligative
+  **-അണം** (the **വേണം** the learner knows, worn onto the verb), **-ഏണ്ടതാണ്** and
+  **-അതുകൊണ്ട്**. Travel: asking the way, a ticket, and a missed bus or a lost
+  bag. Experience: feelings in the dative with **തോന്നുക**, **-ആൻ ആഗ്രഹമുണ്ട്**,
+  **-ക്കാൾ** and **ഏറ്റവും**, and **മൂന്ന് വർഷമായി**. Conditions: **-ആൽ** and
+  **-എങ്കിൽ** on a full verb, **ഇല്ലെങ്കിൽ**, **ആശ്രയിച്ചിരിക്കുന്നു**, and the
+  unreal **-ഇരുന്നെങ്കിൽ … -ഉമായിരുന്നു**, closed by six connected lines of
+  writing. Eight letters arrive here, each written straight after a word that
+  holds it: **ഈ** (ഈയിടെ), **ഐ** (ഐക്യം), **ഔ** (ഔദ്യോഗികമായ), **ഡ** (റോഡ്),
+  **ൗ** (സൗകര്യം), **ഃ** (ദുഃഖം), **ഋ** (ഋതു) and **ഘ** (ആഘോഷം). The rows for the four
+  vowels and two signs in
+  [`data/scripts/malayalam.json`](../data/scripts/malayalam.json) are
+  recognition-only: no stroke order is claimed for them, because the
+  script-ductus package has no font-checked ductus to back one yet. Their
+  lessons describe the shape in words, ask the learner to copy the printed
+  letter, and print no strip. Until a cited row lands, the four vowels stay out
+  of glyph closure, and each anchoring headword is one pinned glyph gap.
+- **Chapters 349–572 — the B1 vocabulary** ([`lessons/`](./lessons/),
+  `ML-C349-*` to `ML-R572-*`): 1,120 headwords, 400 of them verbs, one word per
+  lesson, practised again in the next two lessons, with a review after every
+  eight chapters. Four tranches, one per node:
+  - 349–404: narrating (news, incidents, the courts, life events, history);
+  - 405–460: reasons and conditions (opinion, society, education, the law);
+  - 461–516: travel (transport, lodging, the town, nature and the weather);
+  - 517–572: experience (feelings, health, work, family, the arts, home).
+
+  Origins cite DEDR for native Dravidian words and CDIAL or Monier-Williams for
+  Sanskrit ones, and are hedged where neither settles them. With these chapters
+  Malayalam teaches 2,569 headwords at or below B1, and **attains B1** on the
+  level gate.
+
 ## Book / fonts
 
 ---

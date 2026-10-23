@@ -1,0 +1,15 @@
+[package]
+name = "x509-rsa-sha256-reviewed-server-link"
+version = "0.3.0"
+edition = "2021"
+description = "Reviewed-root RSA SHA-256 server-link binding with exact anchor DNS policy"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+x509-certificate = { path = "../x509-certificate" }
+x509-name-constraints = { path = "../x509-name-constraints" }
+x509-rsa-sha256-reviewed-anchor-link = { path = "../x509-rsa-sha256-reviewed-anchor-link" }
+x509-server-certificate-policy = { path = "../x509-server-certificate-policy" }
+x509-subject-alt-name = { path = "../x509-subject-alt-name" }
+
+[dev-dependencies]

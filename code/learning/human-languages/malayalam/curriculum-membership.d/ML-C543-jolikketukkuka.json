@@ -1,0 +1,11 @@
+{
+  "id": "ML-C543-jolikketukkuka",
+  "pathSegment": "ML-PATH-543-NIYAMANAM543",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-543-NIYAMANAM543",
+      "order": 2
+    }
+  ]
+}

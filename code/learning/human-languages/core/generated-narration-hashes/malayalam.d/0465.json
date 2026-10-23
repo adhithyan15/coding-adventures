@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:69fc30df07594b37",
+  "lessonIds": [
+    "ML-C465-purappetal",
+    "ML-C465-varavu",
+    "ML-C465-kalatamasam",
+    "ML-C465-kattunilkkuka",
+    "ML-C465-otikkayaruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch465.txt",
+  "json": "malayalam/narration/ch465.json",
+  "textHash": "fnv1a64:d78c2cc6cde57d89",
+  "jsonHash": "fnv1a64:3ba8a4fcb4dfb5f7",
+  "findings": []
+}

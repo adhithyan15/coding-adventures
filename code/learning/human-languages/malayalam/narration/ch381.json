@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 381,
+  "title": "In the Dark",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:600313f16690d787",
+  "lessons": [
+    {
+      "id": "ML-C381-iruttu",
+      "sequence": 18640,
+      "title": "ഇരുട്ട് (iruṭṭŭ) — darkness",
+      "headword": "ഇരുട്ട്",
+      "romanization": "iruṭṭŭ",
+      "gloss": "darkness",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43a5ec3fb02af7b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to scream, then the Malayalam for to turn back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഇരുട്ട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇരുട്ട് — iruṭṭŭ — \"darkness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കറന്റ് പോയി, വീട് മുഴുവൻ ഇരുട്ടിലായി. kaṟanṟŭ pōyi, vīṭŭ muḻuvan iruṭṭilāyi. The power went and the whole house was in darkness."
+            },
+            {
+              "kind": "speech",
+              "text": "In the dark is ഇരുട്ടിൽ. The adjective ഇരുണ്ട, dark, has the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഇരുട്ട് (iruṭṭŭ) is native Dravidian: DEDR 2552 lists Malayalam iruṭṭu, \"darkness\", with iruḷ and the verb for growing dark."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iruṭṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iruṭṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iruṭṭŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iruṭṭŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṟanṟŭ pōyi, vīṭŭ muḻuvan iruṭṭilāyi. — The power went and the whole house was in darkness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṟanṟŭ pōyi, vīṭŭ muḻuvan iruṭṭilāyi.* — The power went and the whole house was in darkness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to scream, then the Malayalam for to turn back, then say iruṭṭŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to scream, then the Malayalam for to turn back, then say *iruṭṭŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഇരുട്ട് (iruṭṭŭ) mean? (\"Darkness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C381-sabdam",
+      "sequence": 18650,
+      "title": "ശബ്ദം (śabdaṁ) — a sound; a voice",
+      "headword": "ശബ്ദം",
+      "romanization": "śabdaṁ",
+      "gloss": "a sound; a voice",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27099980da3dd600",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to turn back, then the Malayalam for darkness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശബ്ദം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശബ്ദം — śabdaṁ — \"a sound; a voice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "രാത്രി അടുക്കളയിൽ ഒരു ശബ്ദം കേട്ടു. rātri aṭukkaḷayil oru śabdaṁ kēṭṭu. At night a sound was heard in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "Also a voice: അവളുടെ ശബ്ദം (śabdaṁ), her voice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശബ്ദം (śabdaṁ) is borrowed from Sanskrit śabda, \"an articulate sound, a noise\" (CDIAL 12298)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śabdaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śabdaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śabdaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śabdaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rātri aṭukkaḷayil oru śabdaṁ kēṭṭu. — At night a sound was heard in the kitchen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rātri aṭukkaḷayil oru śabdaṁ kēṭṭu.* — At night a sound was heard in the kitchen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to turn back, then the Malayalam for darkness, then say śabdaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to turn back, then the Malayalam for darkness, then say *śabdaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശബ്ദം (śabdaṁ) mean? (\"A sound; a voice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C381-nissabdata",
+      "sequence": 18660,
+      "title": "നിശ്ശബ്ദത (niśśabdata) — silence",
+      "headword": "നിശ്ശബ്ദത",
+      "romanization": "niśśabdata",
+      "gloss": "silence",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:966895c56ec335ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for darkness, then the Malayalam for a sound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നിശ്ശബ്ദത",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിശ്ശബ്ദത — niśśabdata — \"silence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അറിയിപ്പ് കേട്ടപ്പോൾ ക്ലാസിൽ നിശ്ശബ്ദത പരന്നു. aṟiyippŭ kēṭṭappōḷ klāsil niśśabdata parannu. When they heard the notice, silence spread through the class."
+            },
+            {
+              "kind": "speech",
+              "text": "The adjective is നിശ്ശബ്ദമായ, silent; the -ത ending makes the noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നിശ്ശബ്ദത (niśśabdata) is built from Sanskrit niḥśabda, \"noiseless, silent\" (Monier-Williams), with -ത, the ending that makes a noun of a state. The visarga of niḥ- becomes a second ശ before ശബ്ദം (śabdaṁ), so the word is written with ശ്ശ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niśśabdata",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niśśabdata*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niśśabdata, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niśśabdata*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṟiyippŭ kēṭṭappōḷ klāsil niśśabdata parannu. — When they heard the notice, silence spread through the class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṟiyippŭ kēṭṭappōḷ klāsil niśśabdata parannu.* — When they heard the notice, silence spread through the class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for darkness, then the Malayalam for a sound, then say niśśabdata again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for darkness, then the Malayalam for a sound, then say *niśśabdata* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നിശ്ശബ്ദത (niśśabdata) mean? (\"Silence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C381-mantrikkuka",
+      "sequence": 18670,
+      "title": "മന്ത്രിക്കുക (mantrikkuka) — to whisper",
+      "headword": "മന്ത്രിക്കുക",
+      "romanization": "mantrikkuka",
+      "gloss": "to whisper",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:797a51ae8823b83e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a sound, then the Malayalam for silence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മന്ത്രിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മന്ത്രിക്കുക — mantrikkuka — \"to whisper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ എന്റെ ചെവിയിൽ എന്തോ മന്ത്രിച്ചു. avaḷ enṟe ceviyil entō mantriccu. She whispered something in my ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മന്ത്രിച്ചു, mantriccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Into the ear is ചെവിയിൽ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മന്ത്രിക്കുക (mantrikkuka) is built from Sanskrit mantra, \"thought, counsel, a spell\" (CDIAL 9834), with the Malayalam verb ending -ിക്കുക: to say something low, as a spell is said."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantrikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantrikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mantrikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mantrikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ enṟe ceviyil entō mantriccu. — She whispered something in my ear.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ enṟe ceviyil entō mantriccu.* — She whispered something in my ear.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a sound, then the Malayalam for silence, then say mantrikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a sound, then the Malayalam for silence, then say *mantrikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മന്ത്രിക്കുക (mantrikkuka) mean? (\"To whisper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C381-apratyaksamakuka",
+      "sequence": 18680,
+      "title": "അപ്രത്യക്ഷമാകുക (apratyakṣamākuka) — to disappear",
+      "headword": "അപ്രത്യക്ഷമാകുക",
+      "romanization": "apratyakṣamākuka",
+      "gloss": "to disappear",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22b983f00f582823",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for silence, then the Malayalam for to whisper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: അപ്രത്യക്ഷമാകുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അപ്രത്യക്ഷമാകുക — apratyakṣamākuka — \"to disappear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "കള്ളൻ ഇരുട്ടിൽ അപ്രത്യക്ഷമായി. kaḷḷan iruṭṭil apratyakṣamāyi. The thief disappeared into the darkness."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: അപ്രത്യക്ഷമായി, apratyakṣamāyi."
+            },
+            {
+              "kind": "speech",
+              "text": "അ-, not, + പ്രത്യക്ഷം, before the eyes, + ആകുക, to become: to go out of sight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അപ്രത്യക്ഷമാകുക (apratyakṣamākuka) is built from Sanskrit pratyakṣa, \"visible, before the eyes\" (CDIAL 8635), with a-, \"not\", and the Malayalam ആകുക, \"to become\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apratyakṣamākuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apratyakṣamākuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "apratyakṣamākuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *apratyakṣamākuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḷḷan iruṭṭil apratyakṣamāyi. — The thief disappeared into the darkness.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḷḷan iruṭṭil apratyakṣamāyi.* — The thief disappeared into the darkness.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for silence, then the Malayalam for to whisper, then say apratyakṣamākuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for silence, then the Malayalam for to whisper, then say *apratyakṣamākuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does അപ്രത്യക്ഷമാകുക (apratyakṣamākuka) mean? (\"To disappear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

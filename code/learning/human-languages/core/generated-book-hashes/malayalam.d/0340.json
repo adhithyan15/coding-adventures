@@ -1,0 +1,14 @@
+{
+  "language": "malayalam",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:7602155e81a39814",
+  "lessonIds": [
+    "ML-C340-iyite",
+    "ML-W340-ii",
+    "ML-C340-ennittu",
+    "ML-C340-atinusesham",
+    "ML-C340-gramathil",
+    "ML-R340-a-story-in-order"
+  ],
+  "tex": "malayalam/book/chapters/ch340-telling-a-story-in-order.tex"
+}

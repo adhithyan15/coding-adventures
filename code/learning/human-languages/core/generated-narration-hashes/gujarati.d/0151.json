@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:51f41cb592f130d2",
+  "lessonIds": [
+    "GU-C151-notis",
+    "GU-C151-khullun",
+    "GU-C151-phakt",
+    "GU-C151-jaher",
+    "GU-C151-dukan-notis"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "gujarati/narration/ch151.txt",
+  "json": "gujarati/narration/ch151.json",
+  "textHash": "fnv1a64:5ac245daf1772f15",
+  "jsonHash": "fnv1a64:a18db6d23b4b2394",
+  "findings": []
+}

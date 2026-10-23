@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:2b66fd97ecd922f9",
+  "lessonIds": [
+    "ML-C423-nayam",
+    "ML-C423-natappakkuka",
+    "ML-C423-pasakkuka",
+    "ML-C423-bhedagati-ceyyuka",
+    "ML-C423-satyapratijna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch423.txt",
+  "json": "malayalam/narration/ch423.json",
+  "textHash": "fnv1a64:a6a1301451276b68",
+  "jsonHash": "fnv1a64:fc373edeb3702c7b",
+  "findings": []
+}

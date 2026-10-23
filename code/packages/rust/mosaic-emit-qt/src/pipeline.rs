@@ -3460,6 +3460,34 @@ fn qml_text_capitalization(props: &[StyleProp]) -> Option<&'static str> {
     Some(capitalization)
 }
 
+/// Width belongs to the outer text box, not to an inner painted label.
+/// Validate every state before recording a read: mixed fill/scalar geometry
+/// cannot be represented by a static attached layout flag.
+fn qml_text_width_lines(props: &[StyleProp], layers: &[StateLayer<'_>]) -> Vec<String> {
+    fn scalar(value: &str) -> Option<String> {
+        let value = qml_px_or_none(value)?;
+        (value.parse::<f64>().ok()? >= 0.0).then_some(value)
+    }
+    let raw = |props: &[StyleProp]| {
+        props.iter().find(|p| p.name == "width").map(|p| p.value.clone())
+    };
+    let Some(base) = raw(props) else { return Vec::new(); };
+    if base.trim().trim_matches('"') == "100%" {
+        return if host_control_has_fill_width(props, layers) {
+            vec!["Layout.fillWidth: true".to_string()]
+        } else { Vec::new() };
+    }
+    if scalar(&base).is_none()
+        || layers.iter().filter_map(|l| raw(l.props)).any(|v| scalar(&v).is_none())
+    {
+        return Vec::new();
+    }
+    let width = conditional_scalar_expr(
+        style_prop(props, "width").and_then(scalar), layers, "width", "0", scalar,
+    ).expect("validated base width");
+    vec![format!("width: {width}"), format!("Layout.preferredWidth: {width}")]
+}
+
 fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
     if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
@@ -4683,7 +4711,20 @@ fn emit_qml_tree(
     };
     let text_part_lines = if is_text {
         part_style_props(node, ctx)
-            .map(qml_text_part_style_lines)
+            .map(|props| {
+                let mut lines = qml_text_part_style_lines(props);
+                let layers = node.part_name.as_deref()
+                    .map(|part| collect_state_layers(node, part, ctx.part_styles))
+                    .unwrap_or_default();
+                if !needs_container_wrapper(props)
+                    && !layers.iter().any(|l| needs_container_wrapper(l.props))
+                    && !ctx.cell_fill_children
+                    && ctx.text_style.is_none()
+                {
+                    lines.extend(qml_text_width_lines(props, &layers));
+                }
+                lines
+            })
             .unwrap_or_default()
     } else {
         Vec::new()
@@ -19032,6 +19073,7 @@ mod tests {
             parts: vec![PartStyle {
                 name: "app-title".to_string(),
                 base: vec![
+                    sp("width", "150"),
                     sp("color", "#f8fafc"),
                     sp("font-size", "28.5"),
                     sp("font-weight", "700"),
@@ -19053,6 +19095,9 @@ mod tests {
         let out = from_pipeline(&component("Title", vec![], vec![]), &layout, &style)
             .unwrap()
             .output;
+
+        assert!(out.contains("width: 150"), "missing text width:\n{out}");
+        assert!(out.contains("Layout.preferredWidth: 150"));
 
         assert!(
             out.contains("color: \"#f8fafc\""),
@@ -19079,6 +19124,33 @@ mod tests {
             0,
             "text-only styling must keep the bare Text shape:\n{out}"
         );
+    }
+
+    #[test]
+    fn text_width_rejects_invalid_geometry_and_preserves_fill() {
+        for value in ["-1", "NaN", "inf", "75%", "auto", "1; evil()", "1.2.3"] {
+            assert!(qml_text_width_lines(&[sp("width", value)], &[]).is_empty(), "{value}");
+        }
+        assert_eq!(qml_text_width_lines(&[sp("width", "100%")], &[]),
+            vec!["Layout.fillWidth: true"]);
+        assert_eq!(qml_text_width_lines(&[sp("width", "190px")], &[]),
+            vec!["width: 190", "Layout.preferredWidth: 190"]);
+    }
+
+    #[test]
+    fn text_width_states_are_ordered_and_mixed_geometry_is_not_consumed() {
+        let base = [sp("width", "150")];
+        let first = [sp("width", "180")];
+        let last = [sp("width", "190")];
+        let layers = [
+            StateLayer { cond_expr: "first".into(), props: &first },
+            StateLayer { cond_expr: "last".into(), props: &last },
+        ];
+        let lines = qml_text_width_lines(&base, &layers);
+        assert_eq!(lines[0], "width: ( last ) ? 190 : ( first ) ? 180 : 150");
+        let invalid = [sp("width", "100%")];
+        assert!(qml_text_width_lines(&base,
+            &[StateLayer { cond_expr: "active".into(), props: &invalid }]).is_empty());
     }
 
     #[test]
@@ -19140,6 +19212,13 @@ mod tests {
             dropped.is_empty(),
             "the surface wrapper must consume every authored property: {dropped:?}"
         );
+        let mut sized_style = style.clone();
+        sized_style.parts[0].base.push(sp("width", "190"));
+        let sized = from_pipeline(&model, &layout, &sized_style).unwrap().output;
+        assert_eq!(sized.matches("Layout.preferredWidth: 190").count(), 1);
+        assert_eq!(sized.matches("implicitWidth: 190").count(), 1);
+        assert!(!sized.lines().any(|line| line.trim() == "width: 190"),
+            "the inner semantic Text must not claim the outer width: {sized}");
     }
 
     /// An unstyled `Box` (no matching part) keeps the bare `Item` shape —

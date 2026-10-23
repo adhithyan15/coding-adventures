@@ -1,0 +1,11 @@
+{
+  "id": "AR-C389-ajbara",
+  "pathSegment": "AR-PATH-389-NUFUDH389",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-389-NUFUDH389",
+      "order": 3
+    }
+  ]
+}

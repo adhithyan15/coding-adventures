@@ -1,0 +1,11 @@
+{
+  "id": "AR-C538-tatriz",
+  "pathSegment": "AR-PATH-538-IBRA538",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-538-IBRA538",
+      "order": 0
+    }
+  ]
+}

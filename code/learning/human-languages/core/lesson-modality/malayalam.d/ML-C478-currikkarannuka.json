@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C478-currikkarannuka",
+    "language": "malayalam",
+    "chapter": 478,
+    "sequence": 23910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fffd2e7907d81e1"
+  },
+  "findings": []
+}

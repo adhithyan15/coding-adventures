@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:00a1c98348177e41",
+  "lessonIds": [
+    "ML-C487-nagarasabha",
+    "ML-C487-villeju-ophisu",
+    "ML-C487-talukku",
+    "ML-C487-kalaktar",
+    "ML-C487-salyam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch487.txt",
+  "json": "malayalam/narration/ch487.json",
+  "textHash": "fnv1a64:abfedd0e80136e51",
+  "jsonHash": "fnv1a64:e835565c1e3236ed",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C519-mutadarrib",
+    "language": "arabic",
+    "chapter": 519,
+    "sequence": 28810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f6677ee7f621c74"
+  },
+  "findings": []
+}

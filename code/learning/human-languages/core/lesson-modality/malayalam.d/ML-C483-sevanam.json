@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C483-sevanam",
+    "language": "malayalam",
+    "chapter": 483,
+    "sequence": 24120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4e340b659d55ed9"
+  },
+  "findings": []
+}

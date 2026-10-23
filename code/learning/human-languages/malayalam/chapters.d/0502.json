@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Plantations and Trees",
+  "label": "ch:ml-plantations-and-trees",
+  "canDo": "I can say a plantation, greenery, to sprout, to fall off and to cut down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C502-vettimarruka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can say a plantation, greenery, to sprout, to fall off and to cut down.",
+    "assesses": [
+      "ML-LEX-C502-TOTTAM502-03",
+      "ML-LEX-C502-TOTTAM502-04",
+      "ML-LEX-C502-TOTTAM502-05"
+    ]
+  }
+}

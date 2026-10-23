@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 209,
+  "sourceHash": "fnv1a64:e697b94e02ed59f0",
+  "lessonIds": [
+    "GU-C209-bagadvu",
+    "GU-C209-dhakelvu",
+    "GU-C209-athadavu",
+    "GU-C209-phasavu",
+    "GU-C209-sarakvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch209.txt",
+  "json": "gujarati/narration/ch209.json",
+  "textHash": "fnv1a64:5547e00f8b33dda1",
+  "jsonHash": "fnv1a64:36808441e39a7e4c",
+  "findings": []
+}

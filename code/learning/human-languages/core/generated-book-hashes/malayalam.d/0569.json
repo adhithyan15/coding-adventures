@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 569,
+  "sourceHash": "fnv1a64:910dad1b1884abe5",
+  "lessonIds": [
+    "ML-C569-campyan",
+    "ML-C569-etirali",
+    "ML-C569-turnamenru",
+    "ML-C569-munneruka",
+    "ML-C569-pinnilakuka"
+  ],
+  "tex": "malayalam/book/chapters/ch569-winning-and-losing.tex"
+}

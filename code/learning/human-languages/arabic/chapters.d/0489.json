@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "Panic, terror and calm",
+  "label": "ch:ar-panic-terror-and-calm",
+  "canDo": "I can talk about panic, terror and calm, and say that someone shivered or frightened someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C489-akhafa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about panic, terror and calm, and say that someone shivered or frightened someone.",
+    "assesses": [
+      "AR-LEX-C489-KHAWF489-03",
+      "AR-LEX-C489-KHAWF489-04",
+      "AR-LEX-C489-KHAWF489-05"
+    ]
+  }
+}

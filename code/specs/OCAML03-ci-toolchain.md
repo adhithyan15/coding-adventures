@@ -59,6 +59,14 @@ than accepting an exact opam version input. The workflow therefore treats the
 action commit as reviewed bootstrap code and immediately fails closed unless
 `opam --version` is exactly `2.5.2`.
 
+*Revision 2026-10-20.* setup-ocaml v3.9.0 raised its hard-coded opam bound
+from below 2.6 to below 2.7, so it installs opam 2.6.1, and it still has no
+exact opam version input. The lock therefore keeps the reviewed v3.7.0 commit.
+A later setup-ocaml bump is an opam upgrade and must go through a reviewed
+change to this contract. Dependabot cannot refresh it as a pin. The same
+review re-pinned `actions/upload-artifact` from v7.0.1 to v7.0.2. That
+release only bumps the `@actions/artifact` dependency and adds no inputs.
+
 ## Closed evidence manifest
 
 `code/specs/fixtures/ocaml-toolchain/toolchain-lock.json` is the authority for

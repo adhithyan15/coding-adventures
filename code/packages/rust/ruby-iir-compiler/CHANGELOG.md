@@ -1,5 +1,48 @@
 # Changelog
 
+## Unreleased — LANG84 phase 5b, slice 2: the release sweep
+
+### Added
+- `tests/release_sweep.rs`: compiles every positive `rb-int-puts` case
+  under every release whose `iir_status` claims it (3.3.5, 3.3.6, 3.3.7),
+  digests each module's `interpreter_ir::serialise` bytes (SHA-256; the
+  `release` field is not on the wire), classes each release by its whole
+  outcome vector, and compares the result with the committed
+  `code/grammars/ruby/release_classes.csv` (`subset,case,release,class`,
+  42 rows). One class: all three releases emit the same IIR for every case,
+  and its representative (the first claiming row in `releases.csv`) is
+  3.3.5. `RUBY_RELEASE_SWEEP_WRITE=1` rewrites the CSV; that run fails on
+  purpose and refuses `CI`/`GITHUB_ACTIONS`. A claiming release that refuses
+  a positive case fails the sweep (Ruby's corpus has no per-release
+  override). Tests: `the_sweep_covers_every_claiming_release_in_inventory_order`,
+  `release_classes_csv_matches_the_sweep`,
+  `every_claiming_release_lowers_a_case_to_the_same_iir`,
+  `the_boundary_releases_are_the_class_representatives`.
+- Dev-dependency `coding_adventures_sha256` for the class digests.
+
+### Changed
+- The inventory and corpus readers moved from `tests/release_subsets.rs` to
+  `tests/common/mod.rs`, shared with the sweep. They now fail on a corpus
+  file name containing `@` (a per-release override they would otherwise
+  ignore).
+
+## Unreleased — LANG84 phase 5b, slice 1: release recorded and selectable through lang-aot
+
+### Added
+- The compiled module records the release that produced it:
+  `IIRModule::release` is `Some("3.3.5" | "3.3.6" | "3.3.7")` from
+  `compile_source_at`, `compile_source` (the default, `3.3.6`) and
+  `compile_cst` alike. lang-aot's `--lang ruby@<release>` relies on it.
+
+### Changed
+- `FrontendError::ReleaseNotAvailable.stage` is self-describing. A row with
+  no grammar pair now reads `no grammar pair: grammar_stage none` instead of
+  the bare `none`, next to the existing `no IIR profile: …`, so lang-aot
+  can show either as `release X cannot compile yet (…)`. ruby-parser's
+  regeneration-bug phrases (`token table missing (regenerate ruby-lexer)`)
+  already say what is wrong and are kept as they are (security review,
+  info).
+
 ## Unreleased — LANG84 phase 5a (= LANG83 PR2): the R0 release pairs, LANG83 ops
 
 ### Changed (breaking)

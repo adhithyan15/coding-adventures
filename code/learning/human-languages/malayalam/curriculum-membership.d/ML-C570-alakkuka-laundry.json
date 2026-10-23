@@ -1,0 +1,11 @@
+{
+  "id": "ML-C570-alakkuka-laundry",
+  "pathSegment": "ML-PATH-570-VITTUPAKARANAM570",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-570-VITTUPAKARANAM570",
+      "order": 3
+    }
+  ]
+}

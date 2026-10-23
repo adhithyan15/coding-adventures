@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 414,
+  "title": "Ideas and Sources",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2e5cc7b3f048e047",
+  "lessons": [
+    {
+      "id": "ML-C414-tatvam",
+      "sequence": 20460,
+      "title": "തത്വം (tatvaṁ) — a principle",
+      "headword": "തത്വം",
+      "romanization": "tatvaṁ",
+      "gloss": "a principle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b95f785c24d6f67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to urge, then the Malayalam for to express."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തത്വം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തത്വം — tatvaṁ — \"a principle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സത്യം പറയുക എന്നതാണ് അവന്റെ തത്വം. satyaṁ paṟayuka ennatāṇŭ avanṟe tatvaṁ. Telling the truth is his principle."
+            },
+            {
+              "kind": "speech",
+              "text": "Also spelled തത്ത്വം in older books."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തത്വം (tatvaṁ) is borrowed from Sanskrit tattva, \"the real state of a thing, truth\" (CDIAL 5642), from tad, \"that\": thatness, what a thing is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatvaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatvaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tatvaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tatvaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "satyaṁ paṟayuka ennatāṇŭ avanṟe tatvaṁ. — Telling the truth is his principle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *satyaṁ paṟayuka ennatāṇŭ avanṟe tatvaṁ.* — Telling the truth is his principle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to urge, then the Malayalam for to express, then say tatvaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to urge, then the Malayalam for to express, then say *tatvaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തത്വം (tatvaṁ) mean? (\"A principle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C414-dharana",
+      "sequence": 20470,
+      "title": "ധാരണ (dhāraṇa) — an understanding; a notion",
+      "headword": "ധാരണ",
+      "romanization": "dhāraṇa",
+      "gloss": "an understanding; a notion",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f21f38cc69a880ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to express, then the Malayalam for a principle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ധാരണ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ധാരണ — dhāraṇa — \"an understanding; a notion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ വിഷയത്തെക്കുറിച്ച് എനിക്ക് നല്ല ധാരണയുണ്ട്. ā viṣayattekkuṟiccŭ enikkŭ nalla dhāraṇayuṇṭŭ. I have a good understanding of that subject."
+            },
+            {
+              "kind": "speech",
+              "text": "അവർ തമ്മിൽ ധാരണയായി, they reached an understanding: it is also an agreement between two sides."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ധാരണ (dhāraṇa) is borrowed from Sanskrit dhāraṇā, \"holding, bearing; keeping in the mind\" (Monier-Williams). An understanding is what the mind holds."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāraṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāraṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāraṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāraṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā viṣayattekkuṟiccŭ enikkŭ nalla dhāraṇayuṇṭŭ. — I have a good understanding of that subject.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā viṣayattekkuṟiccŭ enikkŭ nalla dhāraṇayuṇṭŭ.* — I have a good understanding of that subject.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to express, then the Malayalam for a principle, then say dhāraṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to express, then the Malayalam for a principle, then say *dhāraṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ധാരണ (dhāraṇa) mean? (\"An understanding; a notion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C414-siddhantam",
+      "sequence": 20480,
+      "title": "സിദ്ധാന്തം (siddhāntaṁ) — a theory",
+      "headword": "സിദ്ധാന്തം",
+      "romanization": "siddhāntaṁ",
+      "gloss": "a theory",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:072d51a99fed581a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a principle, then the Malayalam for an understanding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സിദ്ധാന്തം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സിദ്ധാന്തം — siddhāntaṁ — \"a theory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പുതിയ സിദ്ധാന്തം പലരും അംഗീകരിച്ചില്ല. putiya siddhāntaṁ palaruṁ aṁgīkariccilla. Many people did not accept the new theory."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: സിദ്ധാന്തങ്ങൾ, siddhāntaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: സിദ്ധാന്തങ്ങൾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സിദ്ധാന്തം (siddhāntaṁ) is borrowed from Sanskrit siddhānta, \"an established end, a doctrine\" (CDIAL 13404): siddha, \"settled\", and anta, \"end\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhāntaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhāntaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siddhāntaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siddhāntaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "putiya siddhāntaṁ palaruṁ aṁgīkariccilla. — Many people did not accept the new theory.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *putiya siddhāntaṁ palaruṁ aṁgīkariccilla.* — Many people did not accept the new theory.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a principle, then the Malayalam for an understanding, then say siddhāntaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a principle, then the Malayalam for an understanding, then say *siddhāntaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സിദ്ധാന്തം (siddhāntaṁ) mean? (\"A theory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C414-uravitam",
+      "sequence": 20490,
+      "title": "ഉറവിടം (uṟaviṭaṁ) — a source",
+      "headword": "ഉറവിടം",
+      "romanization": "uṟaviṭaṁ",
+      "gloss": "a source",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c51cd47bf15d7c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an understanding, then the Malayalam for a theory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉറവിടം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറവിടം — uṟaviṭaṁ — \"a source\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വാർത്തയുടെ ഉറവിടം ആരും പറഞ്ഞില്ല. vārttayuṭe uṟaviṭaṁ āruṁ paṟaññilla. Nobody said what the source of the news was."
+            },
+            {
+              "kind": "speech",
+              "text": "It is first the place a spring rises, then any source of news or money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉറവിടം (uṟaviṭaṁ) is a native Malayalam compound: ഉറവ, \"a spring of water\", from ഊറുക, \"to spring, to ooze\" (DEDR 761), and ഇടം, \"a place\" (DEDR 434). A source is where things spring from."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟaviṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟaviṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṟaviṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṟaviṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vārttayuṭe uṟaviṭaṁ āruṁ paṟaññilla. — Nobody said what the source of the news was.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vārttayuṭe uṟaviṭaṁ āruṁ paṟaññilla.* — Nobody said what the source of the news was.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an understanding, then the Malayalam for a theory, then say uṟaviṭaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an understanding, then the Malayalam for a theory, then say *uṟaviṭaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉറവിടം (uṟaviṭaṁ) mean? (\"A source\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C414-satamanam",
+      "sequence": 20500,
+      "title": "ശതമാനം (śatamānaṁ) — per cent; a percentage",
+      "headword": "ശതമാനം",
+      "romanization": "śatamānaṁ",
+      "gloss": "per cent; a percentage",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e4f5e45dc441761",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a theory, then the Malayalam for a source."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശതമാനം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശതമാനം — śatamānaṁ — \"per cent; a percentage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "എഴുപത് ശതമാനം കുട്ടികളും പരീക്ഷ ജയിച്ചു. eḻupatŭ śatamānaṁ kuṭṭikaḷuṁ parīkṣa jayiccu. Seventy per cent of the children passed the exam."
+            },
+            {
+              "kind": "speech",
+              "text": "The number comes first: പത്ത് ശതമാനം (śatamānaṁ), ten per cent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശതമാനം (śatamānaṁ) is built from Sanskrit śata, \"a hundred\" (CDIAL 12278), and māna, \"a measure\" (CDIAL 10041): a measure out of a hundred."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatamānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatamānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatamānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatamānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eḻupatŭ śatamānaṁ kuṭṭikaḷuṁ parīkṣa jayiccu. — Seventy per cent of the children passed the exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eḻupatŭ śatamānaṁ kuṭṭikaḷuṁ parīkṣa jayiccu.* — Seventy per cent of the children passed the exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a theory, then the Malayalam for a source, then say śatamānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a theory, then the Malayalam for a source, then say *śatamānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശതമാനം (śatamānaṁ) mean? (\"Per cent; a percentage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:8803030ce90602b0",
+  "lessonIds": [
+    "AR-C364-hallala",
+    "AR-C364-unsur",
+    "AR-C364-miyar",
+    "AR-C364-haddada",
+    "AR-C364-mayyaza"
+  ],
+  "tex": "arabic/book/chapters/ch364-analysing-things.tex"
+}

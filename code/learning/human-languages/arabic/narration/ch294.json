@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 294,
+  "title": "Suddenly, it happened",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:08a0b5f365694811",
+  "lessons": [
+    {
+      "id": "AR-C294-fajatan",
+      "sequence": 17050,
+      "title": "فجأة (fajʾatan) — suddenly, all of a sudden",
+      "headword": "فجأة",
+      "romanization": "fajʾatan",
+      "gloss": "suddenly, all of a sudden",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d613b13d3b0beba1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to announce, then the Arabic for to declare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فجأة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فجأة — fajʾatan — \"suddenly, all of a sudden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انقطعت الكهرباء فجأة. inqaṭaʿat al-kahrabāʾ fajʾatan. Suddenly the electricity went off."
+            },
+            {
+              "kind": "speech",
+              "text": "An adverb with -an, like غالبا. It often opens a sentence: فجأة (fajʾatan) سمعنا صوتا."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فجأة (fajʾatan) is built on the native Arabic root f-j-ʾ (Lane), \"to come upon someone unawares\". The noun fajʾa, \"a sudden coming\", takes the adverb ending -an."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fajʾatan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fajʾatan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fajʾatan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fajʾatan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inqaṭaʿat al-kahrabāʾ fajʾatan. — Suddenly the electricity went off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inqaṭaʿat al-kahrabāʾ fajʾatan.* — Suddenly the electricity went off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to announce, then the Arabic for to declare, then say fajʾatan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to announce, then the Arabic for to declare, then say *fajʾatan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فجأة (fajʾatan) mean? (\"Suddenly, all of a sudden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C294-waqaa",
+      "sequence": 17060,
+      "title": "وقع (waqaʿa) — to take place; to fall",
+      "headword": "وقع",
+      "romanization": "waqaʿa",
+      "gloss": "to take place; to fall",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:688ce74de90a2f4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to declare, then the Arabic for suddenly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وقع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وقع — waqaʿa — \"to take place; to fall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وقع الحادث قرب المدرسة. waqaʿa al-ḥādith qurba al-madrasa. The accident happened near the school."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقع, yaqaʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "Of events: وقع (waqaʿa) حادث, an accident happened. Of places, يقع means it lies or is located."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وقع (waqaʿa) is built on the native Arabic root w-q-ʿ (Lane), \"to fall, to drop down\". A thing that falls upon people is a thing that happens, and wāqiʿ is \"what has fallen out\": reality."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "waqaʿa al-ḥādith qurba al-madrasa. — The accident happened near the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *waqaʿa al-ḥādith qurba al-madrasa.* — The accident happened near the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to declare, then the Arabic for suddenly, then say waqaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to declare, then the Arabic for suddenly, then say *waqaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وقع (waqaʿa) mean? (\"To take place; to fall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C294-infajara",
+      "sequence": 17070,
+      "title": "انفجر (infajara) — to explode, to burst",
+      "headword": "انفجر",
+      "romanization": "infajara",
+      "gloss": "to explode, to burst",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ff4a928c9d1788f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for suddenly, then the Arabic for to take place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انفجر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انفجر — infajara — \"to explode, to burst\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انفجر البالون فوق رأس الطفل. infajara al-bālūn fawqa raʾs aṭ-ṭifl. The balloon burst above the child’s head."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينفجر, yanfajir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انفجر (infajara) is built on the native Arabic root f-j-r (Lane), \"to cleave, to make water gush out\", the root of fajr, \"dawn\". It is Form VII, \"to burst open\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "infajara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *infajara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "infajara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *infajara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "infajara al-bālūn fawqa raʾs aṭ-ṭifl. — The balloon burst above the child’s head.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *infajara al-bālūn fawqa raʾs aṭ-ṭifl.* — The balloon burst above the child’s head.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for suddenly, then the Arabic for to take place, then say infajara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for suddenly, then the Arabic for to take place, then say *infajara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انفجر (infajara) mean? (\"To explode, to burst\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C294-fi-al-bidaya",
+      "sequence": 17080,
+      "title": "في البداية (fī al-bidāya) — at first, in the beginning",
+      "headword": "في البداية",
+      "romanization": "fī al-bidāya",
+      "gloss": "at first, in the beginning",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:957473ca46ca9a23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to take place, then the Arabic for to explode."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: في البداية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "في البداية — fī al-bidāya — \"at first, in the beginning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "في البداية كان الطريق سهلا. fī al-bidāya kāna aṭ-ṭarīq sahlan. At first the road was easy."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens a story; ثم and بعد ذلك carry it on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "في البداية (fī al-bidāya) is the preposition fī, \"in\", with bidāya, \"a beginning\", which is built on the native Arabic root b-d-ʾ, \"to begin\" (Lane), the root of badaʾa."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fī al-bidāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fī al-bidāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fī al-bidāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fī al-bidāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fī al-bidāya kāna aṭ-ṭarīq sahlan. — At first the road was easy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fī al-bidāya kāna aṭ-ṭarīq sahlan.* — At first the road was easy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to take place, then the Arabic for to explode, then say fī al-bidāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to take place, then the Arabic for to explode, then say *fī al-bidāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does في البداية (fī al-bidāya) mean? (\"At first, in the beginning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C294-fi-tilka-al-lahza",
+      "sequence": 17090,
+      "title": "في تلك اللحظة (fī tilka al-laḥẓa) — at that moment",
+      "headword": "في تلك اللحظة",
+      "romanization": "fī tilka al-laḥẓa",
+      "gloss": "at that moment",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b18e5057b67e3ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to explode, then the Arabic for at first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: في تلك اللحظة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "في تلك اللحظة — fī tilka al-laḥẓa — \"at that moment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "في تلك اللحظة دخل الأستاذ الصف. fī tilka al-laḥẓa dakhala al-ustādh aṣ-ṣaff. At that moment the teacher came into the classroom."
+            },
+            {
+              "kind": "speech",
+              "text": "A story moves on with it: something happens, and in that moment something else begins."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "في تلك اللحظة (fī tilka al-laḥẓa) is \"in that moment\": tilka is \"that\" for a feminine noun, and laḥẓa is built on the native Arabic root l-ḥ-ẓ, \"to glance\" (Lane). A moment is as long as a glance."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fī tilka al-laḥẓa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fī tilka al-laḥẓa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fī tilka al-laḥẓa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fī tilka al-laḥẓa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fī tilka al-laḥẓa dakhala al-ustādh aṣ-ṣaff. — At that moment the teacher came into the classroom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fī tilka al-laḥẓa dakhala al-ustādh aṣ-ṣaff.* — At that moment the teacher came into the classroom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to explode, then the Arabic for at first, then say fī tilka al-laḥẓa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to explode, then the Arabic for at first, then say *fī tilka al-laḥẓa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does في تلك اللحظة (fī tilka al-laḥẓa) mean? (\"At that moment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

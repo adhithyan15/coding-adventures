@@ -307,10 +307,20 @@ branches, for example Ruby 1.8.7-p374 (2013-06) released after 2.0.0-p0
 (2013-02), make semver order wrong for scheduling and lineage. Syntax lineage
 follows `predecessor`, a tree. Inventory order schedules work: earliest first.
 
+A reduced-precision date sorts as the start of its period, but it is not
+forced there. A row may sit anywhere its period allows. The order check passes
+when some day inside each row's period makes the column non-decreasing. This
+keeps perlhist's `5.000alpha4 1993-???-??` between alpha3 (1993-10-10) and
+alpha6 (1994-03-18), where upstream lists it. *(Amended in 2b. The 2a check
+put every reduced date at the start of its period, which would have moved
+alpha4 ahead of alpha1.)*
+
 Migration of the Perl inventory: the existing columns are kept. `perlhist_line`
 becomes a language-specific extra column. The schema PR adds the required
 columns and fills them mechanically: `partial` rows become `grammar_stage=P`
 with `grammar_subset=pl-decimal-print`, and `pending` rows become `none`.
+The rules used for the other columns (ISO dates, row order, channel, source,
+and lineage) are in `code/grammars/perl/README.md`.
 
 `code/scripts/release_inventory.py check` (new) validates the following:
 
@@ -335,10 +345,63 @@ the stems it lists and fails if a listed stem has no files.
 covers the header, uniqueness and charset, date format and order, the
 predecessor rule (an earlier row; empty only on the first row), the allowed
 status values, the monotonic claims, pair files in both directions, declared
-subsets, and named profiles. `--matrix` is not implemented yet. Perl's
+subsets, and named profiles. ~~`--matrix` is not implemented yet. Perl's
 inventory keeps the LANG82 header and is reported as skipped until the
-phase 2b migration. Only directories listed in the script's `LEGACY_SCHEMA`
-may be skipped.
+phase 2b migration.~~ *(Superseded by 2b, below.)*
+
+**Status (2b).** Every inventory, Perl's included, now has the common header,
+and the legacy-schema skip (`LEGACY_SCHEMA`) is gone. CI runs
+`release_inventory.py check --matrix`. grammar-tools' Perl release family
+reads `grammar_stage` from its column like Ruby's, so the 4a stopgap that
+derived it from `grammar_status` (`StageSource::DerivedFromStatus`) is
+removed; every release family requires the column.
+
+- **Perl migration.** All 776 rows keep their IDs and `grammar_status`.
+  `perlhist_line` stays as an extra column, and `lineage` is added
+  (`first`/`line`/`branch-point`, as for Ruby and Python). The migration
+  converted dates to ISO and reordered 164 rows into date order. It derived
+  `channel` from the ID. It cited the upstream tag (493 rows) or the pinned
+  `perlhist.pod` line, at commit `d97e2dc0ca5f…`, as `source_ref`. It derived
+  `predecessor` from per-ID lines rather than git ancestry. 2c is expected to
+  confirm that lineage. `iir_status`, `backend_status` and `profile` stay `-`:
+  stage I for `pl-int-print` needs the corpus and the `release_subsets` test
+  from 4c. The reordering changes only the order of the generated
+  `INVENTORY`/`SUPPORTED_RELEASES`. It moves no release to another
+  table, changes no `g_` module, and does not change the first release of any
+  class. The grammar-tools reader now refuses a row whose field count differs
+  from the header's. The perl-parser tests read the CSV by header name, and
+  none of them matches `,partial` row endings any more.
+- **`subsets.csv`** for `perl/` (`pl-decimal-print`, LANG82; `pl-int-print`,
+  LANG81), `ruby/` (`rb-int-puts`, LANG80), `python/` (`py-float-print`,
+  LANG79) and `ecmascript/` (`es-number-log`, LANG78). The checker reads the
+  four columns by name. It requires a subset name matching
+  `[a-z0-9]+(-[a-z0-9]+)*`, other than `full`, and a non-empty description.
+  `corpus_dir` must be exactly `corpus/<subset>`, so a cell cannot point
+  outside the grammar directory. `spec` must name a file in `code/specs/`, and
+  `subsets.csv` must not exist without a `releases.csv`. A subset claimed at
+  I or B needs at least one positive corpus case. Every case has exactly one
+  source file and exactly one of `.expect` or `.reject`. Every `.expect` has a
+  `.cite`, and an `.expect@<profile>` override has a plain `.expect`.
+- **`--matrix`** (contract for 4c). For each release R claiming B(S), each
+  positive case C of S needs one of three things. `release_classes.csv` can
+  mark (C, R) `rejected`, meaning R does not accept C: R's grammar does not
+  parse it, or a `.reject@<profile>` override puts it outside R's profile
+  (the second reading added in 4c). A
+  `lang_matrix` row can run C on R. Or `release_classes.csv` can put (C, R) in
+  an IIR-identity class whose representative (its first release in inventory
+  order) has such a row. `release_classes.csv` (`subset,case,release,class`,
+  where `class` is 12–64 hex digits of the IIR hash, or `rejected`) is
+  written by 4c's `release_sweep.rs`. A `lang_matrix` row counts when it names
+  `release: Some("<id>")` and `case: Some("<subset>/<name>")`. The `case`
+  field is new: it ties a row to a corpus case without comparing program
+  text. The checker reads `Prog { .. }` literals with string and character
+  literals masked, so program text cannot be mistaken for a field. It fails
+  on a row naming an unknown release or case, and on a malformed or
+  duplicate class entry. Matrix rows that name no release are counted in a
+  note rather than failed until 4c adds the field to the 11 Perl rows.
+  *(Since 4c such a row fails the check.)* Each
+  inventory prints a coverage line (`N backend claim(s); case coverage …`),
+  so a pass with zero claims is visible rather than silent.
 
 ### Materialized pair per release
 
@@ -436,7 +499,10 @@ The corpus lives under `code/grammars/<dir>/corpus/<subset>/`. Each case is
 `<name>.cite`. A case may carry `<name>.expect@<profile>` overrides. A case
 applies to a release when the release lists the subset and its grammar parses
 the case. Negative probes live in `<name>.reject`, with the expected error
-category.
+category. A positive case may also carry `<name>.reject@<profile>`: under that
+profile the case is outside the subset and must be refused with the named
+category, because the release's own semantics for it are not established
+(Perl's negative zero, below). *(Added in 4c.)*
 
 Every `.expect` file MUST have an oracle record in its `.cite`. One of:
 
@@ -477,10 +543,22 @@ hand-picked:
 
 `lang_matrix`'s `Prog` gains `release: Option<&'static str>`. It is required
 (`Some`) for every language with an inventory, and `None` only for in-repo
-languages without one. A new `release_sweep.rs` test performs steps 1–2 and
+languages without one. It also gains `case: Option<&'static str>`
+(`"<subset>/<name>"`), which names the corpus case the row runs. *(Added in
+2b for `--matrix`.)* A new `release_sweep.rs` test performs steps 1–2 and
 generates the boundary set. `release_inventory.py check --matrix` fails if a
 release claims B(S) while a case of S has neither a matrix row on its
 boundary release nor membership in a class whose representative has one.
+Since phase 4c every row of a language with an inventory must name its
+release (and the corpus case it runs); a row that names none is an error.
+Perl's rows name the three IIR-identity class representatives. Ruby's and
+Python's rows name their default releases (3.3.6, 3.13.16) and, since phases
+5b and 7b slice 2, each class representative from their own
+`release_sweep.rs`.
+Corpus overrides `<name>.expect@<x>` and `<name>.reject@<x>` both need the
+plain `.expect`; `<x>` is a profile some `profiles.rs` defines (Perl's
+`zero_and_negation.reject@perl_nv`) or a row of the language's `releases.csv`
+(Python's `int_underscores.reject@3.0a1`).
 
 ## grammar-tools capability extensions
 
@@ -911,7 +989,7 @@ noted.
 | Maxima | re-exports Macsyma | — | CST | none of its own | No grammar of its own | Own `maxima<release>` pairs from Maxima tags before any `Language::Maxima`. Until then `--lang maxima` is an error, not a silent Macsyma alias |
 | Maple, Reduce | GL | GP | CST | unversioned | Compliant, not in lang-aot | Inventory; `Language` variants |
 | Nib, Oct | GL | GP | CST | unversioned | Compliant (in-repo languages) | Single-row inventory (see open questions) |
-| Python | GL (indentation mode) | GP | CST | 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned; no CSV | Compliant; selection hard-coded to `"3.12"` | Phase 7 |
+| Python | GL (indentation mode) | GP | CST | 5 release pairs (3.0a1, 3.11.17, 3.12.3, 3.13.16, 3.16.0a1) + legacy minor lines 2.7, 3.0, 3.6, 3.8, 3.10, 3.12 + unversioned | **Compliant; release selection real since phase 7a** for `py-int-print` (`compile_source_at`, I for all five, `Language::Python` on all nine backends; `--lang python@<release>` since 7b slice 1; release sweep and B for all five in 7b slice 2). LANG79's float pilot still uses the legacy `"3.12"` minor line | 7c |
 | Perl | GL | GP | CST | 118 partial versioned pairs, compiled into 5 distinct token and 2 distinct parser tables; `releases.csv` 776 rows | Compliant; `compile_source_at` selects any checked release; `DEFAULT_RELEASE` is the inventory release `5.38.0` and the unversioned pair is off the IIR path (4b); `IIRModule.release` recorded; `Language::Perl` on all nine backends with `--lang perl@<release>` (4a, 4b) | Phase 4c |
 | COBOL-60 | GL + `strip_cobol_columns` | GP | CST | unversioned | Compliant (C3 hook) | Inventory (60, 61, 61-ext, 65, 68, 74, 85, 2002, 2014, 2023); `Cobol60` → `Cobol` |
 | Dartmouth BASIC | GL + 2 hooks (`lib.rs`: 391 non-test lines incl. docs) | GP | CST | unversioned | Compliant (C3 hooks) | Inventory (editions 1–7) |
@@ -920,7 +998,7 @@ noted.
 | McCarthy Lisp | GL | GP | CST | unversioned | Compliant since `mccarthy-lisp-iir-compiler` 0.9.0 (was C2 typed lift via `extract_program` → `Vec<LispExpr>`) | Phase 8 CST rewrite done; inventory (LISP 1, 1.5) |
 | Twig | GL | GP | CST | unversioned | Compliant since `twig-ir-compiler` 0.46.0 (was C2 typed lift via `ast_extract.rs` + `ast_nodes.rs` → `twig_parser::Program`). The TW05-B gate's checker still lifts internally; see open question 2 | Phase 8 CST rewrite done; single-row inventory (see open question 5) |
 | JavaScript | GL with runtime `REGEX`/`BAD_REGEX` deletion | GP over `es*.grammar` + `asi.rs` (≈338) | CST (`parse_javascript_cst_division_only`) | 14 pairs (es1, es3, es5, es2015–es2025) + unversioned; no CSV; hard-coded `Es2020` | **Partial:** the IIR compiler walks the CST since `javascript-iir-compiler` 0.3.0 (decision 6 met; was a C2 typed lift via `bridge.rs` (≈4,214) → `javascript_ast::Program`). Still non-compliant under C2: the runtime `REGEX` deletion in the lexer and `asi.rs`, which is longer than a small hook, remain until 6a/6b replace them | Phase 6c CST rewrite done; 6a, 6b, 6d, 6e remain |
-| Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends. The hand-written lexer remains only for non-IIR consumers | 5b; R1–R7 (phase 3) |
+| Ruby | IIR path: GL over `ruby<release>.tokens` (R0 pairs). Legacy non-IIR callers: hand-written `ruby-lexer` (≈2,200 lines) driving `ruby-1.8.lexer.states.toml` (1,917 lines) | GP over `ruby<release>.grammar` (IIR path) or `ruby.grammar` (legacy) | CST | 5 R0 pairs (0.49, 0.50, 3.3.5–3.3.7) + unversioned | **Compliant on the IIR path since phase 5a**: `ruby-iir-compiler` walks the release CST; I(rb-int-puts) for 3.3.5–3.3.7, `Language::Ruby` on all nine backends, `--lang ruby@<release>` since 5b slice 1; release sweep and B for 3.3.5 and 3.3.7 in 5b slice 2. The hand-written lexer remains only for non-IIR consumers | R1–R7 (phase 3) |
 
 ### Ruby: port the lexer to `ruby<release>.tokens`
 
@@ -1058,18 +1136,115 @@ Decisions and deviations in this slice:
 - **Not in 5a:** `IIRModule.release`, `compile_source_to_iir_at`, `--lang
   ruby@<release>` and the lang-aot `UnknownRelease`/`ReleaseNotAvailable`
   variants. They are the lang-aot release API that Perl's phase 4b also
-  needs; building it twice would conflict. Phase 4b has since landed that
-  API (with Perl as its only inventory language), so until 5b a
-  `ruby@<release>` request is refused as `UnknownRelease` and a Ruby module
-  leaves `IIRModule.release` as `None`.
+  needs; building it twice would conflict. Phase 4b landed that API with
+  Perl as its only inventory language, and phase 5b slice 1 (below) adds
+  Ruby to it.
 
-**Phase 5b (remaining).** Wire Ruby into the lang-aot release API above
-(`has_release_inventory`, the `compile_source_to_iir_at` arm, and
-`IIRModule.release` from `ruby-iir-compiler`); matrix
-rows with `Prog.release` on the boundary releases 3.3.5 and 3.3.7 (or the
-release sweep of [CI bounding](#ci-bounding)), after which those rows may
-claim `backend_status`; the release-identity class check in a
-`release_sweep.rs`.
+**Phase 5b, slice 1 (release selection).** Ruby joins the lang-aot
+release API above (Python's phase 7b slice 1 is the same change for
+Python):
+
+- `ruby-iir-compiler` records the resolved ID in `IIRModule.release`, from
+  `compile_source_at` and `compile_cst` alike, so a module says which
+  release's grammar produced it.
+- `Language::has_release_inventory` lists Ruby, so `--lang ruby@3.3.7` and
+  `compile_source_to_iir_at(Ruby, Some("3.3.7"), …)` compile against exactly
+  that release, and `--lang ruby` against `DEFAULT_RELEASE` (`3.3.6`).
+- The frontend's typed errors map one for one: an ID that is not a row is
+  `UnknownRelease` with its up-to-five suggestions; a row that cannot compile
+  the subset is `ReleaseNotAvailable`, whether it has no grammar pair
+  (`3.3.4`, `grammar_stage none`) or a pair but no IIR profile (`0.49`,
+  `0.50`: their `rb-int-puts` programs do not run as Ruby 3.3's do).
+  `ReleaseNotAvailable` carries a self-describing reason (`no grammar pair:
+  …` or `no IIR profile: …`), and lang-aot prints it as `release X cannot
+  compile yet (reason)` for every language, because "has no grammar pair"
+  is wrong for a Ruby row that has one.
+
+Nothing falls back: `ruby@3.3` is `UnknownRelease`, not 3.3.6.
+
+**Phase 5b, slice 2 (release sweep).** Ruby gets Perl phase 4c's
+[CI bounding](#ci-bounding) machinery for `rb-int-puts`, and with it B for
+every release that claims I:
+
+- **Sweep.** `ruby-iir-compiler/tests/release_sweep.rs` compiles every
+  positive case under every release whose `iir_status` claims the subset
+  (3.3.5, 3.3.6, 3.3.7, in `releases.csv` order). It digests each module's
+  `interpreter_ir::serialise` bytes with SHA-256 and names each release's
+  class by the first 16 hex digits of the digest of its whole outcome
+  vector, as Perl's sweep does. It then compares the result with the
+  committed `code/grammars/ruby/release_classes.csv`
+  (`subset,case,release,class`). `RUBY_RELEASE_SWEEP_WRITE=1` rewrites the
+  file; the run that writes fails on purpose and refuses `CI` and
+  `GITHUB_ACTIONS`. Only claiming releases are swept: 0.49 and 0.50 have
+  pairs but no profile, so they refuse every case. Ruby's corpus has no
+  per-release override, so a claiming release that refuses a positive case
+  fails the sweep. That is never a `rejected` cell. The test pins the
+  representatives, so a new class is a reviewed change.
+  `release_subsets.rs` keeps its Debug-based identity check, and both tests
+  read the corpus through a shared `tests/common/mod.rs`.
+- **Matrix.** The fourteen default-release rows (3.3.6) stay. The matrix
+  also runs every case on each class representative, which is the class's
+  first release in inventory order. If the three releases form one class,
+  that is 3.3.5, not the default. The new rows include the corpus source
+  with `include_str!`, as Perl's do. A new named test,
+  `ruby_rows_run_their_corpus_case`, mirrors
+  `perl_rows_run_their_corpus_case`. Each row names a release and a case,
+  and runs exactly that case's source and `.expect`. The rows must equal the
+  boundary set read from `release_classes.csv` exactly. The LANG83 check runs
+  each row's module compiled at the row's release.
+- **CSV.** `backend_status` gains `rb-int-puts` for 3.3.5 and 3.3.7 once
+  `release_inventory.py check --matrix` shows that every case is covered,
+  either directly or through the class representative.
+
+**Phases 5b and 7b slice 2 result (2026-10-22).** Every release that claims
+I(`rb-int-puts`) or I(`py-int-print`) now claims B. `check --matrix` and a
+named test prove each claim.
+
+- **Ruby sweep.** One class, `728c8484ef39b2e5`, holds 3.3.5, 3.3.6 and
+  3.3.7. Its representative is 3.3.5. `release_classes.csv` has 42 rows
+  (14 positive cases × 3 releases) and no `rejected` cell.
+- **Python sweep.** Two classes, which differ only in the cases they
+  accept. Every release that accepts a case lowers it to the same IIR
+  digest. `release_classes.csv` has 90 rows (18 × 5), and one is `rejected`.
+
+  | Representative | Members | Not accepted |
+  | --- | --- | --- |
+  | `3.0a1` | 1 (`e6a72b170747738e`) | `int_underscores` |
+  | `3.12.3` | 4: 3.12.3, 3.13.16, 3.11.17, 3.16.0a1 (`5afb074f1e9583ba`) | — |
+- **Matrix.** There are 14 new Ruby rows on 3.3.5, so Ruby has 28 rows and
+  224 cells. There are 35 new Python rows, 17 on 3.0a1 and 18 on 3.12.3,
+  so Python has 53 rows and 424 cells. All rows use all eight columns.
+  `check --matrix` reports 3 Ruby claims: 28 cells direct and 14 by IIR
+  class. It reports 5 Python claims: 53 direct, 36 by IIR class and 1 not
+  applicable. Dropping one representative row fails the check for every
+  release in that class. The authoring host had no `dotnet` or `erl`, so
+  CLR and BEAM ran only in CI. Locally, Ruby ran 168 cells and Python 318,
+  and the host ruby 3.3.6 and CPython 3.13.16 oracles agree with every row.
+
+Divergences from this spec in 5b/7b slice 2:
+
+- **The default keeps its own rows.** The default release is in the
+  representative's class in both languages, but it is not the
+  representative. CI bounding step 3 lists the default as a boundary
+  release, so its rows stay: 14 Ruby rows on 3.3.6 and 18 Python rows on
+  3.13.16. Identical IIR makes those cells redundant with the
+  representative's. Perl avoids this only because its default, 5.38.0,
+  is a representative.
+- **Only claiming releases are swept.** Perl sweeps every checked release,
+  because every checked release claims I. The Ruby and Python sweeps take
+  the releases whose `iir_status` claims the subset. Ruby's 0.49 and 0.50
+  have pairs but no profile, so they have no IIR to class.
+- **No newest-release rows.** 3.3.7 and 3.16.0a1 get no rows of their own.
+  Their class representative's rows stand for them, as 5.45.3's do in Perl.
+- **One oracle for every row.** The host ruby and CPython oracles check
+  each row's expectation regardless of the row's release. The
+  representatives' rows carry the default rows' expectations, so the 3.0a1
+  and 3.12.3 rows are re-checked on CPython 3.13. Per-release host oracles
+  stay in `python-iir-compiler`'s `release_subsets.rs`, for 3.11.17,
+  3.12.3 and 3.13.16.
+- **CI triggering** is the same as in 4c. A change confined to
+  `code/grammars/ruby/` or `code/grammars/python/` runs `check --matrix`,
+  but not the frontends' `release_sweep`.
 
 ### JavaScript: rewrite to walk the CST
 
@@ -1194,7 +1369,8 @@ execute in CI; the authoring host had no `dotnet` or `erl`.
   reachable as release `""`. Perl's pre-schema inventory has no
   `grammar_stage` column until phase 2b, so its family declares
   `StageSource::DerivedFromStatus`: the stage is derived by the migration
-  rule above (`pending` → `none`, otherwise `P`). Every family's reader
+  rule above (`pending` → `none`, otherwise `P`); 2b removed that stopgap
+  once the column existed. Every family's reader
   refuses quoted rows, field-count mismatches, unsafe or duplicate IDs, and
   unknown statuses or stages.
 - `perl_iir_compiler::compile_source_at(source, release, module_name,
@@ -1301,8 +1477,9 @@ selectable and recorded end to end.
 
 Divergences from this spec in 4b:
 
-- **C4.4.** CI cannot assert a non-empty `iir_status` for the default yet:
-  Perl's `releases.csv` keeps the LANG82 header until the 2b migration. The
+- **C4.4.** CI cannot assert a non-empty `iir_status` for the default yet.
+  Perl's `releases.csv` kept the LANG82 header until the 2b migration, and
+  since 2b its `iir_status` is `-` until 4c proves stage I. The
   tests assert instead that `DEFAULT_RELEASE_ID` is a checked
   (non-pending) row with compiled tables and resolves to itself.
 - **C8.** "Every release whose `iir_status` is non-empty" is read as every
@@ -1331,11 +1508,357 @@ Divergences from this spec in 4b:
   have unbounded `INT` rules, and their evidence is pod files, not
   `toke.c`. Correcting them is a separate LANG82 follow-up.
 
-Remaining phase 4 slice:
+**Phase 4c (release sweep).** B(`pl-int-print`) for the checked releases,
+bounded per [CI bounding](#ci-bounding):
 
-- **4c.** Release sweep: B(pl-int-print) for every checked release on the
-  backends, bounded per [CI bounding](#ci-bounding), with the corpus under
-  `code/grammars/perl/corpus/` once 2b's `subsets.csv` exists.
+- **Corpus.** `code/grammars/perl/corpus/pl-int-print/` holds the eleven
+  `lang_matrix` programs as positive cases, a CRLF layout case, and negative
+  cases whose category is the same under every checked release. Every case
+  has a `.cite`. `.expect` holds the exact stdout plus one final LF that is
+  not part of it (Perl's `print` subset never writes a newline).
+- **Profiles.** `perl-iir-compiler/src/profiles.rs` defines the
+  `ReleaseProfile`s the `profile` column names, mapped from exact IDs only.
+  The one semantic switch the subset needs is the sign of a computed zero.
+  Before PERL_PRESERVE_IVUV, Perl evaluates `+`, `-`, `*` and unary minus on
+  C doubles, so `-0` and `0 * -3` are IEEE negative zeros, and whether
+  `print` shows `0` or `-0` depends on the release's constant folding and on
+  the platform's `printf`/`Gconvert` (pinned sources in `profiles.rs`). Under
+  that profile the compiler tracks each value's zero sign and refuses to
+  print a negative zero (`Unsupported`), so a program whose output the
+  release does not pin down never compiles. Cases that print one carry
+  `.reject@<profile>`.
+- **Sweep.** `perl-iir-compiler/tests/release_sweep.rs` compiles every case
+  under every checked release, groups the releases into IIR-identity classes
+  (releases whose outcome, IIR digest or rejection, is the same for every
+  case; the `release` field is not serialised), and compares the result with
+  the committed `code/grammars/perl/release_classes.csv`
+  (`PERL_RELEASE_SWEEP_WRITE=1` rewrites it). A class's `class` cell is the
+  first 16 hex digits of the SHA-256 of its whole outcome vector; a case the
+  release does not accept is `rejected`. `tests/release_subsets.rs` proves
+  stage I for every release whose `iir_status` claims the subset.
+- **Matrix.** `lang_matrix`'s `Prog` gains `release` and `case`. The eleven
+  Perl rows name `5.38.0` and their case; new rows run every case each class
+  representative accepts, on all eight executable columns.
+- **CSV.** `iir_status`, `backend_status` and `profile` are filled for every
+  release the sweep, the stage-I test and `check --matrix` prove.
+
+**Phase 4c result (2026-10-20).** All 118 checked Perl releases claim
+`pl-int-print` at stages I and B in `releases.csv`, and every claim is
+proven by a named test or by `check --matrix`.
+
+- **Corpus.** 12 positive and 7 negative cases. The positive cases are the
+  eleven 4a matrix programs plus `crlf_layout` (byte-exact in git through a
+  `-text` attribute; under the repository's `eol=lf` it would otherwise be
+  normalized on commit). The negative cases are refused with the same
+  category under every release: `Parse` for a decrement, an octal literal,
+  `print 1;` and a missing `;`, and `Unsupported` for three out-of-range
+  values. Every `.cite` names host `perl` v5.38.2, and the stage-I test
+  checks every `.expect` and every negative case's recorded Perl behaviour
+  against it.
+- **Profiles.** `perl_nv` (114 releases: 1.000 to 5.004_05, 1.0.15, 1.0_16)
+  and `perl_iv` (5.38.0, 5.38.2, 5.44.0, 5.45.3), with the pinned sources
+  (tag, commit, file and line, read 2026-10-20) in `profiles.rs`. Fact 1:
+  every non-zero value and every positive zero prints as its exact decimal
+  integer in every checked release (doubles hold these integers exactly,
+  and `%.20g`, `Gconvert(.., DBL_DIG, ..)` and `%ld` print them exactly).
+  Fact 2: the negative zero is where releases differ, so `perl_nv` refuses
+  to print one. `zero_and_negation.reject@perl_nv` records that refusal.
+- **Sweep.** Three classes, which differ only in the cases they accept.
+  Every release that accepts a case lowers it to the same IIR digest.
+
+  | Representative | Members | Not accepted |
+  | --- | --- | --- |
+  | `1.000` | 41 (`perl_nv`, CR is whitespace) | `zero_and_negation` |
+  | `5.003_26` | 73 (`perl_nv`, CR is a lex error through 5.004_71) | `zero_and_negation`, `crlf_layout` |
+  | `5.38.0` | 4 (`perl_iv`) | — |
+- **Matrix.** 33 Perl rows (12 cases on 5.38.0, 11 on 1.000, 10 on
+  5.003_26), 264 cells. `check --matrix` reports 118 claims: 33 cells
+  direct, 1,196 by IIR class and 187 not applicable. Every runner compiles
+  with the row's release, and the full non-ALGOL aggregate passes with the
+  change. CLR and BEAM ran only in CI; the authoring host had no `dotnet`
+  or `erl`.
+- **The INT follow-up from 4b is fixed.** `perl5.38.2` is a mechanical copy
+  of `perl5.38.0` (identical syntax blobs). `perl5.44.0` and `perl5.45.3`
+  bound `INT` at 1018 digits, because `tokenbuf` grew to
+  `256 * MAX_UNICODE_UTF8_BYTES` bytes after 5.38. See LANG82.
+- **C4.4 and C8 now hold as written.** The default `5.38.0` claims
+  `iir_status` (`the_default_release_claims_pl_int_print`). "Every release
+  whose `iir_status` is non-empty" is now the same set as every checked
+  release, which is what `cst_contract` walks.
+- **Security review.** A sibling session reviewed the change: verdict PASS,
+  no finding above low, all fixed. `release_inventory.py` now takes profile
+  names only from `name: "<id>"` fields of a `profiles.rs` (matching any
+  word let `pub` or a comment word pass as a profile), refuses two overrides
+  for one profile, a corpus file over 64 KiB and a CR not followed by LF.
+  The sweep's write switch fails the run that writes and refuses CI. The
+  Rust corpus readers repeat the checker's path and symlink rules. Every
+  claiming release must run a baseline case. The CRLF case and its
+  `.gitattributes` line are pinned. The host-`perl` oracle runs each corpus
+  file with a cleared environment, a scratch directory, no stdin and a
+  timeout.
+- **Merge fix.** The 4b hostile probes counted a one-instruction `ret_void`
+  epilogue. Since 4a's `main` returns `i64` 0 (`const 0; ret`), the epilogue
+  is two instructions.
+
+Divergences from this spec in 4c:
+
+- **Classes are per release, over the whole corpus.** "CI bounding" groups
+  releases by "the hash of the produced IIR". 4c takes that hash over a
+  release's outcome for every case, an IIR digest or `rejected`, so a class
+  is the set of releases that are identical for every case. `class` holds
+  that 16-hex digest for each case the release accepts. The checker's
+  per-case representative is therefore the class's first release.
+- **Boundary releases.** The default release is a representative, so it
+  runs on every column. The newest release (5.45.3) does not get rows of
+  its own. It is in the default's class, and the class's identical IIR
+  stands for it. There is no nightly tier: all three representatives run on
+  every PR, at 33 rows.
+- **`perl_nv` is conservative for 5.001 to 5.004_05.** In those releases a
+  folded integral `double` constant becomes an IV, so `print(-0)` most
+  likely prints `0`. The profile still refuses every negative zero rather
+  than depend on which side of the folding changes each untagged
+  development release falls (5.000 has no fold to IV, and 5.005 stops
+  folding `OP_NEGATE` results).
+- **No `Lex` category among the negative cases.** I(S) names `Unsupported`
+  or `Parse`. The 250/251-digit boundary is not a corpus case because its
+  category depends on the release: `Parse` where `INT` is bounded,
+  `Unsupported` in the unbounded early pairs. It stays in the unit tests
+  and the hostile probes.
+- **`cst_contract`'s shape assertions still use the frontend's own
+  corpus**, not `corpus/pl-int-print/`. The two hold the same programs.
+- **CI triggering.** A change confined to `code/grammars/perl/` (the corpus,
+  `releases.csv`, `release_classes.csv`) maps to no package. On such a
+  change the contracts job's `check --matrix` runs, but `release_sweep` and
+  `release_subsets` run only when a Perl crate changes. A path gate for
+  them is a follow-up.
+
+### Python phase 7a: `py-int-print` on every backend
+
+Phase 7a is the first Python slice on the release path. It is a new subset,
+`py-int-print`, beside LANG79's float pilot (`py-float-print`), which keeps its
+own API and its legacy minor-line grammar until LANG83's float formatting
+lands (7b/7c).
+
+**The subset.** A module of `print` statements over integer arithmetic:
+
+```python
+print(1 + 2 * 3)          # 7
+print(-7 // 2, )          # -4   (floor division; trailing comma allowed)
+print(-7 % 2); print()    # 1, then an empty line
+print(1_000 * (2 - 5))    # -3000 (`_` separators where the release lexes them)
+```
+
+- Statements: `print(<expr>)` with exactly one positional argument (an
+  optional trailing comma), or `print()`. Statements are separated by
+  NEWLINE or `;` (a trailing `;` is allowed). Blank lines, `#` comments, a
+  `\`-newline continuation, and newlines inside parentheses are trivia, as
+  CPython's tokenizer makes them.
+- Expressions: decimal integer literals, parentheses, unary `+` and `-`, and
+  binary `+ - * // %` at Python's precedence (`* // %` above `+ -`, unary
+  above both), all left-associative.
+- Everything else is a typed error: a lexer error for tokens the release's
+  partial `.tokens` does not lex (strings, floats, hex/octal/binary
+  literals), a parse error for shapes its `.grammar` does not admit, and
+  `Unsupported` for shapes it parses but the subset excludes (`/`, which gives
+  a float, a callee other than `print`, keyword or multiple arguments,
+  `print(...)` used as a value, and literals outside `i64`).
+
+**Semantics and lowering.** Every value is an `i64`; the compiler emits only
+LANG83 registry ops plus the ungated `const` and `ret`:
+
+| Python | IIR |
+| --- | --- |
+| literal | `const` (a literal outside `i64` is `Unsupported`) |
+| `a + b`, `a - b`, `a * b` | `i64_add_ovf`, `i64_sub_ovf`, `i64_mul_ovf` |
+| `-a` | `i64_neg_ovf` |
+| `+a` | no instruction (`int.__pos__` is the identity) |
+| `a // b`, `a % b` | `i64_div_floor`, `i64_mod_floor` |
+| `a // -1`, `a % -1` (divisor known to be `-1`) | `i64_neg_ovf a`, `const 0` |
+| `print(a)` | `call_builtin print_i64 a` |
+| `print()` | `call_builtin putchar 10` |
+| end of module | `const 0`, `ret` (`main` returns `i64`) |
+
+- Python integers are unbounded; this subset's are not. Where CPython would
+  produce an `int` outside `[-2^63, 2^63-1]`, the program stops with
+  `Trap.Overflow` after the output so far, never a wrapped value. This is a
+  stated divergence from CPython. Promoting to a bignum on that trap is
+  later work (LANG83 PR4: "bignum promotion is a frontend decision made by
+  catching it, once traps are catchable").
+- A zero divisor stops the program with `Trap.DivZero` after the output so
+  far, as CPython's `ZeroDivisionError` does.
+- The divisor `-1` is folded. `a // -1 == -a` and `a % -1 == 0` hold for
+  every integer, so the compiler emits those forms when it knows the divisor
+  is `-1`. That keeps `i64::MIN // -1` and `i64::MIN % -1`, the two operands
+  a machine divide faults on, away from every backend's divide: the first
+  becomes `i64_neg_ovf i64::MIN`, which traps `Trap.Overflow` (CPython's
+  answer, 2^63, is outside `i64`); the second becomes `0`, CPython's answer.
+- Python evaluates a call's argument before `print` writes, so a trap inside
+  the argument prints nothing for that statement.
+
+**Releases.** `py-int-print` needs `print` as a function and `//`, so it
+starts at Python 3; the first Python 3 tag is 3.0a1. Phase 7a writes a
+materialized `python<release>.tokens`/`.grammar` pair for:
+
+| Release | Why | Oracle |
+| --- | --- | --- |
+| 3.0a1 | earliest tag with a Python 3 grammar | pinned historical source: `Grammar/Grammar`, `Parser/tokenizer.c`, `Objects/longobject.c`, `Python/bltinmodule.c` at the tag |
+| 3.11.17 | host `python3.11` | host interpreter, plus pinned source |
+| 3.12.3 | host `python3.12` | host interpreter, plus pinned source |
+| 3.13.16 | host `python3` and `DEFAULT_RELEASE` | host interpreter, plus pinned source |
+| 3.16.0a1 | newest inventory row | pinned historical source |
+
+`3.0` and `2.7` cannot have release pairs yet: their file names would be
+`python3.0.*` and `python2.7.*`, which are the legacy minor-line pairs. Python
+2 needs a `print` statement shape and a profile, so it is a later slice.
+
+Every pair is `partial`, stage `P`, `grammar_subset` `py-int-print`. The token
+file of each lexes the subset's neighbourhood: the release's operators,
+keywords (`Lib/keyword.py` at the tag), names, and decimal integers. It does
+not lex strings, floats, imaginary numbers or non-decimal integers. The
+grammar files keep `python3.12.grammar`'s rule names for the rules the subset
+uses (`file`, `statement`, `simple_stmt`, `small_stmt`, `expression`, `arith`,
+`term`, `factor`, `primary`, `suffix`, `arguments`, `argument`, `atom`,
+`paren_expr`, `paren_body`), so C8 can check them. They omit precedence levels
+that the subset never reaches, so each parenthesis costs 8 rule levels
+instead of about 18, and later subsets add those levels by name. The one known
+lexical difference inside the subset is PEP 515's `_` digit separator (3.6):
+3.0a1 lexes `1_000` as an error, as CPython 3.0a1 rejects it.
+
+All five rows name profile `py3` and claim `iir_status` `py-int-print`.
+`backend_status` is claimed for 3.13.16, the release the matrix rows compile.
+
+**Crates.**
+
+- `grammar-tools` compiles `python` as a release family. The legacy
+  minor-line pairs are still embedded, behind a separate `legacy_versions`
+  module that the release selector cannot reach.
+- `python-lexer` exposes `releases::{token_grammar, grammar_class,
+  SUPPORTED_RELEASES}`. `python-parser` gains the release API:
+  `parse_python_at`, `tokenize_python_at`, `resolve_release`,
+  `FrontendBudgets`, `PythonFrontendError`, and `DEFAULT_RELEASE = "3.13.16"`.
+  The legacy `tokenize_python`/`parse_python(source, "3.12")` API is
+  unchanged.
+- `python-iir-compiler` gains `compile_source_at(source, release,
+  module_name, &FrontendBudgets)`, `compile_cst`, `profiles.rs`, and
+  `run_source_at`. These compile `py-int-print`. LANG84 asks the existing
+  `compile_source` to delegate to `compile_source_at`. Here it cannot,
+  because `compile_source` is LANG79's float pilot. It keeps its signature,
+  its behaviour and its legacy 3.12 grammar until the float subset moves to
+  release pairs.
+- `lang-aot`: `Language::Python` (`python` or `py`, `.py` files) compiles
+  through `compile_source_at(.., None, ..)`. `lang_matrix` gets `py-int-print`
+  rows on all eight executable columns, `StdoutThenTrap` rows for
+  `Trap.DivZero` and `Trap.Overflow`, and an oracle test against host
+  `python3` 3.13.
+
+**Corpus and oracles.** `code/grammars/python/corpus/py-int-print`: each case
+is `<name>.py` with either `<name>.expect` or `<name>.reject`, plus a
+`<name>.cite`. `<name>.reject@<release>` names a release where an otherwise
+accepted case must be refused, with its category. That is how
+`int_underscores` records that 3.0a1 refuses it. For an `Overflow` case the
+`.expect` comes from the subset definition, not from CPython; the oracle test
+checks instead that host CPython prints the expected prefix and then an
+integer outside `i64`.
+
+**Status (7a, 2026-10-20).** Landed as planned above, with these results and
+decisions:
+
+- **Pairs and evidence.** The five pairs, `pair-evidence.csv`, and the README
+  section "Release pairs" in `code/grammars/python/`. Three token classes:
+  3.0a1 (no `_`, 33 keywords, 45 operators); 3.11.17 (47 operators, no `!`);
+  and 3.12.3 = 3.13.16 = 3.16.0a1 (48). There is one grammar class. Stage G
+  is `grammar-tools validate` on each pair, and generation now always
+  validates release pairs. Stage P is `python-parser`'s `release_probes`.
+  `tokenize_differential` checks the three host releases' token tables
+  against the exact token streams that CPython 3.11.17, 3.12.3 and 3.13.16's
+  own `tokenize` recorded for six fixtures. Kinds, spellings and 1-based
+  positions all match.
+- **Generator.** `python` is a release family. Its six minor-line pairs are
+  embedded in a separate `legacy_versions` module that no release ID
+  reaches, so `parse_python(source, "3.12")` is unchanged. The CI regen gate
+  covers `python-lexer` and `python-parser`.
+- **Stage I** is `cargo test -p python-iir-compiler --test release_subsets`.
+  It runs 36 corpus cases on each of the five releases on vm-core, comparing
+  stdout and trap kind; for 3.0a1 `int_underscores` is a `Lex` error by its
+  `.reject@3.0a1` override. It also checks C7, the `profile` column against
+  `profiles.rs`, and IIR identity across all five releases. The host-CPython
+  oracle checks every case under 3.11.17, 3.12.3 and 3.13.16, and they all
+  agree. C8 is `cst_contract`, C5 `hostile_release`, and C2/C4.5 `iir_path`.
+- **Backends.** `Language::Python` has 18 `lang_matrix` rows, one per accepted
+  corpus case, on all eight executable columns, and `check_module_for`
+  passes on all nine. The `StdoutThenTrap` matrix support is the same code as
+  phase 5a's, ported unchanged so the two branches merge cleanly. Locally,
+  native x86-64, LLVM, WASM, JVM, VM and JIT executed all 108 of their
+  Python cells, 54 of them trapping with the right stdout and kind. CLR and
+  BEAM execute in CI only, because the authoring host had neither `dotnet`
+  nor `erl`. The JIT column runs printing functions on the vm-core tier (the
+  known matrix limitation, VM-078d).
+
+Decisions and deviations:
+
+- **`compile_source` does not delegate to `compile_source_at`.** It is
+  LANG79's float pilot and keeps the legacy `"3.12"` grammar. LANG84 C4.5
+  ("the IIR path MUST NOT use the unversioned pair") holds for the release
+  path; the float pilot is a separate, older path that moves in 7b/7c.
+- **A lean subset grammar.** Rule names are `python3.12.grammar`'s, but the
+  precedence levels the subset never reaches are left out, so the release
+  parser admits more than 15 nested parentheses under the 190-level cap
+  where the legacy grammar admits 9.
+- **No folding of constants into `const`.** Every operation is emitted and
+  checked at run time. The one exception is a divisor known to be `-1`,
+  which is folded to `i64_neg_ovf` or `const 0`, as planned.
+- **Not in 7a:** `IIRModule.release`, `compile_source_to_iir_at`,
+  `--lang python@<release>`, the lang-aot `UnknownRelease` and
+  `ReleaseNotAvailable` variants, and matrix rows on releases other than
+  the default. These are the shared lang-aot release API (phases 4b and 5b).
+  Phase 4b landed that API with Perl as its only inventory language, and
+  phase 7b slice 1 (below) adds Python to it.
+
+**Phase 7b, slice 1 (release selection).** Python joins the lang-aot release
+API exactly as Ruby does in 5b slice 1, in the same change:
+
+- `python-iir-compiler` records the resolved ID in `IIRModule.release`, from
+  `compile_source_at` and `compile_cst` alike.
+- `Language::has_release_inventory` lists Python, so `--lang
+  python@3.0a1` … `python@3.16.0a1` compile against exactly that release and
+  `--lang python` against `DEFAULT_RELEASE` (`3.13.16`).
+- `python@3.13` is `UnknownRelease` with up to five suggestions;
+  `python@3.12.2` (a row with no grammar pair) is `ReleaseNotAvailable` with
+  the reason `no grammar pair: grammar_stage none`. All five paired releases
+  have an IIR profile, so Python has no pair-without-profile row today; the
+  frontend's `no IIR profile: …` reason covers one if it appears.
+
+**Phase 7b, slice 2 (release sweep)** is phase 5b slice 2's change for
+`py-int-print`, made in the same change:
+
+- **Sweep.** `python-iir-compiler/tests/release_sweep.rs` sweeps the five
+  claiming releases in `releases.csv` order (3.0a1, 3.12.3, 3.13.16,
+  3.11.17, 3.16.0a1, which is date order) into
+  `code/grammars/python/release_classes.csv`.
+  `PYTHON_RELEASE_SWEEP_WRITE=1` rewrites the file under the same rules as
+  Ruby's. A cell is `rejected` only when a `.reject@<release>` override
+  says so and the compile error has the category it names. The one such
+  override is `int_underscores.reject@3.0a1`: PEP 515 separators arrived in
+  3.6. Any other refusal of a positive case fails. 3.0a1 refuses one case,
+  so its outcome vector differs and it is expected to be a class of its own.
+- **Matrix.** The eighteen default-release rows (3.13.16) stay.
+  `include_str!` rows run every case each class representative accepts.
+  `python_rows_run_their_corpus_case` checks the rows against the boundary
+  set. `python_rows_are_py_int_print_corpus_cases` keeps its "every case
+  has a row" direction for the default release's rows. The LANG83 check
+  compiles each row at its release.
+- **CSV.** `backend_status` gains `py-int-print` for 3.0a1, 3.11.17, 3.12.3
+  and 3.16.0a1 once `check --matrix` covers them.
+  `the_default_release_claims_py_int_print_on_the_backends` changes from
+  "only the default claims B" to "B is claimed by exactly the releases that
+  claim I".
+
+The result (two classes, 53 rows, B for all five releases) is recorded
+with 5b slice 2's, under "Phases 5b and 7b slice 2 result" in the Ruby
+section above.
+
+7c is the rest of the 7b/7c row in the phase table: Python 2, more
+releases, and the float subset.
 
 ### Wire every IIR frontend into lang-aot
 
@@ -1403,7 +1926,7 @@ are rough estimates of reviewed diff size, not counting regenerated
 | --- | --- | --- | --- |
 | 1 | 1 | This spec, plus cross-links from LANG78 and LANG82 | doc only |
 | 2 | 2a | `releases.csv` and README for Ruby (1,189 rows), Python (657) and ecmascript (29), plus the first `release_inventory.py check` and its CI hook | ~1,900 CSV rows, ~200 lines of prose, ~400 lines of checker and tests |
-| | 2b | `subsets.csv` scaffolding, Perl CSV schema migration (including the perl-parser tests that match `,partial` row endings), `--matrix` | ~600 lines |
+| | 2b | **Done:** `subsets.csv` scaffolding, Perl CSV schema migration (including the perl-parser tests that match `,partial` row endings), `--matrix` | ~600 lines |
 | | 2c | `release_evidence.py` (blob-ID capture per release) | ~400 lines |
 | 3 | 3.1 | E1 line/column guards (+ F-spec) | ~800 lines Rust + tests |
 | | 3.2 | Ruby R0: `ruby<earliest…>` partial pairs for `rb-int-puts`, mechanically materialized from evidence; differential tests. **Landed for 0.49, 0.50, 3.3.5–3.3.7** (see the Ruby status above) | ~600 lines + pairs |
@@ -1415,10 +1938,10 @@ are rough estimates of reviewed diff size, not counting regenerated
 | | 3.8 | E6 adjacency predicates and ASI | ~800 lines |
 | | 3.9 | E7 goal-directed lexing and binding predicates (largest; may split into lattice and bindings) | ~2,500 lines over 2–3 PRs |
 | | 3.10 | Ruby R4, R6; delete the `ruby-lexer` state machine | ~1,500 lines |
-| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c:** release sweep. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
-| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b:** lang-aot release selection and the boundary-release sweep (B for 3.3.5, 3.3.7) | ~1,200 lines over 2 PRs |
+| 4 | 4a–4c | **Perl on all backends** (= LANG83 PR3, after LANG83 PR1b). **4a done:** compile versioned pairs (deduplicating generator); `compile_source_at`; `print` → `write_i64`; `Language::Perl`; matrix rows. **4b done:** default on the inventory release `5.38.0` (new pair grounded in tag `v5.38.0`); `IIRModule.release`; lang-aot release API; `cst_contract`; child-process hostile probes. **4c done:** `pl-int-print` corpus, `ReleaseProfile`s, release sweep (3 IIR-identity classes), `Prog.release`/`case`, I and B for all 118 checked releases. Fastest win, because Perl is already compliant | ~1,500 lines over 3 PRs |
+| 5 | 5a–5b | **Ruby integer subset on all backends** (= LANG83 PR2), on R0 pairs. **5a done:** `rb_int_div` → `i64_div_floor`, `%` → `i64_mod_floor`, `puts` → `print_i64`, `StdoutThenTrap` rows; `Language::Ruby`; the IIR path drops `ruby-lexer`; I(rb-int-puts) for 3.3.5–3.3.7, B for 3.3.6. **5b slice 1 done:** lang-aot release selection (`--lang ruby@<release>`, `IIRModule.release`). **5b slice 2 done:** release sweep (one IIR-identity class, representative 3.3.5), matrix rows on it, B for 3.3.5 and 3.3.7 | ~1,200 lines over 2 PRs |
 | 6 | 6a–6e | JavaScript CST rewrite (see above; 6c, the compiler rewrite, done in `javascript-iir-compiler` 0.3.0) | ~3,000 lines over 5 PRs |
-| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family | ~2,000 lines over 3 PRs |
+| 7 | 7a–7c | Python: inventory pairs for the subset, `compile_source_at`, `Language::Python`, matrix rows. The float subset depends on LANG83 float formatting; an int subset depends on the LANG83 `*_ovf` family. **7a done:** `py-int-print` on five release pairs (3.0a1 … 3.16.0a1), PR4 `*_ovf` ops, `StdoutThenTrap` rows for `Trap.DivZero` and `Trap.Overflow`, I for all five, B for 3.13.16. **7b slice 1 done:** lang-aot release selection (`--lang python@<release>`, `IIRModule.release`). **7b slice 2 done:** release sweep (two classes, representatives 3.0a1 and 3.12.3), matrix rows on them, B for all five. **7c:** Python 2 (print statement, classic `/`), more releases, and the float subset after LANG83 float formatting | ~2,000 lines over 3 PRs |
 | 8 | 8.x | Twig CST rewrite (≈5,700-line compiler, ~6–10 PRs by construct family, IIR-identity gate; done in one, `twig-ir-compiler` 0.46.0). McCarthy Lisp CST rewrite (~3 PRs; done in one, `mccarthy-lisp-iir-compiler` 0.9.0) | large |
 | 9 | ongoing | Release backfill, earliest first: per-release pairs and subset status for every language; remaining inventories (BASIC, ALGOL, COBOL and others); remaining lang-aot variants | many small PRs |
 

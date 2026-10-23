@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:ac1869638dcd80b0",
+  "lessonIds": [
+    "ML-C472-gatagatam",
+    "ML-C472-gatagatakkurukku",
+    "ML-C472-vegata",
+    "ML-C472-nirannuka",
+    "ML-C472-kulunnuka"
+  ],
+  "tex": "malayalam/book/chapters/ch472-traffic.tex"
+}

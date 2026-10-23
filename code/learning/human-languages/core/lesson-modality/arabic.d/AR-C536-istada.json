@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C536-istada",
+    "language": "arabic",
+    "chapter": 536,
+    "sequence": 29680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce25d23c7ab8e51b"
+  },
+  "findings": []
+}

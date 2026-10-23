@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:0e4b2c9710bbe113",
+  "lessonIds": [
+    "AR-C336-ahda",
+    "AR-C336-istaqbala",
+    "AR-C336-baraka",
+    "AR-C336-mahr",
+    "AR-C336-ashiyya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch336.txt",
+  "json": "arabic/narration/ch336.json",
+  "textHash": "fnv1a64:0b9e3397ff2afa7e",
+  "jsonHash": "fnv1a64:5cba1cb9bec90b18",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C362-mughalata",
+  "pathSegment": "AR-PATH-362-MANTIQ362",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-362-MANTIQ362",
+      "order": 1
+    }
+  ]
+}

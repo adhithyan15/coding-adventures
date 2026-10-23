@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C549-vahikkuka",
+    "language": "malayalam",
+    "chapter": 549,
+    "sequence": 27680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:131dbe7eb2ee7e50"
+  },
+  "findings": []
+}

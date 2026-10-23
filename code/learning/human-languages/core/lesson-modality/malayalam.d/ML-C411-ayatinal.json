@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C411-ayatinal",
+    "language": "malayalam",
+    "chapter": 411,
+    "sequence": 20310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5857eb624d9cfaaa"
+  },
+  "findings": []
+}

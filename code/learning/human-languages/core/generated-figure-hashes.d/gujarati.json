@@ -413,6 +413,27 @@
       "sourceHash": "fnv1a64:607de344398fd072",
       "svgHash": "fnv1a64:7b08320acfdf8edc",
       "svg": "gujarati/book/figures/GU-W45-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W46-o",
+      "sourceHash": "fnv1a64:dc46b46cbee8079f",
+      "svgHash": "fnv1a64:a96d937fbef11a46",
+      "svg": "gujarati/book/figures/GU-W46-o-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W47-dda",
+      "sourceHash": "fnv1a64:438e6345ca2449d7",
+      "svgHash": "fnv1a64:76d419c89905d6d2",
+      "svg": "gujarati/book/figures/GU-W47-dda-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W48-uu",
+      "sourceHash": "fnv1a64:e4020b1a94968f79",
+      "svgHash": "fnv1a64:5e7341ebeae71a6d",
+      "svg": "gujarati/book/figures/GU-W48-uu-filmstrip.svg"
     }
   ]
 }

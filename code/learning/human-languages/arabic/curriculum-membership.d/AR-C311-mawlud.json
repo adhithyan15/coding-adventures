@@ -1,0 +1,11 @@
+{
+  "id": "AR-C311-mawlud",
+  "pathSegment": "AR-PATH-311-WILADA311",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-311-WILADA311",
+      "order": 1
+    }
+  ]
+}

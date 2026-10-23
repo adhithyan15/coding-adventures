@@ -1,0 +1,11 @@
+{
+  "id": "AR-C518-sikritir",
+  "pathSegment": "AR-PATH-518-MIHNA518",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-518-MIHNA518",
+      "order": 1
+    }
+  ]
+}

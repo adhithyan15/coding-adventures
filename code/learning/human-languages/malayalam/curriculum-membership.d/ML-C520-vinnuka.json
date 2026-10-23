@@ -1,0 +1,11 @@
+{
+  "id": "ML-C520-vinnuka",
+  "pathSegment": "ML-PATH-520-ANUKAMPA520",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-520-ANUKAMPA520",
+      "order": 2
+    }
+  ]
+}

@@ -9,9 +9,15 @@ This directory holds three kinds of files:
   pairs of their line exist, then deletes them. They are never selectable
   through the release API.
 - `releases.csv`: the LANG84 release inventory. It has one row per upstream
-  tagged CPython release, and per-release pairs (`python<release>.*`) will be
-  built against it, earliest first. See
+  tagged CPython release. Per-release pairs (`python<release>.*`) are built
+  against it, earliest first. See
   [LANG84](../../specs/LANG84-grammar-driven-versioned-frontends.md).
+- Five per-release pairs (LANG84 phase 7a): `python3.0a1`, `python3.11.17`,
+  `python3.12.3`, `python3.13.16` and `python3.16.0a1`. Each is a **partial**
+  pair for the `py-int-print` subset, and `pair-evidence.csv` cites the
+  upstream files it was written from. See [Release pairs](#release-pairs-lang84-phase-7a).
+- `subsets.csv` and `corpus/py-int-print/`: the subset and its oracle-backed
+  test cases. See [Corpus](#corpus-py-int-print).
 
 The CSV header declares the legacy pairs with
 `legacy-minor-line-pairs: ...`, so `release_inventory.py check` does not
@@ -92,6 +98,108 @@ question 10). They are recorded in the CSV header:
 - Releases older than the tags, or never tagged: 0.9.0–0.9.7, 1.0.0 and 1.6
   final.
 
-Every row is `pending`, stage `none`. No per-release pair exists yet.
+Every row is `pending`, stage `none`, except the five phase-7a rows below.
 
-`python3 code/scripts/release_inventory.py check` validates this file.
+`python3 code/scripts/release_inventory.py check --matrix` validates this
+file and `subsets.csv`.
+
+## Release pairs (LANG84 phase 7a)
+
+`py-int-print` needs `print` as a function and `//`, so it starts with
+Python 3. These five releases have a pair:
+
+| Release | Why this release | Token class | Oracle |
+| --- | --- | --- | --- |
+| 3.0a1 | earliest Python 3 tag | no `_` in numbers; 33 keywords; 45 operators | pinned source at the tag |
+| 3.11.17 | host `python3.11` | `_` (PEP 515); 35 keywords; 47 operators (`@=`, `:=`) | host interpreter |
+| 3.12.3 | host `python3.12` | as 3.11.17 plus `!` (PEP 701): 48 operators | host interpreter |
+| 3.13.16 | host `python3`; the frontend's `DEFAULT_RELEASE` | as 3.12.3 | host interpreter |
+| 3.16.0a1 | newest inventory row | as 3.12.3 | pinned source at the tag |
+
+Every row is `partial`, stage `P`, `grammar_subset` `py-int-print`,
+`iir_status` `py-int-print` and profile `py3`. Since LANG84 phase 7b slice 2
+every row also claims `backend_status`. `python-iir-compiler`'s
+`tests/release_sweep.rs` groups the five releases into IIR-identity classes
+and writes `release_classes.csv` (`subset,case,release,class`, one row per
+positive case and release; `class` is a 16-hex digest of the release's IIR
+for the whole corpus, or `rejected` where a `.reject@<release>` override
+applies). There are two classes. 3.0a1 is alone, because it refuses
+`int_underscores`. 3.12.3, 3.13.16, 3.11.17 and 3.16.0a1 form the other,
+with 3.12.3 as its representative, the first of them in this file.
+`lang_matrix` runs every case each representative accepts on every backend,
+plus the whole corpus on the default 3.13.16. `check --matrix` credits the
+3.12.3 rows to 3.11.17 and 3.16.0a1. After a deliberate change,
+`PYTHON_RELEASE_SWEEP_WRITE=1 cargo test -p python-iir-compiler --test
+release_sweep` rewrites the CSV.
+
+**How each pair was written.** Every pair is `reviewed`: no two releases have
+identical syntax blobs, so none is a mechanical copy. `pair-evidence.csv`
+records, per release, the git blob IDs (`git ls-tree <commit> <path>` in
+`python/cpython`, retrieved 2026-10-20) of:
+
+- the grammar (`Grammar/Grammar` at 3.0a1, `Grammar/python.gram` after);
+- `Grammar/Tokens` (absent at 3.0a1, whose operators come from
+  `PyToken_OneChar`/`TwoChars`/`ThreeChars` in `Parser/tokenizer.c`);
+- the tokenizer (`Parser/tokenizer.c`, `Parser/lexer/lexer.c` from 3.13; from
+  3.16 numbers are in `Parser/lexer/number.c`);
+- `Lib/keyword.py`, which gives the hard keywords (`kwlist`);
+- `Objects/longobject.c` and `Python/bltinmodule.c`, which back the `py3`
+  profile (floor `//` and `%`, `ZeroDivisionError`, the `print` builtin).
+
+Each `.tokens`/`.grammar` header repeats the release's `source_ref`,
+`source_sha` and syntax blobs. `python-parser`'s `release_probes` test checks
+the headers against both CSVs.
+
+**What a pair lexes and parses.** The `.tokens` file lexes the subset's
+neighbourhood: decimal integers, names, the release's keywords, and every
+operator and delimiter its tokenizer knows. It does not lex strings, floats,
+imaginary numbers or non-decimal integers, which are lexer errors. The
+`.grammar` file parses `print` calls over `+ - * / // %`, unary `+`/`-` and
+parentheses. It keeps `python3.12.grammar`'s rule names (LANG84 C8) and leaves
+out the precedence levels the subset never reaches. Both files list their
+narrowings in their header comments.
+
+**Differences inside the subset.** The only one is PEP 515's `_` digit
+separator. 3.0a1 lexes `1_000` as an error, as CPython 3.0a1's `tok_get`
+rejects it. The other releases accept `1_000`, `0_0` and `00`, and reject
+`1__0`, `1_`, `0_1` and `012`, as their tokenizers do.
+
+**The 3.0 and 2.7 name collision** above still holds. Release `3.0` (final)
+and every Python 2 release have no pair. Python 2 also needs a `print`
+statement shape and its own profile (`/` floors on ints), so it is a later
+slice.
+
+## Corpus (`py-int-print`)
+
+`corpus/py-int-print/` holds one file set per case:
+
+- `<name>.py`: the program.
+- `<name>.expect`: the exact stdout, then `trap:<kind>` when the program stops
+  on a LANG83 trap (`Trap.DivZero` or `Trap.Overflow`).
+- `<name>.reject`: the C6 error category (`Lex`, `Parse`, `Unsupported`) the
+  compile must fail with.
+- `<name>.reject@<release>`: a release where an otherwise accepted case must
+  be refused, and with which category. `int_underscores.reject@3.0a1` says
+  `Lex`.
+- `<name>.cite`: the oracle record.
+
+The oracle for every accepted case is host CPython 3.11.17, 3.12.3 and 3.13.16
+(`python3.11`, `python3.12`, `python3`), with one exception. For the
+`Trap.Overflow` cases the expectation comes from the subset definition, not
+from CPython: CPython would print a larger `int`, and this subset stops
+instead. For those cases the `.cite` records the value CPython prints, and
+`python-iir-compiler`'s oracle test checks that the value is outside `i64`.
+Each rejected case's `.cite` records whether CPython accepts the program
+(`host-python: accepts`) or rejects it too (`host-python: SyntaxError`,
+`IndentationError`). A `py-int-print` refusal of a valid Python program is a
+subset limit, not a claim about Python.
+
+## Subsets (`subsets.csv`)
+
+`subsets.csv` (LANG84 phase 2b) declares the subsets that `grammar_subset`,
+`iir_status` and `backend_status` may name:
+
+- `py-int-print` (phase 7a, above), with its corpus in `corpus/py-int-print/`.
+- `py-float-print`: LANG79's float `print` subset (phase 7), defined in
+  LANG79. Its corpus goes in `corpus/py-float-print/` when a release first
+  claims stage I. No row names it yet.

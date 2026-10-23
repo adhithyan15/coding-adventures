@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C272-asha-rakhvi",
+    "language": "gujarati",
+    "chapter": 272,
+    "sequence": 14730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4020247c4afb1454"
+  },
+  "findings": []
+}

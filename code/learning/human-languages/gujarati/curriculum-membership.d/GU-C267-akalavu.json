@@ -1,0 +1,11 @@
+{
+  "id": "GU-C267-akalavu",
+  "pathSegment": "GU-PATH-267-UPSET267",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-267-UPSET267",
+      "order": 2
+    }
+  ]
+}

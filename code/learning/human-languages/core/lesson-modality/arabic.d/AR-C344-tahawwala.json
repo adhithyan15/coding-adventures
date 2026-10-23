@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C344-tahawwala",
+    "language": "arabic",
+    "chapter": 344,
+    "sequence": 19630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f0d8df78416fdfa"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C508-caruka-drizzle",
+  "pathSegment": "ML-PATH-508-CARRAL508",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-508-CARRAL508",
+      "order": 0
+    }
+  ]
+}

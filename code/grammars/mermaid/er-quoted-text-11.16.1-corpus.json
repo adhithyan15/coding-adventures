@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 ER quoted entity, alias, role, and attribute text vertical slice",
+  "fixtures": [
+    {
+      "name": "quoted-unicode-entities-and-aliases",
+      "source": "erDiagram\n\"Customer ❤\" ||--o{ account : \"places order\"\n\"Customer ❤\" {\n  string id PK \"Primary identifier\"\n}\naccount[\"Customer Account\"] {\n  string? displayName \"Preferred name\"\n}"
+    }
+  ]
+}

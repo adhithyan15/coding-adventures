@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 544,
+  "title": "Starting a Venture",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3785ffcf1c733132",
+  "lessons": [
+    {
+      "id": "ML-C544-ovartaim",
+      "sequence": 27380,
+      "title": "ഓവർടൈം (ōvarṭaiṁ) — overtime",
+      "headword": "ഓവർടൈം",
+      "romanization": "ōvarṭaiṁ",
+      "gloss": "overtime",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c16128ab5e8682b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to dismiss, then the Malayalam for an employer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഓവർടൈം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓവർടൈം — ōvarṭaiṁ — \"overtime\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പണി തീർക്കാൻ അവൻ ഇന്നലെ ഓവർടൈം ചെയ്തു. paṇi tīrkkān avan innale ōvarṭaiṁ ceytu. He worked overtime yesterday to finish the job."
+            },
+            {
+              "kind": "speech",
+              "text": "ഓവർടൈം (ōvarṭaiṁ) ചെയ്യുക, to work overtime."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓവർടൈം (ōvarṭaiṁ) was borrowed from English overtime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōvarṭaiṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōvarṭaiṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōvarṭaiṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōvarṭaiṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇi tīrkkān avan innale ōvarṭaiṁ ceytu. — He worked overtime yesterday to finish the job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇi tīrkkān avan innale ōvarṭaiṁ ceytu.* — He worked overtime yesterday to finish the job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to dismiss, then the Malayalam for an employer, then say ōvarṭaiṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to dismiss, then the Malayalam for an employer, then say *ōvarṭaiṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഓവർടൈം (ōvarṭaiṁ) mean? (\"Overtime\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C544-samrambham",
+      "sequence": 27390,
+      "title": "സംരംഭം (saṁrambhaṁ) — a venture; an enterprise",
+      "headword": "സംരംഭം",
+      "romanization": "saṁrambhaṁ",
+      "gloss": "a venture; an enterprise",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81d7378c50e7ef13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an employer, then the Malayalam for overtime."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സംരംഭം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംരംഭം — saṁrambhaṁ — \"a venture; an enterprise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ ഒരു ചെറിയ ബേക്കറി സംരംഭം തുടങ്ങി. avaḷ oru ceṟiya bēkkaṟi saṁrambhaṁ tuṭaṅṅi. She started a small bakery venture."
+            },
+            {
+              "kind": "speech",
+              "text": "A word of business news; സംരംഭം (saṁrambhaṁ) തുടങ്ങുക, to start a venture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംരംഭം (saṁrambhaṁ) is borrowed from Sanskrit saṁrambha, which CDIAL glosses as vehemence (CDIAL 12993); Malayalam uses it for an undertaking pursued with zeal."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁrambhaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁrambhaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁrambhaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁrambhaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ oru ceṟiya bēkkaṟi saṁrambhaṁ tuṭaṅṅi. — She started a small bakery venture.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ oru ceṟiya bēkkaṟi saṁrambhaṁ tuṭaṅṅi.* — She started a small bakery venture.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an employer, then the Malayalam for overtime, then say saṁrambhaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an employer, then the Malayalam for overtime, then say *saṁrambhaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സംരംഭം (saṁrambhaṁ) mean? (\"A venture; an enterprise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C544-samrambhakan",
+      "sequence": 27400,
+      "title": "സംരംഭകൻ (saṁrambhakan) — an entrepreneur",
+      "headword": "സംരംഭകൻ",
+      "romanization": "saṁrambhakan",
+      "gloss": "an entrepreneur",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f1e45da9af0ee77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for overtime, then the Malayalam for a venture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സംരംഭകൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംരംഭകൻ — saṁrambhakan — \"an entrepreneur\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ആ സംരംഭകൻ ഗ്രാമത്തിലെ പത്ത് പേർക്ക് ജോലി കൊടുത്തു. ā saṁrambhakan grāmattile pattŭ pērkkŭ jōli koṭuttu. That entrepreneur gave jobs to ten people in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman is സംരംഭക. -അകൻ marks the one who does something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സംരംഭകൻ (saṁrambhakan) is built on സംരംഭം (saṁrambhaṁ), from Sanskrit saṁrambha (CDIAL 12993), with the agent ending -അകൻ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁrambhakan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁrambhakan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁrambhakan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁrambhakan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā saṁrambhakan grāmattile pattŭ pērkkŭ jōli koṭuttu. — That entrepreneur gave jobs to ten people in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā saṁrambhakan grāmattile pattŭ pērkkŭ jōli koṭuttu.* — That entrepreneur gave jobs to ten people in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for overtime, then the Malayalam for a venture, then say saṁrambhakan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for overtime, then the Malayalam for a venture, then say *saṁrambhakan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സംരംഭകൻ (saṁrambhakan) mean? (\"An entrepreneur\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C544-siphrru",
+      "sequence": 27410,
+      "title": "ഷിഫ്റ്റ് (ṣiphṟṟŭ) — a work shift",
+      "headword": "ഷിഫ്റ്റ്",
+      "romanization": "ṣiphṟṟŭ",
+      "gloss": "a work shift",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a86e156615edc6ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a venture, then the Malayalam for an entrepreneur."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഷിഫ്റ്റ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഷിഫ്റ്റ് — ṣiphṟṟŭ — \"a work shift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചേച്ചിക്ക് അടുത്ത ആഴ്ച രാത്രി ഷിഫ്റ്റ് ആണ്. cēccikkŭ aṭutta āḻca rātri ṣiphṟṟŭ āṇŭ. My elder sister is on the night shift next week."
+            },
+            {
+              "kind": "speech",
+              "text": "Day and night shifts: പകൽ ഷിഫ്റ്റ് (ṣiphṟṟŭ), രാത്രി ഷിഫ്റ്റ് (ṣiphṟṟŭ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഷിഫ്റ്റ് (ṣiphṟṟŭ) was borrowed from English shift."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣiphṟṟŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣiphṟṟŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣiphṟṟŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣiphṟṟŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēccikkŭ aṭutta āḻca rātri ṣiphṟṟŭ āṇŭ. — My elder sister is on the night shift next week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēccikkŭ aṭutta āḻca rātri ṣiphṟṟŭ āṇŭ.* — My elder sister is on the night shift next week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a venture, then the Malayalam for an entrepreneur, then say ṣiphṟṟŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a venture, then the Malayalam for an entrepreneur, then say *ṣiphṟṟŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഷിഫ്റ്റ് (ṣiphṟṟŭ) mean? (\"A work shift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C544-mutannuka",
+      "sequence": 27420,
+      "title": "മുടങ്ങുക (muṭaṅṅuka) — to be interrupted; to stop midway",
+      "headword": "മുടങ്ങുക",
+      "romanization": "muṭaṅṅuka",
+      "gloss": "to be interrupted; to stop midway",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99bb8b7344949e34",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an entrepreneur, then the Malayalam for a work shift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുടങ്ങുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുടങ്ങുക — muṭaṅṅuka — \"to be interrupted; to stop midway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ കാരണം പണി രണ്ട് ദിവസം മുടങ്ങി. maḻa kāraṇaṁ paṇi raṇṭŭ divasaṁ muṭaṅṅi. Because of the rain, work stopped for two days."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മുടങ്ങി, muṭaṅṅi."
+            },
+            {
+              "kind": "speech",
+              "text": "മുടക്കുക is to stop something; മുടക്കം is an interruption."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുടങ്ങുക (muṭaṅṅuka) is native Dravidian: DEDR 4933 gives it as to be hindered or obstructed (DEDR 4933)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭaṅṅuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭaṅṅuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṭaṅṅuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṭaṅṅuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻa kāraṇaṁ paṇi raṇṭŭ divasaṁ muṭaṅṅi. — Because of the rain, work stopped for two days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻa kāraṇaṁ paṇi raṇṭŭ divasaṁ muṭaṅṅi.* — Because of the rain, work stopped for two days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an entrepreneur, then the Malayalam for a work shift, then say muṭaṅṅuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an entrepreneur, then the Malayalam for a work shift, then say *muṭaṅṅuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുടങ്ങുക (muṭaṅṅuka) mean? (\"To be interrupted; to stop midway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

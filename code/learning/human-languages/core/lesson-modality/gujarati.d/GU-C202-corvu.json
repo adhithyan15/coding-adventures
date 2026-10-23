@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C202-corvu",
+    "language": "gujarati",
+    "chapter": 202,
+    "sequence": 10980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d003ffa2936a6f1"
+  },
+  "findings": []
+}

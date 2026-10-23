@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Tempers and habits",
+  "label": "ch:ar-tempers-and-habits",
+  "canDo": "I can describe a person as tolerant, irritable, cheerful, organized or careless.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-R503-review-496-503",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can describe a person as tolerant, irritable, cheerful, organized or careless.",
+    "assesses": [
+      "AR-LEX-C503-TABA503-03",
+      "AR-LEX-C503-TABA503-04",
+      "AR-LEX-C503-TABA503-05"
+    ]
+  }
+}

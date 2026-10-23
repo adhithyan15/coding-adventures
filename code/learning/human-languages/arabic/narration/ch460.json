@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 460,
+  "title": "When things break",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:004a1e5b49272f1d",
+  "lessons": [
+    {
+      "id": "AR-C460-utl",
+      "sequence": 25690,
+      "title": "عطل (ʿuṭl) — a breakdown; a fault",
+      "headword": "عطل",
+      "romanization": "ʿuṭl",
+      "gloss": "a breakdown; a fault",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1cd0d40ded50e843",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for purchases, then the Arabic for to economise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عطل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عطل — ʿuṭl — \"a breakdown; a fault\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان في السيارة عطل صغير. kāna fī as-sayyāra ʿuṭl ṣaghīr. The car had a small fault."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أعطال, aʿṭāl."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عطل (ʿuṭl) is built on the native Arabic root ʿ-ṭ-l, \"to be idle, without work\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿuṭl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿuṭl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿuṭl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿuṭl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna fī as-sayyāra ʿuṭl ṣaghīr. — The car had a small fault.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna fī as-sayyāra ʿuṭl ṣaghīr.* — The car had a small fault.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for purchases, then the Arabic for to economise, then say ʿuṭl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for purchases, then the Arabic for to economise, then say *ʿuṭl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عطل (ʿuṭl) mean? (\"A breakdown; a fault\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C460-khalal",
+      "sequence": 25700,
+      "title": "خلل (khalal) — a malfunction; a defect",
+      "headword": "خلل",
+      "romanization": "khalal",
+      "gloss": "a malfunction; a defect",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:480009dc2f460bb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to economise, then the Arabic for a breakdown."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خلل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خلل — khalal — \"a malfunction; a defect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وجد المهندس خللا في الجهاز. wajada al-muhandis khalalan fī al-jihāz. The engineer found a defect in the device."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خلل (khalal) is built on the native Arabic root kh-l-l, \"a gap, an opening\" (Lane)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khalal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khalal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wajada al-muhandis khalalan fī al-jihāz. — The engineer found a defect in the device.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wajada al-muhandis khalalan fī al-jihāz.* — The engineer found a defect in the device.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to economise, then the Arabic for a breakdown, then say khalal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to economise, then the Arabic for a breakdown, then say *khalal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خلل (khalal) mean? (\"A malfunction; a defect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C460-inkasara",
+      "sequence": 25710,
+      "title": "انكسر (inkasara) — to get broken",
+      "headword": "انكسر",
+      "romanization": "inkasara",
+      "gloss": "to get broken",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d2ffa3436801407",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a breakdown, then the Arabic for a malfunction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: انكسر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انكسر — inkasara — \"to get broken\"."
+            },
+            {
+              "kind": "speech",
+              "text": "انكسرت نظارتي في الطريق. inkasarat naẓẓāratī fī aṭ-ṭarīq. My glasses got broken on the way."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينكسر, yankasir."
+            },
+            {
+              "kind": "speech",
+              "text": "kasara breaks a thing; inkasara is what the thing does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "انكسر (inkasara) is built on the native Arabic root k-s-r, \"to break\" (Lane). It is Form VII, \"to be broken\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkasara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkasara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkasara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkasara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkasarat naẓẓāratī fī aṭ-ṭarīq. — My glasses got broken on the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkasarat naẓẓāratī fī aṭ-ṭarīq.* — My glasses got broken on the way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a breakdown, then the Arabic for a malfunction, then say inkasara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a breakdown, then the Arabic for a malfunction, then say *inkasara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does انكسر (inkasara) mean? (\"To get broken\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C460-talifa",
+      "sequence": 25720,
+      "title": "تلف (talifa) — to go bad; to be damaged",
+      "headword": "تلف",
+      "romanization": "talifa",
+      "gloss": "to go bad; to be damaged",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:206715f1403222b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a malfunction, then the Arabic for to get broken."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تلف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تلف — talifa — \"to go bad; to be damaged\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تلفت الفاكهة بسبب الحرارة. talifat al-fākiha bi-sabab al-ḥarāra. The fruit spoiled because of the heat."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتلف, yatlaf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تلف (talifa) is built on the native Arabic root t-l-f, \"to perish, to be destroyed\" (Lane). It is the plain verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talifa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talifa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talifa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talifa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talifat al-fākiha bi-sabab al-ḥarāra. — The fruit spoiled because of the heat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talifat al-fākiha bi-sabab al-ḥarāra.* — The fruit spoiled because of the heat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a malfunction, then the Arabic for to get broken, then say talifa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a malfunction, then the Arabic for to get broken, then say *talifa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تلف (talifa) mean? (\"To go bad; to be damaged\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C460-tadarrara",
+      "sequence": 25730,
+      "title": "تضرر (taḍarrara) — to suffer damage",
+      "headword": "تضرر",
+      "romanization": "taḍarrara",
+      "gloss": "to suffer damage",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:017abd240c12b2c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to get broken, then the Arabic for to go bad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تضرر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تضرر — taḍarrara — \"to suffer damage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تضرر سقف المنزل بسبب العاصفة. taḍarrara saqf al-manzil bi-sabab al-ʿāṣifa. The roof of the house was damaged by the storm."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتضرر, yataḍarrar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تضرر (taḍarrara) is built on the native Arabic root ḍ-r-r, \"to harm\" (Lane). It is Form V; ḍarar, \"harm\", shares the root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍarrara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍarrara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍarrara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍarrara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍarrara saqf al-manzil bi-sabab al-ʿāṣifa. — The roof of the house was damaged by the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍarrara saqf al-manzil bi-sabab al-ʿāṣifa.* — The roof of the house was damaged by the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to get broken, then the Arabic for to go bad, then say taḍarrara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to get broken, then the Arabic for to go bad, then say *taḍarrara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تضرر (taḍarrara) mean? (\"To suffer damage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

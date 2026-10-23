@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:95bce975e9101918",
+  "lessonIds": [
+    "GU-C197-cokidar",
+    "GU-C197-tapasvu",
+    "GU-C197-olakhpatra",
+    "GU-C197-bandh",
+    "GU-C197-khulvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch197.txt",
+  "json": "gujarati/narration/ch197.json",
+  "textHash": "fnv1a64:eb3e9311e262e43d",
+  "jsonHash": "fnv1a64:0970ba9d9d7e09bd",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C175-satat",
+    "language": "gujarati",
+    "chapter": 175,
+    "sequence": 9570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08381f23a62053f2"
+  },
+  "findings": []
+}

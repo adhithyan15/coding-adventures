@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:7a2ef0b27495af17",
+  "lessonIds": [
+    "AR-C416-tabanna",
+    "AR-C416-badalan-min",
+    "AR-C416-bi-l-idafa-ila",
+    "AR-C416-tamin",
+    "AR-C416-siwa"
+  ],
+  "tex": "arabic/book/chapters/ch416-instead-and-besides.tex"
+}

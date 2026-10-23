@@ -1,0 +1,11 @@
+{
+  "id": "GU-C222-ot",
+  "pathSegment": "GU-PATH-222-EARTH222",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-222-EARTH222",
+      "order": 4
+    }
+  ]
+}

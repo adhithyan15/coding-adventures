@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-353-KIMVADANTI353",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ML-EXT-353-KIMVADANTI353"
+  ],
+  "after": []
+}

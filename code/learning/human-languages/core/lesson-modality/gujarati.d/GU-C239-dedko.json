@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C239-dedko",
+    "language": "gujarati",
+    "chapter": 239,
+    "sequence": 12940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:490d2c78ba7f3b81"
+  },
+  "findings": []
+}

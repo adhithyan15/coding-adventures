@@ -1,0 +1,11 @@
+{
+  "id": "ML-C500-cekkeruka",
+  "pathSegment": "ML-PATH-500-PAKSI500",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-500-PAKSI500",
+      "order": 3
+    }
+  ]
+}

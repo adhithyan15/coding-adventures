@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:98af7e72097f9506",
+  "lessonIds": [
+    "AR-C539-nard",
+    "AR-C539-urjuha",
+    "AR-C539-tasalla",
+    "AR-C539-bastana",
+    "AR-C539-taarjaha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch539.txt",
+  "json": "arabic/narration/ch539.json",
+  "textHash": "fnv1a64:d482e627c8b21341",
+  "jsonHash": "fnv1a64:72424907bfb851da",
+  "findings": []
+}

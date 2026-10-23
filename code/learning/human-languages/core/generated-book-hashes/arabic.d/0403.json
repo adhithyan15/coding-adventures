@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:0934437b9ff3b59d",
+  "lessonIds": [
+    "AR-C403-tayaqqana",
+    "AR-C403-irtaba",
+    "AR-C403-mustahil",
+    "AR-C403-ala-al-arjah",
+    "AR-C403-umuman"
+  ],
+  "tex": "arabic/book/chapters/ch403-sure-and-unsure.tex"
+}

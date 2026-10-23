@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Speeches and openings",
+  "label": "ch:ar-speeches-and-openings",
+  "canDo": "I can say a speech, to deliver, to convene, to inaugurate and to conclude.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R357-review-final-357",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say a speech, to deliver, to convene, to inaugurate and to conclude.",
+    "assesses": [
+      "AR-LEX-C357-KHITAB357-03",
+      "AR-LEX-C357-KHITAB357-04",
+      "AR-LEX-C357-KHITAB357-05"
+    ]
+  }
+}

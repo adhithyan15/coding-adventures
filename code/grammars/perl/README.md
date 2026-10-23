@@ -19,6 +19,110 @@ explicitly partial token and grammar pairs. Historical archives provide
 the source for each candidate; the shared parser probes validate only the
 bounded decimal `print` arithmetic subset.
 
+## LANG84 schema (phase 2b)
+
+Since LANG84 phase 2b, `releases.csv` has the common LANG84 header
+(`release,date,channel,source_ref,source_sha,predecessor,grammar_status,grammar_stage,grammar_subset,iir_status,backend_status,profile`)
+followed by two Perl columns, `perlhist_line` (the LANG82 column, unchanged)
+and `lineage`. `python3 code/scripts/release_inventory.py check --matrix`
+validates it in CI. The migration was mechanical. It changed no release ID and
+no `grammar_status`, and it filled the new columns as follows:
+
+- **`date`**: perlhist's `1987-Dec-18` becomes ISO `1987-12-18`. An unknown day
+  (`1991-Jan-??`) becomes `1991-01`, and an unknown month (`1993-???-??`)
+  becomes `1993`. perlhist's own `?` (5.000gamma and 5.000o) is kept as a
+  suffix.
+- **Row order** is chronological. Rows are sorted by date, and rows with the
+  same date keep their perlhist order. A reduced-precision date stays where
+  perlhist lists it when that position falls inside its period. For example,
+  `5.000alpha4 1993` stays after alpha3 (1993-10-10) and is not moved to the
+  start of 1993. The checker accepts a row if some day inside its period keeps
+  the dates non-decreasing. 164 of the 776 rows moved, mostly where
+  maintenance tracks interleave (5.004_04 trials among 5.004_5x development
+  releases, and 1.0.15 and 1.0_16 among the 2002 and 2003 releases).
+- **`channel`** is derived from the release ID, using perlhist's own track
+  notes ("The 5.004 maintenance track", "The 5.005 development track"):
+  - `-RCn` and `p54rcN` are `rc`.
+  - `-TRIALn`, `-tN`, `-TN`, `-mN`, `-MTn`, `-foolish`, and the 5.004/5.005
+    sub-patches such as `5.004_01_01` are `trial`.
+  - 5.000/5.002 `alphaN`/`aNx` are `alpha`, and `betaN`/`bN[x]` are `beta`.
+  - `gamma` and `delta` have no LANG84 channel of their own and are `preview`.
+  - The 5.000/5.001 letter patches (`5.001a`..`5.001n`) and the Perl 1–4
+    patch levels (`1.001`..`4.036`) are `patch`.
+  - `5.004_01`..`5.004_49` and `5.005_01`..`5.005_49` are maintenance
+    releases, so they are `patch`.
+  - Every other `5.00X_YY` (5.002_01, 5.003_xx, 5.004_5x+, 5.005_5x+,
+    `5.5.6x0`) is `dev`, as is `1.0_16`.
+  - `5.N.M` is `dev` for odd N and `final` for even N. 5.000 through 5.005,
+    `N.000`, and 1.0.15 are `final`.
+- **`source_ref` / `source_sha`**: when a `Perl/perl5` tag names the release
+  (`v<release>`, `perl-<release>`, or one of five spellings that the pair
+  headers already cite: `perl-1.0`, `perl-1.0.16`, `perl-2.0`, `perl-4.0.00`
+  and `perl-4.0.36`), the cell is the tag URL and the commit the tag names
+  (`git ls-remote --tags`, 2026-10-20). There are 493 such rows. Every other
+  row cites its `perlhist.pod` line at commit
+  `d97e2dc0ca5fcae83ac557cf21372672cd497510`, the commit that introduced the
+  pinned blob `2a0c30fc6f1b3e48af6b408cf02cb20e62fe3855`, and that commit is
+  its `source_sha`.
+- **`predecessor` / `lineage`**: every release is assigned to a line by its
+  ID: Perl 1, 2, 3, 4; 5.000 through 5.005; the 5.00X development tracks
+  (`5.00X_5x` and up, all of 5.002_01 and 5.003_xx, `5.5.6x0`); and `5.N`.
+  The predecessor is the previous row on the same line (`line`). The first
+  row of a line takes the latest earlier row of the nearest lower line
+  (`branch-point`). For example, 5.005 follows 5.004_76, 5.6.0-RC1 follows
+  the last 5.5.6x0, and 5.38.0-RC1 follows 5.37.11. Ruby's and Python's
+  lineage is checked against git ancestry, but this lineage comes from the
+  release IDs. `release_evidence.py` (LANG84 phase 2c) is expected to confirm
+  it.
+- **Status columns**: `partial` rows become `grammar_stage=P` with
+  `grammar_subset=pl-decimal-print`, and `pending` rows become `none` and `-`.
+  `iir_status`, `backend_status` and `profile` are `-` everywhere. Stage
+  I(`pl-int-print`) needs the corpus under `corpus/pl-int-print/` and the
+  `release_subsets` test, which arrive in phase 4c. *(Since 4c, the 118
+  checked rows claim `pl-int-print` at I and B; see below.)*
+
+`subsets.csv` declares the subsets the CSV may name:
+
+| Subset | Meaning | Spec |
+| --- | --- | --- |
+| `pl-decimal-print` | The bounded plain-decimal arithmetic `print` subset that every partial pair parses | LANG82 |
+| `pl-int-print` | LANG81's integer `print` subset, lowered to IIR and run on the LANG83 backends | LANG81 |
+
+## The `pl-int-print` corpus and release classes (LANG84 phase 4c)
+
+`corpus/pl-int-print/` holds 12 positive and 7 negative cases. A positive
+case is `<name>.pl`, `<name>.expect` (the exact stdout, followed by one LF
+that is not part of it, because the subset's `print` never writes a newline)
+and `<name>.cite`, the oracle record: the host `perl` v5.38.2, plus the
+pinned historical sources for the older releases (in
+`perl-iir-compiler/src/profiles.rs`). A negative case has `<name>.reject`,
+the error category every checked release must return, and its `.cite` says
+what Perl itself does with the program. `zero_and_negation.reject@perl_nv`
+says that releases on the `perl_nv` profile refuse that case: they compute
+`-0` as the C double `-0.0` and print it as `0` or `-0` depending on constant
+folding and the platform. `crlf_layout.pl` keeps its CRLF line ends
+(`-text` in the repository's `.gitattributes`).
+
+`release_classes.csv` (`subset,case,release,class`) is written by
+`perl-iir-compiler`'s `tests/release_sweep.rs`. For each positive case and
+checked release, `class` is the release's IIR-identity class (16 hex digits
+of the SHA-256 of its outcome for every case), or `rejected` when the release
+does not accept the case. The 118 releases fall into three classes:
+
+| Representative | Profile | Members | Not accepted |
+| --- | --- | --- | --- |
+| `1.000` | `perl_nv` | 41: Perl 1–4, 5.000–5.003_25, 5.004_72, 1.0.15, 1.0_16 | `zero_and_negation` |
+| `5.003_26` | `perl_nv` | 73: 5.003_26–5.004_71, `p54rc1`/`p54rc2`, the 5.004 maintenance track | `zero_and_negation`, `crlf_layout` (CR is a lex error) |
+| `5.38.0` | `perl_iv` | 4: 5.38.0, 5.38.2, 5.44.0, 5.45.3 | — |
+
+Every release that accepts a case lowers it to the same IIR; the classes
+differ only in what they accept. `lang-aot`'s `lang_matrix` runs every case
+each representative accepts on all eight executable backends, and
+`release_inventory.py check --matrix` checks that every `backend_status`
+claim is covered by those rows.
+
+## Release pairs
+
 The user requested a **separate `.tokens` and `.grammar` file for every
 release**, including maintenance and development versions. The filenames are
 `perl<V>.tokens` and `perl<V>.grammar`, with `<V>` from the `release` column.
@@ -477,15 +581,21 @@ Current pairs:
   the compiled tables share one class. Retrieved 2026-10-20: the
   `perly.y`, `toke.c` and `keywords.h` blobs of `v5.38.0` and `v5.38.2`
   are identical (and `perly.y`/`keywords.h` match `v5.37.11`).
-- `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
-  subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
-  It rejects syntax outside that pilot, including adjacent `--` and
-  leading-zero integer forms, and does not claim full coverage.
+- `perl5.38.2.*` is a **partial** pair for the same subset, and since LANG84
+  phase 4c a mechanical copy of `perl5.38.0.*`: the [`v5.38.2` source tag]'s
+  `perly.y`, `toke.c`, `keywords.h` and `parser.h` blobs are byte-identical
+  to `v5.38.0`'s, and the header cites both. The LANG81-era pair it replaced
+  had an unbounded `INT`; the host `perl` v5.38.2 croaks `Number too long` on
+  a 251-digit literal, as the copied 250-digit bound does.
 - `perl5.44.0.*` and `perl5.45.3.*` are distinct **partial** pairs for the
   current stable and development endpoints in the pinned inventory. Their
   arithmetic and `print` subset is documented by each release's tagged
   `perlop.pod` and `perlfunc.pod`; they reject adjacent `--` and leading-zero
-  integer forms and do not claim complete coverage.
+  integer forms and do not claim complete coverage. Since LANG84 phase 4c
+  their `INT` is bounded at 1018 digits from each tag's own `toke.c`,
+  `parser.h` and `utf8.h` (cited in the `.tokens` headers): `scan_num` keeps
+  six bytes of `PL_tokenbuf` in reserve, and the buffer grew to
+  `256 * MAX_UNICODE_UTF8_BYTES` = 1024 bytes after 5.38.
 - `perl.tokens` and `perl.grammar` are the unversioned **partial** Perl 5.38
   execution subset used by LANG81. They are not a substitute for the required
   release-specific `perl5.38.*` files.

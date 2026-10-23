@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 557,
+  "sourceHash": "fnv1a64:1a272dca7dcd6b07",
+  "lessonIds": [
+    "ML-C557-uttuka",
+    "ML-C557-sasikkuka",
+    "ML-C557-lalikkuka",
+    "ML-C557-talolikkuka",
+    "ML-C557-ottuceral"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch557.txt",
+  "json": "malayalam/narration/ch557.json",
+  "textHash": "fnv1a64:4db24726f9d7c54c",
+  "jsonHash": "fnv1a64:093b3a4855ff2e89",
+  "findings": []
+}

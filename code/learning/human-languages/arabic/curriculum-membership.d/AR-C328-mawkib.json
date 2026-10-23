@@ -1,0 +1,11 @@
+{
+  "id": "AR-C328-mawkib",
+  "pathSegment": "AR-PATH-328-HAFL328",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-328-HAFL328",
+      "order": 2
+    }
+  ]
+}

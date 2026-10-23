@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Brisk, Bold and Shy",
+  "label": "ch:ml-brisk-bold-and-shy",
+  "canDo": "I can say energetic, briskness, obstinacy, a coward and to feel shy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C530-nanikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can say energetic, briskness, obstinacy, a coward and to feel shy.",
+    "assesses": [
+      "ML-LEX-C530-USHAR530-03",
+      "ML-LEX-C530-USHAR530-04",
+      "ML-LEX-C530-USHAR530-05"
+    ]
+  }
+}

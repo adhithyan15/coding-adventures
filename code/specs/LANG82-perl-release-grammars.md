@@ -9,6 +9,9 @@ release, no aliases, explicitly partial pairs, and source evidence per release.
 LANG84 also extends the `releases.csv` schema: this file's columns stay, and
 `perlhist_line` becomes a Perl-specific extra column. It adds release
 selection for the Perl IIR frontend and measured G/P/I/B status stages.
+Since LANG84 phase 2b the inventory has the common LANG84 header, ISO dates,
+and rows in date order rather than `perlhist.pod` order. The rules that
+filled the new columns are in `code/grammars/perl/README.md`.
 
 ## Version range and evidence
 
@@ -113,11 +116,19 @@ whitespace upstream, stay outside the subset. The resulting rules equal
 unversioned files stay only for `tokenize_perl`/`parse_perl`, which are not
 on the IIR path.
 
-The `perl5.38.2` pair predates this check and keeps an unbounded `INT`
-although its `toke.c` is the same blob as 5.38.0's; so do `perl5.44.0` and
-`perl5.45.3`, whose evidence is pod files rather than `toke.c`. 5.38.2's
-bound is a known gap; 5.44.0's and 5.45.3's need checking against their own
-tags. Both are follow-ups, outside phase 4b.
+The `perl5.38.2` pair predated this check and kept an unbounded `INT`
+although its `toke.c` is the same blob as 5.38.0's; so did `perl5.44.0` and
+`perl5.45.3`, whose evidence was pod files rather than `toke.c`. LANG84 phase
+4c closed both gaps. `perl5.38.2` is now a mechanical copy of `perl5.38.0`
+whose header cites both tags' identical `perly.y`, `toke.c`, `keywords.h`
+and `parser.h` blobs (the host `perl` v5.38.2 also croaks on a 251-digit
+literal). `perl5.44.0` and `perl5.45.3` keep their other rules and bound
+`INT` at **1018** digits, read from each tag's own blobs: `scan_num` still
+stops at `C_ARRAY_END(PL_tokenbuf) - 6`, but `parser.h` now sizes
+`tokenbuf[PERL_IDENTIFIER_LENGTH]`, which is `256 * MAX_UNICODE_UTF8_BYTES`
+(4 on ASCII platforms, `utf8.h`), so the buffer is 1024 bytes. The blob IDs
+and line numbers are in the pair headers. The bounds are pinned per release
+by `perl-parser`'s release probes.
 
 Since LANG84 phase 4a the checked pairs are compiled into `perl-lexer` and
 `perl-parser` (deduplicated by content, release list read from

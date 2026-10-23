@@ -1,0 +1,11 @@
+{
+  "id": "GU-C196-pesvu",
+  "pathSegment": "GU-PATH-196-STOREY196",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-196-STOREY196",
+      "order": 3
+    }
+  ]
+}

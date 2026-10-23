@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:4aa552e59c8788fd",
+  "lessonIds": [
+    "ML-C418-siksa",
+    "ML-C418-siksikkuka",
+    "ML-C418-vilakku",
+    "ML-C418-nirodhikkuka",
+    "ML-C418-anuvadikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch418-punishment-and-permission.tex"
+}

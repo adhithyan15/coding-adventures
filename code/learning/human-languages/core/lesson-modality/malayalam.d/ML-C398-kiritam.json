@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C398-kiritam",
+    "language": "malayalam",
+    "chapter": 398,
+    "sequence": 19520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae82bb04bf64e8cf"
+  },
+  "findings": []
+}

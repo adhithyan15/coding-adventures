@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:bff5a3dc31cad1ee",
+  "lessonIds": [
+    "GU-C246-parinam",
+    "GU-C246-gun",
+    "GU-C246-napas-thavu",
+    "GU-C246-abhyas",
+    "GU-C246-mahenat-karvi"
+  ],
+  "tex": "gujarati/book/chapters/ch246-marks-and-results.tex"
+}

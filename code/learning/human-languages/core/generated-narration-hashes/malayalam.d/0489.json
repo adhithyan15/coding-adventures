@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:b2e9fd14af74d6b6",
+  "lessonIds": [
+    "ML-C489-karansi",
+    "ML-C489-vinimayam",
+    "ML-C489-cillarayakkuka",
+    "ML-C489-panamataykkuka",
+    "ML-C489-varinilkkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch489.txt",
+  "json": "malayalam/narration/ch489.json",
+  "textHash": "fnv1a64:f9501baebcd070ff",
+  "jsonHash": "fnv1a64:1a85856d6e61c5be",
+  "findings": []
+}

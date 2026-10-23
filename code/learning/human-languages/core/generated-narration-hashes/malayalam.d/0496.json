@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:bdbc33e062168713",
+  "lessonIds": [
+    "ML-C496-nadi",
+    "ML-C496-aruvi",
+    "ML-C496-urava",
+    "ML-C496-anakkettu",
+    "ML-C496-varruka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch496.txt",
+  "json": "malayalam/narration/ch496.json",
+  "textHash": "fnv1a64:6a5cc8d90491ab82",
+  "jsonHash": "fnv1a64:8fd02922e680b827",
+  "findings": []
+}

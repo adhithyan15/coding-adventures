@@ -1,0 +1,14 @@
+{
+  "language": "arabic",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:37bed1326ce1f129",
+  "lessonIds": [
+    "AR-C316-inhara",
+    "AR-C316-fada",
+    "AR-C316-indalaa",
+    "AR-C316-rukam",
+    "AR-C316-anqad",
+    "AR-R316-review-309-316"
+  ],
+  "tex": "arabic/book/chapters/ch316-when-buildings-fall.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C461-algha",
+  "pathSegment": "AR-PATH-461-ILGHA461",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-461-ILGHA461",
+      "order": 2
+    }
+  ]
+}

@@ -1,5 +1,12 @@
 # Changelog -- EcmascriptES5Lexer (Swift)
 
+## [Unreleased]
+
+### Fixed
+- Regenerated `_Grammar.swift` from `code/grammars/ecmascript/es5.tokens`
+  after #17901 changed it without regenerating the Swift copy (the
+  `swift/grammar-tools` `--check` drift guard flagged it): line comments stop at `\r`, block comments ending in extra stars close, and a regex literal cannot hold a `\r`.
+
 ## [0.2.0] -- 2026-07-13
 
 ### Changed

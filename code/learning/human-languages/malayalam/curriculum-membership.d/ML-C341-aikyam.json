@@ -1,0 +1,11 @@
+{
+  "id": "ML-C341-aikyam",
+  "pathSegment": "ML-PATH-341-OPINION-SO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-341-OPINION-SO",
+      "order": 2
+    }
+  ]
+}

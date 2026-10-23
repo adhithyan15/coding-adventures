@@ -1,0 +1,11 @@
+{
+  "id": "AR-C506-rimsh",
+  "pathSegment": "AR-PATH-506-WAJH506",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-506-WAJH506",
+      "order": 1
+    }
+  ]
+}

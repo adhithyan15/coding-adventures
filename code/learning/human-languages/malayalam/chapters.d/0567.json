@@ -1,0 +1,19 @@
+{
+  "chapter": 567,
+  "title": "Facing Hard Times",
+  "label": "ch:ml-facing-hard-times",
+  "canDo": "I can say to go through, to confront, to hold out, to overcome and to adapt.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C567-poruttappetuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 567: I can say to go through, to confront, to hold out, to overcome and to adapt.",
+    "assesses": [
+      "ML-LEX-C567-ATIJIVANAM567-03",
+      "ML-LEX-C567-ATIJIVANAM567-04",
+      "ML-LEX-C567-ATIJIVANAM567-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:9bbbc0c30db067e0",
+  "lessonIds": [
+    "ML-C466-syuttkesu",
+    "ML-C466-cumatu",
+    "ML-C466-porttar",
+    "ML-C466-klokkrum",
+    "ML-C466-valiccukontupokuka"
+  ],
+  "tex": "malayalam/book/chapters/ch466-bags-and-loads.tex"
+}

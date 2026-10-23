@@ -1,0 +1,832 @@
+{
+  "version": 1,
+  "language": "gujarati",
+  "chapter": 260,
+  "title": "Cards, chess and toys",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a661850b2fd93c0d",
+  "lessons": [
+    {
+      "id": "GU-C260-pattu",
+      "sequence": 14070,
+      "title": "પત્તું (pattũ) — playing card",
+      "headword": "પત્તું",
+      "romanization": "pattũ",
+      "gloss": "playing card",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:178532f5c13b56f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for exercise, then the Gujarati for wrestling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પત્તું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પત્તું — pattũ — \"playing card\"."
+            },
+            {
+              "kind": "speech",
+              "text": "અમે રાત્રે પત્તાં રમ્યા. — ame rātre pattā̃ ramyā — \"We played cards at night.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The plural is પત્તાં, pattā̃, \"cards\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પત્તું (pattũ), a leaf, then a playing card, is a tadbhava. It comes from Sanskrit páttra, \"wing-feather; leaf; leaf of a book\"; CDIAL lists the Gujarati pātũ, \"leaf\", but not the form pattũ (CDIAL 7733)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pattũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pattũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pattũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pattũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ame rātre pattā̃ ramyā — We played cards at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ame rātre pattā̃ ramyā* — We played cards at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for exercise, then the Gujarati for wrestling, then say pattũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for exercise, then the Gujarati for wrestling, then say *pattũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પત્તું (pattũ) mean? (\"Playing card\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C260-shatranj",
+      "sequence": 14080,
+      "title": "શતરંજ (śatranj) — chess",
+      "headword": "શતરંજ",
+      "romanization": "śatranj",
+      "gloss": "chess",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1b121174d3d1df4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for wrestling, then the Gujarati for playing card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શતરંજ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શતરંજ — śatranj — \"chess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "દાદાએ મને શતરંજ શીખવી. — dādāe mane śatranj śīkhavī — \"Grandfather taught me chess.\""
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શતરંજ (śatranj) is a loan from Persian shatranj, \"chess\" (EtymDB); Lane records the Arabic shiṭranj as a Persian word taken into Arabic (Lane). The Persian word comes from Sanskrit cáturaṅga, \"having four limbs\", the four parts of an army, which CDIAL also glosses \"a kind of chess\" (CDIAL 4596)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatranj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatranj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śatranj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śatranj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādāe mane śatranj śīkhavī — Grandfather taught me chess.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādāe mane śatranj śīkhavī* — Grandfather taught me chess.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for wrestling, then the Gujarati for playing card, then say śatranj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for wrestling, then the Gujarati for playing card, then say *śatranj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does શતરંજ (śatranj) mean? (\"Chess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C260-ramakdu",
+      "sequence": 14090,
+      "title": "રમકડું (ramakḍũ) — toy",
+      "headword": "રમકડું",
+      "romanization": "ramakḍũ",
+      "gloss": "toy",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fa52df24ca9f767",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for playing card, then the Gujarati for chess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: રમકડું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રમકડું — ramakḍũ — \"toy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મેં બાળક માટે રમકડું ખરીદ્યું. — mẽ bāḷak māṭe ramakḍũ kharīdyũ — \"I bought a toy for the child.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "રમકડું (ramakḍũ), a thing to play with, is built on the taught ramvũ, \"to play\", with -kḍũ. CDIAL derives ramvũ from Sanskrit rámatē, \"takes pleasure in\" (CDIAL 10628), but lists no ramakḍũ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ramakḍũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ramakḍũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ramakḍũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ramakḍũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mẽ bāḷak māṭe ramakḍũ kharīdyũ — I bought a toy for the child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mẽ bāḷak māṭe ramakḍũ kharīdyũ* — I bought a toy for the child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for playing card, then the Gujarati for chess, then say ramakḍũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for playing card, then the Gujarati for chess, then say *ramakḍũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does રમકડું (ramakḍũ) mean? (\"Toy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C260-dharvu",
+      "sequence": 14100,
+      "title": "ધારવું (dhārvũ) — to guess, to suppose",
+      "headword": "ધારવું",
+      "romanization": "dhārvũ",
+      "gloss": "to guess, to suppose",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:193016257ac35f98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for chess, then the Gujarati for toy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધારવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધારવું — dhārvũ — \"to guess, to suppose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "મેં સાચો જવાબ ધાર્યો. — mẽ sāco javāb dhāryo — \"I guessed the right answer.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધારવું (dhārvũ), to hold a thought, is a tadbhava. It comes from Sanskrit dhāráyati, \"holds, keeps\"; CDIAL glosses the Gujarati verb \"to consider, guess\" (CDIAL 6791)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhārvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhārvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhārvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhārvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mẽ sāco javāb dhāryo — I guessed the right answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mẽ sāco javāb dhāryo* — I guessed the right answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for chess, then the Gujarati for toy, then say dhārvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for chess, then the Gujarati for toy, then say *dhārvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ધારવું (dhārvũ) mean? (\"To guess, to suppose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C260-pasand-karvu",
+      "sequence": 14110,
+      "title": "પસંદ કરવું (pasand karvũ) — to choose, to pick",
+      "headword": "પસંદ કરવું",
+      "romanization": "pasand karvũ",
+      "gloss": "to choose, to pick",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8da89a870de8407b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Gujarati for toy, then the Gujarati for to guess."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: પસંદ કરવું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પસંદ કરવું — pasand karvũ — \"to choose, to pick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "તેણે લાલ રમકડું પસંદ કર્યું. — teṇe lāl ramakḍũ pasand karyũ — \"She chose the red toy.\""
+            },
+            {
+              "kind": "speech",
+              "text": "પસંદ, pasand, alone means liked or chosen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "પસંદ કરવું (pasand karvũ) is built from pasand, \"liked, approved\", a loan usually traced to Persian pasand, and the verb karvũ, \"to do\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for everyday life at A2."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasand karvũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasand karvũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pasand karvũ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pasand karvũ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "teṇe lāl ramakḍũ pasand karyũ — She chose the red toy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *teṇe lāl ramakḍũ pasand karyũ* — She chose the red toy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Gujarati for toy, then the Gujarati for to guess, then say pasand karvũ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Gujarati for toy, then the Gujarati for to guess, then say *pasand karvũ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does પસંદ કરવું (pasand karvũ) mean? (\"To choose, to pick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-R260-review-255-260",
+      "sequence": 14120,
+      "title": "Words from chapters 255–260 — a review",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 255-260",
+      "script": "gujarati",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c71b87a32fced75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Gujarati for story and poem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "story, poem, novel, drama, film",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: story, poem, novel, drama, film]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "picture, to paint, paintbrush, photo, to knit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: picture, to paint, paintbrush, photo, to knit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "game, player, competition, to take part, to join",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: game, player, competition, to take part, to join]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cricket, ball, bat, to hit, to bounce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cricket, ball, bat, to hit, to bounce]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "match, to defeat, to run, exercise, wrestling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: match, to defeat, to run, exercise, wrestling]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "playing card, chess, toy, to guess, to choose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: playing card, chess, toy, to guess, to choose]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Story? (વાર્તા.) Poem? (કવિતા.) Novel? (નવલકથા.) Drama? (નાટક.) Film? (ફિલ્મ.) Picture? (ચિત્ર.) To paint? (ચીતરવું.) Paintbrush? (પીંછી.) Photo? (ફોટો.) To knit? (ગૂંથવું.) Game? (રમત.) Player? (ખેલાડી.) Competition? (હરીફાઈ.) To take part? (ભાગ લેવો.) To join? (જોડાવું.) Cricket? (ક્રિકેટ.) Ball? (દડો.) Bat? (બેટ.) To hit? (મારવું.) To bounce? (ઊછળવું.) Match? (મેચ.) To defeat? (હરાવવું.) To run? (દોડવું.) Exercise? (કસરત.) Wrestling? (કુસ્તી.) Playing card? (પત્તું (pattũ).) Chess? (શતરંજ (śatranj).) Toy? (રમકડું (ramakḍũ).) To guess? (ધારવું (dhārvũ).) To choose? (પસંદ કરવું (pasand karvũ).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

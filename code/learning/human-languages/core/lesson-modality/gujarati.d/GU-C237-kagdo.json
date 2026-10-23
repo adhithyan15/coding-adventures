@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C237-kagdo",
+    "language": "gujarati",
+    "chapter": 237,
+    "sequence": 12840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:570946d650364f3e"
+  },
+  "findings": []
+}

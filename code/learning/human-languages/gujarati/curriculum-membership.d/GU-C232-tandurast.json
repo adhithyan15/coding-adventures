@@ -1,0 +1,11 @@
+{
+  "id": "GU-C232-tandurast",
+  "pathSegment": "GU-PATH-232-HEALTHY232",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-232-HEALTHY232",
+      "order": 2
+    }
+  ]
+}

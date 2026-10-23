@@ -1,0 +1,19 @@
+{
+  "chapter": 237,
+  "title": "Wings in the air",
+  "label": "ch:gu-wings-in-the-air",
+  "canDo": "I can say how a bird flew away.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "GU-C237-udvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 237: I can say how a bird flew away.",
+    "assesses": [
+      "GU-LEX-C237-WINGS237-03",
+      "GU-LEX-C237-WINGS237-04",
+      "GU-LEX-C237-WINGS237-05"
+    ]
+  }
+}

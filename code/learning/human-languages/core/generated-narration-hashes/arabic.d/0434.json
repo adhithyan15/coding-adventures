@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:9eaedd0309f0fb74",
+  "lessonIds": [
+    "AR-C434-rukhsa",
+    "AR-C434-munataf",
+    "AR-C434-jaddada",
+    "AR-C434-asdara",
+    "AR-C434-tajawaza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch434.txt",
+  "json": "arabic/narration/ch434.json",
+  "textHash": "fnv1a64:204a67e0a2a98497",
+  "jsonHash": "fnv1a64:11b1e6fbbde85a0a",
+  "findings": []
+}

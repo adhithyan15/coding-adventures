@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Shelter and Flight",
+  "label": "ch:ml-shelter-and-flight",
+  "canDo": "I can say shelter, a refugee, loss of life, to flee and to seek.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C378-tetuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can say shelter, a refugee, loss of life, to flee and to seek.",
+    "assesses": [
+      "ML-LEX-C378-ABHAYAM378-03",
+      "ML-LEX-C378-ABHAYAM378-04",
+      "ML-LEX-C378-ABHAYAM378-05"
+    ]
+  }
+}

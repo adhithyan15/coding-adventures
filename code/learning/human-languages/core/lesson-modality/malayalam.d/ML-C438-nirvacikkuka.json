@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C438-nirvacikkuka",
+    "language": "malayalam",
+    "chapter": 438,
+    "sequence": 21730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e2ddfef7ba3d523"
+  },
+  "findings": []
+}

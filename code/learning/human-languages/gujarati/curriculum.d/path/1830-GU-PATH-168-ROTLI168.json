@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-168-ROTLI168",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "GU-EXT-168-ROTLI168"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C243-copdi",
+  "pathSegment": "GU-PATH-243-SCHOOL243",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-243-SCHOOL243",
+      "order": 2
+    }
+  ]
+}

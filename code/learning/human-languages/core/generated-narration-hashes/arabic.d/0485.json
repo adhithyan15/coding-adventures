@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:db5093fdd09f8b78",
+  "lessonIds": [
+    "AR-C485-sahw",
+    "AR-C485-qaws-quzah",
+    "AR-C485-nada",
+    "AR-C485-ashraqa",
+    "AR-C485-azlama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch485.txt",
+  "json": "arabic/narration/ch485.json",
+  "textHash": "fnv1a64:623ef3c7cfa2af45",
+  "jsonHash": "fnv1a64:797db4e93c873ed2",
+  "findings": []
+}

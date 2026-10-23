@@ -1,5 +1,18 @@
 # Changelog -- TOMLLexer (Swift)
 
+## [Unreleased]
+
+### Fixed
+- Regenerated `_Grammar.swift` from `code/grammars/toml/toml.tokens` after
+  #17722 changed that file without regenerating the Swift copy, which left
+  `swift/grammar-tools`' `--check` drift guard (and so every Swift
+  lexer/parser package) red on main. The embedded grammar now carries the
+  linear-time string patterns (`ML_BASIC_STRING`, `ML_LITERAL_STRING`,
+  `BASIC_STRING`, `LITERAL_STRING` refuse lone `\r`), the
+  control-character-free `COMMENT`, and the TOML 1.0 number shapes (no
+  leading zeros, `_` only between digits) that the other TOML lexers
+  already use, with line numbers shifted to match.
+
 ## [0.2.0] -- 2026-07-13
 
 ### Changed

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:08a0b5f365694811",
+  "lessonIds": [
+    "AR-C294-fajatan",
+    "AR-C294-waqaa",
+    "AR-C294-infajara",
+    "AR-C294-fi-al-bidaya",
+    "AR-C294-fi-tilka-al-lahza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch294.txt",
+  "json": "arabic/narration/ch294.json",
+  "textHash": "fnv1a64:04e402e286241ec6",
+  "jsonHash": "fnv1a64:7e181beab7a1d92b",
+  "findings": []
+}

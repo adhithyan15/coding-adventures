@@ -1,0 +1,11 @@
+{
+  "id": "AR-C521-taiba",
+  "pathSegment": "AR-PATH-521-MUKAFAA521",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-521-MUKAFAA521",
+      "order": 4
+    }
+  ]
+}

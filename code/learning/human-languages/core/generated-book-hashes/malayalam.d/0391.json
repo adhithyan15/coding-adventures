@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:de48164b540a3735",
+  "lessonIds": [
+    "ML-C391-savasamskaram",
+    "ML-C391-smasanam",
+    "ML-C391-savappetti",
+    "ML-C391-dahippikkuka",
+    "ML-C391-kuliccituka"
+  ],
+  "tex": "malayalam/book/chapters/ch391-a-funeral.tex"
+}

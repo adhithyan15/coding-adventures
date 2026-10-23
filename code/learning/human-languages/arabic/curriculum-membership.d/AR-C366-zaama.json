@@ -1,0 +1,11 @@
+{
+  "id": "AR-C366-zaama",
+  "pathSegment": "AR-PATH-366-IDDIA366",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-366-IDDIA366",
+      "order": 1
+    }
+  ]
+}

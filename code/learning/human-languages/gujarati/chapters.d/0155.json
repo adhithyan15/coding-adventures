@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Getting ready in the morning",
+  "label": "ch:gu-getting-ready-in-the-morning",
+  "canDo": "I can say how I get ready in the morning.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "GU-C155-lagadvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: I can say how I get ready in the morning.",
+    "assesses": [
+      "GU-LEX-C155-READY155-03",
+      "GU-LEX-C155-READY155-04",
+      "GU-LEX-C155-READY155-05"
+    ]
+  }
+}

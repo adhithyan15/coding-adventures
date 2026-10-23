@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-153-ROOMS153",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "GU-EXT-153-ROOMS153"
+  ],
+  "after": []
+}

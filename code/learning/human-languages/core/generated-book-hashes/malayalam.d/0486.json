@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:f3399713b51f01ac",
+  "lessonIds": [
+    "ML-C486-embasi",
+    "ML-C486-vakuppu",
+    "ML-C486-sakha",
+    "ML-C486-pravrttisamayam",
+    "ML-C486-pravrttidinam"
+  ],
+  "tex": "malayalam/book/chapters/ch486-embassies-and-offices.tex"
+}

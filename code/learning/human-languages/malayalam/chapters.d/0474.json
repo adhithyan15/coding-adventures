@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Missing the Train",
+  "label": "ch:ml-missing-the-train",
+  "canDo": "I can say to miss, a railway track, to jump off, to hang on and to speed along.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C474-payuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can say to miss, a railway track, to jump off, to hang on and to speed along.",
+    "assesses": [
+      "ML-LEX-C474-TIVANDI474-03",
+      "ML-LEX-C474-TIVANDI474-04",
+      "ML-LEX-C474-TIVANDI474-05"
+    ]
+  }
+}

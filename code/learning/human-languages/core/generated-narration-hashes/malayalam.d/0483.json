@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:36e4cf0bb5414146",
+  "lessonIds": [
+    "ML-C483-sevanam",
+    "ML-C483-kotukuvala",
+    "ML-C483-sucitvam",
+    "ML-C483-menu",
+    "ML-C483-veyirrar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch483.txt",
+  "json": "malayalam/narration/ch483.json",
+  "textHash": "fnv1a64:4565bad6779b22e9",
+  "jsonHash": "fnv1a64:93d381a08982a76c",
+  "findings": []
+}

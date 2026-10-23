@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Changing weather",
+  "label": "ch:ar-changing-weather",
+  "canDo": "I can say to keep changing, to get worse, to fall steadily, refreshing and to be exposed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R486-review-479-486",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can say to keep changing, to get worse, to fall steadily, refreshing and to be exposed.",
+    "assesses": [
+      "AR-LEX-C486-TAQALLUB486-03",
+      "AR-LEX-C486-TAQALLUB486-04",
+      "AR-LEX-C486-TAQALLUB486-05"
+    ]
+  }
+}

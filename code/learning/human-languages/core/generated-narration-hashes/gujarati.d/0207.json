@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 207,
+  "sourceHash": "fnv1a64:7883a58a4d4d64b1",
+  "lessonIds": [
+    "GU-C207-gadi",
+    "GU-C207-teksi",
+    "GU-C207-draivar",
+    "GU-C207-petrol",
+    "GU-C207-bhade-levu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch207.txt",
+  "json": "gujarati/narration/ch207.json",
+  "textHash": "fnv1a64:3643def3e06690c4",
+  "jsonHash": "fnv1a64:51b6094500db9898",
+  "findings": []
+}

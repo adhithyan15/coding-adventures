@@ -576,7 +576,7 @@ jobs:
 
       - name: Set up Gradle for native build-tool contract consumers
         if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
-        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
 
       - name: Set up Dart for native build-tool contract consumers
         if: needs.detect.outputs.run_contracts_build_tool_conformance == 'true'
@@ -637,8 +637,11 @@ jobs:
           python3 code/scripts/lessons.py validate
           python3 -m unittest discover -s code/scripts/tests -p 'test_lessons.py'
           # LANG84 release inventories (`code/grammars/*/releases.csv`): the
-          # common header, date order, predecessor lineage and status claims.
-          python3 code/scripts/release_inventory.py check
+          # common header (every inventory, Perl's included since phase 2b),
+          # date order, predecessor lineage, status claims, `subsets.csv` and
+          # corpora. `--matrix` also fails a B(S) claim that has no
+          # `lang_matrix` row on the release or its IIR class representative.
+          python3 code/scripts/release_inventory.py check --matrix
           python3 -m unittest discover -s code/scripts/tests -p 'test_release_inventory.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_forme_spec_map.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
@@ -904,7 +907,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -936,7 +939,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -964,7 +967,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -996,7 +999,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1024,7 +1027,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1056,7 +1059,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1091,7 +1094,7 @@ jobs:
           allow-prereleases: true
 
       - name: Install uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           version: "latest"
           cache-dependency-glob: 'code/**/pyproject.toml'
@@ -1123,7 +1126,7 @@ jobs:
       # Keep Ruby last in multi-language jobs: later toolchain actions can
       # prepend the runner's system Ruby and defeat setup-ruby's selection.
       - name: Set up Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1156,7 +1159,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with:
           ruby-version: '3.4'
           bundler-cache: false
@@ -1233,7 +1236,8 @@ jobs:
   # ── Job 7c: reconciled Rust compiled-grammar regeneration ──────
   #
   # MacroOct and Nib are the first reconciled Rust grammar lanes; Ruby joins
-  # as the first LANG84 release family (tables follow releases.csv). Protect them
+  # as the first LANG84 release family (tables follow releases.csv), and
+  # Python as the second (phase 7a, with its legacy minor lines). Protect them
   # without running the still-drifting full Rust sweep tracked by #14202. Keep
   # widening this job only after each additional lane has been reconciled.
   rust-grammar-regen-check:
@@ -1254,7 +1258,7 @@ jobs:
       - name: Regenerate the reconciled Rust grammar lanes
         run: |
           GT=code/programs/rust/grammar-tools/target/release/grammar-tools
-          for stem in macrooct nib ruby; do
+          for stem in macrooct nib ruby python; do
             "$GT" generate-rust-compiled-grammars "$stem"
           done
 
@@ -1266,11 +1270,13 @@ jobs:
             code/packages/rust/nib-parser/src/_grammar.rs
             code/packages/rust/ruby-lexer/src/_grammar.rs
             code/packages/rust/ruby-parser/src/_grammar.rs
+            code/packages/rust/python-lexer/src/_grammar.rs
+            code/packages/rust/python-parser/src/_grammar.rs
           )
           if ! git diff --quiet -- "${paths[@]}"; then
             echo "::error::A reconciled Rust compiled grammar differs from its canonical source."
             git diff --stat -- "${paths[@]}"
-            echo "Regenerate with: for s in macrooct nib ruby; do grammar-tools generate-rust-compiled-grammars \$s; done"
+            echo "Regenerate with: for s in macrooct nib ruby python; do grammar-tools generate-rust-compiled-grammars \$s; done"
             exit 1
           fi
           echo "All reconciled Rust compiled grammars are up to date."
@@ -1560,7 +1566,7 @@ jobs:
           python-version: '3.13.7'
 
       - name: Setup Node.js
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "22.23.2"
           cache: npm
@@ -1916,7 +1922,7 @@ jobs:
 
       - name: Publish bounded Forme release evidence
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: forme-release-${{ matrix.host }}
           path: .forme-release-evidence/forme-release-${{ matrix.host }}.json
@@ -1943,7 +1949,7 @@ jobs:
         run: test "$PLATFORM_RESULT" = success
 
       - name: Download host attestations
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           pattern: forme-release-*
           path: .forme-release-evidence
@@ -1955,25 +1961,40 @@ jobs:
           --output forme-release-verdict.json
 
       - name: Publish the Forme release verdict
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: forme-release-verdict
           path: forme-release-verdict.json
           if-no-files-found: error
           retention-days: 30
 
-  # ── Job 15: Build and test ─────────────────────────────────────
+  # ── Job 14b: Mosaic Linux runtime acceptance ─────────────────────
   #
-  # Installs only the toolchains flagged by the detect job, then
-  # compiles the build tool and runs the incremental build.
-  build:
+  # Builds each Mosaic app through the standard Qt, Flutter and Compose
+  # bindings with its real Rust engine, builds the Android APKs, and
+  # launches them on an emulator (UI89). None of it depends on the package
+  # build: every step builds what it needs from source.
+  #
+  # Why a job of its own rather than steps of `build`:
+  #
+  #   - `build` is a matrix. On main it is 15 shards, and a step inside it
+  #     runs on every shard. On the 2026-10-20 green main run these steps
+  #     took ~35 minutes of each shard's ~93: ~520 runner-minutes per merge
+  #     spent proving the same thing fifteen times.
+  #   - They write ~18 GB of APKs, Flutter and Gradle projects into
+  #     RUNNER_TEMP. Every shard carried that before its own build started,
+  #     and the shards that died with "No space left on device" died late,
+  #     in Rust archive writes, with that 18 GB still on disk.
+  #
+  # So this job runs once per workflow run, beside the build rather than
+  # inside it, and installs only the toolchains these steps use. The step
+  # conditions are unchanged, so each lane still runs exactly when the
+  # detect job's Mosaic acceptance probes say it is required.
+  mosaic-linux-runtime:
     needs: detect
-    name: build (${{ matrix.label }})
-    strategy:
-      matrix:
-        include: ${{ fromJSON(needs.detect.outputs.build_matrix) }}
-      fail-fast: false
-    runs-on: ${{ matrix.os }}
+    name: Mosaic Linux runtime acceptance
+    if: needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     defaults:
@@ -1984,1414 +2005,80 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 0
           persist-credentials: false
 
-      # ── Language toolchains (conditional) ───────────────────────
-      #
-      # Go is always installed — the build tool is written in Go.
-      # Other toolchains are installed only if their language has
-      # affected packages, as determined by the detect job.
-
-      - name: Set up Go
-        uses: actions/setup-go@v7
-        with:
-          go-version: '1.26.1'
-          cache-dependency-path: 'code/**/go.sum'
-
       - name: Set up Python
-        if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'
         uses: actions/setup-python@v7
         with:
           python-version: '3.13'
           allow-prereleases: true
 
-      - name: Test ADJ Windows Job containment
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: python -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k windows_job -k process_tree -k windows_containment -k job_close_root -k raw_pipe_close -k stuck_stdout -k stuck_drain
-
-      - name: Test ADJ macOS strict-containment boundary
-        if: runner.os == 'macOS'
-        run: python3 -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k posix_process -k process_tree -k guardian -k drain -k raw_pipe_close
-
-      - name: Install uv
-        if: needs.detect.outputs.needs_python == 'true'
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-        with:
-          version: "latest"
-          cache-dependency-glob: 'code/**/pyproject.toml'
-
-      # ── Lua must be set up BEFORE Ruby on Windows ──────────────
-      #
-      # Ruby's MSYS2 ships its own `link.exe` which shadows the MSVC
-      # linker that Lua needs to compile. By installing MSVC + Lua
-      # first, the MSVC `link.exe` is in PATH before Ruby's MSYS2.
-
-      # MSVC supplies the linker and SDK libraries for LANG and Venture, Lua,
-      # and the C/C++ lane (`cl.exe` for the MSVC arm of the pure-ISO check).
-      # A single bootstrap invocation covers these consumers — invoking it twice would
-      # double-prepend the MSVC environment.
-      - name: Test MSVC environment bootstrap
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
-
-      - name: Set up MSVC (Lua + C/C++ + Venture + LANG)
-        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true') && runner.os == 'Windows'
-        shell: pwsh
-        run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
-
-      - name: Restore pinned Lua 5.4.7 cache
-        id: lua-cache
-        if: needs.detect.outputs.needs_lua == 'true'
-        uses: actions/cache@v6
-        with:
-          path: .lua
-          key: lua-5.4.7-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('code/scripts/setup_lua.py') }}
-
-      - name: Install pinned Lua 5.4.7 from verified mirrors
-        if: needs.detect.outputs.needs_lua == 'true' && steps.lua-cache.outputs.cache-hit != 'true'
-        shell: bash
-        timeout-minutes: 15  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            python code/scripts/setup_lua.py --prefix .lua
-          else
-            if [ "$RUNNER_OS" = "macOS" ]; then
-              brew install readline ncurses
-            else
-              sudo apt-get install -qy libreadline-dev libncurses-dev
-            fi
-            python3 code/scripts/setup_lua.py --prefix .lua
-          fi
-
-      - name: Activate and verify pinned Lua 5.4.7
-        if: needs.detect.outputs.needs_lua == 'true'
-        shell: bash
-        run: |
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            lua_bin="$(cygpath -u "$GITHUB_WORKSPACE")/.lua/bin"
-            cygpath -w "$lua_bin" >> "$GITHUB_PATH"
-            "$lua_bin/lua.exe" -v
-          else
-            lua_bin="$GITHUB_WORKSPACE/.lua/bin"
-            echo "$lua_bin" >> "$GITHUB_PATH"
-            "$lua_bin/lua" -v
-          fi
-
-      - name: Set up LuaRocks (Unix)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        uses: leafo/gh-actions-luarocks@e65774a6386cb4f24e293dca7fc4ff89165b64c5 # v4.3.0
-
-      - name: Set up LuaRocks (Windows)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
-        shell: cmd
-        run: |
-          curl -L -o luarocks.zip https://luarocks.github.io/luarocks/releases/luarocks-3.11.1-windows-64.zip
-          powershell -Command "Expand-Archive -Path luarocks.zip -DestinationPath luarocks-install"
-          cd luarocks-install\luarocks-3.11.1-windows-64
-          echo %CD%>> %GITHUB_PATH%
-
-      - name: Install Lua test tools (Unix)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
-        shell: bash
-        run: |
-          tmpdir="$(mktemp -d)"
-          curl -L --fail https://luarocks.org/manifests/hoelzro/lua-term-0.8-1.rockspec -o "$tmpdir/lua-term-0.8-1.rockspec"
-          sed -i.bak 's|archive/0\.08\.tar\.gz|archive/refs/tags/0.08.tar.gz|' "$tmpdir/lua-term-0.8-1.rockspec"
-          luarocks install "$tmpdir/lua-term-0.8-1.rockspec"
-          rm -rf "$tmpdir"
-          luarocks install busted
-          luarocks install dkjson
-          luarocks install libdeflate 1.0.2-1
-          luarocks install luacov
-          luarocks install luacheck
-          luarocks install luasocket 2>/dev/null || true
-
-      - name: Install Lua test tools (Windows)
-        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
-        shell: cmd
-        run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          luarocks install busted
-          luarocks install dkjson
-          luarocks install libdeflate 1.0.2-1
-          luarocks install luacov
-          luarocks install luacheck
-          for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
-
-      - name: Set up Ruby
-        if: needs.detect.outputs.needs_ruby == 'true'
-        id: setup-ruby
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
-        with:
-          ruby-version: '3.4'
-          bundler-cache: false
-
-      - name: Install bundler
-        if: needs.detect.outputs.needs_ruby == 'true'
-        shell: bash
-        run: gem install bundler
-
-      - name: Set up Node.js
-        if: needs.detect.outputs.needs_typescript == 'true'
-        uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-
-      # npm 10.9.8 crashes in Arborist while resolving Vitest peer dependencies
-      # ("Cannot read properties of null (reading 'edgesOut')").
-      # Keep the independently validated installer fixed across all build OSes.
-      - name: Set up npm
-        if: needs.detect.outputs.needs_typescript == 'true'
-        run: npm install --global npm@11.13.0
-
-      - name: Delegate Forme sandbox cgroup v2 root
-        if: runner.os == 'Linux' && needs.detect.outputs.run_build_linux_os_suites == 'true'
-        run: |
-          test -f /sys/fs/cgroup/cgroup.controllers
-          if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
-            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
-          fi
-          sudo mkdir -p \
-            /sys/fs/cgroup/forme-sandbox \
-            /sys/fs/cgroup/forme-sandbox/runner
-          sudo chown "$(id -u):$(id -g)" \
-            /sys/fs/cgroup/forme-sandbox \
-            /sys/fs/cgroup/forme-sandbox/cgroup.procs \
-            /sys/fs/cgroup/forme-sandbox/cgroup.threads \
-            /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control \
-            /sys/fs/cgroup/forme-sandbox/runner \
-            /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs \
-            /sys/fs/cgroup/forme-sandbox/runner/cgroup.threads
-          test -w /sys/fs/cgroup/forme-sandbox
-          test -w /sys/fs/cgroup/forme-sandbox/cgroup.procs
-          test -w /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
-          for controller in cpu memory pids; do
-            grep -qw "$controller" /sys/fs/cgroup/forme-sandbox/cgroup.controllers
-            echo "+$controller" >> /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
-          done
-
-      # ── C/C++ compilers (pure-ISO multi-compiler lane) ──────────
-      #
-      # The goal is that every pure-ISO C/C++ package compiles under GCC, Clang
-      # (LLVM), and MSVC across the 3-OS matrix. Each runner contributes the
-      # compilers only it can host:
-      #   • ubuntu  → GCC (g++/gcc, preinstalled) + Clang (installed below)
-      #   • windows → MSVC (cl.exe, via the msvc-dev-cmd step above)
-      #   • macOS   → Apple Clang (preinstalled)
-      # A real GCC exists only on Linux and real MSVC only on Windows, so no
-      # single machine can host all three — coverage is achieved across the
-      # matrix, and the ISO harness compiles with every compiler it finds.
-      - name: Install Clang alongside GCC (Linux C/C++)
-        if: needs.detect.outputs.needs_cpp == 'true' && runner.os == 'Linux'
-        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: |
-          bash code/scripts/ci/apt-install.sh clang
-          gcc --version | head -1
-          clang --version | head -1
-
+      # Every lane builds a Rust engine. cargo-ndk and the Android targets
+      # are added by the Android steps themselves.
       - name: Set up Rust
-        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
-        # Uses the `stable` channel (matching the rest of this repo's Rust CI).
-        # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
-        # release, so a new Rust release can surface new lints on `main` — treat
-        # that as normal maintenance (run `cargo clippy --fix` + resolve). Pinning
-        # to a specific version was tried but broke BUILDs that invoke
-        # `rustup run stable` / `rustup target add` (wasm + embedded firmware),
-        # because a version-pinned default toolchain is not the `stable` alias
-        # those scripts expect. Reproduce CI's clippy locally with the *current*
-        # stable (`rustup update stable`), not a stale cached toolchain.
         uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
-        with:
-          # dtolnay/rust-toolchain installs the minimal profile, which omits
-          # clippy; the -clippy gate needs it, so request it explicitly.
-          #
-          # llvm-tools is required for the same reason. The chief-of-staff
-          # approval adapters measure coverage with `cargo tarpaulin --engine
-          # llvm` (their integration tests re-exec their own binary, which
-          # tarpaulin's default ptrace engine cannot instrument without raising
-          # SIGILL). That engine shells out to `llvm-profdata` and `llvm-cov`
-          # from the toolchain's sysroot, and the minimal profile ships
-          # neither. Declared here rather than left to chance: a developer
-          # machine usually has the component installed already, so omitting it
-          # fails only on CI.
-          components: clippy,llvm-tools
 
+      # cairo is a transitive native dependency of the Mosaic engines (see
+      # "Install native Paint VM dependencies" in `build`).
       - name: Install native Paint VM dependencies
-        # needs_mosaic_qt_runtime is its own condition, independent of
-        # needs_rust/needs_venture_windows: a change scoped to a Mosaic
-        # package outside code/packages/rust/ (e.g. a mosaic-pkg-* smoke-test
-        # crate whose Cargo.toml starts depending on mosaic-package-artifact-
-        # builder, which pulls in mosaic-emit-qt) can trip
-        # needs_mosaic_qt_runtime without tripping the other two. Without
-        # this arm, "Round-trip Rust engine through standard Qt binding"
-        # (which needs cairo transitively) runs while this installer is
-        # skipped, and the build fails with a pkg-config "cairo not found"
-        # error that has nothing to do with the actual diff. Matches the
-        # same three-way condition "Install Venture Qt acceptance
-        # dependencies" below already uses.
-        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
         timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           bash code/scripts/ci/apt-install.sh libcairo2-dev
 
-      # The `pdf` crate is verified against qpdf, an independent
-      # implementation: a PDF writer checked only by reading its own output
-      # back proves nothing, because a wrong idea of where the xref table goes
-      # would be shared by both halves.
-      #
-      # `tests/qpdf_gate.rs` FAILS when qpdf is absent rather than skipping --
-      # deliberately, since a suite that silently passes when its oracle is
-      # missing is not a suite. That makes installing it here a requirement
-      # rather than a convenience.
-      # `font-subset` writes a font file, and a font writer checked only by
-      # our own parser proves nothing -- a wrong idea of how the table
-      # directory is padded would be shared by both halves and they would agree
-      # perfectly. `tests/fonttools_oracle.rs` hands the subset to fontTools
-      # and asks whether the retained glyphs still have the same outlines at
-      # the same ids.
-      #
-      # Unlike poppler this installs identically everywhere: fontTools is pure
-      # Python, so one pip command covers Linux, macOS and Windows rather than
-      # three package managers with three different names.
-      - name: Install fontTools for the font-subset oracle
-        if: needs.detect.outputs.needs_rust == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 -m pip install --disable-pip-version-check --quiet fonttools
-          python3 -c "import fontTools; print('fontTools', fontTools.version)"
-          # Pin the exact interpreter fontTools was just installed into.
-          # tests/fonttools_oracle.rs defaults to bare `python3` (see
-          # FONTTOOLS_PYTHON) and doesn't run until much later in this job,
-          # after dozens more toolchain-setup steps that can shift PATH --
-          # so a bare `python3` two hours from now is not guaranteed to be
-          # this one. Naming the literal path removes that dependency on
-          # PATH staying stable for the rest of the job.
-          echo "FONTTOOLS_PYTHON=$(command -v python3)" >> "$GITHUB_ENV"
-
-      - name: Install qpdf for the PDF oracle tests
-        if: needs.detect.outputs.needs_rust == 'true'
-        shell: bash
-        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: |
-          set -euo pipefail
-          if [ "$RUNNER_OS" = "Linux" ]; then
-            bash code/scripts/ci/apt-install.sh qpdf
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            brew install qpdf
-          else
-            # The community Chocolatey feed answers 504 often enough to fail
-            # a required job outright, and when it does choco installs
-            # "0/0 packages" and EXITS 0, so its status says nothing. Judge
-            # by the result instead: retry until qpdf is actually on PATH,
-            # three attempts with a growing pause. A feed that stays down
-            # still fails below, at `qpdf --version`, naming qpdf -- loud,
-            # not skipped.
-            for attempt in 1 2 3; do
-              choco install qpdf -y --no-progress || true
-              if command -v qpdf >/dev/null 2>&1; then break; fi
-              if [ "$attempt" -lt 3 ]; then
-                echo "choco attempt $attempt did not install qpdf; retrying in $((attempt * 30))s"
-                sleep $((attempt * 30))
-              fi
-            done
-          fi
-          qpdf --version
-
-      # qpdf proves the file is well FORMED. It cannot prove the page is the
-      # right way up: an upside-down page is structurally perfect, and PDF's
-      # origin is bottom-left where every layout model this repository has puts
-      # it top-left. So `tests/render_gate.rs` rasterises with poppler -- a
-      # second independent implementation -- and asks where the ink actually
-      # landed.
-      #
-      # It FAILS when poppler is absent, for the same reason the qpdf gate
-      # does: an oracle that skips reports green while checking nothing.
-      #
-      # Linux and macOS only. The rendering oracle checks where ink lands on a
-      # page, and the PDF bytes it rasterises are byte-identical on every
-      # platform -- so a third rasteriser adds no coverage, while poppler has
-      # no reliable Chocolatey package (`choco install poppler` fails on
-      # windows-2025). The tests are correspondingly compiled out on Windows,
-      # so this is a stated scope rather than a silent skip: everywhere the
-      # gate runs, a missing poppler still fails the build.
-      - name: Install poppler for the PDF rendering oracle
-        if: needs.detect.outputs.needs_rust == 'true' && runner.os != 'Windows'
-        shell: bash
-        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: |
-          set -euo pipefail
-          if [ "$RUNNER_OS" = "Linux" ]; then
-            sudo apt-get install -y poppler-utils
-          else
-            brew install poppler
-          fi
-          pdftoppm -v
-
-      # VLT-PM51 slice 2 (vault-webauthn-ctap2-hid): ctap-hid-fido2's
-      # `hidapi` dependency uses the `linux-static-hidraw` feature on
-      # Linux, which links against `libudev` via pkg-config at build
-      # time (confirmed by reading hidapi's own build.rs -- the
-      # libusb-based backends aren't compiled in, so libusb-1.0-0-dev
-      # is not needed here, only libudev-dev). macOS links the
-      # preinstalled IOKit/CoreFoundation frameworks and Windows links
-      # SetupAPI, neither of which needs a package install step.
-      - name: Install native HID dependencies (vault-webauthn-ctap2-hid)
-        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
-        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: |
-          bash code/scripts/ci/apt-install.sh libudev-dev
-
-      - name: Install Venture Qt acceptance dependencies
-        if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730 # v4.3.1
+      - name: Install Qt for the Mosaic Qt runtime
+        if: needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
+        uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
         with:
           version: '6.8.3'
           cache: true
 
-      - name: Install cargo-tarpaulin
-        # PINNED, and --locked. An unpinned `cargo install` means coverage can
-        # break with no repo change, and it already did once:
-        # `chief-of-staff-biometric-approval` passed on the ptrace engine on
-        # 2026-08-14 and SIGILLed months later on untouched code -- the tool
-        # moved, not the crate.
-        #
-        # Diff-based CI hides that failure mode. A package is only rebuilt when
-        # it changes, so tool drift sits dormant until an unrelated PR triggers
-        # a near-full rebuild, and then looks like THAT PR's fault. Pinning
-        # turns a mystery into a one-line, reviewable bump.
-        #
-        # `--locked` matters as much as the version: without it Cargo resolves
-        # tarpaulin's own dependency tree fresh, so a patch release in any
-        # transitive dep reintroduces exactly the drift the pin removes.
-        #
-        # 0.37.2, NOT the 0.35.2 this was first pinned to. Upstream fixed the
-        # ptrace SIGILL in 0.35.3 ("PID parent event is delivered in iteration
-        # after the child stop is reported"), which was yanked and republished
-        # as 0.35.4 -- so 0.35.2 is the last release that still HAS the bug
-        # this pin exists to prevent, and 17 of our 20 tarpaulin invocations
-        # run on the default ptrace engine. Pinning to the version that
-        # happened to be installed locally would have frozen CI on it.
-        #
-        # 0.37.1 also brought llvm_profparser 0.13 and with it LLVM 23 support,
-        # which the `--engine llvm` crates need as the floating `@stable`
-        # toolchain advances.
-        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
-        run: cargo install cargo-tarpaulin --version 0.37.2 --locked
-
-      - name: Set up Elixir
-        # Pure-BEAM packages run executable BUILD_windows fronts on the pinned
-        # Windows runner. Pin the setup-beam revision proven on Windows 2025 /
-        # VS 2026; NIF and Metal packages retain narrow machine-reported
-        # BUILD_windows exceptions.
-        # setup-beam v1.24.1 -- version deliberately NOT a trailing
-        # comment here: the Elixir Windows contract matches this block
-        # literally and the SHA is bound in
-        # code/specs/fixtures/elixir-windows-build-front-v1/contract.json
-        if: needs.detect.outputs.needs_elixir == 'true'
-        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
-        with:
-          elixir-version: '1.18.4'
-          otp-version: '27.3.4.11'
-          version-type: strict
-
       - name: Set up Dart
-        if: needs.detect.outputs.needs_dart == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
         with:
           sdk: '3.12.2'
 
       - name: Set up Flutter
-        # macOS too when the SwiftUI lane runs: Flutter on iOS (UI89 §7.7 step 3)
-        # builds there, beside the SwiftUI iOS gates.
-        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' && (runner.os == 'Linux' || (runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'))
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           flutter-version: '3.44.0'
           channel: stable
+          # Cache the Flutter SDK, but NOT the pub cache. The action keys its
+          # pub cache on `hashFiles('**/pubspec.lock')` over the whole
+          # workspace, and re-evaluates that key in its post step to save the
+          # cache after a green job. By then the build has left hundreds of
+          # `node_modules` trees behind; on #17972 (~490 packages built)
+          # `build (macos-latest)` passed every package and then failed in
+          # "Post Set up Flutter" with "hashFiles('**/pubspec.lock') couldn't
+          # finish within 120 seconds". The SDK cache's key has no hashFiles,
+          # so it stays. Losing the pub cache only means `pub get` downloads
+          # again, which is fast next to the SDK.
           cache: true
+          pub-cache: false
 
       - name: Enable Flutter native assets
-        # macOS too when the SwiftUI lane runs: Flutter on iOS (UI89 §7.7 step 3)
-        # builds there, beside the SwiftUI iOS gates.
-        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' && (runner.os == 'Linux' || (runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'))
-        shell: bash
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         run: flutter config --enable-native-assets
 
-      - name: Set up Swift (Windows)
-        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
-          $wingetExitCode = $LASTEXITCODE
-
-          if ($wingetExitCode -ne 0) {
-            Write-Warning "winget install exited with code $wingetExitCode; checking whether Swift is available anyway"
-          }
-
-          $currentPathEntries = @($env:Path -split ';')
-          $currentPathSet = @{}
-          foreach ($entry in $currentPathEntries) {
-            if (-not [string]::IsNullOrWhiteSpace($entry)) {
-              $currentPathSet[$entry] = $true
-            }
-          }
-
-          $registryPathEntries = @(
-            [System.Environment]::GetEnvironmentVariable('Path', 'User')
-            [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
-          ) | Where-Object { $_ } | ForEach-Object { $_ -split ';' } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
-
-          $newPathEntries = @()
-          foreach ($entry in $registryPathEntries) {
-            if (-not $currentPathSet.ContainsKey($entry)) {
-              $currentPathSet[$entry] = $true
-              $newPathEntries += $entry
-            }
-          }
-
-          foreach ($entry in $newPathEntries) {
-            $entry | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          }
-          if ($newPathEntries.Count -gt 0) {
-            $env:Path = "$env:Path;$($newPathEntries -join ';')"
-          }
-
-          $swiftRoots = @(
-            (Join-Path $env:LOCALAPPDATA 'Programs\Swift')
-            (Join-Path $env:ProgramFiles 'Swift')
-          ) | Where-Object { Test-Path $_ }
-
-          $swiftExe = @(
-            (Get-Command swift -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue)
-            ($swiftRoots | ForEach-Object {
-              Get-ChildItem -Path $_ -Filter swift.exe -Recurse -File -ErrorAction SilentlyContinue |
-                Sort-Object FullName -Descending |
-                Select-Object -First 1 -ExpandProperty FullName
-            })
-          ) | Where-Object { $_ } | Select-Object -First 1
-
-          if (-not $swiftExe) {
-            if ($wingetExitCode -ne 0) {
-              throw "winget install exited with code $wingetExitCode and swift.exe was not found"
-            }
-            throw 'swift.exe not found after winget install'
-          }
-
-          $toolchainBin = Split-Path -Parent $swiftExe
-          if (-not $currentPathSet.ContainsKey($toolchainBin)) {
-            $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-            $env:Path = "$env:Path;$toolchainBin"
-            $currentPathSet[$toolchainBin] = $true
-          }
-          Write-Host "Using Swift from $swiftExe"
-
-          $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'User')
-          if (-not $sdkRoot) {
-            $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'Machine')
-          }
-          if (-not $sdkRoot) {
-            $sdkRoot = $swiftRoots | ForEach-Object {
-            Get-ChildItem -Path $_ -Filter Windows.sdk -Directory -Recurse -ErrorAction SilentlyContinue |
-              Sort-Object FullName -Descending |
-              Select-Object -First 1 -ExpandProperty FullName
-            } | Where-Object { $_ } | Select-Object -First 1
-          }
-
-          if ($sdkRoot) {
-            "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            $env:SDKROOT = $sdkRoot
-            Write-Host "Using SDKROOT=$sdkRoot"
-          }
-
-          where.exe swift
-
-      # ── Java / Kotlin ──────────────────────────────────────────
-      #
-      # Both Java and Kotlin packages use Gradle and JDK 21. Venture's
-      # cross-platform package acceptance also emits and directly exercises
-      # its Compose Desktop shell, even though the package harness is Rust.
-      # A single JDK + Gradle setup covers all three cases.
-
+      # The Compose lane builds desktop and Android apps with Gradle; the
+      # runner image's preinstalled Android SDK is reused, not downloaded.
       - name: Set up JDK 21
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
+        if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '21'
 
       - name: Set up Gradle
-        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
-        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
 
-      - name: Disable long-lived Gradle services on Windows CI
-        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
-        shell: bash
-        run: |
-          {
-            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
-          } >> "$GITHUB_ENV"
-
-      - name: Install cpanm and test dependencies (Perl)
-        if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'
-        shell: bash
-        timeout-minutes: 15  # apt can stall on a mirror; fail fast, not at 6h (#12163)
-        run: |
-          if [ "$RUNNER_OS" = "Linux" ]; then
-            sudo apt-get install -y cpanminus
-            # Pre-install Test2::V0 to the system Perl location (requires sudo).
-            # Without sudo, cpanm falls back to ~/perl5 which prove cannot find.
-            sudo cpanm --quiet --notest Test2::V0
-          elif [ "$RUNNER_OS" = "macOS" ]; then
-            brew install cpanminus
-            cpanm --quiet --notest Test2::V0
-          fi
-
-      - name: Set up Haskell
-        if: needs.detect.outputs.needs_haskell == 'true'
-        uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
-        with:
-          ghc-version: '9.4'
-          cabal-version: '3.10'
-
-      # Cabal 3.10 can report a successful `cabal update` while deferring the
-      # package-index cache materialization until the first solver query.  On
-      # fresh hosted runners that made the first Haskell BUILD incorrectly
-      # resolve a test-disabled plan.  Force and verify that read here so a
-      # broken index is classified as bootstrap failure before package tests.
-      - name: Verify Haskell package index
-        if: needs.detect.outputs.needs_haskell == 'true'
-        shell: bash
-        run: |
-          cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
-
-      - name: Set up reviewed OCaml compiler and repository
-        id: setup-ocaml
-        if: needs.detect.outputs.needs_ocaml == 'true' && (matrix.sharded != true || contains(matrix.languages, 'ocaml'))
-        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
-        # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
-        env:
-          GIT_CONFIG_COUNT: '1'
-          GIT_CONFIG_KEY_0: maintenance.auto
-          GIT_CONFIG_VALUE_0: 'false'
-        with:
-          ocaml-compiler: ocaml-base-compiler.5.2.1
-          opam-repositories: |
-            default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
-          opam-pin: false
-          dune-cache: false
-          cache-prefix: ocaml03-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-build-${{ matrix.label }}
-          windows-compiler: mingw
-          windows-environment: cygwin
-          github-token: ${{ github.token }}
-
-      - name: Require reviewed OCaml bootstrap
-        if: steps.setup-ocaml.outcome == 'success'
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(opam --version)" = "2.5.2"
-          test "$(opam exec -- ocamlc -version | tr -d '\r')" = "5.2.1"
-          repository_names="$(
-            opam repository list --all --short --color=never
-          )"
-          test "$repository_names" = "default"
-          repository_listing="$(
-            opam repository list --all --color=never
-          )"
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            python_cmd=python
-          else
-            python_cmd=python3
-          fi
-          "$python_cmd" "$GITHUB_WORKSPACE/code/scripts/ocaml_toolchain_lock.py" \
-            validate-repository-report \
-            --names "$repository_names" \
-            --listing "$repository_listing"
-          for package in dune alcotest bisect_ppx ocamlformat; do
-            if opam list --installed --short --columns=name "$package" \
-                | grep -Fxq "$package"; then
-              printf 'fresh switch unexpectedly contains %s\n' "$package" >&2
-              exit 1
-            fi
-          done
-          export OPAMREQUIRECHECKSUMS=true
-          opam install \
-            dune.3.17.2 \
-            alcotest.1.9.0 \
-            bisect_ppx.2.8.3 \
-            ocamlformat.0.27.0 \
-            --yes --require-checksums
-          "$python_cmd" "$GITHUB_WORKSPACE/code/scripts/ocaml_toolchain_lock.py" \
-            validate-runtime
-          printf 'OPAMREQUIRECHECKSUMS=true\n' >> "$GITHUB_ENV"
-
-      - name: Set up .NET
-        if: needs.detect.outputs.needs_dotnet == 'true' || ((needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true') && runner.os == 'Windows')
-        uses: actions/setup-dotnet@v6
-        with:
-          # .NET 9 is the current LTS release. No platform exclusions needed —
-          # actions/setup-dotnet@v6 works identically on Ubuntu, macOS, and Windows.
-          dotnet-version: '9.0.x'
-
-      - name: Install ILAsm (real-CoreCLR assembler for the CLR-real conformance column)
-        # The W16 conformance suite's `CLR-real` backend assembles textual `.il`
-        # with `ilasm` and runs it on real `dotnet`. `ilasm` ships only in the
-        # RID-specific NuGet runtime pack `runtime.<rid>.Microsoft.NETCore.ILAsm`
-        # (the bare `Microsoft.NETCore.ILAsm` is ref-only, no binary). A
-        # `<PackageDownload>` restore drops the binary into `~/.nuget/packages`,
-        # exactly where the test harness's `find_ilasm()` searches — so the CLR
-        # column is verified on the *real* runtime, not just the simulator.
-        if: needs.detect.outputs.needs_dotnet == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          rid=$(dotnet --info | sed -n 's/^[[:space:]]*RID:[[:space:]]*//p' | head -1)
-          echo "Host RID: ${rid:-<unknown>}"
-          if [ -z "${rid:-}" ]; then
-            echo "Could not determine RID; the CLR-real column will skip gracefully."
-            exit 0
-          fi
-          work=$(mktemp -d)
-          cat > "$work/ilasm.csproj" <<EOF
-          <Project Sdk="Microsoft.NET.Sdk">
-            <PropertyGroup>
-              <TargetFramework>net9.0</TargetFramework>
-            </PropertyGroup>
-            <ItemGroup>
-              <PackageDownload Include="runtime.$rid.Microsoft.NETCore.ILAsm" Version="[9.0.0]" />
-            </ItemGroup>
-          </Project>
-          EOF
-          # Non-fatal: if the pack is unavailable for this RID, the conformance
-          # CLR-real arm simply returns None (skip), leaving the simulator floor.
-          dotnet restore "$work/ilasm.csproj" || echo "ILAsm restore failed; CLR-real column will skip."
-          found=$(find "$HOME/.nuget/packages" -iname ilasm -type f 2>/dev/null | head -1 || true)
-          echo "ilasm binary: ${found:-<not found>}"
-
-      - name: Install test runners
-        shell: bash
-        run: |
-          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ]; then
-            uv pip install --system pytest
-          fi
-          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
-            npm install -g jest
-          fi
-
-      - name: Restore selected Ruby to Windows PATH
-        if: needs.detect.outputs.needs_ruby == 'true' && runner.os == 'Windows'
-        shell: pwsh
-        env:
-          RUBY_PREFIX: ${{ steps.setup-ruby.outputs.ruby-prefix }}
-        run: |
-          if (-not $env:RUBY_PREFIX) {
-            throw "ruby/setup-ruby did not report its installation prefix"
-          }
-          @(
-            (Join-Path $env:RUBY_PREFIX 'bin')
-            (Join-Path $env:RUBY_PREFIX 'msys64\ucrt64\bin')
-            (Join-Path $env:RUBY_PREFIX 'msys64\usr\bin')
-          ) | ForEach-Object {
-            if (Test-Path $_) {
-              Add-Content -Path $env:GITHUB_PATH -Value $_
-            }
-          }
-
-      # ── Verify toolchains ────────────────────────────────────
-      - name: Verify tools
-        shell: bash
-        run: |
-          echo "Go: $(go version)"
-          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ]; then
-            echo "Python: $(python --version)"
-            echo "uv: $(uv --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ]; then
-            echo "Ruby: $(ruby --version)"
-            echo "Bundler: $(bundle --version)"
-            ruby -e 'require "rubygems"; required = Gem::Version.new("3.4"); current = Gem::Version.new(RUBY_VERSION); abort "Ruby #{required}+ required, got #{current}" if current < required'
-          fi
-          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
-            echo "Node: $(node --version)"
-            echo "npm: $(npm --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "${{ needs.detect.outputs.needs_venture_windows }}" = "true" ] || [ "${{ needs.detect.outputs.needs_mosaic_xaml_windows }}" = "true" ]; then
-            echo "Rust: $(rustc --version)"
-            echo "Cargo: $(cargo --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
-            echo "Swift: $(swift --version | head -1)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
-            echo "Elixir: $(elixir --version)"
-            echo "Mix: $(mix --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_dart }}" = "true" ]; then
-            echo "Dart: $(dart --version 2>&1)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ]; then
-            echo "Lua: $(lua -v)"
-            echo "LuaRocks: $(luarocks --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_perl }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
-            echo "Perl: $(perl --version | head -2 | tail -1)"
-            echo "cpanm: $(cpanm --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_haskell }}" = "true" ]; then
-            echo "GHC: $(ghc --version)"
-            echo "Cabal: $(cabal --version)"
-          fi
-          if [ "${{ needs.detect.outputs.needs_dotnet }}" = "true" ]; then
-            echo ".NET: $(dotnet --version)"
-          fi
-
-      # ── Download build plan (skip discovery in build job) ─────
-      - name: Download build plan
-        uses: actions/download-artifact@v8
-        with:
-          name: build-plan
-
-      # ── Build the build tool ──────────────────────────────────
-      - name: Compile build tool
-        shell: bash
-        run: |
-          cd code/programs/go/build-tool
-          if [ "$RUNNER_OS" = "Windows" ]; then
-            go build -o ../../../../build-tool.exe .
-          else
-            go build -o ../../../../build-tool .
-          fi
-
-      - name: Reclaim Linux runner disk
-        if: runner.os == 'Linux'
-        shell: bash
-        env:
-          NEEDS_KOTLIN: ${{ needs.detect.outputs.needs_kotlin }}
-          NEEDS_MOSAIC_COMPOSE: ${{ needs.detect.outputs.needs_mosaic_compose_runtime }}
-        run: |
-          set -euo pipefail
-          echo "Disk before cleanup:"
-          df -h /
-          # Keep the pre-installed Android SDK when Kotlin (Android) builds are
-          # needed — deleting it forces a full re-download later, wasting several
-          # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
-          # builds an Android APK too (UI89 §3.4).
-          if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
-            sudo rm -rf /usr/local/lib/android || true
-          fi
-          docker system prune --all --force || true
-          sudo apt-get clean
-          # The CodeQL bundles in the tool cache serve only codeql.yml, which
-          # runs on its own runners; nothing in this job reads them.
-          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
-          echo "Disk after cleanup:"
-          df -h /
-          # What the image still carries, largest first, so the next reclaim
-          # can be chosen from evidence rather than guessed (#17652).
-          sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
-
-      # ── Android SDK (Kotlin / Android) ────────────────────────
-      #
-      # android-actions/setup-android accepts licences, installs platform-tools
-      # and build-tools via sdkmanager, and sets ANDROID_HOME / ANDROID_SDK_ROOT.
-      # On Linux the pre-installed SDK is reused (we kept it above); on macOS and
-      # Windows the action downloads a fresh SDK. Gradle then auto-downloads
-      # the specific platform (API 35 / 36) on first build.
       - name: Set up Android SDK
-        if: needs.detect.outputs.needs_kotlin == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
-        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4.0.1
+        if: needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
         with:
           packages: 'platform-tools'
-
-      - name: Build and test affected Swift packages on Windows
-        if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
-        shell: pwsh
-        run: |
-          $planFlag = @()
-          if (Test-Path 'build-plan.json') {
-            Write-Host 'Using pre-computed build plan'
-            $planFlag = @('-plan-file', 'build-plan.json')
-          }
-          $shardFlag = @()
-          if ('${{ matrix.sharded }}' -eq 'true') {
-            $shardFlag = @('-shard-index', '${{ matrix.shard_index }}')
-          }
-          & ./build-tool.exe -root . @planFlag @shardFlag -validate-build-files -language swift
-
-      # Rust-only Windows changes do not enter the general BUILD step. This
-      # separate runtime gate must link and launch executables, not just lint.
-      - name: Test LANG Windows native execution
-        if: runner.os == 'Windows' && needs.detect.outputs.needs_lang_windows == 'true'
-        shell: pwsh
-        working-directory: code/packages/rust
-        env:
-          LANG_REQUIRE_WINDOWS_AOT: "1"
-        run: |
-          cargo test -p twig-aot --test windows_x86_64_smoke -- --nocapture
-          if ($LASTEXITCODE -ne 0) {
-            throw "LANG Windows native execution failed with exit code $LASTEXITCODE"
-          }
-          cargo test -p lang-aot --test conformance mccarthy_native_corpus_executes -- --exact --nocapture
-          if ($LASTEXITCODE -ne 0) {
-            throw "McCarthy Windows native corpus failed with exit code $LASTEXITCODE"
-          }
-
-      - name: Build and test Venture Windows acceptance
-        if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'
-        shell: pwsh
-        env:
-          # GitHub-hosted Windows workers do not provide a reliable interactive
-          # WinUI desktop. The test still builds the complete generated app;
-          # local/self-hosted Windows runs launch and interact by default.
-          MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE: '1'
-        run: |
-          Set-Location code/packages/rust
-          cargo test -p paint-vm-cairo -p venture-browser-cairo -p venture-browser-qt -p venture-browser-windows
-          if ($LASTEXITCODE -ne 0) {
-            throw "Venture Windows render and bridge tests failed with exit code $LASTEXITCODE"
-          }
-          Set-Location ..\..\programs\mosaic\venture-browser
-          cargo test
-          if ($LASTEXITCODE -ne 0) {
-            throw "Venture Mosaic package tests failed with exit code $LASTEXITCODE"
-          }
-          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-all.ps1
-          if ($LASTEXITCODE -ne 0) {
-            throw "Venture Windows backend matrix failed with exit code $LASTEXITCODE"
-          }
-
-      - name: Build and test Venture macOS acceptance
-        if: runner.os == 'macOS' && needs.detect.outputs.needs_venture_windows == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd code/packages/rust
-          cargo test -p venture-browser-macos
-
-      - name: Round-trip Rust engine through standard SwiftUI binding
-        if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
-        shell: bash
-        # 16 minutes before Journal's iOS gate (UI89 §2.4) joined it, about 25
-        # after; Engram's (§2.5) adds a second engine and app build, and
-        # Journal's XCUITest (§4.3), Trestle's and Engram's (§4.4) each a test
-        # build and run on the iPad.
-        timeout-minutes: 105
-        run: |
-          set -euo pipefail
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
-          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.dylib"
-
-          bundled_output="$RUNNER_TEMP/mosaic-swift-bundled-conformance"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend swiftui --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/swiftui/mosaic-degradations.json"
-          swift build --package-path "$bundled_output/swiftui"
-          swift_bin="$(swift build --package-path "$bundled_output/swiftui" --show-bin-path)"
-          installed_runtime="$(find "$swift_bin" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit)"
-          test -n "$installed_runtime"
-          cmp "$runtime_library" "$installed_runtime"
-
-          harness="$RUNNER_TEMP/mosaic-swift-runtime-conformance"
-          cp -R code/packages/rust/mosaic-app-bindings/conformance/swiftui "$harness"
-          mkdir -p "$harness/Sources/CMosaicRuntime/include"
-          cp "$bundled_output/swiftui/Sources/App/MosaicRuntimeHost.swift" "$harness/Sources/Conformance/MosaicRuntimeHost.swift"
-          cp "$bundled_output/swiftui/Sources/CMosaicRuntime/CMosaicRuntime.c" "$harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
-          cp "$bundled_output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
-
-          state_path="$RUNNER_TEMP/mosaic-swift-runtime-state.json"
-          rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
-          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
-            swift run --package-path "$harness" Conformance --library "$installed_runtime"
-          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
-            swift run --package-path "$harness" Conformance --library "$installed_runtime"
-          printf '{}' > "$state_path"
-          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
-            MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
-            swift run --package-path "$harness" Conformance --library "$installed_runtime"
-
-          # The SwiftUI platform library's own behaviour (UI87 §7): every SwiftUI app
-          # gets MosaicPlatformEffects.swift, and this drives its open/save
-          # logic, limits and routing with a fake host and fake panels.
-          cp "$bundled_output/swiftui/Sources/App/MosaicPlatformEffects.swift" "$harness/Sources/Conformance/MosaicPlatformEffects.swift"
-          swift run --package-path "$harness" -Xswiftc -DMOSAIC_PLATFORM_EFFECTS Conformance --platform-effects
-
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
-          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.dylib"
-          taskapp_output="$RUNNER_TEMP/mosaic-swift-taskapp"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/swiftui/mosaic-degradations.json"
-          python3 code/scripts/taskapp_native_control_contract.py --backend swiftui --generated-dir "$taskapp_output/swiftui"
-          swift build --package-path "$taskapp_output/swiftui"
-          taskapp_bin="$(swift build --package-path "$taskapp_output/swiftui" --show-bin-path)"
-          installed_taskapp_runtime="$(find "$taskapp_bin" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit)"
-          test -n "$installed_taskapp_runtime"
-          cmp "$task_runtime_library" "$installed_taskapp_runtime"
-
-          # The strict shell must mount a window before probing the runtime and
-          # stay alive on a loader failure. Remove the bundled dylib from the
-          # built resource bundle, launch from / so no checkout-relative copy
-          # can be found, and require the process to remain alive in its visible
-          # recoverable failure state. The emitted-control contract above pins
-          # that state's detail, reassurance, and retry control.
-          installed_taskapp="$taskapp_bin/App"
-          test -x "$installed_taskapp"
-          missing_runtime="$installed_taskapp_runtime.startup-acceptance"
-          mv "$installed_taskapp_runtime" "$missing_runtime"
-          startup_failure_log="$RUNNER_TEMP/mosaic-swift-taskapp-startup-failure.log"
-          (
-            cd /
-            env -u MOSAIC_APP_LIBRARY "$installed_taskapp" \
-              >"$startup_failure_log" 2>&1 &
-            startup_pid=$!
-            trap 'kill "$startup_pid" 2>/dev/null || true; mv "$missing_runtime" "$installed_taskapp_runtime" 2>/dev/null || true' EXIT
-            sleep 5
-            kill -0 "$startup_pid"
-            kill "$startup_pid"
-            wait "$startup_pid" || true
-            mv "$missing_runtime" "$installed_taskapp_runtime"
-            trap - EXIT
-          )
-          cmp "$task_runtime_library" "$installed_taskapp_runtime"
-
-          task_harness="$RUNNER_TEMP/mosaic-swift-taskapp-runtime-conformance"
-          cp -R code/packages/rust/task-mosaic-app/conformance/swiftui "$task_harness"
-          mkdir -p "$task_harness/Sources/CMosaicRuntime/include"
-          cp "$taskapp_output/swiftui/Sources/App/MosaicRuntimeHost.swift" "$task_harness/Sources/Conformance/MosaicRuntimeHost.swift"
-          cp "$taskapp_output/swiftui/Sources/CMosaicRuntime/CMosaicRuntime.c" "$task_harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
-          cp "$taskapp_output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$task_harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
-          task_state_path="$RUNNER_TEMP/mosaic-swift-taskapp-state.json"
-          rm -f "$task_state_path" "$task_state_path.corrupt" "$task_state_path.tmp"
-          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$task_state_path" \
-            swift run --package-path "$task_harness" Conformance --library "$installed_taskapp_runtime"
-          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$task_state_path" MOSAIC_EXPECT_RESTORED=1 \
-            swift run --package-path "$task_harness" Conformance --library "$installed_taskapp_runtime"
-          taskapp_log="$RUNNER_TEMP/mosaic-swift-taskapp-launch.log"
-          diagnose_taskapp_crash() {
-            local diagnostic_log="$RUNNER_TEMP/mosaic-swift-taskapp-lldb.log"
-            local entitlements="$RUNNER_TEMP/taskapp-debug-entitlements.plist"
-            cat >"$entitlements" <<'PLIST'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>com.apple.security.get-task-allow</key>
-            <true/>
-          </dict>
-          </plist>
-          PLIST
-            codesign --force --sign - --entitlements "$entitlements" "$installed_taskapp"
-            (
-              cd /
-              env -u MOSAIC_APP_LIBRARY \
-                lldb --batch -o run -o "thread backtrace all" -- "$installed_taskapp" \
-                >"$diagnostic_log" 2>&1 &
-              debugger_pid=$!
-              sleep 10
-              if kill -0 "$debugger_pid" 2>/dev/null; then
-                pkill -TERM -P "$debugger_pid" 2>/dev/null || true
-                kill "$debugger_pid" 2>/dev/null || true
-              fi
-              wait "$debugger_pid" || true
-            )
-            cat "$diagnostic_log"
-          }
-          (
-            cd /
-            env -u MOSAIC_APP_LIBRARY \
-              SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
-              "$installed_taskapp" >"$taskapp_log" 2>&1 &
-            taskapp_pid=$!
-            trap 'kill "$taskapp_pid" 2>/dev/null || true' EXIT
-            sleep 5
-            if ! kill -0 "$taskapp_pid" 2>/dev/null; then
-              cat "$taskapp_log"
-              sleep 2
-              find "$HOME/Library/Logs/DiagnosticReports" -type f \
-                -name 'App*.ips' -mmin -2 -print -exec cat {} \; || true
-              diagnose_taskapp_crash
-              exit 1
-            fi
-            kill "$taskapp_pid"
-            wait "$taskapp_pid" || true
-            trap - EXIT
-          )
-          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
-          ! grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$taskapp_log"
-
-          # Engram on SwiftUI, the mirror of the Qt Engram lane further down.
-          #
-          # `.dylib`, not `.so`: this block is macOS-gated, the inverse of the
-          # Qt lane, which runs on Linux.
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
-          engram_swift_runtime="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.dylib"
-          test -f "$engram_swift_runtime"
-          engram_swift_output="$RUNNER_TEMP/mosaic-swiftui-engram"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend swiftui --output "$engram_swift_output" --emit-project --profile native-complete --runtime-library "$engram_swift_runtime"
-
-          # Pinned empty, exactly as the Qt lane pins it: SwiftUI's
-          # `MosaicHost.swift` override is retired, and a package that starts
-          # overriding the generated host again has undone that and must fail
-          # here rather than pass quietly.
-          jq -e '.replacedGeneratedFiles == []' "$engram_swift_output/swiftui/mosaic-degradations.json"
-          # `type == "array"` first: `null | length` is 0 in jq, so a report that
-          # lost the key entirely would satisfy a bare length check.
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_swift_output/swiftui/mosaic-degradations.json"
-
-          # The handler is wired into the generated app, and lands INSIDE the
-          # host class rather than ahead of it. This is the half no assertion
-          # over a source file can reach -- and it matters more here than on Qt,
-          # because SwiftPM compiles everything under `Sources/App`, so an
-          # uninstalled handler still compiles, links and ships with no
-          # diagnostic at all.
-          grep -q 'installEngramEffects(mosaicEffectHost)' "$engram_swift_output/swiftui/Sources/App/App.swift"
-          python3 - "$engram_swift_output/swiftui/Sources/App/App.swift" <<'PY'
-          import re
-          import sys
-
-          text = open(sys.argv[1]).read()
-          install = text.index("installEngramEffects(mosaicEffectHost)")
-
-          # "Inside MosaicHostState" means the nearest type declaration ABOVE the
-          # install is that class. Asserting `class_idx < install` instead would
-          # be near-vacuous -- the class is declared once, far up the file, so
-          # the ordering holds even if the call landed in a later type.
-          declarations = [
-              (m.start(), m.group(1))
-              for m in re.finditer(r"(?m)^[ \t]*(?:(?:private|fileprivate|internal|public|final)\s+)*"
-                                   r"(?:class|struct|enum|extension)\s+(\w+)", text)
-              if m.start() < install
-          ]
-          assert declarations, "no type declaration precedes the install"
-          enclosing = declarations[-1][1]
-          assert enclosing == "MosaicHostState", (
-              f"install landed in {enclosing}, not MosaicHostState"
-          )
-
-          # And after the bridge exists: installing onto a nil bridge compiles
-          # and silently does nothing.
-          assignment = text.index("self.bridge = ", declarations[-1][0])
-          assert assignment < install, "install must follow the bridge assignment"
-          PY
-
-          # The gate: it builds.
-          swift build --package-path "$engram_swift_output/swiftui"
-
-          # ---- Journal: emit and BUILD on SwiftUI (J5b, #14416). -------------
-          # The strict standard binding (native-complete + runtime library), no
-          # replaced generated files, zero degradations, and the package builds.
-          # Journal raises no effects, so there is no handler to grep for.
-          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
-          journal_swift_runtime="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.dylib"
-          test -f "$journal_swift_runtime"
-          journal_swift_output="$RUNNER_TEMP/mosaic-swiftui-journal"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_swift_output" --emit-project --profile native-complete --runtime-library "$journal_swift_runtime"
-          jq -e '.replacedGeneratedFiles == []' "$journal_swift_output/swiftui/mosaic-degradations.json"
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_swift_output/swiftui/mosaic-degradations.json"
-          swift build --package-path "$journal_swift_output/swiftui"
-
-          ios_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-source"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_output" --emit-project
-          jq -e '.nativeComplete == false and ([.degradations[].code] == ["runtime.sample-fallback"])' "$ios_output/swiftui/mosaic-degradations.json"
-          (
-            cd "$ios_output/swiftui"
-            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-taskapp-ios" CODE_SIGNING_ALLOWED=NO build
-          )
-
-          # iOS and iPadOS with the REAL runtime linked in (UI89 §2.1): the
-          # Rust engine is built as an .xcframework of static libraries (device
-          # + a fat simulator slice), because iOS does not allow loading an
-          # app's own dylib. The loader then calls it directly
-          # (MOSAIC_RUNTIME_STATIC); nm confirms the engine is in the binary,
-          # not merely that the link succeeded.
-          rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
-          ios_runtime="$RUNNER_TEMP/TaskAppRuntime.xcframework"
-          bash code/scripts/build-mosaic-xcframework.sh task-mosaic-app "$ios_runtime"
-          ios_linked_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked"
-          # Trestle's XCUITest (UI89 §4.4) goes into the iOS project as a UI
-          # test bundle with a shared scheme; it runs on the iPad below.
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output" --emit-project --profile native-complete --runtime-library "$ios_runtime" --ios-ui-test code/packages/rust/task-mosaic-app/conformance/swiftui-ios/TrestleUiTests.swift
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$ios_linked_output/swiftui/mosaic-degradations.json"
-          grep -q 'cSettings: \[.define("MOSAIC_RUNTIME_STATIC")\]' "$ios_linked_output/swiftui/Package.swift"
-          ios_linked_data="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked-dd"
-          (
-            cd "$ios_linked_output/swiftui"
-            xcodebuild -scheme App -destination 'generic/platform=iOS Simulator' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
-            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
-          )
-          # nm writes to a file before grep reads it: `nm | grep -q` under
-          # pipefail fails whenever grep exits at its first match while nm is
-          # still writing (SIGPIPE, "LLVM ERROR: ... Broken pipe"), which depends
-          # only on where the symbol happens to fall in nm's output.
-          for binary in "$ios_linked_data/Build/Products/Debug-iphonesimulator/App" "$ios_linked_data/Build/Products/Debug-iphoneos/App"; do
-            nm -gU "$binary" > "$RUNNER_TEMP/mosaic-ios-symbols.txt"
-            grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-ios-symbols.txt"
-          done
-
-          # An installable iOS / iPadOS APP (UI89 §2.2): the same build wrote
-          # iOS/App.xcodeproj, generated by mosaic-ios-project for any package with
-          # a static runtime. It builds an .app carrying the package's identity
-          # and the engine, which installs and keeps running on a simulator.
-          test -f "$ios_linked_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
-          ios_app_build="$RUNNER_TEMP/mosaic-taskapp-ios-app"
-          (
-            cd "$ios_linked_output/swiftui/iOS"
-            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$ios_app_build" build
-          )
-          ios_app="$ios_app_build/Debug-iphonesimulator/App.app"
-          nm -gU "$ios_app/App" > "$RUNNER_TEMP/mosaic-ios-app-symbols.txt"
-          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-ios-app-symbols.txt"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$ios_app/Info.plist")" = dev.codingadventures.trestle
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$ios_app/Info.plist")" = Trestle
-          simulator="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
-          test -n "$simulator" && test "$simulator" != null
-          xcrun simctl boot "$simulator" || true
-          xcrun simctl bootstatus "$simulator" -b
-          xcrun simctl install "$simulator" "$ios_app"
-          xcrun simctl launch "$simulator" dev.codingadventures.trestle
-          sleep 10
-          # Still running ten seconds later: it started, loaded the engine and
-          # did not crash rendering the first frame. Drain all launchctl output:
-          # grep -q can close the pipe early and make simctl fail with SIGPIPE.
-          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
-
-          # State lives in the app's sandbox and is read back (UI89 §2.3,
-          # step 3). The host writes state only after the first event, so it
-          # is seeded: state the runtime rejects must be quarantined INSIDE
-          # the container (the host found and read that path), and the
-          # snapshot the macOS TaskApp run above persisted -- the same engine
-          # -- must be restored with nothing quarantined. Each time the app
-          # must still be running ten seconds later.
-          ios_container="$(xcrun simctl get_app_container "$simulator" dev.codingadventures.trestle data)"
-          test -n "$ios_container" && test -d "$ios_container"
-          ios_state_dir="$ios_container/Library/Application Support/task-app"
-          ios_state="$ios_state_dir/mosaic-state.v1.json"
-          test -s "$task_state_path"
-          xcrun simctl terminate "$simulator" dev.codingadventures.trestle || true
-          mkdir -p "$ios_state_dir"
-          rm -f "$ios_state" "$ios_state.corrupt"
-          printf '{}' > "$ios_state"
-          xcrun simctl launch "$simulator" dev.codingadventures.trestle
-          sleep 10
-          test -f "$ios_state.corrupt"
-          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
-          xcrun simctl terminate "$simulator" dev.codingadventures.trestle
-          rm -f "$ios_state" "$ios_state.corrupt"
-          cp "$task_state_path" "$ios_state"
-          xcrun simctl launch "$simulator" dev.codingadventures.trestle
-          sleep 10
-          test ! -e "$ios_state.corrupt"
-          # Still there (the environment report is an event, so the host may
-          # have rewritten it; its bytes are not the point).
-          test -s "$ios_state"
-          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
-          xcrun simctl shutdown "$simulator"
-
-          # The same app on iPadOS (UI89 §2.2: one target, TARGETED_DEVICE_FAMILY
-          # 1,2): it installs and keeps running on an iPad simulator.
-          ipad="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPad"))][0].udid')"
-          test -n "$ipad" && test "$ipad" != null
-          xcrun simctl boot "$ipad" || true
-          xcrun simctl bootstatus "$ipad" -b
-          xcrun simctl install "$ipad" "$ios_app"
-          xcrun simctl launch "$ipad" dev.codingadventures.trestle
-          sleep 10
-          xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
-          # A person's use of it (UI89 §4.4): add, complete, reopen and delete
-          # a task through the generated controls, and find a saved task after
-          # a relaunch. Uninstalled first, so launch 1 starts without the state
-          # the launch above left; `xcodebuild test` installs the app fresh.
-          xcrun simctl uninstall "$ipad" dev.codingadventures.trestle
-          trestle_ui_test_log="$RUNNER_TEMP/mosaic-trestle-ios-ui-test.log"
-          (
-            cd "$ios_linked_output/swiftui/iOS"
-            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-trestle-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$trestle_ui_test_log"
-          )
-          # The count, not just the exit status, as for Journal below.
-          grep -q 'Executed 1 test, with 0 failures' "$trestle_ui_test_log"
-          xcrun simctl shutdown "$ipad"
-
-          # ---- Journal on iOS and iPadOS (UI89 §2.4, step 7). ---------------
-          # The same path as Trestle: the engine as a static .xcframework, the
-          # native-complete SwiftUI project, and the generated iOS app target.
-          # mosaic-ios-simulator-gate.sh then launches it three times on the
-          # iPhone simulator: a fresh launch writes state (the environment
-          # report is its first event), a second restores it with nothing
-          # quarantined, and a third quarantines a seeded `{}` and starts
-          # fresh. The same .app then runs on the iPad simulator.
-          journal_ios_runtime="$RUNNER_TEMP/JournalAppRuntime.xcframework"
-          bash code/scripts/build-mosaic-xcframework.sh journal-mosaic-app "$journal_ios_runtime"
-          journal_ios_output="$RUNNER_TEMP/mosaic-swift-journal-ios-linked"
-          # Journal's XCUITest (UI89 §4.3) goes into the project as a UI test
-          # bundle with a shared scheme; it runs on the iPad below.
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_ios_output" --emit-project --profile native-complete --runtime-library "$journal_ios_runtime" --ios-ui-test code/packages/rust/journal-mosaic-app/conformance/swiftui-ios/JournalUiTests.swift
-          jq -e '.replacedGeneratedFiles == []' "$journal_ios_output/swiftui/mosaic-degradations.json"
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_ios_output/swiftui/mosaic-degradations.json"
-          test -f "$journal_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
-          journal_ios_build="$RUNNER_TEMP/mosaic-journal-ios-app"
-          (
-            cd "$journal_ios_output/swiftui/iOS"
-            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$journal_ios_build" build
-          )
-          journal_ios_app="$journal_ios_build/Debug-iphonesimulator/App.app"
-          nm -gU "$journal_ios_app/App" > "$RUNNER_TEMP/mosaic-journal-ios-app-symbols.txt"
-          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-journal-ios-app-symbols.txt"
-          # The defaults Journal's manifest leaves in place (UI89 §2.4, §3.9).
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$journal_ios_app/Info.plist")" = dev.codingadventures.journalapp
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$journal_ios_app/Info.plist")" = JournalApp
-          xcrun simctl boot "$simulator" || true
-          xcrun simctl bootstatus "$simulator" -b
-          bash code/scripts/mosaic-ios-simulator-gate.sh "$journal_ios_app" dev.codingadventures.journalapp journal-app "$simulator"
-          xcrun simctl shutdown "$simulator"
-          xcrun simctl boot "$ipad" || true
-          xcrun simctl bootstatus "$ipad" -b
-          xcrun simctl install "$ipad" "$journal_ios_app"
-          xcrun simctl launch "$ipad" dev.codingadventures.journalapp
-          sleep 10
-          # Running, not merely listed: launchctl keeps an exited job with `-`
-          # for its PID, so the label is matched exactly with a numeric PID.
-          ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
-          awk -v b=dev.codingadventures.journalapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
-          # A person's use of it (UI89 §4.3): write, save and delete entries
-          # through the generated controls, in landscape so both columns of
-          # the split are on screen, and find the survivor after a relaunch.
-          # Uninstalled first, so launch 1 starts without the state the launch
-          # above left; `xcodebuild test` installs the app fresh.
-          xcrun simctl uninstall "$ipad" dev.codingadventures.journalapp
-          journal_ui_test_log="$RUNNER_TEMP/mosaic-journal-ios-ui-test.log"
-          (
-            cd "$journal_ios_output/swiftui/iOS"
-            # What xcodebuild makes of the generated scheme, logged before the
-            # run so a scheme it cannot use is diagnosable from this log.
-            # The UI test scheme lives in a workspace beside the project: the
-            # project's own schemes resolve against its `..` project directory
-            # and found no buildables (mosaic-ios-project, shared_scheme).
-            find App.xcworkspace App.xcodeproj -name '*.xcscheme' -print
-            xcodebuild -list -workspace App.xcworkspace || true
-            xcodebuild -showdestinations -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator || true
-            # -sdk as the app build above passes it: the destination is a
-            # simulator, so the SDK is the simulator's.
-            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-journal-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$journal_ui_test_log"
-          )
-          # The count, not just the exit status: a test that was never compiled
-          # in, or was filtered out, would leave xcodebuild green.
-          grep -q 'Executed 1 test, with 0 failures' "$journal_ui_test_log"
-          xcrun simctl shutdown "$ipad"
-
-          # ---- Engram on iOS and iPadOS (UI89 §2.5, step 7). ----------------
-          # Journal's recipe and gate. The app also compiles Engram's
-          # [host_effects] handler (EngramEffects.swift), which answers Anki
-          # import/export through the platform library's document picker, and
-          # its touch layout. Its XCUITest (UI89 §4.4) goes in as a UI test
-          # bundle; with it, the Debug build compiles the fake picker the
-          # test selects with -MosaicUITestPicker.
-          engram_ios_runtime="$RUNNER_TEMP/EngramAppRuntime.xcframework"
-          bash code/scripts/build-mosaic-xcframework.sh engram-mosaic-app "$engram_ios_runtime"
-          engram_ios_output="$RUNNER_TEMP/mosaic-swift-engram-ios-linked"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend swiftui --output "$engram_ios_output" --emit-project --profile native-complete --runtime-library "$engram_ios_runtime" --ios-ui-test code/programs/mosaic/engram-app/conformance/swiftui-ios/EngramUiTests.swift
-          jq -e '.replacedGeneratedFiles == []' "$engram_ios_output/swiftui/mosaic-degradations.json"
-          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_ios_output/swiftui/mosaic-degradations.json"
-          test -f "$engram_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
-          # The handler is part of the iOS app target, so its #else branch
-          # (the iOS answer to Anki import/export) is compiled here.
-          grep -qF 'Sources/App/EngramEffects.swift' "$engram_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
-          engram_ios_build="$RUNNER_TEMP/mosaic-engram-ios-app"
-          (
-            cd "$engram_ios_output/swiftui/iOS"
-            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$engram_ios_build" build
-          )
-          engram_ios_app="$engram_ios_build/Debug-iphonesimulator/App.app"
-          nm -gU "$engram_ios_app/App" > "$RUNNER_TEMP/mosaic-engram-ios-app-symbols.txt"
-          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-engram-ios-app-symbols.txt"
-          # The defaults Engram's manifest leaves in place (UI89 §2.5, §3.10).
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$engram_ios_app/Info.plist")" = dev.codingadventures.engramapp
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$engram_ios_app/Info.plist")" = EngramApp
-          xcrun simctl boot "$simulator" || true
-          xcrun simctl bootstatus "$simulator" -b
-          bash code/scripts/mosaic-ios-simulator-gate.sh "$engram_ios_app" dev.codingadventures.engramapp engram-app "$simulator"
-          xcrun simctl shutdown "$simulator"
-          xcrun simctl boot "$ipad" || true
-          xcrun simctl bootstatus "$ipad" -b
-          xcrun simctl install "$ipad" "$engram_ios_app"
-          xcrun simctl launch "$ipad" dev.codingadventures.engramapp
-          sleep 10
-          # Running, not merely listed: launchctl keeps an exited job with `-`
-          # for its PID, so the label is matched exactly with a numeric PID.
-          ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
-          awk -v b=dev.codingadventures.engramapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
-          # Anki export and import through the fake picker, and the imported
-          # deck again after a relaunch (UI89 §4.4). Uninstalled first, so
-          # launch 1 starts from an empty collection.
-          xcrun simctl uninstall "$ipad" dev.codingadventures.engramapp
-          engram_ui_test_log="$RUNNER_TEMP/mosaic-engram-ios-ui-test.log"
-          (
-            cd "$engram_ios_output/swiftui/iOS"
-            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-engram-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$engram_ui_test_log"
-          )
-          grep -q 'Executed 1 test, with 0 failures' "$engram_ui_test_log"
-          xcrun simctl shutdown "$ipad"
-
-          toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend swiftui --output "$toolkit_output" --emit-project
-          swift build --package-path "$toolkit_output/swiftui"
-
-          slider_output="$RUNNER_TEMP/mosaic-swift-host-slider"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-swiftui/fixtures/host-slider --backend swiftui --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/swiftui/mosaic-degradations.json"
-          swift build --package-path "$slider_output/swiftui"
-          (
-            cd "$slider_output/swiftui"
-            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-host-slider-ios" CODE_SIGNING_ALLOWED=NO build
-          )
-
-          navigation_split_output="$RUNNER_TEMP/mosaic-swift-host-navigation-split"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-swiftui/fixtures/host-navigation-split --backend swiftui --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
-          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 0)' "$navigation_split_output/swiftui/mosaic-degradations.json"
-          swift build --package-path "$navigation_split_output/swiftui"
-          (
-            cd "$navigation_split_output/swiftui"
-            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-host-navigation-split-ios" CODE_SIGNING_ALLOWED=NO build
-          )
-
-      # UI89 §7 (steps 3 and 4): Trestle, Journal and Engram through the
-      # Flutter backend, on iOS. Each engine is built as iOS dynamic
-      # libraries. Flutter's native assets bundle a dylib as a framework, so
-      # SwiftUI's static xcframework cannot be used. The builder and the hook
-      # check each library per SDK. build-mosaic-flutter-phone-app.sh builds
-      # the simulator app and finds the engine in its frameworks. Each app
-      # then runs through the same simulator gate as its SwiftUI app, after
-      # that app (same bundle id) is uninstalled.
-      - name: Build Trestle, Journal and Engram for iOS with Flutter (UI89 §7)
-        if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
-        shell: bash
-        timeout-minutes: 90
-        run: |
-          set -euo pipefail
-          rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
-          simulator="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
-          test -n "$simulator" && test "$simulator" != null
-          # crate | program | project name | Mosaic application id. Read on
-          # fd 3: cargo, flutter and simctl must not eat the list from stdin.
-          while read -r crate program name application_id <&3; do
-            phone_runtime="$RUNNER_TEMP/mosaic-$name-flutter-ios-runtime"
-            rm -rf "$phone_runtime"
-            echo "::group::$name (Flutter, iOS)"
-            bash code/scripts/build-mosaic-ios-dylibs.sh "$crate" "$phone_runtime"
-            output="$RUNNER_TEMP/mosaic-flutter-$name-ios"
-            bash code/scripts/build-mosaic-flutter-phone-app.sh ios "$program" "$phone_runtime" "$output" dev.codingadventures "$name"
-            xcrun simctl boot "$simulator" || true
-            xcrun simctl bootstatus "$simulator" -b
-            xcrun simctl uninstall "$simulator" "dev.codingadventures.$name" || true
-            bash code/scripts/mosaic-ios-simulator-gate.sh "$output/flutter/build/ios/iphonesimulator/Runner.app" "dev.codingadventures.$name" "$application_id" "$simulator"
-            xcrun simctl shutdown "$simulator"
-            echo "::endgroup::"
-          done 3<<EOF
-          task-mosaic-app code/programs/mosaic/task-app trestle task-app
-          journal-mosaic-app code/programs/mosaic/journal-app journalapp journal-app
-          engram-mosaic-app code/programs/mosaic/engram-app engramapp engram-app
-          EOF
 
       - name: Round-trip Rust engine through standard Qt binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
@@ -4733,6 +3420,1458 @@ jobs:
           EOF
           fi
 
+  # ── Job 15: Build and test ─────────────────────────────────────
+  #
+  # Installs only the toolchains flagged by the detect job, then
+  # compiles the build tool and runs the incremental build.
+  build:
+    needs: detect
+    name: build (${{ matrix.label }})
+    strategy:
+      matrix:
+        include: ${{ fromJSON(needs.detect.outputs.build_matrix) }}
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # ── Language toolchains (conditional) ───────────────────────
+      #
+      # Go is always installed — the build tool is written in Go.
+      # Other toolchains are installed only if their language has
+      # affected packages, as determined by the detect job.
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.26.1'
+          cache-dependency-path: 'code/**/go.sum'
+
+      - name: Set up Python
+        if: needs.detect.outputs.needs_python == 'true' || runner.os == 'Windows' || runner.os == 'macOS'
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+          allow-prereleases: true
+
+      - name: Test ADJ Windows Job containment
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: python -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k windows_job -k process_tree -k windows_containment -k job_close_root -k raw_pipe_close -k stuck_stdout -k stuck_drain
+
+      - name: Test ADJ macOS strict-containment boundary
+        if: runner.os == 'macOS'
+        run: python3 -m unittest discover -s code/scripts/tests -p test_adj_stdlib_provenance.py -k posix_process -k process_tree -k guardian -k drain -k raw_pipe_close
+
+      - name: Install uv
+        if: needs.detect.outputs.needs_python == 'true'
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: "latest"
+          cache-dependency-glob: 'code/**/pyproject.toml'
+
+      # ── Lua must be set up BEFORE Ruby on Windows ──────────────
+      #
+      # Ruby's MSYS2 ships its own `link.exe` which shadows the MSVC
+      # linker that Lua needs to compile. By installing MSVC + Lua
+      # first, the MSVC `link.exe` is in PATH before Ruby's MSYS2.
+
+      # MSVC supplies the linker and SDK libraries for LANG and Venture, Lua,
+      # and the C/C++ lane (`cl.exe` for the MSVC arm of the pure-ISO check).
+      # A single bootstrap invocation covers these consumers — invoking it twice would
+      # double-prepend the MSVC environment.
+      - name: Test MSVC environment bootstrap
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: python -m unittest discover -s code/scripts/tests -p 'test_setup_msvc_dev_cmd.py'
+
+      - name: Set up MSVC (Lua + C/C++ + Venture + LANG)
+        if: (needs.detect.outputs.needs_lua == 'true' || needs.detect.outputs.needs_cpp == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.run_build_windows_os_suites == 'true') && runner.os == 'Windows'
+        shell: pwsh
+        run: python code/scripts/setup_msvc_dev_cmd.py --arch x64
+
+      - name: Restore pinned Lua 5.4.7 cache
+        id: lua-cache
+        if: needs.detect.outputs.needs_lua == 'true'
+        uses: actions/cache@v6
+        with:
+          path: .lua
+          key: lua-5.4.7-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('code/scripts/setup_lua.py') }}
+
+      - name: Install pinned Lua 5.4.7 from verified mirrors
+        if: needs.detect.outputs.needs_lua == 'true' && steps.lua-cache.outputs.cache-hit != 'true'
+        shell: bash
+        timeout-minutes: 15  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            python code/scripts/setup_lua.py --prefix .lua
+          else
+            if [ "$RUNNER_OS" = "macOS" ]; then
+              brew install readline ncurses
+            else
+              sudo apt-get install -qy libreadline-dev libncurses-dev
+            fi
+            python3 code/scripts/setup_lua.py --prefix .lua
+          fi
+
+      - name: Activate and verify pinned Lua 5.4.7
+        if: needs.detect.outputs.needs_lua == 'true'
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            lua_bin="$(cygpath -u "$GITHUB_WORKSPACE")/.lua/bin"
+            cygpath -w "$lua_bin" >> "$GITHUB_PATH"
+            "$lua_bin/lua.exe" -v
+          else
+            lua_bin="$GITHUB_WORKSPACE/.lua/bin"
+            echo "$lua_bin" >> "$GITHUB_PATH"
+            "$lua_bin/lua" -v
+          fi
+
+      - name: Set up LuaRocks (Unix)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        uses: leafo/gh-actions-luarocks@35d062def313a7699a0d513e996bcf4352f05389 # v6.1.0
+
+      - name: Set up LuaRocks (Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        shell: cmd
+        run: |
+          curl -L -o luarocks.zip https://luarocks.github.io/luarocks/releases/luarocks-3.11.1-windows-64.zip
+          powershell -Command "Expand-Archive -Path luarocks.zip -DestinationPath luarocks-install"
+          cd luarocks-install\luarocks-3.11.1-windows-64
+          echo %CD%>> %GITHUB_PATH%
+
+      - name: Install Lua test tools (Unix)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os != 'Windows'
+        shell: bash
+        run: |
+          tmpdir="$(mktemp -d)"
+          curl -L --fail https://luarocks.org/manifests/hoelzro/lua-term-0.8-1.rockspec -o "$tmpdir/lua-term-0.8-1.rockspec"
+          sed -i.bak 's|archive/0\.08\.tar\.gz|archive/refs/tags/0.08.tar.gz|' "$tmpdir/lua-term-0.8-1.rockspec"
+          luarocks install "$tmpdir/lua-term-0.8-1.rockspec"
+          rm -rf "$tmpdir"
+          luarocks install busted
+          luarocks install dkjson
+          luarocks install libdeflate 1.0.2-1
+          luarocks install luacov
+          luarocks install luacheck
+          luarocks install luasocket 2>/dev/null || true
+
+      - name: Install Lua test tools (Windows)
+        if: needs.detect.outputs.needs_lua == 'true' && runner.os == 'Windows'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          luarocks install busted
+          luarocks install dkjson
+          luarocks install libdeflate 1.0.2-1
+          luarocks install luacov
+          luarocks install luacheck
+          for /f "delims=" %%i in ('luarocks path --lr-bin') do echo %%i>> %GITHUB_PATH%
+
+      - name: Set up Ruby
+        if: needs.detect.outputs.needs_ruby == 'true'
+        id: setup-ruby
+        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        with:
+          ruby-version: '3.4'
+          bundler-cache: false
+
+      - name: Install bundler
+        if: needs.detect.outputs.needs_ruby == 'true'
+        shell: bash
+        run: gem install bundler
+
+      - name: Set up Node.js
+        if: needs.detect.outputs.needs_typescript == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      # npm 10.9.8 crashes in Arborist while resolving Vitest peer dependencies
+      # ("Cannot read properties of null (reading 'edgesOut')").
+      # Keep the independently validated installer fixed across all build OSes.
+      - name: Set up npm
+        if: needs.detect.outputs.needs_typescript == 'true'
+        run: npm install --global npm@11.13.0
+
+      - name: Delegate Forme sandbox cgroup v2 root
+        if: runner.os == 'Linux' && needs.detect.outputs.run_build_linux_os_suites == 'true'
+        run: |
+          test -f /sys/fs/cgroup/cgroup.controllers
+          if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+          sudo mkdir -p \
+            /sys/fs/cgroup/forme-sandbox \
+            /sys/fs/cgroup/forme-sandbox/runner
+          sudo chown "$(id -u):$(id -g)" \
+            /sys/fs/cgroup/forme-sandbox \
+            /sys/fs/cgroup/forme-sandbox/cgroup.procs \
+            /sys/fs/cgroup/forme-sandbox/cgroup.threads \
+            /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control \
+            /sys/fs/cgroup/forme-sandbox/runner \
+            /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs \
+            /sys/fs/cgroup/forme-sandbox/runner/cgroup.threads
+          test -w /sys/fs/cgroup/forme-sandbox
+          test -w /sys/fs/cgroup/forme-sandbox/cgroup.procs
+          test -w /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
+          for controller in cpu memory pids; do
+            grep -qw "$controller" /sys/fs/cgroup/forme-sandbox/cgroup.controllers
+            echo "+$controller" >> /sys/fs/cgroup/forme-sandbox/cgroup.subtree_control
+          done
+
+      # ── C/C++ compilers (pure-ISO multi-compiler lane) ──────────
+      #
+      # The goal is that every pure-ISO C/C++ package compiles under GCC, Clang
+      # (LLVM), and MSVC across the 3-OS matrix. Each runner contributes the
+      # compilers only it can host:
+      #   • ubuntu  → GCC (g++/gcc, preinstalled) + Clang (installed below)
+      #   • windows → MSVC (cl.exe, via the msvc-dev-cmd step above)
+      #   • macOS   → Apple Clang (preinstalled)
+      # A real GCC exists only on Linux and real MSVC only on Windows, so no
+      # single machine can host all three — coverage is achieved across the
+      # matrix, and the ISO harness compiles with every compiler it finds.
+      - name: Install Clang alongside GCC (Linux C/C++)
+        if: needs.detect.outputs.needs_cpp == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          bash code/scripts/ci/apt-install.sh clang
+          gcc --version | head -1
+          clang --version | head -1
+
+      - name: Set up Rust
+        if: needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_lang_windows == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true' || needs.detect.outputs.needs_mosaic_swift_runtime == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' || needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        # Uses the `stable` channel (matching the rest of this repo's Rust CI).
+        # NOTE on the -clippy gate: clippy adds/tightens lints on each stable
+        # release, so a new Rust release can surface new lints on `main` — treat
+        # that as normal maintenance (run `cargo clippy --fix` + resolve). Pinning
+        # to a specific version was tried but broke BUILDs that invoke
+        # `rustup run stable` / `rustup target add` (wasm + embedded firmware),
+        # because a version-pinned default toolchain is not the `stable` alias
+        # those scripts expect. Reproduce CI's clippy locally with the *current*
+        # stable (`rustup update stable`), not a stale cached toolchain.
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          # dtolnay/rust-toolchain installs the minimal profile, which omits
+          # clippy; the -clippy gate needs it, so request it explicitly.
+          #
+          # llvm-tools is required for the same reason. The chief-of-staff
+          # approval adapters measure coverage with `cargo tarpaulin --engine
+          # llvm` (their integration tests re-exec their own binary, which
+          # tarpaulin's default ptrace engine cannot instrument without raising
+          # SIGILL). That engine shells out to `llvm-profdata` and `llvm-cov`
+          # from the toolchain's sysroot, and the minimal profile ships
+          # neither. Declared here rather than left to chance: a developer
+          # machine usually has the component installed already, so omitting it
+          # fails only on CI.
+          components: clippy,llvm-tools
+
+      - name: Install native Paint VM dependencies
+        # needs_mosaic_qt_runtime is its own condition, independent of
+        # needs_rust/needs_venture_windows: a change scoped to a Mosaic
+        # package outside code/packages/rust/ (e.g. a mosaic-pkg-* smoke-test
+        # crate whose Cargo.toml starts depending on mosaic-package-artifact-
+        # builder, which pulls in mosaic-emit-qt) can trip
+        # needs_mosaic_qt_runtime without tripping the other two. Without
+        # this arm, "Round-trip Rust engine through standard Qt binding"
+        # (which needs cairo transitively) runs while this installer is
+        # skipped, and the build fails with a pkg-config "cairo not found"
+        # error that has nothing to do with the actual diff. Matches the
+        # same three-way condition "Install Venture Qt acceptance
+        # dependencies" below already uses.
+        if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          bash code/scripts/ci/apt-install.sh libcairo2-dev
+
+      # The `pdf` crate is verified against qpdf, an independent
+      # implementation: a PDF writer checked only by reading its own output
+      # back proves nothing, because a wrong idea of where the xref table goes
+      # would be shared by both halves.
+      #
+      # `tests/qpdf_gate.rs` FAILS when qpdf is absent rather than skipping --
+      # deliberately, since a suite that silently passes when its oracle is
+      # missing is not a suite. That makes installing it here a requirement
+      # rather than a convenience.
+      # `font-subset` writes a font file, and a font writer checked only by
+      # our own parser proves nothing -- a wrong idea of how the table
+      # directory is padded would be shared by both halves and they would agree
+      # perfectly. `tests/fonttools_oracle.rs` hands the subset to fontTools
+      # and asks whether the retained glyphs still have the same outlines at
+      # the same ids.
+      #
+      # Unlike poppler this installs identically everywhere: fontTools is pure
+      # Python, so one pip command covers Linux, macOS and Windows rather than
+      # three package managers with three different names.
+      - name: Install fontTools for the font-subset oracle
+        if: needs.detect.outputs.needs_rust == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --quiet fonttools
+          python3 -c "import fontTools; print('fontTools', fontTools.version)"
+          # Pin the exact interpreter fontTools was just installed into.
+          # tests/fonttools_oracle.rs defaults to bare `python3` (see
+          # FONTTOOLS_PYTHON) and doesn't run until much later in this job,
+          # after dozens more toolchain-setup steps that can shift PATH --
+          # so a bare `python3` two hours from now is not guaranteed to be
+          # this one. Naming the literal path removes that dependency on
+          # PATH staying stable for the rest of the job.
+          echo "FONTTOOLS_PYTHON=$(command -v python3)" >> "$GITHUB_ENV"
+
+      - name: Install qpdf for the PDF oracle tests
+        if: needs.detect.outputs.needs_rust == 'true'
+        shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          set -euo pipefail
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            bash code/scripts/ci/apt-install.sh qpdf
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install qpdf
+          else
+            # The community Chocolatey feed answers 504 often enough to fail
+            # a required job outright, and when it does choco installs
+            # "0/0 packages" and EXITS 0, so its status says nothing. Judge
+            # by the result instead: retry until qpdf is actually on PATH,
+            # three attempts with a growing pause. A feed that stays down
+            # still fails below, at `qpdf --version`, naming qpdf -- loud,
+            # not skipped.
+            for attempt in 1 2 3; do
+              choco install qpdf -y --no-progress || true
+              if command -v qpdf >/dev/null 2>&1; then break; fi
+              if [ "$attempt" -lt 3 ]; then
+                echo "choco attempt $attempt did not install qpdf; retrying in $((attempt * 30))s"
+                sleep $((attempt * 30))
+              fi
+            done
+          fi
+          qpdf --version
+
+      # qpdf proves the file is well FORMED. It cannot prove the page is the
+      # right way up: an upside-down page is structurally perfect, and PDF's
+      # origin is bottom-left where every layout model this repository has puts
+      # it top-left. So `tests/render_gate.rs` rasterises with poppler -- a
+      # second independent implementation -- and asks where the ink actually
+      # landed.
+      #
+      # It FAILS when poppler is absent, for the same reason the qpdf gate
+      # does: an oracle that skips reports green while checking nothing.
+      #
+      # Linux and macOS only. The rendering oracle checks where ink lands on a
+      # page, and the PDF bytes it rasterises are byte-identical on every
+      # platform -- so a third rasteriser adds no coverage, while poppler has
+      # no reliable Chocolatey package (`choco install poppler` fails on
+      # windows-2025). The tests are correspondingly compiled out on Windows,
+      # so this is a stated scope rather than a silent skip: everywhere the
+      # gate runs, a missing poppler still fails the build.
+      - name: Install poppler for the PDF rendering oracle
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os != 'Windows'
+        shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          set -euo pipefail
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get install -y poppler-utils
+          else
+            brew install poppler
+          fi
+          pdftoppm -v
+
+      # VLT-PM51 slice 2 (vault-webauthn-ctap2-hid): ctap-hid-fido2's
+      # `hidapi` dependency uses the `linux-static-hidraw` feature on
+      # Linux, which links against `libudev` via pkg-config at build
+      # time (confirmed by reading hidapi's own build.rs -- the
+      # libusb-based backends aren't compiled in, so libusb-1.0-0-dev
+      # is not needed here, only libudev-dev). macOS links the
+      # preinstalled IOKit/CoreFoundation frameworks and Windows links
+      # SetupAPI, neither of which needs a package install step.
+      - name: Install native HID dependencies (vault-webauthn-ctap2-hid)
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          bash code/scripts/ci/apt-install.sh libudev-dev
+
+      - name: Install Venture Qt acceptance dependencies
+        if: (needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
+        uses: jurplel/install-qt-action@a9c63c7c123f3069cff414e7e482d95dfa9d8125 # v4.4.1
+        with:
+          version: '6.8.3'
+          cache: true
+
+      - name: Install cargo-tarpaulin
+        # PINNED, and --locked. An unpinned `cargo install` means coverage can
+        # break with no repo change, and it already did once:
+        # `chief-of-staff-biometric-approval` passed on the ptrace engine on
+        # 2026-08-14 and SIGILLed months later on untouched code -- the tool
+        # moved, not the crate.
+        #
+        # Diff-based CI hides that failure mode. A package is only rebuilt when
+        # it changes, so tool drift sits dormant until an unrelated PR triggers
+        # a near-full rebuild, and then looks like THAT PR's fault. Pinning
+        # turns a mystery into a one-line, reviewable bump.
+        #
+        # `--locked` matters as much as the version: without it Cargo resolves
+        # tarpaulin's own dependency tree fresh, so a patch release in any
+        # transitive dep reintroduces exactly the drift the pin removes.
+        #
+        # 0.37.2, NOT the 0.35.2 this was first pinned to. Upstream fixed the
+        # ptrace SIGILL in 0.35.3 ("PID parent event is delivered in iteration
+        # after the child stop is reported"), which was yanked and republished
+        # as 0.35.4 -- so 0.35.2 is the last release that still HAS the bug
+        # this pin exists to prevent, and 17 of our 20 tarpaulin invocations
+        # run on the default ptrace engine. Pinning to the version that
+        # happened to be installed locally would have frozen CI on it.
+        #
+        # 0.37.1 also brought llvm_profparser 0.13 and with it LLVM 23 support,
+        # which the `--engine llvm` crates need as the floating `@stable`
+        # toolchain advances.
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        run: cargo install cargo-tarpaulin --version 0.37.2 --locked
+
+      - name: Set up Elixir
+        # Pure-BEAM packages run executable BUILD_windows fronts on the pinned
+        # Windows runner. Pin the setup-beam revision proven on Windows 2025 /
+        # VS 2026; NIF and Metal packages retain narrow machine-reported
+        # BUILD_windows exceptions.
+        # setup-beam v1.24.1 -- version deliberately NOT a trailing
+        # comment here: the Elixir Windows contract matches this block
+        # literally and the SHA is bound in
+        # code/specs/fixtures/elixir-windows-build-front-v1/contract.json
+        if: needs.detect.outputs.needs_elixir == 'true'
+        uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124
+        with:
+          elixir-version: '1.18.4'
+          otp-version: '27.3.4.11'
+          version-type: strict
+
+      - name: Set up Dart
+        if: needs.detect.outputs.needs_dart == 'true' || needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+        with:
+          sdk: '3.12.2'
+
+      - name: Set up Flutter
+        # macOS too when the SwiftUI lane runs: Flutter on iOS (UI89 §7.7 step 3)
+        # builds there, beside the SwiftUI iOS gates.
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' && (runner.os == 'Linux' || (runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'))
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+
+      - name: Enable Flutter native assets
+        # macOS too when the SwiftUI lane runs: Flutter on iOS (UI89 §7.7 step 3)
+        # builds there, beside the SwiftUI iOS gates.
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' && (runner.os == 'Linux' || (runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'))
+        shell: bash
+        run: flutter config --enable-native-assets
+
+      # `flutter build linux` needs GTK 3's development headers, and package
+      # builds run it whenever `flutter` is on PATH (venture-browser's
+      # build-all.sh, for one). They used to get the headers by accident: the
+      # Mosaic Flutter lane installed them earlier in this job. That lane now
+      # runs in `mosaic-linux-runtime`, so the build installs what Flutter on
+      # Linux needs itself, under the same condition that installs Flutter.
+      # xvfb comes along because the lane installed it too.
+      - name: Install Flutter Linux desktop dependencies
+        if: needs.detect.outputs.needs_mosaic_flutter_runtime == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        shell: bash
+        run: |
+          bash code/scripts/ci/apt-install.sh libgtk-3-dev xvfb
+
+      - name: Set up Swift (Windows)
+        if: needs.detect.outputs.needs_swift == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          winget install --id Swift.Toolchain --exact --accept-package-agreements --accept-source-agreements --source winget
+          $wingetExitCode = $LASTEXITCODE
+
+          if ($wingetExitCode -ne 0) {
+            Write-Warning "winget install exited with code $wingetExitCode; checking whether Swift is available anyway"
+          }
+
+          $currentPathEntries = @($env:Path -split ';')
+          $currentPathSet = @{}
+          foreach ($entry in $currentPathEntries) {
+            if (-not [string]::IsNullOrWhiteSpace($entry)) {
+              $currentPathSet[$entry] = $true
+            }
+          }
+
+          $registryPathEntries = @(
+            [System.Environment]::GetEnvironmentVariable('Path', 'User')
+            [System.Environment]::GetEnvironmentVariable('Path', 'Machine')
+          ) | Where-Object { $_ } | ForEach-Object { $_ -split ';' } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+          $newPathEntries = @()
+          foreach ($entry in $registryPathEntries) {
+            if (-not $currentPathSet.ContainsKey($entry)) {
+              $currentPathSet[$entry] = $true
+              $newPathEntries += $entry
+            }
+          }
+
+          foreach ($entry in $newPathEntries) {
+            $entry | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          }
+          if ($newPathEntries.Count -gt 0) {
+            $env:Path = "$env:Path;$($newPathEntries -join ';')"
+          }
+
+          $swiftRoots = @(
+            (Join-Path $env:LOCALAPPDATA 'Programs\Swift')
+            (Join-Path $env:ProgramFiles 'Swift')
+          ) | Where-Object { Test-Path $_ }
+
+          $swiftExe = @(
+            (Get-Command swift -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source -ErrorAction SilentlyContinue)
+            ($swiftRoots | ForEach-Object {
+              Get-ChildItem -Path $_ -Filter swift.exe -Recurse -File -ErrorAction SilentlyContinue |
+                Sort-Object FullName -Descending |
+                Select-Object -First 1 -ExpandProperty FullName
+            })
+          ) | Where-Object { $_ } | Select-Object -First 1
+
+          if (-not $swiftExe) {
+            if ($wingetExitCode -ne 0) {
+              throw "winget install exited with code $wingetExitCode and swift.exe was not found"
+            }
+            throw 'swift.exe not found after winget install'
+          }
+
+          $toolchainBin = Split-Path -Parent $swiftExe
+          if (-not $currentPathSet.ContainsKey($toolchainBin)) {
+            $toolchainBin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            $env:Path = "$env:Path;$toolchainBin"
+            $currentPathSet[$toolchainBin] = $true
+          }
+          Write-Host "Using Swift from $swiftExe"
+
+          $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'User')
+          if (-not $sdkRoot) {
+            $sdkRoot = [System.Environment]::GetEnvironmentVariable('SDKROOT', 'Machine')
+          }
+          if (-not $sdkRoot) {
+            $sdkRoot = $swiftRoots | ForEach-Object {
+            Get-ChildItem -Path $_ -Filter Windows.sdk -Directory -Recurse -ErrorAction SilentlyContinue |
+              Sort-Object FullName -Descending |
+              Select-Object -First 1 -ExpandProperty FullName
+            } | Where-Object { $_ } | Select-Object -First 1
+          }
+
+          if ($sdkRoot) {
+            "SDKROOT=$sdkRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            $env:SDKROOT = $sdkRoot
+            Write-Host "Using SDKROOT=$sdkRoot"
+          }
+
+          where.exe swift
+
+      # ── Java / Kotlin ──────────────────────────────────────────
+      #
+      # Both Java and Kotlin packages use Gradle and JDK 21. Venture's
+      # cross-platform package acceptance also emits and directly exercises
+      # its Compose Desktop shell, even though the package harness is Rust.
+      # A single JDK + Gradle setup covers all three cases.
+
+      - name: Set up JDK 21
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Gradle
+        if: needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
+        uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+      - name: Disable long-lived Gradle services on Windows CI
+        if: (needs.detect.outputs.needs_java == 'true' || needs.detect.outputs.needs_kotlin == 'true' || needs.detect.outputs.needs_venture_windows == 'true') && runner.os == 'Windows'
+        shell: bash
+        run: |
+          {
+            echo 'GRADLE_OPTS=-Dorg.gradle.daemon=false -Dorg.gradle.vfs.watch=false'
+          } >> "$GITHUB_ENV"
+
+      - name: Install cpanm and test dependencies (Perl)
+        if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'
+        shell: bash
+        timeout-minutes: 15  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get install -y cpanminus
+            # Pre-install Test2::V0 to the system Perl location (requires sudo).
+            # Without sudo, cpanm falls back to ~/perl5 which prove cannot find.
+            sudo cpanm --quiet --notest Test2::V0
+          elif [ "$RUNNER_OS" = "macOS" ]; then
+            brew install cpanminus
+            cpanm --quiet --notest Test2::V0
+          fi
+
+      - name: Set up Haskell
+        if: needs.detect.outputs.needs_haskell == 'true'
+        uses: haskell-actions/setup@6037f33647c3f17758a2356c80fc4a53d7e0685d # v2.12.0
+        with:
+          ghc-version: '9.4'
+          cabal-version: '3.10'
+
+      # Cabal 3.10 can report a successful `cabal update` while deferring the
+      # package-index cache materialization until the first solver query.  On
+      # fresh hosted runners that made the first Haskell BUILD incorrectly
+      # resolve a test-disabled plan.  Force and verify that read here so a
+      # broken index is classified as bootstrap failure before package tests.
+      - name: Verify Haskell package index
+        if: needs.detect.outputs.needs_haskell == 'true'
+        shell: bash
+        run: |
+          cabal list --simple-output hspec | grep -Eq '^hspec [0-9]'
+
+      - name: Set up reviewed OCaml compiler and repository
+        id: setup-ocaml
+        if: needs.detect.outputs.needs_ocaml == 'true' && (matrix.sharded != true || contains(matrix.languages, 'ocaml'))
+        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: maintenance.auto
+          GIT_CONFIG_VALUE_0: 'false'
+        with:
+          ocaml-compiler: ocaml-base-compiler.5.2.1
+          opam-repositories: |
+            default: git+https://github.com/ocaml/opam-repository.git#ba8cc66eb9e5baae7ebc88cf77f4c488d63d87ff
+          opam-pin: false
+          dune-cache: false
+          cache-prefix: ocaml03-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}-build-${{ matrix.label }}
+          windows-compiler: mingw
+          windows-environment: cygwin
+          github-token: ${{ github.token }}
+
+      - name: Require reviewed OCaml bootstrap
+        if: steps.setup-ocaml.outcome == 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(opam --version)" = "2.5.2"
+          test "$(opam exec -- ocamlc -version | tr -d '\r')" = "5.2.1"
+          repository_names="$(
+            opam repository list --all --short --color=never
+          )"
+          test "$repository_names" = "default"
+          repository_listing="$(
+            opam repository list --all --color=never
+          )"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            python_cmd=python
+          else
+            python_cmd=python3
+          fi
+          "$python_cmd" "$GITHUB_WORKSPACE/code/scripts/ocaml_toolchain_lock.py" \
+            validate-repository-report \
+            --names "$repository_names" \
+            --listing "$repository_listing"
+          for package in dune alcotest bisect_ppx ocamlformat; do
+            if opam list --installed --short --columns=name "$package" \
+                | grep -Fxq "$package"; then
+              printf 'fresh switch unexpectedly contains %s\n' "$package" >&2
+              exit 1
+            fi
+          done
+          export OPAMREQUIRECHECKSUMS=true
+          opam install \
+            dune.3.17.2 \
+            alcotest.1.9.0 \
+            bisect_ppx.2.8.3 \
+            ocamlformat.0.27.0 \
+            --yes --require-checksums
+          "$python_cmd" "$GITHUB_WORKSPACE/code/scripts/ocaml_toolchain_lock.py" \
+            validate-runtime
+          printf 'OPAMREQUIRECHECKSUMS=true\n' >> "$GITHUB_ENV"
+
+      - name: Set up .NET
+        if: needs.detect.outputs.needs_dotnet == 'true' || ((needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_xaml_windows == 'true') && runner.os == 'Windows')
+        uses: actions/setup-dotnet@v6
+        with:
+          # .NET 9 is the current LTS release. No platform exclusions needed —
+          # actions/setup-dotnet@v6 works identically on Ubuntu, macOS, and Windows.
+          dotnet-version: '9.0.x'
+
+      - name: Install ILAsm (real-CoreCLR assembler for the CLR-real conformance column)
+        # The W16 conformance suite's `CLR-real` backend assembles textual `.il`
+        # with `ilasm` and runs it on real `dotnet`. `ilasm` ships only in the
+        # RID-specific NuGet runtime pack `runtime.<rid>.Microsoft.NETCore.ILAsm`
+        # (the bare `Microsoft.NETCore.ILAsm` is ref-only, no binary). A
+        # `<PackageDownload>` restore drops the binary into `~/.nuget/packages`,
+        # exactly where the test harness's `find_ilasm()` searches — so the CLR
+        # column is verified on the *real* runtime, not just the simulator.
+        if: needs.detect.outputs.needs_dotnet == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rid=$(dotnet --info | sed -n 's/^[[:space:]]*RID:[[:space:]]*//p' | head -1)
+          echo "Host RID: ${rid:-<unknown>}"
+          if [ -z "${rid:-}" ]; then
+            echo "Could not determine RID; the CLR-real column will skip gracefully."
+            exit 0
+          fi
+          work=$(mktemp -d)
+          cat > "$work/ilasm.csproj" <<EOF
+          <Project Sdk="Microsoft.NET.Sdk">
+            <PropertyGroup>
+              <TargetFramework>net9.0</TargetFramework>
+            </PropertyGroup>
+            <ItemGroup>
+              <PackageDownload Include="runtime.$rid.Microsoft.NETCore.ILAsm" Version="[9.0.0]" />
+            </ItemGroup>
+          </Project>
+          EOF
+          # Non-fatal: if the pack is unavailable for this RID, the conformance
+          # CLR-real arm simply returns None (skip), leaving the simulator floor.
+          dotnet restore "$work/ilasm.csproj" || echo "ILAsm restore failed; CLR-real column will skip."
+          found=$(find "$HOME/.nuget/packages" -iname ilasm -type f 2>/dev/null | head -1 || true)
+          echo "ilasm binary: ${found:-<not found>}"
+
+      - name: Install test runners
+        shell: bash
+        run: |
+          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ]; then
+            uv pip install --system pytest
+          fi
+          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
+            npm install -g jest
+          fi
+
+      - name: Restore selected Ruby to Windows PATH
+        if: needs.detect.outputs.needs_ruby == 'true' && runner.os == 'Windows'
+        shell: pwsh
+        env:
+          RUBY_PREFIX: ${{ steps.setup-ruby.outputs.ruby-prefix }}
+        run: |
+          if (-not $env:RUBY_PREFIX) {
+            throw "ruby/setup-ruby did not report its installation prefix"
+          }
+          @(
+            (Join-Path $env:RUBY_PREFIX 'bin')
+            (Join-Path $env:RUBY_PREFIX 'msys64\ucrt64\bin')
+            (Join-Path $env:RUBY_PREFIX 'msys64\usr\bin')
+          ) | ForEach-Object {
+            if (Test-Path $_) {
+              Add-Content -Path $env:GITHUB_PATH -Value $_
+            }
+          }
+
+      # ── Verify toolchains ────────────────────────────────────
+      - name: Verify tools
+        shell: bash
+        run: |
+          echo "Go: $(go version)"
+          if [ "${{ needs.detect.outputs.needs_python }}" = "true" ]; then
+            echo "Python: $(python --version)"
+            echo "uv: $(uv --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_ruby }}" = "true" ]; then
+            echo "Ruby: $(ruby --version)"
+            echo "Bundler: $(bundle --version)"
+            ruby -e 'require "rubygems"; required = Gem::Version.new("3.4"); current = Gem::Version.new(RUBY_VERSION); abort "Ruby #{required}+ required, got #{current}" if current < required'
+          fi
+          if [ "${{ needs.detect.outputs.needs_typescript }}" = "true" ]; then
+            echo "Node: $(node --version)"
+            echo "npm: $(npm --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_rust }}" = "true" ] || [ "${{ needs.detect.outputs.needs_venture_windows }}" = "true" ] || [ "${{ needs.detect.outputs.needs_mosaic_xaml_windows }}" = "true" ]; then
+            echo "Rust: $(rustc --version)"
+            echo "Cargo: $(cargo --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_swift }}" = "true" ]; then
+            echo "Swift: $(swift --version | head -1)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_elixir }}" = "true" ]; then
+            echo "Elixir: $(elixir --version)"
+            echo "Mix: $(mix --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_dart }}" = "true" ]; then
+            echo "Dart: $(dart --version 2>&1)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_lua }}" = "true" ]; then
+            echo "Lua: $(lua -v)"
+            echo "LuaRocks: $(luarocks --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_perl }}" = "true" ] && [ "$RUNNER_OS" != "Windows" ]; then
+            echo "Perl: $(perl --version | head -2 | tail -1)"
+            echo "cpanm: $(cpanm --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_haskell }}" = "true" ]; then
+            echo "GHC: $(ghc --version)"
+            echo "Cabal: $(cabal --version)"
+          fi
+          if [ "${{ needs.detect.outputs.needs_dotnet }}" = "true" ]; then
+            echo ".NET: $(dotnet --version)"
+          fi
+
+      # ── Download build plan (skip discovery in build job) ─────
+      - name: Download build plan
+        uses: actions/download-artifact@v8
+        with:
+          name: build-plan
+
+      # ── Build the build tool ──────────────────────────────────
+      - name: Compile build tool
+        shell: bash
+        run: |
+          cd code/programs/go/build-tool
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            go build -o ../../../../build-tool.exe .
+          else
+            go build -o ../../../../build-tool .
+          fi
+
+      - name: Reclaim Linux runner disk
+        if: runner.os == 'Linux'
+        shell: bash
+        env:
+          NEEDS_KOTLIN: ${{ needs.detect.outputs.needs_kotlin }}
+          NEEDS_MOSAIC_COMPOSE: ${{ needs.detect.outputs.needs_mosaic_compose_runtime }}
+        run: |
+          set -euo pipefail
+          echo "Disk before cleanup:"
+          df -h /
+          # Keep the pre-installed Android SDK when Kotlin (Android) builds are
+          # needed — deleting it forces a full re-download later, wasting several
+          # minutes and ~5 GB of bandwidth per shard. Mosaic's Compose lane
+          # builds an Android APK too (UI89 §3.4).
+          if [ "$NEEDS_KOTLIN" != "true" ] && [ "$NEEDS_MOSAIC_COMPOSE" != "true" ]; then
+            sudo rm -rf /usr/local/lib/android || true
+          fi
+          docker system prune --all --force || true
+          sudo apt-get clean
+          # The CodeQL bundles in the tool cache serve only codeql.yml, which
+          # runs on its own runners; nothing in this job reads them.
+          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+          echo "Disk after cleanup:"
+          df -h /
+          # What the image still carries, largest first, so the next reclaim
+          # can be chosen from evidence rather than guessed (#17652).
+          sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
+
+      # ── Android SDK (Kotlin / Android) ────────────────────────
+      #
+      # android-actions/setup-android accepts licences, installs platform-tools
+      # and build-tools via sdkmanager, and sets ANDROID_HOME / ANDROID_SDK_ROOT.
+      # On Linux the pre-installed SDK is reused (we kept it above); on macOS and
+      # Windows the action downloads a fresh SDK. Gradle then auto-downloads
+      # the specific platform (API 35 / 36) on first build.
+      - name: Set up Android SDK
+        if: needs.detect.outputs.needs_kotlin == 'true' || (needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && runner.os == 'Linux')
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: 'platform-tools'
+
+      - name: Build and test affected Swift packages on Windows
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_swift == 'true'
+        shell: pwsh
+        run: |
+          $planFlag = @()
+          if (Test-Path 'build-plan.json') {
+            Write-Host 'Using pre-computed build plan'
+            $planFlag = @('-plan-file', 'build-plan.json')
+          }
+          $shardFlag = @()
+          if ('${{ matrix.sharded }}' -eq 'true') {
+            $shardFlag = @('-shard-index', '${{ matrix.shard_index }}')
+          }
+          & ./build-tool.exe -root . @planFlag @shardFlag -validate-build-files -language swift
+
+      # Rust-only Windows changes do not enter the general BUILD step. This
+      # separate runtime gate must link and launch executables, not just lint.
+      - name: Test LANG Windows native execution
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_lang_windows == 'true'
+        shell: pwsh
+        working-directory: code/packages/rust
+        env:
+          LANG_REQUIRE_WINDOWS_AOT: "1"
+        run: |
+          cargo test -p twig-aot --test windows_x86_64_smoke -- --nocapture
+          if ($LASTEXITCODE -ne 0) {
+            throw "LANG Windows native execution failed with exit code $LASTEXITCODE"
+          }
+          cargo test -p lang-aot --test conformance mccarthy_native_corpus_executes -- --exact --nocapture
+          if ($LASTEXITCODE -ne 0) {
+            throw "McCarthy Windows native corpus failed with exit code $LASTEXITCODE"
+          }
+
+      - name: Build and test Venture Windows acceptance
+        if: runner.os == 'Windows' && needs.detect.outputs.needs_venture_windows == 'true'
+        shell: pwsh
+        env:
+          # GitHub-hosted Windows workers do not provide a reliable interactive
+          # WinUI desktop. The test still builds the complete generated app;
+          # local/self-hosted Windows runs launch and interact by default.
+          MOSAIC_SKIP_INTERACTIVE_WINDOWS_ACCEPTANCE: '1'
+        run: |
+          Set-Location code/packages/rust
+          cargo test -p paint-vm-cairo -p venture-browser-cairo -p venture-browser-qt -p venture-browser-windows
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Windows render and bridge tests failed with exit code $LASTEXITCODE"
+          }
+          Set-Location ..\..\programs\mosaic\venture-browser
+          cargo test
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Mosaic package tests failed with exit code $LASTEXITCODE"
+          }
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-all.ps1
+          if ($LASTEXITCODE -ne 0) {
+            throw "Venture Windows backend matrix failed with exit code $LASTEXITCODE"
+          }
+
+      - name: Build and test Venture macOS acceptance
+        if: runner.os == 'macOS' && needs.detect.outputs.needs_venture_windows == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd code/packages/rust
+          cargo test -p venture-browser-macos
+
+      - name: Round-trip Rust engine through standard SwiftUI binding
+        if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'
+        shell: bash
+        # 16 minutes before Journal's iOS gate (UI89 §2.4) joined it, about 25
+        # after; Engram's (§2.5) adds a second engine and app build, and
+        # Journal's XCUITest (§4.3), Trestle's and Engram's (§4.4) each a test
+        # build and run on the iPad.
+        timeout-minutes: 105
+        run: |
+          set -euo pipefail
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p mosaic-app-conformance
+          runtime_library="$(pwd)/code/packages/rust/target/debug/libmosaic_app_conformance.dylib"
+
+          bundled_output="$RUNNER_TEMP/mosaic-swift-bundled-conformance"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-app-conformance/package --backend swiftui --output "$bundled_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$bundled_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$bundled_output/swiftui"
+          swift_bin="$(swift build --package-path "$bundled_output/swiftui" --show-bin-path)"
+          installed_runtime="$(find "$swift_bin" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit)"
+          test -n "$installed_runtime"
+          cmp "$runtime_library" "$installed_runtime"
+
+          harness="$RUNNER_TEMP/mosaic-swift-runtime-conformance"
+          cp -R code/packages/rust/mosaic-app-bindings/conformance/swiftui "$harness"
+          mkdir -p "$harness/Sources/CMosaicRuntime/include"
+          cp "$bundled_output/swiftui/Sources/App/MosaicRuntimeHost.swift" "$harness/Sources/Conformance/MosaicRuntimeHost.swift"
+          cp "$bundled_output/swiftui/Sources/CMosaicRuntime/CMosaicRuntime.c" "$harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
+          cp "$bundled_output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
+
+          state_path="$RUNNER_TEMP/mosaic-swift-runtime-state.json"
+          rm -f "$state_path" "$state_path.corrupt" "$state_path.tmp"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
+            swift run --package-path "$harness" Conformance --library "$installed_runtime"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" MOSAIC_EXPECT_RESTORED=1 \
+            swift run --package-path "$harness" Conformance --library "$installed_runtime"
+          printf '{}' > "$state_path"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state_path" \
+            MOSAIC_EXPECT_PERSISTENCE_WARNING=1 \
+            swift run --package-path "$harness" Conformance --library "$installed_runtime"
+
+          # The SwiftUI platform library's own behaviour (UI87 §7): every SwiftUI app
+          # gets MosaicPlatformEffects.swift, and this drives its open/save
+          # logic, limits and routing with a fake host and fake panels.
+          cp "$bundled_output/swiftui/Sources/App/MosaicPlatformEffects.swift" "$harness/Sources/Conformance/MosaicPlatformEffects.swift"
+          swift run --package-path "$harness" -Xswiftc -DMOSAIC_PLATFORM_EFFECTS Conformance --platform-effects
+
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          task_runtime_library="$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.dylib"
+          taskapp_output="$RUNNER_TEMP/mosaic-swift-taskapp"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$taskapp_output" --emit-project --profile native-complete --runtime-library "$task_runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$taskapp_output/swiftui/mosaic-degradations.json"
+          python3 code/scripts/taskapp_native_control_contract.py --backend swiftui --generated-dir "$taskapp_output/swiftui"
+          swift build --package-path "$taskapp_output/swiftui"
+          taskapp_bin="$(swift build --package-path "$taskapp_output/swiftui" --show-bin-path)"
+          installed_taskapp_runtime="$(find "$taskapp_bin" -type f -path '*/Runtime/libmosaic_app.dylib' -print -quit)"
+          test -n "$installed_taskapp_runtime"
+          cmp "$task_runtime_library" "$installed_taskapp_runtime"
+
+          # The strict shell must mount a window before probing the runtime and
+          # stay alive on a loader failure. Remove the bundled dylib from the
+          # built resource bundle, launch from / so no checkout-relative copy
+          # can be found, and require the process to remain alive in its visible
+          # recoverable failure state. The emitted-control contract above pins
+          # that state's detail, reassurance, and retry control.
+          installed_taskapp="$taskapp_bin/App"
+          test -x "$installed_taskapp"
+          missing_runtime="$installed_taskapp_runtime.startup-acceptance"
+          mv "$installed_taskapp_runtime" "$missing_runtime"
+          startup_failure_log="$RUNNER_TEMP/mosaic-swift-taskapp-startup-failure.log"
+          (
+            cd /
+            env -u MOSAIC_APP_LIBRARY "$installed_taskapp" \
+              >"$startup_failure_log" 2>&1 &
+            startup_pid=$!
+            trap 'kill "$startup_pid" 2>/dev/null || true; mv "$missing_runtime" "$installed_taskapp_runtime" 2>/dev/null || true' EXIT
+            sleep 5
+            kill -0 "$startup_pid"
+            kill "$startup_pid"
+            wait "$startup_pid" || true
+            mv "$missing_runtime" "$installed_taskapp_runtime"
+            trap - EXIT
+          )
+          cmp "$task_runtime_library" "$installed_taskapp_runtime"
+
+          task_harness="$RUNNER_TEMP/mosaic-swift-taskapp-runtime-conformance"
+          cp -R code/packages/rust/task-mosaic-app/conformance/swiftui "$task_harness"
+          mkdir -p "$task_harness/Sources/CMosaicRuntime/include"
+          cp "$taskapp_output/swiftui/Sources/App/MosaicRuntimeHost.swift" "$task_harness/Sources/Conformance/MosaicRuntimeHost.swift"
+          cp "$taskapp_output/swiftui/Sources/CMosaicRuntime/CMosaicRuntime.c" "$task_harness/Sources/CMosaicRuntime/CMosaicRuntime.c"
+          cp "$taskapp_output/swiftui/Sources/CMosaicRuntime/include/CMosaicRuntime.h" "$task_harness/Sources/CMosaicRuntime/include/CMosaicRuntime.h"
+          task_state_path="$RUNNER_TEMP/mosaic-swift-taskapp-state.json"
+          rm -f "$task_state_path" "$task_state_path.corrupt" "$task_state_path.tmp"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$task_state_path" \
+            swift run --package-path "$task_harness" Conformance --library "$installed_taskapp_runtime"
+          env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$task_state_path" MOSAIC_EXPECT_RESTORED=1 \
+            swift run --package-path "$task_harness" Conformance --library "$installed_taskapp_runtime"
+          taskapp_log="$RUNNER_TEMP/mosaic-swift-taskapp-launch.log"
+          diagnose_taskapp_crash() {
+            local diagnostic_log="$RUNNER_TEMP/mosaic-swift-taskapp-lldb.log"
+            local entitlements="$RUNNER_TEMP/taskapp-debug-entitlements.plist"
+            cat >"$entitlements" <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>com.apple.security.get-task-allow</key>
+            <true/>
+          </dict>
+          </plist>
+          PLIST
+            codesign --force --sign - --entitlements "$entitlements" "$installed_taskapp"
+            (
+              cd /
+              env -u MOSAIC_APP_LIBRARY \
+                lldb --batch -o run -o "thread backtrace all" -- "$installed_taskapp" \
+                >"$diagnostic_log" 2>&1 &
+              debugger_pid=$!
+              sleep 10
+              if kill -0 "$debugger_pid" 2>/dev/null; then
+                pkill -TERM -P "$debugger_pid" 2>/dev/null || true
+                kill "$debugger_pid" 2>/dev/null || true
+              fi
+              wait "$debugger_pid" || true
+            )
+            cat "$diagnostic_log"
+          }
+          (
+            cd /
+            env -u MOSAIC_APP_LIBRARY \
+              SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
+              "$installed_taskapp" >"$taskapp_log" 2>&1 &
+            taskapp_pid=$!
+            trap 'kill "$taskapp_pid" 2>/dev/null || true' EXIT
+            sleep 5
+            if ! kill -0 "$taskapp_pid" 2>/dev/null; then
+              cat "$taskapp_log"
+              sleep 2
+              find "$HOME/Library/Logs/DiagnosticReports" -type f \
+                -name 'App*.ips' -mmin -2 -print -exec cat {} \; || true
+              diagnose_taskapp_crash
+              exit 1
+            fi
+            kill "$taskapp_pid"
+            wait "$taskapp_pid" || true
+            trap - EXIT
+          )
+          ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
+          ! grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$taskapp_log"
+
+          # Engram on SwiftUI, the mirror of the Qt Engram lane further down.
+          #
+          # `.dylib`, not `.so`: this block is macOS-gated, the inverse of the
+          # Qt lane, which runs on Linux.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app
+          engram_swift_runtime="$(pwd)/code/packages/rust/target/debug/libengram_mosaic_app.dylib"
+          test -f "$engram_swift_runtime"
+          engram_swift_output="$RUNNER_TEMP/mosaic-swiftui-engram"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend swiftui --output "$engram_swift_output" --emit-project --profile native-complete --runtime-library "$engram_swift_runtime"
+
+          # Pinned empty, exactly as the Qt lane pins it: SwiftUI's
+          # `MosaicHost.swift` override is retired, and a package that starts
+          # overriding the generated host again has undone that and must fail
+          # here rather than pass quietly.
+          jq -e '.replacedGeneratedFiles == []' "$engram_swift_output/swiftui/mosaic-degradations.json"
+          # `type == "array"` first: `null | length` is 0 in jq, so a report that
+          # lost the key entirely would satisfy a bare length check.
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_swift_output/swiftui/mosaic-degradations.json"
+
+          # The handler is wired into the generated app, and lands INSIDE the
+          # host class rather than ahead of it. This is the half no assertion
+          # over a source file can reach -- and it matters more here than on Qt,
+          # because SwiftPM compiles everything under `Sources/App`, so an
+          # uninstalled handler still compiles, links and ships with no
+          # diagnostic at all.
+          grep -q 'installEngramEffects(mosaicEffectHost)' "$engram_swift_output/swiftui/Sources/App/App.swift"
+          python3 - "$engram_swift_output/swiftui/Sources/App/App.swift" <<'PY'
+          import re
+          import sys
+
+          text = open(sys.argv[1]).read()
+          install = text.index("installEngramEffects(mosaicEffectHost)")
+
+          # "Inside MosaicHostState" means the nearest type declaration ABOVE the
+          # install is that class. Asserting `class_idx < install` instead would
+          # be near-vacuous -- the class is declared once, far up the file, so
+          # the ordering holds even if the call landed in a later type.
+          declarations = [
+              (m.start(), m.group(1))
+              for m in re.finditer(r"(?m)^[ \t]*(?:(?:private|fileprivate|internal|public|final)\s+)*"
+                                   r"(?:class|struct|enum|extension)\s+(\w+)", text)
+              if m.start() < install
+          ]
+          assert declarations, "no type declaration precedes the install"
+          enclosing = declarations[-1][1]
+          assert enclosing == "MosaicHostState", (
+              f"install landed in {enclosing}, not MosaicHostState"
+          )
+
+          # And after the bridge exists: installing onto a nil bridge compiles
+          # and silently does nothing.
+          assignment = text.index("self.bridge = ", declarations[-1][0])
+          assert assignment < install, "install must follow the bridge assignment"
+          PY
+
+          # The gate: it builds.
+          swift build --package-path "$engram_swift_output/swiftui"
+
+          # ---- Journal: emit and BUILD on SwiftUI (J5b, #14416). -------------
+          # The strict standard binding (native-complete + runtime library), no
+          # replaced generated files, zero degradations, and the package builds.
+          # Journal raises no effects, so there is no handler to grep for.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_swift_runtime="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.dylib"
+          test -f "$journal_swift_runtime"
+          journal_swift_output="$RUNNER_TEMP/mosaic-swiftui-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_swift_output" --emit-project --profile native-complete --runtime-library "$journal_swift_runtime"
+          jq -e '.replacedGeneratedFiles == []' "$journal_swift_output/swiftui/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_swift_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$journal_swift_output/swiftui"
+
+          ios_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-source"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_output" --emit-project
+          jq -e '.nativeComplete == false and ([.degradations[].code] == ["runtime.sample-fallback"])' "$ios_output/swiftui/mosaic-degradations.json"
+          (
+            cd "$ios_output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-taskapp-ios" CODE_SIGNING_ALLOWED=NO build
+          )
+
+          # iOS and iPadOS with the REAL runtime linked in (UI89 §2.1): the
+          # Rust engine is built as an .xcframework of static libraries (device
+          # + a fat simulator slice), because iOS does not allow loading an
+          # app's own dylib. The loader then calls it directly
+          # (MOSAIC_RUNTIME_STATIC); nm confirms the engine is in the binary,
+          # not merely that the link succeeded.
+          rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+          ios_runtime="$RUNNER_TEMP/TaskAppRuntime.xcframework"
+          bash code/scripts/build-mosaic-xcframework.sh task-mosaic-app "$ios_runtime"
+          ios_linked_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked"
+          # Trestle's XCUITest (UI89 §4.4) goes into the iOS project as a UI
+          # test bundle with a shared scheme; it runs on the iPad below.
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output" --emit-project --profile native-complete --runtime-library "$ios_runtime" --ios-ui-test code/packages/rust/task-mosaic-app/conformance/swiftui-ios/TrestleUiTests.swift
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$ios_linked_output/swiftui/mosaic-degradations.json"
+          grep -q 'cSettings: \[.define("MOSAIC_RUNTIME_STATIC")\]' "$ios_linked_output/swiftui/Package.swift"
+          ios_linked_data="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked-dd"
+          (
+            cd "$ios_linked_output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS Simulator' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
+          )
+          # nm writes to a file before grep reads it: `nm | grep -q` under
+          # pipefail fails whenever grep exits at its first match while nm is
+          # still writing (SIGPIPE, "LLVM ERROR: ... Broken pipe"), which depends
+          # only on where the symbol happens to fall in nm's output.
+          for binary in "$ios_linked_data/Build/Products/Debug-iphonesimulator/App" "$ios_linked_data/Build/Products/Debug-iphoneos/App"; do
+            nm -gU "$binary" > "$RUNNER_TEMP/mosaic-ios-symbols.txt"
+            grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-ios-symbols.txt"
+          done
+
+          # An installable iOS / iPadOS APP (UI89 §2.2): the same build wrote
+          # iOS/App.xcodeproj, generated by mosaic-ios-project for any package with
+          # a static runtime. It builds an .app carrying the package's identity
+          # and the engine, which installs and keeps running on a simulator.
+          test -f "$ios_linked_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          ios_app_build="$RUNNER_TEMP/mosaic-taskapp-ios-app"
+          (
+            cd "$ios_linked_output/swiftui/iOS"
+            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$ios_app_build" build
+          )
+          ios_app="$ios_app_build/Debug-iphonesimulator/App.app"
+          nm -gU "$ios_app/App" > "$RUNNER_TEMP/mosaic-ios-app-symbols.txt"
+          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-ios-app-symbols.txt"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$ios_app/Info.plist")" = dev.codingadventures.trestle
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$ios_app/Info.plist")" = Trestle
+          simulator="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
+          test -n "$simulator" && test "$simulator" != null
+          xcrun simctl boot "$simulator" || true
+          xcrun simctl bootstatus "$simulator" -b
+          xcrun simctl install "$simulator" "$ios_app"
+          xcrun simctl launch "$simulator" dev.codingadventures.trestle
+          sleep 10
+          # Still running ten seconds later: it started, loaded the engine and
+          # did not crash rendering the first frame. Drain all launchctl output:
+          # grep -q can close the pipe early and make simctl fail with SIGPIPE.
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+
+          # State lives in the app's sandbox and is read back (UI89 §2.3,
+          # step 3). The host writes state only after the first event, so it
+          # is seeded: state the runtime rejects must be quarantined INSIDE
+          # the container (the host found and read that path), and the
+          # snapshot the macOS TaskApp run above persisted -- the same engine
+          # -- must be restored with nothing quarantined. Each time the app
+          # must still be running ten seconds later.
+          ios_container="$(xcrun simctl get_app_container "$simulator" dev.codingadventures.trestle data)"
+          test -n "$ios_container" && test -d "$ios_container"
+          ios_state_dir="$ios_container/Library/Application Support/task-app"
+          ios_state="$ios_state_dir/mosaic-state.v1.json"
+          test -s "$task_state_path"
+          xcrun simctl terminate "$simulator" dev.codingadventures.trestle || true
+          mkdir -p "$ios_state_dir"
+          rm -f "$ios_state" "$ios_state.corrupt"
+          printf '{}' > "$ios_state"
+          xcrun simctl launch "$simulator" dev.codingadventures.trestle
+          sleep 10
+          test -f "$ios_state.corrupt"
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          xcrun simctl terminate "$simulator" dev.codingadventures.trestle
+          rm -f "$ios_state" "$ios_state.corrupt"
+          cp "$task_state_path" "$ios_state"
+          xcrun simctl launch "$simulator" dev.codingadventures.trestle
+          sleep 10
+          test ! -e "$ios_state.corrupt"
+          # Still there (the environment report is an event, so the host may
+          # have rewritten it; its bytes are not the point).
+          test -s "$ios_state"
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          xcrun simctl shutdown "$simulator"
+
+          # The same app on iPadOS (UI89 §2.2: one target, TARGETED_DEVICE_FAMILY
+          # 1,2): it installs and keeps running on an iPad simulator.
+          ipad="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPad"))][0].udid')"
+          test -n "$ipad" && test "$ipad" != null
+          xcrun simctl boot "$ipad" || true
+          xcrun simctl bootstatus "$ipad" -b
+          xcrun simctl install "$ipad" "$ios_app"
+          xcrun simctl launch "$ipad" dev.codingadventures.trestle
+          sleep 10
+          xcrun simctl spawn "$ipad" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
+          # A person's use of it (UI89 §4.4): add, complete, reopen and delete
+          # a task through the generated controls, and find a saved task after
+          # a relaunch. Uninstalled first, so launch 1 starts without the state
+          # the launch above left; `xcodebuild test` installs the app fresh.
+          xcrun simctl uninstall "$ipad" dev.codingadventures.trestle
+          trestle_ui_test_log="$RUNNER_TEMP/mosaic-trestle-ios-ui-test.log"
+          (
+            cd "$ios_linked_output/swiftui/iOS"
+            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-trestle-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$trestle_ui_test_log"
+          )
+          # The count, not just the exit status, as for Journal below.
+          grep -q 'Executed 1 test, with 0 failures' "$trestle_ui_test_log"
+          xcrun simctl shutdown "$ipad"
+
+          # ---- Journal on iOS and iPadOS (UI89 §2.4, step 7). ---------------
+          # The same path as Trestle: the engine as a static .xcframework, the
+          # native-complete SwiftUI project, and the generated iOS app target.
+          # mosaic-ios-simulator-gate.sh then launches it three times on the
+          # iPhone simulator: a fresh launch writes state (the environment
+          # report is its first event), a second restores it with nothing
+          # quarantined, and a third quarantines a seeded `{}` and starts
+          # fresh. The same .app then runs on the iPad simulator.
+          journal_ios_runtime="$RUNNER_TEMP/JournalAppRuntime.xcframework"
+          bash code/scripts/build-mosaic-xcframework.sh journal-mosaic-app "$journal_ios_runtime"
+          journal_ios_output="$RUNNER_TEMP/mosaic-swift-journal-ios-linked"
+          # Journal's XCUITest (UI89 §4.3) goes into the project as a UI test
+          # bundle with a shared scheme; it runs on the iPad below.
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_ios_output" --emit-project --profile native-complete --runtime-library "$journal_ios_runtime" --ios-ui-test code/packages/rust/journal-mosaic-app/conformance/swiftui-ios/JournalUiTests.swift
+          jq -e '.replacedGeneratedFiles == []' "$journal_ios_output/swiftui/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_ios_output/swiftui/mosaic-degradations.json"
+          test -f "$journal_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          journal_ios_build="$RUNNER_TEMP/mosaic-journal-ios-app"
+          (
+            cd "$journal_ios_output/swiftui/iOS"
+            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$journal_ios_build" build
+          )
+          journal_ios_app="$journal_ios_build/Debug-iphonesimulator/App.app"
+          nm -gU "$journal_ios_app/App" > "$RUNNER_TEMP/mosaic-journal-ios-app-symbols.txt"
+          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-journal-ios-app-symbols.txt"
+          # The defaults Journal's manifest leaves in place (UI89 §2.4, §3.9).
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$journal_ios_app/Info.plist")" = dev.codingadventures.journalapp
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$journal_ios_app/Info.plist")" = JournalApp
+          xcrun simctl boot "$simulator" || true
+          xcrun simctl bootstatus "$simulator" -b
+          bash code/scripts/mosaic-ios-simulator-gate.sh "$journal_ios_app" dev.codingadventures.journalapp journal-app "$simulator"
+          xcrun simctl shutdown "$simulator"
+          xcrun simctl boot "$ipad" || true
+          xcrun simctl bootstatus "$ipad" -b
+          xcrun simctl install "$ipad" "$journal_ios_app"
+          xcrun simctl launch "$ipad" dev.codingadventures.journalapp
+          sleep 10
+          # Running, not merely listed: launchctl keeps an exited job with `-`
+          # for its PID, so the label is matched exactly with a numeric PID.
+          ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
+          awk -v b=dev.codingadventures.journalapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
+          # A person's use of it (UI89 §4.3): write, save and delete entries
+          # through the generated controls, in landscape so both columns of
+          # the split are on screen, and find the survivor after a relaunch.
+          # Uninstalled first, so launch 1 starts without the state the launch
+          # above left; `xcodebuild test` installs the app fresh.
+          xcrun simctl uninstall "$ipad" dev.codingadventures.journalapp
+          journal_ui_test_log="$RUNNER_TEMP/mosaic-journal-ios-ui-test.log"
+          (
+            cd "$journal_ios_output/swiftui/iOS"
+            # What xcodebuild makes of the generated scheme, logged before the
+            # run so a scheme it cannot use is diagnosable from this log.
+            # The UI test scheme lives in a workspace beside the project: the
+            # project's own schemes resolve against its `..` project directory
+            # and found no buildables (mosaic-ios-project, shared_scheme).
+            find App.xcworkspace App.xcodeproj -name '*.xcscheme' -print
+            xcodebuild -list -workspace App.xcworkspace || true
+            xcodebuild -showdestinations -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator || true
+            # -sdk as the app build above passes it: the destination is a
+            # simulator, so the SDK is the simulator's.
+            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-journal-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$journal_ui_test_log"
+          )
+          # The count, not just the exit status: a test that was never compiled
+          # in, or was filtered out, would leave xcodebuild green.
+          grep -q 'Executed 1 test, with 0 failures' "$journal_ui_test_log"
+          xcrun simctl shutdown "$ipad"
+
+          # ---- Engram on iOS and iPadOS (UI89 §2.5, step 7). ----------------
+          # Journal's recipe and gate. The app also compiles Engram's
+          # [host_effects] handler (EngramEffects.swift), which answers Anki
+          # import/export through the platform library's document picker, and
+          # its touch layout. Its XCUITest (UI89 §4.4) goes in as a UI test
+          # bundle; with it, the Debug build compiles the fake picker the
+          # test selects with -MosaicUITestPicker.
+          engram_ios_runtime="$RUNNER_TEMP/EngramAppRuntime.xcframework"
+          bash code/scripts/build-mosaic-xcframework.sh engram-mosaic-app "$engram_ios_runtime"
+          engram_ios_output="$RUNNER_TEMP/mosaic-swift-engram-ios-linked"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/engram-app --backend swiftui --output "$engram_ios_output" --emit-project --profile native-complete --runtime-library "$engram_ios_runtime" --ios-ui-test code/programs/mosaic/engram-app/conformance/swiftui-ios/EngramUiTests.swift
+          jq -e '.replacedGeneratedFiles == []' "$engram_ios_output/swiftui/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$engram_ios_output/swiftui/mosaic-degradations.json"
+          test -f "$engram_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          # The handler is part of the iOS app target, so its #else branch
+          # (the iOS answer to Anki import/export) is compiled here.
+          grep -qF 'Sources/App/EngramEffects.swift' "$engram_ios_output/swiftui/iOS/App.xcodeproj/project.pbxproj"
+          engram_ios_build="$RUNNER_TEMP/mosaic-engram-ios-app"
+          (
+            cd "$engram_ios_output/swiftui/iOS"
+            xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator -configuration Debug CODE_SIGNING_ALLOWED=NO SYMROOT="$engram_ios_build" build
+          )
+          engram_ios_app="$engram_ios_build/Debug-iphonesimulator/App.app"
+          nm -gU "$engram_ios_app/App" > "$RUNNER_TEMP/mosaic-engram-ios-app-symbols.txt"
+          grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-engram-ios-app-symbols.txt"
+          # The defaults Engram's manifest leaves in place (UI89 §2.5, §3.10).
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$engram_ios_app/Info.plist")" = dev.codingadventures.engramapp
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "$engram_ios_app/Info.plist")" = EngramApp
+          xcrun simctl boot "$simulator" || true
+          xcrun simctl bootstatus "$simulator" -b
+          bash code/scripts/mosaic-ios-simulator-gate.sh "$engram_ios_app" dev.codingadventures.engramapp engram-app "$simulator"
+          xcrun simctl shutdown "$simulator"
+          xcrun simctl boot "$ipad" || true
+          xcrun simctl bootstatus "$ipad" -b
+          xcrun simctl install "$ipad" "$engram_ios_app"
+          xcrun simctl launch "$ipad" dev.codingadventures.engramapp
+          sleep 10
+          # Running, not merely listed: launchctl keeps an exited job with `-`
+          # for its PID, so the label is matched exactly with a numeric PID.
+          ipad_services="$(xcrun simctl spawn "$ipad" launchctl list)"
+          awk -v b=dev.codingadventures.engramapp '$1 ~ /^[0-9]+$/ && ($3 == b || index($3, "UIKitApplication:" b "[") == 1) { f = 1 } END { exit !f }' <<< "$ipad_services"
+          # Anki export and import through the fake picker, and the imported
+          # deck again after a relaunch (UI89 §4.4). Uninstalled first, so
+          # launch 1 starts from an empty collection.
+          xcrun simctl uninstall "$ipad" dev.codingadventures.engramapp
+          engram_ui_test_log="$RUNNER_TEMP/mosaic-engram-ios-ui-test.log"
+          (
+            cd "$engram_ios_output/swiftui/iOS"
+            xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator -destination "platform=iOS Simulator,id=$ipad" -derivedDataPath "$RUNNER_TEMP/mosaic-engram-ios-ui-test" CODE_SIGNING_ALLOWED=NO 2>&1 | tee "$engram_ui_test_log"
+          )
+          grep -q 'Executed 1 test, with 0 failures' "$engram_ui_test_log"
+          xcrun simctl shutdown "$ipad"
+
+          toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend swiftui --output "$toolkit_output" --emit-project
+          swift build --package-path "$toolkit_output/swiftui"
+
+          slider_output="$RUNNER_TEMP/mosaic-swift-host-slider"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-swiftui/fixtures/host-slider --backend swiftui --output "$slider_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$slider_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$slider_output/swiftui"
+          (
+            cd "$slider_output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-host-slider-ios" CODE_SIGNING_ALLOWED=NO build
+          )
+
+          navigation_split_output="$RUNNER_TEMP/mosaic-swift-host-navigation-split"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/rust/mosaic-emit-swiftui/fixtures/host-navigation-split --backend swiftui --output "$navigation_split_output" --emit-project --profile native-complete --runtime-library "$runtime_library"
+          jq -e '.nativeComplete == true and (.degradations | length == 0) and (.behaviorDegradations | length == 0)' "$navigation_split_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$navigation_split_output/swiftui"
+          (
+            cd "$navigation_split_output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-host-navigation-split-ios" CODE_SIGNING_ALLOWED=NO build
+          )
+
+      # UI89 §7 (steps 3 and 4): Trestle, Journal and Engram through the
+      # Flutter backend, on iOS. Each engine is built as iOS dynamic
+      # libraries. Flutter's native assets bundle a dylib as a framework, so
+      # SwiftUI's static xcframework cannot be used. The builder and the hook
+      # check each library per SDK. build-mosaic-flutter-phone-app.sh builds
+      # the simulator app and finds the engine in its frameworks. Each app
+      # then runs through the same simulator gate as its SwiftUI app, after
+      # that app (same bundle id) is uninstalled.
+      - name: Build Trestle, Journal and Engram for iOS with Flutter (UI89 §7)
+        if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
+        shell: bash
+        timeout-minutes: 90
+        run: |
+          set -euo pipefail
+          rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+          simulator="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
+          test -n "$simulator" && test "$simulator" != null
+          # crate | program | project name | Mosaic application id. Read on
+          # fd 3: cargo, flutter and simctl must not eat the list from stdin.
+          while read -r crate program name application_id <&3; do
+            phone_runtime="$RUNNER_TEMP/mosaic-$name-flutter-ios-runtime"
+            rm -rf "$phone_runtime"
+            echo "::group::$name (Flutter, iOS)"
+            bash code/scripts/build-mosaic-ios-dylibs.sh "$crate" "$phone_runtime"
+            output="$RUNNER_TEMP/mosaic-flutter-$name-ios"
+            bash code/scripts/build-mosaic-flutter-phone-app.sh ios "$program" "$phone_runtime" "$output" dev.codingadventures "$name"
+            xcrun simctl boot "$simulator" || true
+            xcrun simctl bootstatus "$simulator" -b
+            xcrun simctl uninstall "$simulator" "dev.codingadventures.$name" || true
+            bash code/scripts/mosaic-ios-simulator-gate.sh "$output/flutter/build/ios/iphonesimulator/Runner.app" "dev.codingadventures.$name" "$application_id" "$simulator"
+            xcrun simctl shutdown "$simulator"
+            echo "::endgroup::"
+          done 3<<EOF
+          task-mosaic-app code/programs/mosaic/task-app trestle task-app
+          journal-mosaic-app code/programs/mosaic/journal-app journalapp journal-app
+          engram-mosaic-app code/programs/mosaic/engram-app engramapp engram-app
+          EOF
+
+      # The Linux Mosaic runtime acceptance (Qt, Flutter and Compose round
+      # trips, the Android builds and the emulator launch) lives in its own
+      # job, `mosaic-linux-runtime`, above. It used to sit here, and main's
+      # full build ran it once per shard: fifteen identical copies, ~520
+      # runner-minutes and ~18 GB of RUNNER_TEMP on every shard of every
+      # merge, on runners that were already running out of disk.
+
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
@@ -5313,7 +5452,7 @@ jobs:
   # accepts skipped required checks.
   ci-gate:
     name: ${{ github.event_name == 'pull_request' && 'CI gate' || 'CI push gate' }}
-    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build]
+    needs: [detect, contracts, ocaml-capability-gate, phy00-phy01-fixture-consumers, d18f-message-conformance, d18p-channel-conformance, d18q-channel-key-grant-conformance, d18t-durable-epoch-activation-conformance, ruby-grammar-regen-check, mosaic-grammar-regen-check, rust-grammar-regen-check, unicode17-elixir-conformance, unicode17-lua-conformance, unicode17-perl-conformance, unicode17-haskell-conformance, unicode17-swift-conformance, unicode17-dart-conformance, mosaic-flutter-platform-library, forme-release-platform, forme-release-verdict, build, mosaic-linux-runtime]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -5350,6 +5489,7 @@ jobs:
           FORME_RELEASE_PLATFORM_RESULT: ${{ needs['forme-release-platform'].result }}
           FORME_RELEASE_VERDICT_RESULT: ${{ needs['forme-release-verdict'].result }}
           BUILD_RESULT: ${{ needs.build.result }}
+          MOSAIC_LINUX_RUNTIME_RESULT: ${{ needs['mosaic-linux-runtime'].result }}
         run: |
           set -euo pipefail
           if [ "$EVENT_NAME" = "pull_request" ]; then
@@ -5377,9 +5517,9 @@ jobs:
             fi
           fi
 
-          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT"
+          echo "detect=$DETECT_RESULT contracts=$CONTRACTS_RESULT ocaml_capability=$OCAML_CAPABILITY_RESULT phy=$PHY_RESULT d18f=$D18F_RESULT d18p=$D18P_RESULT d18q=$D18Q_RESULT d18t=$D18T_RESULT ruby_grammar_regen=$RUBY_GRAMMAR_REGEN_RESULT mosaic_grammar_regen=$MOSAIC_GRAMMAR_REGEN_RESULT rust_grammar_regen=$RUST_GRAMMAR_REGEN_RESULT unicode17_elixir=$UNICODE17_ELIXIR_RESULT unicode17_lua=$UNICODE17_LUA_RESULT unicode17_perl=$UNICODE17_PERL_RESULT unicode17_haskell=$UNICODE17_HASKELL_RESULT unicode17_swift=$UNICODE17_SWIFT_RESULT unicode17_dart=$UNICODE17_DART_RESULT mosaic_flutter_platform_library=$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT forme_release_platform=$FORME_RELEASE_PLATFORM_RESULT forme_release_verdict=$FORME_RELEASE_VERDICT_RESULT build=$BUILD_RESULT mosaic_linux_runtime=$MOSAIC_LINUX_RUNTIME_RESULT"
           fail=0
-          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT"; do
+          for r in "$DETECT_RESULT" "$CONTRACTS_RESULT" "$OCAML_CAPABILITY_RESULT" "$PHY_RESULT" "$D18F_RESULT" "$D18P_RESULT" "$D18Q_RESULT" "$D18T_RESULT" "$RUBY_GRAMMAR_REGEN_RESULT" "$MOSAIC_GRAMMAR_REGEN_RESULT" "$RUST_GRAMMAR_REGEN_RESULT" "$UNICODE17_ELIXIR_RESULT" "$UNICODE17_LUA_RESULT" "$UNICODE17_PERL_RESULT" "$UNICODE17_HASKELL_RESULT" "$UNICODE17_SWIFT_RESULT" "$UNICODE17_DART_RESULT" "$MOSAIC_FLUTTER_PLATFORM_LIBRARY_RESULT" "$FORME_RELEASE_PLATFORM_RESULT" "$FORME_RELEASE_VERDICT_RESULT" "$BUILD_RESULT" "$MOSAIC_LINUX_RUNTIME_RESULT"; do
             case "$r" in
               success|skipped) ;;
               *) echo "::error::a required job did not pass (result: $r)"; fail=1 ;;

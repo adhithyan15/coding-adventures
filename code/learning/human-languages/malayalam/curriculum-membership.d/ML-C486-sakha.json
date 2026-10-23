@@ -1,0 +1,11 @@
+{
+  "id": "ML-C486-sakha",
+  "pathSegment": "ML-PATH-486-OPHIS486",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-486-OPHIS486",
+      "order": 2
+    }
+  ]
+}

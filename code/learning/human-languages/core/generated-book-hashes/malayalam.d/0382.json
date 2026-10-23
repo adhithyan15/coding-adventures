@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:a960739973bbbc70",
+  "lessonIds": [
+    "ML-C382-kalapam",
+    "ML-C382-ayudham",
+    "ML-C382-valayuka-surround",
+    "ML-C382-turattuka",
+    "ML-C382-santamakuka"
+  ],
+  "tex": "malayalam/book/chapters/ch382-a-riot-in-the-town.tex"
+}

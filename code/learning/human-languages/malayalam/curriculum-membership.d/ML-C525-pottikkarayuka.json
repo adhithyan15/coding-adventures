@@ -1,0 +1,11 @@
+{
+  "id": "ML-C525-pottikkarayuka",
+  "pathSegment": "ML-PATH-525-VILAPAM525",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-525-VILAPAM525",
+      "order": 1
+    }
+  ]
+}

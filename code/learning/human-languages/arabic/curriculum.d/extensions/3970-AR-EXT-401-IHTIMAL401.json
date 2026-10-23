@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-401-IHTIMAL401",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a probability, say what is probable, and say that something is likely or ruled out.",
+  "prerequisites": []
+}

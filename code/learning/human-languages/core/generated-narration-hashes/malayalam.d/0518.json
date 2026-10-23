@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 518,
+  "sourceHash": "fnv1a64:540b8224061f3dcf",
+  "lessonIds": [
+    "ML-C518-bhayam",
+    "ML-C518-lajjikkuka",
+    "ML-C518-ekantata",
+    "ML-C518-kotikkuka",
+    "ML-C518-anandam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch518.txt",
+  "json": "malayalam/narration/ch518.json",
+  "textHash": "fnv1a64:fb7018c02f85da76",
+  "jsonHash": "fnv1a64:259a07b0eb241cfb",
+  "findings": []
+}

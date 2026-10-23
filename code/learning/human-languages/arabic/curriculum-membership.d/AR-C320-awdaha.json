@@ -1,0 +1,11 @@
+{
+  "id": "AR-C320-awdaha",
+  "pathSegment": "AR-PATH-320-ILAM320",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-320-ILAM320",
+      "order": 4
+    }
+  ]
+}

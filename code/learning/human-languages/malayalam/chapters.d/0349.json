@@ -1,0 +1,19 @@
+{
+  "chapter": 349,
+  "title": "A Witness to the War",
+  "label": "ch:ml-a-witness-to-the-war",
+  "canDo": "I can say a witness, a war, a correspondent, to happen and to announce.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C349-prakhyapikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 349: I can say a witness, a war, a correspondent, to happen and to announce.",
+    "assesses": [
+      "ML-LEX-C349-VARTTA349-03",
+      "ML-LEX-C349-VARTTA349-04",
+      "ML-LEX-C349-VARTTA349-05"
+    ]
+  }
+}

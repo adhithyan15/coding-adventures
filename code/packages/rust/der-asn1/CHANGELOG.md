@@ -4,6 +4,8 @@
 
 - Added canonical schema-selected implicit BIT STRING validation for composed
   ASN.1 schemas such as RFC 5280 unique identifiers.
+- Added bounded schema-selected context-specific IMPLICIT constructed cursors
+  for fields such as RFC 5280 NameConstraints subtree sets.
 
 ## 0.1.0 — 2026-09-19
 

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C407-tajannaba",
+  "pathSegment": "AR-PATH-407-TAJANNUB407",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-407-TAJANNUB407",
+      "order": 2
+    }
+  ]
+}
