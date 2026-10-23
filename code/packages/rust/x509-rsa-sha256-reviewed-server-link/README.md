@@ -41,13 +41,20 @@ retains optional payload-free count evidence. Callers supply separate ASN.1
 limits for the two parses and cannot inject another anchor, certificate, or SAN
 collection.
 
+`validate_x509_rsa_sha256_reviewed_intermediate_server_anchor_policy` applies
+the same selected-entry policy to the complete two-link server path. It takes
+the target certificate only from the retained server policy and the constraint
+bytes only from the root selected by the retained reviewed parent link. Its
+distinct non-copyable result keeps the whole target-to-intermediate-to-root
+proof, including intermediate policy and path-length state, plus the optional
+payload-free DNS count evidence.
+
 ## Boundary
 
-This is exact-object evidence composition plus deliberately narrow direct-link
-anchor DNS policy, not complete certificate-path or TLS validation. The
-two-link target binding does not yet apply the selected root's anchor policy;
-the existing DNS-policy composition remains direct-link only. That composition
-supports only the repository's bounded permitted-dNSName constraint subset.
+This is exact-object evidence composition plus deliberately narrow selected-
+anchor DNS policy for direct and exactly one-intermediate RSA SHA-256 paths,
+not complete certificate-path or TLS validation. These compositions support
+only the repository's bounded permitted-dNSName constraint subset.
 The crate does not apply excluded, directory-name, IP, or other constraint
 forms; other anchor constraints; path search or generalized construction;
 revocation; TLS; HTTP; OAuth transport; or network effects.
@@ -57,7 +64,8 @@ X.509, or cryptographic implementation is linked here.
 The focused unit and integration tests cover the security-sensitive
 exact-object predicate, the public two-link target binding with a static public
 Let's Encrypt precertificate, R13 intermediate, and reviewed ISRG Root X1, the
-byte-equal separately decoded target rejection, complete-input getters,
+two-link anchor-policy retention, byte-equal separately decoded target
+rejection, complete-input getters,
 unconstrained and constrained policy branches, exact reviewed `.tr` bytes,
 all-target-DNS matching, DNS-absent SANs, malformed inputs, independent decoder
 budgets, and payload-free failures. The static integration fixtures record
