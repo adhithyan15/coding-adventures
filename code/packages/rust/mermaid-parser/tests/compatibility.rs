@@ -53,6 +53,14 @@ const ER_QUOTED_TEXT_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-quoted-text-11.16.1-visual-corpus.json"
 ));
+const ER_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-accessibility-11.16.1-corpus.json"
+));
+const ER_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-accessibility-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2002,6 +2010,29 @@ fn pinned_er_quoted_text_reaches_semantic_ir() {
     assert_eq!(diagram.relationships[0].from, "Customer ❤");
     assert_eq!(diagram.relationships[0].to, "account");
     assert_eq!(diagram.relationships[0].label.as_deref(), Some("places order"));
+}
+
+#[test]
+fn pinned_er_accessibility_metadata_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_ACCESSIBILITY_CORPUS)
+        .expect("ER accessibility corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ACCESSIBILITY_VISUAL_CORPUS)
+        .expect("ER accessibility visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().expect("ER accessibility fixtures");
+
+    let single = parse_er_diagram(fixtures[0]["source"].as_str().expect("single-line source"))
+        .expect("single-line ER accessibility metadata must parse");
+    assert_eq!(single.accessibility_title.as_deref(), Some("Account model"));
+    assert_eq!(single.accessibility_description.as_deref(), Some("Customer accounts"));
+
+    let multiline = parse_er_diagram(fixtures[1]["source"].as_str().expect("multiline source"))
+        .expect("multiline ER accessibility metadata must parse");
+    assert_eq!(multiline.accessibility_title.as_deref(), Some("Order model"));
+    assert_eq!(
+        multiline.accessibility_description.as_deref(),
+        Some("Customers place orders.\nOrders contain items.")
+    );
 }
 
 #[test]
