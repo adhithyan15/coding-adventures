@@ -4,7 +4,7 @@
   "chapter": 417,
   "title": "Rules and the Law",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e52a7d51fa443e55",
+  "sourceHash": "fnv1a64:2c0a4d26c2e55d59",
   "lessons": [
     {
       "id": "ML-C417-cattam",
@@ -457,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2bf940f7972a9e2b",
+      "sourceHash": "fnv1a64:3e35292a7625dc97",
       "notice": null,
       "blocks": [
         {
@@ -492,7 +492,7 @@
             },
             {
               "kind": "speech",
-              "text": "-പരമായ, concerned with, makes adjectives from nouns: നിയമപരമായ (niyamaparamāya), to do with the law."
+              "text": "നിയമപരമായ (niyamaparamāya), to do with the law: -പരമായ, concerned with, makes adjectives from nouns."
             }
           ]
         },

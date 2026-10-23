@@ -4,7 +4,7 @@
   "chapter": 550,
   "title": "Managing and Consulting",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2f6c215727db4d26",
+  "sourceHash": "fnv1a64:032066ccebebfa01",
   "lessons": [
     {
       "id": "ML-C550-jolisthalam",
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c2ac9d2cde5ae19",
+      "sourceHash": "fnv1a64:40f360ef09965d99",
       "notice": null,
       "blocks": [
         {
@@ -488,7 +488,7 @@
             },
             {
               "kind": "speech",
-              "text": "കൂടി together + ആലോചിക്കുക to think over. The noun is കൂടിയാലോചന."
+              "text": "കൂടി together + ആലോചിക്കുക to think over. കൂടിയാലോചന is the noun."
             }
           ]
         },

@@ -60,8 +60,8 @@ In print it is often joined to the word before it: **വീട്ടിലായ
 ## You'll want to know: ഉണ്ടായിരുന്നു
 <!-- hl-knowledge: introduces=[ML-GRAMMAR-C339-UNDAYIRUNNU-01]; assesses=[ML-LEX-GRANDMOTHER, ML-LEX-C42-ADJ-01, ML-LEX-C135-TOWN-05, ML-LEX-C110-PHONE-01] -->
 
-Where **ഉണ്ട്** says "there is" or, with the dative, "somebody has", **ഉണ്ടായിരുന്നു** says
-"there was" and "somebody had".
+**ഉണ്ടായിരുന്നു** says "there was" and "somebody had", where **ഉണ്ട്** says
+"there is" or, with the dative, "somebody has".
 
 > **ഗ്രാമത്തിൽ ഒരു ചെറിയ കട ഉണ്ടായിരുന്നു.**
 >

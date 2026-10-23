@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 354,
-  "sourceHash": "fnv1a64:bd9f17abb1c49c10",
+  "sourceHash": "fnv1a64:64d997a1df4c1415",
   "lessonIds": [
     "ML-C354-prasamgam",
     "ML-C354-madhyamam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch354.txt",
   "json": "malayalam/narration/ch354.json",
-  "textHash": "fnv1a64:943c9607925b4cc8",
-  "jsonHash": "fnv1a64:72277434f973cb9f",
+  "textHash": "fnv1a64:e964a31fff6ffd4e",
+  "jsonHash": "fnv1a64:5f01cede10f1e4ae",
   "findings": []
 }

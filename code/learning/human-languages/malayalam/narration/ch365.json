@@ -4,7 +4,7 @@
   "chapter": 365,
   "title": "At the Police Station",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cde64a9090aa05e6",
+  "sourceHash": "fnv1a64:79b4cdd5531eaa90",
   "lessons": [
     {
       "id": "ML-C365-parati",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe56b8a833172e72",
+      "sourceHash": "fnv1a64:f92212bf2cf5d15a",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "A complaint is given: പരാതി (parāti) കൊടുക്കുക. The verb is പരാതിപ്പെടുക."
+              "text": "A complaint is given: പരാതി (parāti) കൊടുക്കുക. പരാതിപ്പെടുക is the verb."
             }
           ]
         },

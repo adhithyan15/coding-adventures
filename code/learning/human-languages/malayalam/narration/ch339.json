@@ -4,7 +4,7 @@
   "chapter": 339,
   "title": "Was, Was Doing, Used To",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e89fbbede07e5f4d",
+  "sourceHash": "fnv1a64:e474b2543be93414",
   "lessons": [
     {
       "id": "ML-C339-ayirunnu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:889df0e46b39c095",
+      "sourceHash": "fnv1a64:2a7f10798abbb309",
       "notice": null,
       "blocks": [
         {
@@ -79,7 +79,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Where ഉണ്ട് says \"there is\" or, with the dative, \"somebody has\", ഉണ്ടായിരുന്നു says \"there was\" and \"somebody had\"."
+              "text": "ഉണ്ടായിരുന്നു says \"there was\" and \"somebody had\", where ഉണ്ട് says \"there is\" or, with the dative, \"somebody has\"."
             },
             {
               "kind": "speech",

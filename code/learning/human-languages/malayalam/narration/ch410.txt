@@ -151,7 +151,7 @@ Before the new one: say the Malayalam for to highlight, then the Malayalam for r
 You'll want to know: അപ്രസക്തമായ.
 അപ്രസക്തമായ — aprasaktamāya — "irrelevant".
 ആ ചോദ്യം ഇപ്പോൾ അപ്രസക്തമാണ്. ā cōdyaṁ ippōḷ aprasaktamāṇŭ. That question is irrelevant now.
-The Sanskrit prefix അ- makes an opposite: പ്രസക്തമായ (prasaktamāya), അപ്രസക്തമായ (aprasaktamāya).
+പ്രസക്തമായ (prasaktamāya), അപ്രസക്തമായ (aprasaktamāya): the Sanskrit prefix അ- makes an opposite.
 
 The word, taken apart.
 അപ്രസക്തമായ (aprasaktamāya) is built from Sanskrit a-, "not", and prasakta, "attached to, connected with" (Monier-Williams), with the adjective ending -ആയ.

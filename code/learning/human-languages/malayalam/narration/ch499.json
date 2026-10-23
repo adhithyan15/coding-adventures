@@ -4,7 +4,7 @@
   "chapter": 499,
   "title": "In the Forest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e025356fd82c7fac",
+  "sourceHash": "fnv1a64:bef5f6d2fc88638a",
   "lessons": [
     {
       "id": "ML-C499-vanam",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a15cb806e3184d63",
+      "sourceHash": "fnv1a64:c3396a0ad12ff45f",
       "notice": null,
       "blocks": [
         {
@@ -342,7 +342,7 @@
             },
             {
               "kind": "speech",
-              "text": "A protected place: പക്ഷിസങ്കേതം, a bird sanctuary; വന്യജീവിസങ്കേതം, a wildlife sanctuary."
+              "text": "A protected place: a bird sanctuary is a പക്ഷിസങ്കേതം; a wildlife sanctuary is a വന്യജീവിസങ്കേതം."
             }
           ]
         },

@@ -50,7 +50,7 @@ reviews_of: [ML-C414-tatvam]
 >
 > I have a good understanding of that subject.
 
-It is also an agreement between two sides: അവർ തമ്മിൽ ധാരണയായി, they reached an understanding.
+അവർ തമ്മിൽ ധാരണയായി, they reached an understanding: it is also an agreement between two sides.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

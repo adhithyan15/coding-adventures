@@ -4,7 +4,7 @@
   "chapter": 522,
   "title": "Curious and Fed Up",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:30ce32664e41137d",
+  "sourceHash": "fnv1a64:6acabd346a88ad50",
   "lessons": [
     {
       "id": "ML-C522-jijnasa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eec2f241017ed1a2",
+      "sourceHash": "fnv1a64:9409f6b20569c11c",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "What one is curious about takes -ഇൽ. The adjective is ജിജ്ഞാസയുള്ള, curious."
+              "text": "What one is curious about takes -ഇൽ. ജിജ്ഞാസയുള്ള, curious, is the adjective."
             }
           ]
         },

@@ -52,7 +52,7 @@ reviews_of: [ML-C458-upayogappetuttuka]
 
 Past: വിനിയോഗിച്ചു, *viniyōgiccu*.
 
-Said of funds and powers; for everyday spending people say ചെലവാക്കുക.
+Said of funds and powers; people say ചെലവാക്കുക for everyday spending.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

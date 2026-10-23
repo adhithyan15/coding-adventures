@@ -50,7 +50,7 @@ reviews_of: [ML-C499-vanyajivi]
 >
 > That bird sanctuary has many kinds of birds.
 
-A protected place: പക്ഷിസങ്കേതം, a bird sanctuary; വന്യജീവിസങ്കേതം, a wildlife sanctuary.
+A protected place: a bird sanctuary is a പക്ഷിസങ്കേതം; a wildlife sanctuary is a വന്യജീവിസങ്കേതം.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

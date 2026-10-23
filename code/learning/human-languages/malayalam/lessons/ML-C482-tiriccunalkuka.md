@@ -52,7 +52,7 @@ reviews_of: [ML-C482-oliyuka]
 
 Past: തിരിച്ചുനൽകി, *tiriccunalki*.
 
-തിരിച്ച്, back, plus നൽകുക, to give. A refund is പണം തിരിച്ചുനൽകൽ.
+തിരിച്ച്, back, plus നൽകുക, to give. പണം തിരിച്ചുനൽകൽ is a refund.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

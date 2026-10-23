@@ -52,7 +52,7 @@ reviews_of: [ML-C354-kayyatikkuka]
 
 Past: പരാമർശിച്ചു, *parāmarśiccu*.
 
-What is mentioned takes the object ending: അപകടത്തെ പരാമർശിച്ചു, mentioned the accident. The noun is പരാമർശം.
+The noun is പരാമർശം. What is mentioned takes the object ending: അപകടത്തെ പരാമർശിച്ചു, mentioned the accident.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

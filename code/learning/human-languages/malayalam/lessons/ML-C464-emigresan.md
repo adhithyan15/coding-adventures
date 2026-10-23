@@ -50,7 +50,7 @@ reviews_of: [ML-C464-kasrramsu]
 >
 > At immigration they checked my passport and visa.
 
-Malayalam speakers usually call the passport desk at an airport എമിഗ്രേഷൻ, the English name of the check on people leaving.
+At an airport, Malayalam speakers usually call the passport desk എമിഗ്രേഷൻ, the English name of the check on people leaving.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -50,7 +50,7 @@ reviews_of: [ML-C407-teliyikkuka]
 >
 > After class she asked the teacher about a doubt.
 
-The verb is സംശയിക്കുക, to suspect. Without a doubt: സംശയമില്ലാതെ.
+The verb is സംശയിക്കുക, to suspect. സംശയമില്ലാതെ: without a doubt.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

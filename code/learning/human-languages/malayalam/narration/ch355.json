@@ -4,7 +4,7 @@
   "chapter": 355,
   "title": "Journalists and Crowds",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f65eb0ff06ea1085",
+  "sourceHash": "fnv1a64:a131e1c50ed21c21",
   "lessons": [
     {
       "id": "ML-C355-patrapravarttakan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa94cf1f2556f036",
+      "sourceHash": "fnv1a64:0aa44309663f0cd0",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "A woman journalist is പത്രപ്രവർത്തക. The trade is പത്രപ്രവർത്തനം, journalism."
+              "text": "A woman journalist is പത്രപ്രവർത്തക. പത്രപ്രവർത്തനം, journalism, is the trade."
             }
           ]
         },

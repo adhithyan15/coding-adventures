@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 365,
-  "sourceHash": "fnv1a64:cde64a9090aa05e6",
+  "sourceHash": "fnv1a64:79b4cdd5531eaa90",
   "lessonIds": [
     "ML-C365-parati",
     "ML-C365-kurravali",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch365.txt",
   "json": "malayalam/narration/ch365.json",
-  "textHash": "fnv1a64:3b817be1a31087c9",
-  "jsonHash": "fnv1a64:a74264aa9711f529",
+  "textHash": "fnv1a64:66bcf9a3a0c7c501",
+  "jsonHash": "fnv1a64:80b0685d5188a241",
   "findings": []
 }

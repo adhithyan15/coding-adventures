@@ -50,7 +50,7 @@ reviews_of: [ML-C506-cakravalam]
 >
 > After the rain the air grew cool.
 
-Also the mood of a place: a calm atmosphere is ശാന്തമായ അന്തരീക്ഷം.
+Also the mood of a place: ശാന്തമായ അന്തരീക്ഷം is a calm atmosphere.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

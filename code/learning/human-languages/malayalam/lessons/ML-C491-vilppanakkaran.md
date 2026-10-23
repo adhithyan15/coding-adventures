@@ -50,7 +50,7 @@ reviews_of: [ML-C491-adayavilppana]
 >
 > The salesman showed me shirts in many colours.
 
-വിൽപ്പന, a sale, plus -കാരൻ, one who: a saleswoman is a വിൽപ്പനക്കാരി.
+വിൽപ്പന, a sale, plus -കാരൻ, one who: a വിൽപ്പനക്കാരി is a saleswoman.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 550,
-  "sourceHash": "fnv1a64:2f6c215727db4d26",
+  "sourceHash": "fnv1a64:032066ccebebfa01",
   "lessonIds": [
     "ML-C550-jolisthalam",
     "ML-C550-melnottam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch550.txt",
   "json": "malayalam/narration/ch550.json",
-  "textHash": "fnv1a64:af75841a91c77c68",
-  "jsonHash": "fnv1a64:0a7b0a13cc561237",
+  "textHash": "fnv1a64:cf19cabf7ae759a4",
+  "jsonHash": "fnv1a64:fa265505b415763c",
   "findings": []
 }

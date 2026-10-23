@@ -50,7 +50,7 @@ reviews_of: [ML-C521-netuvirppituka]
 >
 > Children are curious about everything.
 
-What one is curious about takes -ഇൽ. The adjective is ജിജ്ഞാസയുള്ള, curious.
+What one is curious about takes -ഇൽ. ജിജ്ഞാസയുള്ള, curious, is the adjective.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 342,
   "title": "Must, Ought To, and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5891d33d1d529a27",
+  "sourceHash": "fnv1a64:e2017f2d2f5c0bc0",
   "lessons": [
     {
       "id": "ML-C342-pokanam",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f41c8977dfac6b43",
+      "sourceHash": "fnv1a64:a75714374f0ee42b",
       "notice": null,
       "blocks": [
         {
@@ -213,7 +213,7 @@
             },
             {
               "kind": "speech",
-              "text": "With -ആയി it becomes \"officially\": ഔദ്യോഗികമായി (audyōgikamāyi). Its first letter is new; the next lesson takes it out and puts it in your hand."
+              "text": "With -ആയി it becomes ഔദ്യോഗികമായി (audyōgikamāyi), \"officially\". Its first letter is new; the next lesson takes it out and puts it in your hand."
             }
           ]
         },

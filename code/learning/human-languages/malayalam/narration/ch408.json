@@ -4,7 +4,7 @@
   "chapter": 408,
   "title": "Weighing It Up",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d5a3ff78182156ad",
+  "sourceHash": "fnv1a64:667ef16326958c81",
   "lessons": [
     {
       "id": "ML-C408-pariganikkuka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97478d90e2610cfa",
+      "sourceHash": "fnv1a64:481ee72892e7b93a",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is considered takes -നെ or stays unmarked: അപേക്ഷ പരിഗണിക്കുക (parigaṇikkuka)."
+              "text": "അപേക്ഷ പരിഗണിക്കുക (parigaṇikkuka): what is considered takes -നെ or stays unmarked."
             }
           ]
         },

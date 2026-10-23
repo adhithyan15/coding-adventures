@@ -4,7 +4,7 @@
   "chapter": 464,
   "title": "At the Border",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fb539b6e5001bb2a",
+  "sourceHash": "fnv1a64:ef032cd0dd348581",
   "lessons": [
     {
       "id": "ML-C464-kasrramsu",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:716e15e58ea275c3",
+      "sourceHash": "fnv1a64:973df547ab4c0ec1",
       "notice": null,
       "blocks": [
         {
@@ -196,7 +196,7 @@
             },
             {
               "kind": "speech",
-              "text": "Malayalam speakers usually call the passport desk at an airport എമിഗ്രേഷൻ (emigrēṣan), the English name of the check on people leaving."
+              "text": "At an airport, Malayalam speakers usually call the passport desk എമിഗ്രേഷൻ (emigrēṣan), the English name of the check on people leaving."
             }
           ]
         },

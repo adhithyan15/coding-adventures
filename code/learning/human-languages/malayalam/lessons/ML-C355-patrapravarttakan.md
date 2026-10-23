@@ -50,7 +50,7 @@ reviews_of: [ML-C354-paramarsikkuka]
 >
 > My uncle is a journalist.
 
-A woman journalist is പത്രപ്രവർത്തക. The trade is പത്രപ്രവർത്തനം, journalism.
+A woman journalist is പത്രപ്രവർത്തക. പത്രപ്രവർത്തനം, journalism, is the trade.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

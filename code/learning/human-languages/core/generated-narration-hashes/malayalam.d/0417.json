@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 417,
-  "sourceHash": "fnv1a64:e52a7d51fa443e55",
+  "sourceHash": "fnv1a64:2c0a4d26c2e55d59",
   "lessonIds": [
     "ML-C417-cattam",
     "ML-C417-palikkuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch417.txt",
   "json": "malayalam/narration/ch417.json",
-  "textHash": "fnv1a64:86141e6a024906ac",
-  "jsonHash": "fnv1a64:d73d22f344179f59",
+  "textHash": "fnv1a64:4fd9bbc094463316",
+  "jsonHash": "fnv1a64:06bc89ffcead17f4",
   "findings": []
 }

@@ -55,7 +55,7 @@ In set phrases it stands before its noun without **-മായ**:
 >
 > *malayāḷaṁ kēraḷattinṟe audyōgika bhāṣayāṇŭ.* — "Malayalam is the official language of Kerala."
 
-With **-ആയി** it becomes "officially": **ഔദ്യോഗികമായി** (*audyōgikamāyi*). Its first letter is new; the next
+With **-ആയി** it becomes **ഔദ്യോഗികമായി** (*audyōgikamāyi*), "officially". Its first letter is new; the next
 lesson takes it out and puts it in your hand.
 
 ## The word, taken apart

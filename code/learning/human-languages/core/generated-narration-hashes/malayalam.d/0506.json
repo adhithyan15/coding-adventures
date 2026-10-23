@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 506,
-  "sourceHash": "fnv1a64:9d817c195332ae9a",
+  "sourceHash": "fnv1a64:2baeec2f629d3c3e",
   "lessonIds": [
     "ML-C506-suryodayam",
     "ML-C506-suryastamayam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch506.txt",
   "json": "malayalam/narration/ch506.json",
-  "textHash": "fnv1a64:18f926f0c8e221a2",
-  "jsonHash": "fnv1a64:a71206a3bba63109",
+  "textHash": "fnv1a64:0d5bf6b456ad4b04",
+  "jsonHash": "fnv1a64:330e14d5c819631d",
   "findings": []
 }

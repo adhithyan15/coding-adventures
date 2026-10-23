@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 355,
-  "sourceHash": "fnv1a64:f65eb0ff06ea1085",
+  "sourceHash": "fnv1a64:a131e1c50ed21c21",
   "lessonIds": [
     "ML-C355-patrapravarttakan",
     "ML-C355-aropanam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch355.txt",
   "json": "malayalam/narration/ch355.json",
-  "textHash": "fnv1a64:6c73899506ba6c17",
-  "jsonHash": "fnv1a64:d30866bd01537aba",
+  "textHash": "fnv1a64:84544a9d1a20514f",
+  "jsonHash": "fnv1a64:2f70c99805a83754",
   "findings": []
 }

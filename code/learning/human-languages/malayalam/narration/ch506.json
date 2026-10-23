@@ -4,7 +4,7 @@
   "chapter": 506,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9d817c195332ae9a",
+  "sourceHash": "fnv1a64:2baeec2f629d3c3e",
   "lessons": [
     {
       "id": "ML-C506-suryodayam",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f344dfbe4210386b",
+      "sourceHash": "fnv1a64:2da5c4fdd6a7a57b",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +480,7 @@
             },
             {
               "kind": "speech",
-              "text": "Also the mood of a place: a calm atmosphere is ശാന്തമായ അന്തരീക്ഷം (antarīkṣaṁ)."
+              "text": "Also the mood of a place: ശാന്തമായ അന്തരീക്ഷം (antarīkṣaṁ) is a calm atmosphere."
             }
           ]
         },

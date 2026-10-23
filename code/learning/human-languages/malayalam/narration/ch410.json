@@ -4,7 +4,7 @@
   "chapter": 410,
   "title": "Making a Point",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0fbe7c18dba484bc",
+  "sourceHash": "fnv1a64:1f4a29f26079fa4c",
   "lessons": [
     {
       "id": "ML-C410-sucippikkuka",
@@ -599,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42eb34d523c44f56",
+      "sourceHash": "fnv1a64:9033f5f5748df9be",
       "notice": null,
       "blocks": [
         {
@@ -634,7 +634,7 @@
             },
             {
               "kind": "speech",
-              "text": "The Sanskrit prefix അ- makes an opposite: പ്രസക്തമായ (prasaktamāya), അപ്രസക്തമായ (aprasaktamāya)."
+              "text": "പ്രസക്തമായ (prasaktamāya), അപ്രസക്തമായ (aprasaktamāya): the Sanskrit prefix അ- makes an opposite."
             }
           ]
         },

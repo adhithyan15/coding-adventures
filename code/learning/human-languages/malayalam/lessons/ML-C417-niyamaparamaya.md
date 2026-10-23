@@ -50,7 +50,7 @@ reviews_of: [ML-C417-anusarikkuka]
 >
 > This is a fully legal contract.
 
--പരമായ, concerned with, makes adjectives from nouns: നിയമപരമായ, to do with the law.
+നിയമപരമായ, to do with the law: -പരമായ, concerned with, makes adjectives from nouns.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

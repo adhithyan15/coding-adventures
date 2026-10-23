@@ -152,7 +152,7 @@ You'll want to know: പരാമർശിക്കുക.
 പരാമർശിക്കുക — parāmarśikkuka — "to mention; to refer to".
 പ്രസംഗത്തിൽ അവൾ അമ്മയെ പരാമർശിച്ചു. prasaṁgattil avaḷ ammaye parāmarśiccu. In the speech she mentioned her mother.
 Past: പരാമർശിച്ചു, parāmarśiccu.
-What is mentioned takes the object ending: അപകടത്തെ പരാമർശിച്ചു, mentioned the accident. The noun is പരാമർശം.
+The noun is പരാമർശം. What is mentioned takes the object ending: അപകടത്തെ പരാമർശിച്ചു, mentioned the accident.
 
 The word, taken apart.
 പരാമർശിക്കുക (parāmarśikkuka) is built from Sanskrit parāmarśa, "seizing, taking hold of" (Monier-Williams), with the Malayalam verb ending -ിക്കുക: to mention a thing is to take hold of it in words.

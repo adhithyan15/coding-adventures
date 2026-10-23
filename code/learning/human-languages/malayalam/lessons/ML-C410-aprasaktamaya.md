@@ -50,7 +50,7 @@ reviews_of: [ML-C410-prasaktamaya]
 >
 > That question is irrelevant now.
 
-The Sanskrit prefix അ- makes an opposite: പ്രസക്തമായ, അപ്രസക്തമായ.
+പ്രസക്തമായ, അപ്രസക്തമായ: the Sanskrit prefix അ- makes an opposite.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

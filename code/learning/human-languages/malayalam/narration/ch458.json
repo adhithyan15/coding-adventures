@@ -4,7 +4,7 @@
   "chapter": 458,
   "title": "Using Resources",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:661ea712ffec138e",
+  "sourceHash": "fnv1a64:452ddb7f3e18ceff",
   "lessons": [
     {
       "id": "ML-C458-upayogappetuttuka",
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e296865ec162f3be",
+      "sourceHash": "fnv1a64:90b35102b499a116",
       "notice": null,
       "blocks": [
         {
@@ -204,7 +204,7 @@
             },
             {
               "kind": "speech",
-              "text": "Said of funds and powers; for everyday spending people say ചെലവാക്കുക."
+              "text": "Said of funds and powers; people say ചെലവാക്കുക for everyday spending."
             }
           ]
         },

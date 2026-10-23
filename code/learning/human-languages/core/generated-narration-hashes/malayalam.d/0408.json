@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 408,
-  "sourceHash": "fnv1a64:d5a3ff78182156ad",
+  "sourceHash": "fnv1a64:667ef16326958c81",
   "lessonIds": [
     "ML-C408-pariganikkuka",
     "ML-C408-vilayiruttuka",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch408.txt",
   "json": "malayalam/narration/ch408.json",
-  "textHash": "fnv1a64:7ed0135fedbbf632",
-  "jsonHash": "fnv1a64:97f4226e66d43687",
+  "textHash": "fnv1a64:62a7f430e4f45642",
+  "jsonHash": "fnv1a64:d7f8ac1d10646f0b",
   "findings": []
 }

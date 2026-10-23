@@ -50,7 +50,7 @@ reviews_of: [ML-C364-kuttitturakkuka]
 >
 > Father filed a complaint with the police.
 
-A complaint is given: പരാതി കൊടുക്കുക. The verb is പരാതിപ്പെടുക.
+A complaint is given: പരാതി കൊടുക്കുക. പരാതിപ്പെടുക is the verb.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

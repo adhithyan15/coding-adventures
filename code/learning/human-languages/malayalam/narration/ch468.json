@@ -4,7 +4,7 @@
   "chapter": 468,
   "title": "On the Highway",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:aad95ed8a56e17ed",
+  "sourceHash": "fnv1a64:5cba96836fab79e7",
   "lessons": [
     {
       "id": "ML-C468-desiyapata",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b59d8b765b9b181c",
+      "sourceHash": "fnv1a64:9000821b6a7b6d06",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "A -ം noun: before an ending the -ം becomes -ത്ത്-, as in തുരങ്കത്തിൽ, in the tunnel."
+              "text": "A -ം noun: before an ending the -ം becomes -ത്ത്-. തുരങ്കത്തിൽ: in the tunnel."
             }
           ]
         },

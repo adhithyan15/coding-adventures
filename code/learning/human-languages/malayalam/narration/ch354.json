@@ -4,7 +4,7 @@
   "chapter": 354,
   "title": "A Speech and Its Applause",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bd9f17abb1c49c10",
+  "sourceHash": "fnv1a64:64d997a1df4c1415",
   "lessons": [
     {
       "id": "ML-C354-prasamgam",
@@ -599,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96b723a5e46054bd",
+      "sourceHash": "fnv1a64:d4d5aec54a85e06d",
       "notice": null,
       "blocks": [
         {
@@ -638,7 +638,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is mentioned takes the object ending: അപകടത്തെ പരാമർശിച്ചു, mentioned the accident. The noun is പരാമർശം."
+              "text": "The noun is പരാമർശം. What is mentioned takes the object ending: അപകടത്തെ പരാമർശിച്ചു, mentioned the accident."
             }
           ]
         },

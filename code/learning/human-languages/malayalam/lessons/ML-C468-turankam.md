@@ -50,7 +50,7 @@ reviews_of: [ML-C468-tol]
 >
 > The train went through a long tunnel in the hills.
 
-A -ം noun: before an ending the -ം becomes -ത്ത്-, as in തുരങ്കത്തിൽ, in the tunnel.
+A -ം noun: before an ending the -ം becomes -ത്ത്-. തുരങ്കത്തിൽ: in the tunnel.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

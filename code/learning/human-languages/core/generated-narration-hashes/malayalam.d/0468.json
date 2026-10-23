@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 468,
-  "sourceHash": "fnv1a64:aad95ed8a56e17ed",
+  "sourceHash": "fnv1a64:5cba96836fab79e7",
   "lessonIds": [
     "ML-C468-desiyapata",
     "ML-C468-tol",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "malayalam/narration/ch468.txt",
   "json": "malayalam/narration/ch468.json",
-  "textHash": "fnv1a64:71b85f8ff1386754",
-  "jsonHash": "fnv1a64:e2ebc660bd65d11b",
+  "textHash": "fnv1a64:243f47505e414559",
+  "jsonHash": "fnv1a64:153e1be9aabedf17",
   "findings": []
 }

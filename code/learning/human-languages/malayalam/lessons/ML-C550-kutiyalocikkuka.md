@@ -52,7 +52,7 @@ reviews_of: [ML-C550-ekopippikkuka]
 
 Past: കൂടിയാലോചിച്ചു, *kūṭiyālōciccu*.
 
-കൂടി together + ആലോചിക്കുക to think over. The noun is കൂടിയാലോചന.
+കൂടി together + ആലോചിക്കുക to think over. കൂടിയാലോചന is the noun.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

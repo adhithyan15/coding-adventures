@@ -52,7 +52,7 @@ reviews_of: [ML-C407-artthamakkuka]
 
 Past: പരിഗണിച്ചു, *parigaṇiccu*.
 
-What is considered takes -നെ or stays unmarked: അപേക്ഷ പരിഗണിക്കുക.
+അപേക്ഷ പരിഗണിക്കുക: what is considered takes -നെ or stays unmarked.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
