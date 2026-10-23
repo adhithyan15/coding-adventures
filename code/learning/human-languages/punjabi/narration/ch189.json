@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 189,
+  "title": "They Want; Do You Want?",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:50baae2d1a8df71d",
+  "lessons": [
+    {
+      "id": "PA-C189-want-return",
+      "sequence": 10180,
+      "title": "Return to familiar want language",
+      "headword": "ਚਾਹੁਣਾ · ਉਹ ਕੰਮ ਕਰਦੇ ਹਨ",
+      "romanization": "chaahunaa; oh kamm karde han",
+      "gloss": "retrieve to want and a familiar plural or respectful habitual frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:155562b2e57fa1f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "chaahunaa; YOU SAY: ਚਾਹੁਣਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *chaahunaa*; YOU SAY: **ਚਾਹੁਣਾ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar plural or respectful habitual frame before changing the verb: ਉਹ ਕੰਮ ਕਰਦੇ ਹਨ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "chaahunaa; YOU SAY: ਚਾਹੁਣਾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *chaahunaa*; YOU SAY: **ਚਾਹੁਣਾ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "oh kamm karde han; YOU SAY: ਉਹ ਕੰਮ ਕਰਦੇ ਹਨ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *oh kamm karde han*; YOU SAY: **ਉਹ ਕੰਮ ਕਰਦੇ ਹਨ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the infinitive, then the familiar agreement frame. This opener owns no new form."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C189-chahunde",
+      "sequence": 10190,
+      "title": "The plural or respectful want form",
+      "headword": "ਚਾਹੁੰਦੇ",
+      "romanization": "chaahunde",
+      "gloss": "want, with plural or respectful habitual agreement",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b79741c668e394d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਚਾਹੁਣਾ, then the middle form in ਉਹ ਕੰਮ ਕਰਦੇ ਹਨ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਾਹੁੰਦੇ — chaahunde — want, with plural or respectful habitual agreement."
+            },
+            {
+              "kind": "speech",
+              "text": "Treat the whole written form as today’s measured target. The next lesson retrieves it before either complete sentence frame is built."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "chaahunde; YOU SAY: ਚਾਹੁੰਦੇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *chaahunde*; YOU SAY: **ਚਾਹੁੰਦੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਚਾਹੁੰਦੇ (chaahunde)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਚਾਹੁੰਦੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਾਹੁੰਦੇ (chaahunde) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਾਹੁੰਦੇ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the plural or respectful want form without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C189-chahunde-review",
+      "sequence": 10200,
+      "title": "Retrieve the new agreement form",
+      "headword": "ਚਾਹੁੰਦੇ",
+      "romanization": "chaahunde",
+      "gloss": "retrieve the plural or respectful want form",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:94e038d14824c893",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear “want, plural or respectful” and prepare the single form."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ਚਾਹੁੰਦੇ (chaahunde) distinct from the infinitive ਚਾਹੁਣਾ. Its agreement job matches the familiar plural or respectful pattern in ਕਰਦੇ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "chaahunde; YOU SAY: ਚਾਹੁੰਦੇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *chaahunde*; YOU SAY: **ਚਾਹੁੰਦੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਚਾਹੁੰਦੇ (chaahunde)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਚਾਹੁੰਦੇ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਚਾਹੁੰਦੇ (chaahunde)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਚਾਹੁੰਦੇ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read the form once more and state its bounded agreement job."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C189-chahunde-han",
+      "sequence": 10210,
+      "title": "Build the third-person plural frame",
+      "headword": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ",
+      "romanization": "oh kamm karnaa chaahunde han",
+      "gloss": "they want to work",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:adf2c07d9238127c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਉਹ, ਕੰਮ, ਕਰਨਾ, and ਚਾਹੁੰਦੇ (chaahunde)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: complete statement",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ — oh kamm karnaa chaahunde han — they want to work."
+            },
+            {
+              "kind": "speech",
+              "text": "Read the plural subject, the wanted action, the agreement form, and the familiar plural auxiliary as one bounded frame."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "oh kamm karnaa chaahunde han; YOU SAY: ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *oh kamm karnaa chaahunde han*; YOU SAY: **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ (oh kamm karnaa chaahunde han)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਾਹੁੰਦੇ (chaahunde) ਹਨ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਾਹੁੰਦੇ ਹਨ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete “they want to work” frame."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C189-han-review",
+      "sequence": 10220,
+      "title": "Retrieve the plural statement",
+      "headword": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ",
+      "romanization": "oh kamm karnaa chaahunde han",
+      "gloss": "retrieve the third-person plural want frame",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19c4bddf5e93ce33",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear “they want to work” and prepare the whole statement."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the target next to its familiar plural auxiliary. The frame remains ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ (oh kamm karnaa chaahunde han)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "oh kamm karnaa chaahunde han; YOU SAY: ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *oh kamm karnaa chaahunde han*; YOU SAY: **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ (oh kamm karnaa chaahunde han)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ (oh kamm karnaa chaahunde han)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the statement once more without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C189-chahunde-ho",
+      "sequence": 10230,
+      "title": "Ask what someone wants to do",
+      "headword": "ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ",
+      "romanization": "tusiin kii karnaa chaahunde ho",
+      "gloss": "what do you want to do, plural or respectful",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:909e76242148f91b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਤੁਸੀਂ, ਕੀ, ਕਰਨਾ, ਚਾਹੁੰਦੇ (chaahunde), and ਹੋ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: complete question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ — tusiin kii karnaa chaahunde ho — what do you want to do?"
+            },
+            {
+              "kind": "speech",
+              "text": "The respectful or plural subject keeps the same target form, while the familiar second-person auxiliary closes the question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "tusiin kii karnaa chaahunde ho; YOU SAY: ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *tusiin kii karnaa chaahunde ho*; YOU SAY: **ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ (tusiin kii karnaa chaahunde ho)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਾਹੁੰਦੇ (chaahunde) ਹੋ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਾਹੁੰਦੇ ਹੋ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the complete question without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C189-frame-contrast",
+      "sequence": 10240,
+      "title": "Contrast the two complete frames",
+      "headword": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ · ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ",
+      "romanization": "oh kamm karnaa chaahunde han; tusiin kii karnaa chaahunde ho",
+      "gloss": "contrast third-person plural statement and second-person polite question",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:7ea0670bb58c49f9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Prepare the plural statement and the respectful question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: same target, different frame endings",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ (oh kamm karnaa chaahunde han) — a third-person plural statement."
+            },
+            {
+              "kind": "speech",
+              "text": "ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ (tusiin kii karnaa chaahunde ho) — a second-person plural or respectful question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ (oh kamm karnaa chaahunde han)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ (tusiin kii karnaa chaahunde ho)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ਚਾਹੁੰਦੇ (chaahunde) ਹਨ, ਚਾਹੁੰਦੇ (chaahunde) ਹੋ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ਚਾਹੁੰਦੇ ਹਨ · ਚਾਹੁੰਦੇ ਹੋ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the models and produce statement, then question."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C189-payoff",
+      "sequence": 10250,
+      "title": "A bounded plural and respectful want payoff",
+      "headword": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ · ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ",
+      "romanization": "oh kamm karnaa chaahunde han; tusiin kii karnaa chaahunde ho",
+      "gloss": "retrieve plural and respectful want frames across four skills",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8403551db32ebfa9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the target alone, then prepare both complete frames."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "oh kamm karnaa chaahunde han; tusiin kii karnaa chaahunde ho; YOU SAY: ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ; ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *oh kamm karnaa chaahunde han; tusiin kii karnaa chaahunde ho*; YOU SAY: **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ; ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ (oh kamm karnaa chaahunde han), ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ (tusiin kii karnaa chaahunde ho)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਹ ਕੰਮ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹਨ · ਤੁਸੀਂ ਕੀ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਚਾਹੁੰਦੇ (chaahunde) ਹਨ, ਚਾਹੁੰਦੇ (chaahunde) ਹੋ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਚਾਹੁੰਦੇ ਹਨ · ਚਾਹੁੰਦੇ ਹੋ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the plural statement and the respectful question once more."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the twelfth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
