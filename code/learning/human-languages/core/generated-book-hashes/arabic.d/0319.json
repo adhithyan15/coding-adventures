@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:01f07be026276f6b",
+  "lessonIds": [
+    "AR-C319-aza",
+    "AR-C319-azza",
+    "AR-C319-ratha",
+    "AR-C319-naa",
+    "AR-C319-hidad"
+  ],
+  "tex": "arabic/book/chapters/ch319-mourning.tex"
+}

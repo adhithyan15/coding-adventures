@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:e110b89a10c91953",
+  "lessonIds": [
+    "AR-C443-bawwab",
+    "AR-C443-mulaa",
+    "AR-C443-nazafa",
+    "AR-C443-atalla",
+    "AR-C443-khazna"
+  ],
+  "tex": "arabic/book/chapters/ch443-bed-and-view.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-497-TAWATTUR497",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-497-TAWATTUR497"
+  ],
+  "after": []
+}

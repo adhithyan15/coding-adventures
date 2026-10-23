@@ -1,0 +1,11 @@
+{
+  "id": "AR-C494-malla",
+  "pathSegment": "AR-PATH-494-KAABA494",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-494-KAABA494",
+      "order": 4
+    }
+  ]
+}

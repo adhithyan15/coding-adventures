@@ -1,0 +1,11 @@
+{
+  "id": "AR-C362-tanaqud",
+  "pathSegment": "AR-PATH-362-MANTIQ362",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-362-MANTIQ362",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Wills and inheritance",
+  "label": "ch:ar-wills-and-inheritance",
+  "canDo": "I can say a will, an inheritance, to inherit, an heir and a widow.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C337-armala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can say a will, an inheritance, to inherit, an heir and a widow.",
+    "assesses": [
+      "AR-LEX-C337-IRTH337-03",
+      "AR-LEX-C337-IRTH337-04",
+      "AR-LEX-C337-IRTH337-05"
+    ]
+  }
+}

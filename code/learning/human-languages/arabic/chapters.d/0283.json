@@ -1,0 +1,21 @@
+{
+  "chapter": 283,
+  "title": "The Past, Person By Person",
+  "label": "ch:ar-the-past-person-by-person",
+  "canDo": "I can say what I do now and what I did, for every person, and paint the scene of a story with kāna and the present.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-R283-the-past-person-by-person",
+    "kind": "production",
+    "summary": "Complete AR-R283-the-past-person-by-person: a scene with kāna and the present, and the event that cut into it, joined with ḥīnamā.",
+    "assesses": [
+      "AR-GRAMMAR-C283-PRESENT-PERSONS-01",
+      "AR-GRAMMAR-C283-PAST-PERSONS-01",
+      "AR-LEX-C283-MADI283-01",
+      "AR-GRAMMAR-C283-KANA-IMPERFECT-01",
+      "AR-GRAMMAR-C283-SCENE-EVENT-01"
+    ]
+  }
+}

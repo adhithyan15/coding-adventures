@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "In the harbour",
+  "label": "ch:ar-in-the-harbour",
+  "canDo": "I can say a harbour, an anchorage, a lighthouse, a dinghy and to row.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R430-review-423-430",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can say a harbour, an anchorage, a lighthouse, a dinghy and to row.",
+    "assesses": [
+      "AR-LEX-C430-MARFA430-03",
+      "AR-LEX-C430-MARFA430-04",
+      "AR-LEX-C430-MARFA430-05"
+    ]
+  }
+}

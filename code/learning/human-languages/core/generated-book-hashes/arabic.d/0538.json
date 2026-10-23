@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:2856875171e0dc28",
+  "lessonIds": [
+    "AR-C538-tatriz",
+    "AR-C538-tarraza",
+    "AR-C538-hiyaka",
+    "AR-C538-haka-knit",
+    "AR-C538-khata"
+  ],
+  "tex": "arabic/book/chapters/ch538-needle-and-thread.tex"
+}

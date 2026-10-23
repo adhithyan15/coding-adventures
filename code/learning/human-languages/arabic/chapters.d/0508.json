@@ -1,0 +1,19 @@
+{
+  "chapter": 508,
+  "title": "Skin trouble",
+  "label": "ch:ar-skin-trouble",
+  "canDo": "I can talk about a rash, an itch and an inflammation, and say that someone scratched or that a foot swelled up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C508-tawarrama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about a rash, an itch and an inflammation, and say that someone scratched or that a foot swelled up.",
+    "assesses": [
+      "AR-LEX-C508-JILD508-03",
+      "AR-LEX-C508-JILD508-04",
+      "AR-LEX-C508-JILD508-05"
+    ]
+  }
+}

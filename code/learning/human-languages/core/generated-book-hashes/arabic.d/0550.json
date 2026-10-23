@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 550,
+  "sourceHash": "fnv1a64:47030aa7cebed696",
+  "lessonIds": [
+    "AR-C550-thurayya",
+    "AR-C550-mazhariyya",
+    "AR-C550-nafada",
+    "AR-C550-lammaa",
+    "AR-C550-sana"
+  ],
+  "tex": "arabic/book/chapters/ch550-keeping-the-house.tex"
+}

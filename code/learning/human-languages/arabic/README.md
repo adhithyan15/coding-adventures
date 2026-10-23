@@ -106,8 +106,24 @@ All seventy-four lessons in Chapters 3–36 remain below five effective minutes.
 
 ## What the level gate says, and what it counts
 
-`src/level-gate.ts` reports Arabic as **in progress at pre-A1**, blocked on two
-of the four HL09 §3.1 criteria:
+**Now: Arabic attains B1.** Chapters 283–292 are the B1 core. They teach the
+past and present for every person, *kāna* with the present, the subjunctive
+after *an*, the future with *sa-*, *sawfa* and *lan*, comparison, and *idhā*
+against *law*, and they realize all five B1 spine nodes. The core also
+teaches the hamza seats ؤ and ئ. Chapters 293–552 then add 1,300 B1
+headwords, 507 of them verbs, one word per lesson. Each tranche sits on one
+B1 node:
+- narration and news (293–357);
+- reasons, society and education, then conditions (358–422);
+- travel and the environment (423–487);
+- feelings, health, work, family and leisure (488–552).
+
+The gate counts 2,572 distinct headwords at or below B1, against a target of
+2,500. The next rung, B2, needs four more spine nodes and 4,000 headwords.
+
+The history below is kept because it explains how the gate counts. When it
+was written, the gate reported Arabic as **in progress at pre-A1**, blocked
+on two of the four HL09 §3.1 criteria:
 
 | criterion | before Chapters 33–36 | after |
 |---|---|---|

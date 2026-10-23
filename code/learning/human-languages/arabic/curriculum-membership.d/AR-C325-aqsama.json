@@ -1,0 +1,11 @@
+{
+  "id": "AR-C325-aqsama",
+  "pathSegment": "AR-PATH-325-SHAHID325",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-325-SHAHID325",
+      "order": 1
+    }
+  ]
+}

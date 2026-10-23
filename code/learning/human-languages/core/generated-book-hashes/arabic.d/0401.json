@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:363ab36e7c1c812b",
+  "lessonIds": [
+    "AR-C401-ihtimal",
+    "AR-C401-muhtamal",
+    "AR-C401-ihtamala",
+    "AR-C401-rajjaha",
+    "AR-C401-istabada"
+  ],
+  "tex": "arabic/book/chapters/ch401-likely-or-not.tex"
+}

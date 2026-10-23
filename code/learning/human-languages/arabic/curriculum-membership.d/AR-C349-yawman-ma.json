@@ -1,0 +1,11 @@
+{
+  "id": "AR-C349-yawman-ma",
+  "pathSegment": "AR-PATH-349-MARRA349",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-349-MARRA349",
+      "order": 3
+    }
+  ]
+}

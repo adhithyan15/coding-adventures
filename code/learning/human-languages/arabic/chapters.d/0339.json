@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Invasions",
+  "label": "ch:ar-invasions",
+  "canDo": "I can say to invade, to attack, to occupy, to lead and to withdraw.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C339-insahaba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can say to invade, to attack, to occupy, to lead and to withdraw.",
+    "assesses": [
+      "AR-LEX-C339-GHAZW339-03",
+      "AR-LEX-C339-GHAZW339-04",
+      "AR-LEX-C339-GHAZW339-05"
+    ]
+  }
+}

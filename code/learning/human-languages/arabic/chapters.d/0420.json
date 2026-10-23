@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Responding",
+  "label": "ch:ar-responding",
+  "canDo": "I can say that someone responded, ignored, nominated or was equal, and say what is shared.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C420-mushtarak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can say that someone responded, ignored, nominated or was equal, and say what is shared.",
+    "assesses": [
+      "AR-LEX-C420-ISTIJABA420-03",
+      "AR-LEX-C420-ISTIJABA420-04",
+      "AR-LEX-C420-ISTIJABA420-05"
+    ]
+  }
+}

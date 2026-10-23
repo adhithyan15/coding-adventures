@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:4cdb02b2c23f66f6",
+  "lessonIds": [
+    "AR-C510-tashkhis",
+    "AR-C510-tahlil",
+    "AR-C510-ashia",
+    "AR-C510-alaja",
+    "AR-C510-dawa"
+  ],
+  "tex": "arabic/book/chapters/ch510-tests-and-treatment.tex"
+}

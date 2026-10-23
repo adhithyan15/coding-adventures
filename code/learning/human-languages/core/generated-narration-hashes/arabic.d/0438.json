@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:59c26b01ece38366",
+  "lessonIds": [
+    "AR-C438-siyaha",
+    "AR-C438-jawla",
+    "AR-C438-nuzha",
+    "AR-C438-tajawwala",
+    "AR-C438-rahhala",
+    "AR-R438-review-431-438"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch438.txt",
+  "json": "arabic/narration/ch438.json",
+  "textHash": "fnv1a64:85e9075dc9b6d0f8",
+  "jsonHash": "fnv1a64:214b8e77b9d80998",
+  "findings": []
+}

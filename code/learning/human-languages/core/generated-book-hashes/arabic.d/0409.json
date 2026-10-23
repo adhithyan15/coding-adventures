@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:fa1a7b4a83381919",
+  "lessonIds": [
+    "AR-C409-qanun",
+    "AR-C409-tashri",
+    "AR-C409-band",
+    "AR-C409-nassa",
+    "AR-C409-sharraa"
+  ],
+  "tex": "arabic/book/chapters/ch409-laws.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C331-izdahara",
+  "pathSegment": "AR-PATH-331-IMBARATUR331",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-331-IMBARATUR331",
+      "order": 3
+    }
+  ]
+}

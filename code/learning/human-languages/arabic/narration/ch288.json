@@ -1,0 +1,955 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 288,
+  "title": "At The Station",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:17305d5ba8af34ff",
+  "lessons": [
+    {
+      "id": "AR-C288-dhahab-wa-iyab",
+      "sequence": 16640,
+      "title": "تذكرة ذهاب وإياب (tadhkirat dhahāb wa-iyāb) — a return ticket",
+      "headword": "تذكرة ذهاب وإياب",
+      "romanization": "tadhkirat dhahāb wa-iyāb",
+      "gloss": "a return ticket — word for word 'a ticket of going and coming back', beside tadhkirat dhahāb faqaṭ, one way",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d7e3590ed7ee876",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the way to the station in two orders. (Idhhab mustaqīman, thumma khudh ash-shāriʿa al-awwala ʿalā al-yamīn.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are at the station now, at the counter, and the person behind the glass is waiting for you to speak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تذكرة ذهاب وإياب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تذكرة ذهاب وإياب — tadhkirat dhahāb wa-iyāb — \"a return ticket\", word for word \"a ticket of going and coming back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أريد تذكرة ذهاب وإياب، من فضلك. — urīdu tadhkirat dhahāb wa-iyāb, min faḍlik — I'd like a return ticket, please."
+            },
+            {
+              "kind": "speech",
+              "text": "Tadhkira ends in ة, and before the noun that follows it you hear its t: tadhkirat dhahāb. For one way only, say tadhkirat dhahāb faqaṭ, \"a ticket of going only\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: three questions at the counter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بكم التذكرة؟ — bi-kam at-tadhkira? — How much is the ticket?"
+            },
+            {
+              "kind": "speech",
+              "text": "من أي رصيف؟ — min ayyi raṣīf? — From which platform?"
+            },
+            {
+              "kind": "speech",
+              "text": "متى ينطلق القطار؟ — matā yanṭaliqu al-qiṭār? — When does the train leave?"
+            },
+            {
+              "kind": "speech",
+              "text": "Bi-kam is \"for how much\", ayy is \"which\", and matā is \"when\" in a question. Yanṭaliqu is the present of inṭalaqa, to set off."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذهاب (dhahāb) is the verbal noun of dhahaba, \"to go\", on the root dh-h-b. إياب (iyāb) is built on the native Arabic root ʾ-w-b, \"to return from a journey\" (Lane), who gives iyāb among its verbal nouns and notes that a y has taken the place of the root's w. The pair rhymes, which is part of why it sticks."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'd like a return ticket, please\" — urīdu tadhkirat dhahāb wa-iyāb, min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'd like a return ticket, please\" — *urīdu tadhkirat dhahāb wa-iyāb, min faḍlik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"one way only\" — tadhkirat dhahāb faqaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"one way only\" — *tadhkirat dhahāb faqaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"How much is the ticket?\" — bi-kam at-tadhkira?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"How much is the ticket?\" — *bi-kam at-tadhkira?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"From which platform?\", then \"when does the train leave?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"From which platform?\", then \"when does the train leave?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to buy two tickets\" — urīdu an ashtariya tadhkiratayn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to buy two tickets\" — *urīdu an ashtariya tadhkiratayn*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"A return ticket\"? (Tadhkirat dhahāb wa-iyāb.) \"One way\"? (Tadhkirat dhahāb faqaṭ.) \"How much?\" (Bi-kam?) What does iyāb mean? (Coming back.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C288-taira",
+      "sequence": 16650,
+      "title": "طائرة (ṭāʾira) — a plane",
+      "headword": "طائرة",
+      "romanization": "ṭāʾira",
+      "gloss": "a plane, an aeroplane — 'a flying thing', from the root of ṭāra, to fly",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fb32f02ff86ba9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for a return ticket, then ask the price. (Urīdu tadhkirat dhahāb wa-iyāb, bi-kam at-tadhkira?)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Arabic for an airport and a pilot. (Maṭār, ṭayyār.) They share a root, and so does the thing between them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: طائرة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طائرة — ṭāʾira — \"a plane, an aeroplane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وصلت الطائرة متأخرة. — waṣalat aṭ-ṭāʾira mutaʾakhkhira — The plane arrived late."
+            },
+            {
+              "kind": "speech",
+              "text": "سافرنا بالطائرة. — sāfarnā bi-ṭ-ṭāʾira — We travelled by plane."
+            },
+            {
+              "kind": "speech",
+              "text": "The verb takes the -at of \"she\": waṣalat. A word ending in ة is usually feminine, and so is the verb that goes with it."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it ṭā-ʾi-ra: the long ā, then the catch, then ira."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "طائرة (ṭāʾira) is built on the native Arabic root ṭ-y-r, \"to fly\" (Lane), the root of ṭāra, \"it flew\", maṭār, \"an airport\", and ṭayyār, \"a pilot\". Lane gives ṭāʾir as a flying thing, a bird, and notes that the feminine ṭāʾira is seldom used of a female bird; the sense \"a plane\" belongs to the age of planes. The catch in the middle is a hamza, on a seat the next lesson puts in your hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭāʾira, slowly — ṭā-ʾi-ra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭāʾira*, slowly — *ṭā-ʾi-ra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The plane arrived late\" — waṣalat aṭ-ṭāʾira mutaʾakhkhira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The plane arrived late\" — *waṣalat aṭ-ṭāʾira mutaʾakhkhira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We travelled by plane\" — sāfarnā bi-ṭ-ṭāʾira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We travelled by plane\" — *sāfarnā bi-ṭ-ṭāʾira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four words of the root — ṭāra, maṭār, ṭayyār, ṭāʾira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four words of the root — *ṭāra, maṭār, ṭayyār, ṭāʾira*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does طائرة mean? (\"A plane\".) Which verb shares its root? (Ṭāra, it flew.) \"By plane\"? (Bi-ṭ-ṭāʾira.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W288-hamza-on-yaa",
+      "sequence": 16660,
+      "title": "ئ (hamza on yāʾ) — the catch inside طائرة (ṭāʾira)",
+      "headword": "ئ",
+      "romanization": "hamza on yāʾ",
+      "gloss": "hamza on a yāʾ seat — the catch inside طائرة, written on a dotless tooth",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:9a7dddc0bf8fd222",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ئ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ئ and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ي and ؤ once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say طائرة (ṭāʾira), \"a plane\". You met it a moment ago. This lesson takes its catch out and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ئ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ئ (hamza on yāʾ) — hamza on a yāʾ seat, the same catch as ؤ, written ʾ in this book's romanization."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the third letter of طائرة (ṭāʾira), after ا. Because ا does not join to the letter after it, ئ (hamza on yāʾ) starts a new piece. It is two pieces itself: below, a small tooth like the tooth of ي inside a word, with no dots — that is the seat; on top, the hamza mark. The tooth joins on to the ر after it."
+            },
+            {
+              "kind": "speech",
+              "text": "The sound is the catch you already say in suʾāl and saʾala. Here the i right after it calls for the ي seat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ئ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ئ (hamza on yāʾ) and follow its line. Write the dotless tooth first, then add the hamza above it. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this character or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "the seat and the mark of ئ (hamza on yāʾ) inside طائرة (ṭāʾira)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: the seat and the mark of ئ inside **طائرة**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ئ (hamza on yāʾ) three times, saying the catch as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ئ three times, saying the catch as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "طا, then a new piece: ئرة",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: طا, then a new piece: ئرة]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "طائرة (ṭāʾira), then سؤال: one catch, two seats",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **طائرة**, then **سؤال**: one catch, two seats]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "طائرة (ṭāʾira) aloud once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **طائرة** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is this — ئ (hamza on yāʾ)? (Hamza on a yāʾ seat, a catch.) Which word did it come from? (طائرة, ṭāʾira, \"a plane\".) Does the seat have dots? (No: only the hamza on top.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C288-masul",
+      "sequence": 16670,
+      "title": "مسؤول (masʾūl) — the person in charge",
+      "headword": "مسؤول",
+      "romanization": "masʾūl",
+      "gloss": "an official, the person in charge; responsible — the one to ask for when something has gone wrong",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b09a4de23f570bde",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a question\", then \"a plane\". (Suʾāl, ṭāʾira.) Which seat carries the catch in each? (و, then the dotless tooth.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When a plane is late and the employee at the desk cannot help, you ask for somebody else."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مسؤول",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسؤول — masʾūl — \"the person in charge, an official\"; as a description, \"responsible\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أريد أن أتكلم مع المسؤول. — urīdu an atakallama maʿa al-masʾūl — I want to speak to the person in charge."
+            },
+            {
+              "kind": "speech",
+              "text": "من المسؤول هنا؟ — man al-masʾūl hunā? — Who is in charge here?"
+            },
+            {
+              "kind": "speech",
+              "text": "As a description it takes ʿan, \"for\": al-muwaẓẓaf masʾūl ʿan at-tadhākir, the employee is responsible for the tickets. It is written with the ؤ of سؤال; some writers spell it مسئول, with the other seat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مسؤول (masʾūl) is built on the native Arabic root s-a-l, \"to ask\" (Lane), the root of saʾala and suʾāl. Its shape mafʿūl is the one that means \"done to\", so masʾūl is \"asked\", and Lane lists it among the root's words for a thing asked for. \"The one asked to answer\", and so \"the one in charge\", is the usual way the modern sense is explained."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "masʾūl, slowly — mas-ʾūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *masʾūl*, slowly — *mas-ʾūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I want to speak to the person in charge\" — urīdu an atakallama maʿa al-masʾūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I want to speak to the person in charge\" — *urīdu an atakallama maʿa al-masʾūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Who is in charge here?\" — man al-masʾūl hunā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Who is in charge here?\" — *man al-masʾūl hunā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Where is the person in charge of the station?\" — ayna masʾūl al-maḥaṭṭa?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Where is the person in charge of the station?\" — *ayna masʾūl al-maḥaṭṭa?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مسؤول (masʾūl) mean? (\"The person in charge; responsible\".) Which word for a question shares its root? (سؤال, suʾāl.) \"Responsible for\"? (Masʾūl ʿan.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C288-fatani",
+      "sequence": 16680,
+      "title": "فاتني القطار (fātanī al-qiṭār) — I missed the train",
+      "headword": "فاتني القطار",
+      "romanization": "fātanī al-qiṭār",
+      "gloss": "I missed the train — reporting a problem with the thing as the subject: fātanī al-qiṭār, ḍāʿat ḥaqībatī, taʾakhkharat aṭ-ṭāʾira, and mādhā yajibu an aʿmala?",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:358af08027543282",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I want to speak to the person in charge\". (Urīdu an atakallama maʿa al-masʾūl.) Then ask for a return ticket. (Tadhkirat dhahāb wa-iyāb.)"
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now something has gone wrong. Arabic reports it in a shape English does not use."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the thing did it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فاتني القطار. — fātanī al-qiṭār — I missed the train."
+            },
+            {
+              "kind": "speech",
+              "text": "Word for word it is \"the train passed me by\". Fāta is \"it passed, it slipped by\", -nī is \"me\", and the train is the subject, after its verb. Your own mistake is told as the train's doing."
+            },
+            {
+              "kind": "speech",
+              "text": "ضاعت حقيبتي. — ḍāʿat ḥaqībatī — My bag is lost."
+            },
+            {
+              "kind": "speech",
+              "text": "Ḍāʿa is \"to get lost\", and the bag, feminine, gives the verb its -at. So ḍāʿat amtiʿatī, my luggage is lost; taʾakhkharat aṭ-ṭāʾira, the plane is late. Each opens with the past verb and then names the thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: asking for help",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ماذا يجب أن أعمل؟ — mādhā yajibu an aʿmala? — What should I do?"
+            },
+            {
+              "kind": "speech",
+              "text": "Mādhā is \"what\", before a verb. Open with ʿafwan, \"excuse me\", and close, if you need to, with urīdu an atakallama maʿa al-masʾūl."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I missed the train\" — fātanī al-qiṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I missed the train\" — *fātanī al-qiṭār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My bag is lost\" — ḍāʿat ḥaqībatī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My bag is lost\" — *ḍāʿat ḥaqībatī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The plane is late\" — taʾakhkharat aṭ-ṭāʾira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The plane is late\" — *taʾakhkharat aṭ-ṭāʾira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Excuse me, what should I do?\" — ʿafwan, mādhā yajibu an aʿmala?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Excuse me, what should I do?\" — *ʿafwan, mādhā yajibu an aʿmala?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole report — ʿafwan, fātanī al-qiṭār, wa-ḍāʿat ḥaqībatī. mādhā yajibu an aʿmala?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole report — *ʿafwan, fātanī al-qiṭār, wa-ḍāʿat ḥaqībatī. mādhā yajibu an aʿmala?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I missed the train\"? (Fātanī al-qiṭār.) Who is the subject in it? (The train: it passed me by.) Why ḍāʿat and not ḍāʿa? (The bag is feminine.) \"What should I do?\" (Mādhā yajibu an aʿmala?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R288-at-the-station",
+      "sequence": 16690,
+      "title": "Review — at the station, when things go wrong",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "a ticket bought, a problem reported, and the person in charge found — with the two new hamza seats read and written",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e4bdb77a4f35d881",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the way to the airport. (Min faḍlik, kayfa aṣilu ilā al-maṭār?) Then give the answer yourself: \"go straight on, then cross the bridge\". (Idhhab mustaqīman, thumma uʿbur al-jisr.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five lessons, and a whole trip through a station. At the counter: tadhkirat dhahāb wa-iyāb, bi-kam?, min ayyi raṣīf? When it goes wrong: fātanī al-qiṭār, ḍāʿat ḥaqībatī, taʾakhkharat aṭ-ṭāʾira, and mādhā yajibu an aʿmala? And if nobody can help, al-masʾūl."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The hamza now has three of its seats in your hand: أ in سأل, ؤ in سؤال and مسؤول (masʾūl), ئ (hamza on yāʾ) in طائرة (ṭāʾira). One sound, three ways to write it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"A return ticket, please. From which platform?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"A return ticket, please. From which platform?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Excuse me, I missed the plane. What should I do?\" — ʿafwan, fātatnī aṭ-ṭāʾira. mādhā yajibu an aʿmala?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Excuse me, I missed the plane. What should I do?\" — *ʿafwan, fātatnī aṭ-ṭāʾira. mādhā yajibu an aʿmala?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My luggage is lost. Who is in charge here?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My luggage is lost. Who is in charge here?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I won't travel today; the reason is that the train is late\" — lan usāfira al-yawm; as-sababu huwa anna al-qiṭāra mutaʾakhkhir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I won't travel today; the reason is that the train is late\" — *lan usāfira al-yawm; as-sababu huwa anna al-qiṭāra mutaʾakhkhir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I'll take the bus\" — sa-ākhudhu al-ḥāfila",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I'll take the bus\" — *sa-ākhudhu al-ḥāfila*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The pilot was on a phone call\" — kāna aṭ-ṭayyār fī mukālama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The pilot was on a phone call\" — *kāna aṭ-ṭayyār fī mukālama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سؤال, مسؤول (masʾūl) and طائرة (ṭāʾira), and circle each seat",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **سؤال**, **مسؤول** and **طائرة**, and circle each seat]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"One way only\"? (Tadhkirat dhahāb faqaṭ.) \"My bag is lost\"? (Ḍāʿat ḥaqībatī.) \"The person in charge\"? (Al-masʾūl.) Which seat does the hamza take in طائرة (ṭāʾira)? (ئ (hamza on yāʾ), the dotless tooth.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

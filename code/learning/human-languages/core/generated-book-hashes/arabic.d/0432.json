@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:c643de2794790ce8",
+  "lessonIds": [
+    "AR-C432-waqud",
+    "AR-C432-banzin",
+    "AR-C432-muharrik",
+    "AR-C432-faramil",
+    "AR-C432-zawwada"
+  ],
+  "tex": "arabic/book/chapters/ch432-fuel-and-engines.tex"
+}

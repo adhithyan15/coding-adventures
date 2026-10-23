@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C403-tayaqqana",
+    "language": "arabic",
+    "chapter": 403,
+    "sequence": 22700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa1e81a193b9e5eb"
+  },
+  "findings": []
+}

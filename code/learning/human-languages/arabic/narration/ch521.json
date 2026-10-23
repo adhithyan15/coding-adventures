@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 521,
+  "title": "Pay and rewards",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bd11845eede52f94",
+  "lessons": [
+    {
+      "id": "AR-C521-ajr",
+      "sequence": 28890,
+      "title": "أجر (ajr) — a wage, pay",
+      "headword": "أجر",
+      "romanization": "ajr",
+      "gloss": "a wage, pay",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75a3baa66e7971c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a task, then the Arabic for to carry out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أجر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أجر — ajr — \"a wage, pay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "يأخذ العامل أجره كل أسبوع. yaʾkhudhu al-ʿāmil ajrahu kull usbūʿ. The worker takes his pay every week."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أجور, ujūr."
+            },
+            {
+              "kind": "speech",
+              "text": "راتب is a monthly salary; أجر (ajr) is pay for work done. Read ajara, the same letters are a verb, to reward."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أجر (ajr) is built on the native Arabic root ʾ-j-r, \"to reward, to hire\" (Lane). Ījār, rent, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ajr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ajr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yaʾkhudhu al-ʿāmil ajrahu kull usbūʿ. — The worker takes his pay every week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yaʾkhudhu al-ʿāmil ajrahu kull usbūʿ.* — The worker takes his pay every week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a task, then the Arabic for to carry out, then say ajr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a task, then the Arabic for to carry out, then say *ajr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أجر (ajr) mean? (\"A wage, pay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C521-mukafaa",
+      "sequence": 28900,
+      "title": "مكافأة (mukāfaʾa) — a bonus, a reward",
+      "headword": "مكافأة",
+      "romanization": "mukāfaʾa",
+      "gloss": "a bonus, a reward",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aefbc132b2410a26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to carry out, then the Arabic for a wage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مكافأة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مكافأة — mukāfaʾa — \"a bonus, a reward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أعطت الشركة الموظفين مكافأة. aʿṭat ash-sharika al-muwaẓẓafīn mukāfaʾa. The company gave the staff a bonus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مكافأة (mukāfaʾa) is built on the native Arabic root k-f-ʾ, \"to be equal to, to match\" (Lane). Kafāʾa, competence, which you know, is from the same root: a reward matches the work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukāfaʾa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukāfaʾa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukāfaʾa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukāfaʾa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aʿṭat ash-sharika al-muwaẓẓafīn mukāfaʾa. — The company gave the staff a bonus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aʿṭat ash-sharika al-muwaẓẓafīn mukāfaʾa.* — The company gave the staff a bonus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to carry out, then the Arabic for a wage, then say mukāfaʾa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to carry out, then the Arabic for a wage, then say *mukāfaʾa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مكافأة (mukāfaʾa) mean? (\"A bonus, a reward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C521-tarqiya",
+      "sequence": 28910,
+      "title": "ترقية (tarqiya) — a promotion",
+      "headword": "ترقية",
+      "romanization": "tarqiya",
+      "gloss": "a promotion",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7e830d48e1638a84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a wage, then the Arabic for a bonus."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ترقية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترقية — tarqiya — \"a promotion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حصلت أختي على ترقية في عملها. ḥaṣalat ukhtī ʿalā tarqiya fī ʿamalihā. My sister got a promotion at work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ترقية (tarqiya) is built on the native Arabic root r-q-y, \"to go up, to climb\" (Lane). Tarqiya is the verbal noun of Form II: raising someone up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarqiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarqiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarqiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarqiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaṣalat ukhtī ʿalā tarqiya fī ʿamalihā. — My sister got a promotion at work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaṣalat ukhtī ʿalā tarqiya fī ʿamalihā.* — My sister got a promotion at work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a wage, then the Arabic for a bonus, then say tarqiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a wage, then the Arabic for a bonus, then say *tarqiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ترقية (tarqiya) mean? (\"A promotion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C521-raqqa",
+      "sequence": 28920,
+      "title": "رقى (raqqā) — to promote",
+      "headword": "رقى",
+      "romanization": "raqqā",
+      "gloss": "to promote",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ff84ccf6bbd0568",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a bonus, then the Arabic for a promotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: رقى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رقى — raqqā — \"to promote\"."
+            },
+            {
+              "kind": "speech",
+              "text": "رقى المدير زميلي. raqqā al-mudīr zamīlī. The manager promoted my colleague."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يرقي, yuraqqī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "رقى (raqqā) is built on the native Arabic root r-q-y, \"to go up, to climb\" (Lane). Form II raqqā is to make someone go up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raqqā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raqqā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raqqā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raqqā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raqqā al-mudīr zamīlī. — The manager promoted my colleague.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raqqā al-mudīr zamīlī.* — The manager promoted my colleague.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a bonus, then the Arabic for a promotion, then say raqqā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a bonus, then the Arabic for a promotion, then say *raqqā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does رقى (raqqā) mean? (\"To promote\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C521-taiba",
+      "sequence": 28930,
+      "title": "تعب (taʿiba) — to get tired",
+      "headword": "تعب",
+      "romanization": "taʿiba",
+      "gloss": "to get tired",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c36f31b5b4d9191e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a promotion, then the Arabic for to promote."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعب — taʿiba — \"to get tired\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعب العمال بعد يوم طويل. taʿiba al-ʿummāl baʿda yawm ṭawīl. The workers got tired after a long day."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتعب, yatʿab."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعب (taʿiba) is built on the native Arabic root t-ʿ-b, \"to be tired, to toil\" (Lane). Mutʿab, tired, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿiba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿiba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿiba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿiba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿiba al-ʿummāl baʿda yawm ṭawīl. — The workers got tired after a long day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿiba al-ʿummāl baʿda yawm ṭawīl.* — The workers got tired after a long day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a promotion, then the Arabic for to promote, then say taʿiba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a promotion, then the Arabic for to promote, then say *taʿiba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعب (taʿiba) mean? (\"To get tired\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

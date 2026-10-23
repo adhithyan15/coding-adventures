@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:fa73e04331a0efb9",
+  "lessonIds": [
+    "AR-C506-jafn",
+    "AR-C506-rimsh",
+    "AR-C506-litha",
+    "AR-C506-dhaqn",
+    "AR-C506-asab"
+  ],
+  "tex": "arabic/book/chapters/ch506-the-face-up-close.tex"
+}

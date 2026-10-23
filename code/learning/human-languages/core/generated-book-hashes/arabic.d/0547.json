@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 547,
+  "sourceHash": "fnv1a64:99ae5f79491e48bb",
+  "lessonIds": [
+    "AR-C547-fawz",
+    "AR-C547-butula",
+    "AR-C547-kas",
+    "AR-C547-midaliya",
+    "AR-C547-taahhala"
+  ],
+  "tex": "arabic/book/chapters/ch547-winning-and-prizes.tex"
+}

@@ -8,3 +8,8 @@ from `code/packages/typescript/human-language-data` is
 root-owned validator to a package-local command chain. Prefer running
 repository-wide validators with the worktree root as the explicit working
 directory.
+
+This recurred from a Rust crate at the same `code/packages/rust/<package>`
+depth: `../../../../scripts/lessons.py` incorrectly reached root-level
+`scripts`, while `../../../scripts/lessons.py` reaches `code/scripts`. Keep the
+repository validator in a separate root-cwd command to avoid this arithmetic.

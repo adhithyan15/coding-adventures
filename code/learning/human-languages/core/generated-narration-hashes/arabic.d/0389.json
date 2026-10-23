@@ -1,0 +1,20 @@
+{
+  "language": "arabic",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:018081c4c4c5a042",
+  "lessonIds": [
+    "AR-C389-nufudh",
+    "AR-C389-sada-prevail",
+    "AR-C389-indamma",
+    "AR-C389-ajbara",
+    "AR-C389-istiqrar",
+    "AR-R389-review-382-389"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "arabic/narration/ch389.txt",
+  "json": "arabic/narration/ch389.json",
+  "textHash": "fnv1a64:06faa489e9c6eeca",
+  "jsonHash": "fnv1a64:890b4451bd63a3e6",
+  "findings": []
+}

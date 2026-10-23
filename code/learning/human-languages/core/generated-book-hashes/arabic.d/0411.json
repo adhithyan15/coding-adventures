@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:dc73e72f6cd48b3b",
+  "lessonIds": [
+    "AR-C411-ajaza",
+    "AR-C411-khadaa",
+    "AR-C411-zalama",
+    "AR-C411-kafaha",
+    "AR-C411-aqarra"
+  ],
+  "tex": "arabic/book/chapters/ch411-rules-and-wrongs.tex"
+}

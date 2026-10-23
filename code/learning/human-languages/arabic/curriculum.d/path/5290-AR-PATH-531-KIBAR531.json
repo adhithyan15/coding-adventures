@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-531-KIBAR531",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-531-KIBAR531"
+  ],
+  "after": []
+}

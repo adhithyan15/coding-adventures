@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C460-khalal",
+    "language": "arabic",
+    "chapter": 460,
+    "sequence": 25700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:480009dc2f460bb4"
+  },
+  "findings": []
+}

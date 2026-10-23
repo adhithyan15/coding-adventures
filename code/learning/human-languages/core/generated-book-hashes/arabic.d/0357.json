@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:0ebc6d859d80fd27",
+  "lessonIds": [
+    "AR-C357-khitab",
+    "AR-C357-alqa",
+    "AR-C357-inaqada",
+    "AR-C357-iftataha",
+    "AR-C357-ikhtatama",
+    "AR-R357-review-357-357",
+    "AR-R357-review-final-357"
+  ],
+  "tex": "arabic/book/chapters/ch357-speeches-and-openings.tex"
+}

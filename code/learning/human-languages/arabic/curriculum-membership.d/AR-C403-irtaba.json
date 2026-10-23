@@ -1,0 +1,11 @@
+{
+  "id": "AR-C403-irtaba",
+  "pathSegment": "AR-PATH-403-IRTIYAB403",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-403-IRTIYAB403",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:9537097737c3000b",
+  "lessonIds": [
+    "AR-C342-turath",
+    "AR-C342-makhtuta",
+    "AR-C342-naqsh",
+    "AR-C342-laqab",
+    "AR-C342-ikhtaraa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch342.txt",
+  "json": "arabic/narration/ch342.json",
+  "textHash": "fnv1a64:2ae897481b6d5c1b",
+  "jsonHash": "fnv1a64:bcf618648e115c00",
+  "findings": []
+}

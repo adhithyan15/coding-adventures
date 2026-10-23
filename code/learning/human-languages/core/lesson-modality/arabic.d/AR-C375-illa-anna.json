@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C375-illa-anna",
+    "language": "arabic",
+    "chapter": 375,
+    "sequence": 21280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c3f2cec594368b4"
+  },
+  "findings": []
+}

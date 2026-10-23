@@ -1,0 +1,11 @@
+{
+  "id": "AR-C373-tanazala",
+  "pathSegment": "AR-PATH-373-MAWQIF373",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-373-MAWQIF373",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C474-tafa",
+  "pathSegment": "AR-PATH-474-SAQR474",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-474-SAQR474",
+      "order": 4
+    }
+  ]
+}

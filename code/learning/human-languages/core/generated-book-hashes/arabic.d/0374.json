@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:db9184f07e344913",
+  "lessonIds": [
+    "AR-C374-bi-t-tali",
+    "AR-C374-li-hadha-as-sabab",
+    "AR-C374-bi-ma-anna",
+    "AR-C374-haythu-inna",
+    "AR-C374-li-kay"
+  ],
+  "tex": "arabic/book/chapters/ch374-linking-reasons.tex"
+}

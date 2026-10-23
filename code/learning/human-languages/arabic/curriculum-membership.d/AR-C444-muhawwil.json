@@ -1,0 +1,11 @@
+{
+  "id": "AR-C444-muhawwil",
+  "pathSegment": "AR-PATH-444-KAHRABA444",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-444-KAHRABA444",
+      "order": 3
+    }
+  ]
+}

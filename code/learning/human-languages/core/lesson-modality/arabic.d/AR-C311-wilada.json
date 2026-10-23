@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C311-wilada",
+    "language": "arabic",
+    "chapter": 311,
+    "sequence": 17920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebceb3d6dc6e096d"
+  },
+  "findings": []
+}

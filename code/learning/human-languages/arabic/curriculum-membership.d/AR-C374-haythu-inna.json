@@ -1,0 +1,11 @@
+{
+  "id": "AR-C374-haythu-inna",
+  "pathSegment": "AR-PATH-374-RABT374",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-374-RABT374",
+      "order": 3
+    }
+  ]
+}

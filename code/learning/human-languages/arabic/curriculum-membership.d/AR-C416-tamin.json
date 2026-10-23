@@ -1,0 +1,11 @@
+{
+  "id": "AR-C416-tamin",
+  "pathSegment": "AR-PATH-416-BADAL416",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-416-BADAL416",
+      "order": 3
+    }
+  ]
+}

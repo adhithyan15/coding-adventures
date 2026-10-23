@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Degrees and training",
+  "label": "ch:ar-degrees-and-training",
+  "canDo": "I can name a bachelor's degree, a master's degree and a doctorate, and talk about a syllabus and training.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-R397-review-390-397",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can name a bachelor's degree, a master's degree and a doctorate, and talk about a syllabus and training.",
+    "assesses": [
+      "AR-LEX-C397-SHAHADA397-03",
+      "AR-LEX-C397-SHAHADA397-04",
+      "AR-LEX-C397-SHAHADA397-05"
+    ]
+  }
+}

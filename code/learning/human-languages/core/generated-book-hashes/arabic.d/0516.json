@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:8ab72b28902bf185",
+  "lessonIds": [
+    "AR-C516-tamaddada",
+    "AR-C516-inhana",
+    "AR-C516-irtajafa",
+    "AR-C516-saala",
+    "AR-C516-iltiwa"
+  ],
+  "tex": "arabic/book/chapters/ch516-stretching-and-shaking.tex"
+}

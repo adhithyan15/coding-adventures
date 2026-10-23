@@ -1,0 +1,11 @@
+{
+  "id": "AR-C419-asasi",
+  "pathSegment": "AR-PATH-419-IJABI419",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-419-IJABI419",
+      "order": 2
+    }
+  ]
+}

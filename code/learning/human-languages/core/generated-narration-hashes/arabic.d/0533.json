@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:90f5373c83473e2b",
+  "lessonIds": [
+    "AR-C533-itana",
+    "AR-C533-dallala",
+    "AR-C533-hadana",
+    "AR-C533-sanada",
+    "AR-C533-habib"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch533.txt",
+  "json": "arabic/narration/ch533.json",
+  "textHash": "fnv1a64:50f80902cf5e50cf",
+  "jsonHash": "fnv1a64:ac73b31e29d97af1",
+  "findings": []
+}

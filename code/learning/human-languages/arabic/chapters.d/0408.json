@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Gains and losses",
+  "label": "ch:ar-gains-and-losses",
+  "canDo": "I can say that someone benefited, enjoyed a right or was deprived, and talk about well-being and care.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C408-riaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can say that someone benefited, enjoyed a right or was deprived, and talk about well-being and care.",
+    "assesses": [
+      "AR-LEX-C408-MASLAHA408-03",
+      "AR-LEX-C408-MASLAHA408-04",
+      "AR-LEX-C408-MASLAHA408-05"
+    ]
+  }
+}

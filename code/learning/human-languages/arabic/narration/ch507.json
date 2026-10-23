@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 507,
+  "title": "Falling ill",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:77b98a31f1c3ddb1",
+  "lessons": [
+    {
+      "id": "AR-C507-marida",
+      "sequence": 28170,
+      "title": "مرض (mariḍa) — to fall ill",
+      "headword": "مرض",
+      "romanization": "mariḍa",
+      "gloss": "to fall ill",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ee1f1407740b0fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a chin, then the Arabic for a nerve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مرض",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرض — mariḍa — \"to fall ill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مرض أخي في الشتاء الماضي. mariḍa akhī fī ash-shitāʾ al-māḍī. My brother fell ill last winter."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يمرض, yamraḍ."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun مرض (mariḍa), read maraḍ, is an illness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرض (mariḍa) is built on the native Arabic root m-r-ḍ, \"to be sick\" (Lane). Marīḍ, sick, which you know, is from the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mariḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mariḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mariḍa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mariḍa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mariḍa akhī fī ash-shitāʾ al-māḍī. — My brother fell ill last winter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mariḍa akhī fī ash-shitāʾ al-māḍī.* — My brother fell ill last winter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a chin, then the Arabic for a nerve, then say mariḍa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a chin, then the Arabic for a nerve, then say *mariḍa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مرض (mariḍa) mean? (\"To fall ill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C507-nazlat-bard",
+      "sequence": 28180,
+      "title": "نزلة برد (nazlat bard) — a chill",
+      "headword": "نزلة برد",
+      "romanization": "nazlat bard",
+      "gloss": "a chill",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9df68c67acd485cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a nerve, then the Arabic for to fall ill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نزلة برد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزلة برد — nazlat bard — \"a chill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عند أخي نزلة برد خفيفة. ʿinda akhī nazlat bard khafīfa. My brother has a slight chill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نزلة برد (nazlat bard) is built on two native Arabic roots: nazla, \"a coming down\", from n-z-l, the root of nazala, to go down (Lane), and bard, \"cold\": a cold that comes down on you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazlat bard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazlat bard*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nazlat bard, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nazlat bard*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿinda akhī nazlat bard khafīfa. — My brother has a slight chill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿinda akhī nazlat bard khafīfa.* — My brother has a slight chill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a nerve, then the Arabic for to fall ill, then say nazlat bard again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a nerve, then the Arabic for to fall ill, then say *nazlat bard* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نزلة برد (nazlat bard) mean? (\"A chill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C507-ghathayan",
+      "sequence": 28190,
+      "title": "غثيان (ghathayān) — nausea",
+      "headword": "غثيان",
+      "romanization": "ghathayān",
+      "gloss": "nausea",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa92daf4314f25c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to fall ill, then the Arabic for a chill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: غثيان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غثيان — ghathayān — \"nausea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شعرت بالغثيان في السفينة. shaʿartu bi-l-ghathayān fī as-safīna. I felt sick on the ship."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "غثيان (ghathayān) is built on the native Arabic root gh-th-y, \"to be troubled, to heave (of the stomach)\" (Lane). The pattern faʿalān often names a restless movement."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghathayān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghathayān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghathayān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghathayān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shaʿartu bi-l-ghathayān fī as-safīna. — I felt sick on the ship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shaʿartu bi-l-ghathayān fī as-safīna.* — I felt sick on the ship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to fall ill, then the Arabic for a chill, then say ghathayān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to fall ill, then the Arabic for a chill, then say *ghathayān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does غثيان (ghathayān) mean? (\"Nausea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C507-taqayyaa",
+      "sequence": 28200,
+      "title": "تقيأ (taqayyaʾa) — to vomit, to be sick",
+      "headword": "تقيأ",
+      "romanization": "taqayyaʾa",
+      "gloss": "to vomit, to be sick",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ab7427df8ad7da3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a chill, then the Arabic for nausea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تقيأ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تقيأ — taqayyaʾa — \"to vomit, to be sick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تقيأ الطفل بعد الرحلة الطويلة. taqayyaʾa aṭ-ṭifl baʿda ar-riḥla aṭ-ṭawīla. The child was sick after the long journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتقيأ, yataqayyaʾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تقيأ (taqayyaʾa) is built on the native Arabic root q-y-ʾ, \"to vomit\" (Lane). Form V taqayyaʾa is the usual verb today."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqayyaʾa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqayyaʾa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqayyaʾa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqayyaʾa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taqayyaʾa aṭ-ṭifl baʿda ar-riḥla aṭ-ṭawīla. — The child was sick after the long journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taqayyaʾa aṭ-ṭifl baʿda ar-riḥla aṭ-ṭawīla.* — The child was sick after the long journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a chill, then the Arabic for nausea, then say taqayyaʾa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a chill, then the Arabic for nausea, then say *taqayyaʾa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تقيأ (taqayyaʾa) mean? (\"To vomit, to be sick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C507-ishal",
+      "sequence": 28210,
+      "title": "إسهال (ishāl) — diarrhoea",
+      "headword": "إسهال",
+      "romanization": "ishāl",
+      "gloss": "diarrhoea",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98d70c42c29e4861",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for nausea, then the Arabic for to vomit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إسهال",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إسهال — ishāl — \"diarrhoea\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أعطى الطبيب الطفل دواء للإسهال. aʿṭā aṭ-ṭabīb aṭ-ṭifl dawāʾ li-l-ishāl. The doctor gave the child medicine for diarrhoea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إسهال (ishāl) is built on the native Arabic root s-h-l, \"to be smooth, easy\" (Lane). Lane gives Form IV ashala, of a medicine, as to loosen the bowels; sahl, easy, is the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aʿṭā aṭ-ṭabīb aṭ-ṭifl dawāʾ li-l-ishāl. — The doctor gave the child medicine for diarrhoea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aʿṭā aṭ-ṭabīb aṭ-ṭifl dawāʾ li-l-ishāl.* — The doctor gave the child medicine for diarrhoea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for nausea, then the Arabic for to vomit, then say ishāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for nausea, then the Arabic for to vomit, then say *ishāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إسهال (ishāl) mean? (\"Diarrhoea\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

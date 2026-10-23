@@ -1,0 +1,11 @@
+{
+  "id": "AR-C462-nafida",
+  "pathSegment": "AR-PATH-462-ISTIDAD462",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-462-ISTIDAD462",
+      "order": 2
+    }
+  ]
+}

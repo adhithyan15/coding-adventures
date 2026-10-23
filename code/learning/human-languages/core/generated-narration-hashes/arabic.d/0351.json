@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:cba62a044f3f2127",
+  "lessonIds": [
+    "AR-C351-khadaa-trick",
+    "AR-C351-ghashsha",
+    "AR-C351-ihtala",
+    "AR-C351-zawwara",
+    "AR-C351-akhfa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch351.txt",
+  "json": "arabic/narration/ch351.json",
+  "textHash": "fnv1a64:61d9a1e2f16d9666",
+  "jsonHash": "fnv1a64:da1023494df2534e",
+  "findings": []
+}

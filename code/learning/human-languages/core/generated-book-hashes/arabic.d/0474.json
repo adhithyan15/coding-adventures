@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:3d519533d87c2dd3",
+  "lessonIds": [
+    "AR-C474-saqr",
+    "AR-C474-naama",
+    "AR-C474-nawras",
+    "AR-C474-risha",
+    "AR-C474-tafa"
+  ],
+  "tex": "arabic/book/chapters/ch474-birds.tex"
+}

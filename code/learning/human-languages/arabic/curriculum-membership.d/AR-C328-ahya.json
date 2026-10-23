@@ -1,0 +1,11 @@
+{
+  "id": "AR-C328-ahya",
+  "pathSegment": "AR-PATH-328-HAFL328",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-328-HAFL328",
+      "order": 1
+    }
+  ]
+}

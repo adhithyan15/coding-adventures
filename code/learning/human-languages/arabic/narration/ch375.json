@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 375,
+  "title": "Contrast and addition",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4bedf83be7df0cf0",
+  "lessons": [
+    {
+      "id": "AR-C375-maa-dhalika",
+      "sequence": 21270,
+      "title": "مع ذلك (maʿa dhālika) — even so; however",
+      "headword": "مع ذلك",
+      "romanization": "maʿa dhālika",
+      "gloss": "even so; however",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:647a0dd8b81232d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for given that, then the Arabic for in order to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مع ذلك",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مع ذلك — maʿa dhālika — \"even so; however\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان متعبا، مع ذلك أكمل عمله. kāna mutʿaban, maʿa dhālika akmala ʿamalah. He was tired; even so, he finished his work."
+            },
+            {
+              "kind": "speech",
+              "text": "Often with و: ومع ذلك, and yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مع ذلك (maʿa dhālika) joins two native Arabic words, maʿa, \"with\", and dhālika, \"that\": with all that, even so. The deeper origin of such particles is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maʿa dhālika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maʿa dhālika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maʿa dhālika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maʿa dhālika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna mutʿaban, maʿa dhālika akmala ʿamalah. — He was tired; even so, he finished his work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna mutʿaban, maʿa dhālika akmala ʿamalah.* — He was tired; even so, he finished his work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for given that, then the Arabic for in order to, then say maʿa dhālika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for given that, then the Arabic for in order to, then say *maʿa dhālika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مع ذلك (maʿa dhālika) mean? (\"Even so; however\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C375-illa-anna",
+      "sequence": 21280,
+      "title": "إلا أن (illā anna) — yet; but",
+      "headword": "إلا أن",
+      "romanization": "illā anna",
+      "gloss": "yet; but",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c3f2cec594368b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for in order to, then the Arabic for even so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: إلا أن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إلا أن — illā anna — \"yet; but\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الفندق جميل، إلا أن الغرف صغيرة. al-funduq jamīl, illā anna al-ghuraf ṣaghīra. The hotel is beautiful, but the rooms are small."
+            },
+            {
+              "kind": "speech",
+              "text": "More formal than لكن."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إلا أن (illā anna) joins the native Arabic particles illā, \"except\", and anna, \"that\": except that, and so yet, but. The deeper origin of such particles is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "illā anna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *illā anna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "illā anna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *illā anna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-funduq jamīl, illā anna al-ghuraf ṣaghīra. — The hotel is beautiful, but the rooms are small.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-funduq jamīl, illā anna al-ghuraf ṣaghīra.* — The hotel is beautiful, but the rooms are small.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for in order to, then the Arabic for even so, then say illā anna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for in order to, then the Arabic for even so, then say *illā anna* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does إلا أن (illā anna) mean? (\"Yet; but\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C375-amma",
+      "sequence": 21290,
+      "title": "أما (ammā) — as for",
+      "headword": "أما",
+      "romanization": "ammā",
+      "gloss": "as for",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b44b2681a6e81c21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for even so, then the Arabic for yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أما",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أما — ammā — \"as for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أما أخي فيحب الرياضة. ammā akhī fa-yuḥibbu ar-riyāḍa. As for my brother, he loves sport."
+            },
+            {
+              "kind": "speech",
+              "text": "The next part starts with فـ: أما (ammā) … فـ …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أما (ammā) is an old native Arabic particle that sets one topic apart from the others. Its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ammā akhī fa-yuḥibbu ar-riyāḍa. — As for my brother, he loves sport.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ammā akhī fa-yuḥibbu ar-riyāḍa.* — As for my brother, he loves sport.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for even so, then the Arabic for yet, then say ammā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for even so, then the Arabic for yet, then say *ammā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أما (ammā) mean? (\"As for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C375-kadhalika",
+      "sequence": 21300,
+      "title": "كذلك (kadhālika) — likewise",
+      "headword": "كذلك",
+      "romanization": "kadhālika",
+      "gloss": "likewise",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f43f95cbbc01c23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for yet, then the Arabic for as for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كذلك",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كذلك — kadhālika — \"likewise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أختي تحب الموسيقى، وأمي كذلك. ukhtī tuḥibbu al-mūsīqā, wa-ummī kadhālika. My sister loves music, and so does my mother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كذلك (kadhālika) is built from the native Arabic ka-, \"like\", and dhālika, \"that\": like that, likewise. The deeper origin of such particles is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadhālika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadhālika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kadhālika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kadhālika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukhtī tuḥibbu al-mūsīqā, wa-ummī kadhālika. — My sister loves music, and so does my mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukhtī tuḥibbu al-mūsīqā, wa-ummī kadhālika.* — My sister loves music, and so does my mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for yet, then the Arabic for as for, then say kadhālika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for yet, then the Arabic for as for, then say *kadhālika* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كذلك (kadhālika) mean? (\"Likewise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C375-ilawatan-ala",
+      "sequence": 21310,
+      "title": "علاوة على (ʿilāwatan ʿalā) — moreover; on top of",
+      "headword": "علاوة على",
+      "romanization": "ʿilāwatan ʿalā",
+      "gloss": "moreover; on top of",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aba154a64d0a3f66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for as for, then the Arabic for likewise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: علاوة على",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "علاوة على — ʿilāwatan ʿalā — \"moreover; on top of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "علاوة على الراتب، يحصل الموظف على سيارة. ʿilāwatan ʿalā ar-rātib, yaḥṣulu al-muwaẓẓaf ʿalā sayyāra. On top of the salary, the employee gets a car."
+            },
+            {
+              "kind": "speech",
+              "text": "Also علاوة alone: a bonus on a salary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "علاوة على (ʿilāwatan ʿalā) is built on the native Arabic root ʿ-l-w, \"to be high, to rise above\" (Lane). ʿIlāwa is what is laid on top of a load: something extra, and so moreover."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿilāwatan ʿalā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿilāwatan ʿalā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿilāwatan ʿalā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿilāwatan ʿalā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿilāwatan ʿalā ar-rātib, yaḥṣulu al-muwaẓẓaf ʿalā sayyāra. — On top of the salary, the employee gets a car.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿilāwatan ʿalā ar-rātib, yaḥṣulu al-muwaẓẓaf ʿalā sayyāra.* — On top of the salary, the employee gets a car.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for as for, then the Arabic for likewise, then say ʿilāwatan ʿalā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for as for, then the Arabic for likewise, then say *ʿilāwatan ʿalā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does علاوة على (ʿilāwatan ʿalā) mean? (\"Moreover; on top of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

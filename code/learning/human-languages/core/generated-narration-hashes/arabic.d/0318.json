@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:cc4ecb41a8f0d0de",
+  "lessonIds": [
+    "AR-C318-hadara",
+    "AR-C318-athar",
+    "AR-C318-atlal",
+    "AR-C318-mabad",
+    "AR-C318-haram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch318.txt",
+  "json": "arabic/narration/ch318.json",
+  "textHash": "fnv1a64:14cfba7fafaa5cac",
+  "jsonHash": "fnv1a64:4fe751663543e039",
+  "findings": []
+}

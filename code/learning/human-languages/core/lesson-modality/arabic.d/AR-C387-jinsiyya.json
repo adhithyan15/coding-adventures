@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C387-jinsiyya",
+    "language": "arabic",
+    "chapter": 387,
+    "sequence": 21900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11263a30d6d6f7a0"
+  },
+  "findings": []
+}

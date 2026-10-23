@@ -1,0 +1,19 @@
+{
+  "chapter": 301,
+  "title": "An accident on the road",
+  "label": "ch:ar-an-accident-on-the-road",
+  "canDo": "I can say to collide, to overturn, a victim, a wounded person and to give first aid.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C301-asafa-aid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say to collide, to overturn, a victim, a wounded person and to give first aid.",
+    "assesses": [
+      "AR-LEX-C301-TARIQ301-03",
+      "AR-LEX-C301-TARIQ301-04",
+      "AR-LEX-C301-TARIQ301-05"
+    ]
+  }
+}

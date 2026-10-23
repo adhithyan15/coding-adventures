@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:951c37c16131f3cc",
+  "lessonIds": [
+    "AR-C488-saada",
+    "AR-C488-malal",
+    "AR-C488-ghadiba",
+    "AR-C488-hazina",
+    "AR-C488-tanahhada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch488.txt",
+  "json": "arabic/narration/ch488.json",
+  "textHash": "fnv1a64:1971efc64a5e8923",
+  "jsonHash": "fnv1a64:00c1ed201b88ffa8",
+  "findings": []
+}

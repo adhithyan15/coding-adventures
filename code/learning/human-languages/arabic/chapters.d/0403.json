@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Sure and unsure",
+  "label": "ch:ar-sure-and-unsure",
+  "canDo": "I can say that someone made certain or grew suspicious, and say impossible, most probably and in general.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-C403-umuman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can say that someone made certain or grew suspicious, and say impossible, most probably and in general.",
+    "assesses": [
+      "AR-LEX-C403-IRTIYAB403-03",
+      "AR-LEX-C403-IRTIYAB403-04",
+      "AR-LEX-C403-IRTIYAB403-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-331-IMBARATUR331",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "AR-EXT-331-IMBARATUR331"
+  ],
+  "after": []
+}

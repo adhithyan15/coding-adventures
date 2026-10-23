@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "A fire",
+  "label": "ch:ar-a-fire",
+  "canDo": "I can say a blaze, smoke, to catch fire, to burn down and a firefighter.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C298-rajul-itfa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can say a blaze, smoke, to catch fire, to burn down and a firefighter.",
+    "assesses": [
+      "AR-LEX-C298-HARIQ298-03",
+      "AR-LEX-C298-HARIQ298-04",
+      "AR-LEX-C298-HARIQ298-05"
+    ]
+  }
+}

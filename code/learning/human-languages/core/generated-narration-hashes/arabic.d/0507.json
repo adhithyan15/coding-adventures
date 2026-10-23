@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:77b98a31f1c3ddb1",
+  "lessonIds": [
+    "AR-C507-marida",
+    "AR-C507-nazlat-bard",
+    "AR-C507-ghathayan",
+    "AR-C507-taqayyaa",
+    "AR-C507-ishal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch507.txt",
+  "json": "arabic/narration/ch507.json",
+  "textHash": "fnv1a64:9ce5e4c55f8fd0e7",
+  "jsonHash": "fnv1a64:de61fe2a13152a91",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C544-nay",
+  "pathSegment": "AR-PATH-544-ALAT544",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-544-ALAT544",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:ab82388071b9ee29",
+  "lessonIds": [
+    "AR-C314-janaza",
+    "AR-C314-tuwuffiya",
+    "AR-C314-dafana",
+    "AR-C314-shayyaa",
+    "AR-C314-qabr"
+  ],
+  "tex": "arabic/book/chapters/ch314-a-funeral.tex"
+}

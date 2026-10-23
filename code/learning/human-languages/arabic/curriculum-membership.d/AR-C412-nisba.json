@@ -1,0 +1,11 @@
+{
+  "id": "AR-C412-nisba",
+  "pathSegment": "AR-PATH-412-IZDIYAD412",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-412-IZDIYAD412",
+      "order": 4
+    }
+  ]
+}

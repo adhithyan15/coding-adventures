@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Research",
+  "label": "ch:ar-research",
+  "canDo": "I can talk about a researcher, a study, a laboratory, an institute and a questionnaire.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C391-istibyan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can talk about a researcher, a study, a laboratory, an institute and a questionnaire.",
+    "assesses": [
+      "AR-LEX-C391-BAHTH391-03",
+      "AR-LEX-C391-BAHTH391-04",
+      "AR-LEX-C391-BAHTH391-05"
+    ]
+  }
+}

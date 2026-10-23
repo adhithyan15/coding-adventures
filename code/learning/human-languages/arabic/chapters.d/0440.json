@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Breaks and souvenirs",
+  "label": "ch:ar-breaks-and-souvenirs",
+  "canDo": "I can say a fountain, a souvenir, a rest stop, to accompany and to give a lift.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C440-awsala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can say a fountain, a souvenir, a rest stop, to accompany and to give a lift.",
+    "assesses": [
+      "AR-LEX-C440-TIDHKAR440-03",
+      "AR-LEX-C440-TIDHKAR440-04",
+      "AR-LEX-C440-TIDHKAR440-05"
+    ]
+  }
+}

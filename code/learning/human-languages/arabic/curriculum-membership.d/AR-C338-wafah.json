@@ -1,0 +1,11 @@
+{
+  "id": "AR-C338-wafah",
+  "pathSegment": "AR-PATH-338-MAWTA338",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-338-MAWTA338",
+      "order": 2
+    }
+  ]
+}

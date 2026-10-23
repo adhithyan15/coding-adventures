@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:21f786f60b9c65ca",
+  "lessonIds": [
+    "AR-C507-marida",
+    "AR-C507-nazlat-bard",
+    "AR-C507-ghathayan",
+    "AR-C507-taqayyaa",
+    "AR-C507-ishal"
+  ],
+  "tex": "arabic/book/chapters/ch507-falling-ill.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:23200c936cdca1a6",
+  "lessonIds": [
+    "AR-C301-istadama",
+    "AR-C301-inqalaba",
+    "AR-C301-dahiyya",
+    "AR-C301-jarih",
+    "AR-C301-asafa-aid"
+  ],
+  "tex": "arabic/book/chapters/ch301-an-accident-on-the-road.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C472-hadba",
+  "pathSegment": "AR-PATH-472-QIMMA472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-472-QIMMA472",
+      "order": 1
+    }
+  ]
+}

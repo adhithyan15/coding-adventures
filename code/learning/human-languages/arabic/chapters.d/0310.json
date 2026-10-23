@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Calling for help",
+  "label": "ch:ar-calling-for-help",
+  "canDo": "I can say to call for help, to survive, to shout, to call out and a rescuer.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C310-munqidh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can say to call for help, to survive, to shout, to call out and a rescuer.",
+    "assesses": [
+      "AR-LEX-C310-NAJDA310-03",
+      "AR-LEX-C310-NAJDA310-04",
+      "AR-LEX-C310-NAJDA310-05"
+    ]
+  }
+}

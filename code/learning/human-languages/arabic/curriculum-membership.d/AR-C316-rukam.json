@@ -1,0 +1,11 @@
+{
+  "id": "AR-C316-rukam",
+  "pathSegment": "AR-PATH-316-KARITHA316",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-316-KARITHA316",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 363,
+  "title": "Theories and concepts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5394584315b1d459",
+  "lessons": [
+    {
+      "id": "AR-C363-nazariyya",
+      "sequence": 20650,
+      "title": "نظرية (naẓariyya) — a theory",
+      "headword": "نظرية",
+      "romanization": "naẓariyya",
+      "gloss": "a theory",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36febd5bb89e6c9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to deduce, then the Arabic for a contradiction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: نظرية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نظرية — naẓariyya — \"a theory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "درسنا نظرية جديدة في الصف. darasnā naẓariyya jadīda fī aṣ-ṣaff. We studied a new theory in class."
+            },
+            {
+              "kind": "speech",
+              "text": "نظريا, naẓariyyan, in theory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "نظرية (naẓariyya) is built on the native Arabic root n-ẓ-r, \"to look, to regard\" (Lane). Naẓariyya is a modern abstract noun from naẓar, looking, consideration: a way of seeing a thing, a theory."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naẓariyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naẓariyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naẓariyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naẓariyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darasnā naẓariyya jadīda fī aṣ-ṣaff. — We studied a new theory in class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darasnā naẓariyya jadīda fī aṣ-ṣaff.* — We studied a new theory in class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to deduce, then the Arabic for a contradiction, then say naẓariyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to deduce, then the Arabic for a contradiction, then say *naẓariyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does نظرية (naẓariyya) mean? (\"A theory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C363-fardiyya",
+      "sequence": 20660,
+      "title": "فرضية (farḍiyya) — a hypothesis",
+      "headword": "فرضية",
+      "romanization": "farḍiyya",
+      "gloss": "a hypothesis",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae7151244dbcf6f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a contradiction, then the Arabic for a theory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فرضية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرضية — farḍiyya — \"a hypothesis\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أراد الطالب أن يختبر فرضيته. arāda aṭ-ṭālib an yakhtabira farḍiyyatah. The student wanted to test his hypothesis."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فرضية (farḍiyya) is built on the native Arabic root f-r-ḍ, \"to make a notch; to make binding\" (Lane). Farḍiyya is a modern abstract noun from farḍ, a supposition: an idea put forward to be tested."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farḍiyya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farḍiyya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farḍiyya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farḍiyya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "arāda aṭ-ṭālib an yakhtabira farḍiyyatah. — The student wanted to test his hypothesis.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *arāda aṭ-ṭālib an yakhtabira farḍiyyatah.* — The student wanted to test his hypothesis.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a contradiction, then the Arabic for a theory, then say farḍiyya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a contradiction, then the Arabic for a theory, then say *farḍiyya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فرضية (farḍiyya) mean? (\"A hypothesis\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C363-mafhum",
+      "sequence": 20670,
+      "title": "مفهوم (mafhūm) — a concept",
+      "headword": "مفهوم",
+      "romanization": "mafhūm",
+      "gloss": "a concept",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe7e96e64b50871a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a theory, then the Arabic for a hypothesis."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مفهوم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مفهوم — mafhūm — \"a concept\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مفهوم الصداقة مختلف عند كل شخص. mafhūm aṣ-ṣadāqa mukhtalif ʿinda kulli shakhṣ. The concept of friendship differs from person to person."
+            },
+            {
+              "kind": "speech",
+              "text": "Also an adjective, understood, clear: هذا مفهوم (mafhūm)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مفهوم (mafhūm) is built on the native Arabic root f-h-m, \"to understand\" (Lane). Mafhūm is the passive participle of fahima, \"to understand\": what is understood, a concept."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mafhūm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mafhūm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mafhūm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mafhūm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mafhūm aṣ-ṣadāqa mukhtalif ʿinda kulli shakhṣ. — The concept of friendship differs from person to person.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mafhūm aṣ-ṣadāqa mukhtalif ʿinda kulli shakhṣ.* — The concept of friendship differs from person to person.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a theory, then the Arabic for a hypothesis, then say mafhūm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a theory, then the Arabic for a hypothesis, then say *mafhūm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مفهوم (mafhūm) mean? (\"A concept\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C363-zahira",
+      "sequence": 20680,
+      "title": "ظاهرة (ẓāhira) — a phenomenon",
+      "headword": "ظاهرة",
+      "romanization": "ẓāhira",
+      "gloss": "a phenomenon",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6894a8846e3dafdc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a hypothesis, then the Arabic for a concept."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ظاهرة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ظاهرة — ẓāhira — \"a phenomenon\"."
+            },
+            {
+              "kind": "speech",
+              "text": "المطر في الصيف ظاهرة نادرة هنا. al-maṭar fī aṣ-ṣayf ẓāhira nādira hunā. Rain in summer is a rare phenomenon here."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: ظواهر, ẓawāhir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ظاهرة (ẓāhira) is built on the native Arabic root ẓ-h-r, \"to appear, to come out\" (Lane). Ẓāhira is the feminine active participle, what appears: a phenomenon."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ẓāhira",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ẓāhira*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ẓāhira, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ẓāhira*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-maṭar fī aṣ-ṣayf ẓāhira nādira hunā. — Rain in summer is a rare phenomenon here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-maṭar fī aṣ-ṣayf ẓāhira nādira hunā.* — Rain in summer is a rare phenomenon here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a hypothesis, then the Arabic for a concept, then say ẓāhira again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a hypothesis, then the Arabic for a concept, then say *ẓāhira* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ظاهرة (ẓāhira) mean? (\"A phenomenon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C363-fassara",
+      "sequence": 20690,
+      "title": "فسر (fassara) — to interpret",
+      "headword": "فسر",
+      "romanization": "fassara",
+      "gloss": "to interpret",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bacdd481b9c335a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a concept, then the Arabic for a phenomenon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فسر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فسر — fassara — \"to interpret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "فسر المعلم القصيدة للطلاب. fassara al-muʿallim al-qaṣīda li-ṭ-ṭullāb. The teacher interpreted the poem for the students."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يفسر, yufassir."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun تفسير, tafsīr, an interpretation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فسر (fassara) is built on the native Arabic root f-s-r, \"to uncover, to make plain\" (Lane). It is Form II, to make plain: to explain what a thing means."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fassara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fassara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fassara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fassara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fassara al-muʿallim al-qaṣīda li-ṭ-ṭullāb. — The teacher interpreted the poem for the students.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fassara al-muʿallim al-qaṣīda li-ṭ-ṭullāb.* — The teacher interpreted the poem for the students.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a concept, then the Arabic for a phenomenon, then say fassara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a concept, then the Arabic for a phenomenon, then say *fassara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فسر (fassara) mean? (\"To interpret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

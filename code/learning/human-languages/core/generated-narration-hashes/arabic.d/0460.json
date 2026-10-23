@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:004a1e5b49272f1d",
+  "lessonIds": [
+    "AR-C460-utl",
+    "AR-C460-khalal",
+    "AR-C460-inkasara",
+    "AR-C460-talifa",
+    "AR-C460-tadarrara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch460.txt",
+  "json": "arabic/narration/ch460.json",
+  "textHash": "fnv1a64:521e1c81d86fa902",
+  "jsonHash": "fnv1a64:f67f74004bc67eb0",
+  "findings": []
+}

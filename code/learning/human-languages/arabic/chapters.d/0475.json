@@ -1,0 +1,19 @@
+{
+  "chapter": 475,
+  "title": "Wild animals",
+  "label": "ch:ar-wild-animals",
+  "canDo": "I can say a hyena, a cheetah, a hedgehog, a squirrel and a bat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C475-khuffash",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can say a hyena, a cheetah, a hedgehog, a squirrel and a bat.",
+    "assesses": [
+      "AR-LEX-C475-DABU475-03",
+      "AR-LEX-C475-DABU475-04",
+      "AR-LEX-C475-DABU475-05"
+    ]
+  }
+}

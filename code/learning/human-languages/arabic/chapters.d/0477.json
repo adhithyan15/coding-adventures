@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Under the sea",
+  "label": "ch:ar-under-the-sea",
+  "canDo": "I can say a shark, a crab, oysters, pure and a strait.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-C477-madiq",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can say a shark, a crab, oysters, pure and a strait.",
+    "assesses": [
+      "AR-LEX-C477-QIRSH477-03",
+      "AR-LEX-C477-QIRSH477-04",
+      "AR-LEX-C477-QIRSH477-05"
+    ]
+  }
+}
