@@ -1,6 +1,6 @@
 [package]
 name = "x509-name-constraints"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Bounded DNS NameConstraints decoding and evaluation"
 

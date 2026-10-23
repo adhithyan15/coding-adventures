@@ -1,7 +1,7 @@
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use x509_name_constraints::{
-    decode_name_constraints_contents, evaluate_permitted_dns_names, DnsConstraintErrorKind,
-    DnsNameSyntaxError, MAX_PRESENTED_DNS_NAMES,
+    decode_name_constraints, decode_name_constraints_contents, evaluate_dns_names,
+    ConstrainedDnsNames, DnsConstraintErrorKind, DnsNameSyntaxError, MAX_PRESENTED_DNS_NAMES,
 };
 
 fn der_length(length: usize) -> Vec<u8> {
@@ -31,14 +31,40 @@ fn permitted(subtrees: &[&[u8]]) -> Vec<u8> {
     element(0xa0, &contents)
 }
 
+fn excluded(subtrees: &[&[u8]]) -> Vec<u8> {
+    let mut contents = Vec::new();
+    for subtree in subtrees {
+        contents.extend_from_slice(&element(0x30, &element(0x82, subtree)));
+    }
+    element(0xa1, &contents)
+}
+
 fn evaluate(
     permitted_subtrees: &[&[u8]],
     presented_dns_names: &[&str],
-) -> Result<x509_name_constraints::PermittedDnsNames, x509_name_constraints::DnsConstraintError> {
+) -> Result<ConstrainedDnsNames, x509_name_constraints::DnsConstraintError> {
     let encoded = permitted(permitted_subtrees);
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     let constraints = decode_name_constraints_contents(&mut decoder, &encoded).unwrap();
-    evaluate_permitted_dns_names(&constraints, presented_dns_names)
+    evaluate_dns_names(&constraints, presented_dns_names)
+}
+
+fn evaluate_full(
+    permitted_subtrees: &[&[u8]],
+    excluded_subtrees: &[&[u8]],
+    presented_dns_names: &[&str],
+) -> Result<ConstrainedDnsNames, x509_name_constraints::DnsConstraintError> {
+    let mut fields = Vec::new();
+    if !permitted_subtrees.is_empty() {
+        fields.extend(permitted(permitted_subtrees));
+    }
+    if !excluded_subtrees.is_empty() {
+        fields.extend(excluded(excluded_subtrees));
+    }
+    let encoded = element(0x30, &fields);
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let constraints = decode_name_constraints(&mut decoder, &encoded).unwrap();
+    evaluate_dns_names(&constraints, presented_dns_names)
 }
 
 #[test]
@@ -50,7 +76,7 @@ fn exact_and_subdomain_matches_are_case_insensitive_and_label_based() {
     .unwrap();
     assert_eq!(evaluated.count(), 3);
     assert!(!evaluated.is_empty());
-    assert_eq!(format!("{evaluated:?}"), "PermittedDnsNames { count: 3 }");
+    assert_eq!(format!("{evaluated:?}"), "ConstrainedDnsNames { count: 3 }");
 
     let error = evaluate(&[b"example.com"], &["badexample.com"]).unwrap_err();
     assert_eq!(
@@ -65,7 +91,7 @@ fn reviewed_leading_dot_requires_a_left_hand_label() {
     let encoded = [0xa0, 0x07, 0x30, 0x05, 0x82, 0x03, b'.', b't', b'r'];
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     let constraints = decode_name_constraints_contents(&mut decoder, &encoded).unwrap();
-    let evaluated = evaluate_permitted_dns_names(
+    let evaluated = evaluate_dns_names(
         &constraints,
         &["example.tr", "deep.example.tr", "*.example.tr"],
     )
@@ -73,8 +99,64 @@ fn reviewed_leading_dot_requires_a_left_hand_label() {
     assert_eq!(evaluated.count(), 3);
 
     for name in ["tr", "eviltr", ".tr"] {
-        assert!(evaluate_permitted_dns_names(&constraints, &[name]).is_err());
+        assert!(evaluate_dns_names(&constraints, &[name]).is_err());
     }
+}
+
+#[test]
+fn excluded_subtrees_reject_exact_and_descendant_names() {
+    let evaluated =
+        evaluate_full(&[], &[b"private.example.test"], &["public.example.test"]).unwrap();
+    assert_eq!(evaluated.count(), 1);
+
+    for name in ["private.example.test", "api.private.example.test"] {
+        let error = evaluate_full(&[], &[b"private.example.test"], &[name]).unwrap_err();
+        assert_eq!(
+            error.kind(),
+            DnsConstraintErrorKind::PresentedDnsNameExcluded
+        );
+        assert_eq!(error.item_index(), 0);
+    }
+}
+
+#[test]
+fn excluded_leading_dot_requires_a_left_hand_label() {
+    assert!(evaluate_full(&[], &[b".tr"], &["tr"]).is_ok());
+    for name in ["example.tr", "deep.example.tr", "*.example.tr"] {
+        assert_eq!(
+            evaluate_full(&[], &[b".tr"], &[name]).unwrap_err().kind(),
+            DnsConstraintErrorKind::PresentedDnsNameExcluded
+        );
+    }
+}
+
+#[test]
+fn exclusion_wins_when_a_name_is_also_permitted() {
+    let error = evaluate_full(
+        &[b"example.test"],
+        &[b"private.example.test"],
+        &["api.private.example.test"],
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        DnsConstraintErrorKind::PresentedDnsNameExcluded
+    );
+}
+
+#[test]
+fn every_excluded_constraint_is_validated_before_any_name_is_accepted() {
+    let error = evaluate_full(
+        &[b"example.test"],
+        &[b"private.example.test", b"*.invalid.test"],
+        &["api.example.test"],
+    )
+    .unwrap_err();
+    assert_eq!(
+        error.kind(),
+        DnsConstraintErrorKind::InvalidExcludedSubtree(DnsNameSyntaxError::WildcardNotAllowed)
+    );
+    assert_eq!(error.item_index(), 1);
 }
 
 #[test]

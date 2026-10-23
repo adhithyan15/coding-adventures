@@ -14,8 +14,8 @@
 use core::fmt;
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use x509_name_constraints::{
-    decode_name_constraints, decode_name_constraints_contents, evaluate_permitted_dns_names,
-    DnsConstraintErrorKind, NameConstraintsErrorKind, PermittedDnsNames, NAME_CONSTRAINTS_OID,
+    decode_name_constraints, decode_name_constraints_contents, evaluate_dns_names,
+    ConstrainedDnsNames, DnsConstraintErrorKind, NameConstraintsErrorKind, NAME_CONSTRAINTS_OID,
 };
 use x509_rsa_sha256_reviewed_anchor_link::{
     BoundX509RsaSha256ReviewedAnchorLink, BoundX509RsaSha256ReviewedIntermediatePath,
@@ -43,11 +43,11 @@ pub enum X509RsaSha256ReviewedServerLinkErrorKind {
     MissingTargetSubjectAlternativeName,
     /// The exact target certificate's Subject Alternative Name was invalid.
     InvalidTargetSubjectAlternativeName(SubjectAltNameErrorKind),
-    /// At least one target dNSName was invalid or outside every permitted
-    /// subtree.
+    /// At least one target dNSName was invalid or violated the selected
+    /// anchor's supported permitted constraint set.
     TargetDnsNameConstraints(DnsConstraintErrorKind),
-    /// At least one target dNSName was invalid or outside every permitted
-    /// intermediate subtree.
+    /// At least one target dNSName was invalid, excluded, or outside every
+    /// permitted intermediate subtree when a permitted set was present.
     TargetIntermediateDnsNameConstraints(DnsConstraintErrorKind),
 }
 
@@ -252,7 +252,7 @@ pub struct ValidatedX509RsaSha256ReviewedServerAnchorPolicy<
         'issuer_certificate,
         'issuer_encoded,
     >,
-    permitted_dns_names: Option<PermittedDnsNames>,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
 }
 
 impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
@@ -277,8 +277,8 @@ impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
 
     /// Return DNS-constraint evidence when the selected anchor carried the
     /// supported out-of-band constraint form.
-    pub const fn permitted_dns_names(&self) -> Option<PermittedDnsNames> {
-        self.permitted_dns_names
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
     }
 }
 
@@ -318,7 +318,7 @@ pub struct ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy<
         'root_certificate,
         'root_encoded,
     >,
-    permitted_dns_names: Option<PermittedDnsNames>,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
 }
 
 impl<
@@ -363,8 +363,8 @@ impl<
 
     /// Return DNS-constraint evidence when the selected anchor carried the
     /// supported out-of-band constraint form.
-    pub const fn permitted_dns_names(&self) -> Option<PermittedDnsNames> {
-        self.permitted_dns_names
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
     }
 }
 
@@ -390,7 +390,7 @@ impl fmt::Debug
 ///
 /// Success retains the complete reviewed-root anchor-policy proof and proves
 /// either that its exact intermediate has no NameConstraints extension or that
-/// the supported critical permitted-DNS subset was applied to every dNSName in
+/// the supported critical permitted-and-excluded-DNS subset was applied to every dNSName in
 /// the exact retained target. It is not generalized path validation,
 /// revocation, TLS, HTTP, OAuth transport, or network authority.
 pub struct ValidatedX509RsaSha256ReviewedIntermediateServerNameConstraintsPolicy<
@@ -415,7 +415,7 @@ pub struct ValidatedX509RsaSha256ReviewedIntermediateServerNameConstraintsPolicy
         'root_certificate,
         'root_encoded,
     >,
-    permitted_dns_names: Option<PermittedDnsNames>,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
 }
 
 impl<
@@ -460,8 +460,8 @@ impl<
 
     /// Return DNS evidence when the exact intermediate carried supported
     /// critical NameConstraints.
-    pub const fn permitted_dns_names(&self) -> Option<PermittedDnsNames> {
-        self.permitted_dns_names
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
     }
 }
 
@@ -492,7 +492,7 @@ fn evaluate_selected_anchor_dns_policy(
     name_constraints: Option<&[u8]>,
     constraint_limits: Asn1Limits,
     subject_alt_name_limits: Asn1Limits,
-) -> Result<Option<PermittedDnsNames>, X509RsaSha256ReviewedServerLinkError> {
+) -> Result<Option<ConstrainedDnsNames>, X509RsaSha256ReviewedServerLinkError> {
     let Some(encoded_constraints) = name_constraints else {
         return Ok(None);
     };
@@ -530,17 +530,14 @@ fn evaluate_selected_anchor_dns_policy(
                 ),
             )
         })?;
-    let permitted_dns_names = evaluate_permitted_dns_names(
-        &constraints,
-        subject_alt_name.dns_names(),
-    )
-    .map_err(|error| {
-        X509RsaSha256ReviewedServerLinkError::new(
-            X509RsaSha256ReviewedServerLinkErrorKind::TargetDnsNameConstraints(error.kind()),
-        )
-    })?;
+    let constrained_dns_names = evaluate_dns_names(&constraints, subject_alt_name.dns_names())
+        .map_err(|error| {
+            X509RsaSha256ReviewedServerLinkError::new(
+                X509RsaSha256ReviewedServerLinkErrorKind::TargetDnsNameConstraints(error.kind()),
+            )
+        })?;
 
-    Ok(Some(permitted_dns_names))
+    Ok(Some(constrained_dns_names))
 }
 
 fn evaluate_intermediate_dns_policy(
@@ -548,7 +545,7 @@ fn evaluate_intermediate_dns_policy(
     intermediate_certificate: &x509_certificate::X509Certificate<'_>,
     constraint_limits: Asn1Limits,
     subject_alt_name_limits: Asn1Limits,
-) -> Result<Option<PermittedDnsNames>, X509RsaSha256ReviewedServerLinkError> {
+) -> Result<Option<ConstrainedDnsNames>, X509RsaSha256ReviewedServerLinkError> {
     let Some(extension) = intermediate_certificate
         .tbs_certificate()
         .extensions()
@@ -598,18 +595,16 @@ fn evaluate_intermediate_dns_policy(
                     ),
                 )
             })?;
-    let permitted_dns_names =
-        evaluate_permitted_dns_names(&constraints, subject_alt_name.dns_names()).map_err(
-            |error| {
-                X509RsaSha256ReviewedServerLinkError::new(
-                    X509RsaSha256ReviewedServerLinkErrorKind::TargetIntermediateDnsNameConstraints(
-                        error.kind(),
-                    ),
-                )
-            },
-        )?;
+    let constrained_dns_names = evaluate_dns_names(&constraints, subject_alt_name.dns_names())
+        .map_err(|error| {
+            X509RsaSha256ReviewedServerLinkError::new(
+                X509RsaSha256ReviewedServerLinkErrorKind::TargetIntermediateDnsNameConstraints(
+                    error.kind(),
+                ),
+            )
+        })?;
 
-    Ok(Some(permitted_dns_names))
+    Ok(Some(constrained_dns_names))
 }
 
 /// Bind target-server policy to one reviewed-root issuer link for the same
@@ -751,7 +746,7 @@ pub fn validate_x509_rsa_sha256_reviewed_server_anchor_policy<
         .reviewed_anchor_link()
         .reviewed_anchor()
         .name_constraints();
-    let permitted_dns_names = evaluate_selected_anchor_dns_policy(
+    let constrained_dns_names = evaluate_selected_anchor_dns_policy(
         certificate,
         name_constraints,
         constraint_limits,
@@ -760,7 +755,7 @@ pub fn validate_x509_rsa_sha256_reviewed_server_anchor_policy<
 
     Ok(ValidatedX509RsaSha256ReviewedServerAnchorPolicy {
         reviewed_server_link,
-        permitted_dns_names,
+        constrained_dns_names,
     })
 }
 
@@ -818,7 +813,7 @@ pub fn validate_x509_rsa_sha256_reviewed_intermediate_server_anchor_policy<
         .reviewed_parent_link()
         .reviewed_anchor()
         .name_constraints();
-    let permitted_dns_names = evaluate_selected_anchor_dns_policy(
+    let constrained_dns_names = evaluate_selected_anchor_dns_policy(
         certificate,
         name_constraints,
         constraint_limits,
@@ -828,7 +823,7 @@ pub fn validate_x509_rsa_sha256_reviewed_intermediate_server_anchor_policy<
     Ok(
         ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy {
             reviewed_intermediate_server_path,
-            permitted_dns_names,
+            constrained_dns_names,
         },
     )
 }
@@ -839,7 +834,7 @@ pub fn validate_x509_rsa_sha256_reviewed_intermediate_server_anchor_policy<
 /// and intermediate are derived only through that retained fixed two-link
 /// path, preventing certificate or SAN substitution. An absent extension
 /// succeeds without new evidence; a present extension must be critical and
-/// must decode as the supported permitted-DNS-only subset under caller limits.
+/// must decode as the supported permitted-and-excluded-DNS subset under caller limits.
 pub fn validate_x509_rsa_sha256_reviewed_intermediate_server_name_constraints_policy<
     'server_certificate,
     'path_child_certificate,
@@ -889,7 +884,7 @@ pub fn validate_x509_rsa_sha256_reviewed_intermediate_server_name_constraints_po
         .authenticated_intermediate()
         .intermediate_policy()
         .certificate();
-    let permitted_dns_names = evaluate_intermediate_dns_policy(
+    let constrained_dns_names = evaluate_intermediate_dns_policy(
         target_certificate,
         intermediate_certificate,
         constraint_limits,
@@ -899,7 +894,7 @@ pub fn validate_x509_rsa_sha256_reviewed_intermediate_server_name_constraints_po
     Ok(
         ValidatedX509RsaSha256ReviewedIntermediateServerNameConstraintsPolicy {
             anchor_policy,
-            permitted_dns_names,
+            constrained_dns_names,
         },
     )
 }
@@ -976,8 +971,36 @@ mod tests {
         der(0xa0, &contents)
     }
 
+    fn excluded_dns_subtrees(subtrees: &[&[u8]]) -> Vec<u8> {
+        let mut contents = Vec::new();
+        for subtree in subtrees {
+            contents.extend(der(0x30, &der(0x82, subtree)));
+        }
+        der(0xa1, &contents)
+    }
+
     fn name_constraints(subtrees: &[&[u8]], critical: bool) -> Vec<u8> {
         let value = der(0x30, &permitted_dns_subtrees(subtrees));
+        if critical {
+            critical_extension(NAME_CONSTRAINTS_OID_DER, &value)
+        } else {
+            extension(NAME_CONSTRAINTS_OID_DER, &value)
+        }
+    }
+
+    fn combined_name_constraints(
+        permitted: &[&[u8]],
+        excluded: &[&[u8]],
+        critical: bool,
+    ) -> Vec<u8> {
+        let mut fields = Vec::new();
+        if !permitted.is_empty() {
+            fields.extend(permitted_dns_subtrees(permitted));
+        }
+        if !excluded.is_empty() {
+            fields.extend(excluded_dns_subtrees(excluded));
+        }
+        let value = der(0x30, &fields);
         if critical {
             critical_extension(NAME_CONSTRAINTS_OID_DER, &value)
         } else {
@@ -1014,7 +1037,7 @@ mod tests {
         constraints: Option<&[u8]>,
         constraint_limits: Asn1Limits,
         subject_alt_name_limits: Asn1Limits,
-    ) -> Result<Option<PermittedDnsNames>, X509RsaSha256ReviewedServerLinkError> {
+    ) -> Result<Option<ConstrainedDnsNames>, X509RsaSha256ReviewedServerLinkError> {
         let certificate = decode_x509_certificate(encoded, Asn1Limits::default()).unwrap();
         evaluate_selected_anchor_dns_policy(
             &certificate,
@@ -1229,6 +1252,50 @@ mod tests {
         .unwrap();
 
         assert_eq!(evidence.count(), 2);
+    }
+
+    #[test]
+    fn critical_intermediate_excluded_dns_constraints_are_enforced() {
+        let permitted_target = certificate(&[subject_alt_name(&[dns_name("api.example.test")])]);
+        let excluded_target =
+            certificate(&[subject_alt_name(&[dns_name("api.private.example.test")])]);
+        let intermediate_encoded = certificate(&[combined_name_constraints(
+            &[b"example.test"],
+            &[b"private.example.test"],
+            true,
+        )]);
+        let permitted_target =
+            decode_x509_certificate(&permitted_target, Asn1Limits::default()).unwrap();
+        let excluded_target =
+            decode_x509_certificate(&excluded_target, Asn1Limits::default()).unwrap();
+        let intermediate =
+            decode_x509_certificate(&intermediate_encoded, Asn1Limits::default()).unwrap();
+
+        assert_eq!(
+            evaluate_intermediate_dns_policy(
+                &permitted_target,
+                &intermediate,
+                Asn1Limits::default(),
+                Asn1Limits::default(),
+            )
+            .unwrap()
+            .unwrap()
+            .count(),
+            1
+        );
+        let error = evaluate_intermediate_dns_policy(
+            &excluded_target,
+            &intermediate,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap_err();
+        assert_eq!(
+            error.kind(),
+            X509RsaSha256ReviewedServerLinkErrorKind::TargetIntermediateDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameExcluded,
+            )
+        );
     }
 
     #[test]

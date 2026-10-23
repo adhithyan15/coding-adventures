@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.0 - 2026-10-23
+
+### Added
+
+- Applied supported critical excluded dNSName constraints from the exact
+  retained intermediate, with exclusion taking precedence over permission.
+- Migrated direct, two-link anchor, and intermediate consumers to generalized
+  DNS-constraint evidence so decoded exclusions cannot be silently ignored.
+- Added exact-consumer coverage for combined permitted and excluded subtrees;
+  reviewed-root snapshot constraints remain permitted-only reviewed input.
+
 ## 0.6.0 - 2026-10-23
 
 ### Added
