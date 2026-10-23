@@ -24,6 +24,7 @@ use x509_rsa_sha256_reviewed_anchor_link::{
 };
 use x509_rsa_sha256_reviewed_server_link::{
     bind_x509_rsa_sha256_reviewed_intermediate_server_path,
+    validate_x509_rsa_sha256_reviewed_intermediate_server_anchor_policy,
     X509RsaSha256ReviewedServerLinkErrorKind,
 };
 use x509_server_certificate_policy::{
@@ -310,4 +311,40 @@ fn rejects_byte_equal_distinct_server_target_from_real_reviewed_path() {
         "X.509 RSA SHA-256 reviewed server link error EvidenceMismatch"
     );
     assert!(!error.to_string().contains("valid-isrgrootx1"));
+}
+
+#[test]
+fn applies_selected_anchor_policy_to_the_complete_real_two_link_server_path() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let leaf = decode(&leaf_encoded);
+    let intermediate = decode(&intermediate_encoded);
+    let root = decode(&root_encoded);
+    let policy = server_policy(&leaf);
+    let path = reviewed_path(&leaf, &intermediate, &root);
+    let bound = bind_x509_rsa_sha256_reviewed_intermediate_server_path(policy, path).unwrap();
+
+    let validated = validate_x509_rsa_sha256_reviewed_intermediate_server_anchor_policy(
+        bound,
+        Asn1Limits::default(),
+        Asn1Limits::default(),
+    )
+    .unwrap();
+
+    assert_eq!(validated.permitted_dns_names(), None);
+    let retained = validated.reviewed_intermediate_server_path();
+    assert!(std::ptr::eq(retained.server_policy().certificate(), &leaf));
+    assert!(std::ptr::eq(
+        retained
+            .reviewed_intermediate_path()
+            .reviewed_parent_link()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        &root
+    ));
+    assert_eq!(
+        format!("{validated:?}"),
+        "ValidatedX509RsaSha256ReviewedIntermediateServerAnchorPolicy"
+    );
 }
