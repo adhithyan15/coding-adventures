@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 192,
+  "sourceHash": "fnv1a64:b2844aee3e86c05a",
+  "lessonIds": [
+    "PA-C192-lok-return",
+    "PA-C192-lokaan",
+    "PA-C192-lokaan-review",
+    "PA-C192-lokaan-naal",
+    "PA-C192-lokaan-lai",
+    "PA-C192-lokaan-ton",
+    "PA-C192-payoff"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch192.txt",
+  "json": "punjabi/narration/ch192.json",
+  "textHash": "fnv1a64:2775190b91f42486",
+  "jsonHash": "fnv1a64:f466d16841aaf1a2",
+  "findings": []
+}
