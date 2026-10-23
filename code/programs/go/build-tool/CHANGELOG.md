@@ -60,6 +60,16 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- The `global:luarocks-tree` lock now covers every LuaRocks verb that writes
+  the shared rocks tree (`make`, `install`, `remove`, `build`, `purge`, `test`,
+  `config`, with leading flags allowed), matched as a command word in any
+  package. Before, only `luarocks make` and `luarocks remove` in Lua packages
+  took it. LuaRocks refuses a second writer outright, so `lua/tcp_client`'s
+  unlocked `luarocks install luasocket --local` failed the two locked
+  `luarocks make`s next to it (lua/type_checker_protocol, lua/wasm_leb128) on
+  PR #17822's shard 11. Read-only verbs (`show`, `path`, ...) stay parallel.
+  The key is now the exported `LuaRocksTreeLockKey`.
+
 - `-validate-build-files` on a CI shard (`-plan-file … -shard-index N`) now
   resolves names and paths against every package on the platform, not just
   the shard's. A package's test-only dependencies (a cpanfile `on 'test'`

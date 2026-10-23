@@ -681,6 +681,46 @@ func TestBuildResourceKeysIncludesGlobalLuaRocksLockForLuaRemovesOnLinux(t *test
 	}
 }
 
+// Every LuaRocks verb that writes the tree must share one lock: an
+// unlocked `luarocks install` beside a locked `luarocks make` makes the
+// make fail with "requires exclusive write access" (#17822 shard 11).
+func TestBuildResourceKeysSerializeLuaRocksTreeWrites(t *testing.T) {
+	root := makeFixture(t, map[string]string{"pkg/BUILD": "true"})
+	paths := map[string]string{filepath.Join(root, "pkg"): "pkg"}
+
+	for _, tc := range []struct {
+		command string
+		want    bool
+	}{
+		{"luarocks make --local coding-adventures-pkg-0.1.0-1.rockspec", true},
+		{"luarocks install luasocket --local && cd tests && busted .", true},
+		{"luarocks install luasocket 2>/dev/null || true", true},
+		{"luarocks --local install luasocket", true},
+		{"luarocks --tree lua_modules make pkg-0.1.0-1.rockspec", true},
+		{"luarocks --tree=lua_modules --lua-version 5.4 remove pkg", true},
+		{"luarocks remove --force coding-adventures-pkg 2>/dev/null || true", true},
+		{"(cd ../dep && luarocks build dep-0.1.0-1.rockspec)", true},
+		{"luarocks purge --tree=lua_modules", true},
+		{"luarocks test", true},
+		{"luarocks show coding-adventures-dep >/dev/null 2>&1 || (cd ../dep && bash BUILD)", false},
+		{`eval "$(luarocks path --bin)" && cd tests && busted .`, false},
+		{"busted . --verbose --pattern=test_", false},
+		{"echo luarocks-install-notes", false},
+		{"luarocks --tree lua_modules show pkg", false},
+	} {
+		t.Run(tc.command, func(t *testing.T) {
+			pkg := discovery.Package{Name: "pkg", Path: filepath.Join(root, "pkg"), BuildCommands: []string{tc.command}, Language: "lua"}
+			got := false
+			for _, key := range buildResourceKeys(pkg, paths) {
+				got = got || key == LuaRocksTreeLockKey
+			}
+			if got != tc.want {
+				t.Fatalf("luarocks-tree lock for %q = %v, want %v", tc.command, got, tc.want)
+			}
+		})
+	}
+}
+
 func TestBuildResourceKeysIncludesGlobalCabalStoreLockForHaskellBuilds(t *testing.T) {
 	root := makeFixture(t, map[string]string{
 		"pkg/BUILD": "if command -v cabal >/dev/null 2>&1; then cabal test; else echo 'cabal not found -- skipping'; fi",

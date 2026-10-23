@@ -1018,13 +1018,19 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 			keys["global:rustup-targets"] = true
 		}
 
-		if pkg.Language == "lua" &&
-			(strings.Contains(command, "luarocks make") || strings.Contains(command, "luarocks remove")) {
+		if luarocksTreeWriteRe.MatchString(command) {
 			// LuaRocks uses a shared rocks tree under HOME on every platform.
 			// Concurrent writes race for that tree lock and can leave packages
-			// observing partially-installed local dependencies. Serialise Lua
+			// observing partially-installed local dependencies. Serialise
 			// BUILDs that mutate the tree so sibling rock installs stay stable.
-			keys["global:luarocks-tree"] = true
+			//
+			// Every verb that writes the tree must take the lock, not just
+			// `make` and `remove`: LuaRocks refuses a second writer outright
+			// ("command 'make' requires exclusive write access to
+			// ~/.luarocks"), so one unlocked `luarocks install luasocket
+			// --local` (lua/tcp_client) failed two locked `make`s beside it
+			// on #17822's shard 11.
+			keys[LuaRocksTreeLockKey] = true
 		}
 
 		if pkg.Language == "haskell" && strings.Contains(command, "cabal ") {
@@ -1085,6 +1091,20 @@ func buildResourceKeysForOS(pkg discovery.Package, pathToPkg map[string]string, 
 // code/scripts/ocaml_toolchain_lock.py pins this name: CI runs OCaml in
 // parallel with other languages only because this lock exists.
 const OpamSwitchLockKey = "global:opam-switch"
+
+// LuaRocksTreeLockKey is the resource lock every BUILD that writes the
+// shared LuaRocks tree holds.
+const LuaRocksTreeLockKey = "global:luarocks-tree"
+
+// luarocksTreeWriteRe matches a `luarocks` command whose verb writes the
+// rocks tree, with any leading flags, valued or not (`luarocks --local
+// install x`, `luarocks --tree lua_modules make`). The
+// verbs are LuaRocks' tree-writing commands, the ones that take its
+// exclusive lock: make, install, remove, build and purge; `test` installs
+// a rockspec's test dependencies and `config` writes the config file
+// beside the tree. Read-only verbs (show, path, list, search, which, doc,
+// lint) never lock, so they stay parallel.
+var luarocksTreeWriteRe = regexp.MustCompile(`(^|[\s;&|(])luarocks(\s+-\S+(\s+[^-\s;&|]\S*)?)*\s+(make|install|remove|build|purge|test|config)(\s|$)`)
 
 // RubyGemsLockKey is the resource lock every BUILD that installs Ruby gems
 // into the shared gem home holds.
