@@ -46,6 +46,8 @@ CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
 CI_SCRIPT_PATHS = (
     # Builds and checks each app through Flutter for phones (UI89 §7).
     "code/scripts/build-mosaic-flutter-phone-app.sh",
+    # Installs Flutter's pinned NDK, verified and retried, before that build.
+    "code/scripts/ensure-flutter-android-ndk.sh",
     "code/scripts/build-mosaic-android-libs.sh",
     "code/scripts/start-mosaic-android-emulator.sh",
     "code/scripts/mosaic-android-emulator-gate.sh",
