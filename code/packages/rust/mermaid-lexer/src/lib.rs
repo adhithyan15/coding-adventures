@@ -1457,6 +1457,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_bracketed_attribute_name_suffix() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK {\n  string author-ref[name](1)\n}\n",
+        );
+        let suffixes: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ATTRIBUTE_SUFFIX"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(suffixes, ["(1)"]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
