@@ -4,6 +4,12 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Documentation
+
+- Record the completed immutable v0.5.9 publication and independent asset audit
+  in the README, completion spec, and backlog (#17999); artifact coverage and
+  unsigned-platform limitations remain unchanged.
+
 Entries added after `task-app-v0.5.9` accumulate here until the next version is
 cut.
 
