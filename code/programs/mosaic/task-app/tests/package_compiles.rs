@@ -139,7 +139,7 @@ fn builds_on_every_backend() {
 }
 
 /// A floor on the inner column alone does not constrain its For delegate.
-/// Pin both ownership levels so narrow board rows cannot shrink the wrapper.
+/// Pin the outer floor and inner preferred width for the existing shrink intent.
 #[test]
 fn qt_board_columns_keep_their_width_floor_in_both_themes() {
     use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
@@ -158,7 +158,23 @@ fn qt_board_columns_keep_their_width_floor_in_both_themes() {
         assert!(delegate.contains("Layout.minimumWidth: 260"), "{theme}: {delegate}");
         let column = column.split_once("ColumnLayout {").unwrap().0;
         assert!(column.contains("Layout.preferredWidth: 260"), "{theme}: {column}");
-        assert!(column.contains("Layout.minimumWidth: 260"), "{theme}: {column}");
+    }
+}
+
+/// Release validation, not package construction, caught the initial SwiftUI
+/// min-width regression. Keep its exact budget visible beside this repair.
+#[test]
+fn board_floor_does_not_add_swiftui_min_width_drops() {
+    use mosaic_package_artifact_builder::{analyze_package_degradations, Backend, BuildOptions, BuildProfile};
+    for theme in ["light", "dark"] {
+        let out = tempfile::TempDir::new().unwrap();
+        let report = analyze_package_degradations(&BuildOptions {
+            package_root: PathBuf::from(env!("CARGO_MANIFEST_DIR")),
+            output_root: out.path().to_path_buf(), backend: Backend::SwiftUI,
+            emit_project: false, theme: Some(theme.to_string()),
+        }, BuildProfile::NativeComplete).unwrap();
+        let count = report.style_degradations.iter().filter(|d| d.primitive.as_deref() == Some("min-width")).count();
+        assert_eq!(count, 2, "{theme}: SwiftUI release min-width budget");
     }
 }
 

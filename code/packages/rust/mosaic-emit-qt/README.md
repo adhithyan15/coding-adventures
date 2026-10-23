@@ -16,10 +16,10 @@ string describing the component as a tree of Qt Quick elements.
 
 ## Pipeline position
 
-A single Row/Column/Box inside a `For` retains its static nonnegative scalar
-`min-width` on the delegate Item as well as on the inner container. This keeps
-the enclosing layout from shrinking the wrapper below the authored floor.
-State overrides and multi-child delegate floors are not forwarded.
+A single Row/Column/Box inside a `For` pairs a static nonnegative scalar width
+with exact `flex-shrink: 0` to give the delegate Item a minimum width. This keeps
+the enclosing layout from shrinking the extra wrapper. State overrides and
+multi-child bodies are excluded; general flex-shrink remains reported.
 
 Painted rectangles preserve a single finite `rotate(Ndeg)` through centered
 Qt Item rotation, including ordered state overrides. Layout dimensions remain

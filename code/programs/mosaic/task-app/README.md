@@ -6,8 +6,8 @@ auto-schedules them into a working-day timeline via the Critical Path Method.
 
 ## Architecture
 
-Board columns declare an explicit 260-pixel minimum in both themes. Qt carries
-that floor across the repeated-column wrapper as well as the inner column;
+Board columns declare width 260 and non-shrink intent in both themes. Qt derives
+a minimum on the repeated-column wrapper from those existing declarations;
 this does not claim general flex-shrink support or change release coverage.
 
 The UI is authored **once in Mosaic**. Browser hosts share one framework-neutral

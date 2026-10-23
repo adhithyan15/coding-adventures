@@ -8861,10 +8861,16 @@ fn emit_table_section_rows(
 
 /// Validate a static floor before recording it as supported geometry.
 fn static_delegate_min_width(props: &[StyleProp], layers: &[StateLayer<'_>]) -> Option<String> {
-    if layers.iter().any(|layer| layer.props.iter().any(|p| p.name == "min-width")) {
+    // Do not record flex-shrink as generally supported: this only prevents
+    // the extra For wrapper from shrinking a fixed-width container.
+    let shrink = props.iter().find(|p| p.name == "flex-shrink")?.value.trim().trim_matches('"');
+    let conflicts = |p: &StyleProp| matches!(p.name.as_str(),
+        "min-width" | "max-width" | "flex" | "flex-basis");
+    if shrink != "0" || props.iter().any(conflicts) || layers.iter().any(|layer| layer.props.iter()
+        .any(|p| conflicts(p) || matches!(p.name.as_str(), "width" | "flex-shrink"))) {
         return None;
     }
-    lowered_style_prop(props, "min-width", |raw| {
+    lowered_style_prop(props, "width", |raw| {
         qml_px_or_none(raw)
             .filter(|value| value.parse::<f64>().is_ok_and(|n| n.is_finite() && n >= 0.0))
     })
@@ -8963,10 +8969,9 @@ fn emit_for_qml(
     writeln!(out, "{prop_pad}implicitWidth: childrenRect.width").unwrap();
     writeln!(out, "{prop_pad}implicitHeight: childrenRect.height").unwrap();
 
-    // An attached Layout minimum belongs to the RowLayout's direct child.
-    // A lone styled container is wrapped by this delegate, so its floor must
-    // cross that wrapper. Restrict this bridge to static scalar geometry:
-    // multiple children or state-owned floors need a separate sizing contract.
+    // This wrapper is the enclosing layout's direct child. Preserve a lone
+    // container's authored width + non-shrink intent here, where the parent
+    // actually negotiates geometry. General flex lowering remains unsupported.
     if let [child] = node.children.as_slice() {
         if matches!(child.tag.as_str(), "Row" | "Column" | "Box") {
             if let Some(props) = part_style_props(child, ctx) {
@@ -18229,15 +18234,25 @@ mod tests {
     #[test]
     fn delegate_width_floor_accepts_only_static_nonnegative_scalars() {
         for value in ["-1", "NaN", "inf", "100%", "auto", "1; evil()"] {
-            assert_eq!(static_delegate_min_width(&[sp("min-width", value)], &[]), None);
+            assert_eq!(static_delegate_min_width(&[sp("width", value), sp("flex-shrink", "0")], &[]), None);
         }
         for (value, expected) in [("0", "0"), ("260", "260"), ("12.5px", "12.5")] {
-            assert_eq!(static_delegate_min_width(&[sp("min-width", value)], &[]), Some(expected.into()));
+            assert_eq!(static_delegate_min_width(&[sp("width", value), sp("flex-shrink", "0")], &[]), Some(expected.into()));
         }
         assert_eq!(static_delegate_min_width(&[], &[]), None);
-        let state = [sp("min-width", "300")];
+        assert_eq!(static_delegate_min_width(&[sp("width", "260")], &[]), None);
+        assert_eq!(static_delegate_min_width(&[sp("width", "260"), sp("flex-shrink", "1")], &[]), None);
+        let state = [sp("width", "300")];
         let layers = [StateLayer { cond_expr: "active".into(), props: &state }];
-        assert_eq!(static_delegate_min_width(&[sp("min-width", "260")], &layers), None);
+        assert_eq!(static_delegate_min_width(&[sp("width", "260"), sp("flex-shrink", "0")], &layers), None);
+        for property in ["min-width", "max-width", "flex", "flex-basis", "flex-shrink"] {
+            let state = [sp(property, "100")];
+            let layers = [StateLayer { cond_expr: "active".into(), props: &state }];
+            assert_eq!(static_delegate_min_width(&[sp("width", "260"), sp("flex-shrink", "0")], &layers), None);
+            if property != "flex-shrink" {
+                assert_eq!(static_delegate_min_width(&[sp("width", "260"), sp("flex-shrink", "0"), sp(property, "100")], &[]), None);
+            }
+        }
     }
 
     #[test]
@@ -18250,7 +18265,7 @@ mod tests {
                 tag: "For".into(), part_name: None, props: vec![], children: vec![child; count],
             }};
             let style = StyleDef { component_name: "Grid".into(), parts: vec![PartStyle {
-                name: "floor".into(), base: vec![sp("min-width", "260")],
+                name: "floor".into(), base: vec![sp("width", "260"), sp("flex-shrink", "0")],
                 transitions: vec![], states: vec![],
             }] };
             let out = from_pipeline(&styled_cell_component("Grid"), &layout, &style).unwrap().output;

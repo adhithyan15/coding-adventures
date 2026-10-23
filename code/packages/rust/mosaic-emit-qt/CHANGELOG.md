@@ -2,9 +2,9 @@
 
 ## 2026-10-23 (Repeated container width floors)
 
-- Forward a single Row/Column/Box child's static finite nonnegative minimum
-  width to its For delegate Item. State-owned floors and multi-child bodies
-  are outside this bridge; general flex-shrink remains unsupported.
+- Derive a single Row/Column/Box child's For delegate minimum from its static
+  finite nonnegative width paired with exact flex-shrink: 0. State overrides
+  and multi-child bodies are outside this bridge; general flex stays reported.
 
 ## 2026-10-21 (Text layout widths)
 

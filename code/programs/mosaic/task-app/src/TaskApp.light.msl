@@ -316,8 +316,6 @@ style TaskApp {
   }
   part board-col {
     width : 260 ;
-    // The repeated column's native layout floor is explicit, not flex-only.
-    min-width : 260 ;
     flex-shrink : 0 ;
     background : "#f7f2ea" ;
     padding : 12 ;

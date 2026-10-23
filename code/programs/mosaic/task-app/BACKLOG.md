@@ -84,7 +84,7 @@ in run 39904677952: all six payload jobs and publisher passed; the immutable
 tag, manifest source, thirteen assets and twelve checksum entries were verified.
 Receipt reconciliation #17999 is complete in #18001. The current bounded
 #12022 fidelity slice is #18030: preserve the 260-pixel board-column minimum
-in both themes and Qt's For delegate, without claiming general flex lowering
+from both themes' existing width/non-shrink intent on Qt's For delegate, without claiming general flex lowering
 or reducing the style-drop budget. Feature composition remains paused
 behind #14011 and signing remains credential-blocked in #13977.
 
