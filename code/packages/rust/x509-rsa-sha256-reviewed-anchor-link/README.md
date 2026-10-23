@@ -19,14 +19,25 @@ Equal certificate bytes decoded into different objects are rejected. The
 result retains both inputs so later composition cannot silently detach the
 authenticated link from the reviewed anchor identity.
 
+The two-link entry point additionally consumes one
+`ValidatedX509RsaSha256AuthenticatedIntermediatePathLength` and one reviewed
+parent link. It requires the first proof's complete intermediate policy and the
+second proof's authenticated child to retain the same exact decoded
+certificate object. Success returns a distinct non-copyable result retaining
+both inputs, including the advanced path-length state. This prevents a caller
+from joining independently authenticated links through byte-equal but
+separately decoded intermediates.
+
 ## Boundary
 
-This is one-link evidence binding, not general certificate-path validation. It
-does not apply the anchor's optional name constraints, check target role,
-purpose, validity, or hostname, apply path-length or other constraints,
-construct a multi-hop path, check revocation, perform TLS or HTTP, or authorize
-OAuth network access. `webpki-roots` remains reviewed public data only; no
-external TLS, X.509, or cryptographic implementation is linked here.
+These are fixed-shape evidence bindings, not general certificate-path
+validation. The two-link result covers exactly one caller-ordered
+child-to-intermediate-to-reviewed-root chain for the repository-owned RSA
+SHA-256 path. It does not apply the anchor's optional name constraints, check
+target role, purpose, validity, or hostname, search or generalize paths, check
+revocation, perform TLS or HTTP, or authorize OAuth network access.
+`webpki-roots` remains reviewed public data only; no external TLS, X.509, or
+cryptographic implementation is linked here.
 
 The success test uses the public ISRG Root X1 certificate solely as an
 interoperability vector for the repository-owned parser and RSA verifier. Its

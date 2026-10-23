@@ -929,6 +929,19 @@ The direct reviewed-server anchor-policy composition is the sole consumer in
 this slice that binds that evaluator to certificate and anchor evidence. It
 does not make the standalone decoder or evaluator authoritative, and complete
 path validation, revocation, TLS, HTTP, and OAuth transport remain unavailable.
+A bounded two-link evidence-binding follow-up now consumes one authenticated
+child-to-intermediate path-length transition together with one authenticated
+intermediate-to-reviewed-root link. It fails closed unless the complete
+intermediate policy retained by the first proof and the child certificate
+retained by the second proof refer to the same exact decoded certificate
+object, then returns distinct non-copyable evidence retaining both inputs. This
+prevents traversal from joining independently authenticated links through
+byte-equal but separately decoded intermediates or silently discarding the
+advanced path-length state. The result covers exactly one caller-ordered
+child-to-intermediate-to-reviewed-root chain for the fixed RSA SHA-256 path;
+it does not search or generalize paths, apply anchor name constraints, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
