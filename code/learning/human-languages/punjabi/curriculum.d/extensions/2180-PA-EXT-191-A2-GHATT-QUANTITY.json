@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-191-A2-GHATT-QUANTITY",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use one familiar quantity word to say there is not much water, time, or space.",
+  "prerequisites": [
+    "PA-EXT-190-A2-KITA-PERFECTIVE"
+  ]
+}

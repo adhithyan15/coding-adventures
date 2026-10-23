@@ -1,0 +1,18 @@
+{
+  "chapter": 191,
+  "title": "Less Water, Time, and Space",
+  "label": "ch:pa-a2-ghatt-quantity",
+  "canDo": "I can use one familiar quantity word to say there is not much water, time, or space.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C191-payoff",
+    "kind": "production",
+    "summary": "Retrieve three limited-amount statements through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-LEX-GHATT-191"
+    ],
+    "note": "This fourteenth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}
