@@ -5481,6 +5481,16 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("144"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 - built-in integer-valued functions normalize checked static
+    // reductions without losing exactness; the false branch computes
+    // entier(abs(((10 div 3)+(7 mod 4))^(6 div 3)))*(2*sign(3.5)+2).
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin boolean procedure choose; choose := false; real procedure leftvalue; leftvalue := -2.25; real procedure rightvalue; rightvalue := 3.5; real left, right, result; left := leftvalue(); right := rightvalue(); result := entier(if choose() then (abs((6 div 4) - 3) * sign(left)) else (entier(abs(((10 div 3) + (7 mod 4)) ^ (6 div 3))) * ((2 * sign(right)) + 2))); output(result) end",
+        expect: Expect::Stdout("144"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -24093,6 +24103,32 @@ fn algol_powered_static_integer_reduction_runtime_real_output_runs_on_every_avai
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the powered static integer-reduction program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_normalized_static_integer_reduction_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(if choose() then (abs((6 div 4) - 3) * sign(left)) else (entier(abs(((10 div 3) + (7 mod 4)) ^ (6 div 3))) * ((2 * sign(right)) + 2)))",
+                )
+        })
+        .expect("the normalized static integer-reduction ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the normalized static integer-reduction program did not run"
             );
             continue;
         };
