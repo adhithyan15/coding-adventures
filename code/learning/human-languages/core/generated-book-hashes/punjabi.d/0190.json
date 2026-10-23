@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:f7dbe760a7e0bfb7",
+  "lessonIds": [
+    "PA-C190-karna-return",
+    "PA-C190-kita",
+    "PA-C190-kita-review",
+    "PA-C190-kamm-kita",
+    "PA-C190-frame-review",
+    "PA-C190-infinitive-perfective-contrast",
+    "PA-C190-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch190-i-did-the-work.tex"
+}
