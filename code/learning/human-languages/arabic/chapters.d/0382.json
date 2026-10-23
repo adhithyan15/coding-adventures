@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "Protest",
+  "label": "ch:ar-protest",
+  "canDo": "I can talk about a protest, dignity and a strike, and say that people demonstrated or protested.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C382-idrab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can talk about a protest, dignity and a strike, and say that people demonstrated or protested.",
+    "assesses": [
+      "AR-LEX-C382-IHTIJAJ382-03",
+      "AR-LEX-C382-IHTIJAJ382-04",
+      "AR-LEX-C382-IHTIJAJ382-05"
+    ]
+  }
+}

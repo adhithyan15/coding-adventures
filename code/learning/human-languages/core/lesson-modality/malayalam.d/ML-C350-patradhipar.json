@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C350-patradhipar",
+    "language": "malayalam",
+    "chapter": 350,
+    "sequence": 17060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aecbcc6d3fb8265b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R346-comparing-and-time",
+    "language": "malayalam",
+    "chapter": 346,
+    "sequence": 16490,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c1136c3bf921750b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C520-mahamma",
+  "pathSegment": "AR-PATH-520-DAWAM520",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-520-DAWAM520",
+      "order": 3
+    }
+  ]
+}

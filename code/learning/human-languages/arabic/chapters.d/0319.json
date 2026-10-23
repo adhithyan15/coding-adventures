@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Mourning",
+  "label": "ch:ar-mourning",
+  "canDo": "I can say condolence, to console, to lament, to announce a death and mourning.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C319-hidad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can say condolence, to console, to lament, to announce a death and mourning.",
+    "assesses": [
+      "AR-LEX-C319-AZA319-03",
+      "AR-LEX-C319-AZA319-04",
+      "AR-LEX-C319-AZA319-05"
+    ]
+  }
+}

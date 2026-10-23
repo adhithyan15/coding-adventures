@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:e4a25a05ab6af0f3",
+  "lessonIds": [
+    "ML-C440-vyavastha",
+    "ML-C440-nibandhana",
+    "ML-C440-upadhi",
+    "ML-C440-illattapaksam",
+    "ML-C440-allattapaksam"
+  ],
+  "tex": "malayalam/book/chapters/ch440-on-one-condition.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C535-cennikkuttu",
+  "pathSegment": "ML-PATH-535-VATAM535",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-535-VATAM535",
+      "order": 2
+    }
+  ]
+}

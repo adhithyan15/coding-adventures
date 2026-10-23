@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R348-depends-and-would",
+    "language": "malayalam",
+    "chapter": 348,
+    "sequence": 16580,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7f9909bd94df5cae"
+  },
+  "findings": []
+}

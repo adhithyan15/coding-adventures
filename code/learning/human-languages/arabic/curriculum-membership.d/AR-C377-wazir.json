@@ -1,0 +1,11 @@
+{
+  "id": "AR-C377-wazir",
+  "pathSegment": "AR-PATH-377-HUKUMA377",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-377-HUKUMA377",
+      "order": 1
+    }
+  ]
+}

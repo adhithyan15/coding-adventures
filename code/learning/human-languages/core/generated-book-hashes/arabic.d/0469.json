@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:4dca3509c3afd520",
+  "lessonIds": [
+    "AR-C469-turba",
+    "AR-C469-samad",
+    "AR-C469-mahsul",
+    "AR-C469-khasib",
+    "AR-C469-iqtalaa"
+  ],
+  "tex": "arabic/book/chapters/ch469-soil-and-crops.tex"
+}

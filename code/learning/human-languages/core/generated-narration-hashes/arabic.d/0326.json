@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:b80c3b198acd3e7b",
+  "lessonIds": [
+    "AR-C326-silah",
+    "AR-C326-sayf",
+    "AR-C326-rumh",
+    "AR-C326-sahm",
+    "AR-C326-dir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch326.txt",
+  "json": "arabic/narration/ch326.json",
+  "textHash": "fnv1a64:eb422a9c5a00f136",
+  "jsonHash": "fnv1a64:22ae2e7c30f2629c",
+  "findings": []
+}

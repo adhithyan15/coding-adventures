@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:d79990f831a35acc",
+  "lessonIds": [
+    "AR-C355-ajil",
+    "AR-C355-mudawwana",
+    "AR-C355-taliq",
+    "AR-C355-iftitahiyya",
+    "AR-C355-nafa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch355.txt",
+  "json": "arabic/narration/ch355.json",
+  "textHash": "fnv1a64:a99a94a1e94b3368",
+  "jsonHash": "fnv1a64:001860aab80c7b40",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:09f474b0632ede47",
+  "lessonIds": [
+    "ML-C353-kimvadanti",
+    "ML-C353-abhyuham",
+    "ML-C353-vyaja",
+    "ML-C353-pracarikkuka",
+    "ML-C353-pracarippikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch353.txt",
+  "json": "malayalam/narration/ch353.json",
+  "textHash": "fnv1a64:143e4a8f034b4fbe",
+  "jsonHash": "fnv1a64:62609f0b7d8a8d20",
+  "findings": []
+}

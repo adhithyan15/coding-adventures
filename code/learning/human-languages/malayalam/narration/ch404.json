@@ -1,0 +1,940 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 404,
+  "title": "Old Writings and Ruins",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:f67feabbd14b8a37",
+  "lessons": [
+    {
+      "id": "ML-C404-caritrakaran",
+      "sequence": 19810,
+      "title": "ചരിത്രകാരൻ (caritrakāran) — a historian",
+      "headword": "ചരിത്രകാരൻ",
+      "romanization": "caritrakāran",
+      "gloss": "a historian",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84afddf91a5ddb9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a curse, then the Malayalam for to curse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചരിത്രകാരൻ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചരിത്രകാരൻ — caritrakāran — \"a historian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ചരിത്രകാരൻ ആ കോട്ടയെക്കുറിച്ച് ഒരു പുസ്തകം എഴുതി. caritrakāran ā kōṭṭayekkuṟiccŭ oru pustakaṁ eḻuti. The historian wrote a book about that fort."
+            },
+            {
+              "kind": "speech",
+              "text": "ചരിത്രം, history, + -കാരൻ, one who works at it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചരിത്രകാരൻ (caritrakāran) is built on ചരിത്രം (caritraṁ), \"history\", from Sanskrit caritra, \"going; behaviour\" (CDIAL 4691), with the ending -കാരൻ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caritrakāran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caritrakāran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caritrakāran, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caritrakāran*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caritrakāran ā kōṭṭayekkuṟiccŭ oru pustakaṁ eḻuti. — The historian wrote a book about that fort.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caritrakāran ā kōṭṭayekkuṟiccŭ oru pustakaṁ eḻuti.* — The historian wrote a book about that fort.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a curse, then the Malayalam for to curse, then say caritrakāran again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a curse, then the Malayalam for to curse, then say *caritrakāran* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചരിത്രകാരൻ (caritrakāran) mean? (\"A historian\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C404-puratana",
+      "sequence": 19820,
+      "title": "പുരാതന (purātana) — ancient",
+      "headword": "പുരാതന",
+      "romanization": "purātana",
+      "gloss": "ancient",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:af69eeee7c027b41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to curse, then the Malayalam for a historian."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുരാതന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുരാതന — purātana — \"ancient\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മ്യൂസിയത്തിൽ ഒരുപാട് പുരാതന നാണയങ്ങൾ ഉണ്ട്. myūsiyattil orupāṭŭ purātana nāṇayaṅṅaḷ uṇṭŭ. There are many ancient coins in the museum."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands before the noun, unchanged: പുരാതന (purātana) ക്ഷേത്രം, an ancient temple."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുരാതന (purātana) is borrowed from Sanskrit purātana, \"ancient, belonging to the past\" (CDIAL 8285)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purātana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purātana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purātana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purātana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "myūsiyattil orupāṭŭ purātana nāṇayaṅṅaḷ uṇṭŭ. — There are many ancient coins in the museum.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *myūsiyattil orupāṭŭ purātana nāṇayaṅṅaḷ uṇṭŭ.* — There are many ancient coins in the museum.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to curse, then the Malayalam for a historian, then say purātana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to curse, then the Malayalam for a historian, then say *purātana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പുരാതന (purātana) mean? (\"Ancient\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C404-taliyola",
+      "sequence": 19830,
+      "title": "താളിയോല (tāḷiyōla) — a palm-leaf manuscript",
+      "headword": "താളിയോല",
+      "romanization": "tāḷiyōla",
+      "gloss": "a palm-leaf manuscript",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb7882d7daff5b58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a historian, then the Malayalam for ancient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: താളിയോല",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താളിയോല — tāḷiyōla — \"a palm-leaf manuscript\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ഗ്രന്ഥശാലയിൽ പഴയ താളിയോലകൾ സൂക്ഷിച്ചിരിക്കുന്നു. granthaśālayil paḻaya tāḷiyōlakaḷ sūkṣiccirikkunnu. Old palm-leaf manuscripts are kept in the library."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: താളിയോലകൾ, tāḷiyōlakaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "Before paper, books were written on such leaves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താളിയോല (tāḷiyōla) is a native compound of താളി, usually traced to the name of a palm, and ഓല (ōla), \"a palm leaf, a writing leaf\" (DEDR 1070)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷiyōla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷiyōla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāḷiyōla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāḷiyōla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "granthaśālayil paḻaya tāḷiyōlakaḷ sūkṣiccirikkunnu. — Old palm-leaf manuscripts are kept in the library.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *granthaśālayil paḻaya tāḷiyōlakaḷ sūkṣiccirikkunnu.* — Old palm-leaf manuscripts are kept in the library.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a historian, then the Malayalam for ancient, then say tāḷiyōla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a historian, then the Malayalam for ancient, then say *tāḷiyōla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does താളിയോല (tāḷiyōla) mean? (\"A palm-leaf manuscript\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C404-lipi",
+      "sequence": 19840,
+      "title": "ലിപി (lipi) — a script; writing",
+      "headword": "ലിപി",
+      "romanization": "lipi",
+      "gloss": "a script; writing",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ff93a54e1097548",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for ancient, then the Malayalam for a palm-leaf manuscript."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ലിപി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലിപി — lipi — \"a script; writing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മലയാള ലിപിയിൽ ഒരുപാട് അക്ഷരങ്ങൾ ഉണ്ട്. malayāḷa lipiyil orupāṭŭ akṣaraṅṅaḷ uṇṭŭ. The Malayalam script has many letters."
+            },
+            {
+              "kind": "speech",
+              "text": "Also any system of writing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലിപി (lipi) is borrowed from Sanskrit lipi, \"writing\" (CDIAL 11058); CDIAL traces the Sanskrit word itself to Old Persian dipi, \"an inscription\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lipi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lipi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lipi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lipi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malayāḷa lipiyil orupāṭŭ akṣaraṅṅaḷ uṇṭŭ. — The Malayalam script has many letters.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malayāḷa lipiyil orupāṭŭ akṣaraṅṅaḷ uṇṭŭ.* — The Malayalam script has many letters.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for ancient, then the Malayalam for a palm-leaf manuscript, then say lipi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for ancient, then the Malayalam for a palm-leaf manuscript, then say *lipi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ലിപി (lipi) mean? (\"A script; writing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C404-nasippikkuka",
+      "sequence": 19850,
+      "title": "നശിപ്പിക്കുക (naśippikkuka) — to destroy",
+      "headword": "നശിപ്പിക്കുക",
+      "romanization": "naśippikkuka",
+      "gloss": "to destroy",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77b1da69e6e65573",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a palm-leaf manuscript, then the Malayalam for a script."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നശിപ്പിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നശിപ്പിക്കുക — naśippikkuka — \"to destroy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "യുദ്ധം ആ പുരാതന നഗരം നശിപ്പിച്ചു. yuddhaṁ ā purātana nagaraṁ naśippiccu. The war destroyed that ancient city."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: നശിപ്പിച്ചു, naśippiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of war, of fire and of time: what is destroyed is the plain object."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നശിപ്പിക്കുക (naśippikkuka) is built from Sanskrit nāśana, \"destroying\" (CDIAL 7086), with the Malayalam causative ending -ിപ്പിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naśippikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naśippikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naśippikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naśippikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddhaṁ ā purātana nagaraṁ naśippiccu. — The war destroyed that ancient city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddhaṁ ā purātana nagaraṁ naśippiccu.* — The war destroyed that ancient city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a palm-leaf manuscript, then the Malayalam for a script, then say naśippikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a palm-leaf manuscript, then the Malayalam for a script, then say *naśippikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നശിപ്പിക്കുക (naśippikkuka) mean? (\"To destroy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R404-review-397-404",
+      "sequence": 19860,
+      "title": "Words for telling what happened, once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of chapters 397-404",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c08473ee954aaa14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a king and a queen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a king, a queen, a prince, a princess, a palace",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a king, a queen, a prince, a princess, a palace]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a throne, a crown, a coronation, a sovereign, to reign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a throne, a crown, a coronation, a sovereign, to reign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an empire, a fort, an army, a soldier, to conquer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an empire, a fort, an army, a soldier, to conquer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an enemy, a warrior, a spy, to beat in battle, to surrender",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an enemy, a warrior, a spy, to beat in battle, to surrender]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a slave, a revolution, an invasion, to fight, to resist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a slave, a revolution, an invasion, to fight, to resist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a myth, a fable, a folk tale, a hero, a moral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a myth, a fable, a folk tale, a hero, a moral]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ghost, a magician, a treasure, a curse, to curse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ghost, a magician, a treasure, a curse, to curse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a historian, ancient, a palm-leaf manuscript, a script, to destroy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a historian, ancient, a palm-leaf manuscript, a script, to destroy]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A king? (രാജാവ്, rājāvŭ.) A queen? (രാജ്ഞി, rājñi.) A prince? (രാജകുമാരൻ, rājakumāran.) A princess? (രാജകുമാരി, rājakumāri.) A palace? (കൊട്ടാരം, koṭṭāraṁ.) A throne? (സിംഹാസനം, siṁhāsanaṁ.) A crown? (കിരീടം, kirīṭaṁ.) A coronation? (പട്ടാഭിഷേകം, paṭṭābhiṣēkaṁ.) A sovereign? (ഭരണാധികാരി, bharaṇādhikāri.) To reign? (വാഴുക, vāḻuka.) An empire? (സാമ്രാജ്യം, sāmrājyaṁ.) A fort? (കോട്ട, kōṭṭa.) An army? (സൈന്യം, sainyaṁ.) A soldier? (പട്ടാളക്കാരൻ, paṭṭāḷakkāran.) To conquer? (കീഴടക്കുക, kīḻaṭakkuka.) An enemy? (ശത്രു, śatru.) A warrior? (യോദ്ധാവ്, yōddhāvŭ.) A spy? (ചാരൻ, cāran.) To beat in battle? (തോൽപ്പിക്കുക, tōlppikkuka.) To surrender? (കീഴടങ്ങുക, kīḻaṭaṅṅuka.) A slave? (അടിമ, aṭima.) A revolution? (വിപ്ലവം, viplavaṁ.) An invasion? (അധിനിവേശം, adhinivēśaṁ.) To fight? (പോരാടുക, pōrāṭuka.) To resist? (ചെറുത്തുനിൽക്കുക, ceṟuttunilkkuka.) A myth? (പുരാണം, purāṇaṁ.) A fable? (കെട്ടുകഥ, keṭṭukatha.) A folk tale? (നാടോടിക്കഥ, nāṭōṭikkatha.) A hero? (നായകൻ, nāyakan.) A moral? (ഗുണപാഠം, guṇapāṭhaṁ.) A ghost? (പ്രേതം, prētaṁ.) A magician? (മാന്ത്രികൻ, māntrikan.) A treasure? (നിധി, nidhi.) A curse? (ശാപം, śāpaṁ.) To curse? (ശപിക്കുക, śapikkuka.) A historian? (ചരിത്രകാരൻ, caritrakāran.) Ancient? (പുരാതന, purātana.) A palm-leaf manuscript? (താളിയോല, tāḷiyōla.) A script? (ലിപി, lipi.) To destroy? (നശിപ്പിക്കുക, naśippikkuka.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R404-review-final-404",
+      "sequence": 19870,
+      "title": "Old Writings and Ruins — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over chapter 404",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:660ebf26bac7314b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Malayalam for a historian and ancient."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a historian, ancient, a palm-leaf manuscript, a script, to destroy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a historian, ancient, a palm-leaf manuscript, a script, to destroy]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A historian? (ചരിത്രകാരൻ, caritrakāran.) Ancient? (പുരാതന, purātana.) A palm-leaf manuscript? (താളിയോല, tāḷiyōla.) A script? (ലിപി, lipi.) To destroy? (നശിപ്പിക്കുക, naśippikkuka.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

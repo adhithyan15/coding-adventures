@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:512394454fdac017",
+  "lessonIds": [
+    "ML-C460-antarastra",
+    "ML-C460-agola",
+    "ML-C460-prayogikamaya",
+    "ML-C460-uddesikkuka",
+    "ML-C460-vyatyasappetuka",
+    "ML-R460-review-453-460",
+    "ML-R460-review-final-460"
+  ],
+  "tex": "malayalam/book/chapters/ch460-near-and-far.tex"
+}

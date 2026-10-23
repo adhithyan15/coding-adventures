@@ -13504,21 +13504,82 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     cursor.skip_terminators();
 
     let mut title = None;
+    let mut accessibility_title = None;
+    let mut accessibility_description = None;
     let mut nodes: Vec<StructuralNode> = Vec::new();
     let mut node_indices: HashMap<String, usize> = HashMap::new();
     let mut relationships = Vec::new();
+    let mut direction = None;
+    let mut class_styles: HashMap<String, DiagramStyle> = HashMap::new();
+    let mut class_assignments: Vec<(Vec<String>, Vec<String>)> = Vec::new();
+    let mut direct_styles: Vec<(Vec<String>, DiagramStyle)> = Vec::new();
 
     while !cursor.at_eof() {
-        if cursor.current().type_ == TokenType::Keyword {
+        match token_name(cursor.current()) {
+            "ACC_TITLE" => {
+                accessibility_title = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR" => {
+                accessibility_description = cursor
+                    .advance()
+                    .value
+                    .split_once(':')
+                    .map(|(_, value)| value.trim().to_string());
+                cursor.skip_terminators();
+                continue;
+            }
+            "ACC_DESCR_BLOCK" => {
+                let value = cursor.advance().value.clone();
+                let open = value.find('{').expect("ER accessibility block requires '{'");
+                let close = value.rfind('}').expect("ER accessibility block requires '}'");
+                accessibility_description = Some(
+                    value[open + 1..close]
+                        .lines()
+                        .map(str::trim)
+                        .filter(|line| !line.is_empty())
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                );
+                cursor.skip_terminators();
+                continue;
+            }
+            _ => {}
+        }
+        if matches!(cursor.current().value.as_str(), "title" | "direction" | "classDef" | "class" | "style") {
             match cursor.current().value.as_str() {
                 "title" => {
                     cursor.advance();
                     title = Some(parse_er_line_text(&mut cursor));
                 }
-                "direction" | "classDef" | "class" | "style" => {
-                    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
-                        cursor.advance();
+                "direction" => {
+                    cursor.advance();
+                    direction = Some(direction_from_token(cursor.current())?);
+                    cursor.advance();
+                }
+                "classDef" => {
+                    let token = cursor.advance().clone();
+                    let class_names = parse_er_id_list(&mut cursor)?;
+                    let style = parse_er_style_tail(&mut cursor, &token)?;
+                    for class_name in class_names {
+                        class_styles.insert(class_name, style.clone());
                     }
+                }
+                "class" => {
+                    cursor.advance();
+                    let node_ids = parse_er_id_list(&mut cursor)?;
+                    let class_names = parse_er_id_list(&mut cursor)?;
+                    class_assignments.push((node_ids, class_names));
+                }
+                "style" => {
+                    let token = cursor.advance().clone();
+                    let node_ids = parse_er_id_list(&mut cursor)?;
+                    direct_styles.push((node_ids, parse_er_style_tail(&mut cursor, &token)?));
                 }
                 _ => return Err(token_error(cursor.current(), "unsupported ER statement")),
             }
@@ -13534,7 +13595,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 .consume_if("RBRACKET")
                 .ok_or_else(|| token_error(cursor.current(), "expected ']' after ER alias"))?;
         }
-        consume_er_class_suffix(&mut cursor)?;
+        let entity_classes = consume_er_class_suffix(&mut cursor)?;
 
         if is_er_cardinality(cursor.current()) {
             let from_mult = parse_er_cardinality(&mut cursor)?;
@@ -13551,7 +13612,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
             cursor.advance();
             let to_mult = parse_er_cardinality(&mut cursor)?;
             let target_id = parse_er_name(&mut cursor)?;
-            consume_er_class_suffix(&mut cursor)?;
+            let target_classes = consume_er_class_suffix(&mut cursor)?;
             cursor.consume_if("COLON").ok_or_else(|| {
                 token_error(cursor.current(), "expected ':' before ER relationship role")
             })?;
@@ -13563,12 +13624,18 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 entity_id.clone(),
                 entity_label,
             );
+            if !entity_classes.is_empty() {
+                class_assignments.push((vec![entity_id.clone()], entity_classes));
+            }
             upsert_er_node(
                 &mut nodes,
                 &mut node_indices,
                 target_id.clone(),
                 target_id.clone(),
             );
+            if !target_classes.is_empty() {
+                class_assignments.push((vec![target_id.clone()], target_classes));
+            }
             relationships.push(StructuralRelationship {
                 from: entity_id,
                 to: target_id,
@@ -13629,7 +13696,15 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     cursor.skip_terminators();
                 }
             }
-            let index = upsert_er_node(&mut nodes, &mut node_indices, entity_id, entity_label);
+            let index = upsert_er_node(
+                &mut nodes,
+                &mut node_indices,
+                entity_id.clone(),
+                entity_label,
+            );
+            if !entity_classes.is_empty() {
+                class_assignments.push((vec![entity_id], entity_classes));
+            }
             if !fields.is_empty() {
                 nodes[index].compartments.push(Compartment {
                     kind: CompartmentKind::Fields,
@@ -13640,13 +13715,20 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         cursor.skip_terminators();
     }
 
+    apply_er_styles(
+        &mut nodes,
+        &class_styles,
+        &class_assignments,
+        &direct_styles,
+    )?;
+
     Ok(StructuralDiagram {
         kind: StructuralKind::Er,
         architecture_config: None,
         title,
-        accessibility_title: None,
-        accessibility_description: None,
-        direction: None,
+        accessibility_title,
+        accessibility_description,
+        direction,
         alignments: Vec::new(),
         nodes,
         groups: vec![],
@@ -13665,13 +13747,87 @@ fn parse_er_name(cursor: &mut TokenCursor) -> Result<String, ParseError> {
     Ok(cursor.advance().value.clone())
 }
 
-fn consume_er_class_suffix(cursor: &mut TokenCursor) -> Result<(), ParseError> {
+fn consume_er_class_suffix(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseError> {
     if cursor.consume_if("STYLE_SEPARATOR").is_none() {
-        return Ok(());
+        return Ok(Vec::new());
     }
-    parse_er_name(cursor)?;
+    parse_er_id_list(cursor)
+}
+
+fn parse_er_id_list(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseError> {
+    let mut names = vec![parse_er_name(cursor)?];
     while cursor.consume_if("COMMA").is_some() {
-        parse_er_name(cursor)?;
+        names.push(parse_er_name(cursor)?);
+    }
+    Ok(names)
+}
+
+fn parse_er_style_tail(
+    cursor: &mut TokenCursor,
+    statement_token: &Token,
+) -> Result<DiagramStyle, ParseError> {
+    let mut source = String::new();
+    let mut end_column = None;
+    while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
+        let token = cursor.advance().clone();
+        if let Some(previous_end) = end_column {
+            for _ in previous_end..token.column {
+                source.push(' ');
+            }
+        }
+        source.push_str(&token.value);
+        end_column = Some(token.column + token.value.chars().count());
+    }
+    if source.trim().is_empty() {
+        return Err(token_error(statement_token, "ER style requires declarations"));
+    }
+    parse_block_style(statement_token, source.trim().trim_end_matches(';'))
+}
+
+fn apply_er_styles(
+    nodes: &mut [StructuralNode],
+    class_styles: &HashMap<String, DiagramStyle>,
+    class_assignments: &[(Vec<String>, Vec<String>)],
+    direct_styles: &[(Vec<String>, DiagramStyle)],
+) -> Result<(), ParseError> {
+    if let Some(default_style) = class_styles.get("default") {
+        let explicitly_classed = class_assignments
+            .iter()
+            .flat_map(|(node_ids, _)| node_ids.iter())
+            .collect::<HashSet<_>>();
+        for node in nodes.iter_mut().filter(|node| !explicitly_classed.contains(&node.id)) {
+            merge_state_style(node.style.get_or_insert_default(), default_style);
+        }
+    }
+    for (node_ids, class_names) in class_assignments {
+        for node_id in node_ids {
+            let node = nodes
+                .iter_mut()
+                .find(|node| node.id == *node_id)
+                .ok_or_else(|| ParseError {
+                    message: format!("ER class references an unknown entity {node_id:?}"),
+                    line: 1,
+                    col: 1,
+                })?;
+            for class_name in class_names {
+                if let Some(style) = class_styles.get(class_name) {
+                    merge_state_style(node.style.get_or_insert_default(), style);
+                }
+            }
+        }
+    }
+    for (node_ids, style) in direct_styles {
+        for node_id in node_ids {
+            let node = nodes
+                .iter_mut()
+                .find(|node| node.id == *node_id)
+                .ok_or_else(|| ParseError {
+                    message: format!("ER style references an unknown entity {node_id:?}"),
+                    line: 1,
+                    col: 1,
+                })?;
+            merge_state_style(node.style.get_or_insert_default(), style);
+        }
     }
     Ok(())
 }

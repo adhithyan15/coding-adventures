@@ -1,0 +1,11 @@
+{
+  "id": "AR-C343-sudfa",
+  "pathSegment": "AR-PATH-343-MUGHAMARA343",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-343-MUGHAMARA343",
+      "order": 3
+    }
+  ]
+}

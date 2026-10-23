@@ -1,0 +1,11 @@
+{
+  "id": "ML-C512-ponnuka",
+  "pathSegment": "ML-PATH-512-PRALAYAM512",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-512-PRALAYAM512",
+      "order": 2
+    }
+  ]
+}

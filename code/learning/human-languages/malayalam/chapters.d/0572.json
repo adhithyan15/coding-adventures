@@ -1,0 +1,19 @@
+{
+  "chapter": 572,
+  "title": "Settling Into a Home",
+  "label": "ch:ml-settling-into-a-home",
+  "canDo": "I can say to get used to, to shatter, housework, to stack and a cobweb.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-R572-review-final-572",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 572: I can say to get used to, to shatter, housework, to stack and a cobweb.",
+    "assesses": [
+      "ML-LEX-C572-VITTUJOLI572-03",
+      "ML-LEX-C572-VITTUJOLI572-04",
+      "ML-LEX-C572-VITTUJOLI572-05"
+    ]
+  }
+}

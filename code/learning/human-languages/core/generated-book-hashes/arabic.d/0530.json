@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:4434edda01f591b2",
+  "lessonIds": [
+    "AR-C530-hamil",
+    "AR-C530-mahd",
+    "AR-C530-ardaa",
+    "AR-C530-fatama",
+    "AR-C530-rabba"
+  ],
+  "tex": "arabic/book/chapters/ch530-babies.tex"
+}

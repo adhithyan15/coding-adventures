@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C189-frame-contrast",
+    "language": "punjabi",
+    "chapter": 189,
+    "sequence": 10240,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:275c29fa26ef475d"
+  },
+  "findings": []
+}

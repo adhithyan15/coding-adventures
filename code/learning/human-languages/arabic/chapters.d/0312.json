@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Discoveries",
+  "label": "ch:ar-discoveries",
+  "canDo": "I can say to uncover, to discover, to come across, an explorer and a treasure.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C312-kanz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can say to uncover, to discover, to come across, an explorer and a treasure.",
+    "assesses": [
+      "AR-LEX-C312-KASHF312-03",
+      "AR-LEX-C312-KASHF312-04",
+      "AR-LEX-C312-KASHF312-05"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "chapter": 344,
+  "title": "Tickets, Seats and Trouble",
+  "label": "ch:ml-tickets-seats-and-trouble",
+  "canDo": "I can buy a ticket and ask about times and seats, and report a missed bus, a late train or a lost bag and ask for help.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-R344-at-the-station",
+    "kind": "production",
+    "summary": "Complete ML-R344-at-the-station: buy a ticket and ask when the train leaves, report a missed bus and a lost bag, ask for help with -āmō, and read the new sign ൗ.",
+    "assesses": [
+      "ML-LEX-C344-SAUKARYAM-01",
+      "ML-SCRIPT-C344-AU-SIGN-01",
+      "ML-GRAMMAR-C344-BUY-TICKET-01",
+      "ML-GRAMMAR-C344-TRAIN-TIME-01",
+      "ML-GRAMMAR-C344-MISSED-01",
+      "ML-GRAMMAR-C344-LOST-REPORT-01",
+      "ML-GRAMMAR-C343-ASK-WAY-01",
+      "ML-GRAMMAR-C343-GIVE-WAY-01",
+      "ML-SCRIPT-C343-DA-01"
+    ]
+  }
+}

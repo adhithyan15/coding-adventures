@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C361-tutakkam",
+    "language": "malayalam",
+    "chapter": 361,
+    "sequence": 17640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81bf6619a08e4790"
+  },
+  "findings": []
+}

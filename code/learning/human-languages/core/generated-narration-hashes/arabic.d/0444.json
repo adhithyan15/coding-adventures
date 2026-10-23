@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:be3873ade46cf323",
+  "lessonIds": [
+    "AR-C444-kahraba",
+    "AR-C444-sakhkhana",
+    "AR-C444-inqataa",
+    "AR-C444-muhawwil",
+    "AR-C444-anara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch444.txt",
+  "json": "arabic/narration/ch444.json",
+  "textHash": "fnv1a64:c9cf8bc62aa5b728",
+  "jsonHash": "fnv1a64:65fc27e83a728793",
+  "findings": []
+}

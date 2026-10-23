@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## 0.64.0 - Unreleased - quote-only string literals no longer panic the bridge
+
+### Fixed
+
+- The typed bridge no longer panics on a string literal whose decoded
+  interior is a single quote character. `parse_javascript_program(
+  "console.log('\"');", EsVersion::Es2020)` used to abort with "byte range
+  starts at 1 but ends at 0" instead of returning `Ok`/`Err`; it now returns
+  `Ok` with `value == "\""`. The same held for `"'"` in every edition and for
+  `"\""` / `'\''` in the editions before ES2025 (whose lexer decodes escapes
+  itself).
+- Root cause: the GrammarLexer already strips a STRING token's surrounding
+  quotes, but the bridge's string decoder stripped them a second time
+  whenever the interior started and ended with the same quote. A
+  one-character interior `"` sliced `raw[1..0]`; a longer one silently lost
+  real characters, so `'"abc"'` decoded to `abc` instead of `"abc"` (a value
+  miscompile, also for quoted object keys such as `{'"a"': 1}`).
+- `unquote_string` is renamed `decode_string_escapes` and no longer strips
+  anything: it only decodes escape sequences in the interior the lexer
+  delivers. `StringLiteral.raw` is unchanged (still the lexer's interior);
+  no in-tree consumer reads it, and closure-emitter re-derives the quotes
+  from `value`.
+
+### Tests
+
+- `quote_only_and_quote_wrapped_strings_decode_without_panicking` asserts the
+  decoded `value` for `'"'`, `"'"`, `"\""`, `'\''`, `""`, `''`, `'"abc"'`
+  and `"'x'"`, plus quote-only object keys.
+- `quote_only_strings_parse_in_every_edition` runs the differential-check
+  reproduction through `parse_javascript_program` for every `EsVersion`.
+
 ## 0.63.0 - Unreleased - post-ASI CST entry for the native IIR compiler (LANG84)
 
 ### Added - redeclaration early errors in blocks and switch case blocks (#17877)
@@ -181,7 +212,7 @@ Legacy octal is forbidden in strict-mode source, but sloppy string literals
 permit it, so the compiler must round-trip the identical value Closure does.
 
 **Known adjacent divergence (filed as a follow-up):** the emitter renders a NUL
-code unit as ` ` where Closure emits `\x00` — a string-*rendering* issue in
+code unit as a raw, unescaped U+0000 where Closure emits `\x00` — a string-*rendering* issue in
 `closure-emitter`, independent of this decode fix (the decoded *value* is
 correct either way).
 

@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 557,
+  "title": "Support and Scolding",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1a272dca7dcd6b07",
+  "lessons": [
+    {
+      "id": "ML-C557-uttuka",
+      "sequence": 28050,
+      "title": "ഊട്ടുക (ūṭṭuka) — to hand-feed; to feed",
+      "headword": "ഊട്ടുക",
+      "romanization": "ūṭṭuka",
+      "gloss": "to hand-feed; to feed",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53fecc217765b692",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for care, then the Malayalam for consideration."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഊട്ടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊട്ടുക — ūṭṭuka — \"to hand-feed; to feed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അമ്മ കുഞ്ഞിനെ ചോറ് ഊട്ടി. amma kuññine cōṟŭ ūṭṭi. Mother fed the baby rice by hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ഊട്ടി, ūṭṭi."
+            },
+            {
+              "kind": "speech",
+              "text": "Feeding a child or a guest by hand; the past is ഊട്ടി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഊട്ടുക (ūṭṭuka) is native Dravidian: DEDR 600 lists it beside ഉണ്ണുക, \"to eat\", and ഊണ്, \"a meal\", as the verb of making someone eat (DEDR 600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūṭṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūṭṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma kuññine cōṟŭ ūṭṭi. — Mother fed the baby rice by hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma kuññine cōṟŭ ūṭṭi.* — Mother fed the baby rice by hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for care, then the Malayalam for consideration, then say ūṭṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for care, then the Malayalam for consideration, then say *ūṭṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഊട്ടുക (ūṭṭuka) mean? (\"To hand-feed; to feed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C557-sasikkuka",
+      "sequence": 28060,
+      "title": "ശാസിക്കുക (śāsikkuka) — to scold; to reprimand",
+      "headword": "ശാസിക്കുക",
+      "romanization": "śāsikkuka",
+      "gloss": "to scold; to reprimand",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab73e71ae61a7db0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for consideration, then the Malayalam for to hand-feed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശാസിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശാസിക്കുക — śāsikkuka — \"to scold; to reprimand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ക്ലാസിൽ സംസാരിച്ചതിന് അധ്യാപകൻ കുട്ടികളെ ശാസിച്ചു. klāsil saṁsāriccatinŭ adhyāpakan kuṭṭikaḷe śāsiccu. The teacher scolded the children for talking in class."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ശാസിച്ചു, śāsiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Firmer than വഴക്ക് പറയുക; the noun is ശാസന."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശാസിക്കുക (śāsikkuka) is built from Sanskrit śāsana, \"instructing, a command, punishment\" (CDIAL 12420), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāsikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāsikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāsikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāsikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "klāsil saṁsāriccatinŭ adhyāpakan kuṭṭikaḷe śāsiccu. — The teacher scolded the children for talking in class.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *klāsil saṁsāriccatinŭ adhyāpakan kuṭṭikaḷe śāsiccu.* — The teacher scolded the children for talking in class.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for consideration, then the Malayalam for to hand-feed, then say śāsikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for consideration, then the Malayalam for to hand-feed, then say *śāsikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശാസിക്കുക (śāsikkuka) mean? (\"To scold; to reprimand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C557-lalikkuka",
+      "sequence": 28070,
+      "title": "ലാളിക്കുക (lāḷikkuka) — to pamper; to spoil",
+      "headword": "ലാളിക്കുക",
+      "romanization": "lāḷikkuka",
+      "gloss": "to pamper; to spoil",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:469ad631ccf08ea3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to hand-feed, then the Malayalam for to scold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ലാളിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലാളിക്കുക — lāḷikkuka — \"to pamper; to spoil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മുത്തശ്ശി എപ്പോഴും ഇളയ പേരക്കുട്ടിയെ ലാളിക്കും. muttaśśi eppōḻuṁ iḷaya pērakkuṭṭiye lāḷikkuṁ. Grandmother always pampers her youngest grandchild."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: ലാളിച്ചു, lāḷiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to spoil with too much love."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ലാളിക്കുക (lāḷikkuka) is built from Sanskrit lālana, \"caressing\" (CDIAL 11025), with the Malayalam verb ending -ിക്കുക."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāḷikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāḷikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāḷikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāḷikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muttaśśi eppōḻuṁ iḷaya pērakkuṭṭiye lāḷikkuṁ. — Grandmother always pampers her youngest grandchild.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muttaśśi eppōḻuṁ iḷaya pērakkuṭṭiye lāḷikkuṁ.* — Grandmother always pampers her youngest grandchild.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to hand-feed, then the Malayalam for to scold, then say lāḷikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to hand-feed, then the Malayalam for to scold, then say *lāḷikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ലാളിക്കുക (lāḷikkuka) mean? (\"To pamper; to spoil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C557-talolikkuka",
+      "sequence": 28080,
+      "title": "താലോലിക്കുക (tālōlikkuka) — to cuddle; to fondle",
+      "headword": "താലോലിക്കുക",
+      "romanization": "tālōlikkuka",
+      "gloss": "to cuddle; to fondle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c33075fbb0e6d5d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to scold, then the Malayalam for to pamper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: താലോലിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താലോലിക്കുക — tālōlikkuka — \"to cuddle; to fondle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അമ്മ കുഞ്ഞിനെ മടിയിൽ കിടത്തി താലോലിച്ചു. amma kuññine maṭiyil kiṭatti tālōliccu. Mother laid the baby in her lap and cuddled it."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: താലോലിച്ചു, tālōliccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Fond touching and rocking of a small child."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "താലോലിക്കുക (tālōlikkuka) is a fond, spoken verb; no source we can open explains it, so its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tālōlikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tālōlikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tālōlikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tālōlikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "amma kuññine maṭiyil kiṭatti tālōliccu. — Mother laid the baby in her lap and cuddled it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *amma kuññine maṭiyil kiṭatti tālōliccu.* — Mother laid the baby in her lap and cuddled it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to scold, then the Malayalam for to pamper, then say tālōlikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to scold, then the Malayalam for to pamper, then say *tālōlikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does താലോലിക്കുക (tālōlikkuka) mean? (\"To cuddle; to fondle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C557-ottuceral",
+      "sequence": 28090,
+      "title": "ഒത്തുചേരൽ (ottucēral) — a get-together; a reunion",
+      "headword": "ഒത്തുചേരൽ",
+      "romanization": "ottucēral",
+      "gloss": "a get-together; a reunion",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c169c7a296d33512",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to pamper, then the Malayalam for to cuddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഒത്തുചേരൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒത്തുചേരൽ — ottucēral — \"a get-together; a reunion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവധിക്ക് കുടുംബത്തിന്റെ ഒരു ഒത്തുചേരൽ ഉണ്ടായിരുന്നു. avadhikkŭ kuṭumbattinṟe oru ottucēral uṇṭāyirunnu. There was a family get-together in the holidays."
+            },
+            {
+              "kind": "speech",
+              "text": "ഒത്ത് together + ചേരൽ a coming together, from ചേരുക, to join."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഒത്തുചേരൽ (ottucēral) is native Dravidian, a compound of ഒത്ത്, from ഒക്കുക, \"to agree, to be alike\" (DEDR 924), and ചേരൽ, \"a joining\", from ചേരുക (DEDR 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottucēral",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottucēral*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ottucēral, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ottucēral*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avadhikkŭ kuṭumbattinṟe oru ottucēral uṇṭāyirunnu. — There was a family get-together in the holidays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avadhikkŭ kuṭumbattinṟe oru ottucēral uṇṭāyirunnu.* — There was a family get-together in the holidays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to pamper, then the Malayalam for to cuddle, then say ottucēral again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to pamper, then the Malayalam for to cuddle, then say *ottucēral* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഒത്തുചേരൽ (ottucēral) mean? (\"A get-together; a reunion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

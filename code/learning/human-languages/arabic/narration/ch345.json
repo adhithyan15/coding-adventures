@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 345,
+  "title": "Facing danger",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8cf8df34412087d4",
+  "lessons": [
+    {
+      "id": "AR-C345-tahadda",
+      "sequence": 19660,
+      "title": "تحدى (taḥaddā) — to challenge, to defy",
+      "headword": "تحدى",
+      "romanization": "taḥaddā",
+      "gloss": "to challenge, to defy",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:185f7db1f007b6a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to come true, then the Arabic for to take revenge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تحدى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحدى — taḥaddā — \"to challenge, to defy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تحدى الولد صديقه في السباق. taḥaddā al-walad ṣadīqahu fī as-sibāq. The boy challenged his friend to a race."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتحدى, yataḥaddā."
+            },
+            {
+              "kind": "speech",
+              "text": "A challenge is تحد; plural تحديات."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تحدى (taḥaddā) is built on the native Arabic root ḥ-d-w (Lane), where ḥadā is to drive camels on with song, and Form V taḥaddā is \"to vie with someone, to dare him\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥaddā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥaddā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥaddā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥaddā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḥaddā al-walad ṣadīqahu fī as-sibāq. — The boy challenged his friend to a race.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḥaddā al-walad ṣadīqahu fī as-sibāq.* — The boy challenged his friend to a race.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to come true, then the Arabic for to take revenge, then say taḥaddā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to come true, then the Arabic for to take revenge, then say *taḥaddā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تحدى (taḥaddā) mean? (\"To challenge, to defy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C345-wajaha",
+      "sequence": 19670,
+      "title": "واجه (wājaha) — to confront, to face",
+      "headword": "واجه",
+      "romanization": "wājaha",
+      "gloss": "to confront, to face",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a404f5690d5910d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to take revenge, then the Arabic for to challenge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: واجه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "واجه — wājaha — \"to confront, to face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "واجه الفريق مشكلة كبيرة. wājaha al-farīq mushkila kabīra. The team faced a big problem."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يواجه, yuwājih."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "واجه (wājaha) is built on the native Arabic root w-j-h (Lane), the root of the taught wajh, a face. It is Form III, \"to meet face to face\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wājaha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wājaha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wājaha, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wājaha*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wājaha al-farīq mushkila kabīra. — The team faced a big problem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wājaha al-farīq mushkila kabīra.* — The team faced a big problem.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to take revenge, then the Arabic for to challenge, then say wājaha again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to take revenge, then the Arabic for to challenge, then say *wājaha* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does واجه (wājaha) mean? (\"To confront, to face\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C345-taghallaba",
+      "sequence": 19680,
+      "title": "تغلب (taghallaba) — to overcome",
+      "headword": "تغلب",
+      "romanization": "taghallaba",
+      "gloss": "to overcome",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a66cfffabde0392",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to challenge, then the Arabic for to confront."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تغلب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تغلب — taghallaba — \"to overcome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تغلبت البنت على خوفها من الماء. taghallabat al-bint ʿalā khawfihā min al-māʾ. The girl overcame her fear of water."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتغلب, yataghallab."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: تغلب (taghallaba) على."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تغلب (taghallaba) is built on the native Arabic root gh-l-b (Lane), \"to overpower\", the root of the taught ghāliban, mostly. It is Form V, \"to get the upper hand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taghallaba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taghallaba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taghallaba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taghallaba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taghallabat al-bint ʿalā khawfihā min al-māʾ. — The girl overcame her fear of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taghallabat al-bint ʿalā khawfihā min al-māʾ.* — The girl overcame her fear of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to challenge, then the Arabic for to confront, then say taghallaba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to challenge, then the Arabic for to confront, then say *taghallaba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تغلب (taghallaba) mean? (\"To overcome\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C345-iqtaraba",
+      "sequence": 19690,
+      "title": "اقترب (iqtaraba) — to approach, to come near",
+      "headword": "اقترب",
+      "romanization": "iqtaraba",
+      "gloss": "to approach, to come near",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b044ed01a711524e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to confront, then the Arabic for to overcome."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اقترب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اقترب — iqtaraba — \"to approach, to come near\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اقترب الكلب من الطفل ببطء. iqtaraba al-kalb min aṭ-ṭifl bi-buṭʾ. The dog came slowly closer to the child."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقترب, yaqtarib."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes من: اقترب (iqtaraba) من."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اقترب (iqtaraba) is built on the native Arabic root q-r-b (Lane), \"to be near\", the root of the taught qarīb. It is Form VIII, \"to draw near\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaraba",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaraba*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaraba, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaraba*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iqtaraba al-kalb min aṭ-ṭifl bi-buṭʾ. — The dog came slowly closer to the child.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iqtaraba al-kalb min aṭ-ṭifl bi-buṭʾ.* — The dog came slowly closer to the child.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to confront, then the Arabic for to overcome, then say iqtaraba again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to confront, then the Arabic for to overcome, then say *iqtaraba* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اقترب (iqtaraba) mean? (\"To approach, to come near\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C345-ibtaada",
+      "sequence": 19700,
+      "title": "ابتعد (ibtaʿada) — to move away, to keep away",
+      "headword": "ابتعد",
+      "romanization": "ibtaʿada",
+      "gloss": "to move away, to keep away",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0ed4863fae488ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to overcome, then the Arabic for to approach."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ابتعد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ابتعد — ibtaʿada — \"to move away, to keep away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ابتعد الناس عن البيت المحترق. ibtaʿada an-nās ʿan al-bayt al-muḥtariq. People moved away from the burning house."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يبتعد, yabtaʿid."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes عن: ابتعد (ibtaʿada) عن."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ابتعد (ibtaʿada) is built on the native Arabic root b-ʿ-d (Lane), \"to be far\", the root of the taught baʿīd. It is Form VIII, \"to go far off\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibtaʿada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibtaʿada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibtaʿada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibtaʿada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ibtaʿada an-nās ʿan al-bayt al-muḥtariq. — People moved away from the burning house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ibtaʿada an-nās ʿan al-bayt al-muḥtariq.* — People moved away from the burning house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to overcome, then the Arabic for to approach, then say ibtaʿada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to overcome, then the Arabic for to approach, then say *ibtaʿada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ابتعد (ibtaʿada) mean? (\"To move away, to keep away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

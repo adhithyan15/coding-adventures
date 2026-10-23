@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "Society",
+  "label": "ch:ml-society",
+  "canDo": "I can say society, the public, population, equality and freedom.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ML-C415-svatantryam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can say society, the public, population, equality and freedom.",
+    "assesses": [
+      "ML-LEX-C415-SAMUHAM415-03",
+      "ML-LEX-C415-SAMUHAM415-04",
+      "ML-LEX-C415-SAMUHAM415-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C482-niksepam",
+  "pathSegment": "ML-PATH-482-VATAKA482",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-482-VATAKA482",
+      "order": 1
+    }
+  ]
+}

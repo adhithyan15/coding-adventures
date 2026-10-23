@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:5e7378d5df34dea8",
+  "lessonIds": [
+    "AR-C513-sukkari",
+    "AR-C513-rabw",
+    "AR-C513-iaqa",
+    "AR-C513-daufa",
+    "AR-C513-nazafa"
+  ],
+  "tex": "arabic/book/chapters/ch513-long-illnesses.tex"
+}

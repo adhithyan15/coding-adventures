@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C489-dhur",
+    "language": "arabic",
+    "chapter": 489,
+    "sequence": 27250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39c6c0e8cf529c10"
+  },
+  "findings": []
+}

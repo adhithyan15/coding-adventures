@@ -1,0 +1,729 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 322,
+  "title": "Castles and walls",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c91143d75a42003b",
+  "lessons": [
+    {
+      "id": "AR-C322-qala",
+      "sequence": 18480,
+      "title": "قلعة (qalʿa) — a castle, a citadel",
+      "headword": "قلعة",
+      "romanization": "qalʿa",
+      "gloss": "a castle, a citadel",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff86f47629829bc2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to rob, then the Arabic for to loot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قلعة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قلعة — qalʿa — \"a castle, a citadel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "صعدنا إلى قلعة على الجبل. ṣaʿidnā ilā qalʿa ʿalā al-jabal. We climbed up to a castle on the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: قلاع, qilāʿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قلعة (qalʿa) is usually filed under the native Arabic root q-l-ʿ, \"to pull out by the roots\" (Lane). Lane's article does not give the castle sense, and how a fortress took the name is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qalʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qalʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qalʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qalʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṣaʿidnā ilā qalʿa ʿalā al-jabal. — We climbed up to a castle on the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṣaʿidnā ilā qalʿa ʿalā al-jabal.* — We climbed up to a castle on the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to rob, then the Arabic for to loot, then say qalʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to rob, then the Arabic for to loot, then say *qalʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قلعة (qalʿa) mean? (\"A castle, a citadel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C322-hisn",
+      "sequence": 18490,
+      "title": "حصن (ḥiṣn) — a fort, a stronghold",
+      "headword": "حصن",
+      "romanization": "ḥiṣn",
+      "gloss": "a fort, a stronghold",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dfb7ab2966efb952",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to loot, then the Arabic for a castle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حصن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حصن — ḥiṣn — \"a fort, a stronghold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "بنى الجنود حصنا قرب البحر. banā al-junūd ḥiṣnan qurba al-baḥr. The soldiers built a fort near the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: حصون, ḥuṣūn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حصن (ḥiṣn) is built on the native Arabic root ḥ-ṣ-n (Lane), \"to be inaccessible, well guarded\"; the taught ḥiṣān, a horse, is the same root."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥiṣn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥiṣn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥiṣn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥiṣn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "banā al-junūd ḥiṣnan qurba al-baḥr. — The soldiers built a fort near the sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *banā al-junūd ḥiṣnan qurba al-baḥr.* — The soldiers built a fort near the sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to loot, then the Arabic for a castle, then say ḥiṣn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to loot, then the Arabic for a castle, then say *ḥiṣn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حصن (ḥiṣn) mean? (\"A fort, a stronghold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C322-sur",
+      "sequence": 18500,
+      "title": "سور (sūr) — a city wall",
+      "headword": "سور",
+      "romanization": "sūr",
+      "gloss": "a city wall",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:939bd600e34ffa98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a castle, then the Arabic for a fort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سور — sūr — \"a city wall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حول المدينة القديمة سور طويل. ḥawla al-madīna al-qadīma sūr ṭawīl. There is a long wall round the old city."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أسوار, aswār."
+            },
+            {
+              "kind": "speech",
+              "text": "A wall round a garden or a school is also سور (sūr); the wall of a room is جدار."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سور (sūr) is built on the native Arabic root s-w-r (Lane), where Lane gives sūr as the wall of a town, and sāra, to climb over it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥawla al-madīna al-qadīma sūr ṭawīl. — There is a long wall round the old city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥawla al-madīna al-qadīma sūr ṭawīl.* — There is a long wall round the old city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a castle, then the Arabic for a fort, then say sūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a castle, then the Arabic for a fort, then say *sūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سور (sūr) mean? (\"A city wall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C322-hasara",
+      "sequence": 18510,
+      "title": "حاصر (ḥāṣara) — to besiege, to surround",
+      "headword": "حاصر",
+      "romanization": "ḥāṣara",
+      "gloss": "to besiege, to surround",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e2c54f674f5f539",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a fort, then the Arabic for a city wall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حاصر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حاصر — ḥāṣara — \"to besiege, to surround\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حاصر الجيش القلعة شهرا. ḥāṣara al-jaysh al-qalʿa shahran. The army besieged the castle for a month."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يحاصر, yuḥāṣir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حاصر (ḥāṣara) is built on the native Arabic root ḥ-ṣ-r (Lane), \"to confine, to hem in\". It is Form III, \"to hem in an enemy\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāṣara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāṣara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāṣara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāṣara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāṣara al-jaysh al-qalʿa shahran. — The army besieged the castle for a month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāṣara al-jaysh al-qalʿa shahran.* — The army besieged the castle for a month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a fort, then the Arabic for a city wall, then say ḥāṣara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a fort, then the Arabic for a city wall, then say *ḥāṣara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حاصر (ḥāṣara) mean? (\"To besiege, to surround\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C322-dafaa-defend",
+      "sequence": 18520,
+      "title": "دافع (dāfaʿa) — to defend",
+      "headword": "دافع",
+      "romanization": "dāfaʿa",
+      "gloss": "to defend",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0734a9ef8b2950ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a city wall, then the Arabic for to besiege."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دافع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دافع — dāfaʿa — \"to defend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دافع الجنود عن المدينة. dāfaʿa al-junūd ʿan al-madīna. The soldiers defended the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يدافع, yudāfiʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes عن: دافع (dāfaʿa) عن صديقه."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دافع (dāfaʿa) is built on the native Arabic root d-f-ʿ (Lane), \"to push\", the root of the taught dafaʿa. It is Form III, \"to push back against someone\": to defend."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāfaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāfaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāfaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāfaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāfaʿa al-junūd ʿan al-madīna. — The soldiers defended the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāfaʿa al-junūd ʿan al-madīna.* — The soldiers defended the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a city wall, then the Arabic for to besiege, then say dāfaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a city wall, then the Arabic for to besiege, then say *dāfaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دافع (dāfaʿa) mean? (\"To defend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C392-adaranjali",
+    "language": "malayalam",
+    "chapter": 392,
+    "sequence": 19210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b8b945ac9ab3a64"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C491-ajaba",
+    "language": "arabic",
+    "chapter": 491,
+    "sequence": 27390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c55aa356c8e088ce"
+  },
+  "findings": []
+}

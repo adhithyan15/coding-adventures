@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 500,
+  "title": "Vain, selfish, cowardly and bold",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:414bb98aa619266e",
+  "lessons": [
+    {
+      "id": "AR-C500-maghrur",
+      "sequence": 27810,
+      "title": "مغرور (maghrūr) — conceited, vain",
+      "headword": "مغرور",
+      "romanization": "maghrūr",
+      "gloss": "conceited, vain",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d6dd7cc989c6d4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for loyal, then the Arabic for faithful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مغرور",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مغرور — maghrūr — \"conceited, vain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "لا يحب الفريق اللاعب المغرور. lā yuḥibbu al-farīq al-lāʿib al-maghrūr. The team does not like the conceited player."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مغرور (maghrūr) is built on the native Arabic root gh-r-r, \"to deceive, to beguile\" (Lane). Maghrūr is the passive participle: one beguiled, here by his own worth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maghrūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maghrūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maghrūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maghrūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lā yuḥibbu al-farīq al-lāʿib al-maghrūr. — The team does not like the conceited player.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lā yuḥibbu al-farīq al-lāʿib al-maghrūr.* — The team does not like the conceited player.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for loyal, then the Arabic for faithful, then say maghrūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for loyal, then the Arabic for faithful, then say *maghrūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مغرور (maghrūr) mean? (\"Conceited, vain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C500-mutakabbir",
+      "sequence": 27820,
+      "title": "متكبر (mutakabbir) — arrogant",
+      "headword": "متكبر",
+      "romanization": "mutakabbir",
+      "gloss": "arrogant",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0cd40c0cd000a9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for faithful, then the Arabic for conceited."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: متكبر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متكبر — mutakabbir — \"arrogant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان المدير متكبرا مع الموظفين. kāna al-mudīr mutakabbiran maʿa al-muwaẓẓafīn. The manager was arrogant with the staff."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "متكبر (mutakabbir) is built on the native Arabic root k-b-r, \"to be big, great\" (Lane). Kabīr, big, is from the same root; Form V mutakabbir is one who makes himself big."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutakabbir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutakabbir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mutakabbir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mutakabbir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna al-mudīr mutakabbiran maʿa al-muwaẓẓafīn. — The manager was arrogant with the staff.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna al-mudīr mutakabbiran maʿa al-muwaẓẓafīn.* — The manager was arrogant with the staff.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for faithful, then the Arabic for conceited, then say mutakabbir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for faithful, then the Arabic for conceited, then say *mutakabbir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does متكبر (mutakabbir) mean? (\"Arrogant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C500-anani",
+      "sequence": 27830,
+      "title": "أناني (anānī) — selfish",
+      "headword": "أناني",
+      "romanization": "anānī",
+      "gloss": "selfish",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d0374e34a5e6802",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for conceited, then the Arabic for arrogant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أناني",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أناني — anānī — \"selfish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الطفل الأناني لا يشارك أخاه في ألعابه. aṭ-ṭifl al-anānī lā yushāriku akhāhu fī alʿābihi. The selfish child does not share his toys with his brother."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أناني (anānī) is a modern Arabic word, usually traced to the pronoun anā, \"I\", with the adjective ending -ī: a person always saying I. The noun anāniyya is selfishness."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anānī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anānī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭ-ṭifl al-anānī lā yushāriku akhāhu fī alʿābihi. — The selfish child does not share his toys with his brother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭ-ṭifl al-anānī lā yushāriku akhāhu fī alʿābihi.* — The selfish child does not share his toys with his brother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for conceited, then the Arabic for arrogant, then say anānī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for conceited, then the Arabic for arrogant, then say *anānī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أناني (anānī) mean? (\"Selfish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C500-jaban",
+      "sequence": 27840,
+      "title": "جبان (jabān) — cowardly; a coward",
+      "headword": "جبان",
+      "romanization": "jabān",
+      "gloss": "cowardly; a coward",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:117d017bd7edacf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for arrogant, then the Arabic for selfish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جبان",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جبان — jabān — \"cowardly; a coward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "هرب الرجل الجبان من الكلب. haraba ar-rajul al-jabān min al-kalb. The cowardly man ran away from the dog."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun جبن, cowardice, is written like jubn, cheese."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جبان (jabān) is built on the native Arabic root j-b-n, \"to be cowardly\" (Lane). Jabān is the adjective of a lasting trait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jabān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jabān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jabān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jabān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haraba ar-rajul al-jabān min al-kalb. — The cowardly man ran away from the dog.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haraba ar-rajul al-jabān min al-kalb.* — The cowardly man ran away from the dog.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for arrogant, then the Arabic for selfish, then say jabān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for arrogant, then the Arabic for selfish, then say *jabān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جبان (jabān) mean? (\"Cowardly; a coward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C500-jari",
+      "sequence": 27850,
+      "title": "جريء (jarīʾ) — bold, daring",
+      "headword": "جريء",
+      "romanization": "jarīʾ",
+      "gloss": "bold, daring",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:605fed51cfc8a80a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for selfish, then the Arabic for cowardly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جريء",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جريء — jarīʾ — \"bold, daring\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قفز الولد الجريء في النهر. qafaza al-walad al-jarīʾ fī an-nahr. The bold boy jumped into the river."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جريء (jarīʾ) is built on the native Arabic root j-r-ʾ, \"to be bold, to dare\" (Lane). Jarīʾ is the adjective pattern of a lasting trait."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarīʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarīʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jarīʾ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jarīʾ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qafaza al-walad al-jarīʾ fī an-nahr. — The bold boy jumped into the river.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qafaza al-walad al-jarīʾ fī an-nahr.* — The bold boy jumped into the river.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for selfish, then the Arabic for cowardly, then say jarīʾ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for selfish, then the Arabic for cowardly, then say *jarīʾ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جريء (jarīʾ) mean? (\"Bold, daring\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

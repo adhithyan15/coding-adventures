@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Being fair",
+  "label": "ch:ar-being-fair",
+  "canDo": "I can say objective, and talk about tolerance, a pretext and absence, and say that someone condemned something.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "AR-R422-review-final-422",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can say objective, and talk about tolerance, a pretext and absence, and say that someone condemned something.",
+    "assesses": [
+      "AR-LEX-C422-MAWDUI422-03",
+      "AR-LEX-C422-MAWDUI422-04",
+      "AR-LEX-C422-MAWDUI422-05"
+    ]
+  }
+}

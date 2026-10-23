@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:d5c21111ae607955",
+  "lessonIds": [
+    "ML-C394-svattu",
+    "ML-C394-avakasi",
+    "ML-C394-osyattu",
+    "ML-C394-vidhava",
+    "ML-C394-paitrkam"
+  ],
+  "tex": "malayalam/book/chapters/ch394-property-and-inheritance.tex"
+}

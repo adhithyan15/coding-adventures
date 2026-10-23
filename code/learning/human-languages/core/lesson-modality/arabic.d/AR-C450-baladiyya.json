@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C450-baladiyya",
+    "language": "arabic",
+    "chapter": 450,
+    "sequence": 25180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63d21c52c2ad7e8c"
+  },
+  "findings": []
+}

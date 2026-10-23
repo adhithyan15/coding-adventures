@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R516-review-final-516",
+    "language": "malayalam",
+    "chapter": 516,
+    "sequence": 25870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99718bce00836b88"
+  },
+  "findings": []
+}

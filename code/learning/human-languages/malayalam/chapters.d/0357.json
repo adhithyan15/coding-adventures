@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "Afterwards and Ever Since",
+  "label": "ch:ml-afterwards-and-ever-since",
+  "canDo": "I can say afterwards, gradually, until then, ever since and all of a sudden.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ML-C357-potunnane",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say afterwards, gradually, until then, ever since and all of a sudden.",
+    "assesses": [
+      "ML-LEX-C357-PINNITU357-03",
+      "ML-LEX-C357-PINNITU357-04",
+      "ML-LEX-C357-PINNITU357-05"
+    ]
+  }
+}

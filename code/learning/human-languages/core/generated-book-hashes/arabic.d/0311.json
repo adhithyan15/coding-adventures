@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:c3085ae3625d1856",
+  "lessonIds": [
+    "AR-C311-wilada",
+    "AR-C311-mawlud",
+    "AR-C311-qabila-midwife",
+    "AR-C311-anjaba",
+    "AR-C311-tasmiya"
+  ],
+  "tex": "arabic/book/chapters/ch311-a-birth.tex"
+}

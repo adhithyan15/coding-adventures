@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 546,
+  "title": "Match day",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:74360e12c07dc7e5",
+  "lessons": [
+    {
+      "id": "AR-C546-shawt",
+      "sequence": 30170,
+      "title": "شوط (shawṭ) — a half (of a match)",
+      "headword": "شوط",
+      "romanization": "shawṭ",
+      "gloss": "a half (of a match)",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98f8286277ae5412",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to create, then the Arabic for to direct films."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شوط",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شوط — shawṭ — \"a half (of a match)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سجل الفريق هدفا في الشوط الأول. sajjala al-farīq hadafan fī ash-shawṭ al-awwal. The team scored a goal in the first half."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: أشواط, ashwāṭ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شوط (shawṭ) is built on the native Arabic root sh-w-ṭ, \"a run, a single course\" (Lane). Lane gives shawṭ as one run of a course: one stretch of a race."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shawṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shawṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shawṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shawṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sajjala al-farīq hadafan fī ash-shawṭ al-awwal. — The team scored a goal in the first half.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sajjala al-farīq hadafan fī ash-shawṭ al-awwal.* — The team scored a goal in the first half.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to create, then the Arabic for to direct films, then say shawṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to create, then the Arabic for to direct films, then say *shawṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شوط (shawṭ) mean? (\"A half (of a match)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C546-mushajji",
+      "sequence": 30180,
+      "title": "مشجع (mushajjiʿ) — a supporter, a fan",
+      "headword": "مشجع",
+      "romanization": "mushajjiʿ",
+      "gloss": "a supporter, a fan",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d836d048383d91a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to direct films, then the Arabic for a half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مشجع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مشجع — mushajjiʿ — \"a supporter, a fan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "غنى المشجعون في الملعب. ghannā al-mushajjiʿūn fī al-malʿab. The supporters sang in the stadium."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مشجع (mushajjiʿ) is built on the native Arabic root sh-j-ʿ, \"to be brave\" (Lane). Mushajjiʿ is the participle of shajjaʿa, to encourage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mushajjiʿ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mushajjiʿ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mushajjiʿ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mushajjiʿ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghannā al-mushajjiʿūn fī al-malʿab. — The supporters sang in the stadium.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghannā al-mushajjiʿūn fī al-malʿab.* — The supporters sang in the stadium.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to direct films, then the Arabic for a half, then say mushajjiʿ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to direct films, then the Arabic for a half, then say *mushajjiʿ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مشجع (mushajjiʿ) mean? (\"A supporter, a fan\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C546-taadala",
+      "sequence": 30190,
+      "title": "تعادل (taʿādala) — to finish level; to end in a draw",
+      "headword": "تعادل",
+      "romanization": "taʿādala",
+      "gloss": "to finish level; to end in a draw",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:651d536c06718fca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a half, then the Arabic for a supporter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تعادل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعادل — taʿādala — \"to finish level; to end in a draw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تعادل الفريقان في المباراة. taʿādala al-farīqān fī al-mubārā. The two teams drew the match."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتعادل, yataʿādal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تعادل (taʿādala) is built on the native Arabic root ʿ-d-l, \"to be equal, to be fair\" (Lane). Form VI taʿādala is to be equal to one another."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿādala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿādala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿādala, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿādala*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taʿādala al-farīqān fī al-mubārā. — The two teams drew the match.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taʿādala al-farīqān fī al-mubārā.* — The two teams drew the match.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a half, then the Arabic for a supporter, then say taʿādala again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a half, then the Arabic for a supporter, then say *taʿādala* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تعادل (taʿādala) mean? (\"To finish level; to end in a draw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C546-marrara",
+      "sequence": 30200,
+      "title": "مرر (marrara) — to pass the ball",
+      "headword": "مرر",
+      "romanization": "marrara",
+      "gloss": "to pass the ball",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04ce02f8152466ad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a supporter, then the Arabic for to finish level."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مرر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرر — marrara — \"to pass the ball\"."
+            },
+            {
+              "kind": "speech",
+              "text": "مرر اللاعب الكرة إلى زميله. marrara al-lāʿib al-kura ilā zamīlihi. The player passed the ball to his teammate."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يمرر, yumarrir."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مرر (marrara) is built on the native Arabic root m-r-r, \"to pass, to go by\" (Lane). Form II marrara is to make a thing pass."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marrara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marrara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marrara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marrara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marrara al-lāʿib al-kura ilā zamīlihi. — The player passed the ball to his teammate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marrara al-lāʿib al-kura ilā zamīlihi.* — The player passed the ball to his teammate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a supporter, then the Arabic for to finish level, then say marrara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a supporter, then the Arabic for to finish level, then say *marrara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مرر (marrara) mean? (\"To pass the ball\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C546-tanafasa",
+      "sequence": 30210,
+      "title": "تنافس (tanāfasa) — to compete",
+      "headword": "تنافس",
+      "romanization": "tanāfasa",
+      "gloss": "to compete",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60a6b49830149271",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to finish level, then the Arabic for to pass the ball."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تنافس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تنافس — tanāfasa — \"to compete\"."
+            },
+            {
+              "kind": "speech",
+              "text": "تنافس الفريقان على البطولة. tanāfasa al-farīqān ʿalā al-buṭūla. The two teams competed for the championship."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتنافس, yatanāfas."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على for the prize."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تنافس (tanāfasa) is built on the native Arabic root n-f-s, \"a soul; to be precious\" (Lane). Form VI tanāfasa is to vie with one another for a precious thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanāfasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanāfasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanāfasa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanāfasa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tanāfasa al-farīqān ʿalā al-buṭūla. — The two teams competed for the championship.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tanāfasa al-farīqān ʿalā al-buṭūla.* — The two teams competed for the championship.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to finish level, then the Arabic for to pass the ball, then say tanāfasa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to finish level, then the Arabic for to pass the ball, then say *tanāfasa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تنافس (tanāfasa) mean? (\"To compete\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C301-istadama",
+    "language": "arabic",
+    "chapter": 301,
+    "sequence": 17410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d68dd4e79989369"
+  },
+  "findings": []
+}

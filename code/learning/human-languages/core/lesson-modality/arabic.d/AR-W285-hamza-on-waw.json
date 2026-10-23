@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "AR-W285-hamza-on-waw",
+    "language": "arabic",
+    "chapter": 285,
+    "sequence": 16530,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5d1afc83767e6d5a",
+    "detachableSegments": [
+      "Script you'll notice: ؤ",
+      "Writing: ؤ"
+    ]
+  },
+  "findings": []
+}

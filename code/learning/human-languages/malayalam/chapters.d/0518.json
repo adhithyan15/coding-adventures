@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Dread and Longing",
+  "label": "ch:ml-dread-and-longing",
+  "canDo": "I can say dread, to feel ashamed, loneliness, to long for and bliss.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C518-anandam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can say dread, to feel ashamed, loneliness, to long for and bliss.",
+    "assesses": [
+      "ML-LEX-C518-BHAYAM518-03",
+      "ML-LEX-C518-BHAYAM518-04",
+      "ML-LEX-C518-BHAYAM518-05"
+    ]
+  }
+}

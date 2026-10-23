@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Legends and heroes",
+  "label": "ch:ar-legends-and-heroes",
+  "canDo": "I can say a legend, a myth, a hero, a villain and to imagine.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C303-takhayyala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can say a legend, a myth, a hero, a villain and to imagine.",
+    "assesses": [
+      "AR-LEX-C303-USTURA303-03",
+      "AR-LEX-C303-USTURA303-04",
+      "AR-LEX-C303-USTURA303-05"
+    ]
+  }
+}

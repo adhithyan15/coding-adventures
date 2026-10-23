@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C354-kayyatikkuka",
+    "language": "malayalam",
+    "chapter": 354,
+    "sequence": 17280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09887a83195b774b"
+  },
+  "findings": []
+}

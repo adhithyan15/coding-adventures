@@ -1,0 +1,11 @@
+{
+  "id": "AR-C469-mahsul",
+  "pathSegment": "AR-PATH-469-TURBA469",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-469-TURBA469",
+      "order": 2
+    }
+  ]
+}

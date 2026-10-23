@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "In the fairy tale",
+  "label": "ch:ar-in-the-fairy-tale",
+  "canDo": "I can say a woodcutter, to enchant, to turn into, to come true and to take revenge.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C344-intaqama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say a woodcutter, to enchant, to turn into, to come true and to take revenge.",
+    "assesses": [
+      "AR-LEX-C344-HIKAYA344-03",
+      "AR-LEX-C344-HIKAYA344-04",
+      "AR-LEX-C344-HIKAYA344-05"
+    ]
+  }
+}

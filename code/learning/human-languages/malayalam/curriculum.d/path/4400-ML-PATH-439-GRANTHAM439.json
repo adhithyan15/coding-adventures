@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-439-GRANTHAM439",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ML-EXT-439-GRANTHAM439"
+  ],
+  "after": []
+}

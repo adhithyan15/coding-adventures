@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 383,
+  "title": "A Secret Found Out",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1587678a931d8f20",
+  "lessons": [
+    {
+      "id": "ML-C383-rahasyam",
+      "sequence": 18740,
+      "title": "രഹസ്യം (rahasyaṁ) — a secret",
+      "headword": "രഹസ്യം",
+      "romanization": "rahasyaṁ",
+      "gloss": "a secret",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f463baadc558b925",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to drive away, then the Malayalam for to calm down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: രഹസ്യം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രഹസ്യം — rahasyaṁ — \"a secret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "അവൾ ആ രഹസ്യം ആരോടും പറഞ്ഞില്ല. avaḷ ā rahasyaṁ ārōṭuṁ paṟaññilla. She told nobody that secret."
+            },
+            {
+              "kind": "speech",
+              "text": "Secretly is രഹസ്യമായി."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "രഹസ്യം (rahasyaṁ) is borrowed from Sanskrit rahasya, \"private, secret\" (CDIAL 10669)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahasyaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahasyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rahasyaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rahasyaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaḷ ā rahasyaṁ ārōṭuṁ paṟaññilla. — She told nobody that secret.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaḷ ā rahasyaṁ ārōṭuṁ paṟaññilla.* — She told nobody that secret.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to drive away, then the Malayalam for to calm down, then say rahasyaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to drive away, then the Malayalam for to calm down, then say *rahasyaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does രഹസ്യം (rahasyaṁ) mean? (\"A secret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C383-pratyaksappetuka",
+      "sequence": 18750,
+      "title": "പ്രത്യക്ഷപ്പെടുക (pratyakṣappeṭuka) — to appear; to show up",
+      "headword": "പ്രത്യക്ഷപ്പെടുക",
+      "romanization": "pratyakṣappeṭuka",
+      "gloss": "to appear; to show up",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed24ad68bc66c4e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to calm down, then the Malayalam for a secret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പ്രത്യക്ഷപ്പെടുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രത്യക്ഷപ്പെടുക — pratyakṣappeṭuka — \"to appear; to show up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴയ്ക്ക് ശേഷം ആകാശത്തിൽ ഒരു മഴവില്ല് പ്രത്യക്ഷപ്പെട്ടു. maḻaykkŭ śēṣaṁ ākāśattil oru maḻavillŭ pratyakṣappeṭṭu. After the rain a rainbow appeared in the sky."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: പ്രത്യക്ഷപ്പെട്ടു, pratyakṣappeṭṭu."
+            },
+            {
+              "kind": "speech",
+              "text": "പ്രത്യക്ഷം, before the eyes, + -പ്പെടുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പ്രത്യക്ഷപ്പെടുക (pratyakṣappeṭuka) is built from Sanskrit pratyakṣa, \"visible, present before the eyes\" (CDIAL 8635), with -പ്പെടുക, \"to come to be\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyakṣappeṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyakṣappeṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pratyakṣappeṭuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pratyakṣappeṭuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻaykkŭ śēṣaṁ ākāśattil oru maḻavillŭ pratyakṣappeṭṭu. — After the rain a rainbow appeared in the sky.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻaykkŭ śēṣaṁ ākāśattil oru maḻavillŭ pratyakṣappeṭṭu.* — After the rain a rainbow appeared in the sky.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to calm down, then the Malayalam for a secret, then say pratyakṣappeṭuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to calm down, then the Malayalam for a secret, then say *pratyakṣappeṭuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പ്രത്യക്ഷപ്പെടുക (pratyakṣappeṭuka) mean? (\"To appear; to show up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C383-marayuka",
+      "sequence": 18760,
+      "title": "മറയുക (maṟayuka) — to vanish; to go out of sight",
+      "headword": "മറയുക",
+      "romanization": "maṟayuka",
+      "gloss": "to vanish; to go out of sight",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8246485ee6df56ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a secret, then the Malayalam for to appear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മറയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മറയുക — maṟayuka — \"to vanish; to go out of sight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "സൂര്യൻ കുന്നിന്റെ പിന്നിൽ മറഞ്ഞു. sūryan kunninṟe pinnil maṟaññu. The sun vanished behind the hill."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: മറഞ്ഞു, maṟaññu."
+            },
+            {
+              "kind": "speech",
+              "text": "To go behind something and out of sight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മറയുക (maṟayuka) is native Dravidian: DEDR 4760 lists Malayalam maṟayuka, \"to disappear, to hide oneself\", with മറ, \"a screen, a cover\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṟayuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṟayuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maṟayuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maṟayuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūryan kunninṟe pinnil maṟaññu. — The sun vanished behind the hill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūryan kunninṟe pinnil maṟaññu.* — The sun vanished behind the hill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a secret, then the Malayalam for to appear, then say maṟayuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a secret, then the Malayalam for to appear, then say *maṟayuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മറയുക (maṟayuka) mean? (\"To vanish; to go out of sight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C383-kantupitikkuka",
+      "sequence": 18770,
+      "title": "കണ്ടുപിടിക്കുക (kaṇṭupiṭikkuka) — to find out; to discover",
+      "headword": "കണ്ടുപിടിക്കുക",
+      "romanization": "kaṇṭupiṭikkuka",
+      "gloss": "to find out; to discover",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ad9286708fc1718",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to appear, then the Malayalam for to vanish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കണ്ടുപിടിക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കണ്ടുപിടിക്കുക — kaṇṭupiṭikkuka — \"to find out; to discover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് ആ മോഷണത്തിന്റെ രഹസ്യം കണ്ടുപിടിച്ചു. pōlīsŭ ā mōṣaṇattinṟe rahasyaṁ kaṇṭupiṭiccu. The police found out the secret of that theft."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കണ്ടുപിടിച്ചു, kaṇṭupiṭiccu."
+            },
+            {
+              "kind": "speech",
+              "text": "Also to invent: ആരാണ് ഫോൺ കണ്ടുപിടിച്ചത്? Who invented the telephone?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കണ്ടുപിടിക്കുക (kaṇṭupiṭikkuka) is a native Dravidian compound of കണ്ട്, \"having seen\", from കാണുക (kāṇuka) (DEDR 1443), and പിടിക്കുക (piṭikkuka), \"to catch\" (DEDR 4148): to see and catch hold of."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭupiṭikkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭupiṭikkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭupiṭikkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭupiṭikkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ ā mōṣaṇattinṟe rahasyaṁ kaṇṭupiṭiccu. — The police found out the secret of that theft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ ā mōṣaṇattinṟe rahasyaṁ kaṇṭupiṭiccu.* — The police found out the secret of that theft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to appear, then the Malayalam for to vanish, then say kaṇṭupiṭikkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to appear, then the Malayalam for to vanish, then say *kaṇṭupiṭikkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കണ്ടുപിടിക്കുക (kaṇṭupiṭikkuka) mean? (\"To find out; to discover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C383-kantetukkuka",
+      "sequence": 18780,
+      "title": "കണ്ടെടുക്കുക (kaṇṭeṭukkuka) — to retrieve; to recover",
+      "headword": "കണ്ടെടുക്കുക",
+      "romanization": "kaṇṭeṭukkuka",
+      "gloss": "to retrieve; to recover",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c59789318db554ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to vanish, then the Malayalam for to find out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കണ്ടെടുക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കണ്ടെടുക്കുക — kaṇṭeṭukkuka — \"to retrieve; to recover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "പോലീസ് മോഷ്ടിച്ച സ്വർണ്ണം കണ്ടെടുത്തു. pōlīsŭ mōṣṭicca svarṇṇaṁ kaṇṭeṭuttu. The police recovered the stolen gold."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കണ്ടെടുത്തു, kaṇṭeṭuttu."
+            },
+            {
+              "kind": "speech",
+              "text": "കണ്ട്, having found, + എടുക്കുക, to take: found and taken back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കണ്ടെടുക്കുക (kaṇṭeṭukkuka) is a native Dravidian compound of കണ്ട്, \"having seen, having found\", from കാണുക (DEDR 1443), and എടുക്കുക (eṭukkuka), \"to take up\" (DEDR 851)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭeṭukkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭeṭukkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇṭeṭukkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇṭeṭukkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōlīsŭ mōṣṭicca svarṇṇaṁ kaṇṭeṭuttu. — The police recovered the stolen gold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōlīsŭ mōṣṭicca svarṇṇaṁ kaṇṭeṭuttu.* — The police recovered the stolen gold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to vanish, then the Malayalam for to find out, then say kaṇṭeṭukkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to vanish, then the Malayalam for to find out, then say *kaṇṭeṭukkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കണ്ടെടുക്കുക (kaṇṭeṭukkuka) mean? (\"To retrieve; to recover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

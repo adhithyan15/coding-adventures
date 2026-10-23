@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C475-khuffash",
+    "language": "arabic",
+    "chapter": 475,
+    "sequence": 26500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8cef61c95883c72"
+  },
+  "findings": []
+}

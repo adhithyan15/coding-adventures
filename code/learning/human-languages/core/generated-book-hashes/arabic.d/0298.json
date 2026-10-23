@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:154650005adbbdf9",
+  "lessonIds": [
+    "AR-C298-hariq",
+    "AR-C298-dukhan",
+    "AR-C298-ishtaala",
+    "AR-C298-ihtaraqa",
+    "AR-C298-rajul-itfa"
+  ],
+  "tex": "arabic/book/chapters/ch298-a-fire.tex"
+}

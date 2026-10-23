@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-543-MUSIQA543",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-543-MUSIQA543"
+  ],
+  "after": []
+}

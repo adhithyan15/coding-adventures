@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:0ad65e25ccc79e46",
+  "lessonIds": [
+    "AR-C336-ahda",
+    "AR-C336-istaqbala",
+    "AR-C336-baraka",
+    "AR-C336-mahr",
+    "AR-C336-ashiyya"
+  ],
+  "tex": "arabic/book/chapters/ch336-gifts-and-blessings.tex"
+}

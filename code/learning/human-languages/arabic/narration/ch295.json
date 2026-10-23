@@ -1,0 +1,733 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 295,
+  "title": "Telling a story",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:484f73844bce8cbf",
+  "lessons": [
+    {
+      "id": "AR-C295-hikaya",
+      "sequence": 17100,
+      "title": "حكاية (ḥikāya) — a tale, a story told aloud",
+      "headword": "حكاية",
+      "romanization": "ḥikāya",
+      "gloss": "a tale, a story told aloud",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51e9bb3d8bf3aa32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for at first, then the Arabic for at that moment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حكاية",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حكاية — ḥikāya — \"a tale, a story told aloud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سمع الأطفال حكاية قبل النوم. samiʿa al-aṭfāl ḥikāya qabla an-nawm. The children heard a story before bed."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural حكايات. A حكاية (ḥikāya) is told; a قصة can be told or read."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حكاية (ḥikāya) is built on the native Arabic root ḥ-k-y (Lane), where ḥakā means both \"to relate\" and \"to imitate\": a tale repeats what someone said or did."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥikāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥikāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥikāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥikāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samiʿa al-aṭfāl ḥikāya qabla an-nawm. — The children heard a story before bed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samiʿa al-aṭfāl ḥikāya qabla an-nawm.* — The children heard a story before bed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for at first, then the Arabic for at that moment, then say ḥikāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for at first, then the Arabic for at that moment, then say *ḥikāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حكاية (ḥikāya) mean? (\"A tale, a story told aloud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C295-rawa",
+      "sequence": 17110,
+      "title": "روى (rawā) — to narrate, to relate",
+      "headword": "روى",
+      "romanization": "rawā",
+      "gloss": "to narrate, to relate",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45ca59a499c11bfe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for at that moment, then the Arabic for a tale."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: روى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "روى — rawā — \"to narrate, to relate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "روى جدي قصة عن القرية. rawā jaddī qiṣṣa ʿan al-qarya. My grandfather told a story about the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يروي, yarwī."
+            },
+            {
+              "kind": "speech",
+              "text": "The narrator is الراوي; the taught رواية, a novel, is the same root."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "روى (rawā) is built on the native Arabic root r-w-y (Lane), which gives both \"to give water to drink\" and \"to transmit a report or a poem\". Riwāya, a novel, and rāwī, a narrator, share it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rawā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rawā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rawā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rawā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rawā jaddī qiṣṣa ʿan al-qarya. — My grandfather told a story about the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rawā jaddī qiṣṣa ʿan al-qarya.* — My grandfather told a story about the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for at that moment, then the Arabic for a tale, then say rawā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for at that moment, then the Arabic for a tale, then say *rawā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does روى (rawā) mean? (\"To narrate, to relate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C295-qassa",
+      "sequence": 17120,
+      "title": "قص (qaṣṣa) — to tell a story; to cut",
+      "headword": "قص",
+      "romanization": "qaṣṣa",
+      "gloss": "to tell a story; to cut",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc55ae80d7e7b989",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a tale, then the Arabic for to narrate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قص",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قص — qaṣṣa — \"to tell a story; to cut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "قصت المعلمة على التلاميذ قصة قصيرة. qaṣṣat al-muʿallima ʿalā at-talāmīdh qiṣṣa qaṣīra. The teacher told the pupils a short story."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يقص, yaquṣṣ."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على for the listener: قص (qaṣṣa) على الأطفال. With scissors it means to cut."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قص (qaṣṣa) is built on the native Arabic root q-ṣ-ṣ (Lane), \"to follow a track step by step\" and \"to clip\". To tell a story is to follow events in order; qiṣṣa, a story, is its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qaṣṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qaṣṣa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qaṣṣa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qaṣṣa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qaṣṣat al-muʿallima ʿalā at-talāmīdh qiṣṣa qaṣīra. — The teacher told the pupils a short story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qaṣṣat al-muʿallima ʿalā at-talāmīdh qiṣṣa qaṣīra.* — The teacher told the pupils a short story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a tale, then the Arabic for to narrate, then say qaṣṣa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a tale, then the Arabic for to narrate, then say *qaṣṣa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قص (qaṣṣa) mean? (\"To tell a story; to cut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C295-sarada",
+      "sequence": 17130,
+      "title": "سرد (sarada) — to recount, to narrate in order",
+      "headword": "سرد",
+      "romanization": "sarada",
+      "gloss": "to recount, to narrate in order",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71ee5c31ecee51d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to narrate, then the Arabic for to tell a story."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سرد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرد — sarada — \"to recount, to narrate in order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سرد المسافر تفاصيل رحلته. sarada al-musāfir tafāṣīl riḥlatihi. The traveller recounted the details of his journey."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسرد, yasrud."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun سرد (sarada) is narration, as in a novel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سرد (sarada) is built on the native Arabic root s-r-d (Lane), first \"to stitch\" and \"to link rings of mail one into the next\", then \"to carry on a story without a break\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarada",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarada*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarada, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarada*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarada al-musāfir tafāṣīl riḥlatihi. — The traveller recounted the details of his journey.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarada al-musāfir tafāṣīl riḥlatihi.* — The traveller recounted the details of his journey.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to narrate, then the Arabic for to tell a story, then say sarada again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to narrate, then the Arabic for to tell a story, then say *sarada* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سرد (sarada) mean? (\"To recount, to narrate in order\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C295-dhata-yawm",
+      "sequence": 17140,
+      "title": "ذات يوم (dhāta yawm) — one day, once upon a time",
+      "headword": "ذات يوم",
+      "romanization": "dhāta yawm",
+      "gloss": "one day, once upon a time",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c91b202cc33e38d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to tell a story, then the Arabic for to recount."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ذات يوم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذات يوم — dhāta yawm — \"one day, once upon a time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ذات يوم خرج الصياد إلى البحر. dhāta yawm kharaja aṣ-ṣayyād ilā al-baḥr. One day the fisherman went out to sea."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens a story, like the taught ذات مرة, once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ذات يوم (dhāta yawm) puts yawm, \"a day\", which is usually traced to an inherited Semitic word, after dhāta, the feminine of dhū, \"possessor of\", as in the taught ذات مرة."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāta yawm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāta yawm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāta yawm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāta yawm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhāta yawm kharaja aṣ-ṣayyād ilā al-baḥr. — One day the fisherman went out to sea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhāta yawm kharaja aṣ-ṣayyād ilā al-baḥr.* — One day the fisherman went out to sea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to tell a story, then the Arabic for to recount, then say dhāta yawm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to tell a story, then the Arabic for to recount, then say *dhāta yawm* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ذات يوم (dhāta yawm) mean? (\"One day, once upon a time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

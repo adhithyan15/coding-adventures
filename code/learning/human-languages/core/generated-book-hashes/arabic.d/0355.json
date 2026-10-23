@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:6aabe65a1b0e5fcb",
+  "lessonIds": [
+    "AR-C355-ajil",
+    "AR-C355-mudawwana",
+    "AR-C355-taliq",
+    "AR-C355-iftitahiyya",
+    "AR-C355-nafa"
+  ],
+  "tex": "arabic/book/chapters/ch355-breaking-news.tex"
+}

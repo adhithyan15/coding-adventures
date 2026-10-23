@@ -1,0 +1,11 @@
+{
+  "id": "AR-C332-waddaa",
+  "pathSegment": "AR-PATH-332-HIJRA332",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-332-HIJRA332",
+      "order": 4
+    }
+  ]
+}

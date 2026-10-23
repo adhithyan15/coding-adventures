@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:109f7e44bcb9730e",
+  "lessonIds": [
+    "ML-C450-talttuka",
+    "ML-C450-urappakkuka",
+    "ML-C450-samraksikkuka",
+    "ML-C450-meccappetuttuka",
+    "ML-C450-avasanippikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch450-keeping-things-safe.tex"
+}

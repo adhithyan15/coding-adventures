@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C549-jaras",
+    "language": "arabic",
+    "chapter": 549,
+    "sequence": 30330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d0c3ac03fd10c8a"
+  },
+  "findings": []
+}

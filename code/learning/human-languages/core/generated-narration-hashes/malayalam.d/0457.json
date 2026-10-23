@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:ae9f0353b0ba35ce",
+  "lessonIds": [
+    "ML-C457-abhyartthikkuka",
+    "ML-C457-kramikarikkuka",
+    "ML-C457-nirvahikkuka",
+    "ML-C457-sthapikkuka",
+    "ML-C457-nilanirttuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch457.txt",
+  "json": "malayalam/narration/ch457.json",
+  "textHash": "fnv1a64:f50e86d5676053e8",
+  "jsonHash": "fnv1a64:02df1a2aad24ad7a",
+  "findings": []
+}

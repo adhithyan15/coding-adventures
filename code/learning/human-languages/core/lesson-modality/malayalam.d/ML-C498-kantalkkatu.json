@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C498-kantalkkatu",
+    "language": "malayalam",
+    "chapter": 498,
+    "sequence": 24890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:31cdd6436a7f4082"
+  },
+  "findings": []
+}

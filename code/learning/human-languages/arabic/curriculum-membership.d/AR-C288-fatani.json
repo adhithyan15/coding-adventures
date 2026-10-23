@@ -1,0 +1,11 @@
+{
+  "id": "AR-C288-fatani",
+  "pathSegment": "AR-PATH-288-STATION",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-288-STATION",
+      "order": 4
+    }
+  ]
+}

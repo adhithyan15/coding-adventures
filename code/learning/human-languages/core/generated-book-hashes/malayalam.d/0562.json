@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 562,
+  "sourceHash": "fnv1a64:e3cc2849bfa122d2",
+  "lessonIds": [
+    "ML-C562-talam",
+    "ML-C562-ragam",
+    "ML-C562-samvidhayakan",
+    "ML-C562-tirakkatha",
+    "ML-C562-noval"
+  ],
+  "tex": "malayalam/book/chapters/ch562-rhythm-raga-and-the-screen.tex"
+}

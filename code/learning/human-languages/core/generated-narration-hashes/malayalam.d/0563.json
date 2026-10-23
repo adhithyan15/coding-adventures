@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 563,
+  "sourceHash": "fnv1a64:de5d85284f6d21ad",
+  "lessonIds": [
+    "ML-C563-kathapatram",
+    "ML-C563-ramgam",
+    "ML-C563-vedi",
+    "ML-C563-kani",
+    "ML-C563-kayyati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch563.txt",
+  "json": "malayalam/narration/ch563.json",
+  "textHash": "fnv1a64:70b99b852c0d18ae",
+  "jsonHash": "fnv1a64:06967b2f90024c66",
+  "findings": []
+}

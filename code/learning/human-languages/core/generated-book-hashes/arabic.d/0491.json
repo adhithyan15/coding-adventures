@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:ba6bf508f205b9c5",
+  "lessonIds": [
+    "AR-C491-fakhur",
+    "AR-C491-iftakhara",
+    "AR-C491-imtinan",
+    "AR-C491-mumtann",
+    "AR-C491-ajaba"
+  ],
+  "tex": "arabic/book/chapters/ch491-pride-and-thanks.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 529,
+  "sourceHash": "fnv1a64:1b88e497edd119be",
+  "lessonIds": [
+    "AR-C529-sihr",
+    "AR-C529-kanna",
+    "AR-C529-nasib",
+    "AR-C529-adil",
+    "AR-C529-talaq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch529.txt",
+  "json": "arabic/narration/ch529.json",
+  "textHash": "fnv1a64:2e384bf29843409f",
+  "jsonHash": "fnv1a64:31c926d42e29fdb4",
+  "findings": []
+}

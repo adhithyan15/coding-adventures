@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C346-varsamayi",
+    "language": "malayalam",
+    "chapter": 346,
+    "sequence": 16480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1b84830e739ee1d"
+  },
+  "findings": []
+}

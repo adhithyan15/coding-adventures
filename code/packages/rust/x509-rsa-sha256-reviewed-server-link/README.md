@@ -20,23 +20,29 @@ policy.
 `validate_x509_rsa_sha256_reviewed_server_anchor_policy` then consumes that
 complete direct-link evidence and checks the selected snapshot entry itself.
 Entries without out-of-band name constraints produce a stronger non-copyable
-anchor-policy result. Any entry carrying name-constraint bytes fails closed
-with a payload-free `UnsupportedAnchorNameConstraints` category; unsupported
-bytes never become implicitly accepted constraints.
+anchor-policy result without DNS evidence. For a constrained entry, the policy
+decodes the exact selected-entry bytes and re-decodes Subject Alternative Name
+from the exact target certificate retained by the server-policy evidence. It
+requires every target dNSName to satisfy at least one permitted DNS subtree and
+retains optional payload-free count evidence. Callers supply separate ASN.1
+limits for the two parses and cannot inject another anchor, certificate, or SAN
+collection.
 
 ## Boundary
 
-This is exact-object evidence composition plus a deliberately narrow
-unconstrained-anchor policy, not complete certificate-path or TLS validation.
-It does not parse or apply non-empty reviewed-root name constraints,
-path-length or other anchor constraints, construct a multi-hop path, check
-revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
-connection.
+This is exact-object evidence composition plus deliberately narrow direct-link
+anchor DNS policy, not complete certificate-path or TLS validation. It supports
+only the repository's bounded permitted-dNSName constraint subset. It does not
+apply excluded, directory-name, IP, or other constraint forms; path-length or
+other anchor constraints; multi-hop construction; revocation; TLS; HTTP; OAuth
+transport; or network effects.
 `webpki-roots` remains reviewed public data only; no external executable TLS,
 X.509, or cryptographic implementation is linked here.
 
-The focused unit tests cover the security-sensitive exact-object predicate and
-payload-free failures. The upstream evidence types intentionally expose no
-forging constructors, and the repository has no direct reviewed-root-signed
-end-entity fixture, so this package does not weaken those types with a test-only
-construction path.
+The focused unit tests cover the security-sensitive exact-object predicate,
+unconstrained and constrained policy branches, exact reviewed `.tr` bytes,
+all-target-DNS matching, DNS-absent SANs, malformed inputs, independent decoder
+budgets, and payload-free failures. The upstream evidence types intentionally
+expose no forging constructors, and the repository has no direct reviewed-root-
+signed end-entity fixture, so this package does not weaken those types with a
+test-only construction path.

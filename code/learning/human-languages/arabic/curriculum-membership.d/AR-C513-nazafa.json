@@ -1,0 +1,11 @@
+{
+  "id": "AR-C513-nazafa",
+  "pathSegment": "AR-PATH-513-MUZMIN513",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-513-MUZMIN513",
+      "order": 4
+    }
+  ]
+}

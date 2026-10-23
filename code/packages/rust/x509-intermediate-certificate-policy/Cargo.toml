@@ -1,0 +1,13 @@
+[package]
+name = "x509-intermediate-certificate-policy"
+version = "0.1.0"
+edition = "2021"
+description = "Exact-certificate intermediate CA role, algorithm, self-issued, and validity policy composition"
+
+[dependencies]
+x509-certificate = { path = "../x509-certificate" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-time = { path = "../x509-time" }
+
+[dev-dependencies]
+der-asn1 = { path = "../der-asn1" }

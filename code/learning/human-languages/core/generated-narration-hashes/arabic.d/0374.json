@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:c4db070c7f7947df",
+  "lessonIds": [
+    "AR-C374-bi-t-tali",
+    "AR-C374-li-hadha-as-sabab",
+    "AR-C374-bi-ma-anna",
+    "AR-C374-haythu-inna",
+    "AR-C374-li-kay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch374.txt",
+  "json": "arabic/narration/ch374.json",
+  "textHash": "fnv1a64:0da55555dffb508a",
+  "jsonHash": "fnv1a64:5d83a59f5362cfa2",
+  "findings": []
+}

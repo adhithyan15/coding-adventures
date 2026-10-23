@@ -1,0 +1,11 @@
+{
+  "id": "ML-C556-karutal",
+  "pathSegment": "ML-PATH-556-VANCANA556",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-556-VANCANA556",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C555-verpiriyuka",
+  "pathSegment": "ML-PATH-555-TALAMURA555",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-555-TALAMURA555",
+      "order": 3
+    }
+  ]
+}

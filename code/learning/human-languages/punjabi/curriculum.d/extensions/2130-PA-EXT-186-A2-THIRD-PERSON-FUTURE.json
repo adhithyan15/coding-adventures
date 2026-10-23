@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-186-A2-THIRD-PERSON-FUTURE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can recognise and use common masculine and feminine third-person future forms of to be and to come.",
+  "prerequisites": [
+    "PA-EXT-185-A2-POSSESSIVE-AGREEMENT"
+  ]
+}

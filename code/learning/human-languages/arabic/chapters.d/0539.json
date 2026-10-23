@@ -1,0 +1,19 @@
+{
+  "chapter": 539,
+  "title": "Games for all ages",
+  "label": "ch:ar-games-for-all-ages",
+  "canDo": "I can name dice and a swing, talk about gardening, and say that we had fun or swung on a swing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C539-taarjaha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 539: I can name dice and a swing, talk about gardening, and say that we had fun or swung on a swing.",
+    "assesses": [
+      "AR-LEX-C539-LUAB539-03",
+      "AR-LEX-C539-LUAB539-04",
+      "AR-LEX-C539-LUAB539-05"
+    ]
+  }
+}

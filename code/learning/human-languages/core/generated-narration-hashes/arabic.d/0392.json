@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:7c4cf1f732526e66",
+  "lessonIds": [
+    "AR-C392-muhadir",
+    "AR-C392-ustadh",
+    "AR-C392-ashrafa",
+    "AR-C392-mushrif",
+    "AR-C392-dhakara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch392.txt",
+  "json": "arabic/narration/ch392.json",
+  "textHash": "fnv1a64:60e3ce5b16e0ee05",
+  "jsonHash": "fnv1a64:0b592d0abb49724e",
+  "findings": []
+}

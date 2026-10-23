@@ -1,0 +1,11 @@
+{
+  "id": "AR-C378-sawwata",
+  "pathSegment": "AR-PATH-378-INTIKHAB378",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-378-INTIKHAB378",
+      "order": 2
+    }
+  ]
+}

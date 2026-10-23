@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Curious and Fed Up",
+  "label": "ch:ml-curious-and-fed-up",
+  "canDo": "I can say curiosity, impatience, to get angry, freshness and to get fed up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C522-matukkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can say curiosity, impatience, to get angry, freshness and to get fed up.",
+    "assesses": [
+      "ML-LEX-C522-JIJNASA522-03",
+      "ML-LEX-C522-JIJNASA522-04",
+      "ML-LEX-C522-JIJNASA522-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:d5f5e2d43e645f73",
+  "lessonIds": [
+    "ML-C549-naipunyam",
+    "ML-C549-pratiphalam",
+    "ML-C549-kariyar",
+    "ML-C549-sampalavarddhana",
+    "ML-C549-vahikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch549.txt",
+  "json": "malayalam/narration/ch549.json",
+  "textHash": "fnv1a64:6a151f8fb588ff1e",
+  "jsonHash": "fnv1a64:9a1c2690c3c431e8",
+  "findings": []
+}

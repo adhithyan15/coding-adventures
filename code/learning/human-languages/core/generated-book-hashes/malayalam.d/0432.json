@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:43b983c64f18ea2b",
+  "lessonIds": [
+    "ML-C432-gavesanam",
+    "ML-C432-gavesakan",
+    "ML-C432-prabandham",
+    "ML-C432-prophasar",
+    "ML-C432-prabhasanam"
+  ],
+  "tex": "malayalam/book/chapters/ch432-research.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:14011f82e169590f",
+  "lessonIds": [
+    "ML-C350-talakkettu",
+    "ML-C350-patradhipar",
+    "ML-C350-patippu",
+    "ML-C350-vayanakkaran",
+    "ML-C350-accatikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch350.txt",
+  "json": "malayalam/narration/ch350.json",
+  "textHash": "fnv1a64:5e47effa4a4fc8e6",
+  "jsonHash": "fnv1a64:d03c5c642929a922",
+  "findings": []
+}

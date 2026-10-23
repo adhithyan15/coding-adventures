@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C393-anusmaranam",
+    "language": "malayalam",
+    "chapter": 393,
+    "sequence": 19250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2ed0f91f7e3c02e"
+  },
+  "findings": []
+}

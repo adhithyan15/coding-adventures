@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:9603b141b5d43716",
+  "lessonIds": [
+    "AR-C525-antaja",
+    "AR-C525-sammama",
+    "AR-C525-musammim",
+    "AR-C525-barmaja",
+    "AR-C525-mubarmij"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch525.txt",
+  "json": "arabic/narration/ch525.json",
+  "textHash": "fnv1a64:0b17f1e712d6fe17",
+  "jsonHash": "fnv1a64:1676950c1668eef4",
+  "findings": []
+}

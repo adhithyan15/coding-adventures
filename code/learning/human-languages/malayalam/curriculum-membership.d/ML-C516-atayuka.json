@@ -1,0 +1,11 @@
+{
+  "id": "ML-C516-atayuka",
+  "pathSegment": "ML-PATH-516-TATASSAM516",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-516-TATASSAM516",
+      "order": 2
+    }
+  ]
+}

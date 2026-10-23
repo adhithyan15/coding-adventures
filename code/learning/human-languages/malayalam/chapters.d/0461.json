@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "At the Platform",
+  "label": "ch:ml-at-the-platform",
+  "canDo": "I can say a platform, a bus conductor, a fare, a queue and to travel.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C461-sancarikkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say a platform, a bus conductor, a fare, a queue and to travel.",
+    "assesses": [
+      "ML-LEX-C461-YATRA461-03",
+      "ML-LEX-C461-YATRA461-04",
+      "ML-LEX-C461-YATRA461-05"
+    ]
+  }
+}

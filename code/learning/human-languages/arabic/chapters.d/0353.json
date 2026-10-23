@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Crowds in the street",
+  "label": "ch:ar-crowds-in-the-street",
+  "canDo": "I can say a demonstration, to gather, to cheer, to storm and to spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "AR-C353-intashara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say a demonstration, to gather, to cheer, to storm and to spread.",
+    "assesses": [
+      "AR-LEX-C353-MUZAHARA353-03",
+      "AR-LEX-C353-MUZAHARA353-04",
+      "AR-LEX-C353-MUZAHARA353-05"
+    ]
+  }
+}

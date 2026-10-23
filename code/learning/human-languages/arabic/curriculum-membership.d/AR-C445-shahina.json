@@ -1,0 +1,11 @@
+{
+  "id": "AR-C445-shahina",
+  "pathSegment": "AR-PATH-445-TRAM445",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-445-TRAM445",
+      "order": 1
+    }
+  ]
+}

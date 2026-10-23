@@ -1,0 +1,11 @@
+{
+  "id": "ML-C459-pirikkuka",
+  "pathSegment": "ML-PATH-459-NIKUTI459",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-459-NIKUTI459",
+      "order": 1
+    }
+  ]
+}

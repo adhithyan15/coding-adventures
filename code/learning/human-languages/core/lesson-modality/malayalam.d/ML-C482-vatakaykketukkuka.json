@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C482-vatakaykketukkuka",
+    "language": "malayalam",
+    "chapter": 482,
+    "sequence": 24070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76c2b4af13c6d58c"
+  },
+  "findings": []
+}

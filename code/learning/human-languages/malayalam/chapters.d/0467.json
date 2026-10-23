@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "Loading the Lorry",
+  "label": "ch:ml-loading-the-lorry",
+  "canDo": "I can say goods, a lorry, to put on board, to unload and to pack.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C467-pakku-ceyyuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can say goods, a lorry, to put on board, to unload and to pack.",
+    "assesses": [
+      "ML-LEX-C467-CARAKKU467-03",
+      "ML-LEX-C467-CARAKKU467-04",
+      "ML-LEX-C467-CARAKKU467-05"
+    ]
+  }
+}

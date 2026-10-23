@@ -1,0 +1,20 @@
+{
+  "language": "malayalam",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:fbab694fe2050886",
+  "lessonIds": [
+    "ML-C412-curukkattil",
+    "ML-C412-mariccu",
+    "ML-C412-athava",
+    "ML-C412-potuve",
+    "ML-C412-ennuveccal",
+    "ML-R412-review-405-412"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "malayalam/narration/ch412.txt",
+  "json": "malayalam/narration/ch412.json",
+  "textHash": "fnv1a64:b263f5e5b6826dcf",
+  "jsonHash": "fnv1a64:42bc888adb32eb3c",
+  "findings": []
+}

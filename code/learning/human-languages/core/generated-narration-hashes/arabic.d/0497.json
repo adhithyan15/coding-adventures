@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:ce96be309c1366c3",
+  "lessonIds": [
+    "AR-C497-mutawattir",
+    "AR-C497-irtabaka",
+    "AR-C497-mudtarib",
+    "AR-C497-mutaraddid",
+    "AR-C497-katama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch497.txt",
+  "json": "arabic/narration/ch497.json",
+  "textHash": "fnv1a64:72c92bf4d5d91bc0",
+  "jsonHash": "fnv1a64:599c364a4291ca68",
+  "findings": []
+}

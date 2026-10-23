@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:72eacef19f3539dd",
+  "lessonIds": [
+    "AR-C302-hiwar",
+    "AR-C302-hawara",
+    "AR-C302-ajra",
+    "AR-C302-istadafa",
+    "AR-C302-mutahaddith"
+  ],
+  "tex": "arabic/book/chapters/ch302-an-interview.tex"
+}

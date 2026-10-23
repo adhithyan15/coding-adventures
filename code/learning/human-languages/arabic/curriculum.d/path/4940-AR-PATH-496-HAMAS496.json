@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-496-HAMAS496",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-496-HAMAS496"
+  ],
+  "after": []
+}

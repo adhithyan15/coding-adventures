@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 371,
+  "title": "Aims and means",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fc16712cd34c40da",
+  "lessons": [
+    {
+      "id": "AR-C371-wasila",
+      "sequence": 21060,
+      "title": "وسيلة (wasīla) — a means",
+      "headword": "وسيلة",
+      "romanization": "wasīla",
+      "gloss": "a means",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d300d73c77f56977",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to exaggerate, then the Arabic for to generalize."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: وسيلة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وسيلة — wasīla — \"a means\"."
+            },
+            {
+              "kind": "speech",
+              "text": "الحافلة وسيلة رخيصة للسفر. al-ḥāfila wasīla rakhīṣa li-s-safar. The bus is a cheap means of travel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "وسيلة (wasīla) is built on the native Arabic root w-s-l, \"to seek to draw near\" (Lane). A wasīla is what brings you near to a goal: a means."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wasīla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wasīla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wasīla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wasīla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "al-ḥāfila wasīla rakhīṣa li-s-safar. — The bus is a cheap means of travel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *al-ḥāfila wasīla rakhīṣa li-s-safar.* — The bus is a cheap means of travel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to exaggerate, then the Arabic for to generalize, then say wasīla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to exaggerate, then the Arabic for to generalize, then say *wasīla* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does وسيلة (wasīla) mean? (\"A means\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C371-saa",
+      "sequence": 21070,
+      "title": "سعى (saʿā) — to strive",
+      "headword": "سعى",
+      "romanization": "saʿā",
+      "gloss": "to strive",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2dc30bb58d171b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to generalize, then the Arabic for a means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: سعى",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سعى — saʿā — \"to strive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "سعى الشاب إلى عمل أفضل. saʿā ash-shābb ilā ʿamal afḍal. The young man strove for a better job."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يسعى, yasʿā."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes إلى: سعى (saʿā) إلى …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "سعى (saʿā) is built on the native Arabic root s-ʿ-y, usually traced to the sense \"to run, to strive\". Saʿā is a Form I verb with a weak last letter, so its present is yasʿā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʿā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʿā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʿā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʿā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saʿā ash-shābb ilā ʿamal afḍal. — The young man strove for a better job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saʿā ash-shābb ilā ʿamal afḍal.* — The young man strove for a better job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to generalize, then the Arabic for a means, then say saʿā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to generalize, then the Arabic for a means, then say *saʿā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does سعى (saʿā) mean? (\"To strive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C371-anjaza",
+      "sequence": 21080,
+      "title": "أنجز (anjaza) — to accomplish",
+      "headword": "أنجز",
+      "romanization": "anjaza",
+      "gloss": "to accomplish",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c45663af297449e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a means, then the Arabic for to strive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أنجز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنجز — anjaza — \"to accomplish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "أنجز العمال البناء في سنة. anjaza al-ʿummāl al-bināʾ fī sana. The workers completed the building in a year."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: ينجز, yunjiz."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنجز (anjaza) is built on the native Arabic root n-j-z, \"to be accomplished, finished\" (Lane). It is Form IV, to bring to completion: to accomplish."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anjaza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anjaza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anjaza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anjaza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "anjaza al-ʿummāl al-bināʾ fī sana. — The workers completed the building in a year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *anjaza al-ʿummāl al-bināʾ fī sana.* — The workers completed the building in a year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a means, then the Arabic for to strive, then say anjaza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a means, then the Arabic for to strive, then say *anjaza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does أنجز (anjaza) mean? (\"To accomplish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C371-sahama",
+      "sequence": 21090,
+      "title": "ساهم (sāhama) — to contribute",
+      "headword": "ساهم",
+      "romanization": "sāhama",
+      "gloss": "to contribute",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eed01915b8e65090",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to strive, then the Arabic for to accomplish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ساهم",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ساهم — sāhama — \"to contribute\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ساهم الجيران في تنظيف الشارع. sāhama al-jīrān fī tanẓīf ash-shāriʿ. The neighbours contributed to cleaning the street."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يساهم, yusāhim."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes في: ساهم (sāhama) في …."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ساهم (sāhama) is built on the native Arabic root s-h-m, \"an arrow; a share\" (Lane). It is Form III, to take a share with others: to contribute."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāhama",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāhama*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāhama, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāhama*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāhama al-jīrān fī tanẓīf ash-shāriʿ. — The neighbours contributed to cleaning the street.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāhama al-jīrān fī tanẓīf ash-shāriʿ.* — The neighbours contributed to cleaning the street.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to strive, then the Arabic for to accomplish, then say sāhama again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to strive, then the Arabic for to accomplish, then say *sāhama* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ساهم (sāhama) mean? (\"To contribute\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C371-hafiz",
+      "sequence": 21100,
+      "title": "حافز (ḥāfiz) — an incentive",
+      "headword": "حافز",
+      "romanization": "ḥāfiz",
+      "gloss": "an incentive",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb693755422cba69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to accomplish, then the Arabic for to contribute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: حافز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حافز — ḥāfiz — \"an incentive\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كان الراتب الجيد حافزا للعمل. kāna ar-rātib al-jayyid ḥāfizan li-l-ʿamal. The good salary was an incentive to work."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: حوافز, ḥawāfiz."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حافز (ḥāfiz) is built on the native Arabic root ḥ-f-z, \"to urge on from behind\" (Lane). Ḥāfiz is the active participle: what urges you on, an incentive."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāfiz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāfiz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥāfiz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥāfiz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāna ar-rātib al-jayyid ḥāfizan li-l-ʿamal. — The good salary was an incentive to work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāna ar-rātib al-jayyid ḥāfizan li-l-ʿamal.* — The good salary was an incentive to work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to accomplish, then the Arabic for to contribute, then say ḥāfiz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to accomplish, then the Arabic for to contribute, then say *ḥāfiz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does حافز (ḥāfiz) mean? (\"An incentive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

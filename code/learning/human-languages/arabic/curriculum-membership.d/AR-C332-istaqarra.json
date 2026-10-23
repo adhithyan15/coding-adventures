@@ -1,0 +1,11 @@
+{
+  "id": "AR-C332-istaqarra",
+  "pathSegment": "AR-PATH-332-HIJRA332",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-332-HIJRA332",
+      "order": 1
+    }
+  ]
+}

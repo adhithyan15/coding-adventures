@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 563,
+  "sourceHash": "fnv1a64:6b553b39e59ba6a7",
+  "lessonIds": [
+    "ML-C563-kathapatram",
+    "ML-C563-ramgam",
+    "ML-C563-vedi",
+    "ML-C563-kani",
+    "ML-C563-kayyati"
+  ],
+  "tex": "malayalam/book/chapters/ch563-on-stage.tex"
+}

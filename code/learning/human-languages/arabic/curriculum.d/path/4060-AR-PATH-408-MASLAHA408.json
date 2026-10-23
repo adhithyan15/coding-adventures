@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-408-MASLAHA408",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "AR-EXT-408-MASLAHA408"
+  ],
+  "after": []
+}

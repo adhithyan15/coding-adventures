@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:8fe5ada9319d1f6f",
+  "lessonIds": [
+    "AR-C305-mahkama",
+    "AR-C305-shahid-iyan",
+    "AR-C305-ittahama",
+    "AR-C305-muttaham",
+    "AR-C305-hakama"
+  ],
+  "tex": "arabic/book/chapters/ch305-in-court.tex"
+}

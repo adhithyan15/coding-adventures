@@ -1,0 +1,11 @@
+{
+  "id": "AR-C324-fawda",
+  "pathSegment": "AR-PATH-324-KHATAR324",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-324-KHATAR324",
+      "order": 4
+    }
+  ]
+}

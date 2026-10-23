@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:41fccd661beb7040",
+  "lessonIds": [
+    "AR-C490-dahsha",
+    "AR-C490-mundahish",
+    "AR-C490-indahasha",
+    "AR-C490-tafajaa",
+    "AR-C490-ijab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch490.txt",
+  "json": "arabic/narration/ch490.json",
+  "textHash": "fnv1a64:afe14d26d9cb0c5d",
+  "jsonHash": "fnv1a64:51a1e9e0a63db1e0",
+  "findings": []
+}

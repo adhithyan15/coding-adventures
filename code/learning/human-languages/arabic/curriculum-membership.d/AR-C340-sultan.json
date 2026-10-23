@@ -1,0 +1,11 @@
+{
+  "id": "AR-C340-sultan",
+  "pathSegment": "AR-PATH-340-HUKM340",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-340-HUKM340",
+      "order": 1
+    }
+  ]
+}

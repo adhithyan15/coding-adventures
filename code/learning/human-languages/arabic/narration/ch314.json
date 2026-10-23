@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 314,
+  "title": "A funeral",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:833d31282bb90235",
+  "lessons": [
+    {
+      "id": "AR-C314-janaza",
+      "sequence": 18070,
+      "title": "جنازة (janāza) — a funeral",
+      "headword": "جنازة",
+      "romanization": "janāza",
+      "gloss": "a funeral",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecc9dc860c7be3b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for anew, then the Arabic for to regain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: جنازة",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جنازة — janāza — \"a funeral\"."
+            },
+            {
+              "kind": "speech",
+              "text": "حضر الجيران جنازة (janāza) الرجل العجوز. ḥaḍara al-jīrān janāzat ar-rajul al-ʿajūz. The neighbours attended the old man’s funeral."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جنازة (janāza) is built on the native Arabic root j-n-z (Lane), where janāza is the bier with the dead person upon it, and then the procession that carries it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janāza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janāza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "janāza, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *janāza*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥaḍara al-jīrān janāzat ar-rajul al-ʿajūz. — The neighbours attended the old man’s funeral.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥaḍara al-jīrān janāzat ar-rajul al-ʿajūz.* — The neighbours attended the old man’s funeral.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for anew, then the Arabic for to regain, then say janāza again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for anew, then the Arabic for to regain, then say *janāza* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does جنازة (janāza) mean? (\"A funeral\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C314-tuwuffiya",
+      "sequence": 18080,
+      "title": "توفي (tuwuffiya) — to pass away",
+      "headword": "توفي",
+      "romanization": "tuwuffiya",
+      "gloss": "to pass away",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1203ecf676b87f20",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to regain, then the Arabic for a funeral."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: توفي",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "توفي — tuwuffiya — \"to pass away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "توفي جدي قبل سنتين. tuwuffiya jaddī qabla sanatayn. My grandfather passed away two years ago."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يتوفى, yutawaffā."
+            },
+            {
+              "kind": "speech",
+              "text": "A polite word for to die, passive in form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "توفي (tuwuffiya) is built on the native Arabic root w-f-y (Lane), \"to be complete, to fulfil\". Tawaffā is \"to take a thing in full\"; its passive, tuwuffiya, is said of one whose life is complete."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuwuffiya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuwuffiya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuwuffiya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuwuffiya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuwuffiya jaddī qabla sanatayn. — My grandfather passed away two years ago.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuwuffiya jaddī qabla sanatayn.* — My grandfather passed away two years ago.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to regain, then the Arabic for a funeral, then say tuwuffiya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to regain, then the Arabic for a funeral, then say *tuwuffiya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does توفي (tuwuffiya) mean? (\"To pass away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C314-dafana",
+      "sequence": 18090,
+      "title": "دفن (dafana) — to bury",
+      "headword": "دفن",
+      "romanization": "dafana",
+      "gloss": "to bury",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c52dbc780d8b525b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a funeral, then the Arabic for to pass away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: دفن",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دفن — dafana — \"to bury\"."
+            },
+            {
+              "kind": "speech",
+              "text": "دفن الصياد الكنز تحت شجرة. dafana aṣ-ṣayyād al-kanz taḥta shajara. The fisherman buried the treasure under a tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يدفن, yadfin."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "دفن (dafana) is built on the native Arabic root d-f-n (Lane), \"to bury, to hide a thing in the ground\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dafana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dafana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dafana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dafana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dafana aṣ-ṣayyād al-kanz taḥta shajara. — The fisherman buried the treasure under a tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dafana aṣ-ṣayyād al-kanz taḥta shajara.* — The fisherman buried the treasure under a tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a funeral, then the Arabic for to pass away, then say dafana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a funeral, then the Arabic for to pass away, then say *dafana* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does دفن (dafana) mean? (\"To bury\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C314-shayyaa",
+      "sequence": 18100,
+      "title": "شيع (shayyaʿa) — to escort a coffin; to see off",
+      "headword": "شيع",
+      "romanization": "shayyaʿa",
+      "gloss": "to escort a coffin; to see off",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53fd8c48a2704a70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to pass away, then the Arabic for to bury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شيع",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شيع — shayyaʿa — \"to escort a coffin; to see off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "شيع أهل القرية الرجل إلى المقبرة. shayyaʿa ahl al-qarya ar-rajul ilā al-maqbara. The villagers walked with the man’s coffin to the cemetery."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يشيع, yushayyiʿ."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun is تشييع; شيع (shayyaʿa) ضيفه: he saw his guest off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شيع (shayyaʿa) is built on the native Arabic root sh-y-ʿ (Lane), \"to follow\". It is Form II, \"to go along with one who is leaving\", and so with the dead."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shayyaʿa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shayyaʿa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shayyaʿa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shayyaʿa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shayyaʿa ahl al-qarya ar-rajul ilā al-maqbara. — The villagers walked with the man’s coffin to the cemetery.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shayyaʿa ahl al-qarya ar-rajul ilā al-maqbara.* — The villagers walked with the man’s coffin to the cemetery.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to pass away, then the Arabic for to bury, then say shayyaʿa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to pass away, then the Arabic for to bury, then say *shayyaʿa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شيع (shayyaʿa) mean? (\"To escort a coffin; to see off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C314-qabr",
+      "sequence": 18110,
+      "title": "قبر (qabr) — a grave",
+      "headword": "قبر",
+      "romanization": "qabr",
+      "gloss": "a grave",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8bfd35fbfbe9a60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to bury, then the Arabic for to escort a coffin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: قبر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قبر — qabr — \"a grave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "زارت الأسرة قبر الجدة. zārat al-usra qabr al-jadda. The family visited the grandmother’s grave."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: قبور, qubūr."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "قبر (qabr) is built on the native Arabic root q-b-r (Lane), \"to bury\"; qabr is the place of burial."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qabr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qabr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zārat al-usra qabr al-jadda. — The family visited the grandmother’s grave.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zārat al-usra qabr al-jadda.* — The family visited the grandmother’s grave.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to bury, then the Arabic for to escort a coffin, then say qabr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to bury, then the Arabic for to escort a coffin, then say *qabr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does قبر (qabr) mean? (\"A grave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

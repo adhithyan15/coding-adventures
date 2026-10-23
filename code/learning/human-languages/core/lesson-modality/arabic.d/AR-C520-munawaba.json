@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C520-munawaba",
+    "language": "arabic",
+    "chapter": 520,
+    "sequence": 28850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc1ad5dd2bbaaa7f"
+  },
+  "findings": []
+}

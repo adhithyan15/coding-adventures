@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:7f7146ed5f0b66c0",
+  "lessonIds": [
+    "AR-C532-walid",
+    "AR-C532-rabib",
+    "AR-C532-qaraba",
+    "AR-C532-asha",
+    "AR-C532-mata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch532.txt",
+  "json": "arabic/narration/ch532.json",
+  "textHash": "fnv1a64:38308a1406fcbe2f",
+  "jsonHash": "fnv1a64:33fe49c48902d33a",
+  "findings": []
+}

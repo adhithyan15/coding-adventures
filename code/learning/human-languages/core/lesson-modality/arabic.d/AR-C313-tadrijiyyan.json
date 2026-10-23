@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C313-tadrijiyyan",
+    "language": "arabic",
+    "chapter": 313,
+    "sequence": 18040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1b991397a0c1947"
+  },
+  "findings": []
+}

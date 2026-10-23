@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C529-sahisnuta",
+    "language": "malayalam",
+    "chapter": 529,
+    "sequence": 26650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:354e6806b4b7ff26"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:3e203b01d71ab8ef",
+  "lessonIds": [
+    "ML-C437-ganitam",
+    "ML-C437-sampattikasastram",
+    "ML-C437-tatvasastram",
+    "ML-C437-vijnanam",
+    "ML-C437-pathanam"
+  ],
+  "tex": "malayalam/book/chapters/ch437-subjects.tex"
+}

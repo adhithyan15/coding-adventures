@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:3f78add2830c9e65",
+  "lessonIds": [
+    "ML-C475-kappal",
+    "ML-C475-navikan",
+    "ML-C475-jetti",
+    "ML-C475-vallam",
+    "ML-C475-tula"
+  ],
+  "tex": "malayalam/book/chapters/ch475-ships-and-boats.tex"
+}

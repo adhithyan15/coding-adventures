@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:bb5204407bbeafd0",
+  "lessonIds": [
+    "AR-C370-intaqada",
+    "AR-C370-aarada",
+    "AR-C370-barrara",
+    "AR-C370-balagha",
+    "AR-C370-ammama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch370.txt",
+  "json": "arabic/narration/ch370.json",
+  "textHash": "fnv1a64:b2288968de92217a",
+  "jsonHash": "fnv1a64:c95379d8e1496a3c",
+  "findings": []
+}

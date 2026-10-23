@@ -1,0 +1,19 @@
+{
+  "chapter": 445,
+  "title": "How Serious",
+  "label": "ch:ml-how-serious",
+  "canDo": "I can say inevitable, crucial, fundamental, serious and complex.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ML-C445-sankirnnamaya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 445: I can say inevitable, crucial, fundamental, serious and complex.",
+    "assesses": [
+      "ML-LEX-C445-GAURAVAM445-03",
+      "ML-LEX-C445-GAURAVAM445-04",
+      "ML-LEX-C445-GAURAVAM445-05"
+    ]
+  }
+}

@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "chapter": 312,
+  "title": "Discoveries",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5a22feaf0373a4cc",
+  "lessons": [
+    {
+      "id": "AR-C312-kashafa",
+      "sequence": 17970,
+      "title": "كشف (kashafa) — to uncover, to reveal",
+      "headword": "كشف",
+      "romanization": "kashafa",
+      "gloss": "to uncover, to reveal",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:88a2691b8c457239",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to have a child, then the Arabic for a naming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كشف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كشف — kashafa — \"to uncover, to reveal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "كشف التحقيق سبب الحريق. kashafa at-taḥqīq sabab al-ḥarīq. The investigation revealed the cause of the fire."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يكشف, yakshif."
+            },
+            {
+              "kind": "speech",
+              "text": "كشف (kashafa) عن: to disclose. A medical check-up is كشف (kashafa) طبي."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كشف (kashafa) is built on the native Arabic root k-sh-f (Lane), \"to take away a covering from a thing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kashafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kashafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kashafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kashafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kashafa at-taḥqīq sabab al-ḥarīq. — The investigation revealed the cause of the fire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kashafa at-taḥqīq sabab al-ḥarīq.* — The investigation revealed the cause of the fire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to have a child, then the Arabic for a naming, then say kashafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to have a child, then the Arabic for a naming, then say *kashafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كشف (kashafa) mean? (\"To uncover, to reveal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C312-iktashafa",
+      "sequence": 17980,
+      "title": "اكتشف (iktashafa) — to discover",
+      "headword": "اكتشف",
+      "romanization": "iktashafa",
+      "gloss": "to discover",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a3a4ba3b9233764",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for a naming, then the Arabic for to uncover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: اكتشف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اكتشف — iktashafa — \"to discover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "اكتشف العلماء نجما جديدا. iktashafa al-ʿulamāʾ najman jadīdan. The scientists discovered a new star."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يكتشف, yaktashif."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "اكتشف (iktashafa) is built on the native Arabic root k-sh-f (Lane), \"to uncover\". It is Form VIII, \"to uncover for oneself\": to find out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iktashafa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iktashafa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iktashafa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iktashafa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iktashafa al-ʿulamāʾ najman jadīdan. — The scientists discovered a new star.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iktashafa al-ʿulamāʾ najman jadīdan.* — The scientists discovered a new star.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for a naming, then the Arabic for to uncover, then say iktashafa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for a naming, then the Arabic for to uncover, then say *iktashafa* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does اكتشف (iktashafa) mean? (\"To discover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C312-athara-find",
+      "sequence": 17990,
+      "title": "عثر (ʿathara) — to come across, to find",
+      "headword": "عثر",
+      "romanization": "ʿathara",
+      "gloss": "to come across, to find",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ccd7b6e06d9fae30",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to uncover, then the Arabic for to discover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عثر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عثر — ʿathara — \"to come across, to find\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عثر الولد على مفتاح في الحديقة. ʿathara al-walad ʿalā miftāḥ fī al-ḥadīqa. The boy came across a key in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Present: يعثر, yaʿthur."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes على: عثر (ʿathara) على."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عثر (ʿathara) is built on the native Arabic root ʿ-th-r (Lane), \"to stumble\", the root of the taught taʿaththara. To stumble upon a thing is to find it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿathara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿathara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿathara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿathara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿathara al-walad ʿalā miftāḥ fī al-ḥadīqa. — The boy came across a key in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿathara al-walad ʿalā miftāḥ fī al-ḥadīqa.* — The boy came across a key in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to uncover, then the Arabic for to discover, then say ʿathara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to uncover, then the Arabic for to discover, then say *ʿathara* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does عثر (ʿathara) mean? (\"To come across, to find\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C312-mustakshif",
+      "sequence": 18000,
+      "title": "مستكشف (mustakshif) — an explorer",
+      "headword": "مستكشف",
+      "romanization": "mustakshif",
+      "gloss": "an explorer",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12820b0714b780b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to discover, then the Arabic for to come across."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مستكشف",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستكشف — mustakshif — \"an explorer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "عبر المستكشف الصحراء على جمل. ʿabara al-mustakshif aṣ-ṣaḥrāʾ ʿalā jamal. The explorer crossed the desert on a camel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مستكشف (mustakshif) is built on the native Arabic root k-sh-f (Lane), \"to uncover\". Mustakshif is the Form X participle, \"one who seeks to uncover\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustakshif",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustakshif*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustakshif, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustakshif*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿabara al-mustakshif aṣ-ṣaḥrāʾ ʿalā jamal. — The explorer crossed the desert on a camel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿabara al-mustakshif aṣ-ṣaḥrāʾ ʿalā jamal.* — The explorer crossed the desert on a camel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to discover, then the Arabic for to come across, then say mustakshif again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to discover, then the Arabic for to come across, then say *mustakshif* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does مستكشف (mustakshif) mean? (\"An explorer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C312-kanz",
+      "sequence": 18010,
+      "title": "كنز (kanz) — a treasure",
+      "headword": "كنز",
+      "romanization": "kanz",
+      "gloss": "a treasure",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2c8a32e9ccad3c41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Arabic for to come across, then the Arabic for an explorer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كنز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كنز — kanz — \"a treasure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "وجد الصياد كنزا تحت الرمل. wajada aṣ-ṣayyād kanzan taḥta ar-raml. The fisherman found a treasure under the sand."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: كنوز, kunūz."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كنز (kanz) is built on the root k-n-z, \"to store up, to bury wealth\" (Lane). A link with Persian ganj, treasure, is often proposed, but the origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kanz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kanz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wajada aṣ-ṣayyād kanzan taḥta ar-raml. — The fisherman found a treasure under the sand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wajada aṣ-ṣayyād kanzan taḥta ar-raml.* — The fisherman found a treasure under the sand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Arabic for to come across, then the Arabic for an explorer, then say kanz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Arabic for to come across, then the Arabic for an explorer, then say *kanz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does كنز (kanz) mean? (\"A treasure\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

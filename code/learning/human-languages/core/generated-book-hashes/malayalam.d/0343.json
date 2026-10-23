@@ -1,0 +1,12 @@
+{
+  "language": "malayalam",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:c49cb3158de5a976",
+  "lessonIds": [
+    "ML-C343-rodu",
+    "ML-W343-da",
+    "ML-C343-evideyanu",
+    "ML-R343-asking-the-way"
+  ],
+  "tex": "malayalam/book/chapters/ch343-asking-the-way.tex"
+}

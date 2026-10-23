@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:67aca4db01e7ac10",
+  "lessonIds": [
+    "AR-C445-tram",
+    "AR-C445-shahina",
+    "AR-C445-miqwad",
+    "AR-C445-tamahhala",
+    "AR-C445-arqala"
+  ],
+  "tex": "arabic/book/chapters/ch445-trams-and-lorries.tex"
+}

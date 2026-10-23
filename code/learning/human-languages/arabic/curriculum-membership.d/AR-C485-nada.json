@@ -1,0 +1,11 @@
+{
+  "id": "AR-C485-nada",
+  "pathSegment": "AR-PATH-485-SAMA485",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-485-SAMA485",
+      "order": 2
+    }
+  ]
+}

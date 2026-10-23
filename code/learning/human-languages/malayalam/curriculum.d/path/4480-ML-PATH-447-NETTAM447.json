@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-447-NETTAM447",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ML-EXT-447-NETTAM447"
+  ],
+  "after": []
+}

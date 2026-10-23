@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C369-niraparadhi",
+    "language": "malayalam",
+    "chapter": 369,
+    "sequence": 18050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:088645c6db952140"
+  },
+  "findings": []
+}

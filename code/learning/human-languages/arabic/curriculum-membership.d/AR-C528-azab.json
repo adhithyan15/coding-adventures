@@ -1,0 +1,11 @@
+{
+  "id": "AR-C528-azab",
+  "pathSegment": "AR-PATH-528-ZAWAJ528",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-528-ZAWAJ528",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C452-samipanam",
+  "pathSegment": "ML-PATH-452-SAMADHANAM452",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-452-SAMADHANAM452",
+      "order": 3
+    }
+  ]
+}

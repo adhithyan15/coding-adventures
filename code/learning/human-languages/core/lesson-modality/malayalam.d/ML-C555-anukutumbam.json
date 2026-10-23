@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C555-anukutumbam",
+    "language": "malayalam",
+    "chapter": 555,
+    "sequence": 27960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94f45402812b0f8d"
+  },
+  "findings": []
+}

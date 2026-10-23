@@ -1,0 +1,11 @@
+{
+  "id": "AR-C360-jadala",
+  "pathSegment": "AR-PATH-360-JADAL360",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-360-JADAL360",
+      "order": 3
+    }
+  ]
+}

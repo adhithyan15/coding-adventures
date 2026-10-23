@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-189-A2-WANT-PLURAL",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-189-A2-WANT-PLURAL"
+  ],
+  "after": []
+}

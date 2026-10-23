@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:f37a8c7830499387",
+  "lessonIds": [
+    "ML-C365-parati",
+    "ML-C365-kurravali",
+    "ML-C365-anvesanam",
+    "ML-C365-arasrru-ceyyuka",
+    "ML-C365-piticcetukkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch365-at-the-police-station.tex"
+}

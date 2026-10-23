@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:88c2267ebfa446eb",
+  "lessonIds": [
+    "ML-C430-alimati",
+    "ML-C430-kaikkuli",
+    "ML-C430-cusanam-ceyyuka",
+    "ML-C430-sutaryamaya",
+    "ML-C430-anvesikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch430.txt",
+  "json": "malayalam/narration/ch430.json",
+  "textHash": "fnv1a64:d18786e88a238fcf",
+  "jsonHash": "fnv1a64:ad139aa608a27071",
+  "findings": []
+}

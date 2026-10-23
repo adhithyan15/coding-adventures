@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 379,
+  "sourceHash": "fnv1a64:1869caceccd4c188",
+  "lessonIds": [
+    "AR-C379-hizb",
+    "AR-C379-hamla",
+    "AR-C379-tarashshaha",
+    "AR-C379-nashit",
+    "AR-C379-dimuqratiyya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch379.txt",
+  "json": "arabic/narration/ch379.json",
+  "textHash": "fnv1a64:67b82229adeceb20",
+  "jsonHash": "fnv1a64:b5f8aea734943a68",
+  "findings": []
+}

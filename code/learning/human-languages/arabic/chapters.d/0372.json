@@ -1,0 +1,19 @@
+{
+  "chapter": 372,
+  "title": "Obstacles",
+  "label": "ch:ar-obstacles",
+  "canDo": "I can talk about an obstacle, a difficulty and a dilemma, and say that someone fell short or managed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C372-tamakkana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 372: I can talk about an obstacle, a difficulty and a dilemma, and say that someone fell short or managed.",
+    "assesses": [
+      "AR-LEX-C372-AQABA372-03",
+      "AR-LEX-C372-AQABA372-04",
+      "AR-LEX-C372-AQABA372-05"
+    ]
+  }
+}

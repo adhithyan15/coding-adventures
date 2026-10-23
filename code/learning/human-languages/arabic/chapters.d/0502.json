@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Talkers and the curious",
+  "label": "ch:ar-talkers-and-the-curious",
+  "canDo": "I can describe a person as talkative, reserved, nosy, affectionate or friendly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C502-wadud",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can describe a person as talkative, reserved, nosy, affectionate or friendly.",
+    "assesses": [
+      "AR-LEX-C502-THARTHAR502-03",
+      "AR-LEX-C502-THARTHAR502-04",
+      "AR-LEX-C502-THARTHAR502-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-532-HAYAT532",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "AR-EXT-532-HAYAT532"
+  ],
+  "after": []
+}

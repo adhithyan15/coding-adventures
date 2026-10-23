@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:ce2db3c7c99e7893",
+  "lessonIds": [
+    "ML-C415-samuham",
+    "ML-C415-potujanam",
+    "ML-C415-janasamkhya",
+    "ML-C415-samatvam",
+    "ML-C415-svatantryam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch415.txt",
+  "json": "malayalam/narration/ch415.json",
+  "textHash": "fnv1a64:f0e39bea4fa579cd",
+  "jsonHash": "fnv1a64:4537431298e12373",
+  "findings": []
+}

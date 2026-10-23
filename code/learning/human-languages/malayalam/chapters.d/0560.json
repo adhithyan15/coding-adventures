@@ -1,0 +1,19 @@
+{
+  "chapter": 560,
+  "title": "Sculptures and Exhibitions",
+  "label": "ch:ml-sculptures-and-exhibitions",
+  "canDo": "I can say an excursion, painting, a sculpture, a sculptor and an exhibition.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ML-C560-pradarsanam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 560: I can say an excursion, painting, a sculpture, a sculptor and an exhibition.",
+    "assesses": [
+      "ML-LEX-C560-SILPAM560-03",
+      "ML-LEX-C560-SILPAM560-04",
+      "ML-LEX-C560-SILPAM560-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:bbbf3a25494d329f",
+  "lessonIds": [
+    "AR-C514-araq",
+    "AR-C514-irhaq",
+    "AR-C514-arhaqa",
+    "AR-C514-tathaaba",
+    "AR-C514-ghafa"
+  ],
+  "tex": "arabic/book/chapters/ch514-worn-out.tex"
+}

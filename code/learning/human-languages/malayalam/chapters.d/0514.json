@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "Drought and Power Cuts",
+  "label": "ch:ml-drought-and-power-cuts",
+  "canDo": "I can say a drought, to crack open, to get scorched, to be disconnected and to stop working.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ML-C514-nilaykkuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can say a drought, to crack open, to get scorched, to be disconnected and to stop working.",
+    "assesses": [
+      "ML-LEX-C514-VARALCA514-03",
+      "ML-LEX-C514-VARALCA514-04",
+      "ML-LEX-C514-VARALCA514-05"
+    ]
+  }
+}

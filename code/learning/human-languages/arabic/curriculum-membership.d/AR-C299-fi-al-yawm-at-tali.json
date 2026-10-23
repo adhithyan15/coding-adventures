@@ -1,0 +1,11 @@
+{
+  "id": "AR-C299-fi-al-yawm-at-tali",
+  "pathSegment": "AR-PATH-299-ATHNA299",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-299-ATHNA299",
+      "order": 2
+    }
+  ]
+}

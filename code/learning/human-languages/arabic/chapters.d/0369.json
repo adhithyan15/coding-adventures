@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Advice and hesitation",
+  "label": "ch:ar-advice-and-hesitation",
+  "canDo": "I can say that someone advised, hinted, encouraged or hesitated, and talk about an alternative.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "AR-C369-badil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can say that someone advised, hinted, encouraged or hesitated, and talk about an alternative.",
+    "assesses": [
+      "AR-LEX-C369-NASIHA369-03",
+      "AR-LEX-C369-NASIHA369-04",
+      "AR-LEX-C369-NASIHA369-05"
+    ]
+  }
+}

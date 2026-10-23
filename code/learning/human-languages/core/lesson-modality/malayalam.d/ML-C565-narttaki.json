@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C565-narttaki",
+    "language": "malayalam",
+    "chapter": 565,
+    "sequence": 28480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67ec712a193578f9"
+  },
+  "findings": []
+}

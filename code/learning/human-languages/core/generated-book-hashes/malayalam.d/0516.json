@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:3f1dfa7c80220c52",
+  "lessonIds": [
+    "ML-C516-kuli",
+    "ML-C516-poti",
+    "ML-C516-atayuka",
+    "ML-C516-tatayuka",
+    "ML-C516-tatassappetuka",
+    "ML-R516-review-509-516",
+    "ML-R516-review-final-516"
+  ],
+  "tex": "malayalam/book/chapters/ch516-blocked-roads.tex"
+}

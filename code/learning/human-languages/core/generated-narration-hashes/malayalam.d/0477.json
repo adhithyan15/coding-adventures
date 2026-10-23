@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:4b8d876f128ff3ec",
+  "lessonIds": [
+    "ML-C477-katavu",
+    "ML-C477-pulayoram",
+    "ML-C477-kanal",
+    "ML-C477-nintikkatakkuka",
+    "ML-C477-kutikkuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch477.txt",
+  "json": "malayalam/narration/ch477.json",
+  "textHash": "fnv1a64:5eace6aba0a6b2d6",
+  "jsonHash": "fnv1a64:78d1b81d18da02c4",
+  "findings": []
+}

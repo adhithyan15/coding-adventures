@@ -1,0 +1,737 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 502,
+  "title": "Plantations and Trees",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:765839f2570c8430",
+  "lessons": [
+    {
+      "id": "ML-C502-tottam",
+      "sequence": 25100,
+      "title": "തോട്ടം (tōṭṭaṁ) — a plantation; a garden",
+      "headword": "തോട്ടം",
+      "romanization": "tōṭṭaṁ",
+      "gloss": "a plantation; a garden",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:619e4089150b5e8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for an entry fee, then the Malayalam for to drift in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തോട്ടം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തോട്ടം — tōṭṭaṁ — \"a plantation; a garden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മലയിൽ വലിയ തേയിലത്തോട്ടങ്ങൾ ഉണ്ട്. malayil valiya tēyilattōṭṭaṅṅaḷ uṇṭŭ. There are big tea plantations in the hills."
+            },
+            {
+              "kind": "speech",
+              "text": "Plural: തോട്ടങ്ങൾ, tōṭṭaṅṅaḷ."
+            },
+            {
+              "kind": "speech",
+              "text": "You met it in പൂന്തോട്ടം, a flower garden."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തോട്ടം (tōṭṭaṁ) is native Dravidian, \"a garden\", from a root that means to dig (DEDR 3549)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṭṭaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṭṭaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tōṭṭaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tōṭṭaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malayil valiya tēyilattōṭṭaṅṅaḷ uṇṭŭ. — There are big tea plantations in the hills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malayil valiya tēyilattōṭṭaṅṅaḷ uṇṭŭ.* — There are big tea plantations in the hills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for an entry fee, then the Malayalam for to drift in, then say tōṭṭaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for an entry fee, then the Malayalam for to drift in, then say *tōṭṭaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തോട്ടം (tōṭṭaṁ) mean? (\"A plantation; a garden\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C502-paccappu",
+      "sequence": 25110,
+      "title": "പച്ചപ്പ് (paccappŭ) — greenery",
+      "headword": "പച്ചപ്പ്",
+      "romanization": "paccappŭ",
+      "gloss": "greenery",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d95a14d32dba5d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to drift in, then the Malayalam for a plantation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പച്ചപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പച്ചപ്പ് — paccappŭ — \"greenery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴക്കാലത്ത് എവിടെയും പച്ചപ്പാണ്. maḻakkālattŭ eviṭeyuṁ paccappāṇŭ. In the rainy season there is greenery everywhere."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun of പച്ച, green, with -പ്പ്."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പച്ചപ്പ് (paccappŭ) is native Dravidian, the noun of പച്ച, green (DEDR 3821)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paccappŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paccappŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paccappŭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paccappŭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻakkālattŭ eviṭeyuṁ paccappāṇŭ. — In the rainy season there is greenery everywhere.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻakkālattŭ eviṭeyuṁ paccappāṇŭ.* — In the rainy season there is greenery everywhere.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to drift in, then the Malayalam for a plantation, then say paccappŭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to drift in, then the Malayalam for a plantation, then say *paccappŭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പച്ചപ്പ് (paccappŭ) mean? (\"Greenery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C502-talirkkuka",
+      "sequence": 25120,
+      "title": "തളിർക്കുക (taḷirkkuka) — to sprout; to put out leaves",
+      "headword": "തളിർക്കുക",
+      "romanization": "taḷirkkuka",
+      "gloss": "to sprout; to put out leaves",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3559d58a1b65f9ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for a plantation, then the Malayalam for greenery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തളിർക്കുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തളിർക്കുക — taḷirkkuka — \"to sprout; to put out leaves\"."
+            },
+            {
+              "kind": "speech",
+              "text": "മഴ പെയ്തപ്പോൾ ഉണങ്ങിയ ചെടികൾ തളിർത്തു. maḻa peytappōḷ uṇaṅṅiya ceṭikaḷ taḷirttu. When the rain fell, the dry plants sprouted."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: തളിർത്തു, taḷirttu."
+            },
+            {
+              "kind": "speech",
+              "text": "തളിര് is a tender new leaf."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തളിർക്കുക (taḷirkkuka) is native Dravidian, \"to bud, to sprout\", from തളിര്, a new leaf (DEDR 3131)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḷirkkuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḷirkkuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḷirkkuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḷirkkuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maḻa peytappōḷ uṇaṅṅiya ceṭikaḷ taḷirttu. — When the rain fell, the dry plants sprouted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maḻa peytappōḷ uṇaṅṅiya ceṭikaḷ taḷirttu.* — When the rain fell, the dry plants sprouted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for a plantation, then the Malayalam for greenery, then say taḷirkkuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for a plantation, then the Malayalam for greenery, then say *taḷirkkuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തളിർക്കുക (taḷirkkuka) mean? (\"To sprout; to put out leaves\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C502-koliyuka",
+      "sequence": 25130,
+      "title": "കൊഴിയുക (koḻiyuka) — to fall off; to drop",
+      "headword": "കൊഴിയുക",
+      "romanization": "koḻiyuka",
+      "gloss": "to fall off; to drop",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80fe541ceb757245",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for greenery, then the Malayalam for to sprout."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൊഴിയുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊഴിയുക — koḻiyuka — \"to fall off; to drop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വേനലിൽ മരങ്ങളുടെ ഇലകൾ കൊഴിഞ്ഞു. vēnalil maraṅṅaḷuṭe ilakaḷ koḻiññu. In the dry season the leaves fell from the trees."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: കൊഴിഞ്ഞു, koḻiññu."
+            },
+            {
+              "kind": "speech",
+              "text": "For leaves, fruit, petals and hair; a person falls with വീഴുക."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊഴിയുക (koḻiyuka) is native Dravidian, \"to fall out, to drop, as fruit, leaves or hair\" (DEDR 1825)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḻiyuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḻiyuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koḻiyuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koḻiyuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēnalil maraṅṅaḷuṭe ilakaḷ koḻiññu. — In the dry season the leaves fell from the trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēnalil maraṅṅaḷuṭe ilakaḷ koḻiññu.* — In the dry season the leaves fell from the trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for greenery, then the Malayalam for to sprout, then say koḻiyuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for greenery, then the Malayalam for to sprout, then say *koḻiyuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൊഴിയുക (koḻiyuka) mean? (\"To fall off; to drop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C502-vettimarruka",
+      "sequence": 25140,
+      "title": "വെട്ടിമാറ്റുക (veṭṭimāṟṟuka) — to cut down; to clear away",
+      "headword": "വെട്ടിമാറ്റുക",
+      "romanization": "veṭṭimāṟṟuka",
+      "gloss": "to cut down; to clear away",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d942ebe1663d942a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Malayalam for to sprout, then the Malayalam for to fall off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വെട്ടിമാറ്റുക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വെട്ടിമാറ്റുക — veṭṭimāṟṟuka — \"to cut down; to clear away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "വഴി വീതി കൂട്ടാൻ അവർ മരങ്ങൾ വെട്ടിമാറ്റി. vaḻi vīti kūṭṭān avar maraṅṅaḷ veṭṭimāṟṟi. They cut down the trees to widen the road."
+            },
+            {
+              "kind": "speech",
+              "text": "Past: വെട്ടിമാറ്റി, veṭṭimāṟṟi."
+            },
+            {
+              "kind": "speech",
+              "text": "വെട്ടി, having cut, plus മാറ്റുക, to remove."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വെട്ടിമാറ്റുക (veṭṭimāṟṟuka) is a native Dravidian compound of വെട്ടുക, to cut with an axe (DEDR 5478), and മാറ്റുക, to move away (DEDR 4834)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṭṭimāṟṟuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṭṭimāṟṟuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veṭṭimāṟṟuka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veṭṭimāṟṟuka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaḻi vīti kūṭṭān avar maraṅṅaḷ veṭṭimāṟṟi. — They cut down the trees to widen the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaḻi vīti kūṭṭān avar maraṅṅaḷ veṭṭimāṟṟi.* — They cut down the trees to widen the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Malayalam for to sprout, then the Malayalam for to fall off, then say veṭṭimāṟṟuka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Malayalam for to sprout, then the Malayalam for to fall off, then say *veṭṭimāṟṟuka* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വെട്ടിമാറ്റുക (veṭṭimāṟṟuka) mean? (\"To cut down; to clear away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

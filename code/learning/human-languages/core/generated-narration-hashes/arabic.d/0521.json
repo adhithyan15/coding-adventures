@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:bd11845eede52f94",
+  "lessonIds": [
+    "AR-C521-ajr",
+    "AR-C521-mukafaa",
+    "AR-C521-tarqiya",
+    "AR-C521-raqqa",
+    "AR-C521-taiba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch521.txt",
+  "json": "arabic/narration/ch521.json",
+  "textHash": "fnv1a64:a0242e1b4d367701",
+  "jsonHash": "fnv1a64:e606e2d3e1c52691",
+  "findings": []
+}

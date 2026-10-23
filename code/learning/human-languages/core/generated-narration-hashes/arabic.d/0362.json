@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:0ba47c0cff997020",
+  "lessonIds": [
+    "AR-C362-mantiq",
+    "AR-C362-mughalata",
+    "AR-C362-aql",
+    "AR-C362-istantaja",
+    "AR-C362-tanaqud"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch362.txt",
+  "json": "arabic/narration/ch362.json",
+  "textHash": "fnv1a64:c33a69dbf4102a32",
+  "jsonHash": "fnv1a64:98e26a691c5f663f",
+  "findings": []
+}

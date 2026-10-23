@@ -1,0 +1,23 @@
+{
+  "chapter": 288,
+  "title": "At The Station",
+  "label": "ch:ar-at-the-station",
+  "canDo": "I can buy a return ticket, report a missed train or a lost bag, and ask for the person in charge.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "AR-R288-at-the-station",
+    "kind": "production",
+    "summary": "Complete AR-R288-at-the-station: buy a return ticket, report a missed train, and ask for the person in charge.",
+    "assesses": [
+      "AR-LEX-C288-SAFAR288-01",
+      "AR-GRAMMAR-C288-COUNTER-QUESTIONS-01",
+      "AR-LEX-C288-SAFAR288-02",
+      "AR-SCRIPT-C288-HAMZA-YAA-01",
+      "AR-LEX-C288-SAFAR288-03",
+      "AR-GRAMMAR-C288-PROBLEM-PAST-01",
+      "AR-GRAMMAR-C288-ASK-HELP-01"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C482-erppatu",
+    "language": "malayalam",
+    "chapter": 482,
+    "sequence": 24110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3b5d97581c6ffa2"
+  },
+  "findings": []
+}

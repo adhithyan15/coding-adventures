@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:c032a5ca2ee2ca4c",
+  "lessonIds": [
+    "ML-C448-pratisandhi",
+    "ML-C448-velluvili",
+    "ML-C448-tatassam",
+    "ML-C448-visakalanam-ceyyuka",
+    "ML-C448-riti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch448.txt",
+  "json": "malayalam/narration/ch448.json",
+  "textHash": "fnv1a64:032bd16f25896615",
+  "jsonHash": "fnv1a64:56681709c2a93cd0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-R527-review-520-527",
+  "pathSegment": "AR-PATH-527-MAL527",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-527-MAL527",
+      "order": 5
+    }
+  ]
+}

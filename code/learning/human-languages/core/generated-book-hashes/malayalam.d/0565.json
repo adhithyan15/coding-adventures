@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 565,
+  "sourceHash": "fnv1a64:cc76017b6c879fe8",
+  "lessonIds": [
+    "ML-C565-citrakaran",
+    "ML-C565-samgitajnan",
+    "ML-C565-narttaki",
+    "ML-C565-eluttukaran",
+    "ML-C565-nirmmikkuka"
+  ],
+  "tex": "malayalam/book/chapters/ch565-painters-dancers-and-writers.tex"
+}

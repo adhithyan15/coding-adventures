@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "Looking after loved ones",
+  "label": "ch:ar-looking-after-loved-ones",
+  "canDo": "I can say that someone looked after, spoiled, held or stood by a loved one.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C533-habib",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can say that someone looked after, spoiled, held or stood by a loved one.",
+    "assesses": [
+      "AR-LEX-C533-RIAYA533-03",
+      "AR-LEX-C533-RIAYA533-04",
+      "AR-LEX-C533-RIAYA533-05"
+    ]
+  }
+}

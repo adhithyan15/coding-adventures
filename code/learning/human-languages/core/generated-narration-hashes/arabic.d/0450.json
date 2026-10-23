@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:8baa68b379a4eb5b",
+  "lessonIds": [
+    "AR-C450-baladiyya",
+    "AR-C450-qunsuliyya",
+    "AR-C450-dawam",
+    "AR-C450-tabur",
+    "AR-C450-taqaddama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch450.txt",
+  "json": "arabic/narration/ch450.json",
+  "textHash": "fnv1a64:6d8fce2f325f6553",
+  "jsonHash": "fnv1a64:647978d2b0f21499",
+  "findings": []
+}

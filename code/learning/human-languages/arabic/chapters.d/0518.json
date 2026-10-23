@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Careers and ambitions",
+  "label": "ch:ar-careers-and-ambitions",
+  "canDo": "I can talk about a profession, a secretary, a vet and an adviser, and say that someone aspires to a career.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "AR-C518-tamaha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about a profession, a secretary, a vet and an adviser, and say that someone aspires to a career.",
+    "assesses": [
+      "AR-LEX-C518-MIHNA518-03",
+      "AR-LEX-C518-MIHNA518-04",
+      "AR-LEX-C518-MIHNA518-05"
+    ]
+  }
+}

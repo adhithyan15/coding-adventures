@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:8e2395d7a4f3a7a4",
+  "lessonIds": [
+    "AR-C452-far",
+    "AR-C452-rasid",
+    "AR-C452-hawala",
+    "AR-C452-sarafa",
+    "AR-C452-awdaa"
+  ],
+  "tex": "arabic/book/chapters/ch452-at-the-bank.tex"
+}

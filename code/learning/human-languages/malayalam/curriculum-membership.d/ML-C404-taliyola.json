@@ -1,0 +1,11 @@
+{
+  "id": "ML-C404-taliyola",
+  "pathSegment": "ML-PATH-404-CHARITHRAM404",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-404-CHARITHRAM404",
+      "order": 2
+    }
+  ]
+}

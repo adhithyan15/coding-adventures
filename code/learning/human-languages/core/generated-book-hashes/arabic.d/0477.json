@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:86e589d85d50e5af",
+  "lessonIds": [
+    "AR-C477-qirsh",
+    "AR-C477-saltaun",
+    "AR-C477-mahar",
+    "AR-C477-naqi",
+    "AR-C477-madiq"
+  ],
+  "tex": "arabic/book/chapters/ch477-under-the-sea.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:f062e807b67bc43b",
+  "lessonIds": [
+    "ML-C449-niyantrikkuka",
+    "ML-C449-varddhikkuka",
+    "ML-C449-varddhippikkuka",
+    "ML-C449-uyaruka",
+    "ML-C449-uyarttuka"
+  ],
+  "tex": "malayalam/book/chapters/ch449-up-and-down.tex"
+}

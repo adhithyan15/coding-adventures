@@ -1,0 +1,11 @@
+{
+  "id": "AR-C398-mahw-al-ummiyya",
+  "pathSegment": "AR-PATH-398-TALIM398",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-398-TALIM398",
+      "order": 3
+    }
+  ]
+}

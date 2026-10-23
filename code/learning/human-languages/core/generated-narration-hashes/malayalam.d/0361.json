@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:2f3e55c41ebb5f1f",
+  "lessonIds": [
+    "ML-C361-yugam",
+    "ML-C361-bhutakalam",
+    "ML-C361-sandarbham",
+    "ML-C361-tutakkam",
+    "ML-C361-apratiksitamayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch361.txt",
+  "json": "malayalam/narration/ch361.json",
+  "textHash": "fnv1a64:3fa707c5ea8896d7",
+  "jsonHash": "fnv1a64:efdf2e65be56a347",
+  "findings": []
+}
