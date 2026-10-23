@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an authenticated-intermediate binding that retains the strongest
   selected issuer link and complete intermediate policy only when both refer to
   the identical decoded issuer object.
+- Added a consuming authenticated path-length composition that advances only
+  from the retained exact-intermediate policy and retains both the authenticated
+  link evidence and resulting state.
 
 ### Security
 
@@ -44,3 +47,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Authenticated-intermediate composition rejects byte-equal policy evidence
   from a separately decoded issuer and grants no path-length, parent-link,
   complete-path, trust, revocation, TLS, HTTP, or network authority.
+- Authenticated path-length composition cannot advance from detached policy or
+  discard its adjacent-link proof, while still granting no parent-link, path
+  order, complete-path, trust, revocation, TLS, HTTP, or network authority.
