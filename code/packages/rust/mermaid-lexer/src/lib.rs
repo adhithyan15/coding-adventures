@@ -1413,6 +1413,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_comma_separated_attribute_type_parameters() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBUILDING {\n  public.geometry(point,4326) location\n}\n",
+        );
+        let parameterized: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("COMMA_ATTRIBUTE_TYPE"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(parameterized, ["public.geometry(point,4326)"]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
