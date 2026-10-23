@@ -13743,7 +13743,7 @@ fn parse_er_style_tail(
     if source.trim().is_empty() {
         return Err(token_error(statement_token, "ER style requires declarations"));
     }
-    parse_block_style(statement_token, source.trim())
+    parse_block_style(statement_token, source.trim().trim_end_matches(';'))
 }
 
 fn apply_er_styles(
@@ -13752,6 +13752,15 @@ fn apply_er_styles(
     class_assignments: &[(Vec<String>, Vec<String>)],
     direct_styles: &[(Vec<String>, DiagramStyle)],
 ) -> Result<(), ParseError> {
+    if let Some(default_style) = class_styles.get("default") {
+        let explicitly_classed = class_assignments
+            .iter()
+            .flat_map(|(node_ids, _)| node_ids.iter())
+            .collect::<HashSet<_>>();
+        for node in nodes.iter_mut().filter(|node| !explicitly_classed.contains(&node.id)) {
+            merge_state_style(node.style.get_or_insert_default(), default_style);
+        }
+    }
     for (node_ids, class_names) in class_assignments {
         for node_id in node_ids {
             let node = nodes
