@@ -1,8 +1,9 @@
-//! # Reviewed-anchor DNS NameConstraints structure
+//! # DNS NameConstraints structure
 //!
 //! This crate decodes a narrow, bounded RFC 5280 structure and evaluates its
-//! permitted DNS subtrees against caller-supplied DNS names. It deliberately
-//! grants no certificate-evidence, path, trust-root, or TLS authority.
+//! permitted and excluded DNS subtrees against caller-supplied DNS names. It
+//! deliberately grants no certificate-evidence, path, trust-root, or TLS
+//! authority.
 
 #![deny(unsafe_code)]
 
@@ -13,6 +14,7 @@ use std::fmt;
 
 const SEQUENCE_TAG: u32 = 16;
 const PERMITTED_SUBTREES_TAG: u32 = 0;
+const EXCLUDED_SUBTREES_TAG: u32 = 1;
 const DNS_NAME_TAG: u32 = 2;
 
 /// RFC 5280 id-ce-nameConstraints (2.5.29.30).
@@ -43,7 +45,9 @@ pub enum DnsNameSyntaxError {
 pub enum DnsConstraintErrorKind {
     TooManyPresentedDnsNames,
     InvalidPermittedSubtree(DnsNameSyntaxError),
+    InvalidExcludedSubtree(DnsNameSyntaxError),
     InvalidPresentedDnsName(DnsNameSyntaxError),
+    PresentedDnsNameExcluded,
     PresentedDnsNameNotPermitted,
 }
 
@@ -80,13 +84,13 @@ impl fmt::Display for DnsConstraintError {
 
 impl Error for DnsConstraintError {}
 
-/// Payload-free evidence that all supplied DNS names were permitted.
+/// Payload-free evidence that all supplied DNS names satisfied the constraints.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct PermittedDnsNames {
+pub struct ConstrainedDnsNames {
     count: usize,
 }
 
-impl PermittedDnsNames {
+impl ConstrainedDnsNames {
     pub const fn count(self) -> usize {
         self.count
     }
@@ -101,7 +105,10 @@ impl PermittedDnsNames {
 pub enum NameConstraintsErrorKind {
     Structure(Asn1ErrorKind),
     UnsupportedTopLevelField,
+    DuplicateTopLevelField,
+    UnsupportedTopLevelFieldOrder,
     EmptyPermittedSubtrees,
+    EmptyExcludedSubtrees,
     TooManySubtrees,
     InvalidGeneralSubtree,
     UnsupportedGeneralName,
@@ -175,14 +182,17 @@ impl Error for NameConstraintsError {}
 #[derive(Clone)]
 pub struct NameConstraints<'a> {
     permitted_dns_subtrees: [&'a str; MAX_DNS_SUBTREES],
-    len: usize,
+    permitted_len: usize,
+    excluded_dns_subtrees: [&'a str; MAX_DNS_SUBTREES],
+    excluded_len: usize,
 }
 
 impl fmt::Debug for NameConstraints<'_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
             .debug_struct("NameConstraints")
-            .field("permitted_dns_subtrees", &self.len)
+            .field("permitted_dns_subtrees", &self.permitted_len)
+            .field("excluded_dns_subtrees", &self.excluded_len)
             .finish()
     }
 }
@@ -190,12 +200,27 @@ impl fmt::Debug for NameConstraints<'_> {
 impl<'a> NameConstraints<'a> {
     /// Return permitted DNS subtree strings in wire order.
     pub fn permitted_dns_subtrees(&self) -> &[&'a str] {
-        &self.permitted_dns_subtrees[..self.len]
+        &self.permitted_dns_subtrees[..self.permitted_len]
     }
 
-    /// Return the number of retained DNS subtrees.
+    /// Return excluded DNS subtree strings in wire order.
+    pub fn excluded_dns_subtrees(&self) -> &[&'a str] {
+        &self.excluded_dns_subtrees[..self.excluded_len]
+    }
+
+    /// Return the number of retained permitted DNS subtrees.
+    pub const fn permitted_len(&self) -> usize {
+        self.permitted_len
+    }
+
+    /// Return the number of retained excluded DNS subtrees.
+    pub const fn excluded_len(&self) -> usize {
+        self.excluded_len
+    }
+
+    /// Return the total number of retained DNS subtrees.
     pub const fn len(&self) -> usize {
-        self.len
+        self.permitted_len + self.excluded_len
     }
 
     /// Return whether no DNS subtree was retained.
@@ -203,15 +228,15 @@ impl<'a> NameConstraints<'a> {
     /// Successful decoding is never empty; this method keeps collection use
     /// explicit for downstream policy code.
     pub const fn is_empty(&self) -> bool {
-        self.len == 0
+        self.permitted_len == 0 && self.excluded_len == 0
     }
 }
 
-/// Evaluate presented DNS subjectAltName values against permitted subtrees.
-pub fn evaluate_permitted_dns_names(
+/// Evaluate presented DNS subjectAltName values against both constraint sets.
+pub fn evaluate_dns_names(
     constraints: &NameConstraints<'_>,
     presented_dns_names: &[&str],
-) -> Result<PermittedDnsNames, DnsConstraintError> {
+) -> Result<ConstrainedDnsNames, DnsConstraintError> {
     if presented_dns_names.len() > MAX_PRESENTED_DNS_NAMES {
         return Err(DnsConstraintError::new(
             DnsConstraintErrorKind::TooManyPresentedDnsNames,
@@ -219,11 +244,20 @@ pub fn evaluate_permitted_dns_names(
         ));
     }
 
-    let mut validated_constraints = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
+    let mut validated_permitted = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
     for (index, subtree) in constraints.permitted_dns_subtrees().iter().enumerate() {
-        validated_constraints[index] = validate_constraint(subtree).map_err(|reason| {
+        validated_permitted[index] = validate_constraint(subtree).map_err(|reason| {
             DnsConstraintError::new(
                 DnsConstraintErrorKind::InvalidPermittedSubtree(reason),
+                index,
+            )
+        })?;
+    }
+    let mut validated_excluded = [ValidConstraint::EMPTY; MAX_DNS_SUBTREES];
+    for (index, subtree) in constraints.excluded_dns_subtrees().iter().enumerate() {
+        validated_excluded[index] = validate_constraint(subtree).map_err(|reason| {
+            DnsConstraintError::new(
+                DnsConstraintErrorKind::InvalidExcludedSubtree(reason),
                 index,
             )
         })?;
@@ -237,9 +271,20 @@ pub fn evaluate_permitted_dns_names(
             )
         })?;
 
-        let permitted = validated_constraints[..constraints.len()]
+        let excluded = validated_excluded[..constraints.excluded_len()]
             .iter()
-            .any(|constraint| within_subtree(name, *constraint));
+            .any(|constraint| overlaps_excluded_subtree(name, *constraint));
+        if excluded {
+            return Err(DnsConstraintError::new(
+                DnsConstraintErrorKind::PresentedDnsNameExcluded,
+                index,
+            ));
+        }
+
+        let permitted = constraints.permitted_len() == 0
+            || validated_permitted[..constraints.permitted_len()]
+                .iter()
+                .any(|constraint| within_subtree(name, *constraint));
         if !permitted {
             return Err(DnsConstraintError::new(
                 DnsConstraintErrorKind::PresentedDnsNameNotPermitted,
@@ -248,7 +293,7 @@ pub fn evaluate_permitted_dns_names(
         }
     }
 
-    Ok(PermittedDnsNames {
+    Ok(ConstrainedDnsNames {
         count: presented_dns_names.len(),
     })
 }
@@ -353,9 +398,31 @@ fn within_subtree(name: &str, constraint: ValidConstraint<'_>) -> bool {
         && name[base_offset..].eq_ignore_ascii_case(constraint.base)
 }
 
+fn overlaps_excluded_subtree(name: &str, constraint: ValidConstraint<'_>) -> bool {
+    if within_subtree(name, constraint) {
+        return true;
+    }
+
+    // A presented wildcard stands for exactly one concrete left-most label.
+    // Ordinary subtree matching covers constraints at or above its fixed
+    // suffix. An exact excluded base one label below that suffix also overlaps
+    // one possible expansion and must therefore reject the wildcard.
+    let Some(wildcard_base) = name.strip_prefix("*.") else {
+        return false;
+    };
+    if constraint.subdomains_only || constraint.base.len() <= wildcard_base.len() {
+        return false;
+    }
+
+    let suffix_offset = constraint.base.len() - wildcard_base.len();
+    constraint.base.as_bytes()[suffix_offset - 1] == b'.'
+        && constraint.base[suffix_offset..].eq_ignore_ascii_case(wildcard_base)
+        && !constraint.base[..suffix_offset - 1].contains('.')
+}
+
 /// Decode the supported DER contents of an RFC 5280 NameConstraints SEQUENCE.
 ///
-/// The accepted subset is one `[0] permittedSubtrees` field containing
+/// The snapshot accepted subset is one `[0] permittedSubtrees` field containing
 /// non-empty dNSName GeneralSubtree values with omitted distance fields.
 pub fn decode_name_constraints_contents<'a>(
     decoder: &mut Asn1Decoder,
@@ -364,13 +431,27 @@ pub fn decode_name_constraints_contents<'a>(
     let root = decoder
         .decode_exact(encoded_contents)
         .map_err(NameConstraintsError::structure)?;
-    decode_name_constraints_element(decoder, root, 0)
+    let (permitted_dns_subtrees, permitted_len) = decode_subtrees_field(
+        decoder,
+        root,
+        0,
+        PERMITTED_SUBTREES_TAG,
+        NameConstraintsErrorKind::EmptyPermittedSubtrees,
+    )?;
+    Ok(NameConstraints {
+        permitted_dns_subtrees,
+        permitted_len,
+        excluded_dns_subtrees: [""; MAX_DNS_SUBTREES],
+        excluded_len: 0,
+    })
 }
 
 /// Decode one exact DER-encoded RFC 5280 `NameConstraints` SEQUENCE.
 ///
 /// Certificate extension values contain this complete SEQUENCE rather than
-/// only the sequence contents retained by reviewed trust-anchor snapshots.
+/// only the sequence contents retained by reviewed trust-anchor snapshots. The
+/// accepted subset contains a non-empty `[0]` permitted field, a non-empty
+/// `[1]` excluded field, or both in schema order, with dNSName subtrees only.
 pub fn decode_name_constraints<'a>(
     decoder: &mut Asn1Decoder,
     encoded: &'a [u8],
@@ -383,37 +464,98 @@ pub fn decode_name_constraints<'a>(
     let mut fields = decoder
         .sequence(root)
         .map_err(NameConstraintsError::structure)?;
-    let field_offset = child_offset(value_offset, value_length, fields.remaining().len());
-    let field = fields
-        .read(decoder)
-        .map_err(|error| NameConstraintsError::child_structure(error, value_offset, field_offset))?
-        .ok_or_else(|| {
-            NameConstraintsError::new(
+    let mut decoded = NameConstraints {
+        permitted_dns_subtrees: [""; MAX_DNS_SUBTREES],
+        permitted_len: 0,
+        excluded_dns_subtrees: [""; MAX_DNS_SUBTREES],
+        excluded_len: 0,
+    };
+    let mut seen_permitted = false;
+    let mut seen_excluded = false;
+    while !fields.remaining().is_empty() {
+        let field_offset = child_offset(value_offset, value_length, fields.remaining().len());
+        let field = fields
+            .read(decoder)
+            .map_err(|error| {
+                NameConstraintsError::child_structure(error, value_offset, field_offset)
+            })?
+            .expect("a non-empty DER cursor must yield one element");
+
+        if is_exact_tag(
+            field.tag(),
+            TagClass::ContextSpecific,
+            true,
+            PERMITTED_SUBTREES_TAG,
+        ) {
+            if seen_permitted {
+                return Err(NameConstraintsError::new(
+                    NameConstraintsErrorKind::DuplicateTopLevelField,
+                    field_offset,
+                ));
+            }
+            if seen_excluded {
+                return Err(NameConstraintsError::new(
+                    NameConstraintsErrorKind::UnsupportedTopLevelFieldOrder,
+                    field_offset,
+                ));
+            }
+            let (subtrees, len) = decode_subtrees_field(
+                decoder,
+                field,
+                field_offset,
+                PERMITTED_SUBTREES_TAG,
+                NameConstraintsErrorKind::EmptyPermittedSubtrees,
+            )?;
+            decoded.permitted_dns_subtrees = subtrees;
+            decoded.permitted_len = len;
+            seen_permitted = true;
+        } else if is_exact_tag(
+            field.tag(),
+            TagClass::ContextSpecific,
+            true,
+            EXCLUDED_SUBTREES_TAG,
+        ) {
+            if seen_excluded {
+                return Err(NameConstraintsError::new(
+                    NameConstraintsErrorKind::DuplicateTopLevelField,
+                    field_offset,
+                ));
+            }
+            let (subtrees, len) = decode_subtrees_field(
+                decoder,
+                field,
+                field_offset,
+                EXCLUDED_SUBTREES_TAG,
+                NameConstraintsErrorKind::EmptyExcludedSubtrees,
+            )?;
+            decoded.excluded_dns_subtrees = subtrees;
+            decoded.excluded_len = len;
+            seen_excluded = true;
+        } else {
+            return Err(NameConstraintsError::new(
                 NameConstraintsErrorKind::UnsupportedTopLevelField,
-                value_offset,
-            )
-        })?;
-    if !fields.remaining().is_empty() {
-        return Err(NameConstraintsError::new(
-            NameConstraintsErrorKind::UnsupportedTopLevelField,
-            child_offset(value_offset, value_length, fields.remaining().len()),
-        ));
+                field_offset,
+            ));
+        }
     }
     fields.finish().map_err(NameConstraintsError::structure)?;
-    decode_name_constraints_element(decoder, field, field_offset)
+    if !seen_permitted && !seen_excluded {
+        return Err(NameConstraintsError::new(
+            NameConstraintsErrorKind::UnsupportedTopLevelField,
+            value_offset,
+        ));
+    }
+    Ok(decoded)
 }
 
-fn decode_name_constraints_element<'a>(
+fn decode_subtrees_field<'a>(
     decoder: &mut Asn1Decoder,
     root: Asn1Element<'a>,
     root_offset: usize,
-) -> Result<NameConstraints<'a>, NameConstraintsError> {
-    if !is_exact_tag(
-        root.tag(),
-        TagClass::ContextSpecific,
-        true,
-        PERMITTED_SUBTREES_TAG,
-    ) {
+    tag_number: u32,
+    empty_kind: NameConstraintsErrorKind,
+) -> Result<([&'a str; MAX_DNS_SUBTREES], usize), NameConstraintsError> {
+    if !is_exact_tag(root.tag(), TagClass::ContextSpecific, true, tag_number) {
         return Err(NameConstraintsError::new(
             NameConstraintsErrorKind::UnsupportedTopLevelField,
             root_offset,
@@ -423,23 +565,18 @@ fn decode_name_constraints_element<'a>(
     let value_offset = root_offset + root.header().len();
     let value_length = root.value().len();
     let mut subtrees = decoder
-        .implicit_constructed(root, PERMITTED_SUBTREES_TAG)
+        .implicit_constructed(root, tag_number)
         .map_err(|error| NameConstraintsError::element_structure(error, root_offset))?;
     if subtrees.remaining().is_empty() {
-        return Err(NameConstraintsError::new(
-            NameConstraintsErrorKind::EmptyPermittedSubtrees,
-            value_offset,
-        ));
+        return Err(NameConstraintsError::new(empty_kind, value_offset));
     }
 
-    let mut decoded = NameConstraints {
-        permitted_dns_subtrees: [""; MAX_DNS_SUBTREES],
-        len: 0,
-    };
+    let mut decoded = [""; MAX_DNS_SUBTREES];
+    let mut len = 0;
 
     while !subtrees.remaining().is_empty() {
         let subtree_offset = child_offset(value_offset, value_length, subtrees.remaining().len());
-        if decoded.len == MAX_DNS_SUBTREES {
+        if len == MAX_DNS_SUBTREES {
             return Err(NameConstraintsError::new(
                 NameConstraintsErrorKind::TooManySubtrees,
                 subtree_offset,
@@ -460,12 +597,12 @@ fn decode_name_constraints_element<'a>(
         }
 
         let dns_name = decode_general_subtree(decoder, subtree, subtree_offset)?;
-        decoded.permitted_dns_subtrees[decoded.len] = dns_name;
-        decoded.len += 1;
+        decoded[len] = dns_name;
+        len += 1;
     }
 
     subtrees.finish().map_err(NameConstraintsError::structure)?;
-    Ok(decoded)
+    Ok((decoded, len))
 }
 
 fn decode_general_subtree<'a>(
