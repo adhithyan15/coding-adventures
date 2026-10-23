@@ -1,17 +1,26 @@
-use der_asn1::Asn1Limits;
+use der_asn1::{Asn1Decoder, Asn1Limits};
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_path_length_policy::{
     X509CertificatePathLengthErrorKind, X509CertificatePathLengthState,
 };
 use x509_certificate_policy::{
-    classify_certificate_self_issued, validate_certificate_role_extensions,
-    ValidatedCertificateRoleExtensions, X509CertificateRole,
+    classify_certificate_self_issued, validate_certificate_algorithm_policy,
+    validate_certificate_role_extensions, validate_certificate_role_policy,
+    ValidatedCertificateRoleExtensions, X509AlgorithmParametersPolicy,
+    X509CertificateAlgorithmProfile, X509CertificateRole,
 };
+use x509_intermediate_certificate_policy::{
+    validate_x509_intermediate_certificate_policy, ValidatedX509IntermediateCertificatePolicy,
+};
+use x509_time::{decode_x509_time, X509Time};
 
 const SIGNATURE_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
+const SIGNATURE_OID_ARCS: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
 const KEY_OID: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
+const KEY_OID_ARCS: &[u64] = &[1, 2, 840, 113_549, 1, 1, 1];
 const BASIC_CONSTRAINTS_OID: &[u8] = &[0x55, 0x1d, 0x13];
 const KEY_USAGE_OID: &[u8] = &[0x55, 0x1d, 0x0f];
+const NULL_DER: &[u8] = &[0x05, 0x00];
 
 fn der(tag: u8, value: &[u8]) -> Vec<u8> {
     let mut encoded = Vec::with_capacity(value.len() + 4);
@@ -105,6 +114,77 @@ fn decoded_certificate(
     };
     let encoded = Box::leak(certificate(&extensions).into_boxed_slice());
     decode_x509_certificate(encoded, Asn1Limits::default()).unwrap()
+}
+
+fn algorithm_profiles() -> [X509CertificateAlgorithmProfile<'static>; 1] {
+    [X509CertificateAlgorithmProfile::new(
+        SIGNATURE_OID_ARCS,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        KEY_OID_ARCS,
+        X509AlgorithmParametersPolicy::ExactDer(NULL_DER),
+        16,
+        16,
+        16,
+        16,
+    )
+    .unwrap()]
+}
+
+fn time(value: &[u8; 13]) -> X509Time {
+    let encoded = der(0x17, value);
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    decode_x509_time(decoder.decode_exact(&encoded).unwrap()).unwrap()
+}
+
+fn validated_intermediate_policy(
+    is_self_issued: bool,
+    path_length: Option<&[u8]>,
+) -> ValidatedX509IntermediateCertificatePolicy<'static, 'static> {
+    let certificate = Box::leak(Box::new(decoded_certificate(
+        X509CertificateRole::IssuingCertificateAuthority,
+        path_length,
+    )));
+    let role_policy = validate_certificate_role_policy(
+        certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(certificate, &algorithm_profiles()).unwrap();
+    let classification =
+        classify_certificate_self_issued(certificate, |_issuer, _subject| is_self_issued);
+
+    validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        classification,
+        &time(b"260701120000Z"),
+    )
+    .unwrap()
+}
+
+#[test]
+fn complete_non_self_issued_intermediate_policy_advances_and_tightens_state() {
+    let intermediate = validated_intermediate_policy(false, Some(&[0x00]));
+
+    let state = X509CertificatePathLengthState::new(3)
+        .advance_validated_intermediate_ca(&intermediate)
+        .unwrap();
+
+    assert_eq!(state.remaining_non_self_issued_intermediate_cas(), 0);
+}
+
+#[test]
+fn complete_self_issued_intermediate_policy_skips_only_the_decrement() {
+    let intermediate = validated_intermediate_policy(true, Some(&[0x02]));
+
+    let state = X509CertificatePathLengthState::new(3)
+        .advance_validated_intermediate_ca(&intermediate)
+        .unwrap();
+
+    assert_eq!(state.remaining_non_self_issued_intermediate_cas(), 2);
 }
 
 #[test]

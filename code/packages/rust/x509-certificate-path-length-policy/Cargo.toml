@@ -7,6 +7,8 @@ description = "Bounded RFC 5280 certificate path-length policy state"
 [dependencies]
 der-asn1 = { path = "../der-asn1" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-intermediate-certificate-policy = { path = "../x509-intermediate-certificate-policy" }
 
 [dev-dependencies]
 x509-certificate = { path = "../x509-certificate" }
+x509-time = { path = "../x509-time" }
